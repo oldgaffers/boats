@@ -1,6 +1,6 @@
-import React from 'react';
-import { Grid } from '@material-ui/core'
-import { Pagination } from '@material-ui/lab'
+import React, { useState } from 'react';
+import { Grid } from '@material-ui/core';
+import { Pagination } from '@material-ui/lab';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import BoatCard from './boatcard';
@@ -23,63 +23,85 @@ query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
     }
   }`;
 
-function BoatCards({ 
-  page=1, boatsPerPage=12, 
-  sortField='name', sortDirection='asc', 
+function BoatCards({
+  boatsPerPage = 12,
+  sortField = 'name',
+  sortDirection = 'asc',
   where = {
-    _and:[
+    _and: [
       { year: { _gte: '1800' } },
-      { year: { _lte: (new Date()).getFullYear() } }
+      { year: { _lte: new Date().getFullYear() } },
     ],
-  }, 
-  onLoad = function(n) {console.log('boat cards loaded total is', n);}
+  },
+  onLoad = function(n) {
+    console.log('boat cards loaded total is', n);
+  },
 }) {
-    const { loading, error, data } = useQuery(
-        query(`{${sortField}: ${sortDirection}}`),
-        {
-          variables: {
-              limit: boatsPerPage,
-              offset: boatsPerPage*(page-1),
-              where: where,
-          }
-        }
-    );
-    if (error) return <p>Error: (BoatCards)</p>;
-  
-    if (loading) {
-      if (data) {
-        console.log('Loading set but data here');
-      } else {
-        return <p>Loading...</p>;
-      }
-    }
-  
-    const totalCount = data.boat_aggregate.aggregate.totalCount;
-  
-    if (onLoad) {
-      onLoad(totalCount);
-    }
 
-    const pages = Math.ceil(totalCount/boatsPerPage);
-  
-    if (totalCount > 0) {
-    return(
-        <div>
-        <Pagination count={pages} variant="outlined" shape="rounded" />
-        <Grid container direction="row" justify="center" alignItems="center" >
-        {data.boat.map((boat) => <BoatCard key={boat.oga_no} boat={boat} />)};
-        </Grid>
-        <Pagination count={pages} variant="outlined" shape="rounded" />
-        </div>
-        );
+  const [page, setPage] = useState(1);
+
+  const { loading, error, data } = useQuery(
+    query(`{${sortField}: ${sortDirection}}`),
+    {
+      variables: {
+        limit: boatsPerPage,
+        offset: boatsPerPage * (page - 1),
+        where: where,
+      },
+    },
+  );
+  if (error) return <p>Error: (BoatCards)</p>;
+
+  if (loading) {
+    if (data) {
+      console.log('Loading set but data here');
+    } else {
+      return <p>Loading...</p>;
     }
+  }
+
+  const totalCount = data.boat_aggregate.aggregate.totalCount;
+
+  if (onLoad) {
+    onLoad(totalCount);
+  }
+
+  const pages = Math.ceil(totalCount / boatsPerPage);
+
+  function handlePageChange(event, page) {
+    setPage(page);
+  }
+
+  if (totalCount > 0) {
     return (
-      <p>
-        There are no boats which match the filter criteria you have set. Try
-        broadening the criteria.
-      </p>
+      <div>
+        <Pagination
+          count={pages}
+          variant="outlined"
+          shape="rounded"
+          onChange={handlePageChange}
+        />
+        <Grid container direction="row" justify="center" alignItems="center">
+          {data.boat.map((boat) => (
+            <BoatCard key={boat.oga_no} boat={boat} />
+          ))}
+          ;
+        </Grid>
+        <Pagination
+          count={pages}
+          variant="outlined"
+          shape="rounded"
+          onChange={handlePageChange}
+        />
+      </div>
     );
+  }
+  return (
+    <p>
+      There are no boats which match the filter criteria you have set. Try
+      broadening the criteria.
+    </p>
+  );
 }
 
-export default BoatCards
-
+export default BoatCards;

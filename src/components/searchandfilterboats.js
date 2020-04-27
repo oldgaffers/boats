@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function SearchAndFilterBoats() {
+function SearchAndFilterBoats({ onPageSizeChange, onSortFieldChange, onSortDirectionChange }) {
     const classes = useStyles();
     const now = (new Date()).getFullYear() + 1;
 
@@ -48,9 +48,9 @@ function SearchAndFilterBoats() {
             <Picker id="construction-material" options={sampleMaterials} label="Construction Material" />
             <FormControlLabel control={<Switch />} label="include boats without pictures" />
             <FormControlLabel control={<Switch />} label="only boats for sale" />
-            <Picker id="sort-field" options={sortFields} label="Sort By" />
-            <FormControlLabel control={<Switch />} label="reversed" />
-            <Picker id="page-size" options={pageSize} label="Boats Per Page" />
+            <Picker id="sort-field" onChange={onSortFieldChange} options={sortFields} label="Sort By" />
+            <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch />} label="reversed" />
+            <Picker id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
         </Grid>
     </form>
     );
