@@ -3,12 +3,11 @@ import { TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 
 function Picker({ options, id, label, onChange, defaultValue }) {
-
     const [value, setValue] = useState({name: defaultValue});
     return (
         <Autocomplete
-        defaultValue={value}
-        inputValue={value}
+        defaultValue={{ name: value }}
+        inputValue={{ name: value }}
         id={id}
         options={options}
         getOptionSelected={(t,v)=>(t.name === v.name)}
