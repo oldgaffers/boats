@@ -36,11 +36,9 @@ function SearchAndFilterBoats({
 }) {
     const classes = useStyles();
 
-    const [names, setNames] = useState();
+    const [names, setNames] = useState({});
     const [ogaNo, setOgaNo] = useState();
     const [year, setYear] = useState({ firstYear: after, lastYear: until });
-    const [sale, setSale] = useState(undefined);
-    const [pics, setPics] = useState(undefined);
 
     const { loading, error, data } = useQuery(gql(`{
         boat{name previous_names}
@@ -67,23 +65,13 @@ function SearchAndFilterBoats({
     const boatNames = allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 
     function updateFilters() {
-        const filters = {
-            ...names,
-            ogaNo,
-            year,
-            pics,
-            sale
-        };
-        onFilterChange(filters);
+        onFilterChange({ ...names, ogaNo, year });
     }
 
-    function sw1(event, val) {
-        setPics(val);
-        updateFilters();
-    }
-
-    function sw2(event, val) {
-        setSale(val);
+    function sw(event, val) {
+        const n = names;
+        n[event.target.id] = val;
+        setNames(n)
         updateFilters();
     }
 
@@ -100,6 +88,7 @@ function SearchAndFilterBoats({
     }
 
     function sy(event) {
+        console.log('sy', event);
         const { id, value } = event.target;
         if (value.length === 4) {
             const y = year;
@@ -123,8 +112,8 @@ function SearchAndFilterBoats({
             <Picker onChange={pl} defaultValue="yacht" id="generic-type" options={generic_type} label="Generic Type" />
             <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" />
             <Picker onChange={pl} defaultValue="wood" id="construction-material" options={construction_material} label="Construction Material" />
-            <FormControlLabel control={<Switch onChange={sw1} />} label="include boats without pictures" />
-            <FormControlLabel control={<Switch onChange={sw2} />} label="only boats for sale" />
+            <FormControlLabel control={<Switch id="nopics" onChange={sw} />} label="include boats without pictures" />
+            <FormControlLabel control={<Switch id="sale" onChange={sw} />} label="only boats for sale" />
             <Picker defaultValue="name" id="sort-field" onChange={onSortFieldChange} options={sortFields} label="Sort By" />
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch />} label="reversed" />
             <Picker defaultValue="6" id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />

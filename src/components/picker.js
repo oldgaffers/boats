@@ -6,7 +6,7 @@ function Picker({ options, id, label, onChange, defaultValue }) {
     const [value, setValue] = useState({name: defaultValue});
     return (
         <Autocomplete
-        defaultValue={defaultValue}
+        defaultValue={value}
         inputValue={defaultValue}
         id={id}
         options={options}
