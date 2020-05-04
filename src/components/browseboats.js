@@ -9,38 +9,13 @@ function BrowseBoats() {
     const [sortDirection, setSortDirection] = useState('asc');
     const [where, setWhere] = useState(undefined);
 
-    function updateFilters(event, option) {
-        let field; let value;
-        if (option) {
-            if (option.name) {
-                if(option.__typename) {
-                    field = option.__typename;
-                    value = option.name;
-                    // console.log('updateFilters', option.__typename, option.name);
-                } else {
-                    console.log('updateFilters', '?', value.name);
-                }
-            } else {
-                // console.log('updateFilters', event, option);
-                field = event;
-                value = option;
-        }    
-        } else {
-            if(event) {
-                if (event.target) {
-                    // console.log('updateFilters', event.target.id, event.target.value);
-                    field = event.target.id;
-                    value = event.target.value;
-                } else {
-                    // console.log('updateFilters', event);
-                    field = event;
-                    value = false;
-                    }
-            } else {
-                // console.log('updateFilters');
-            }
-        }
-        console.log(updateFilters, field, value);
+    function updateFilters(filters) {
+        setWhere({
+            _and: [
+              { year: { _gte: filters.year.first } },
+              { year: { _lte: filters.year.last } },
+            ],
+        });
     }
 
     return (

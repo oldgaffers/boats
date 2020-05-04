@@ -6,8 +6,8 @@ function Picker({ options, id, label, onChange, defaultValue }) {
     const [value, setValue] = useState({name: defaultValue});
     return (
         <Autocomplete
-        defaultValue={{ name: value }}
-        inputValue={{ name: value }}
+        defaultValue={defaultValue}
+        inputValue={defaultValue}
         id={id}
         options={options}
         getOptionSelected={(t,v)=>(t.name === v.name)}
