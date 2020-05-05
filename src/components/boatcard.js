@@ -14,10 +14,13 @@ const useStyles = makeStyles({
   },
   root: {
     width: 300,
-    height: 640,
+    minHeight: 640,
   },
   title: {
     fontSize: 14,
+  },
+  text: {
+    minHeight: 250,
   },
   pos: {
     marginBottom: 6,
@@ -79,7 +82,7 @@ export default function BoatCard({ boat }) {
           image={image}
           title={boat.name}
         />):''}
-      <CardContent>
+      <CardContent className={classes.text} >
         <Typography variant="h5" component="h2">
         {boat.name} ({boat.oga_no})
         </Typography>
