@@ -8,14 +8,19 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles({
+  noimage: {
+    width: 300,
+    minHeight: 400,
+  },
   root: {
     width: 300,
+    height: 640,
   },
   title: {
     fontSize: 14,
   },
   pos: {
-    marginBottom: 12,
+    marginBottom: 6,
   },
   media: {
     height: 300,
@@ -51,13 +56,27 @@ export default function BoatCard({ boat }) {
     }
   }
 
+  const image = data && data.thumb;
+
+  function normaliseDescription(boat) {
+    if (boat && boat.short_description) {
+      const desc = boat.short_description.trim();
+      if (desc.startsWith('<p>')) {
+        return desc;
+      }
+      return `<p>${desc}</p>`;
+    }
+    return '';
+  }
+
+
   return (
-    <Card className={classes.root}>
+    <Card m={4} className={image ? classes.root : classes.noimage}>
     <CardActionArea>
-        {(data && data.thumb)?(
+        {(image)?(
         <CardMedia
           className={classes.media}
-          image={data.thumb}
+          image={image}
           title={boat.name}
         />):''}
       <CardContent>
@@ -65,7 +84,7 @@ export default function BoatCard({ boat }) {
         {boat.name} ({boat.oga_no})
         </Typography>
         <Typography variant="body2" 
-        dangerouslySetInnerHTML={{ __html: boat.short_description }}
+        dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
         />
         <TextList fields={wanted} data={boat} />
       </CardContent>
