@@ -31,6 +31,7 @@ function BoatCards({
     _and: [
       { year: { _gte: '1800' } },
       { year: { _lte: new Date().getFullYear() } },
+      {image_key: { _is_null: false } } ,
     ],
   },
   onLoad = function(n) {
