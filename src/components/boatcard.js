@@ -10,7 +10,7 @@ import { useQuery } from '@apollo/react-hooks';
 const useStyles = makeStyles({
   noimage: {
     width: 300,
-    minHeight: 400,
+    minHeight: 200,
   },
   root: {
     width: 300,
