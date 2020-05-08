@@ -9,15 +9,9 @@ import Main from './components/main';
 import BrowseBoats from './components/browseboats';
 import Boat from './components/boat';
 
-require('dotenv').config()
-
 const client = new ApolloClient({
   link: createHttpLink({
-    // read-only endpoint
     uri: "https://api-oga.herokuapp.com/v1/graphql",
-    headers: {
-      "x-hasura-admin-secret": ''
-    }
   }),
   cache: new InMemoryCache()
 });
