@@ -62,7 +62,7 @@ function BrowseBoats() {
     <Container>
         <h3>Welcome to the OGA Boat Register</h3>
         <h4>We have hundreds of boats with pictures and many more waiting for pictures and more information.</h4>
-        <p>Filter the list using the options below and then click on a boat for all the pictures and information we have for that boat.</p>
+        <p>Filter the list using the options below and then click on 'Learn More' for all the pictures and information we have for that boat.</p>
         <p>Have a boat and can't find it here. Fill in our <a href="https://form.jotform.com/jfbcable/new-boat">form</a> and we will add it.</p>
         <p>You can also use the form to suggest a boat whether you own it or not.</p>
         <p>You'll can submit pictures, additions and corrections to boats or contact the owner from the boat's detail page.</p>
