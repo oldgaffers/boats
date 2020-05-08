@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import RigAndSails from './rigandsails';
 import ImageCarousel from './imagecarousel';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import TextList from './textlist';
 
 const boatQuery = (id) => gql`{
@@ -147,6 +148,7 @@ export default function Boat({ id }) {
     */
 
     return (
+    <MuiThemeProvider>
     <Grid columns={2} divided>
         <Grid.Row>
             <Grid.Column width={10}>
@@ -179,5 +181,6 @@ export default function Boat({ id }) {
            { /*<Tab panes={panes} />*/}
         </Grid.Row>
     </Grid>
+    </MuiThemeProvider>
     );
 };

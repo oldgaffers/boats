@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Container, Divider } from '@material-ui/core'
 import SearchAndFilterBoats from './searchandfilterboats'
 import BoatCards from './boatcards'
+import { List, ListItem } from 'material-ui';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 function BrowseBoats() {
     const [boatsPerPage, setBoatsPerPage] = useState(12);
@@ -51,18 +53,23 @@ function BrowseBoats() {
         if (filters['sale']) {
             all.push({for_sale_state: {text: {_eq: "for_sale"}}});
         }
+        console.log('filters', all);
         setWhere({ _and: all });
     }
 
     return (
+    <MuiThemeProvider>
     <Container>
         <h3>Welcome to the OGA Boat Register</h3>
         <h4>We have hundreds of boats with pictures and many more waiting for pictures and more information.</h4>
-        <p>Filter the list using the options below and then click on a boat for all the pictures and data we have for that boat.</p>
-        <p>Know something we don't? We'd love to hear from you.</p>
+        <p>Filter the list using the options below and then click on a boat for all the pictures and information we have for that boat.</p>
+        <p>Have a boat and can't find it here. Fill in our <a href="https://form.jotform.com/jfbcable/new-boat">form</a> and we will add it.</p>
+        <p>You can also use the form to suggest a boat whether you own it or not.</p>
+        <p>You'll can submit pictures, additions and corrections to boats or contact the owner from the boat's detail page.</p>
+        <p>Members can use the register to advertise their boat for sale. The first step is to make sure the boat is on the register.</p>
         <SearchAndFilterBoats 
-            onPageSizeChange={(_,{name}) => setBoatsPerPage(parseInt(name))}
-            onSortFieldChange={(_,{name}) => setSortField(name)}
+            onPageSizeChange={(_,a) => a && setBoatsPerPage(parseInt(a.name))}
+            onSortFieldChange={(_,a) => a && setSortField(a.name)}
             onSortDirectionChange={event => setSortDirection(event.target.checked?'desc':'asc')}
             onFilterChange={updateFilters}
         />
@@ -73,8 +80,14 @@ function BrowseBoats() {
             sortDirection={sortDirection}
             where={where}
         />
-        <Divider/>     
+        <Divider/>
+        <p>Other great places to look for boats are:</p>
+        <List>
+            <ListItem><a href="https://www.nationalhistoricships.org.uk">National Historic Ships</a></ListItem>
+            <ListItem><a href="https://nmmc.co.uk/explore/databases/">NMM Cornwall</a> maintain a number of interesting databases including small boats, yacht designs</ListItem>
+        </List>     
     </Container>
+    </MuiThemeProvider>
     );
 }
 

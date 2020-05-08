@@ -82,7 +82,7 @@ function BoatCards({
           shape="rounded"
           onChange={handlePageChange}
         />
-        <Grid container direction="row" justify="center" alignItems="center">
+        <Grid container direction="row" justify="center" alignItems="center" spacing={12}>
           {data.boat.map((boat) => (
             <BoatCard key={boat.oga_no} boat={boat} />
           ))}

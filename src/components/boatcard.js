@@ -22,6 +22,9 @@ const useStyles = makeStyles({
   text: {
     minHeight: 250,
   },
+  textnoimage: {
+    minHeight: 150,
+  },
   pos: {
     marginBottom: 6,
   },
@@ -74,7 +77,7 @@ export default function BoatCard({ boat }) {
 
 
   return (
-    <Card m={4} className={image ? classes.root : classes.noimage}>
+    <Card className={image ? classes.root : classes.noimage}>
     <CardActionArea>
         {(image)?(
         <CardMedia
@@ -82,7 +85,7 @@ export default function BoatCard({ boat }) {
           image={image}
           title={boat.name}
         />):''}
-      <CardContent className={classes.text} >
+      <CardContent className={image ? classes.text : classes.textnoimage} >
         <Typography variant="h5" component="h2">
         {boat.name} ({boat.oga_no})
         </Typography>

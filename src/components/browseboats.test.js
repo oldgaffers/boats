@@ -8,12 +8,12 @@ import BrowseBoats from './browseboats';
 const mocks = [
   {
     request: {
-      query: gql`query{thumb(id:$id)}`,
+      query: gql`query{boats(){id}}`,
       variables: { id: 1 }
     },
     result: {
       data: {
-        thumb: "https://thumbs.com/1.jpg"
+        boat: {}
       }
     }
   },

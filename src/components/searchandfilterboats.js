@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
@@ -39,16 +39,24 @@ function SearchAndFilterBoats({
     const [names, setNames] = useState({});
     const [ogaNo, setOgaNo] = useState();
     const [year, setYear] = useState({ firstYear: after, lastYear: until });
+    
+    function update() {
+        const f = { ...names, ogaNo, year };
+        console.log('updateFilters', f);
+        if(onFilterChange) onFilterChange(f);
+    }
+
+    useEffect(update, [names, ogaNo, year]);
 
     const { loading, error, data } = useQuery(gql(`{
         boat{name previous_names}
-        designer{name}
-        builder{name}
-        rig_type {name}
-        sail_type{name}
-        design_class {name}
-        generic_type{name}
-        construction_material{name}        
+        designer(order_by: {name: asc}){name}
+        builder(order_by: {name: asc}){name}
+        rig_type(order_by: {name: asc}){name}
+        sail_type(order_by: {name: asc}){name}
+        design_class(order_by: {name: asc}){name}
+        generic_type(order_by: {name: asc}){name}
+        construction_material(order_by: {name: asc}){name}
     }`));
 
     if (loading) return <p>Loading...</p>;
@@ -64,27 +72,29 @@ function SearchAndFilterBoats({
     if (allBoatNames[0] === '') allBoatNames.shift();
     const boatNames = allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 
-    function updateFilters() {
-        onFilterChange({ ...names, ogaNo, year });
-    }
-
     function sw(event, val) {
-        const n = names;
-        n[event.target.id] = val;
-        setNames(n)
-        updateFilters();
+        if (event.target.id) {
+            const n = names;
+            n[event.target.id] = val;
+            setNames(n);
+            update(); 
+        }
     }
 
-    function pl(event, value) {
+    function pl(id, value) {
         const n = names;
-        n[value.__typename] = value.name;
+        if (value) {
+            n[id] = value;
+        } else {
+            delete n[id];
+        }
         setNames(n);
-        updateFilters();
-    }
+        update(); 
+}
 
     function o(event) {
         setOgaNo(event.target.value);
-        updateFilters();
+        update(); 
     }
 
     function sy(event) {
@@ -94,7 +104,7 @@ function SearchAndFilterBoats({
             const y = year;
             y[id] = value;
             setYear(y);    
-            updateFilters();
+            update(); 
         }
     }
 
@@ -107,11 +117,11 @@ function SearchAndFilterBoats({
             <Picker onChange={pl} id="builder-name" options={builder} label="Builder" />
             <TextField onChange={sy} id="firstYear" label="Built After" min={after} max="" defaultValue={after} variant="outlined" />
             <TextField onChange={sy} id="lastYear" label="Built Before" min={after} max={until} defaultValue={until} variant="outlined" />
-            <Picker onChange={pl} defaultValue="Cutter" id="rig-type" options={rig_type} label="Rig Type" />
-            <Picker onChange={pl} defaultValue="gaff" id="mainsail-type" options={sail_type} label="Mainsail Type" />
-            <Picker onChange={pl} defaultValue="yacht" id="generic-type" options={generic_type} label="Generic Type" />
+            <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" />
+            <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" />
+            <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" />
             <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" />
-            <Picker onChange={pl} defaultValue="wood" id="construction-material" options={construction_material} label="Construction Material" />
+            <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" />
             <FormControlLabel control={<Switch id="nopics" onChange={sw} />} label="include boats without pictures" />
             <FormControlLabel control={<Switch id="sale" onChange={sw} />} label="only boats for sale" />
             <Picker defaultValue="name" id="sort-field" onChange={onSortFieldChange} options={sortFields} label="Sort By" />
