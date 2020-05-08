@@ -3,26 +3,40 @@ import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import BrowseBoats from './browseboats';
-
+import { query } from './boatcards';
 
 const mocks = [
   {
     request: {
-      query: gql`query{boats(){id}}`,
-      variables: { id: 1 }
+      query: query({name: 'asc'}),
+      variables: { 
+        $limit: 1,
+        $offset: 1,
+        $where: {
+        _and: [
+            { year: { _gte: '1800' } },
+            { year: { _lte: '2021' } },
+            {image_key: { _is_null: false } } ,
+          ],
+        }
+      }
     },
     result: {
       data: {
-        boat: {}
+        boat_aggregate: { aggregate: { totalCount: 0 } }
       }
     }
   },
   {
     request: {
-      query: gql`query{thumb(id:$id)}`,
-      variables: { id: 1}
+      query: gql`query{boats{id}}`,
+      variables: { id: 1 }
     },
-    error: new Error("Something went wrong")
+    result: {
+      data: {
+        boat_aggregate: { aggregate: { totalCount: 0 } }
+      }
+    }
   }
 ];
 

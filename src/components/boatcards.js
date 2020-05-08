@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import BoatCard from './boatcard';
 
-const query = (sort) => gql`
+export const query = (sort) => gql`
 query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
     boat_aggregate(where: $where) { aggregate { totalCount: count } }
     boat(limit: $limit, offset: $offset, order_by: ${sort}, where: $where) {
@@ -40,7 +40,6 @@ function BoatCards({
 }) {
 
   const [page, setPage] = useState(1);
-
   const { loading, error, data } = useQuery(
     query(`{${sortField}: ${sortDirection}}`),
     {
@@ -61,7 +60,7 @@ function BoatCards({
     }
   }
 
-  const totalCount = data.boat_aggregate.aggregate.totalCount;
+  const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; // should only happen in test
 
   if (onLoad) {
     onLoad(totalCount);
