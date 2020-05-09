@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/oga-boatregister-frontend/static/css/main.d1b05096.chunk.css",
-    "main.js": "/oga-boatregister-frontend/static/js/main.90e72691.chunk.js",
-    "main.js.map": "/oga-boatregister-frontend/static/js/main.90e72691.chunk.js.map",
+    "main.js": "/oga-boatregister-frontend/static/js/main.ceda1e13.chunk.js",
+    "main.js.map": "/oga-boatregister-frontend/static/js/main.ceda1e13.chunk.js.map",
     "runtime-main.js": "/oga-boatregister-frontend/static/js/runtime-main.ff857cf3.js",
     "runtime-main.js.map": "/oga-boatregister-frontend/static/js/runtime-main.ff857cf3.js.map",
     "static/js/2.4aecf8bc.chunk.js": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js",
     "static/js/2.4aecf8bc.chunk.js.map": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js.map",
     "index.html": "/oga-boatregister-frontend/index.html",
-    "precache-manifest.38b4d4bba27b0071d126c11b69edfcb2.js": "/oga-boatregister-frontend/precache-manifest.38b4d4bba27b0071d126c11b69edfcb2.js",
+    "precache-manifest.96a93eb2ffeeaf5da9e0792665780fad.js": "/oga-boatregister-frontend/precache-manifest.96a93eb2ffeeaf5da9e0792665780fad.js",
     "service-worker.js": "/oga-boatregister-frontend/service-worker.js",
     "static/css/main.d1b05096.chunk.css.map": "/oga-boatregister-frontend/static/css/main.d1b05096.chunk.css.map",
     "static/js/2.4aecf8bc.chunk.js.LICENSE.txt": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.ff857cf3.js",
     "static/js/2.4aecf8bc.chunk.js",
     "static/css/main.d1b05096.chunk.css",
-    "static/js/main.90e72691.chunk.js"
+    "static/js/main.ceda1e13.chunk.js"
   ]
 }

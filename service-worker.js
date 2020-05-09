@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/oga-boatregister-frontend/precache-manifest.38b4d4bba27b0071d126c11b69edfcb2.js"
+  "/oga-boatregister-frontend/precache-manifest.96a93eb2ffeeaf5da9e0792665780fad.js"
 );
 
 self.addEventListener('message', (event) => {

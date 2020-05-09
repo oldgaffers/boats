@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "63f076866343cf66ede87507beac7be1",
+    "revision": "e63ce0ae0ce1d50840e30802d4b4c919",
     "url": "/oga-boatregister-frontend/index.html"
   },
   {
-    "revision": "9d42303af4bae778a642",
+    "revision": "c43c779f5fccd2b1e2bd",
     "url": "/oga-boatregister-frontend/static/css/main.d1b05096.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "9d42303af4bae778a642",
-    "url": "/oga-boatregister-frontend/static/js/main.90e72691.chunk.js"
+    "revision": "c43c779f5fccd2b1e2bd",
+    "url": "/oga-boatregister-frontend/static/js/main.ceda1e13.chunk.js"
   },
   {
     "revision": "2a4053a61e83a0d3699f",
