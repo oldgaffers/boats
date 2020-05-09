@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/oga-boatregister-frontend/static/css/main.d1b05096.chunk.css",
-    "main.js": "/oga-boatregister-frontend/static/js/main.ceda1e13.chunk.js",
-    "main.js.map": "/oga-boatregister-frontend/static/js/main.ceda1e13.chunk.js.map",
-    "runtime-main.js": "/oga-boatregister-frontend/static/js/runtime-main.ff857cf3.js",
-    "runtime-main.js.map": "/oga-boatregister-frontend/static/js/runtime-main.ff857cf3.js.map",
-    "static/js/2.4aecf8bc.chunk.js": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js",
-    "static/js/2.4aecf8bc.chunk.js.map": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js.map",
-    "index.html": "/oga-boatregister-frontend/index.html",
-    "precache-manifest.96a93eb2ffeeaf5da9e0792665780fad.js": "/oga-boatregister-frontend/precache-manifest.96a93eb2ffeeaf5da9e0792665780fad.js",
-    "service-worker.js": "/oga-boatregister-frontend/service-worker.js",
-    "static/css/main.d1b05096.chunk.css.map": "/oga-boatregister-frontend/static/css/main.d1b05096.chunk.css.map",
-    "static/js/2.4aecf8bc.chunk.js.LICENSE.txt": "/oga-boatregister-frontend/static/js/2.4aecf8bc.chunk.js.LICENSE.txt"
+    "main.css": "/boats/static/css/main.d1b05096.chunk.css",
+    "main.js": "/boats/static/js/main.1eb3ee04.chunk.js",
+    "main.js.map": "/boats/static/js/main.1eb3ee04.chunk.js.map",
+    "runtime-main.js": "/boats/static/js/runtime-main.189a47b1.js",
+    "runtime-main.js.map": "/boats/static/js/runtime-main.189a47b1.js.map",
+    "static/js/2.1be7c384.chunk.js": "/boats/static/js/2.1be7c384.chunk.js",
+    "static/js/2.1be7c384.chunk.js.map": "/boats/static/js/2.1be7c384.chunk.js.map",
+    "index.html": "/boats/index.html",
+    "precache-manifest.a6a97f8c882e6500e55970239cc3ec59.js": "/boats/precache-manifest.a6a97f8c882e6500e55970239cc3ec59.js",
+    "service-worker.js": "/boats/service-worker.js",
+    "static/css/main.d1b05096.chunk.css.map": "/boats/static/css/main.d1b05096.chunk.css.map",
+    "static/js/2.1be7c384.chunk.js.LICENSE.txt": "/boats/static/js/2.1be7c384.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.ff857cf3.js",
-    "static/js/2.4aecf8bc.chunk.js",
+    "static/js/runtime-main.189a47b1.js",
+    "static/js/2.1be7c384.chunk.js",
     "static/css/main.d1b05096.chunk.css",
-    "static/js/main.ceda1e13.chunk.js"
+    "static/js/main.1eb3ee04.chunk.js"
   ]
 }
