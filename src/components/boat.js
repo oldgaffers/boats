@@ -8,80 +8,103 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // import TextList from './textlist';
 
 const boatQuery = (id) => gql`{
-    boat(id:${id}) {
-        name prev_name
-        year approximate_year_of_build
-        place_built home_country home_port
-        sail_no ssr_no nhsr_no fishing_no call_sign
-        other_registries nsbr_no off_reg_no port_reg
-        short_desc full_desc
-        for_sale sale_text price
-        images{
-            uri
-            copyright
-            height width title alt
-        }
-        class{
-            name
-            rigType
-            mainsailType
-            hullType
-            genericType
-        }
-        builder{name}
-        construction_material
-        construction_method
-        beam
-        draft
-        length_on_waterline
-        length_overall
-        propulsion{
-            propellor_type
-            propellor_position
-            propellor_blades
-            engine_fuel
-            engine_position
-            engine_date
-            engine_make
-            engine_power
-            hp
-            previous_engine
-        }
+    boat(where: {oga_no: {_eq: 315}}) {
+    id
+    name
+    previous_names
+    year
+    year_is_approximate
+    public
+    place_built
+    home_port
+    home_country
+    ssr
+    sail_number
+    nhsr
+    nsbr
+    oga_no
+    fishing_number
+    callsign
+    mssi
+    full_description
+    image_key
+    uk_part1
+    constructionMaterialByConstructionMaterial { name }
+    constructionMethodByConstructionMethod { name }
+    construction_details
+    construction_notes
+    designClassByDesignClass { name }
+    designerByDesigner { name }
+    draft
+    generic_type
+    handicap_data
+    hull_form
+    keel_laid
+    launched
+    length_on_deck
+    mainsail_type
+    rigTypeByRigType { name }
+    sail_type { name }
+    short_description
+    updated_at
+    website
+    genericTypeByGenericType { name }
+    builderByBuilder { name notes }
+    beam
+    air_draft
+    for_sale_state { text }
+    for_sales {
+      flexibility
+      offered
+      price_flexibility {
+        text
+      }
+      reduced
+      sales_text
+      sold
+      summary
+      updated_at
     }
+    engine_installations {
+      engine
+      installed
+      removed
+    }
+  }
   }`;
 
 const registration = {
-    prev_name: { label: 'Previous name/s' },
+    previous_names: { label: 'Previous name/s' },
     place_built: { label: 'Place built' },
     year: { label: 'Year of Build' },
-    approximate_year_of_build: { label: 'Approximate Year of Build' },
-    sail_no: { label: 'Sail No.' },
+    year_is_approximate: { label: 'ish' },
+    sail_number: { label: 'Sail No.' },
     home_country: { label: 'Home Country' },
-    ssr_no: { label: 'Small Ships Registry no. (SSR)' },
-    nhsr_no: { label: 'National Register of Historic Vessels no. (NRHV)' },
-    fishing_no: { label: 'Fishing No.' },
-    call_sign: { label: 'Call Sign' },
-    other_registries: { label: 'Other Registrations' },
-    nsbr_no: { label: 'National Small Boat Register' },
-    off_reg_no: { label: 'Official Registration' },
-    port_reg: { label: 'Port of Registry' }
+    ssr: { label: 'Small Ships Registry no. (SSR)' },
+    nhsr: { label: 'National Register of Historic Vessels no. (NRHV)' },
+    fishing_number: { label: 'Fishing No.' },
+    callsign: { label: 'Call Sign' },
+    // other_registries: { label: 'Other Registrations' },
+    nsbr: { label: 'National Small Boat Register' },
+    uk_part1: { label: 'Official Registration' }
 };
 
 const construction = {
-    construction_method: { label: 'Construction method' },
-    construction_material: { label: 'Construction material' },
-    class: {
-        hullType: { label: 'Hull Type' },
-        genericType: { label: 'Generic Type ' },
+    constructionMaterialByConstructionMaterial: { 
+      name: { label: 'Construction material' }
     },
-    builder: { name: { label: 'Builder' } }
+    constructionMethodByConstructionMethod: {
+      name: { label: 'Construction method' }
+    },
+    hull_form: { label: 'Hull form' },
+    genericTypeByGenericType: { name: { label: 'Generic Type ' } },
+    builderByBuilder: { name:  { label: 'Builder' } }
 };
 
 const hull = {
-    length_overall: { label: 'Length on deck (LOD):', unit: 'ft' },
-    length_on_waterline: { label: 'Length on waterline (LWL):', unit: 'ft' },
-    beam: { label: 'Beam', unit: 'ft' },
-    draft: { label: 'Draft', unit: 'ft' }
+    length_on_deck: { label: 'Length on deck (LOD):', unit: 'm' },
+    beam: { label: 'Beam', unit: 'm' },
+    draft: { label: 'Draft', unit: 'm' }
 };
 
 const engine = {
@@ -149,20 +172,20 @@ export default function Boat({ id }) {
 
     return (
     <MuiThemeProvider>
-    <Grid columns={2} divided>
-        <Grid.Row>
-            <Grid.Column width={10}>
+    <Grid>
+        <div>
+            <div>
                 <Typography variant="h1">{boat.name}</Typography>
-            </Grid.Column>
-            <Grid.Column width={1}>
+            </div>
+            <div>
                 <Typography variant="h1">{boat.year}</Typography>
-            </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-            <Grid.Column width={13}>
+            </div>
+        </div>
+        <div>
+            <div>
                 <ImageCarousel images={boat.images} />
-            </Grid.Column>
-            <Grid.Column width={3}>
+            </div>
+            <div>
                 <Typography variant="h2">Details</Typography>
                 {
                     /*
@@ -175,11 +198,11 @@ export default function Boat({ id }) {
                 </List>
                 */
                 }
-            </Grid.Column>
-        </Grid.Row>
-        <Grid.Row width={16}>
+            </div>
+        </div>
+        <div width={16}>
            { /*<Tab panes={panes} />*/}
-        </Grid.Row>
+        </div>
     </Grid>
     </MuiThemeProvider>
     );
