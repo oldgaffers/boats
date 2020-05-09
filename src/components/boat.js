@@ -1,25 +1,93 @@
-import React, { useEffect } from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import RigAndSails from './rigandsails';
 import ImageCarousel from './imagecarousel';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import clsx from 'clsx';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Drawer from '@material-ui/core/Drawer';
+import Box from '@material-ui/core/Box';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import List from '@material-ui/core/List';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Button from '@material-ui/core/Button';
+import Icon from '@material-ui/core/Icon';
+import TextField from '@material-ui/core/TextField';
+import AppBar from '@material-ui/core/AppBar';
+import SwipeableViews from 'react-swipeable-views';
+import TabPanel from './tabpanel';
+import ConditionalText from './conditionaltext';
+import SailTable from './sailtable';
+import G from 'glob';
+
+function m2f(val) {
+    if(val) {
+        return `${(val*100/2.54/12).toFixed(2)} ft`;
+    }
+}
+
+const drawerWidth = 240;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  title: {
+    flexGrow: 1,
+  },
+  drawerPaper: {
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width: theme.spacing(7),
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9),
+    },
+  },
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 240,
+  },
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
 
 const boatQuery = (id) => gql`{
-    boat(where: {oga_no: {_eq: 315}}) {
+    boat(where: {oga_no: {_eq: ${id}}}) {
     id
     name
     previous_names
@@ -64,12 +132,11 @@ const boatQuery = (id) => gql`{
     beam
     air_draft
     for_sale_state { text }
-    for_sales {
+    for_sales(limit: 1, order_by: {updated_at: desc}) {
+      asking_price
       flexibility
       offered
-      price_flexibility {
-        text
-      }
+      price_flexibility { text }
       reduced
       sales_text
       sold
@@ -84,40 +151,6 @@ const boatQuery = (id) => gql`{
   }
   }`;
 
-const registration = {
-    previous_names: { label: 'Previous name/s' },
-    place_built: { label: 'Place built' },
-    year: { label: 'Year of Build' },
-    year_is_approximate: { label: 'ish' },
-    sail_number: { label: 'Sail No.' },
-    home_country: { label: 'Home Country' },
-    ssr: { label: 'Small Ships Registry no. (SSR)' },
-    nhsr: { label: 'National Register of Historic Vessels no. (NRHV)' },
-    fishing_number: { label: 'Fishing No.' },
-    callsign: { label: 'Call Sign' },
-    // other_registries: { label: 'Other Registrations' },
-    nsbr: { label: 'National Small Boat Register' },
-    uk_part1: { label: 'Official Registration' }
-};
-
-const construction = {
-    constructionMaterialByConstructionMaterial: { 
-      name: { label: 'Construction material' }
-    },
-    constructionMethodByConstructionMethod: {
-      name: { label: 'Construction method' }
-    },
-    hull_form: { label: 'Hull form' },
-    genericTypeByGenericType: { name: { label: 'Generic Type ' } },
-    builderByBuilder: { name:  { label: 'Builder' } }
-};
-
-const hull = {
-    length_on_deck: { label: 'Length on deck (LOD):', unit: 'm' },
-    beam: { label: 'Beam', unit: 'm' },
-    draft: { label: 'Draft', unit: 'm' }
-};
-
 const engine = {
     engine_make: { label: 'Engine make:' },
     engine_power: { label: 'Engine power:' },
@@ -129,183 +162,223 @@ const engine = {
     propellor_position: { label: 'Propeller position:' }
 };
 
-export function Boat1({ id }) {
-    
-    const { loading, error, data } = useQuery(boatQuery(id));
 
-    useEffect(() => {
-        if (data) {
-            document.title = data.boat.name;
-        }
-    });
-
-    const rigItems = RigAndSails({ id }); // uses hooks so must be unconditional
-
-    console.log(registration, construction, hull, engine, rigItems);
-
-    if (loading) return <p>Loading...</p>
-    if (error) return <p>Error: (Boat)</p>;
-    const boat = data.boat;
-
-    /*
-    const panes = [
-        { menuItem: 'Registration and location', render: () => <Tab.Pane><List><ListItems labels={registration} boat={boat} /></List></Tab.Pane> },
-        { menuItem: 'Construction', render: () => <Tab.Pane><List><ListItems labels={construction} boat={boat} /></List></Tab.Pane> },
-        { menuItem: 'Hull', render: () => <Tab.Pane><List><ListItems labels={hull} boat={boat} /></List></Tab.Pane> },
-    ];
-    
-    if (rigItems.length > 0) {
-        panes.push({ menuItem: 'Rig and Sails', render: () => <Tab.Pane><List>{rigItems}</List></Tab.Pane> });
-    }
-    const engineItems = ListItems({ labels: engine, boat: boat.propulsion });
-    if (engineItems.length > 0) {
-        panes.push({ menuItem: 'Engine', render: () => <Tab.Pane><List>{engineItems}</List></Tab.Pane> });
-    }
-    
-
-    if (boat.full_desc) {
-        panes.unshift(
-            { menuItem: 'Full Description', render: () => <Tab.Pane dangerouslySetInnerHTML={{ __html: boat.full_desc }} /> },
-        );
-    }
-    
-
-    if (boat.for_sale) {
-        let text = boat.sale_text;
-        if (boat.price) {
-            text += "<b>Price: </b>" + boat.price;
-        }
-        panes.unshift({
-            menuItem: 'For Sale', render: () => <Tab.Pane dangerouslySetInnerHTML={{ __html: text }} />
-        });
-    }
-    */
-
-    return (
-    <MuiThemeProvider>
-    <Grid>
-        <div>
-            <div>
-                <Typography variant="h1">{boat.name}</Typography>
-            </div>
-            <div>
-                <Typography variant="h1">{boat.year}</Typography>
-            </div>
-        </div>
-        <div>
-            <div>
-                <ImageCarousel images={boat.images} />
-            </div>
-            <div>
-                <Typography variant="h2">Details</Typography>
-                {
-                    /*
-                <List>
-                    <List.Item header='Boat OGA no:' content={id} />
-                    <List.Item header='Mainsail type:' content={boat.class.mainsailType} />
-                    <List.Item header='Rig type:' content={boat.class.rigType} />
-                    <List.Item header='Home port or other location:' content={boat.home_port} />
-                    <ListItem><div dangerouslySetInnerHTML={{ __html: boat.short_desc }}></div></ListItem>
-                </List>
-                */
-                }
-            </div>
-        </div>
-        <div width={16}>
-           { /*<Tab panes={panes} />*/}
-        </div>
-    </Grid>
-    </MuiThemeProvider>
-    );
-};
-
-
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-  },
-}));
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export default function Boat({ id }) {
   const classes = useStyles();
+  const theme = useTheme();
+  const [value, setValue] = useState(0);
+  const [open, setOpen] = useState(true);
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const { loading, error, data } = useQuery(boatQuery(id));
+
+  useEffect(() => {
+      if (data) {
+          document.title = data.boat[0].name;
+      }
+  });
+
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error: (Boat)</p>;
+  const boat = data.boat[0];
+  console.log(boat);
+
+  const panes = [
+    { title: 'Registration and location', children: (
+        <>
+        <ConditionalText value={boat.previous_names} label="Previous name/s"/>
+        <ConditionalText value={boat.place_built} label="Place built"/>
+        <ConditionalText value={boat.home_country} label="Home Country"/>
+        <ConditionalText value={boat.year_is_approximate?'around ':''+boat.year} label="Year of Build"/>
+        <ConditionalText value={boat.sail_number} label="Sail No."/>
+        <ConditionalText value={boat.ssr} label="Small Ships Registry no. (SSR)"/>
+        <ConditionalText value={boat.nhsr} label="National Register of Historic Vessels no. (NRHV)"/>
+        <ConditionalText value={boat.fishing_number} label="Fishing No."/>
+        <ConditionalText value={boat.callsign} label="Call Sign"/>
+        <ConditionalText value={boat.nsbr} label="National Small Boat Register"/>
+        <ConditionalText value={boat.uk_part1} label="Official Registration" />     
+        </>)
+     },
+    { title: 'Construction', children: (
+        <>
+        <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
+        <ConditionalText value={boat.hull_form.replace(/_/g, ' ')} label="Hull form"/>
+        <ConditionalText value={boat.builderByBuilder} label="Builder"/>
+        <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
+        <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
+        <ConditionalText value={boat.construction_details} label="Construction details"/>
+        <ConditionalText value={boat.construction_notes} label="Construction notes"/>
+        </>
+        )    
+    },
+    { title: 'Hull', children: (<>
+        <ConditionalText value={m2f(boat.length_on_deck)} label="Length on deck (LOD)"/>
+        <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_overall:undefined)}/>
+        <ConditionalText label="Waterline Length (LWL)" value={m2f(boat.handicap_data?boat.handicap_data.length_on_waterline:undefined)}/>
+        <ConditionalText value={m2f(boat.beam)} label="Beam"/>
+        <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
+    </>)},
+  ];
+
+  if (boat.full_description) {
+    panes.unshift(
+        { title: 'Full Description', children: (<div dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
+    );
+  }
+  
+  if (boat.handicap_data) {
+    const data = boat.handicap_data;
+    const sails = [];
+    Object.entries(data).forEach(([key, value]) => {
+        if (value.luff) {
+            sails.push({ name: key, ...value });
+        }
+    });
+    if(data.main || data.thcf || data.calculated_thcf || data.fore_triangle_base) {
+        panes.push({ title: 'Rig and Sails', children: (
+            <>
+            <ConditionalText label="fore triangle base" value={m2f(data.fore_triangle_base)}/>
+            <ConditionalText label="fore triangle height" value={m2f(data.fore_triangle_height)}/>
+            <ConditionalText label="Calculated THCF" value={data.calculated_thcf}/>
+            <ConditionalText label="THCF" value={data.thcf}/>
+            <SailTable classes={classes} rows={sails}/>
+            </>
+        )});    
+    }
+    //if (engineItems.length > 0) {
+    //  panes.push({ title: 'Engine', render: () => <Tab.Pane><List>{engineItems}</List></Tab.Pane> });
+    //}
+  }
+/*
+    for_sales(limit: 1, order_by: {updated_at: desc}) {
+      asking_price
+      flexibility
+      offered
+      price_flexibility { text }
+      reduced
+      sales_text
+      sold
+      summary
+      updated_at
+    }
+*/
+  if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
+    const fs = boat.for_sales[0];
+    const price = new Intl.NumberFormat('en-GB', { currency: 'GBP', style: 'currency' }
+    ).format(fs.asking_price);
+
+    panes.unshift(
+        { title: 'For Sale', children: (
+             <>
+            <ConditionalText label="Price" value={price}/>
+            <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
+            <Box width={1/3}>
+            <form className={classes.root} noValidate autoComplete="off">
+            <TextField fullWidth="true" type="email" id="sender-email" label="Enter your email to make an enquiry" />
+            <Button
+                size="small"
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    endIcon={<Icon>send</Icon>}
+                >Send</Button>
+            </form>
+            </Box>
+            </>
+        ) },
+    );
+  }
+  
+ const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
 
   return (
-    <React.Fragment>
+    <div className={classes.root}>
       <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <CameraIcon className={classes.icon} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Album layout
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <main>
-        {/* Hero unit */}
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Album layout
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Something short and leading about the collection below—its contents, the creator, etc.
-              Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-              entirely.
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justify="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
-          </Container>
+      <Drawer
+        variant="permanent"
+        classes={{
+          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+        }}
+        open={open}
+      >
+        <div className={classes.toolbarIcon}>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
         </div>
-          {/* End hero unit */}
-      {/* Footer */}
-      <footer className={classes.footer}>
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-          Something here to give the footer a purpose!
-        </Typography>
-      </footer>
-      {/* End footer */}
+        <Divider />
+        <List>{[1,2,3,4]}</List>
+        <Divider />
+        <List>{['a','b','c']}</List>
+      </Drawer>
+      <main className={classes.content}>
+        <Container maxWidth="lg" className={classes.container}>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={8} lg={9}>
+                <Typography variant="h3" component="h3">{boat.name}</Typography>
+            </Grid>
+            <Grid item xs={12} md={4} lg={3}>
+                <Typography variant="h3" component="h3">{boat.year}</Typography>
+            </Grid>
+            <Grid item xs={12} md={8} lg={9}>
+              <Paper className={fixedHeightPaper}>
+                <p>Chart was here</p>
+                <ImageCarousel images={boat.images} />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}>
+                <Typography variant="h4" component="h4">Details</Typography>
+                <ConditionalText value={boat.oga_no} label="OGA no"/>
+                <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
+                <ConditionalText value={boat.rigTypeByRigType.name} label="Rig"/>
+                <ConditionalText value={boat.home_port} label="Home port or other location"/>
+                <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
+                </Paper>
+            </Grid>
+            {/* Recent Orders */}
+            <Grid item xs={12}>
+            <AppBar position="static" color="default">
+                <Tabs
+                onChange={handleChange}
+                    value={value}
+                    indicatorColor="primary"
+                    textColor="primary"
+                    centered
+                >
+                { panes.map((pane, i) => (<Tab key={i} label={pane.title}/>))}
+                </Tabs>
+                </AppBar>
+                <SwipeableViews
+                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                    index={value}
+                    onChangeIndex={handleChangeIndex}
+                >
+                {panes.map((pane, i) => (
+                    <TabPanel key={i} value={value} index={i}>
+                        {pane.children}
+                    </TabPanel>
+                ))}
+                </SwipeableViews>
+            </Grid>
+          </Grid>
+          <Box pt={4}>
+            <p>Copyright was here</p>
+          </Box>
+        </Container>
+      </main>
+    </div>
   );
 }
