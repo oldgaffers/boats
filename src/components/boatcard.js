@@ -96,7 +96,7 @@ export default function BoatCard({ boat }) {
       </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" href={'/boats/'+boat.oga_no} >Learn More</Button>
+        <Button size="small" href={'/boat/'+boat.oga_no} >Learn More</Button>
       </CardActions>
     </Card>
   );
