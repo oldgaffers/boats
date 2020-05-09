@@ -4,6 +4,44 @@ import { Pagination } from '@material-ui/lab';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import BoatCard from './boatcard';
+import { makeStyles } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Container from '@material-ui/core/Container';
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '100%',
+  },
+  cardMediaSmall: {
+    paddingTop: '56.25%',
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+}));
 
 export const query = (sort) => gql`
 query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
@@ -38,6 +76,7 @@ function BoatCards({
     console.log('boat cards loaded total is', n);
   },
 }) {
+  const classes = useStyles();
 
   const [page, setPage] = useState(1);
   const { loading, error, data } = useQuery(
@@ -74,26 +113,33 @@ function BoatCards({
 
   if (totalCount > 0) {
     return (
-      <div>
+    <React.Fragment>
+      <CssBaseline />
+      <main>
+      <Container className={classes.cardGrid} maxWidth="md">
         <Pagination
-          count={pages}
-          variant="outlined"
-          shape="rounded"
-          onChange={handlePageChange}
-        />
-        <Grid container direction="row" justify="center" alignItems="center" spacing={12}>
+            count={pages}
+            variant="outlined"
+            shape="rounded"
+            onChange={handlePageChange}
+          />
+          <Grid container spacing={4}>
+
           {data.boat.map((boat) => (
-            <BoatCard key={boat.oga_no} boat={boat} />
+            <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
+              <BoatCard key={boat.oga_no} boat={boat} classes={classes} />
+            </Grid>
           ))}
-          ;
-        </Grid>
-        <Pagination
+          </Grid>
+          <Pagination
           count={pages}
           variant="outlined"
           shape="rounded"
           onChange={handlePageChange}
         />
-      </div>
+        </Container>
+      </main>
+      </React.Fragment>
     );
   }
   return (

@@ -1,37 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import { 
     Button, Card, CardActions, CardActionArea, CardContent, CardMedia, Typography
 } from '@material-ui/core';
 import TextList from './textlist';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-
-const useStyles = makeStyles({
-  noimage: {
-    width: 300,
-    minHeight: 200,
-  },
-  root: {
-    width: 300,
-    minHeight: 640,
-  },
-  title: {
-    fontSize: 14,
-  },
-  text: {
-    minHeight: 250,
-  },
-  textnoimage: {
-    minHeight: 150,
-  },
-  pos: {
-    marginBottom: 6,
-  },
-  media: {
-    height: 300,
-  }
-});
 
 const wanted = {
     year: { label: 'Year Built', access: (n)=>n},
@@ -43,14 +16,12 @@ const wanted = {
     previous_names: { label: 'Was', access: (n)=>(n.length>0)?n.join(', '):undefined}
 };
 
-export default function BoatCard({ boat }) {
+export default function BoatCard({ boat, classes }) {
 
   const { loading, error, data } = useQuery
     (gql`query{thumb(id:${boat.oga_no})}`,
     { skip: !boat.image_key }
     );
-
-  const classes = useStyles();
 
   if (error) return <p>Error: (BoatCards)</p>;
   
@@ -75,18 +46,17 @@ export default function BoatCard({ boat }) {
     return '';
   }
 
-
   return (
-    <Card className={image ? classes.root : classes.noimage}>
+    <Card className={image ? classes.card : classes.cardSmall}>
     <CardActionArea>
         {(image)?(
         <CardMedia
-          className={classes.media}
+          className={classes.cardMedia}
           image={image}
           title={boat.name}
         />):''}
-      <CardContent className={image ? classes.text : classes.textnoimage} >
-        <Typography variant="h5" component="h2">
+      <CardContent className={classes.cardContent} >
+        <Typography gutterBottom variant="h5" component="h2">
         {boat.name} ({boat.oga_no})
         </Typography>
         <Typography variant="body2" 
@@ -96,7 +66,7 @@ export default function BoatCard({ boat }) {
       </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" href={'/boat/'+boat.oga_no} >Learn More</Button>
+        <Button size="small" href={'/boat/'+boat.oga_no} color="primary">Learn More</Button>
       </CardActions>
     </Card>
   );
