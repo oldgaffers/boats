@@ -341,7 +341,7 @@ const engine = {
               <Button size="small"
               variant="contained"
               className={classes.button}
-               href={'/'} >See more boats</Button>
+               href={'/boats'} >See more boats</Button>
                </Grid>
                <Grid item xs={2} >
                <TextField fullWidth="true" type="email" id="sender-email" label="Enter your email" />

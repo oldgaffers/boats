@@ -16,6 +16,7 @@ const client = new ApolloClient({
 });
 
 const routes = {
+  "/": () => <ApolloProvider client={client}><BrowseBoats /></ApolloProvider>, // keeps tests working
   "/boats/": () => <ApolloProvider client={client}><BrowseBoats /></ApolloProvider>,
   "/boats/boat/:id": ({id}) => <ApolloProvider client={client}><Boat id={id}/></ApolloProvider>,
 };
