@@ -12,7 +12,7 @@ function Picker({ options, id, label, onChange, defaultValue }) {
         id={id}
         options={options}
         getOptionSelected={(t,v)=>(t.name === v.name)}
-        getOptionLabel={(option) => option.name}
+        getOptionLabel={(option) => option.name?option.name:''}
         onInputChange={(_, value) => {
             setValue(value);
             onChange(id, value);
