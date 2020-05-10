@@ -5,7 +5,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import ImageCarousel from './imagecarousel';
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Drawer from '@material-ui/core/Drawer';
@@ -25,7 +24,7 @@ import SwipeableViews from 'react-swipeable-views';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
-import G from 'glob';
+import SmugMugGallery from './smugmuggallery';
 
 function m2f(val) {
     if(val) {
@@ -79,11 +78,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    height: 600,
   },
   button: {
     margin: theme.spacing(1),
   },
+  iframe: {
+    border: 'none !important'
+  }
 }));
 
 const boatQuery = (id) => gql`{
@@ -191,7 +193,7 @@ export default function Boat({ id }) {
 
   const panes = [
     { title: 'Registration and location', children: (
-        <>
+        <Paper>
         <ConditionalText value={boat.previous_names} label="Previous name/s"/>
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={boat.home_country} label="Home Country"/>
@@ -203,10 +205,10 @@ export default function Boat({ id }) {
         <ConditionalText value={boat.callsign} label="Call Sign"/>
         <ConditionalText value={boat.nsbr} label="National Small Boat Register"/>
         <ConditionalText value={boat.uk_part1} label="Official Registration" />     
-        </>)
+        </Paper>)
      },
     { title: 'Construction', children: (
-        <>
+        <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
         <ConditionalText value={boat.hull_form.replace(/_/g, ' ')} label="Hull form"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
@@ -214,21 +216,21 @@ export default function Boat({ id }) {
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
         <ConditionalText value={boat.construction_details} label="Construction details"/>
         <ConditionalText value={boat.construction_notes} label="Construction notes"/>
-        </>
+        </Paper>
         )    
     },
-    { title: 'Hull', children: (<>
+    { title: 'Hull', children: (<Paper>
         <ConditionalText value={m2f(boat.length_on_deck)} label="Length on deck (LOD)"/>
         <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_overall:undefined)}/>
         <ConditionalText label="Waterline Length (LWL)" value={m2f(boat.handicap_data?boat.handicap_data.length_on_waterline:undefined)}/>
         <ConditionalText value={m2f(boat.beam)} label="Beam"/>
         <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
-    </>)},
+    </Paper>)},
   ];
 
   if (boat.full_description) {
     panes.unshift(
-        { title: 'Full Description', children: (<div dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
+        { title: 'Full Description', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
     );
   }
   
@@ -242,13 +244,13 @@ export default function Boat({ id }) {
     });
     if(data.main || data.thcf || data.calculated_thcf || data.fore_triangle_base) {
         panes.push({ title: 'Rig and Sails', children: (
-            <>
+            <Paper>
             <ConditionalText label="fore triangle base" value={m2f(data.fore_triangle_base)}/>
             <ConditionalText label="fore triangle height" value={m2f(data.fore_triangle_height)}/>
             <ConditionalText label="Calculated THCF" value={data.calculated_thcf}/>
             <ConditionalText label="THCF" value={data.thcf}/>
             <SailTable classes={classes} rows={sails}/>
-            </>
+            </Paper>
         )});    
     }
     //if (engineItems.length > 0) {
@@ -275,7 +277,7 @@ export default function Boat({ id }) {
 
     panes.unshift(
         { title: 'For Sale', children: (
-             <>
+             <Paper>
             <ConditionalText label="Price" value={price}/>
             <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
             <Box width={1/3}>
@@ -290,7 +292,7 @@ export default function Boat({ id }) {
                 >Send</Button>
             </form>
             </Box>
-            </>
+            </Paper>
         ) },
     );
   }
@@ -334,8 +336,7 @@ export default function Boat({ id }) {
             </Grid>
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <p>Chart was here</p>
-                <ImageCarousel images={boat.images} />
+                <SmugMugGallery classes={classes} albumKey={boat.image_key} />
               </Paper>
             </Grid>
             <Grid item xs={12} md={4} lg={3}>
