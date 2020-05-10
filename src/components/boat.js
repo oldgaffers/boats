@@ -7,13 +7,8 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import List from '@material-ui/core/List';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
@@ -153,30 +148,11 @@ const boatQuery = (id) => gql`{
   }
   }`;
 
-const engine = {
-    engine_make: { label: 'Engine make:' },
-    engine_power: { label: 'Engine power:' },
-    engine_date: { label: 'Engine date:' },
-    engine_fuel: { label: 'Engine fuel:' },
-    previous_engine: { label: 'Previous engine(s):' },
-    propellor_blades: { label: 'Propeller blades:' },
-    propellor_type: { label: 'Propeller type:' },
-    propellor_position: { label: 'Propeller position:' }
-};
-
-
 
 export default function Boat({ id }) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
-  const [open, setOpen] = useState(true);
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const { loading, error, data } = useQuery(boatQuery(id));
 
@@ -253,23 +229,25 @@ export default function Boat({ id }) {
             </Paper>
         )});    
     }
+
+/*
+const engine = {
+    engine_make: { label: 'Engine make:' },
+    engine_power: { label: 'Engine power:' },
+    engine_date: { label: 'Engine date:' },
+    engine_fuel: { label: 'Engine fuel:' },
+    previous_engine: { label: 'Previous engine(s):' },
+    propellor_blades: { label: 'Propeller blades:' },
+    propellor_type: { label: 'Propeller type:' },
+    propellor_position: { label: 'Propeller position:' }
+};
+
+*/
     //if (engineItems.length > 0) {
     //  panes.push({ title: 'Engine', render: () => <Tab.Pane><List>{engineItems}</List></Tab.Pane> });
     //}
   }
-/*
-    for_sales(limit: 1, order_by: {updated_at: desc}) {
-      asking_price
-      flexibility
-      offered
-      price_flexibility { text }
-      reduced
-      sales_text
-      sold
-      summary
-      updated_at
-    }
-*/
+
   if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
     const fs = boat.for_sales[0];
     const price = new Intl.NumberFormat('en-GB', { currency: 'GBP', style: 'currency' }
@@ -308,23 +286,6 @@ export default function Boat({ id }) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{[1,2,3,4]}</List>
-        <Divider />
-        <List>{['a','b','c']}</List>
-      </Drawer>
       <main className={classes.content}>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
@@ -349,9 +310,8 @@ export default function Boat({ id }) {
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
                 </Paper>
             </Grid>
-            {/* Recent Orders */}
             <Grid item xs={12}>
-            <AppBar position="static" color="default">
+            <AppBar position="static" color="white">
                 <Tabs
                 onChange={handleChange}
                     value={value}
@@ -375,9 +335,39 @@ export default function Boat({ id }) {
                 </SwipeableViews>
             </Grid>
           </Grid>
-          <Box pt={4}>
-            <p>Copyright was here</p>
-          </Box>
+            <Paper>
+              <Grid container direction="row" alignItems="flex-end">
+              <Grid item xs={2}>
+              <Button size="small"
+              variant="contained"
+              className={classes.button}
+               href={'/'} >See more boats</Button>
+               </Grid>
+               <Grid item xs={2} >
+               <TextField fullWidth="true" type="email" id="sender-email" label="Enter your email" />
+               </Grid>
+               <Grid item xs={7} >
+              <Button size="small" 
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<Icon>send</Icon>}
+              >Contact the owner</Button>
+              <Button size="small" 
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<Icon>send</Icon>}
+              >Add pictures / text</Button>
+              <Button size="small" 
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              endIcon={<Icon>send</Icon>}
+              >Request a handicap</Button>
+              </Grid>
+              </Grid>
+            </Paper>
         </Container>
       </main>
     </div>
