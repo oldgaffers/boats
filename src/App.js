@@ -5,7 +5,6 @@ import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { useRoutes } from 'hookrouter';
 import './App.css';
-import Main from './components/main';
 import BrowseBoats from './components/browseboats';
 import Boat from './components/boat';
 
