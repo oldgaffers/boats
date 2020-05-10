@@ -128,6 +128,10 @@ function BrowseBoats({ window }) {
     setWhere({ _and: all });
   }
 
+  function ListItemLink(props) {
+    return <ListItem button component="a" {...props} />;
+  }
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -137,7 +141,11 @@ function BrowseBoats({ window }) {
             <ListItemIcon>
             {[(<BoatIcon/>), (<Icon>person</Icon>), (<Icon>build</Icon>), (<FleetIcon/>)][index]}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemLink href={
+              ["index.html","designers","builders","fleets"][index]
+            }>
+              <ListItemText primary={text} />
+            </ListItemLink>
           </ListItem>
         ))}
       </List>
@@ -148,7 +156,11 @@ function BrowseBoats({ window }) {
             <ListItemIcon>
               {[(<AboutIcon/>), (<Icon>people_alt</Icon>), (<Icon>bug_report</Icon>), (<Icon>code</Icon>)][index]}
             </ListItemIcon>
-            <ListItemText primary={text} />
+            <ListItemLink href={
+              ["about","editors","support","tech"][index]
+            }>
+              <ListItemText primary={text} />
+            </ListItemLink>
           </ListItem>
         ))}
       </List>
