@@ -19,7 +19,8 @@ const client = new ApolloClient({
 const routes = {
   "/": () => <ApolloProvider client={client}><BrowseBoats /></ApolloProvider>,
   "/boat/:id": ({id}) => <ApolloProvider client={client}><Boat id={id}/></ApolloProvider>,
-  "/iframe": () => <Main />
+  "/boats/": () => <ApolloProvider client={client}><BrowseBoats /></ApolloProvider>,
+  "/boats/boat/:id": ({id}) => <ApolloProvider client={client}><Boat id={id}/></ApolloProvider>,
 };
 
 function App() {
