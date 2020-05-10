@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Grid } from '@material-ui/core';
-import { Pagination } from '@material-ui/lab';
-import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import Grid from '@material-ui/core/Grid';
+import { Pagination } from '@material-ui/lab';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import BoatCard from './boatcard';
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
+import gql from 'graphql-tag';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -113,24 +113,22 @@ function BoatCards({
 
   if (totalCount > 0) {
     return (
-    <React.Fragment>
-      <CssBaseline />
-      <main>
       <Container className={classes.cardGrid} maxWidth="md">
-        <Pagination
+        <Pagination 
             count={pages}
             variant="outlined"
             shape="rounded"
             onChange={handlePageChange}
           />
+          <Box py={1} ></Box>
           <Grid container spacing={4}>
-
           {data.boat.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
               <BoatCard key={boat.oga_no} boat={boat} classes={classes} />
             </Grid>
           ))}
           </Grid>
+          <Box py={1} ></Box>
           <Pagination
           count={pages}
           variant="outlined"
@@ -138,8 +136,6 @@ function BoatCards({
           onChange={handlePageChange}
         />
         </Container>
-      </main>
-      </React.Fragment>
     );
   }
   return (
