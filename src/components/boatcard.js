@@ -3,8 +3,6 @@ import {
     Button, Card, CardActions, CardActionArea, CardContent, CardMedia, Typography
 } from '@material-ui/core';
 import TextList from './textlist';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
 
 const wanted = {
     year: { label: 'Year Built', access: (n)=>n},
@@ -18,23 +16,6 @@ const wanted = {
 
 export default function BoatCard({ boat, classes }) {
 
-  const { loading, error, data } = useQuery
-    (gql`query{thumb(id:${boat.oga_no})}`,
-    { skip: !boat.image_key }
-    );
-
-  if (error) return <p>Error: (BoatCards)</p>;
-  
-  if (loading) {
-    if (data) {
-      console.log('Loading set but data here');
-    } else {
-      return <p>Loading...</p>;
-    }
-  }
-
-  const image = data && data.thumb;
-
   function normaliseDescription(boat) {
     if (boat && boat.short_description) {
       const desc = boat.short_description.trim();
@@ -47,12 +28,12 @@ export default function BoatCard({ boat, classes }) {
   }
 
   return (
-    <Card className={image ? classes.card : classes.cardSmall}>
+    <Card className={boat.thumb ? classes.card : classes.cardSmall}>
     <CardActionArea>
-        {(image)?(
+        {(boat.thumb)?(
         <CardMedia
           className={classes.cardMedia}
-          image={image}
+          image={boat.thumb}
           title={boat.name}
         />):''}
       <CardContent className={classes.cardContent} >

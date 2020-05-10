@@ -47,17 +47,12 @@ export const query = (sort) => gql`
 query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
     boat_aggregate(where: $where) { aggregate { totalCount: count } }
     boat(limit: $limit, offset: $offset, order_by: ${sort}, where: $where) {
-      id name
-      oga_no
-      place_built
-      previous_names
-      home_port
-      short_description
-      year
+      name oga_no image_key
+      place_built previous_names home_port
+      short_description year
       builderByBuilder{name}
       designerByDesigner{name}
-      design_class
-      image_key
+      design_class thumb
     }
   }`;
 
