@@ -66,7 +66,7 @@ export default function BoatCard({ boat, classes }) {
       </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" href={'/boat/'+boat.oga_no} color="primary">Learn More</Button>
+        <Button size="small" href={'boat/'+boat.oga_no} color="primary">Learn More</Button>
       </CardActions>
     </Card>
   );
