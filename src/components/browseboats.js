@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
+import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -216,6 +217,7 @@ function BrowseBoats({ window }) {
             <Icon>menu</Icon>
           </IconButton>
         </Grid>
+        <Container>
         <Typography variant="subtitle2">
           We have hundreds of boats with pictures and many more waiting for
           pictures and more information.
@@ -249,6 +251,7 @@ function BrowseBoats({ window }) {
           }
           onFilterChange={updateFilters}
         />
+        </Container>
         <Divider />
         <BoatCards
           boatsPerPage={boatsPerPage}
