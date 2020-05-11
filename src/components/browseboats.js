@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
+import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Drawer from '@material-ui/core/Drawer';
@@ -204,7 +204,7 @@ function BrowseBoats({ window }) {
           </Drawer>
         </Hidden>
       </nav>
-      <Container>
+      <Paper>
         <Grid container direction="row">
           <IconButton
             color="inherit"
@@ -215,7 +215,6 @@ function BrowseBoats({ window }) {
           >
             <Icon>menu</Icon>
           </IconButton>
-          <h3>Welcome to the OGA Boat Register</h3>
         </Grid>
         <Typography variant="subtitle2">
           We have hundreds of boats with pictures and many more waiting for
@@ -271,7 +270,7 @@ function BrowseBoats({ window }) {
             yacht designs
           </ListItem>
         </List>
-      </Container>
+      </Paper>
     </div>
   );
 }
