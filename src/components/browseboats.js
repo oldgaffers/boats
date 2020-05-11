@@ -5,39 +5,22 @@ import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
-import Drawer from '@material-ui/core/Drawer';
-import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import Icon from '@material-ui/core/Icon';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import FleetIcon from './fleeticon';
-import BoatIcon from './boaticon';
-import AboutIcon from './abouticon';
-
-const drawerWidth = 240;
+import LeftMenu from './leftmenu';
+import DrawerController from './drawercontroller';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: drawerWidth,
-      flexShrink: 0,
-    },
-  },
-  appBar: {
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: drawerWidth,
-    },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -45,31 +28,22 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
-  // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
 }));
 
 function BrowseBoats({ window }) {
   const classes = useStyles();
-  const theme = useTheme();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [boatsPerPage, setBoatsPerPage] = useState(12);
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState('asc');
   const [where, setWhere] = useState(undefined);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-
+  
   function updateFilters(filters) {
+    
     console.log(filters);
     const all = [
       { year: { _gte: filters.year.first } },
@@ -129,93 +103,16 @@ function BrowseBoats({ window }) {
     setWhere({ _and: all });
   }
 
-  function ListItemLink(props) {
-    return <ListItem button component="a" {...props} />;
-  }
-
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <List>
-        {['Boats', 'Designers', 'Builders', 'Fleets'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-            {[(<BoatIcon/>), (<Icon>person</Icon>), (<Icon>build</Icon>), (<FleetIcon/>)][index]}
-            </ListItemIcon>
-            <ListItemLink href={
-              ["index.html","designers","builders","fleets"][index]
-            }>
-              <ListItemText primary={text} />
-            </ListItemLink>
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['About', 'Your Editors', 'Support', 'Tech'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {[(<AboutIcon/>), (<Icon>people_alt</Icon>), (<Icon>bug_report</Icon>), (<Icon>code</Icon>)][index]}
-            </ListItemIcon>
-            <ListItemLink href={
-              ["about","editors","support","tech"][index]
-            }>
-              <ListItemText primary={text} />
-            </ListItemLink>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <nav className={classes.drawer} aria-label="mailbox folders">
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Hidden smUp implementation="css">
-          <Drawer
-            container={container}
-            variant="temporary"
-            anchor={theme.direction === 'rtl' ? 'right' : 'left'}
-            open={mobileOpen}
-            onClose={handleDrawerToggle}
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            ModalProps={{
-              keepMounted: true, // Better open performance on mobile.
-            }}
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-        <Hidden xsDown implementation="css">
-          <Drawer
-            classes={{
-              paper: classes.drawerPaper,
-            }}
-            variant="permanent"
-            open
-          >
-            {drawer}
-          </Drawer>
-        </Hidden>
-      </nav>
+      <LeftMenu open={mobileOpen} onClose={handleDrawerToggle} container={container} />
       <Paper>
         <Grid container direction="row">
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            className={classes.menuButton}
-          >
-            <Icon>menu</Icon>
-          </IconButton>
+          <DrawerController onClick={handleDrawerToggle}/>
         </Grid>
         <Container>
         <Typography variant="subtitle2">
@@ -223,7 +120,7 @@ function BrowseBoats({ window }) {
           pictures and more information.
         </Typography>
         <Typography variant="body1">
-          Filter the list using the options below and then click on 'Learn More'
+          Filter the list using the options below and then click the 'More' button
           for all the pictures and information we have for that boat.
           </Typography>
         <Typography variant="body1">
