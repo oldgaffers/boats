@@ -31,6 +31,6 @@ test('renders learn react link', () => {
         <BoatCard classes={{}} boat={{oga_no: 1, previous_names: []}} />
       </MockedProvider>
   );
-  const wanted = getByText(/Learn More/);
+  const wanted = getByText(/More/);
   expect(wanted).toBeInTheDocument();
 });
