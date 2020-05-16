@@ -11,7 +11,7 @@ const wanted = {
     rigType: { label: 'Rig Type', access: (n)=>n},
     designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:undefined},
     builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:undefined},
-    previous_names: { label: 'Was', access: (n)=>(n.length>0)?n.join(', '):undefined}
+    previous_names: { label: 'Was', access: (n)=>(n && n.length>0)?n.join(', '):undefined}
 };
 
 export default function BoatCard({ sortDirection, boat, classes }) {
