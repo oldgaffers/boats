@@ -46,8 +46,8 @@ function BrowseBoats({ dir='asc', window }) {
     
     console.log(filters);
     const all = [
-      { year: { _gte: filters.year.first } },
-      { year: { _lte: filters.year.last } },
+      { year: { _gte: filters.year.firstYear } },
+      { year: { _lte: filters.year.lastYear } },
     ];
     if (filters.ogaNo) {
       all.push({ oga_no: { _eq: filters.ogaNo } });
