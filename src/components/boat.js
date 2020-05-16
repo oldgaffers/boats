@@ -20,6 +20,7 @@ import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
 import SmugMugGallery from './smugmuggallery';
+import Enquiry from './enquiry';
 
 function m2f(val) {
     if(val) {
@@ -312,7 +313,7 @@ const engine = {
                 </Paper>
             </Grid>
             <Grid item xs={12}>
-            <AppBar position="static" color="white">
+            <AppBar position="static" color="inherit">
                 <Tabs
                 onChange={handleChange}
                     value={value}
@@ -344,29 +345,9 @@ const engine = {
               className={classes.button}
                href={`/boats/${sortDirection}`} >See more boats</Button>
                </Grid>
-               <Grid item xs={2} >
-               <TextField fullWidth="true" type="email" id="sender-email" label="Enter your email" />
+               <Grid item xs={10} >
+               <Enquiry classes={classes} id={boat.id} />
                </Grid>
-               <Grid item xs={7} >
-              <Button size="small" 
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              >Contact the owner</Button>
-              <Button size="small" 
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              >Add pictures / text</Button>
-              <Button size="small" 
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              >Request a handicap</Button>
-              </Grid>
               </Grid>
             </Paper>
         </Container>
