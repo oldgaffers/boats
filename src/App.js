@@ -23,12 +23,8 @@ const client = new ApolloClient({
 });
 
 const routes = {
-  "/": () => <ApolloProvider client={client}><BrowseBoats dir='asc'/></ApolloProvider>, // keeps tests working
-  "/asc": () => <ApolloProvider client={client}><BrowseBoats dir='asc' /></ApolloProvider>, // keeps tests working
-  "/desc": () => <ApolloProvider client={client}><BrowseBoats dir='desc'/></ApolloProvider>, // keeps tests working
-  "/boats/:dir": (dir) => <ApolloProvider client={client}><BrowseBoats dir={dir}/></ApolloProvider>,
-  "/boats/boat/:id/:dir": (id, dir) => <ApolloProvider client={client}><Boat sortDirection={dir} id={id}/></ApolloProvider>,
-  "/boat/:id/:dir": (id, dir) => <ApolloProvider client={client}><Boat sortDirection={dir} id={id}/></ApolloProvider>,
+  "/boats/": () => <ApolloProvider client={client}><BrowseBoats dir='asc'/></ApolloProvider>,
+  "/boats/boat/:id": (id) => <ApolloProvider client={client}><Boat id={id}/></ApolloProvider>,
   "/boats/designers": () => <Designers />,
   "/boats/builders": () => <Builders />,
   "/boats/fleets": () => <Fleets />,
