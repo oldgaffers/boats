@@ -136,7 +136,7 @@ function BoatCards({
   return (
     <p>
       There are no boats which match the filter criteria you have set. Try
-      broadening the criteria.
+      broadening the criteria. For example, if you have 'include boats without pictures' disabled, try enabling it.
     </p>
   );
 }
