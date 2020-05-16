@@ -1,4 +1,5 @@
 import React from 'react';
+import { A } from 'hookrouter';
 import { 
     Button, Card, CardActions, CardContent, CardMedia, Typography
 } from '@material-ui/core';
@@ -47,7 +48,13 @@ export default function BoatCard({ sortDirection, boat, classes }) {
         <TextList fields={wanted} data={boat} />
       </CardContent>
       <CardActions>
-        <Button size="small" href={`boat/${boat.oga_no}/${sortDirection}`} variant="contained" color="secondary">More..</Button>
+        <Button 
+          component={A}
+          size="small" 
+          href={`/boats/boat/${boat.oga_no}/${sortDirection}`} 
+          variant="contained" 
+          color="secondary"
+        >More..</Button>
       </CardActions>
     </Card>
   );
