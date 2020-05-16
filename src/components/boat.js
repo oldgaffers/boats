@@ -287,6 +287,7 @@ const engine = {
     <div className={classes.root}>
       <CssBaseline />
       <main className={classes.content}>
+        <Paper>
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
@@ -369,6 +370,7 @@ const engine = {
               </Grid>
             </Paper>
         </Container>
+        </Paper>
       </main>
     </div>
   );
