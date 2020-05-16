@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
-import SearchAndFilterBoats from './searchandfilterboats';
+import SearchAndFilterBoats, { makeBoatNameList } from './searchandfilterboats';
 import { sampleBoatNames } from '../mock/sampledata';
 
 const mocks = [
@@ -27,6 +27,30 @@ const mocks = [
     }
   },
 ];
+
+test('bad names are omitted', () => {
+  const nl = makeBoatNameList([
+    {
+      "name": "Lizzie Girl",
+      "previous_names": null
+    },
+    {
+      "name": "Petrel",
+      "previous_names": []
+    },
+    {
+      "name": "Rowspar",
+      "previous_names": ["Sparrow", "White Kitten"]
+    }
+  ]);
+  expect(nl).toStrictEqual([
+    {"__typename": "boat", "name": "Lizzie Girl"},
+    {"__typename": "boat", "name": "Petrel"},
+    {"__typename": "boat", "name": "Rowspar"},
+    {"__typename": "boat", "name": "Sparrow"},
+    {"__typename": "boat", "name": "White Kitten"}
+  ]);
+});
 
 test('renders learn react link', () => {
   const { getAllByText } = render(

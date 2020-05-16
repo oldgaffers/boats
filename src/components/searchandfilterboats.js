@@ -26,7 +26,17 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-function SearchAndFilterBoats({
+export function makeBoatNameList(boat) {
+  const currentBoatNames = boat.map((b) => (b.name));
+  const previousBoatNames = boat.map((b) => b.previous_names).flat();
+  const setOfBoats = new Set([...currentBoatNames, ...previousBoatNames]);
+  const allBoatNames = [...setOfBoats].filter((name) => name);
+  allBoatNames.sort((a, b) => (a.toLowerCase().localeCompare(b.toLowerCase())));
+  if (allBoatNames[0] === '') allBoatNames.shift();
+  return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
+}
+
+export default function SearchAndFilterBoats({
     onFilterChange,
     onPageSizeChange,
     onSortFieldChange,
@@ -64,13 +74,7 @@ function SearchAndFilterBoats({
 
     const { boat, designer, builder, rig_type, sail_type, design_class, generic_type, construction_material } = data;
 
-    const currentBoatNames = boat.map((b) => (b.name));
-    const previousBoatNames = boat.map((b) => b.previous_names).flat();
-    const setOfBoats = new Set([...currentBoatNames, ...previousBoatNames]);
-    const allBoatNames = [...setOfBoats];
-    allBoatNames.sort((a, b) => (a.toLowerCase().localeCompare(b.toLowerCase())));
-    if (allBoatNames[0] === '') allBoatNames.shift();
-    const boatNames = allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
+    const boatNames = makeBoatNameList(boat);
 
     function sw(event, val) {
         if (event.target.id) {
@@ -131,5 +135,3 @@ function SearchAndFilterBoats({
     </form>
     );
 }
-
-export default SearchAndFilterBoats
