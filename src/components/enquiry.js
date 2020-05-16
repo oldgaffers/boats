@@ -26,7 +26,13 @@ mutation DeleteEnquiry($id: uuid!) {
   }
 `;
 
-export default function Enquiry({ id, classes }) {
+export default function Enquiry({ id, classes, buttons=[
+{ label: 'Make contact with the owner', key: 'general' },
+{ label: 'Add pictures / text', key: 'addinfo' },
+{ label: 'Request a handicap', key: 'handicap' },
+],
+label='enter an email and click one of the options below if you want to be contacted about this boat'
+}) {
 
     const [enabled, setEnabled] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -65,18 +71,8 @@ export default function Enquiry({ id, classes }) {
         setEnabled(false);
     }
 
-    function enquireOwner() {
-        addEnquiry({ variables: { type: 'general', id, email } });
-        setSnackBarOpen(true);
-    }
-
-    function addInfo() {
-        addEnquiry({ variables: { type: 'addinfo', id, email } });
-        setSnackBarOpen(true);
-    }
-
-    function getHandicap() {
-        addEnquiry({ variables: { type: 'handicap', id, email } });
+    function handleClick(event, key) {
+        addEnquiry({ variables: { type: key, id, email } });
         setSnackBarOpen(true);
     }
 
@@ -84,40 +80,25 @@ export default function Enquiry({ id, classes }) {
         <Grid container direction="column">
            <Grid container direction="row" alignItems="flex-end">
               <Grid item xs={10}>
-              <Typography>enter an email and click one of the options below if you want to be contacted about this boat</Typography>
+              <Typography>{label}</Typography>
               </Grid>
               </Grid>
                   <Grid container direction="row" alignItems="flex-end">
               <Grid item xs={2}>
                   <TextField onChange={handleEmail} fullWidth={true} type="email" id="sender-email" label="your email" />
               </Grid>
-              <Grid item xs={8}>                  
-              <Button size="small" 
-              variant="contained"
-              color="primary"
-              disabled={!enabled}
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              onClick={enquireOwner}
-              >Make contact with the owner</Button>
-              <Button size="small" 
-              id="adding"
-              variant="contained"
-              color="primary"
-              disabled={!enabled}
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              onClick={addInfo}
-              >Add pictures / text</Button>
-              <Button size="small" 
-              id="handicap"
-              variant="contained"
-              color="primary"
-              disabled={!enabled}
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              onClick={getHandicap}
-              >Request a handicap</Button>
+              <Grid item xs={8}>
+            {buttons.map((button) => (
+                <Button size="small" 
+                    key={button.key}
+                    variant="contained"
+                    color="primary"
+                    disabled={!enabled}
+                    className={classes.button}
+                    endIcon={<Icon>send</Icon>}
+                    onClick={(e) => handleClick(e, button.key)}
+                >{button.label}</Button>
+            ))}                  
               </Grid>
           </Grid>
           <Snackbar

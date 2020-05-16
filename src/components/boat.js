@@ -259,17 +259,11 @@ const engine = {
              <Paper>
             <ConditionalText label="Price" value={price}/>
             <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
-            <Box width={1/3}>
-            <form className={classes.root} noValidate autoComplete="off">
-            <TextField fullWidth="true" type="email" id="sender-email" label="Enter your email to make an enquiry" />
-            <Button
-                size="small"
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    endIcon={<Icon>send</Icon>}
-                >Send</Button>
-            </form>
+            <Box width={2/3}>
+              <Enquiry classes={classes} id={boat.id}
+              label="Interested?"
+              buttons={[{ label: 'Send', key: 'for_sale' }]}
+              />
             </Box>
             </Paper>
         ) },
