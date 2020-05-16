@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BrowseBoats({ window }) {
+function BrowseBoats({ dir='asc', window }) {
   const classes = useStyles();
   const [boatsPerPage, setBoatsPerPage] = useState(12);
   const [sortField, setSortField] = useState('name');
-  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortDirection, setSortDirection] = useState(dir);
   const [where, setWhere] = useState(undefined);
   const [mobileOpen, setMobileOpen] = useState(false);
 

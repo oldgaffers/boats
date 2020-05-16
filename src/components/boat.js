@@ -149,7 +149,7 @@ const boatQuery = (id) => gql`{
   }`;
 
 
-export default function Boat({ id }) {
+export default function Boat({ sortDirection='asc', id }) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
@@ -341,7 +341,7 @@ const engine = {
               <Button size="small"
               variant="contained"
               className={classes.button}
-               href={'/boats'} >See more boats</Button>
+               href={`/boats/${sortDirection}`} >See more boats</Button>
                </Grid>
                <Grid item xs={2} >
                <TextField fullWidth="true" type="email" id="sender-email" label="Enter your email" />

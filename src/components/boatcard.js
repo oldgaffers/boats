@@ -14,7 +14,7 @@ const wanted = {
     previous_names: { label: 'Was', access: (n)=>(n.length>0)?n.join(', '):undefined}
 };
 
-export default function BoatCard({ boat, classes }) {
+export default function BoatCard({ sortDirection, boat, classes }) {
 
   function normaliseDescription(boat) {
     if (boat && boat.short_description) {
@@ -47,7 +47,7 @@ export default function BoatCard({ boat, classes }) {
       </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button size="small" href={'boat/'+boat.oga_no} variant="contained" color="secondary">More..</Button>
+        <Button size="small" href={`boat/${boat.oga_no}/${sortDirection}`} variant="contained" color="secondary">More..</Button>
       </CardActions>
     </Card>
   );
