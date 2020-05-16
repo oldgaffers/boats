@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-    Button, Card, CardActions, CardActionArea, CardContent, CardMedia, Typography
+    Button, Card, CardActions, CardContent, CardMedia, Typography
 } from '@material-ui/core';
 import TextList from './textlist';
 
@@ -29,13 +29,14 @@ export default function BoatCard({ sortDirection, boat, classes }) {
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
-    <CardActionArea>
+    <div>
         {(boat.thumb)?(
         <CardMedia
           className={classes.cardMedia}
           image={boat.thumb}
           title={boat.name}
         />):''}
+      </div>
       <CardContent className={classes.cardContent} >
         <Typography gutterBottom variant="h5" component="h2">
         {boat.name} ({boat.oga_no})
@@ -45,7 +46,6 @@ export default function BoatCard({ sortDirection, boat, classes }) {
         />
         <TextList fields={wanted} data={boat} />
       </CardContent>
-      </CardActionArea>
       <CardActions>
         <Button size="small" href={`boat/${boat.oga_no}/${sortDirection}`} variant="contained" color="secondary">More..</Button>
       </CardActions>
