@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
-import clsx from 'clsx';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
@@ -16,12 +11,17 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import SwipeableViews from 'react-swipeable-views';
 import { A } from 'hookrouter';
+import gql from 'graphql-tag';
+import { useInView } from 'react-intersection-observer'
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useQuery } from '@apollo/react-hooks';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import clsx from 'clsx';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
 import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
-import { useInView } from 'react-intersection-observer'
 
 function m2f(val) {
     if(val) {
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 600,
+    height: 100,
   },
   button: {
     margin: theme.spacing(1),
