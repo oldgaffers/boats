@@ -77,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 600,
   },
+  fillHeight: {
+    height: "100%",
+  },
   button: {
     margin: theme.spacing(1),
   },
@@ -178,6 +181,7 @@ export default function Boat({ sortDirection='asc', id }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
 
   const [ref, inView] = useInView({
     // Optional options 
@@ -326,7 +330,7 @@ const engine = {
               </Paper>
             </Grid>
             <Grid item xs={12} md={4} lg={3}>
-              <Paper>
+              <Paper className={fillHeightPaper}>
                 <Typography variant="h4" component="h4">Details</Typography>
                 <ConditionalText value={boat.oga_no} label="OGA no"/>
                 <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
