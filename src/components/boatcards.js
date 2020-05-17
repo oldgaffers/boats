@@ -173,7 +173,11 @@ function BoatCards({
           <Grid container spacing={4}>
           {data.boat.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard filters={filters} sortDirection={sortDirection} key={boat.oga_no} boat={boat} classes={classes} />
+              <BoatCard 
+                filters={filters} boatsPerPage={boatsPerPage}
+                sortField={sortField} sortDirection={sortDirection} 
+                key={boat.oga_no} boat={boat} classes={classes}
+              />
             </Grid>
           ))}
           </Grid>

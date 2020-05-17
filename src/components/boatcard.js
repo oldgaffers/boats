@@ -32,7 +32,7 @@ function SalesBadge({ boat, invisible, children }) {
   }
 }
 
-export default function BoatCard({ filters, sortDirection, boat, classes }) {
+export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat, classes }) {
 
   function normaliseDescription(boat) {
     if (boat && boat.short_description) {
@@ -61,7 +61,10 @@ export default function BoatCard({ filters, sortDirection, boat, classes }) {
         <Button 
           size="small" 
           component={Link}
-          href={`/boat/${boat.oga_no}`} 
+          to={{
+            pathname: `/boat/${boat.oga_no}`,
+            state: { filters, boatsPerPage, sortField, sortDirection }
+          }}
           variant="contained" 
           color="secondary"
         >More..</Button>
