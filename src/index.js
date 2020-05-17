@@ -4,6 +4,9 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from 'react-cookie';
+import {setBasepath} from "hookrouter";
+
+setBasepath('/boats');
 
 ReactDOM.render(
   <React.StrictMode>

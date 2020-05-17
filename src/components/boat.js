@@ -14,7 +14,7 @@ import Tab from '@material-ui/core/Tab';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import SwipeableViews from 'react-swipeable-views';
-// import { A } from 'hookrouter';
+import { A } from 'hookrouter';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
@@ -336,6 +336,7 @@ const engine = {
               <Button size="small"
               variant="contained"
               className={classes.button}
+              component={A}
                href="/" >See more boats</Button>
                </Grid>
                <Grid item xs={10} >

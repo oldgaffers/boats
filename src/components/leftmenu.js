@@ -11,6 +11,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import FleetIcon from './fleeticon';
 import BoatIcon from './boaticon';
 import AboutIcon from './abouticon';
+import { A } from 'hookrouter';
 
 const drawerWidth = 240;
 
@@ -40,7 +41,7 @@ function LeftMenu({ open, onClose, container }) {
   const theme = useTheme();
 
   function ListItemLink(props) {
-    return <ListItem button component="a" {...props} />;
+    return <ListItem button component={A} {...props} />;
   }
 
   const drawer = (

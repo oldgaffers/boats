@@ -13,6 +13,7 @@ import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
+import { A } from 'hookrouter';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -125,7 +126,7 @@ function BrowseBoats({ dir='asc', window }) {
           </Typography>
         <Typography variant="body1">
             Have a boat and can't find it here. Fill in our{' '}
-            <a href="https://form.jotform.com/jfbcable/new-boat">form</a> and we
+            <A href="https://form.jotform.com/jfbcable/new-boat">form</A> and we
             will add it.
             </Typography>
         <Typography variant="body1">
