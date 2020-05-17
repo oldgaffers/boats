@@ -28,7 +28,7 @@ const client = new ApolloClient({
 
 function App() {
   return (
-    <Router>
+    <Router basename={window.location.protocol==='http:'?'/':'/boats'}>
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
