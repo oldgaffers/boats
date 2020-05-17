@@ -37,18 +37,19 @@ export function makeBoatNameList(boat) {
 }
 
 export default function SearchAndFilterBoats({
+    sortDirection = 'asc',
+    sortField = 'name',
+    boatsPerPage = 12,
+    filters = { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
     onFilterChange,
     onPageSizeChange,
     onSortFieldChange,
     onSortDirectionChange,
-    after=1800,
-    until=(new Date()).getFullYear() + 1,
 }) {
     const classes = useStyles();
-
     const [names, setNames] = useState({});
     const [ogaNo, setOgaNo] = useState();
-    const [year, setYear] = useState({ firstYear: after, lastYear: until });
+    const [year, setYear] = useState(filters.year);
     
     function update() {
         const f = { ...names, ogaNo, year };
@@ -119,18 +120,22 @@ export default function SearchAndFilterBoats({
             <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" />
             <Picker onChange={pl} id="designer-name" options={designer} label="Designer" />
             <Picker onChange={pl} id="builder-name" options={builder} label="Builder" />
-            <TextField onChange={sy} id="firstYear" label="Built After" min={after} max="" defaultValue={after} variant="outlined" />
-            <TextField onChange={sy} id="lastYear" label="Built Before" min={after} max={until} defaultValue={until} variant="outlined" />
+            <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
+                min={filters.year.firstYear} max={filters.year.lastYear} defaultValue={filters.year.firstYear}
+            />
+            <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
+                min={filters.year.firstYear} max={filters.year.lastYear} defaultValue={filters.year.lastYear}
+            />
             <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" />
             <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" />
             <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" />
             <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" />
             <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" />
-            <FormControlLabel control={<Switch id="nopics" onChange={sw} />} label="include boats without pictures" />
-            <FormControlLabel control={<Switch id="sale" onChange={sw} />} label="only boats for sale" />
-            <Picker defaultValue="name" id="sort-field" onChange={onSortFieldChange} options={sortFields} label="Sort By" />
-            <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch />} label="reversed" />
-            <Picker defaultValue="6" id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
+            <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={filters.nopics} />} label="include boats without pictures"  />
+            <FormControlLabel control={<Switch id="sale" onChange={sw} checked={filters.sale} />} label="only boats for sale"/>
+            <Picker defaultValue={sortField} id="sort-field" onChange={onSortFieldChange} options={sortFields} label="Sort By" />
+            <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
+            <Picker defaultValue={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
         </Grid>
     </form>
     );

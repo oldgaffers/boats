@@ -15,6 +15,7 @@ import gql from 'graphql-tag';
 import { useInView } from 'react-intersection-observer'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
+import { useLocation } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import clsx from 'clsx';
 import TabPanel from './tabpanel';
@@ -177,7 +178,8 @@ function DetailBar({ onChange, value, panes }) {
 }
 
 export default function Boat() {
-  let { id } = useParams();
+  const { id } = useParams();
+  const location = useLocation();
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
@@ -312,6 +314,8 @@ const engine = {
     setValue(index);
   };
 
+  console.log('location', location);
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -365,7 +369,7 @@ const engine = {
               component={Link}
               to={{
                 pathname: '/',
-                state: { /* filters, boatsPerPage, sortField, sortDirection */ }
+                state: (location)?{ ...location.state }:undefined
               }}
                >See more boats</Button>
                </Grid>

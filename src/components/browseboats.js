@@ -9,6 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import { useLocation } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import LeftMenu from './leftmenu';
@@ -30,12 +31,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function BrowseBoats({ dir='asc', window }) {
+function BrowseBoats({ window }) {
+  const { state } = useLocation();
   const classes = useStyles();
-  const [boatsPerPage, setBoatsPerPage] = useState(12);
-  const [sortField, setSortField] = useState('name');
-  const [sortDirection, setSortDirection] = useState(dir);
-  const [filters, setFilters] = useState(undefined);
+  const [boatsPerPage, setBoatsPerPage] = useState(state && state.boatsPerPage);
+  const [sortField, setSortField] = useState(state && state.sortField);
+  const [sortDirection, setSortDirection] = useState(state && state.sortDirection);
+  const [filters, setFilters] = useState(state && state.filters);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -80,6 +82,10 @@ function BrowseBoats({ dir='asc', window }) {
             first step is to make sure the boat is on the register.
         </Typography>
         <SearchAndFilterBoats
+          sortDirection={sortDirection}
+          sortField={sortField}
+          boatsPerPage={boatsPerPage}
+          filters={filters}
           onPageSizeChange={(_, a) => a && setBoatsPerPage(parseInt(a.name))}
           onSortFieldChange={(_, a) => a && setSortField(a.name)}
           onSortDirectionChange={(event) =>
