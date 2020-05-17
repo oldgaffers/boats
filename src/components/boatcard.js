@@ -6,6 +6,7 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import Badge from '@material-ui/core/Badge';
 import TextList from './textlist';
 
 const wanted = {
@@ -17,6 +18,32 @@ const wanted = {
     builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:undefined},
     previous_names: { label: 'Was', access: (n)=>(n && n.length>0)?n.join(', '):undefined}
 };
+
+function SalesBadgeImage({ boat, children }) {
+  if (!boat.thumb) return '';
+  if (!boat.for_sale_state) return children;
+  switch (boat.for_sale_state.text) {
+    case 'for_sale':
+      return (<Badge component="div" badgeContent="For sale" color="secondary">{children}</Badge>);
+    case 'sold':
+      return (<Badge component="div" badgeContent="Sold" color="primary">{children}</Badge>);
+    default:
+      return children;
+  }
+}
+
+function SalesBadge({ boat, children }) {
+  if (!boat.thumb) return '';
+  if (!boat.for_sale_state) return children;
+  switch (boat.for_sale_state.text) {
+    case 'for_sale':
+      return (<Badge badgeContent="For sale" color="secondary">{children}</Badge>);
+    case 'sold':
+      return (<Badge badgeContent="Sold" color="primary">{children}</Badge>);
+    default:
+      return children;
+  }
+}
 
 export default function BoatCard({ sortDirection, boat, classes }) {
 
@@ -33,17 +60,12 @@ export default function BoatCard({ sortDirection, boat, classes }) {
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
-    <div>
-        {(boat.thumb)?(
-        <CardMedia
-          className={classes.cardMedia}
-          image={boat.thumb}
-          title={boat.name}
-        />):''}
-      </div>
+      <SalesBadgeImage boat={boat}>
+        <CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />
+      </SalesBadgeImage>
       <CardContent className={classes.cardContent} >
         <Typography gutterBottom variant="h5" component="h2">
-        {boat.name} ({boat.oga_no})
+        <SalesBadge boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
         <Typography variant="body2" 
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}

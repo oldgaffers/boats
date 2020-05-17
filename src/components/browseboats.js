@@ -36,74 +36,13 @@ function BrowseBoats({ dir='asc', window }) {
   const [boatsPerPage, setBoatsPerPage] = useState(12);
   const [sortField, setSortField] = useState('name');
   const [sortDirection, setSortDirection] = useState(dir);
-  const [where, setWhere] = useState(undefined);
+  const [filters, setFilters] = useState(undefined);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
   
-  function updateFilters(filters) {
-    
-    console.log(filters);
-    const all = [
-      { year: { _gte: filters.year.firstYear } },
-      { year: { _lte: filters.year.lastYear } },
-    ];
-    if (filters.ogaNo) {
-      all.push({ oga_no: { _eq: filters.ogaNo } });
-    }
-    if (filters['boat-name']) {
-      all.push({
-        _or: [
-          { name: { _ilike: `${filters['boat-name']}%` } },
-          { previous_names: { _contains: filters['boat-name'] } },
-        ],
-      });
-    }
-    if (filters['designer-name']) {
-      all.push({
-        designerByDesigner: { name: { _eq: filters['designer-name'] } },
-      });
-    }
-    if (filters['builder-name']) {
-      all.push({
-        builderByBuilder: { name: { _eq: filters['builder-name'] } },
-      });
-    }
-    if (filters['rig-type']) {
-      all.push({ rigTypeByRigType: { name: { _eq: filters['rig-type'] } } });
-    }
-    if (filters['mainsail-type']) {
-      all.push({ sail_type: { name: { _eq: filters['mainsail-type'] } } });
-    }
-    if (filters['generic-type']) {
-      all.push({
-        genericTypeByGenericType: { name: { _eq: filters['generic-type'] } },
-      });
-    }
-    if (filters['design-class']) {
-      all.push({
-        designClassByDesignClass: { name: { _eq: filters['design-class'] } },
-      });
-    }
-    if (filters['construction-material']) {
-      all.push({
-        constructionMaterialByConstructionMaterial: {
-          name: { _eq: filters['construction-material'] },
-        },
-      });
-    }
-    if (!filters['nopics']) {
-      all.push({ image_key: { _is_null: false } });
-    }
-    if (filters['sale']) {
-      all.push({ for_sale_state: { text: { _eq: 'for_sale' } } });
-    }
-    console.log('filters', all);
-    setWhere({ _and: all });
-  }
-
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -147,7 +86,7 @@ function BrowseBoats({ dir='asc', window }) {
           onSortDirectionChange={(event) =>
             setSortDirection(event.target.checked ? 'desc' : 'asc')
           }
-          onFilterChange={updateFilters}
+          onFilterChange={(f) => setFilters(f)}
         />
         </Container>
         <Divider />
@@ -155,7 +94,7 @@ function BrowseBoats({ dir='asc', window }) {
           boatsPerPage={boatsPerPage}
           sortField={sortField}
           sortDirection={sortDirection}
-          where={where}
+          filters={filters}
         />
         <Divider />
         <p>Other great places to look for boats are:</p>
