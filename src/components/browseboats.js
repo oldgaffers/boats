@@ -68,7 +68,7 @@ function BrowseBoats({ dir='asc', window }) {
     }
     if (filters['builder-name']) {
       all.push({
-        buildersByBuilder: { name: { _eq: filters['builder-name'] } },
+        builderByBuilder: { name: { _eq: filters['builder-name'] } },
       });
     }
     if (filters['rig-type']) {
