@@ -365,7 +365,7 @@ const engine = {
               component={Link}
               to={{
                 pathname: '/',
-                state: { filters, boatsPerPage, sortField, sortDirection }
+                state: { /* filters, boatsPerPage, sortField, sortDirection */ }
               }}
                >See more boats</Button>
                </Grid>
