@@ -56,16 +56,16 @@ function BrowseBoats({ window }) {
           <DrawerController onClick={handleDrawerToggle}/>
         </Grid>
         <Container>
-        <Typography variant="subtitle2">
-          We have hundreds of boats with pictures and many more waiting for
+        <Typography variant="body1">
+          We have hundreds of boats with pictures, and many more waiting for
           pictures and more information.
         </Typography>
         <Typography variant="body1">
-          Filter the list using the options below and then click the 'More' button
-          for all the pictures and information we have for that boat.
+          Filter the list using the options below, and then click the 'More' button
+          to see all the pictures and information we have for that boat.
           </Typography>
         <Typography variant="body1">
-            Have a boat and can't find it here. Fill in our{' '}
+            Have a boat and can't find it here? Fill in our{' '}
             <a href="https://form.jotform.com/jfbcable/new-boat">form</a>
              &nbsp;and we will add it.
             </Typography>
@@ -74,7 +74,7 @@ function BrowseBoats({ window }) {
             not.
             </Typography>
         <Typography variant="body1">
-            You'll can submit pictures, additions and corrections to boats or
+            You can submit pictures, additions, and corrections to boats, or
             contact the owner from the boat's detail page.
             </Typography>
         <Typography variant="body1">
