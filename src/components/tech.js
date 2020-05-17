@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
 import { makeStyles } from '@material-ui/core/styles';
+import Iframe from 'react-iframe'
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -80,10 +81,8 @@ function Tech({ window }) {
         <Grid container direction="row">
           <DrawerController onClick={handleDrawerToggle} />
         </Grid>
-        <Container>
-        <Typography>We'll explain here how the boat register works.</Typography>
-        </Container>
-      </Paper>
+        <Iframe url="/tech.html" height="100%" width="100%" />
+     </Paper>
     </div>
   );
 }
