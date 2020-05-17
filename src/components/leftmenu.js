@@ -60,7 +60,7 @@ function LeftMenu({ open, onClose, container }) {
               }
             </ListItemIcon>
             <ListItemLink
-              href={['/boats/', '/boats/designers', '/boats/builders', '/boats/fleets'][index]}
+              href={['/', '/designers', '/builders', '/fleets'][index]}
             >
               <ListItemText primary={text} />
             </ListItemLink>
