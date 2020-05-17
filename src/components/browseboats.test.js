@@ -4,6 +4,7 @@ import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import BrowseBoats from './browseboats';
 import { query } from './boatcards';
+import { MemoryRouter } from "react-router";
 
 const mocks = [
   {
@@ -43,7 +44,9 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <BrowseBoats />
+      <MemoryRouter>
+        <BrowseBoats />
+      </MemoryRouter>
     </MockedProvider>
   );
   const wanted = getByText(/We have hundreds of boats with pictures/);
