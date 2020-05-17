@@ -58,7 +58,7 @@ export default function BoatCard({ filters, boatsPerPage, sortField, sortDirecti
         <TextList fields={wanted} data={boat} />
       </CardContent>
       <CardActions>
-        <Button 
+        <Button
           size="small" 
           component={Link}
           to={{

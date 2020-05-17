@@ -363,7 +363,11 @@ const engine = {
               variant="contained"
               className={classes.button}
               component={Link}
-               href="/" >See more boats</Button>
+              to={{
+                pathname: '/',
+                state: { filters, boatsPerPage, sortField, sortDirection }
+              }}
+               >See more boats</Button>
                </Grid>
                <Grid item xs={10} >
                <Enquiry classes={classes} id={boat.id} />
