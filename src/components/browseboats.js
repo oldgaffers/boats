@@ -13,7 +13,6 @@ import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
-import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
