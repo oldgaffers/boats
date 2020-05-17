@@ -19,25 +19,12 @@ const wanted = {
     previous_names: { label: 'Was', access: (n)=>(n && n.length>0)?n.join(', '):undefined}
 };
 
-function SalesBadgeImage({ boat, children }) {
+function SalesBadge({ boat, invisible, children }) {
   if (!boat.thumb) return '';
   if (!boat.for_sale_state) return children;
   switch (boat.for_sale_state.text) {
     case 'for_sale':
-      return (<Badge component="div" badgeContent="For sale" color="secondary">{children}</Badge>);
-    case 'sold':
-      return (<Badge component="div" badgeContent="Sold" color="primary">{children}</Badge>);
-    default:
-      return children;
-  }
-}
-
-function SalesBadge({ boat, children }) {
-  if (!boat.thumb) return '';
-  if (!boat.for_sale_state) return children;
-  switch (boat.for_sale_state.text) {
-    case 'for_sale':
-      return (<Badge badgeContent="For sale" color="secondary">{children}</Badge>);
+      return (<Badge invisible={invisible} badgeContent="For sale" color="secondary">{children}</Badge>);
     case 'sold':
       return (<Badge badgeContent="Sold" color="primary">{children}</Badge>);
     default:
@@ -45,7 +32,7 @@ function SalesBadge({ boat, children }) {
   }
 }
 
-export default function BoatCard({ sortDirection, boat, classes }) {
+export default function BoatCard({ filters, sortDirection, boat, classes }) {
 
   function normaliseDescription(boat) {
     if (boat && boat.short_description) {
@@ -60,12 +47,10 @@ export default function BoatCard({ sortDirection, boat, classes }) {
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
-      <SalesBadgeImage boat={boat}>
-        <CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />
-      </SalesBadgeImage>
+      {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):''}
       <CardContent className={classes.cardContent} >
         <Typography gutterBottom variant="h5" component="h2">
-        <SalesBadge boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
+        <SalesBadge invisible={filters.sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
         <Typography variant="body2" 
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
