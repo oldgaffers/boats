@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
@@ -11,7 +12,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import FleetIcon from './fleeticon';
 import BoatIcon from './boaticon';
 import AboutIcon from './abouticon';
-import { A } from 'hookrouter';
+import { MemoryRouter } from 'react-router';
+import { Link as RouterLink } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -41,11 +43,34 @@ function LeftMenu({ open, onClose, container }) {
   const theme = useTheme();
 
   function ListItemLink(props) {
-    return <ListItem button component={A} {...props} />;
+    const { icon, primary, to } = props;
+
+    const renderLink = React.useMemo(
+      () =>
+        React.forwardRef((itemProps, ref) => (
+          <RouterLink to={to} ref={ref} {...itemProps} />
+        )),
+      [to],
+    );
+
+    return (
+      <li>
+        <ListItem button component={renderLink}>
+          {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+          <ListItemText primary={primary} />
+        </ListItem>
+      </li>
+    );
   }
 
+  ListItemLink.propTypes = {
+    icon: PropTypes.element,
+    primary: PropTypes.string.isRequired,
+    to: PropTypes.string.isRequired,
+  };
+
   const drawer = (
-    <div>
+    <MemoryRouter initialEntries={['/boats']} initialIndex={0}>
       <div className={classes.toolbar} />
       <List>
         {['Boats', 'Designers', 'Builders', 'Fleets'].map((text, index) => (
@@ -61,7 +86,7 @@ function LeftMenu({ open, onClose, container }) {
               }
             </ListItemIcon>
             <ListItemLink
-              href={['/', '/designers', '/builders', '/fleets'][index]}
+              to={['/', '/designers', '/builders', '/fleets'][index]}
             >
               <ListItemText primary={text} />
             </ListItemLink>
@@ -88,7 +113,7 @@ function LeftMenu({ open, onClose, container }) {
           </ListItem>
         ))}
       </List>
-    </div>
+    </MemoryRouter>
   );
 
   return (

@@ -3,7 +3,6 @@ import ApolloClient from "apollo-client";
 import { ApolloProvider } from '@apollo/react-hooks';
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { useRoutes } from 'hookrouter';
 import './App.css';
 import BrowseBoats from './components/browseboats';
 import Boat from './components/boat';
@@ -14,6 +13,11 @@ import About from './components/about';
 import Support from './components/support';
 import Tech from './components/tech';
 import Editors from './components/editors';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 
 const client = new ApolloClient({
   link: createHttpLink({
@@ -22,21 +26,27 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-const routes = {
-  "/": () => <ApolloProvider client={client}><BrowseBoats dir='asc'/></ApolloProvider>,
-  "/boat/:id": ({id}) => <ApolloProvider client={client}><Boat id={id}/></ApolloProvider>,
-  "/designers": () => <Designers />,
-  "/builders": () => <Builders />,
-  "/fleets": () => <Fleets />,
-  "/about": () => <About />,
-  "/editors": () => <Editors />,
-  "/support": () => <Support />,
-  "/tech": () => <Tech />
-};
-
 function App() {
-  const routeResult = useRoutes(routes)
-  return routeResult
-}
+  return (
+    <Router>
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        <Switch>
+          <Route path="/boat/:id">
+            <ApolloProvider client={client}><Boat /></ApolloProvider>
+          </Route>
+          <Route path="/about"><About /></Route>
+          <Route path="/designers"><Designers /></Route>
+          <Route path="/builders"><Builders /></Route>
+          <Route path="/fleets"><Fleets /></Route>
+          <Route path="/editors"><Editors /></Route>
+          <Route path="/support"><Support /></Route>
+          <Route path="/tech"><Tech /></Route>
+          <Route path="/">
+            <ApolloProvider client={client}><BrowseBoats /></ApolloProvider>
+          </Route>
+        </Switch>
+    </Router>
+  );}
 
 export default App;

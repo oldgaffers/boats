@@ -1,5 +1,5 @@
 import React from 'react';
-import { A } from 'hookrouter';
+import { Link } from "react-router-dom";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -60,7 +60,7 @@ export default function BoatCard({ filters, sortDirection, boat, classes }) {
       <CardActions>
         <Button 
           size="small" 
-          component={A}
+          component={Link}
           href={`/boat/${boat.oga_no}`} 
           variant="contained" 
           color="secondary"
