@@ -8,6 +8,7 @@ import { useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Box from '@material-ui/core/Box';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -20,6 +21,7 @@ import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
 import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
+import { useInView } from 'react-intersection-observer'
 
 function m2f(val) {
     if(val) {
@@ -148,12 +150,40 @@ const boatQuery = (id) => gql`{
   }
   }`;
 
+function MoreBelow({ visible }) {
+    if (visible && false) { // TODO
+      return (<ExpandMoreIcon/>);
+    }
+    return '';
+  }
+
+function DetailBar({ onChange, value, panes }) {
+  return (
+    <AppBar position="static" color="inherit">
+        <Tabs
+        onChange={onChange}
+            value={value}
+            indicatorColor="primary"
+            textColor="primary"
+            centered
+        >
+        { panes.map((pane, i) => (<Tab key={i} label={pane.title}/>))}
+        </Tabs>
+    </AppBar>
+  );
+}
 
 export default function Boat({ sortDirection='asc', id }) {
   const classes = useStyles();
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  const [ref, inView] = useInView({
+    // Optional options 
+     threshold: 0,
+  });
+  
   const { loading, error, data } = useQuery(boatQuery(id));
 
   useEffect(() => {
@@ -268,7 +298,7 @@ const engine = {
         ) },
     );
   }
-  
+
  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -306,17 +336,8 @@ const engine = {
                 </Paper>
             </Grid>
             <Grid item xs={12}>
-            <AppBar position="static" color="inherit">
-                <Tabs
-                onChange={handleChange}
-                    value={value}
-                    indicatorColor="primary"
-                    textColor="primary"
-                    centered
-                >
-                { panes.map((pane, i) => (<Tab key={i} label={pane.title}/>))}
-                </Tabs>
-                </AppBar>
+                <MoreBelow visible={!inView}/>
+                <DetailBar ref={ref} onChange={handleChange} value={value} panes={panes} />
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={value}
