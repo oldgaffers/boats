@@ -12,7 +12,6 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import FleetIcon from './fleeticon';
 import BoatIcon from './boaticon';
 import AboutIcon from './abouticon';
-import { MemoryRouter } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -70,26 +69,21 @@ function LeftMenu({ open, onClose, container }) {
   };
 
   const drawer = (
-    <MemoryRouter initialEntries={['/boats']} initialIndex={0}>
+    <div>
       <div className={classes.toolbar} />
       <List>
         {['Boats', 'Designers', 'Builders', 'Fleets'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon>
-              {
-                [
+            <ListItemLink
+              icon={[
                   <BoatIcon />,
                   <Icon>person</Icon>,
                   <Icon>build</Icon>,
                   <FleetIcon />,
-                ][index]
-              }
-            </ListItemIcon>
-            <ListItemLink
+                ][index]}
               to={['/', '/designers', '/builders', '/fleets'][index]}
-            >
-              <ListItemText primary={text} />
-            </ListItemLink>
+              primary={text}
+            />
           </ListItem>
         ))}
       </List>
@@ -97,8 +91,8 @@ function LeftMenu({ open, onClose, container }) {
       <List>
         {['About', 'Your Editors', 'Support', 'Tech'].map((text, index) => (
           <ListItem button key={text}>
-            <ListItemIcon>
-              {
+            <ListItemLink 
+              icon={
                 [
                   <AboutIcon />,
                   <Icon>people_alt</Icon>,
@@ -106,14 +100,12 @@ function LeftMenu({ open, onClose, container }) {
                   <Icon>code</Icon>,
                 ][index]
               }
-            </ListItemIcon>
-            <ListItemLink href={['about', 'editors', 'support', 'tech'][index]}>
-              <ListItemText primary={text} />
-            </ListItemLink>
+              to={['about', 'editors', 'support', 'tech'][index]}
+              primary={text}/>
           </ListItem>
         ))}
       </List>
-    </MemoryRouter>
+    </div>
   );
 
   return (
