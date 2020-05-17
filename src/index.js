@@ -6,7 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from 'react-cookie';
 import {setBasepath} from "hookrouter";
 
-if (window.location.protocol === 'http') {
+if (window.location.protocol === 'http:') {
   setBasepath('/');
 } else {
   setBasepath('/boats');

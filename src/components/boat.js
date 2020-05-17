@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 100,
+    height: 600,
   },
   button: {
     margin: theme.spacing(1),
@@ -326,7 +326,7 @@ const engine = {
               </Paper>
             </Grid>
             <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
+              <Paper>
                 <Typography variant="h4" component="h4">Details</Typography>
                 <ConditionalText value={boat.oga_no} label="OGA no"/>
                 <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
