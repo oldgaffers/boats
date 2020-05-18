@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/typography';
+import Typography from '@material-ui/core/Typography';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
