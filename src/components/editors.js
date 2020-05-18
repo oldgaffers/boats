@@ -1,62 +1,28 @@
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
 import { makeStyles } from '@material-ui/core/styles';
+import Iframe from 'react-iframe'
+import Container from '@material-ui/core/Container';
 
 const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '100%',
-  },
-  cardMediaSmall: {
-    paddingTop: '56.25%',
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-  },
   root: {
     display: 'flex',
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
+  container: {
+    height: '100vh',
+    width: '100vw',
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
+  frame: {
+    width: '100%',
+    height: '100%',
   },
 }));
 
-function YourEditors({ window }) {
+function Editors({ window }) {
 
   const classes = useStyles();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -77,15 +43,19 @@ function YourEditors({ window }) {
         container={container}
       />
       <Paper>
-        <Grid container direction="row">
+        <Grid className={classes.root} container direction="row">
           <DrawerController onClick={handleDrawerToggle} />
         </Grid>
-        <Container>
-            <Typography>Julian & Alison</Typography>
+        <Container className={classes.container}>
+        <Iframe 
+          className={classes.frame}
+          frameBorder={0}
+          url="https://oldgaffers.github.io/editors.html"
+        />
         </Container>
-      </Paper>
+     </Paper>
     </div>
   );
 }
 
-export default YourEditors
+export default Editors
