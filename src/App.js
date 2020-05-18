@@ -17,6 +17,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
+  useLocation,
 } from "react-router-dom";
 
 const client = new ApolloClient({
@@ -25,6 +27,17 @@ const client = new ApolloClient({
   }),
   cache: new InMemoryCache()
 });
+
+function FourOhFour() {
+  const { search } = useLocation();
+  if (search === '') {
+    return (<BrowseBoats />);
+  }
+  const params = new URLSearchParams(search);
+  const path = params.get('p');
+  console.log(path);
+  return (<Redirect to={path} />)
+}
 
 function App() {
   return (
@@ -43,7 +56,7 @@ function App() {
           <Route path="/support"><Support /></Route>
           <Route path="/tech"><Tech /></Route>
           <Route path="/">
-            <ApolloProvider client={client}><BrowseBoats /></ApolloProvider>
+            <ApolloProvider client={client}><FourOhFour /></ApolloProvider>
           </Route>
         </Switch>
     </Router>
