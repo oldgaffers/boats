@@ -15,12 +15,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     padding: theme.spacing(3),
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
 }));
 
 function Tech({ window }) {
@@ -48,8 +42,8 @@ function Tech({ window }) {
           <DrawerController onClick={handleDrawerToggle} />
         </Grid>
         <Grid container direction="row">
-          <Grid item xs={12}>
-            <Iframe url="https://oldgaffers.github.io/tech.html" height="100%" width="100%" />
+          <Grid className={classes.content} item xs={12}>
+            <Iframe frameBorder={false} url="https://oldgaffers.github.io/tech.html" height="100%" width="100%" />
           </Grid>
         </Grid>
      </Paper>

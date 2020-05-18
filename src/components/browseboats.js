@@ -43,7 +43,12 @@ function BrowseBoats({ window }) {
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  
+
+  const handlePageSizeChange = (_, a) => {
+    console.log('handlePageSizeChange', a);
+    setBoatsPerPage(a)
+  };
+
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -86,7 +91,7 @@ function BrowseBoats({ window }) {
           sortField={sortField}
           boatsPerPage={boatsPerPage}
           filters={filters}
-          onPageSizeChange={(_, a) => a && setBoatsPerPage(parseInt(a.name))}
+          onPageSizeChange={handlePageSizeChange}
           onSortFieldChange={(_, a) => a && setSortField(a.name)}
           onSortDirectionChange={(event) =>
             setSortDirection(event.target.checked ? 'desc' : 'asc')
@@ -96,7 +101,7 @@ function BrowseBoats({ window }) {
         </Container>
         <Divider />
         <BoatCards
-          boatsPerPage={boatsPerPage}
+          boatsPerPage={boatsPerPage?parseInt(boatsPerPage):12}
           sortField={sortField}
           sortDirection={sortDirection}
           filters={filters}

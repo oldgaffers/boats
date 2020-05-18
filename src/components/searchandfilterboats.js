@@ -12,6 +12,7 @@ const sortFields = [
     { name: "Last Updated" },
     { name: "Price" },
 ];
+
 const pageSize = [];
 for(let i=1; i<=8; i++) {
     pageSize.push({name: `${6*i}` });
@@ -39,7 +40,7 @@ export function makeBoatNameList(boat) {
 export default function SearchAndFilterBoats({
     sortDirection = 'asc',
     sortField = 'name',
-    boatsPerPage = 12,
+    boatsPerPage = '12',
     filters = { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
     onFilterChange,
     onPageSizeChange,
@@ -135,7 +136,7 @@ export default function SearchAndFilterBoats({
             <FormControlLabel control={<Switch id="sale" onChange={sw} checked={filters.sale} />} label="only boats for sale"/>
             <Picker defaultValue={sortField} id="sort-field" onChange={onSortFieldChange} options={sortFields} label="Sort By" />
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
-            <Picker defaultValue={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
+            <Picker clearable={false} defaultValue={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
         </Grid>
     </form>
     );

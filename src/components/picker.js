@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextField } from '@material-ui/core'
 import { Autocomplete } from '@material-ui/lab'
 
-function Picker({ options, id, label, onChange, defaultValue }) {
+function Picker({ options, id, label, onChange, defaultValue, clearable=true }) {
     const [value, setValue] = useState({name: defaultValue});
 
     return (
@@ -21,6 +21,7 @@ function Picker({ options, id, label, onChange, defaultValue }) {
             (params) => <TextField {...params} 
             label={label}
             variant="outlined" />}
+        disableClearable={!clearable}
         />
     );
 }
