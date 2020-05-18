@@ -11,9 +11,17 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
   },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
+  container: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  frame: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    border: 0,
   },
 }));
 
@@ -41,11 +49,9 @@ function Tech({ window }) {
         <Grid className={classes.root} container direction="row">
           <DrawerController onClick={handleDrawerToggle} />
         </Grid>
-        <Grid container direction="row">
-          <Grid className={classes.content} item xs={12}>
-            <Iframe frameBorder={false} url="https://oldgaffers.github.io/tech.html" height="100%" width="100%" />
-          </Grid>
-        </Grid>
+          <div className={classes.container}>
+            <Iframe className={classes.frame} frameBorder={false} url="https://oldgaffers.github.io/tech.html" />
+          </div>
      </Paper>
     </div>
   );

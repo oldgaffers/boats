@@ -20,7 +20,7 @@ const wanted = {
 };
 
 function SalesBadge({ boat, invisible, children }) {
-  if (!boat.thumb) return '';
+  if (!boat.thumb) return children;
   if (!boat.for_sale_state) return children;
   switch (boat.for_sale_state.text) {
     case 'for_sale':
@@ -31,6 +31,7 @@ function SalesBadge({ boat, invisible, children }) {
       return children;
   }
 }
+
 
 export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat, classes }) {
 
@@ -50,7 +51,7 @@ export default function BoatCard({ filters, boatsPerPage, sortField, sortDirecti
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):''}
       <CardContent className={classes.cardContent} >
         <Typography gutterBottom variant="h5" component="h2">
-        <SalesBadge invisible={filters.sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
+          <SalesBadge invisible={filters.sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
         <Typography variant="body2" 
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
