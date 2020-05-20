@@ -296,7 +296,7 @@ const engine = {
             <ConditionalText label="Price" value={price}/>
             <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
             <Box width={2/3}>
-              <Enquiry classes={classes} id={boat.id}
+              <Enquiry classes={classes} boat={boat}
               label="Interested?"
               buttons={[{ label: 'Send', key: 'for_sale' }]}
               />
@@ -374,7 +374,7 @@ const engine = {
                >See more boats</Button>
                </Grid>
                <Grid item xs={10} >
-               <Enquiry classes={classes} id={boat.id} />
+               <Enquiry classes={classes} boat={boat} />
                </Grid>
               </Grid>
             </Paper>

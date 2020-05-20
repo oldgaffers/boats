@@ -29,7 +29,7 @@ const DELETE_ENQUIRY = gql`
 `;
 
 export default function Enquiry({
-  id,
+  boat,
   classes,
   buttons = [
     { label: 'Make contact with the owner', key: 'general' },
@@ -74,7 +74,8 @@ export default function Enquiry({
   }
 
   function handleClick(event, key) {
-    addEnquiry({ variables: { type: key, id, email } });
+    const { id, name, oga_no } = boat;
+    addEnquiry({ variables: { type: key, id, name, oga_no, email } });
     setSnackBarOpen(true);
   }
 
