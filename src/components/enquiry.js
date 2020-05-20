@@ -11,8 +11,8 @@ import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
 const ADD_ENQUIRY = gql`
-  mutation AddEnquiry($id: uuid!, $email: String!, $type: enquiry_type_enum!) {
-    insert_enquiry(objects: { boat: $id, email: $email, type: $type }) {
+  mutation AddEnquiry($id: uuid!, $boat_name: String!, $oga_no: Int!, $email: String!, $type: enquiry_type_enum!) {
+    insert_enquiry(objects: { boat: $id, boat_name: $boat_name, oga_no: $oga_no, email: $email, type: $type }) {
       returning {
         id
       }
@@ -75,7 +75,7 @@ export default function Enquiry({
 
   function handleClick(event, key) {
     const { id, name, oga_no } = boat;
-    addEnquiry({ variables: { type: key, id, name, oga_no, email } });
+    addEnquiry({ variables: { type: key, id, boat_name: name, oga_no, email } });
     setSnackBarOpen(true);
   }
 
