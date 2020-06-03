@@ -29,13 +29,14 @@ const client = new ApolloClient({
 });
 
 function FourOhFour() {
-  const { search } = useLocation();
-  if (search === '') {
+  const location = useLocation();
+  if (location.search === '') {
     return (<BrowseBoats />);
   }
-  const params = new URLSearchParams(search);
+  console.log('FourOhFour', JSON.stringify(location));
+  const params = new URLSearchParams(location.search);
   const path = params.get('p');
-  console.log(path);
+  console.log('FourOhFour', path);
   return (<Redirect to={path} />)
 }
 

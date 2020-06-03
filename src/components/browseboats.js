@@ -31,13 +31,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function def(state, field, defaultValue) {
+  if(!state) return defaultValue;
+  if(!state[field]) return defaultValue;
+  return state[field];
+}
+
 function BrowseBoats({ window }) {
   const { state } = useLocation();
   const classes = useStyles();
-  const [boatsPerPage, setBoatsPerPage] = useState(state && state.boatsPerPage);
-  const [sortField, setSortField] = useState(state && state.sortField);
-  const [sortDirection, setSortDirection] = useState(state && state.sortDirection);
-  const [filters, setFilters] = useState(state && state.filters);
+  const [boatsPerPage, setBoatsPerPage] = useState(def(state, 'boatsPerPage', '12'));
+  const [sortField, setSortField] = useState(def(state, 'sortField', 'name'));
+  const [sortDirection, setSortDirection] = useState(def(state, 'sortDirection', 'asc'));
+  const [filters, setFilters] = useState(def(state, 'filters',  { year: { firstYear: 1800, lastYear: new Date().getFullYear() }}));
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -45,7 +51,7 @@ function BrowseBoats({ window }) {
   };
 
   const handlePageSizeChange = (_, a) => {
-    console.log('handlePageSizeChange', a);
+    console.log('BrowseBoats handlePageSizeChange', a);
     setBoatsPerPage(a)
   };
 
@@ -101,7 +107,7 @@ function BrowseBoats({ window }) {
         </Container>
         <Divider />
         <BoatCards
-          boatsPerPage={boatsPerPage?parseInt(boatsPerPage):12}
+          boatsPerPage={parseInt(boatsPerPage)}
           sortField={sortField}
           sortDirection={sortDirection}
           filters={filters}
