@@ -59,10 +59,12 @@ query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
   }`;
 
 function buildWhere(filters) {
-  const all = [
-    { year: { _gte: filters.year.firstYear } },
-    { year: { _lte: filters.year.lastYear } },
-  ];
+  if(!filters) { return { _and: true }}
+  const all = [];
+  if (filters.year) {
+    all.push({ year: { _gte: filters.year.firstYear } });
+    all.push({ year: { _lte: filters.year.lastYear } });
+  }
   if (filters.ogaNo) {
     all.push({ oga_no: { _eq: filters.ogaNo } });
   }
@@ -117,10 +119,10 @@ function buildWhere(filters) {
 }
 
 function BoatCards({
-  boatsPerPage = 12,
-  sortField = 'name',
-  sortDirection = 'asc',
-  filters={ year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
+  boatsPerPage,
+  sortField,
+  sortDirection,
+  filters,
   onLoad = function(n) {
     console.log('boat cards loaded total is', n);
   },
@@ -128,6 +130,7 @@ function BoatCards({
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
+  console.log('BoatCards', sortField, sortDirection);
   const { loading, error, data } = useQuery(
     query(`{${sortField}: ${sortDirection}}`),
     {

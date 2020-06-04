@@ -15,6 +15,14 @@ import BoatCards from './boatcards';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
 
+const sortFieldByLabel = {
+   "Boat Name": 'name',
+   "OGA No.": 'oga_no',
+   "Year Built": 'year',
+   "Last Updated": 'updated_at',
+   "Price": 'price',
+};
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -37,21 +45,29 @@ function def(state, field, defaultValue) {
   return state[field];
 }
 
+function def2(state, field, defaultValue) {
+  console.log('def2', state, field);
+  if(!state) return defaultValue;
+  if(!state[field]) return defaultValue;
+  return state[field];
+}
+
 function BrowseBoats({ window }) {
   const { state } = useLocation();
   const classes = useStyles();
   const [boatsPerPage, setBoatsPerPage] = useState(def(state, 'boatsPerPage', '12'));
-  const [sortField, setSortField] = useState(def(state, 'sortField', 'name'));
+  const [sortField, setSortField] = useState(def(state, 'sortField', 'Boat Name'));
   const [sortDirection, setSortDirection] = useState(def(state, 'sortDirection', 'asc'));
-  const [filters, setFilters] = useState(def(state, 'filters',  { year: { firstYear: 1800, lastYear: new Date().getFullYear() }}));
+  const [filters, setFilters] = useState(def2(state, 'filters',  { year: { firstYear: 1800, lastYear: new Date().getFullYear() }}));
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  console.log('BrowseBoats filters', JSON.stringify(filters));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const handlePageSizeChange = (_, a) => {
-    console.log('BrowseBoats handlePageSizeChange', a);
     setBoatsPerPage(a)
   };
 
@@ -98,7 +114,7 @@ function BrowseBoats({ window }) {
           boatsPerPage={boatsPerPage}
           filters={filters}
           onPageSizeChange={handlePageSizeChange}
-          onSortFieldChange={(_, a) => a && setSortField(a.name)}
+          onSortFieldChange={(field) => setSortField(field)}
           onSortDirectionChange={(event) =>
             setSortDirection(event.target.checked ? 'desc' : 'asc')
           }
@@ -108,7 +124,7 @@ function BrowseBoats({ window }) {
         <Divider />
         <BoatCards
           boatsPerPage={parseInt(boatsPerPage)}
-          sortField={sortField}
+          sortField={sortFieldByLabel[sortField]}
           sortDirection={sortDirection}
           filters={filters}
         />

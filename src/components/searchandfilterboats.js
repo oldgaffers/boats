@@ -114,11 +114,16 @@ export default function SearchAndFilterBoats({
         }
     }
 
+    function handleSortFieldChange(id, value) {
+        console.log('handleSortFieldChange',id,value);
+        onSortFieldChange(value);
+    }
+
     return (
     <form className={classes.root}>
         <Grid container direction="row" justify="center" alignItems="center" >
             <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={names['boat-name']} />
-            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={ogaNo} />
+            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={ogaNo?ogaNo:''} />
             <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={names['designer-name']} />
             <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={names['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
@@ -134,9 +139,9 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" value={names['construction-material-name']}/>
             <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={filters.nopics} />} label="include boats without pictures"  />
             <FormControlLabel control={<Switch id="sale" onChange={sw} checked={filters.sale} />} label="only boats for sale"/>
-            <Picker onChange={onSortFieldChange} id="sort-field" options={sortFields} label="Sort By" value={sortField} />
+            <Picker onChange={handleSortFieldChange} id="sort-field" options={sortFields} label="Sort By" value={sortField} defaultValue={sortField}/>
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
+            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" defaultValue={boatsPerPage} />
         </Grid>
     </form>
     );
