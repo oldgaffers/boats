@@ -125,7 +125,8 @@ export default function SearchAndFilterBoats({
     }
 
     function sy(event) {
-        console.log('sy', event);
+        console.log('sy', event.target);
+        
         const { id, value } = event.target;
         if (value.length === 4) {
             const y = year;
@@ -133,6 +134,7 @@ export default function SearchAndFilterBoats({
             setYear(y);    
             update(); 
         }
+        
     }
 
     function handleSortFieldChange(id, value) {
@@ -140,6 +142,8 @@ export default function SearchAndFilterBoats({
          console.log('handleSortFieldChange', value, map[value], map);
          onSortFieldChange(map[value]);
     }
+
+    const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "1" };
 
     return (
     <form className={classes.root}>
@@ -149,10 +153,10 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={names['designer-name']} />
             <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={names['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
-                min={filters.year.firstYear} max={filters.year.lastYear} value={filters.year.firstYear}
+                type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
-                min={filters.year.firstYear} max={filters.year.lastYear} value={filters.year.lastYear}
+                type="number" inputProps={yearProps} defaultValue={filters.year.lastYear+1}
             />
             <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" value={names['rig-type-name']}/>
             <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" value={names['mainsail-type-name']}/>
