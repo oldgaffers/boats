@@ -5,13 +5,15 @@ import { FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Picker from './picker'
 
-const sortFields = [
-    { name: "Boat Name" },
-    { name: "OGA No." },
-    { name: "Year Built" },
-    { name: "Last Updated" },
-    { name: "Price" },
-];
+ const sortLabelByField = {
+    name: "Boat Name",
+    oga_no: "OGA No.",
+    year: "Year Built",
+    updated_at: "Last Updated",
+    price: "Price",
+ };
+
+const sortLabels = Object.entries(sortLabelByField).map(([key, value]) => ({name: value}));
 
 const pageSize = [];
 for(let i=1; i<=8; i++) {
@@ -48,12 +50,26 @@ export default function SearchAndFilterBoats({
     onSortDirectionChange,
 }) {
     const classes = useStyles();
-    const [names, setNames] = useState({});
+    const [names, setNames] = useState({
+        'boat-name': '',
+        'designer-name': '',
+        'builder-name': '',
+        'rig-type-name': '',
+        'mainsail-type-name': '',
+        'generic-type-name': '',
+        'design-class-name': '',
+        'construction-material-name': '',
+    });
     const [ogaNo, setOgaNo] = useState();
     const [year, setYear] = useState((filters && filters.year) ? filters.year : { firstYear: 1800, lastYear: new Date().getFullYear() });
     
-    function update() {
-        const f = { ...names, ogaNo, year };
+    function update() {        
+        const f = { ogaNo, year };
+        Object.entries(names).forEach(([key, value]) => {
+            if (value !== '') {
+                f[key] = value; 
+            }
+        });
         console.log('updateFilters', f);
         if(onFilterChange) onFilterChange(f);
     }
@@ -88,15 +104,12 @@ export default function SearchAndFilterBoats({
     }
 
     function pl(id, value) {
+        console.log('pl', id, value);
         const n = names;
-        if (value) {
-            n[id] = value;
-        } else {
-            delete n[id];
-        }
+        n[id] = value;
         setNames(n);
         update(); 
-}
+    }
 
     function o(event) {
         setOgaNo(event.target.value);
@@ -115,8 +128,15 @@ export default function SearchAndFilterBoats({
     }
 
     function handleSortFieldChange(id, value) {
-        console.log('handleSortFieldChange',id,value);
-        onSortFieldChange(value);
+        const map = {
+            "Boat Name": 'name',
+            "OGA No.": 'oga_no',
+            "Year Built": 'year',
+            "Last Updated": 'updated_at',
+            "Price": 'price',
+         };
+         console.log('handleSortFieldChange', value, map[value], map);
+         onSortFieldChange(map[value]);
     }
 
     return (
@@ -137,9 +157,9 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" value={names['generic-type-name']}/>
             <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" value={names['design-class-name']}/>
             <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" value={names['construction-material-name']}/>
-            <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={filters.nopics} />} label="include boats without pictures"  />
-            <FormControlLabel control={<Switch id="sale" onChange={sw} checked={filters.sale} />} label="only boats for sale"/>
-            <Picker onChange={handleSortFieldChange} id="sort-field" options={sortFields} label="Sort By" value={sortField} defaultValue={sortField}/>
+            <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
+            <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
+            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" defaultValue={'Boat Name'} />
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
             <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" defaultValue={boatsPerPage} />
         </Grid>
