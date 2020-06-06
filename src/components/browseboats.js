@@ -73,8 +73,8 @@ function BrowseBoats({ window }) {
   const container = window !== undefined ? () => window().document.body : undefined;
 
   let config = state;
-  if (config === undefined) {
-    let config = { 
+  if (!config) {
+    config = { 
       boatsPerPage: '12',
       sortField: 'name',
       sortDirection: 'asc',
@@ -82,6 +82,8 @@ function BrowseBoats({ window }) {
      }
      history.replace('/', config);
   }
+
+  console.log(config);
 
   console.log('BrowseBoats history', history);
 
