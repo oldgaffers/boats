@@ -72,7 +72,8 @@ export default function SearchAndFilterBoats({
     const [year, setYear] = useState((filters && filters.year) ? filters.year : { firstYear: 1800, lastYear: new Date().getFullYear() });
     
     function update() {        
-        const f = { ogaNo, year };
+        const f = { year };
+        if( ogaNo ) f.ogaNo = ogaNo;
         Object.entries(names).forEach(([key, value]) => {
             if (value !== '') {
                 f[key] = value; 
