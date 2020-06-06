@@ -7,13 +7,21 @@ import Picker from './picker'
 
  const sortLabelByField = {
     name: "Boat Name",
-    oga_no: "OGA No.",
+    oga_no: "OGA Boat No.",
     year: "Year Built",
     updated_at: "Last Updated",
     price: "Price",
  };
 
-const sortLabels = Object.entries(sortLabelByField).map(([key, value]) => ({name: value}));
+ const sortLabels = [
+    { field: 'name', name: "Boat Name" },
+    { field: 'oga_no', name: "OGA Boat No." },
+    { field: 'year', name: "Year Built" },
+    { field: 'updated_at', name: "Last Updated" },
+    { field: 'price', name: "Price" },
+ ];
+
+const sortFieldsByLabel = sortLabels.reduce((r, { field, name}) => { r[name]=field; return r;}, {});
 
 const pageSize = [];
 for(let i=1; i<=8; i++) {
@@ -128,13 +136,7 @@ export default function SearchAndFilterBoats({
     }
 
     function handleSortFieldChange(id, value) {
-        const map = {
-            "Boat Name": 'name',
-            "OGA No.": 'oga_no',
-            "Year Built": 'year',
-            "Last Updated": 'updated_at',
-            "Price": 'price',
-         };
+        const map = sortFieldsByLabel;
          console.log('handleSortFieldChange', value, map[value], map);
          onSortFieldChange(map[value]);
     }
@@ -159,7 +161,7 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" value={names['construction-material-name']}/>
             <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
             <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
-            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" defaultValue={'Boat Name'} />
+            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" defaultValue={sortLabels[0].name} />
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
             <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" defaultValue={boatsPerPage} />
         </Grid>
