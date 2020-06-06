@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 import { FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
@@ -58,32 +58,6 @@ export default function SearchAndFilterBoats({
     onSortDirectionChange,
 }) {
     const classes = useStyles();
-    const [names, setNames] = useState({
-        'boat-name': '',
-        'designer-name': '',
-        'builder-name': '',
-        'rig-type-name': '',
-        'mainsail-type-name': '',
-        'generic-type-name': '',
-        'design-class-name': '',
-        'construction-material-name': '',
-    });
-    const [ogaNo, setOgaNo] = useState();
-    const [year, setYear] = useState((filters && filters.year) ? filters.year : { firstYear: 1800, lastYear: new Date().getFullYear() });
-    
-    function update() {        
-        const f = { year };
-        if( ogaNo ) f.ogaNo = ogaNo;
-        Object.entries(names).forEach(([key, value]) => {
-            if (value !== '') {
-                f[key] = value; 
-            }
-        });
-        console.log('updateFilters', f);
-        if(onFilterChange) onFilterChange(f);
-    }
-
-    useEffect(update, [names, ogaNo, year]);
 
     const { loading, error, data } = useQuery(gql(`{
         boat{name previous_names}
@@ -105,37 +79,30 @@ export default function SearchAndFilterBoats({
 
     function sw(event, val) {
         if (event.target.id) {
-            const n = names;
+            const n = {};
             n[event.target.id] = val;
-            setNames(n);
-            update(); 
+            onFilterChange({ ...filters, ...n });
         }
     }
 
     function pl(id, value) {
-        console.log('pl', id, value);
-        const n = names;
+        const n = {};
         n[id] = value;
-        setNames(n);
-        update(); 
+        onFilterChange({ ...filters, ...n });
     }
 
     function o(event) {
-        setOgaNo(event.target.value);
-        update(); 
+        onFilterChange({ ...filters, ogaNo: event.target.value });
     }
 
     function sy(event) {
         console.log('sy', event.target);
-        
         const { id, value } = event.target;
         if (value.length === 4) {
-            const y = year;
-            y[id] = parseInt(value);
-            setYear(y);
-            update();
+            const year = { ...filters.year };
+            year[id] = parseInt(value);
+            onFilterChange({ ...filters, year });
         }
-        
     }
 
     function handleSortFieldChange(id, value) {
@@ -149,26 +116,26 @@ export default function SearchAndFilterBoats({
     return (
     <form className={classes.root}>
         <Grid container direction="row" justify="center" alignItems="center" >
-            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" />
-            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" />
-            <Picker onChange={pl} id="designer-name" options={designer} label="Designer" />
-            <Picker onChange={pl} id="builder-name" options={builder} label="Builder" defaultValue={filters['builder']} />
+            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['name']} />
+            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
+            <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={filters['designer']} />
+            <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} defaultValue={filters.year.lastYear+1}
             />
-            <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" defaultValue={filters['rig-type']}/>
-            <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" />
-            <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" />
-            <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" />
+            <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" value={filters['rig-type']}/>
+            <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" value={filters['mainsail-type']}/>
+            <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" value={filters['generic-type']}/>
+            <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" value={filters['design-class']}/>
             <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" />
             <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
             <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
             <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" />
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
+            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page"/>
         </Grid>
     </form>
     );

@@ -45,13 +45,18 @@ function Picker({ options, id, label, onChange, value, clearable = true }) {
     return option.name === value;
   }
 
+  console.log(id, 'picker render', value);
+  if (value && value !== inputValue) {
+    setInputValue(value);
+  }
+
   return (
     <Autocomplete
       id={id}
       options={options}
       getOptionSelected={(option, value) => v(option,value)}
       getOptionLabel={(option) => option.name?option.name:option}
-      value={value}
+      value={value||''}
       onChange={(event, option, reason) => handleChange(event, option, reason)}
       inputValue={inputValue}
       onInputChange={(event, newInputValue) => {
