@@ -149,26 +149,26 @@ export default function SearchAndFilterBoats({
     return (
     <form className={classes.root}>
         <Grid container direction="row" justify="center" alignItems="center" >
-            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={names['boat-name']} />
-            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={ogaNo?ogaNo:''} />
-            <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={names['designer-name']} />
-            <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={names['builder-name']} />
+            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" />
+            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" />
+            <Picker onChange={pl} id="designer-name" options={designer} label="Designer" />
+            <Picker onChange={pl} id="builder-name" options={builder} label="Builder" defaultValue={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} defaultValue={filters.year.lastYear+1}
             />
-            <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" value={names['rig-type-name']}/>
-            <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" value={names['mainsail-type-name']}/>
-            <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" value={names['generic-type-name']}/>
-            <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" value={names['design-class-name']}/>
-            <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" value={names['construction-material-name']}/>
+            <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" defaultValue={filters['rig-type']}/>
+            <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" />
+            <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" />
+            <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" />
+            <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" />
             <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
             <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
-            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" defaultValue={sortLabels[0].name} />
+            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" />
             <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" defaultValue={boatsPerPage} />
+            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page" />
         </Grid>
     </form>
     );
