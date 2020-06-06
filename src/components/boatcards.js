@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const query = (sort) => gql`
+export const query = (sort) => {
+  const q = `
 query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
     boat_aggregate(where: $where) { aggregate { totalCount: count } }
     boat(limit: $limit, offset: $offset, order_by: ${sort}, where: $where) {
@@ -56,10 +57,15 @@ query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
       thumb image_key
       for_sale_state { text }
     }
-  }`;
+  }`
+  // console.log(q);
+  return gql(q);
+}
 
 function buildWhere(filters) {
-  if(!filters) { return { _and: true }}
+  if (!filters) {
+    return { _and: true }
+  }
   const all = [];
   if (filters.year) {
     all.push({ year: { _gte: filters.year.firstYear } });
@@ -130,7 +136,7 @@ function BoatCards({
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
-  console.log('BoatCards', sortField, sortDirection);
+  // console.log('BoatCards', sortField, sortDirection);
   const { loading, error, data } = useQuery(
     query(`{${sortField}: ${sortDirection}}`),
     {

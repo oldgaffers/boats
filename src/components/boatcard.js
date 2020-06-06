@@ -9,14 +9,26 @@ import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import TextList from './textlist';
 
+function makePreviousNamesField(n) {
+  if (n && n.length>0) {
+    try {
+      return n.join(', ');
+    } catch(e) {
+      console.log(e);
+    }
+
+  }
+  return undefined;
+}
+
 const wanted = {
     year: { label: 'Year Built', access: (n)=>n},
     place_built: { label: 'Place Built', access: (n)=>n},
     home_port: { label: 'Home Port', access: (n)=>n},
     rigType: { label: 'Rig Type', access: (n)=>n},
-    designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:undefined},
-    builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:undefined},
-    previous_names: { label: 'Was', access: (n)=>(n && n.length>0)?n.join(', '):undefined}
+    designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:n},
+    builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:n},
+    previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)}
 };
 
 function SalesBadge({ boat, invisible, children }) {
