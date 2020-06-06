@@ -9,7 +9,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import LeftMenu from './leftmenu';
@@ -31,38 +31,59 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/*
 function def(state, field, defaultValue) {
   if(!state) return defaultValue;
   if(!state[field]) return defaultValue;
   return state[field];
 }
+*/
 
 function BrowseBoats({ window }) {
   const { state } = useLocation();
+  const history = useHistory();
   const classes = useStyles();
-  const [boatsPerPage, setBoatsPerPage] = useState(def(state, 'boatsPerPage', '12'));
-  const [sortField, setSortField] = useState(def(state, 'sortField', 'name'));
-  const [sortDirection, setSortDirection] = useState(def(state, 'sortDirection', 'asc'));
-  const [filters, setFilters] = useState(def(state, 'filters',  { year: { firstYear: 1800, lastYear: new Date().getFullYear() }}));
+  // const [boatsPerPage, setBoatsPerPage] = useState(def(state, 'boatsPerPage', '12'));
+  // const [sortField, setSortField] = useState(def(state, 'sortField', 'name'));
+  // const [sortDirection, setSortDirection] = useState(def(state, 'sortDirection', 'asc'));
+  // const [filters, setFilters] = useState({ year: { firstYear: 1800, lastYear: new Date().getFullYear() }});
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  console.log('BrowseBoats filters', JSON.stringify(filters));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
  
   const handlePageSizeChange = (_, a) => {
-    setBoatsPerPage(a)
+    history.replace('/', { ...state, boatsPerPage: a });
+    // setBoatsPerPage(a)
   };
-
-  const container =
-    window !== undefined ? () => window().document.body : undefined;
-
-  if (sortField.includes(' ')) {
-    console.log('BrowseBoats error sort field is', sortField);
-    throw new Error(`BrowseBoats error sort field is ${sortField}`);
+  
+  function setSortField(field) {
+    history.replace('/', { ...state, sortField: field });
   }
+
+  function setSortDirection(dir) {
+    history.replace('/', { ...state, sortDirection: dir });
+  }
+
+  function setFilters(filters) {
+    history.replace('/', { ...state, filters });
+  }
+
+  const container = window !== undefined ? () => window().document.body : undefined;
+
+  let config = state;
+  if (config === undefined) {
+    let config = { 
+      boatsPerPage: '12',
+      sortField: 'name',
+      sortDirection: 'asc',
+      filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},    
+     }
+     history.replace('/', config);
+  }
+
+  console.log('BrowseBoats history', history);
 
   return (
     <div className={classes.root}>
@@ -99,10 +120,10 @@ function BrowseBoats({ window }) {
             first step is to make sure the boat is on the register.
         </Typography>
         <SearchAndFilterBoats
-          sortDirection={sortDirection}
-          sortField={sortField}
-          boatsPerPage={boatsPerPage}
-          filters={filters}
+          sortDirection={config.sortDirection}
+          sortField={config.sortField}
+          boatsPerPage={config.boatsPerPage}
+          filters={config.filters}
           onPageSizeChange={handlePageSizeChange}
           onSortFieldChange={(field) => setSortField(field)}
           onSortDirectionChange={(event) =>
@@ -113,10 +134,10 @@ function BrowseBoats({ window }) {
         </Container>
         <Divider />
         <BoatCards
-          boatsPerPage={parseInt(boatsPerPage)}
-          sortField={sortField}
-          sortDirection={sortDirection}
-          filters={filters}
+          boatsPerPage={parseInt(config.boatsPerPage)}
+          sortField={config.sortField}
+          sortDirection={config.sortDirection}
+          filters={config.filters}
         />
         <Divider />
         <p>Other great places to look for boats are:</p>

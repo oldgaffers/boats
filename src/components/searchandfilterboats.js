@@ -131,9 +131,9 @@ export default function SearchAndFilterBoats({
         const { id, value } = event.target;
         if (value.length === 4) {
             const y = year;
-            y[id] = value;
-            setYear(y);    
-            update(); 
+            y[id] = parseInt(value);
+            setYear(y);
+            update();
         }
         
     }

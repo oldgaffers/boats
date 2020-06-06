@@ -314,7 +314,9 @@ const engine = {
     setValue(index);
   };
 
-  console.log('location', location);
+  console.log('Boat - location', location);
+  const homeLocation = { ...location, pathname: '/' };
+  console.log('Home - location', homeLocation);
 
   return (
     <div className={classes.root}>
@@ -367,10 +369,7 @@ const engine = {
               variant="contained"
               className={classes.button}
               component={Link}
-              to={{
-                pathname: '/',
-                state: (location)?{ ...location.state }:undefined
-              }}
+              to={homeLocation}
                >See more boats</Button>
                </Grid>
                <Grid item xs={10} >

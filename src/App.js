@@ -56,7 +56,7 @@ function App() {
           <Route path="/editors"><Editors /></Route>
           <Route path="/support"><Support /></Route>
           <Route path="/tech"><Tech /></Route>
-          <Route path="/">
+          <Route path="/">{}
             <ApolloProvider client={client}><FourOhFour /></ApolloProvider>
           </Route>
         </Switch>
