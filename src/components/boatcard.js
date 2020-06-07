@@ -23,7 +23,6 @@ function makePreviousNamesField(n) {
 }
 
 function showPrice(n) {
-  console.log('showPrice', n);
   if (n) return price(n);
   return undefined;
 }
