@@ -55,10 +55,11 @@ query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
       designerByDesigner{name}
       design_class
       thumb image_key
+      price
       for_sale_state { text }
     }
   }`
-  // console.log(q);
+  console.log(q);
   return gql(q);
 }
 
@@ -147,6 +148,7 @@ function BoatCards({
       },
     },
   );
+  if (error) console.log(JSON.stringify(error));
   if (error) return <p>Error: (BoatCards)</p>;
 
   if (loading) {

@@ -8,6 +8,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
 import TextList from './textlist';
+import { price } from '../util/format';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -21,6 +22,12 @@ function makePreviousNamesField(n) {
   return undefined;
 }
 
+function showPrice(n) {
+  console.log('showPrice', n);
+  if (n) return price(n);
+  return undefined;
+}
+
 const wanted = {
     year: { label: 'Year Built', access: (n)=>n},
     place_built: { label: 'Place Built', access: (n)=>n},
@@ -28,7 +35,8 @@ const wanted = {
     rigType: { label: 'Rig Type', access: (n)=>n},
     designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:n},
     builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:n},
-    previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)}
+    previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)},
+    price: { label: 'Price', access: (n) => showPrice(n)},
 };
 
 function SalesBadge({ boat, invisible, children }) {

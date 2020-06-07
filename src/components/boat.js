@@ -23,10 +23,11 @@ import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
 import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
+import { feet, price } from '../util/format';
 
 function m2f(val) {
     if(val) {
-        return `${(val*100/2.54/12).toFixed(2)} ft`;
+        return feet(val*100/2.54/12);
     }
 }
 
@@ -287,13 +288,11 @@ const engine = {
 
   if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
     const fs = boat.for_sales[0];
-    const price = new Intl.NumberFormat('en-GB', { currency: 'GBP', style: 'currency' }
-    ).format(fs.asking_price);
 
     panes.unshift(
         { title: 'For Sale', children: (
              <Paper>
-            <ConditionalText label="Price" value={price}/>
+            <ConditionalText label="Price" value={price(fs.asking_price)}/>
             <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
             <Box width={2/3}>
               <Enquiry classes={classes} boat={boat}
