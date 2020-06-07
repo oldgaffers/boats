@@ -30,7 +30,9 @@ export default function EditDialog({ className, key, disabled, children, boat, e
       >
         {children}
       </Button>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
+      fullWidth maxWidth="200px" style={{minHeight: "50vh", maxHeight: "60vh" }}
+      >
         <DialogTitle id="form-dialog-title">Edit {boat.name} ({boat.oga_no})</DialogTitle>
         <EditBoat boat={boat} email={email} onClose={handleClose} />
       </Dialog>
