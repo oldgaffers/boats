@@ -5,14 +5,6 @@ import { FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Picker from './picker'
 
- const sortLabelByField = {
-    name: "Boat Name",
-    oga_no: "OGA Boat No.",
-    year: "Year Built",
-    updated_at: "Last Updated",
-    price: "Price",
- };
-
  const sortLabels = [
     { field: 'name', name: "Boat Name" },
     { field: 'oga_no', name: "OGA Boat No." },
@@ -21,7 +13,8 @@ import Picker from './picker'
     { field: 'price', name: "Price" },
  ];
 
-const sortFieldsByLabel = sortLabels.reduce((r, { field, name}) => { r[name]=field; return r;}, {});
+const sortFieldByLabel = sortLabels.reduce((r, { field, name}) => { r[name]=field; return r;}, {});
+const sortLabelByField = sortLabels.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
 
 const pageSize = [];
 for(let i=1; i<=8; i++) {
@@ -77,18 +70,14 @@ export default function SearchAndFilterBoats({
 
     const boatNames = makeBoatNameList(boat);
 
-    function sw(event, val) {
+    function sw(event, value) {
         if (event.target.id) {
-            const n = {};
-            n[event.target.id] = val;
-            onFilterChange({ ...filters, ...n });
+            onFilterChange({ ...filters, [event.target.id]: value });
         }
     }
 
     function pl(id, value) {
-        const n = {};
-        n[id] = value;
-        onFilterChange({ ...filters, ...n });
+        onFilterChange({ ...filters, [id]: value });
     }
 
     function o(event) {
@@ -102,13 +91,15 @@ export default function SearchAndFilterBoats({
             const year = { ...filters.year };
             year[id] = parseInt(value);
             onFilterChange({ ...filters, year });
+        } else {
+            console.log('year - do we ever get out of range values?', value);
         }
     }
 
     function handleSortFieldChange(id, value) {
-        const map = sortFieldsByLabel;
-         console.log('handleSortFieldChange', value, map[value], map);
-         onSortFieldChange(map[value]);
+        const field = sortFieldByLabel[value];
+        console.log('handleSortFieldChange', value, field);
+        onSortFieldChange(field);
     }
 
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "1" };
@@ -116,10 +107,10 @@ export default function SearchAndFilterBoats({
     return (
     <form className={classes.root}>
         <Grid container direction="row" justify="center" alignItems="center" >
-            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['name']} />
+            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['boat-name']} />
             <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
-            <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={filters['designer']} />
-            <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={filters['builder']} />
+            <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={filters['designer-name']} />
+            <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={filters['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
             />
