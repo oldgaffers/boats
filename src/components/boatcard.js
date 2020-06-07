@@ -50,10 +50,10 @@ export default function BoatCard({ filters, boatsPerPage, sortField, sortDirecti
   function normaliseDescription(boat) {
     if (boat && boat.short_description) {
       const desc = boat.short_description.trim();
-      if (desc.startsWith('<p>')) {
+      if (desc.startsWith('<')) {
         return desc;
       }
-      return `<p>${desc}</p>`;
+      return `<div>${desc}</div>`;
     }
     return '';
   }
