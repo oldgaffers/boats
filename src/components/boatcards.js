@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import Grid from '@material-ui/core/Grid';
-import { Pagination } from '@material-ui/lab';
+import { usePagination } from '@material-ui/lab/Pagination';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import BoatCard from './boatcard';
 import { makeStyles } from '@material-ui/core/styles';
 import gql from 'graphql-tag';
+// import Icon from '@material-ui/core/Icon';
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -41,7 +42,98 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  ul: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+  },
+  buttonSelected: {
+     fontWeight: 'bold'
+  }
 }));
+
+function useBoatPagination( count, page, onChange ) {
+  const { items } = usePagination({ count, page, onChange });
+  const a = items.findIndex((cur) => cur.type === "start-ellipsis");
+  if (a>=0) {
+    const firstHalf = Math.floor(items[a+1].page / 2);
+    items.splice(a, 0, {
+      disabled: false,
+      onClick: undefined,
+      page: null,
+      selected: false,
+      type: 'other-ellipsis'
+    },
+    {
+      disabled: false,
+      onClick: (event) => onChange(event, firstHalf),
+      page: firstHalf,
+      selected: false,
+      type: 'page'
+    });
+  }
+  const b = items.findIndex((cur) => cur.type === "end-ellipsis");
+  if (b>=0) {
+    const lastHalf = items[b-1].page + Math.floor((count - items[b-1].page) / 2);
+    items.splice(b+1, 0, {
+      disabled: false,
+      onClick: (event) => onChange(event, lastHalf),
+      page: lastHalf,
+      selected: false,
+      type: 'page'
+    },
+    {
+      disabled: false,
+      onClick: undefined,
+      page: null,
+      selected: false,
+      type: 'other-ellipsis'
+    });
+  }
+  console.log('BoatPagination', items);
+  return items;
+}
+
+function BoatPagination({items}) {
+  const classes = useStyles();
+  return (
+    <nav>
+      <ul className={classes.ul}>
+        {items.map(({ page, type, selected, ...item }, index) => {
+          let children = null;
+          switch (type) {
+            case 'other-ellipsis':
+            case 'start-ellipsis':
+            case 'end-ellipsis':
+              children = '…';
+            break;
+            case 'page':
+              children = (
+              <button type="button" {...item} className={selected?classes.buttonSelected:undefined}>
+                {page}
+              </button>
+            );
+            break;
+            case 'fast-forward':
+                // children = (<Icon component="button" {...item} >fast_forward</Icon>);
+              break;
+              case 'fast-rewind':
+                // children = (<Icon component="button" {...item} >fast_rewind</Icon>);
+              break;
+            default:
+              children = (
+              <button type="button" {...item}>
+                {type}
+              </button>
+            );
+          }
+          return <li key={index}>{children}</li>;
+        })}
+      </ul>
+    </nav>
+  );
+}
 
 export const query = (sort) => {
   const q = `
@@ -59,7 +151,7 @@ query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
       for_sale_state { text }
     }
   }`
-  console.log(q);
+  // console.log(q);
   return gql(q);
 }
 
@@ -135,7 +227,6 @@ function BoatCards({
   },
 }) {
   const classes = useStyles();
-
   const [page, setPage] = useState(1);
   // console.log('BoatCards', sortField, sortDirection);
   const { loading, error, data } = useQuery(
@@ -149,6 +240,22 @@ function BoatCards({
     },
   );
   if (error) console.log(JSON.stringify(error));
+
+  const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; // should only happen in test
+
+  if (onLoad) {
+    onLoad(totalCount);
+  }
+
+  const pageItems = useBoatPagination(
+    Math.ceil(totalCount / boatsPerPage),
+    page,
+    function(event, page) {
+      console.log('handlePageChange', event, page);
+      setPage(page);
+    }
+  );
+
   if (error) return <p>Error: (BoatCards)</p>;
 
   if (loading) {
@@ -159,27 +266,10 @@ function BoatCards({
     }
   }
 
-  const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; // should only happen in test
-
-  if (onLoad) {
-    onLoad(totalCount);
-  }
-
-  const pages = Math.ceil(totalCount / boatsPerPage);
-
-  function handlePageChange(event, page) {
-    setPage(page);
-  }
-
   if (totalCount > 0) {
     return (
       <Container className={classes.cardGrid} maxWidth="md">
-        <Pagination 
-            count={pages}
-            variant="outlined"
-            shape="rounded"
-            onChange={handlePageChange}
-          />
+        <BoatPagination items={pageItems} />
           <Box py={1} ></Box>
           <Grid container spacing={4}>
           {data.boat.map((boat) => (
@@ -193,12 +283,7 @@ function BoatCards({
           ))}
           </Grid>
           <Box py={1} ></Box>
-          <Pagination
-          count={pages}
-          variant="outlined"
-          shape="rounded"
-          onChange={handlePageChange}
-        />
+          <BoatPagination items={pageItems} />
         </Container>
     );
   }
