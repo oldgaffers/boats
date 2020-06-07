@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import EditDialog from './forms/editdialog';
 
 const ADD_ENQUIRY = gql`
   mutation AddEnquiry($id: uuid!, $boat_name: String!, $oga_no: Int!, $email: String!, $type: enquiry_type_enum!) {
@@ -97,20 +98,50 @@ export default function Enquiry({
           />
         </Grid>
         <Grid item xs={8}>
-          {buttons.map((button) => (
-            <Button
-              size="small"
-              key={button.key}
-              variant="contained"
-              color="primary"
-              disabled={!email}
-              className={classes.button}
-              endIcon={<Icon>send</Icon>}
-              onClick={(e) => handleClick(e, button.key)}
-            >
-              {button.label}
-            </Button>
-          ))}
+          {buttons.map((button) => {
+            let children;
+            switch (button.key) {
+              case 'general':
+                children = (<Button
+                  size="small"
+                  key={button.key}
+                  variant="contained"
+                  color="primary"
+                  disabled={!email}
+                  className={classes.button}
+                  endIcon={<Icon>send</Icon>}
+                  onClick={(e) => handleClick(e, button.key)}
+                >
+                  {button.label}
+                </Button>);
+                break;
+              case 'addinfo':
+                children = (<EditDialog
+                  className={classes.button}
+                  key={button.key}
+                  disabled={!email}
+                  boat={boat}
+                  email={email}
+                  >
+                  {button.label}
+                  </EditDialog>);
+                break;
+              case 'handicap':
+                children = (<EditDialog
+                  className={classes.button}
+                  key={button.key}
+                  disabled={!email}
+                  boat={boat}
+                  email={email}
+                  >
+                  {button.label}
+                  </EditDialog>);
+                break;
+              default:
+                // nothing
+            }
+            return children;
+          })}
         </Grid>
       </Grid>
       <Snackbar

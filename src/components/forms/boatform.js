@@ -1,8 +1,10 @@
 import React, { useState, isValidElement, cloneElement } from 'react';
-import { Button, Container, Typography, TextField } from '@material-ui/core';
+import { Button, Typography, TextField } from '@material-ui/core';
 import MUIRichTextEditor from 'mui-rte';
 import RadioList from './radiolist';
 import ComboBox from './combobox';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
 
 function Step({
   step,
@@ -12,14 +14,20 @@ function Step({
   children,
   disabled,
   onSubmit,
+  onCancel
 }) {
   if (currentStep !== step) {
     return null;
   }
   return (
     <>
-      {children}
-      <Container>
+    <DialogContent>
+    {children}
+    </DialogContent>
+    <DialogActions>
+        <Button onClick={onCancel} color="primary">
+            Cancel
+        </Button>
         {onPrev ? (
           <Button variant="contained" onClick={onPrev}>
             Back
@@ -36,7 +44,7 @@ function Step({
             Submit
           </Button>
         )}
-      </Container>
+      </DialogActions>
     </>
   );
 }
@@ -48,6 +56,7 @@ function JumpStep({
   onNext,
   onPrev,
   onJump,
+  onCancel,
   nextLabel,
   jumpLabel,
 }) {
@@ -56,8 +65,13 @@ function JumpStep({
   }
   return (
     <>
-      {children}
-      <Container>
+    <DialogContent>
+    {children}
+    </DialogContent>
+    <DialogActions>
+        <Button onClick={onCancel} color="primary">
+            Cancel
+        </Button>
         <Button variant="contained" onClick={onPrev}>
           Back
         </Button>
@@ -67,7 +81,7 @@ function JumpStep({
         <Button variant="contained" onClick={onJump}>
           {jumpLabel}
         </Button>
-      </Container>
+      </DialogActions>
     </>
   );
 }
@@ -167,7 +181,8 @@ function Sail({ label, fields, state, onChange }) {
     );
 }
 
-export default function BoatForm({ state, onChange, onSubmit }) {
+export default function BoatForm({ 
+  boat, email, state, onChange, onSubmit, onClose }) {
   const [step, setStep] = useState(1);
 
   let f = {};
@@ -188,19 +203,12 @@ export default function BoatForm({ state, onChange, onSubmit }) {
 
   return (
     <>
-      <Step step={n++} currentStep={step} onNext={handleNext}>
-        <Field name="name" label="Current name of boat" state={state} onChange={onChange} />
-        <Field
-          state={state}
-          onChange={onChange}
-          label="Contact email"
-        />
-      </Step>
       <Step
         step={n++}
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Upload some Pictures</Typography>
       </Step>
@@ -209,6 +217,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Field
           state={state}
@@ -221,6 +230,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Design Class</Typography>
         <RadioList
@@ -239,6 +249,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <ComboBox
           name="design_class"
@@ -253,6 +264,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Main sail type</Typography>
         <RadioList
@@ -276,6 +288,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Rig type</Typography>
         <RadioList
@@ -290,6 +303,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Engine</Typography>
         <RadioList
@@ -304,6 +318,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <ComboBox
           label="Designer"
@@ -320,6 +335,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         onJump={jumpPastHandicap}
         nextLabel="Enter Handicapping Details"
         jumpLabel="Not Now"
+        onCancel={onClose}
       >
         <Typography>Basic hull measurements</Typography>
         <Field
@@ -340,6 +356,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Measurement Diagram</Typography>
         <img alt="measurement diagram" src="hull-measurements.png" />
@@ -350,6 +367,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Hull measurements</Typography>
         <HandicapField
@@ -365,6 +383,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
           state={state}
           onChange={onChange}
           type="number"
+          onCancel={onClose}
         />
         <HandicapField
           name='beam'
@@ -386,6 +405,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       ></Step>
       <JumpStep
         step={(firstBeforeRacingHeadsails = n++)}
@@ -395,6 +415,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         onJump={jumpPastRacingHeadsails}
         nextLabel="Enter Headsail Details"
         jumpLabel="No headsails set when racing"
+        onCancel={onClose}
       >
         <Field state={state} onChange={onChange} label="Sail Area" />
         <Sail
@@ -409,6 +430,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -422,6 +444,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -435,6 +458,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -448,6 +472,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={jumpBackPastRacingHeadsails}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -461,6 +486,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -474,6 +500,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -487,6 +514,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Sail
           state={state}
@@ -500,6 +528,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Propellor type</Typography>
         <HandicapField as={<RadioList/>}
@@ -514,6 +543,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Hull type</Typography>
         <RadioList
@@ -537,6 +567,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={jumpBackPastHandicap}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Spar material</Typography>
         <RadioList
@@ -558,6 +589,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Construction method</Typography>
         <RadioList
@@ -581,6 +613,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Construction material</Typography>
         <RadioList
@@ -605,6 +638,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Year built / launched</Typography>
         <Field state={state} onChange={onChange} label="Year" />
@@ -614,6 +648,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <ComboBox
           label="Builder"
@@ -627,6 +662,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <ReallyDumbRTE
           label="Short description"
@@ -639,6 +675,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Location</Typography>
         <ComboBox name="home_country" 
@@ -654,6 +691,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Part 1 British Registry Details</Typography>
         <Field
@@ -679,6 +717,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Other Registrations</Typography>
         <Field name="ssr" label="SSR" state={state} onChange={onChange} />
@@ -695,6 +734,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <Typography>Function</Typography>
         <ComboBox
@@ -715,6 +755,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         currentStep={step}
         onPrev={handlePrev}
         onNext={handleNext}
+        onCancel={onClose}
       >
         <ComboBox
           name="generic_type"
@@ -730,6 +771,7 @@ export default function BoatForm({ state, onChange, onSubmit }) {
         onPrev={handlePrev}
         disabled={false /* TODO */}
         onSubmit={onSubmit}
+        onCancel={onClose}
       >
         <ReallyDumbRTE
           label="Full description"
