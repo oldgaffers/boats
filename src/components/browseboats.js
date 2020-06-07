@@ -31,22 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/*
-function def(state, field, defaultValue) {
-  if(!state) return defaultValue;
-  if(!state[field]) return defaultValue;
-  return state[field];
-}
-*/
-
 function BrowseBoats({ window }) {
   const { state } = useLocation();
   const history = useHistory();
   const classes = useStyles();
-  // const [boatsPerPage, setBoatsPerPage] = useState(def(state, 'boatsPerPage', '12'));
-  // const [sortField, setSortField] = useState(def(state, 'sortField', 'name'));
-  // const [sortDirection, setSortDirection] = useState(def(state, 'sortDirection', 'asc'));
-  // const [filters, setFilters] = useState({ year: { firstYear: 1800, lastYear: new Date().getFullYear() }});
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -71,14 +59,14 @@ function BrowseBoats({ window }) {
   }
 
   const container = window !== undefined ? () => window().document.body : undefined;
-
+//filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
   let config = state;
   if (!config) {
     config = { 
       boatsPerPage: '12',
       sortField: 'name',
       sortDirection: 'asc',
-      filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},    
+      filters: { },    
      }
      history.replace('/', config);
   }

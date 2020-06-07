@@ -5,6 +5,15 @@ import { FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Picker from './picker'
 
+/*
+<TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
+                type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
+            />
+            <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
+                type="number" inputProps={yearProps} defaultValue={filters.year.lastYear+1}
+            />
+*/
+
  const sortLabels = [
     { field: 'name', name: "Boat Name" },
     { field: 'oga_no', name: "OGA Boat No." },
@@ -102,7 +111,7 @@ export default function SearchAndFilterBoats({
         onSortFieldChange(field);
     }
 
-    const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "1" };
+    const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
 
     return (
     <form className={classes.root}>
@@ -112,10 +121,10 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={filters['designer-name']} />
             <Picker onChange={pl} id="builder-name" options={builder} label="Builder" value={filters['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
-                type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
+                type="number" inputProps={yearProps} 
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
-                type="number" inputProps={yearProps} defaultValue={filters.year.lastYear+1}
+                type="number" inputProps={yearProps} 
             />
             <Picker onChange={pl} id="rig-type" options={rig_type} label="Rig Type" value={filters['rig-type']}/>
             <Picker onChange={pl} id="mainsail-type" options={sail_type} label="Mainsail Type" value={filters['mainsail-type']}/>
