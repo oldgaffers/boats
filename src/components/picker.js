@@ -45,7 +45,7 @@ function Picker({ options, id, label, onChange, value, clearable = true }) {
     return option.name === value;
   }
 
-  console.log(id, 'picker render', value);
+  // console.log(id, 'picker render', value);
   if (value && value !== inputValue) {
     setInputValue(value);
   }
