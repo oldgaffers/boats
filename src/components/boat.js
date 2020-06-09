@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-import Box from '@material-ui/core/Box';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
@@ -294,12 +293,6 @@ const engine = {
              <Paper>
             <ConditionalText label="Price" value={price(fs.asking_price)}/>
             <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
-            <Box width={2/3}>
-              <Enquiry classes={classes} boat={boat}
-              label="Interested?"
-              buttons={[{ label: 'Send', key: 'for_sale' }]}
-              />
-            </Box>
             </Paper>
         ) },
     );

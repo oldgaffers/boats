@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -9,7 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import EditDialog from './forms/editdialog';
+//import EditDialog from './forms/editdialog';
 
 const ADD_ENQUIRY = gql`
   mutation AddEnquiry($id: uuid!, $boat_name: String!, $oga_no: Int!, $email: String!, $type: enquiry_type_enum!) {
@@ -29,15 +30,15 @@ const DELETE_ENQUIRY = gql`
   }
 `;
 
+
 export default function Enquiry({
   boat,
   classes,
   buttons = [
-    { label: 'Make contact with the owner', key: 'general' },
+    { label: 'Contact the editors', key: 'general' },
     { label: 'Add pictures / text', key: 'addinfo' },
-    { label: 'Request a handicap', key: 'handicap' },
   ],
-  label = 'enter an email and click one of the options below if you want to be contacted about this boat',
+  label = 'enter an email and click one of the options below if you want to be contacted about this boat or add pictures or text',
 }) {
   const [email, setEmail] = useState();
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -116,7 +117,7 @@ export default function Enquiry({
                 </Button>);
                 break;
               case 'addinfo':
-                children = (<EditDialog
+                children = (<FillJot
                   className={classes.button}
                   key={button.key}
                   disabled={!email}
@@ -124,18 +125,7 @@ export default function Enquiry({
                   email={email}
                   >
                   {button.label}
-                  </EditDialog>);
-                break;
-              case 'handicap':
-                children = (<EditDialog
-                  className={classes.button}
-                  key={button.key}
-                  disabled={!email}
-                  boat={boat}
-                  email={email}
-                  >
-                  {button.label}
-                  </EditDialog>);
+                  </FillJot>);
                 break;
               default:
                 // nothing
