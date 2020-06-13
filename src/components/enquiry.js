@@ -1,4 +1,3 @@
-import queryString from 'query-string';
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
@@ -10,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-//import EditDialog from './forms/editdialog';
+import FillJot from './filljot';
 
 const ADD_ENQUIRY = gql`
   mutation AddEnquiry($id: uuid!, $boat_name: String!, $oga_no: Int!, $email: String!, $type: enquiry_type_enum!) {
