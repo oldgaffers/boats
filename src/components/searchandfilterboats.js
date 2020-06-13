@@ -1,10 +1,11 @@
 import React from 'react'
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
+import { Divider, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Picker from './picker'
-
+import FormGroup from '@material-ui/core/FormGroup';
+import FormHelperText from '@material-ui/core/FormHelperText';
 /*
 <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} defaultValue={filters.year.firstYear}
@@ -118,7 +119,23 @@ export default function SearchAndFilterBoats({
 
     return (
     <form className={classes.root}>
-        <Grid container direction="row" justify="center" alignItems="center" >
+        <p></p>
+        <Divider/>
+        <FormHelperText>Use these controls to sort the list by name, price, etc. and to choose how much you want to see</FormHelperText>
+        <Grid container direction="row" justify="space-between" alignItems="stretch" >
+            <FormGroup>
+            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Currently Sorting By" />
+            <span>&nbsp;&nbsp;&nbsp;<FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" /></span>
+            </FormGroup>
+            <FormGroup>
+            <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
+            <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
+            </FormGroup>
+            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page"/>
+        </Grid>
+        <Divider/>
+        <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
+        <Grid container direction="row" justify="space-between" alignItems="stretch" >
             <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['boat-name']} />
             <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
             <Picker onChange={pl} id="designer-name" options={designer} label="Designer" value={filters['designer-name']} />
@@ -134,11 +151,6 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="generic-type" options={generic_type} label="Generic Type" value={filters['generic-type']}/>
             <Picker onChange={pl} id="design-class" options={design_class} label="Design Class" value={filters['design-class']}/>
             <Picker onChange={pl} id="construction-material" options={construction_material} label="Construction Material" />
-            <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
-            <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
-            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Sort By" />
-            <FormControlLabel id="sort-direction" onChange={onSortDirectionChange} control={<Switch checked={sortDirection==='desc'} />} label="reversed" />
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page"/>
         </Grid>
     </form>
     );
