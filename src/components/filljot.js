@@ -5,9 +5,11 @@ import Icon from '@material-ui/core/Icon';
 
 export default function FillJot({ className, boat, email, disabled, children }) {
 
+  /*
   function m2f(m) {
     return (100*m/2.54/12);
   }
+  */
 
   async function handleClick() {
     const form = 'https://form.jotform.com/201591501001335';
