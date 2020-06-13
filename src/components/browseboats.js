@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+//import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
+//import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
@@ -12,8 +13,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import LeftMenu from './leftmenu';
-import DrawerController from './drawercontroller';
+//import LeftMenu from './leftmenu';
+//import DrawerController from './drawercontroller';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,11 +36,11 @@ function BrowseBoats({ window }) {
   const { state } = useLocation();
   const history = useHistory();
   const classes = useStyles();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  //const [mobileOpen, setMobileOpen] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
+  //const handleDrawerToggle = () => {
+  //  setMobileOpen(!mobileOpen);
+  //};
  
   const handlePageSizeChange = (_, a) => {
     history.replace('/', { ...state, boatsPerPage: a });
@@ -58,8 +59,8 @@ function BrowseBoats({ window }) {
     history.replace('/', { ...state, filters });
   }
 
-  const container = window !== undefined ? () => window().document.body : undefined;
-//filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
+  // const container = window !== undefined ? () => window().document.body : undefined;
+  //filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
   let config = state;
   if (!config) {
     config = { 
@@ -78,11 +79,15 @@ function BrowseBoats({ window }) {
   return (
     <div className={classes.root}>
       <CssBaseline />
+      {/*
       <LeftMenu open={mobileOpen} onClose={handleDrawerToggle} container={container} />
+      */}
       <Paper>
+        {/*
         <Grid container direction="row">
           <DrawerController onClick={handleDrawerToggle}/>
         </Grid>
+        */}
         <Container>
         <Typography variant="body1">
           We have hundreds of boats with pictures, and many more waiting for
