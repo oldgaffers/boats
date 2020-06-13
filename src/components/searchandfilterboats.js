@@ -94,14 +94,17 @@ export default function SearchAndFilterBoats({
     }
 
     function sy(event) {
-        console.log('sy', event.target);
         const { id, value } = event.target;
+        const year = { ...filters.year };
+        console.log('sy', id, value, year);
         if (value.length === 4) {
-            const year = { ...filters.year };
             year[id] = parseInt(value);
             onFilterChange({ ...filters, year });
+        } else if (value === '') {
+            delete year[id];
+            onFilterChange({ ...filters, year });
         } else {
-            console.log('year - do we ever get out of range values?', value);
+            console.log('unchanged', year);
         }
     }
 
