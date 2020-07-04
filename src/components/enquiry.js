@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -80,50 +79,44 @@ export default function Enquiry({ boat, classes }) {
   };
 
   return (
-    <Grid container direction="column">
-      <Grid container direction="row" alignItems="flex-end">
-        <Grid item xs={8}>
-        <div>
-            <Button className={classes.button} size="small"
-              endIcon={<Icon>send</Icon>}
-              variant="contained"
-              color="primary" onClick={handleClickOpen}>
-              Contact the editors
-            </Button>
-            <Dialog open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
-              <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
-              <DialogContent>
-                <DialogContentText>
-                  We'd love to hear from you. Please enter your email address here and tell us how we can help.
-                </DialogContentText>
-                <TextField
-                  onChange={handleEmailChange}
-                  autoFocus
-                  margin="dense"
-                  label="Email Address"
-                  type="email"
-                  fullWidth
-                />
-                <TextField
-                  onChange={handleTextChange}
-                  margin="dense"
-                  label="About your enquiry"
-                  type="text"
-                  fullWidth
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCancel} color="primary">
-                  Cancel
-                </Button>
-                <Button onClick={handleSend} color="primary">
-                  Send
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </div>
-        </Grid>
-      </Grid>
+        <>
+          <Button className={classes.button} size="small"
+            endIcon={<Icon>send</Icon>}
+            variant="contained"
+            color="primary" onClick={handleClickOpen}>
+            Contact the editors
+          </Button>
+          <Dialog open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
+            <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                We'd love to hear from you. Please enter your email address here and tell us how we can help.
+              </DialogContentText>
+              <TextField
+                onChange={handleEmailChange}
+                autoFocus
+                margin="dense"
+                label="Email Address"
+                type="email"
+                fullWidth
+              />
+              <TextField
+                onChange={handleTextChange}
+                margin="dense"
+                label="About your enquiry"
+                type="text"
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCancel} color="primary">
+                Cancel
+              </Button>
+              <Button onClick={handleSend} color="primary">
+                Send
+              </Button>
+            </DialogActions>
+          </Dialog>
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={snackBarOpen}
@@ -132,6 +125,6 @@ export default function Enquiry({ boat, classes }) {
         message="Thanks, we'll get back to you."
         severity="success"
       />
-    </Grid>
+    </>
   );
 }
