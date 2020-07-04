@@ -335,6 +335,11 @@ const engine = {
                 <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
                 <ConditionalText value={boat.rigTypeByRigType.name} label="Rig"/>
                 <ConditionalText value={boat.home_port} label="Home port or other location"/>
+                <ConditionalText 
+                  value={(boat.website)?(<div>
+                    <a href={boat.website} rel='noreferrer' target='_blank'>click here</a></div>):undefined}
+                  label="Website"
+                />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
                 </Paper>
             </Grid>
