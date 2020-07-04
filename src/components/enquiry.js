@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import Grid from '@material-ui/core/Grid';
-import Icon from '@material-ui/core/Icon';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import Icon from '@material-ui/core/Icon';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
-import FillJot from './filljot';
 
 const ADD_ENQUIRY = gql`
-  mutation AddEnquiry($id: uuid!, $boat_name: String!, $oga_no: Int!, $email: String!, $type: enquiry_type_enum!) {
-    insert_enquiry(objects: { boat: $id, boat_name: $boat_name, oga_no: $oga_no, email: $email, type: $type }) {
+  mutation AddEnquiry(
+      $id: uuid!, 
+      $boat_name: String!, 
+      $oga_no: Int!, 
+      $email: String!, 
+      $text: String!, 
+      $type: enquiry_type_enum!) {
+    insert_enquiry(objects: { 
+      boat: $id, 
+      boat_name: $boat_name, 
+      oga_no: $oga_no, 
+      email: $email, 
+      text: $text,
+      type: $type,
+      }) {
       returning {
         id
       }
@@ -21,6 +35,7 @@ const ADD_ENQUIRY = gql`
   }
 `;
 
+/*
 const DELETE_ENQUIRY = gql`
   mutation DeleteEnquiry($id: uuid!) {
     delete_enquiry(where: { id: { _eq: $id } }) {
@@ -28,139 +43,94 @@ const DELETE_ENQUIRY = gql`
     }
   }
 `;
+*/
 
-
-export default function Enquiry({
-  boat,
-  classes,
-  buttons = [
-    { label: 'Contact the editors', key: 'general' },
-    { label: 'Add pictures / text', key: 'addinfo' },
-  ],
-  label = 'enter an email and click one of the options below if you want to be contacted about this boat or add pictures or text',
-}) {
-  const [email, setEmail] = useState();
+export default function Enquiry({ boat, classes }) {
+  const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [recallSnackBarOpen, setRecallSnackBarOpen] = useState(false);
+  const [email, setEmail] = useState(false);
+  const [text, setText] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
-  const [deleteEnquiry] = useMutation(DELETE_ENQUIRY);
 
-  function recallEnquiry() {
-    setSnackBarOpen(false);
-    const id = result.data.insert_enquiry.returning[0].id;
-    console.log(id);
-    deleteEnquiry({ variables: { id } });
-    setRecallSnackBarOpen(true);
-  }
-
-  const handleSnackBarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setSnackBarOpen(false);
+  const handleClickOpen = () => {
+    setOpen(true);
   };
 
-  function handleRecallSnackBarClose() {
-    setRecallSnackBarOpen(false);
-  }
+  const handleCancel = () => {
+    setOpen(false);
+  };
 
-  function handleEmail(event) {
-    if (event.target.value) {
-      if (event.target.value.trim() !== '' && event.target.checkValidity()) {
-        setEmail(event.target.value);
-        return;
-      }
-    }
-    setEmail(undefined);
-  }
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
 
-  function handleClick(event, key) {
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+  };
+
+  function handleSnackBarClose() {
+    setSnackBarOpen(false);
+  }
+  const handleSend = () => {
     const { id, name, oga_no } = boat;
-    addEnquiry({ variables: { type: key, id, boat_name: name, oga_no, email } });
+    addEnquiry({ variables: { type: 'general', id, boat_name: name, oga_no, email, text } });
+    setOpen(false);
     setSnackBarOpen(true);
-  }
+  };
 
   return (
     <Grid container direction="column">
       <Grid container direction="row" alignItems="flex-end">
-        <Grid item xs={10}>
-          <Typography>{label}</Typography>
-        </Grid>
-      </Grid>
-      <Grid container direction="row" alignItems="flex-end">
-        <Grid item xs={2}>
-          <TextField
-            onChange={handleEmail}
-            fullWidth={true}
-            type="email"
-            id="sender-email"
-            label="your email"
-          />
-        </Grid>
         <Grid item xs={8}>
-          {buttons.map((button) => {
-            let children;
-            switch (button.key) {
-              case 'general':
-                children = (<Button
-                  size="small"
-                  key={button.key}
-                  variant="contained"
-                  color="primary"
-                  disabled={!email}
-                  className={classes.button}
-                  endIcon={<Icon>send</Icon>}
-                  onClick={(e) => handleClick(e, button.key)}
-                >
-                  {button.label}
-                </Button>);
-                break;
-              case 'addinfo':
-                children = (<FillJot
-                  className={classes.button}
-                  key={button.key}
-                  disabled={!email}
-                  boat={boat}
-                  email={email}
-                  >
-                  {button.label}
-                  </FillJot>);
-                break;
-              default:
-                // nothing
-            }
-            return children;
-          })}
+        <div>
+            <Button className={classes.button} size="small"
+              endIcon={<Icon>send</Icon>}
+              variant="contained"
+              color="primary" onClick={handleClickOpen}>
+              Contact the editors
+            </Button>
+            <Dialog open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
+              <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
+              <DialogContent>
+                <DialogContentText>
+                  We'd love to hear from you. Please enter your email address here and tell us how we can help.
+                </DialogContentText>
+                <TextField
+                  onChange={handleEmailChange}
+                  autoFocus
+                  margin="dense"
+                  label="Email Address"
+                  type="email"
+                  fullWidth
+                />
+                <TextField
+                  onChange={handleTextChange}
+                  margin="dense"
+                  label="About your enquiry"
+                  type="text"
+                  fullWidth
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleCancel} color="primary">
+                  Cancel
+                </Button>
+                <Button onClick={handleSend} color="primary">
+                  Send
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         </Grid>
       </Grid>
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={snackBarOpen}
-        autoHideDuration={6000}
-        onClose={handleSnackBarClose}
-        message="Enquiry Sent"
-        action={
-          <React.Fragment>
-            <Button color="secondary" size="small" onClick={recallEnquiry}>
-              RECALL
-            </Button>
-            <IconButton
-              size="small"
-              aria-label="close"
-              color="inherit"
-              onClick={handleSnackBarClose}
-            >
-              <CloseIcon fontSize="small" />
-            </IconButton>
-          </React.Fragment>
-        }
-      />
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        open={recallSnackBarOpen}
         autoHideDuration={2000}
-        onClose={handleRecallSnackBarClose}
-        message="It never happened"
+        onClose={handleSnackBarClose}
+        message="Thanks, we'll get back to you."
+        severity="success"
       />
     </Grid>
   );

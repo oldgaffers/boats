@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-target-blank */
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -337,7 +338,7 @@ const engine = {
                 <ConditionalText value={boat.home_port} label="Home port or other location"/>
                 <ConditionalText 
                   value={(boat.website)?(<div>
-                    <a href={boat.website} rel='noreferrer' target='_blank'>click here</a></div>):undefined}
+                    <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a></div>):undefined}
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
