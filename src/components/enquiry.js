@@ -47,8 +47,8 @@ const DELETE_ENQUIRY = gql`
 export default function Enquiry({ boat, classes }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [email, setEmail] = useState(false);
-  const [text, setText] = useState(false);
+  const [email, setEmail] = useState('');
+  const [text, setText] = useState('');
   // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
 
@@ -61,7 +61,12 @@ export default function Enquiry({ boat, classes }) {
   };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    if(e.target.reportValidity()) {
+      console.log('email', e.target);
+      setEmail(e.target.value);  
+    } else {
+      console.log('invalid email');
+    }
   };
 
   const handleTextChange = (e) => {
@@ -79,20 +84,21 @@ export default function Enquiry({ boat, classes }) {
   };
 
   return (
-        <>
+        <form noValidate autoComplete="off">
           <Button className={classes.button} size="small"
             endIcon={<Icon>send</Icon>}
             variant="contained"
             color="primary" onClick={handleClickOpen}>
             Contact the editors
           </Button>
-          <Dialog open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
+          <Dialog top open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
             <DialogContent>
               <DialogContentText>
                 We'd love to hear from you. Please enter your email address here and tell us how we can help.
               </DialogContentText>
               <TextField
+                error={email === ''}
                 onChange={handleEmailChange}
                 autoFocus
                 margin="dense"
@@ -112,7 +118,7 @@ export default function Enquiry({ boat, classes }) {
               <Button onClick={handleCancel} color="primary">
                 Cancel
               </Button>
-              <Button onClick={handleSend} color="primary">
+              <Button onClick={handleSend} color="primary" disabled={email === ''}>
                 Send
               </Button>
             </DialogActions>
@@ -125,6 +131,6 @@ export default function Enquiry({ boat, classes }) {
         message="Thanks, we'll get back to you."
         severity="success"
       />
-    </>
+    </form>
   );
 }
