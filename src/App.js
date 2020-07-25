@@ -36,12 +36,16 @@ function FourOhFour() {
   console.log('FourOhFour', JSON.stringify(location));
   const params = new URLSearchParams(location.search);
   const path = params.get('p');
-  console.log('FourOhFour', path);
+  console.log('FourOhFour path', path);
+  if(!path) {
+    return (<BrowseBoats />);
+  }
   return (<Redirect to={path} />)
 }
 
 function App() {
   return (
+    // http is a check for dev mode, production will always be https
     <Router basename={window.location.protocol==='http:'?'/':'/boats'}>
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
