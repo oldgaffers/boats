@@ -1,11 +1,9 @@
 import React from 'react';
-//import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
-//import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
@@ -13,8 +11,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-//import LeftMenu from './leftmenu';
-//import DrawerController from './drawercontroller';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,11 +29,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function BrowseBoats({ window }) {
-  const { state } = useLocation();
+  const { state, search } = useLocation();
   const history = useHistory();
   const classes = useStyles();
   //const [mobileOpen, setMobileOpen] = useState(false);
-
+  const params = new URLSearchParams(search);
+  const options = params.get('options');
   //const handleDrawerToggle = () => {
   //  setMobileOpen(!mobileOpen);
   //};
@@ -61,13 +58,23 @@ function BrowseBoats({ window }) {
 
   // const container = window !== undefined ? () => window().document.body : undefined;
   //filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
+  let filters = {}
   let config = state;
-  if (!config) {
+  if (config) {
+    filters = config.filters;
+  }
+  if (options === 'forsale') {
+    filters.sale = true;
+    filters.nopics = true;
+  }
+  if (config) {
+    config.filters = filters;
+  } else {
     config = { 
       boatsPerPage: '12',
       sortField: 'name',
       sortDirection: 'asc',
-      filters: { },    
+      filters,    
      }
      history.replace('/', config);
   }
