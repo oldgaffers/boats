@@ -49,7 +49,6 @@ launched
 place_built
 current_location
 reference
-construction_notes
 construction_details
 WIN
 

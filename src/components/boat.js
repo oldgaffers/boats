@@ -115,7 +115,6 @@ const boatQuery = (id) => gql`{
     constructionMaterialByConstructionMaterial { name }
     constructionMethodByConstructionMethod { name }
     construction_details
-    construction_notes
     designClassByDesignClass { name }
     designerByDesigner { name }
     draft
@@ -229,7 +228,6 @@ export default function Boat() {
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
         <ConditionalText value={boat.construction_details} label="Construction details"/>
-        <ConditionalText value={boat.construction_notes} label="Construction notes"/>
         </Paper>
         )    
     },
