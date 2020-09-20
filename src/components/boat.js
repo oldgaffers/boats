@@ -24,6 +24,7 @@ import SailTable from './sailtable';
 import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
 import { feet, price } from '../util/format';
+// import Upload from './Upload';
 
 function m2f(val) {
     if(val) {
@@ -340,6 +341,7 @@ const engine = {
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
+                { /* <Upload boatName = {boat.name} ogaNo={boat.oga_no} albumKey={boat.image_key} /> */}
                 </Paper>
             </Grid>
             <Grid item xs={12}>
