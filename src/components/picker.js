@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+// import { validate } from 'graphql';
 
 function Picker({ options, id, label, onChange, value, clearable = true }) {
+
   const [inputValue, setInputValue] = useState('');
+
   function handleChange(event, option, reason) {
-    let value;
+    let val;
     switch (reason) {
       case 'input':
-        value = '';
+        // validate = '';
         break;
       case 'reset':
-        if (option) value = option;
-        else value = options[0].name;
+        if (option) {
+          val = option;          
+        } else {
+          val = options[0].name;
+        }
         break;
       case 'clear':
-        value = '';
+        val = '';
         setInputValue('');
         break;
       case 'select-option':
-        value = option.name;
-        setInputValue(value);
+        val = option.name;
+        setInputValue(val);
         break;
       default:
         console.log('unrecognised reason', reason);
@@ -30,19 +36,19 @@ function Picker({ options, id, label, onChange, value, clearable = true }) {
       'onChange',
       reason,
       'value',
-      value || 'undefined',
+      val || 'undefined',
       'option',
       option || 'undefined',
     );
-    onChange(id, value);
+    onChange(id, val);
   }
 
-  function v(option, value) {
-    //console.log(`${id} getOptionSelected ${option.name} !${value}!`);
-    if(!value) return false;
-    if(value === '""') console.log(`${id} getOptionSelected ${option.name} !${value}!`);
-    if(value.name) return option.name === value.name;
-    return option.name === value;
+  function v(option, val) {
+    //console.log(`${id} getOptionSelected ${option.name} !${val}!`);
+    if(!val) return false;
+    if(val === '""') console.log(`${id} getOptionSelected ${option.name} !${val}!`);
+    if(val.name) return option.name === val.name;
+    return option.name === val;
   }
 
   // console.log(id, 'picker render', value);
@@ -54,7 +60,7 @@ function Picker({ options, id, label, onChange, value, clearable = true }) {
     <Autocomplete
       id={id}
       options={options}
-      getOptionSelected={(option, value) => v(option,value)}
+      getOptionSelected={(option, val) => v(option,val)}
       getOptionLabel={(option) => option.name?option.name:option}
       value={value||''}
       onChange={(event, option, reason) => handleChange(event, option, reason)}
