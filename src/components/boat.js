@@ -25,6 +25,7 @@ import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
 import { feet, price } from '../util/format';
 // import Upload from './Upload';
+import FBShare from './fbshare';
 
 function m2f(val) {
     if(val) {
@@ -310,6 +311,8 @@ const engine = {
   const homeLocation = { ...location, pathname: '/' };
   console.log('Home - location', homeLocation);
 
+  const link = `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${boat.oga_no}`;
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -341,7 +344,8 @@ const engine = {
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
-                { /* <Upload boatName = {boat.name} ogaNo={boat.oga_no} albumKey={boat.image_key} /> */}
+                <p></p>
+                <FBShare link={link}/>
                 </Paper>
             </Grid>
             <Grid item xs={12}>
