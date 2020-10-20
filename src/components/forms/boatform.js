@@ -203,7 +203,7 @@ export default function BoatForm({
 
   return (
     <>
-      <Step
+      {/*<Step
         step={n++}
         currentStep={step}
         onPrev={handlePrev}
@@ -211,7 +211,7 @@ export default function BoatForm({
         onCancel={onClose}
       >
         <Typography>Upload some Pictures</Typography>
-      </Step>
+      </Step>*/}
       <Step
         step={n++}
         currentStep={step}
@@ -244,21 +244,24 @@ export default function BoatForm({
           ]}
         />
       </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <ComboBox
-          name="design_class"
-          label="Class name"
-          options={['Heard 23', 'Heard 28']}
-          state={state}
-          onChange={onChange}
-        />
-      </Step>
+      { (state.design !== 'one_off')? (
+          <Step
+            step={n++}
+            currentStep={step}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            onCancel={onClose}
+          >
+            <ComboBox
+              name="design_class"
+              label="Class name"
+              options={JSON.parse(sessionStorage.getItem('design_class'))}
+              state={state}
+              onChange={onChange}
+            />
+          </Step>):''
+        }
+      }
       <Step
         step={n++}
         currentStep={step}

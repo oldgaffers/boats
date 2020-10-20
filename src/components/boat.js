@@ -23,8 +23,11 @@ import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
 import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
+import Sale from './sale';
 import { feet, price } from '../util/format';
 // import Upload from './Upload';
+import EditDialog from './forms/editdialog'
+import FBShare from './fbshare';
 
 function m2f(val) {
     if(val) {
@@ -248,20 +251,20 @@ export default function Boat() {
   }
   
   if (boat.handicap_data) {
-    const data = boat.handicap_data;
+    const boatData = boat.handicap_data;
     const sails = [];
-    Object.entries(data).forEach(([key, value]) => {
-        if (value.luff) {
-            sails.push({ name: key, ...value });
+    Object.entries(data).forEach(([key, val]) => {
+        if (val.luff) {
+            sails.push({ name: key, ...val });
         }
     });
-    if(data.main || data.thcf || data.calculated_thcf || data.fore_triangle_base) {
+    if(boatData.main || boatData.thcf || boatData.calculated_thcf || boatData.fore_triangle_base) {
         panes.push({ title: 'Rig and Sails', children: (
             <Paper>
-            <ConditionalText label="fore triangle base" value={m2f(data.fore_triangle_base)}/>
-            <ConditionalText label="fore triangle height" value={m2f(data.fore_triangle_height)}/>
-            <ConditionalText label="Calculated THCF" value={data.calculated_thcf}/>
-            <ConditionalText label="THCF" value={data.thcf}/>
+            <ConditionalText label="fore triangle base" value={m2f(boatData.fore_triangle_base)}/>
+            <ConditionalText label="fore triangle height" value={m2f(boatData.fore_triangle_height)}/>
+            <ConditionalText label="Calculated THCF" value={boatData.calculated_thcf}/>
+            <ConditionalText label="THCF" value={boatData.thcf}/>
             <SailTable classes={classes} rows={sails}/>
             </Paper>
         )});    
@@ -309,7 +312,7 @@ const engine = {
   console.log('Boat - location', location);
   const homeLocation = { ...location, pathname: '/' };
   console.log('Home - location', homeLocation);
-
+  const link = `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${boat.oga_no}`;
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -337,11 +340,13 @@ const engine = {
                 <ConditionalText value={boat.home_port} label="Home port or other location"/>
                 <ConditionalText 
                   value={(boat.website)?(<div>
-                    <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a></div>):undefined}
+                    <a href={boat.website}  target='_blank'>click here</a></div>):undefined}
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
-                { /* <Upload boatName = {boat.name} ogaNo={boat.oga_no} albumKey={boat.image_key} /> */}
+                <p></p>
+                <FBShare link={link}/>
+                {/*<Upload boatName = {boat.name} ogaNo={boat.oga_no} albumKey={boat.image_key} />*/}
                 </Paper>
             </Grid>
             <Grid item xs={12}>
@@ -373,6 +378,12 @@ const engine = {
                <Grid item xs={10} >
                <Enquiry classes={classes} boat={boat} />
                </Grid>
+               {/*<Grid item xs={10} >
+               <Sale classes={classes} boat={boat} />
+               </Grid>
+               <Grid item xs={10} >
+               <EditDialog classes={classes} boat={boat}>Suggest Edits</EditDialog>
+               </Grid>*/}
               </Grid>
             </Paper>
         </Container>

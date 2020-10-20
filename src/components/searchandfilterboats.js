@@ -78,6 +78,8 @@ export default function SearchAndFilterBoats({
 
     const { boat, designer, builder, rig_type, sail_type, design_class, generic_type, construction_material } = data;
 
+    sessionStorage.setItem('design_class', JSON.stringify(design_class.map(n=>n.name)));
+
     const boatNames = makeBoatNameList(boat);
 
     function sw(event, value) {
