@@ -344,8 +344,6 @@ const engine = {
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
-                <p></p>
-                <FBShare link={link}/>
                 </Paper>
             </Grid>
             <Grid item xs={12}>
