@@ -89,13 +89,14 @@ export default function Enquiry({ boat, classes }) {
             endIcon={<Icon>send</Icon>}
             variant="contained"
             color="primary" onClick={handleClickOpen}>
-            Contact the editors
+            Contact the editors about this boat
           </Button>
           <Dialog top open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
             <DialogContent>
-              <DialogContentText>
-                We'd love to hear from you. Please enter your email address here and tell us how we can help.
+              <DialogContentText variant="subtitle2">
+                Have some information or a question about <i>{boat.name}</i> ({boat.oga_no})?<p></p>
+                We'd love to hear from you.<p></p>Please enter your email address here and tell us how we can help.
               </DialogContentText>
               <TextField
                 error={email === ''}
