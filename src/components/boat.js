@@ -25,7 +25,10 @@ import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
 import { feet, price } from '../util/format';
 // import Upload from './Upload';
-import FBShare from './fbshare';
+// import FBShare from './fbshare';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import ReactFBLike from 'react-fb-like';
+import {Helmet} from "react-helmet";
 
 function m2f(val) {
     if(val) {
@@ -249,20 +252,20 @@ export default function Boat() {
   }
   
   if (boat.handicap_data) {
-    const data = boat.handicap_data;
+    const hd = boat.handicap_data;
     const sails = [];
-    Object.entries(data).forEach(([key, value]) => {
-        if (value.luff) {
-            sails.push({ name: key, ...value });
+    Object.entries(hd).forEach(([key, val]) => {
+        if (val.luff) {
+            sails.push({ name: key, ...val });
         }
     });
-    if(data.main || data.thcf || data.calculated_thcf || data.fore_triangle_base) {
+    if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
         panes.push({ title: 'Rig and Sails', children: (
             <Paper>
-            <ConditionalText label="fore triangle base" value={m2f(data.fore_triangle_base)}/>
-            <ConditionalText label="fore triangle height" value={m2f(data.fore_triangle_height)}/>
-            <ConditionalText label="Calculated THCF" value={data.calculated_thcf}/>
-            <ConditionalText label="THCF" value={data.thcf}/>
+            <ConditionalText label="fore triangle base" value={m2f(hd.fore_triangle_base)}/>
+            <ConditionalText label="fore triangle height" value={m2f(hd.fore_triangle_height)}/>
+            <ConditionalText label="Calculated THCF" value={hd.calculated_thcf}/>
+            <ConditionalText label="THCF" value={hd.thcf}/>
             <SailTable classes={classes} rows={sails}/>
             </Paper>
         )});    
@@ -315,6 +318,14 @@ const engine = {
 
   return (
     <div className={classes.root}>
+      <Helmet>
+          <meta charSet="utf-8" />
+          <meta property="og:url" content={link} />
+          <meta property="og:type" content="website" />
+          <meta property="og:title" content="OGA {boat.name} ({boat.oga_no})" />
+          <title>OGA {`${boat.name} (${boat.oga_no})`}</title>
+          <link rel="canonical" href={link} />
+      </Helmet>
       <CssBaseline />
       <main className={classes.content}>
         <Paper>
@@ -339,11 +350,21 @@ const engine = {
                 <ConditionalText value={boat.rigTypeByRigType.name} label="Rig"/>
                 <ConditionalText value={boat.home_port} label="Home port or other location"/>
                 <ConditionalText 
-                  value={(boat.website)?(<div>
-                    <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a></div>):undefined}
+                  value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
+                <div/>
+                <div>
+                  <CopyToClipboard text={link}>
+                  <Button size='small' variant='contained' className={classes.button} >
+                    Copy a link to this boat to the clipboard
+                    </Button>
+                  </CopyToClipboard>
+                </div>
+                <div>
+                  <ReactFBLike href={link} language="en_GB" appId="644249802921642" version="v2.12" />
+                </div>
                 </Paper>
             </Grid>
             <Grid item xs={12}>
