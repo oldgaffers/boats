@@ -254,8 +254,8 @@ function BoatCards({
   const pageItems = useBoatPagination(
     Math.ceil(totalCount / boatsPerPage),
     page,
-    function(event, page) {
-      console.log('handlePageChange', event, page);
+    function(event, p) {
+      console.log('handlePageChange', event, p);
       setPage(page);
     }
   );
