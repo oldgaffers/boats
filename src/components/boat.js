@@ -29,6 +29,7 @@ import { feet, price } from '../util/format';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import ReactFBLike from 'react-fb-like';
 import {Helmet} from "react-helmet";
+import References from './references';
 
 function m2f(val) {
     if(val) {
@@ -139,6 +140,7 @@ const boatQuery = (id) => gql`{
     builderByBuilder { name notes }
     beam
     air_draft
+    reference
     for_sale_state { text }
     for_sales(limit: 1, order_by: {updated_at: desc}) {
       asking_price
@@ -354,7 +356,8 @@ const engine = {
                   label="Website"
                 />
                 <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
-                <div/>
+                <References boat={boat}/>
+                <p></p>
                 <div>
                   <CopyToClipboard text={link}>
                   <Button size='small' variant='contained' className={classes.button} >
