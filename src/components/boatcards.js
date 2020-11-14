@@ -8,8 +8,12 @@ import BoatCard from './boatcard';
 import { makeStyles } from '@material-ui/core/styles';
 import gql from 'graphql-tag';
 // import Icon from '@material-ui/core/Icon';
+import toggle from '../images/toggle.gif';
 
 const useStyles = makeStyles((theme) => ({
+  CenterItem: {
+    margin: 'auto'
+  },
   icon: {
     marginRight: theme.spacing(2),
   },
@@ -288,10 +292,12 @@ function BoatCards({
     );
   }
   return (
-    <p>
-      There are no boats which match the filter criteria you have set. Try
+    <div className="CenterItem">
+      <p>There are no boats which match the filter criteria you have set. Try
       broadening the criteria. For example, if you have 'include boats without pictures' disabled, try enabling it.
-    </p>
+      </p>
+        <img src={toggle} alt="there is a toggle pictures control"/>
+    </div>
   );
 }
 

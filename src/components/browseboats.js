@@ -6,11 +6,12 @@ import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
+import BoatsForSaleIntro from './boatregisterintro';
+import BoatRegisterIntro from './boatsforsaleintro';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,8 +53,8 @@ function BrowseBoats({ window }) {
     history.replace('/', { ...state, sortDirection: dir });
   }
 
-  function setFilters(filters) {
-    history.replace('/', { ...state, filters });
+  function setFilters(f) {
+    history.replace('/', { ...state, filters: f });
   }
 
   // const container = window !== undefined ? () => window().document.body : undefined;
@@ -96,31 +97,7 @@ function BrowseBoats({ window }) {
         </Grid>
         */}
         <Container>
-        <Typography variant="body1">
-          We have hundreds of boats with pictures, and many more waiting for
-          pictures and more information.
-        </Typography>
-        <Typography variant="body1">
-          Filter the list using the options below, and then click the 'More' button
-          to see all the pictures and information we have for that boat.
-          </Typography>
-        <Typography variant="body1">
-            Have a boat and can't find it here? Fill in our{' '}
-            <a href="https://form.jotform.com/jfbcable/new-boat">form</a>
-             &nbsp;and we will add it.
-            </Typography>
-        <Typography variant="body1">
-            You can also use the form to suggest a boat whether you own it or
-            not.
-            </Typography>
-        <Typography variant="body1">
-            You can submit pictures, additions, and corrections to boats, or
-            contact the owner from the boat's detail page.
-            </Typography>
-        <Typography variant="body1">
-            Members can use the register to advertise their boat for sale. The
-            first step is to make sure the boat is on the register.
-        </Typography>
+          {(options === 'forsale') ? (<BoatsForSaleIntro/>):(<BoatRegisterIntro/>)}
         <SearchAndFilterBoats
           sortDirection={config.sortDirection}
           sortField={config.sortField}
