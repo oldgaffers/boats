@@ -10,8 +10,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useLocation, useHistory } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import BoatsForSaleIntro from './boatregisterintro';
-import BoatRegisterIntro from './boatsforsaleintro';
+import BoatsForSaleIntro from './boatsforsaleintro';
+import BoatRegisterIntro from './boatregisterintro';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+
+function Intro({boatsForSale}) {
+  if (boatsForSale) {
+    return (<BoatsForSaleIntro/>)
+  }
+  return (<BoatRegisterIntro/>);
+}
 
 function BrowseBoats({ window }) {
   const { state, search } = useLocation();
@@ -64,6 +71,7 @@ function BrowseBoats({ window }) {
   if (config) {
     filters = config.filters;
   }
+
   if (options === 'forsale') {
     filters.sale = true;
     filters.nopics = true;
@@ -97,7 +105,7 @@ function BrowseBoats({ window }) {
         </Grid>
         */}
         <Container>
-          {(options === 'forsale') ? (<BoatsForSaleIntro/>):(<BoatRegisterIntro/>)}
+          <Intro boatsForSale={filters.sale} />
         <SearchAndFilterBoats
           sortDirection={config.sortDirection}
           sortField={config.sortField}
