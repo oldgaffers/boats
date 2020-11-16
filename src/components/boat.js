@@ -25,10 +25,10 @@ import SmugMugGallery from './smugmuggallery';
 import Enquiry from './enquiry';
 import { feet, price } from '../util/format';
 // import Upload from './Upload';
-import FBShare from './fbshare';
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-//import ReactFBLike from 'react-fb-like';
-import {Helmet} from "react-helmet";
+// import FBShare from './fbshare';
+import ReactFBLike from 'react-fb-like';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { Helmet } from "react-helmet";
 import References from './references';
 
 function m2f(val) {
@@ -366,7 +366,7 @@ const engine = {
                   </CopyToClipboard>
                 </div>
                 <div>
-                  <FBShare link={link}/>
+                  <ReactFBLike href={link} language="en_GB" appId="644249802921642" version="v2.12" />
                 </div>
                 </Paper>
             </Grid>
