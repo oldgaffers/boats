@@ -57,7 +57,7 @@ const totalCount = data?data.boat_aggregate.aggregate.totalCount:0;
     page,
     function(event, p) {
       console.log('handlePageChange', event, p);
-      setPage(page);
+      setPage(p);
     }
   );
 
