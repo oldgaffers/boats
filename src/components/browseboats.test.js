@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import BrowseBoats from './browseboats';
-import { query } from './boatcards';
+import { query } from '../util/cardquery';
 import { MemoryRouter } from "react-router";
 
 const mocks = [

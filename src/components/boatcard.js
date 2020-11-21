@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
+import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
 
@@ -51,8 +52,32 @@ function SalesBadge({ boat, invisible, children }) {
   }
 }
 
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '100%',
+  },
+  cardMediaSmall: {
+    paddingTop: '56.25%',
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+  footer: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(6),
+  },
+}));
 
-export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat, classes }) {
+export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat }) {
+  const classes = useStyles();
 
   function normaliseDescription(boat) {
     if (boat && boat.short_description) {
