@@ -30,6 +30,7 @@ import ReactFBLike from 'react-fb-like';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from "react-helmet";
 import References from './references';
+import UploadPhotos from './uploadphotos';
 
 function m2f(val) {
     if(val) {
@@ -396,9 +397,12 @@ const engine = {
               to={homeLocation}
                >See more boats</Button>
                </Grid>
-               <Grid item xs={10} >
+               <Grid item xs={5} >
                <Enquiry classes={classes} boat={boat} />
                </Grid>
+               <Grid item xs={5} >
+               <UploadPhotos classes={classes} boat={boat} />
+              </Grid>
               </Grid>
             </Paper>
         </Container>
