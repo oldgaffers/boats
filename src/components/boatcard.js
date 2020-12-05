@@ -76,23 +76,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function normaliseDescription(boat) {
+  if (boat && boat.short_description) {
+    const desc = boat.short_description.trim();
+    if (desc.startsWith('<')) {
+      return desc;
+    }
+    return `<div>${desc}</div>`;
+  }
+  return '';
+}
+
+function AltForThumb() {
+  // return 'know anyone who can add a photo?';
+  return '';
+}
+
 export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat }) {
   const classes = useStyles();
 
-  function normaliseDescription(boat) {
-    if (boat && boat.short_description) {
-      const desc = boat.short_description.trim();
-      if (desc.startsWith('<')) {
-        return desc;
-      }
-      return `<div>${desc}</div>`;
-    }
-    return '';
-  }
-
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
-      {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):''}
+      {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
       <CardContent className={classes.cardContent} >
         <Typography gutterBottom variant="h5" component="h2">
           <SalesBadge invisible={filters.sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>

@@ -1,119 +1,10 @@
 import React, { useState, isValidElement, cloneElement } from 'react';
-import { Button, Typography, TextField } from '@material-ui/core';
-import MUIRichTextEditor from 'mui-rte';
+import { Typography, TextField } from '@material-ui/core';
 import RadioList from './radiolist';
 import ComboBox from './combobox';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-
-function Step({
-  step,
-  currentStep,
-  onNext,
-  onPrev,
-  children,
-  disabled,
-  onSubmit,
-  onCancel
-}) {
-  if (currentStep !== step) {
-    return null;
-  }
-  return (
-    <>
-    <DialogContent>
-    {children}
-    </DialogContent>
-    <DialogActions>
-        <Button onClick={onCancel} color="primary">
-            Cancel
-        </Button>
-        {onPrev ? (
-          <Button variant="contained" onClick={onPrev}>
-            Back
-          </Button>
-        ) : (
-          ''
-        )}
-        {onNext ? (
-          <Button variant="contained" onClick={onNext}>
-            Next
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={onSubmit}>
-            Submit
-          </Button>
-        )}
-      </DialogActions>
-    </>
-  );
-}
-
-function JumpStep({
-  children,
-  step,
-  currentStep,
-  onNext,
-  onPrev,
-  onJump,
-  onCancel,
-  nextLabel,
-  jumpLabel,
-}) {
-  if (currentStep !== step) {
-    return null;
-  }
-  return (
-    <>
-    <DialogContent>
-    {children}
-    </DialogContent>
-    <DialogActions>
-        <Button onClick={onCancel} color="primary">
-            Cancel
-        </Button>
-        <Button variant="contained" onClick={onPrev}>
-          Back
-        </Button>
-        <Button variant="contained" onClick={onNext}>
-          {nextLabel}
-        </Button>
-        <Button variant="contained" onClick={onJump}>
-          {jumpLabel}
-        </Button>
-      </DialogActions>
-    </>
-  );
-}
-
-function ReallyDumbRTE({
-  label,
-  state,
-  onChange = (editorState) => {},
-  onSave = (editorState) => {},
-}) {
-  let name = label.replace(/ /g, '_').toLowerCase();
-
-  function handleSave(data) {
-    // console.log(data);
-    const newstate = { ...state };
-    newstate[name] = data;
-    onSave(newstate);
-  }
-
-  return (
-    <>
-      <Typography>{label}</Typography>
-      <MUIRichTextEditor
-        label="Start typing..."
-        name={name}
-        onChange={onChange}
-        onSave={handleSave}
-        value={state[name]}
-      />
-    </>
-  );
-}
+import { Step, JumpStep } from '../../util/formsteps';
+import ReallyDumbRTE from '../../util/ReallyDumbRTE';
+import Picker from '../picker';
 
 function Field({ name, state, onChange, as, ...props }) {
 
@@ -182,7 +73,7 @@ function Sail({ label, fields, state, onChange }) {
 }
 
 export default function BoatForm({ 
-  boat, email, state, onChange, onSubmit, onClose }) {
+  state, onChange, onSubmit, onClose }) {
   const [step, setStep] = useState(1);
 
   let f = {};
@@ -201,37 +92,30 @@ export default function BoatForm({
 
   let n = 1;
 
+  function Next({ children, pos }) {
+    return (
+      <Step
+        step={pos}
+        currentStep={step}
+        onPrev={handlePrev}
+        onNext={handleNext}
+        onCancel={onClose}
+    >{children}</Step>
+    );
+
+  }
+
   return (
     <>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <Typography>Upload some Pictures</Typography>
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      <Next pos={n++}>
         <Field
           state={state}
           onChange={onChange}
           label="Previous names"
+          value={state.previous_names?state.previous_names.join(', '):''}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Design Class</Typography>
         <RadioList
           name="design"
@@ -243,68 +127,17 @@ export default function BoatForm({
             'Modified example of a production class',
           ]}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <ComboBox
-          name="design_class"
-          label="Class name"
-          options={['Heard 23', 'Heard 28']}
-          state={state}
-          onChange={onChange}
-        />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <Typography>Main sail type</Typography>
-        <RadioList
-          name="mainsail_type"
-          state={state}
-          onChange={onChange}
-          options={[
-            'Bermudan',
-            'Gaff',
-            'Gunter',
-            'Junk',
-            'Lateen',
-            'Lug',
-            'Spritsail',
-            'Square',
-          ]}
-        />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <Typography>Rig type</Typography>
-        <RadioList
-          name="rig_type"
-          state={state}
-          onChange={onChange}
-          options={['Cutter', 'Ketch', 'Yawl', 'Schooner', 'Sloop', 'Cat boat']}
-        />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
+        <Picker onChange={onChange} options="design_class" label="Design Class" value={state.designClassByDesignClass.name}/>
+      </Next>
+      <Next pos={n++}>
+        <Picker onChange={onChange} options="sail_type" label="Mainsail Type" value={state.mainsail_type}/>
+      </Next>
+      <Next pos={n++}>
+        <Picker onChange={onChange} options="rig_type" label="Rig Type" value={state.rigTypeByRigType.name}/>
+      </Next>
+      <Next pos={n++}>
         <Typography>Engine</Typography>
         <RadioList
           name="engine"
@@ -312,21 +145,10 @@ export default function BoatForm({
           onChange={onChange}
           options={['None', 'Inboard', 'Outboard']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <ComboBox
-          label="Designer"
-          options={['Martin Heard', 'Denys Rayner']}
-          state={state}
-          onChange={onChange}
-        />
-      </Step>
+      </Next>
+      <Next pos={n++}>
+        <Picker onChange={onChange} options="designer" label="Designer" value={state.designerByDesigner.name} />
+      </Next>
       <JumpStep
         step={(firstBeforeHandicap = n++)}
         currentStep={step}
@@ -351,24 +173,11 @@ export default function BoatForm({
           label="Draft"
         />
       </JumpStep>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      <Next pos={n++}>
         <Typography>Measurement Diagram</Typography>
         <img alt="measurement diagram" src="hull-measurements.png" />
-      </Step>
-
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Hull measurements</Typography>
         <HandicapField
           name='length_over_spars'
@@ -399,74 +208,31 @@ export default function BoatForm({
           onChange={onChange}
           type="number"
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      ></Step>
-      <JumpStep
-        step={(firstBeforeRacingHeadsails = n++)}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onJump={jumpPastRacingHeadsails}
-        nextLabel="Enter Headsail Details"
-        jumpLabel="No headsails set when racing"
-        onCancel={onClose}
-      >
-        <Field state={state} onChange={onChange} label="Sail Area" />
-        <Sail
-          state={state}
-          onChange={onChange}
-          label="Fore triangle"
-          fields={['Height', 'Base']}
-        />
-      </JumpStep>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Sail
           state={state}
           onChange={onChange}
           label="Biggest Staysail"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Sail
           state={state}
           onChange={onChange}
           label="Biggest Jib"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Sail
           state={state}
           onChange={onChange}
           label="Biggest Downwind Sail"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Step>
+      </Next>
       <Step
         step={(firstPastRacingHeadsails = n++)}
         currentStep={step}
@@ -481,55 +247,31 @@ export default function BoatForm({
           fields={['Luff', 'Head', 'Foot']}
         />
       </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      <Next pos={n++}>
         <Sail
           state={state}
           onChange={onChange}
           label="Top Sail"
           fields={['Luff', 'Perpendicular']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Sail
           state={state}
           onChange={onChange}
           label="Mizen"
           fields={['Luff', 'Head', 'Foot']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>        
         <Sail
           state={state}
           onChange={onChange}
           label="Mizen Topsail"
           fields={['Luff', 'Perpendicular']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Propellor type</Typography>
         <HandicapField as={<RadioList/>}
           name="propellor"
@@ -537,14 +279,8 @@ export default function BoatForm({
           onChange={onChange}
           options={['None', 'Fixed', 'Folding', 'Feathering']}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Hull type</Typography>
         <RadioList
           name="hull_form"
@@ -561,13 +297,10 @@ export default function BoatForm({
             'centre-board dinghy',
           ]}
         />
-      </Step>
-      <Step
+      </Next>
+      <Next
         step={(firstPastHandicap = n++)}
-        currentStep={step}
         onPrev={jumpBackPastHandicap}
-        onNext={handleNext}
-        onCancel={onClose}
       >
         <Typography>Spar material</Typography>
         <RadioList
@@ -583,14 +316,8 @@ export default function BoatForm({
             'Alloy/Carbon',
           ]}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Construction method</Typography>
         <RadioList
           name="construction_method"
@@ -607,76 +334,25 @@ export default function BoatForm({
             'Strip planking / epoxy sheathed',
           ]}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <Typography>Construction material</Typography>
-        <RadioList
-          name="construction_material"
-          state={state}
-          onChange={onChange}
-          options={[
-            'GRP',
-            'Wood',
-            'Plywood',
-            'Steel',
-            'Aluminium',
-            'Ferro',
-            'Iron',
-            'wood/epoxy',
-            'other',
-          ]}
-        />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
+        <Picker onChange={onChange} options="construction_material" label="Construction Material" value={state.construction_material} />
+      </Next>
+      <Next pos={n++}>
         <Typography>Year built / launched</Typography>
         <Field state={state} onChange={onChange} label="Year" />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <ComboBox
-          label="Builder"
-          options={['Gaffers and Luggers', 'Cornish Crabbers', 'Home Build']}
-          state={state}
-          onChange={onChange}
-        />
-      </Step>
-      <Step
-        step={(f.sd = n++)}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
+        <Picker onChange={onChange} id="builder-name" options="builder" label="Builder" value={state.builderByBuilder.name} />
+      </Next>
+      <Next pos={n++}>
         <ReallyDumbRTE
           label="Short description"
           state={state}
           onSave={onChange}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Location</Typography>
         <ComboBox name="home_country" 
           label="Home Country"
@@ -685,14 +361,8 @@ export default function BoatForm({
           onChange={onChange}
         />
         <Field name="home_port" label="Home Port" state={state} onChange={onChange} />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Part 1 British Registry Details</Typography>
         <Field
           name="uk_part1"
@@ -711,14 +381,8 @@ export default function BoatForm({
           type="number"
           label="Year Registered"
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Other Registrations</Typography>
         <Field name="ssr" label="SSR" state={state} onChange={onChange} />
         <Field name="call_sign" label="VHF Call Sign" state={state} onChange={onChange} />
@@ -728,14 +392,8 @@ export default function BoatForm({
         <Field name="sail_number" label="Sail Number" state={state} onChange={onChange} />
         <Field name="mssi" label="MSSI" state={state} onChange={onChange} />
         <Field name="other_registrations" label="Others" state={state} onChange={onChange} />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Next>
+      <Next pos={n++}>
         <Typography>Function</Typography>
         <ComboBox
           label="Current Function"
@@ -749,27 +407,12 @@ export default function BoatForm({
           state={state}
           onChange={onChange}
         />
-      </Step>
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
-        <ComboBox
-          name="generic_type"
-          label="Generic type"
-          options={['Yacht', 'Dinghy']}
-          state={state}
-          onChange={onChange}
-        />
-      </Step>
-      <Step
+      </Next>
+      <Next pos={n++}>
+      <Picker onChange={onChange} options="generic_type" label="Generic Type" value={state.generic_type}/>
+      </Next>
+      <Next
         step={n}
-        currentStep={step}
-        onPrev={handlePrev}
-        disabled={false /* TODO */}
         onSubmit={onSubmit}
         onCancel={onClose}
       >
@@ -778,7 +421,7 @@ export default function BoatForm({
           state={state}
           onSave={onChange}
         />
-      </Step>
+      </Next>
     </>
   );
 

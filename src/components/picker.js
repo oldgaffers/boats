@@ -7,6 +7,13 @@ function Picker({ options, id, label, onChange, value, clearable = true }) {
 
   const [inputValue, setInputValue] = useState('');
 
+  if (typeof options === 'string') {
+    const data = JSON.parse(sessionStorage.getItem(options));
+    if(data) {
+      options = data;
+    }
+  }
+
   function handleChange(event, option, reason) {
     let val;
     switch (reason) {

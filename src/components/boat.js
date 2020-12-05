@@ -11,7 +11,6 @@ import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import SwipeableViews from 'react-swipeable-views';
 import { Link, useParams } from "react-router-dom";
-import gql from 'graphql-tag';
 import { useInView } from 'react-intersection-observer'
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { useQuery } from '@apollo/react-hooks';
@@ -31,6 +30,8 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Helmet } from "react-helmet";
 import References from './references';
 import UploadPhotos from './uploadphotos';
+import { query } from '../util/boatquery';
+import EditDialog from './forms/editdialog';
 
 function m2f(val) {
     if(val) {
@@ -97,71 +98,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const boatQuery = (id) => gql`{
-    boat(where: {oga_no: {_eq: ${id}}}) {
-    id
-    name
-    previous_names
-    year
-    year_is_approximate
-    public
-    place_built
-    home_port
-    home_country
-    ssr
-    sail_number
-    nhsr
-    nsbr
-    oga_no
-    fishing_number
-    callsign
-    mssi
-    full_description
-    image_key
-    uk_part1
-    constructionMaterialByConstructionMaterial { name }
-    constructionMethodByConstructionMethod { name }
-    construction_details
-    designClassByDesignClass { name }
-    designerByDesigner { name }
-    draft
-    generic_type
-    handicap_data
-    hull_form
-    keel_laid
-    launched
-    length_on_deck
-    mainsail_type
-    rigTypeByRigType { name }
-    sail_type { name }
-    short_description
-    updated_at
-    website
-    genericTypeByGenericType { name }
-    builderByBuilder { name notes }
-    beam
-    air_draft
-    reference
-    for_sale_state { text }
-    for_sales(limit: 1, order_by: {updated_at: desc}) {
-      asking_price
-      flexibility
-      offered
-      price_flexibility { text }
-      reduced
-      sales_text
-      sold
-      summary
-      updated_at
-    }
-    engine_installations {
-      engine
-      installed
-      removed
-    }
-  }
-  }`;
-
 function MoreBelow({ visible }) {
     if (visible && false) { // TODO
       return (<ExpandMoreIcon/>);
@@ -199,7 +135,7 @@ export default function Boat() {
      threshold: 0,
   });
   
-  const { loading, error, data } = useQuery(boatQuery(id));
+  const { loading, error, data } = useQuery(query(id));
 
   useEffect(() => {
       if (data) {
@@ -389,20 +325,23 @@ const engine = {
           </Grid>
             <Paper>
               <Grid container direction="row" alignItems="flex-end">
-              <Grid item xs={2}>
-              <Button size="small"
-              variant="contained"
-              className={classes.button}
-              component={Link}
-              to={homeLocation}
-               >See more boats</Button>
-               </Grid>
-               <Grid item xs={5} >
-               <Enquiry classes={classes} boat={boat} />
-               </Grid>
-               <Grid item xs={5} >
-               <UploadPhotos classes={classes} boat={boat} />
-              </Grid>
+                <Grid item xs={2}>
+                  <Button size="small"
+                  variant="contained"
+                  className={classes.button}
+                  component={Link}
+                  to={homeLocation}
+                  >See more boats</Button>
+                </Grid>
+                <Grid item xs={3} >
+                  <Enquiry classes={classes} boat={boat} />
+                </Grid>
+                <Grid item xs={3} >
+                  <UploadPhotos classes={classes} boat={boat} />
+                </Grid>
+                <Grid item xs={3} >
+                  <EditDialog classes={classes} boat={boat}>I have edits for this boat</EditDialog>
+                </Grid>
               </Grid>
             </Paper>
         </Container>

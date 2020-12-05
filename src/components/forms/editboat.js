@@ -12,6 +12,10 @@ function htmlToRTE(html) {
 
 export default function EditBoat({ boat, email, onClose }) {
 
+  // TODO we could come here without going via the main screen so we need to check if
+  // the pick lists have got into session storage yet and fetch them if they
+  // have not.
+
   const [state, setState] = useState(
     {
       ...boat, contact_email: email, 
