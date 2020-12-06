@@ -20,7 +20,7 @@ export function RadioList({ options, name, state, onChange }) {
     }
   
     let value;
-    if(state && state[name]) value = state[name];
+    if(state && state[name]) value = state[name].toLowerCase();
   
     return (
         <FormControl component="fieldset">
@@ -56,15 +56,23 @@ export function GqlRadioList({ list, name, state, onChange }) {
   function handleChange(event) {
     if (onChange) {
       const s = state;
-      s[name] = event.target.value;
+      s[list] = event.target.value;
       onChange(s);
     }
   }
 
   let value;
-  if(state && state[name]) value = state[name];
+  if(state && state[name]){
+    value = state[name];
+    if(value.name) { value = value.name; }
+  }
+  if(value) { 
+    value = value.toLowerCase();
+  } else {
+    value = '';
+  }
 
-  const options = data[name];
+  const options = data[list];
 
   return (
       <FormControl component="fieldset">

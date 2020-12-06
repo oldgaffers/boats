@@ -19,7 +19,7 @@ export default function ReallyDumbRTE({
   
     return (
       <>
-        <Typography>{label}</Typography>
+        <Typography variant="h4">{label}</Typography>
         <MUIRichTextEditor
           label="Start typing..."
           name={name}

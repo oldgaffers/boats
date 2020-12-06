@@ -5,6 +5,7 @@ import { Step, JumpStep, Submit } from '../../util/formsteps';
 import ReallyDumbRTE from '../../util/ReallyDumbRTE';
 import GqlPicker from '../gqlpicker';
 import Picker from '../picker';
+import Grid from '@material-ui/core/Grid';
 
 function Field({ name, state, onChange, as, ...props }) {
 
@@ -147,7 +148,9 @@ export default function BoatForm({
             state.designClassByDesignClass
             ?state.designClassByDesignClass.name
             :'One off'
-          }/>                  
+          }/>
+          <Typography>&nbsp;</Typography>
+          <GqlPicker onChange={onChange} list="generic_type" label="Generic Type" value={state.generic_type}/>                  
       </Question>
       <Question>
         <GqlPicker onChange={onChange} list="sail_type" label="Mainsail Type" value={state.mainsail_type}/>
@@ -298,31 +301,35 @@ export default function BoatForm({
       </Question>
       <JumpLabel label="afterHandicap"/>
       <Question>
-        <Typography>Spar material</Typography>
-        <GqlRadioList
-          name="spar_material"
-          state={state}
-          onChange={onChange}
-          list="spar_material"
-        />
+        <Typography variant="h4"y>Construction</Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={6}>
+            <Typography>&nbsp;</Typography>
+            <GqlPicker onChange={onChange} list="construction_method" label="Construction Method" value={state.constructionMethodByConstructionMethod?state.constructionMethodByConstructionMethod.name:'undefined'} />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography>&nbsp;</Typography>
+            <GqlPicker onChange={onChange} list="construction_material" label="Construction Material" value={state.constructionMaterialByConstructionMaterial?state.constructionMaterialByConstructionMaterial.name:'undefined'} />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography>&nbsp;</Typography>
+            <GqlPicker onChange={onChange} list="spar_material" label="Spar Material" value={state.spar_material||''} />
+          </Grid>
+          <Grid item xs={6}>
+            <Typography>&nbsp;</Typography>
+            <Field
+              state={state}
+              onChange={onChange}
+              type="text"
+              label="construction_details"
+            />
+          </Grid>
+        </Grid>
       </Question>
       <Question>
-        <Typography>Construction method</Typography>
-        <GqlRadioList
-          name="construction_method"
-          list="construction_method"
-          state={state}
-          onChange={onChange}
-        />
-      </Question>
-      <Question>
-        <GqlPicker onChange={onChange} list="construction_material" label="Construction Material" value={state.construction_material||'undefined'} />
-      </Question>
-      <Question>
-        <Typography>Year built / launched</Typography>
+        <Typography variant="h4">Where and when built</Typography>
         <Field state={state} onChange={onChange} label="Year" />
-      </Question>
-      <Question>
+        <Typography>&nbsp;</Typography>
         <GqlPicker onChange={onChange} id="builder-name" list="builder" label="Builder" value={state.builderByBuilder?state.builderByBuilder.name:''} />
       </Question>
       <Question>
@@ -333,44 +340,69 @@ export default function BoatForm({
         />
       </Question>
       <Question>
-        <Typography>Location</Typography>        
+        <Typography variant="h4">Location</Typography>        
         <Picker onChange={onChange} options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']} label="Home Country" value={state.home_country}/>
         <Field name="home_port" label="Home Port" state={state} onChange={onChange} />
       </Question>
       <Question>
-        <Typography>Part 1 British Registry Details</Typography>
-        <Field
-          name="uk_part1"
-          label="Official Registry Number"
-          state={state}
-          onChange={onChange}
-        />
-        <Field
-          state={state}
-          onChange={onChange}
-          label="Port of Registry"
-        />
-        <Field
-          state={state}
-          onChange={onChange}
-          type="number"
-          label="Year Registered"
-        />
+        <Typography variant="h4">Part 1 British Registry Details</Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={6}>
+            <Field
+              name="uk_part1"
+              label="Official Registry Number"
+              state={state}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Field
+              state={state}
+              onChange={onChange}
+              label="Port of Registry"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Field
+              state={state}
+              onChange={onChange}
+              type="number"
+              label="Year Registered"
+            />
+          </Grid>
+        </Grid>
       </Question>
       <Question>
-        <Typography>Other Registrations</Typography>
-        <Field name="ssr" label="SSR" state={state} onChange={onChange} />
-        <Field name="call_sign" label="VHF Call Sign" state={state} onChange={onChange} />
-        <Field name="nhsr" label="National Register of Historic Vessels Number" state={state} onChange={onChange} />
-        <Field name="nhbr" label="National Small Boats Register Number" state={state} onChange={onChange} />
-        <Field name="fishing_number" label="Fishing Number" state={state} onChange={onChange} />
-        <Field name="sail_number" label="Sail Number" state={state} onChange={onChange} />
-        <Field name="mssi" label="MSSI" state={state} onChange={onChange} />
-        <Field name="WIN" label="WIN" state={state} onChange={onChange} />
-        <Field name="other_registrations" label="Others" state={state} onChange={onChange} />
-      </Question>
-      <Question>
-      <GqlPicker onChange={onChange} list="generic_type" label="Generic Type" value={state.generic_type}/>
+        <Typography variant="h4">Other Registrations</Typography>
+        <Grid container spacing={4}>
+          <Grid item xs={3}>
+            <Field name="ssr" label="SSR" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="call_sign" label="VHF Call Sign" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="nhsr" label="National Register of Historic Vessels Number" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="nhbr" label="National Small Boats Register Number" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="fishing_number" label="Fishing Number" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="sail_number" label="Sail Number" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="mssi" label="MSSI" state={state} onChange={onChange} />
+          </Grid>
+          <Grid item xs={3}>
+            <Field name="WIN" label="WIN" state={state} onChange={onChange} />
+            </Grid>
+          <Grid item xs={12}>
+            <Field name="other_registrations" label="Others" state={state} onChange={onChange} />
+          </Grid>
+        </Grid>
       </Question>
       <Question>
         <ReallyDumbRTE
