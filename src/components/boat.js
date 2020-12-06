@@ -31,7 +31,7 @@ import { Helmet } from "react-helmet";
 import References from './references';
 import UploadPhotos from './uploadphotos';
 import { query } from '../util/boatquery';
-import EditDialog from './forms/editdialog';
+import EditButton from './editbutton';
 
 function m2f(val) {
     if(val) {
@@ -340,7 +340,7 @@ const engine = {
                   <UploadPhotos classes={classes} boat={boat} />
                 </Grid>
                 <Grid item xs={3} >
-                  <EditDialog classes={classes} boat={boat}/>
+                  <EditButton classes={classes} boat={boat}/>
                 </Grid>
               </Grid>
             </Paper>
