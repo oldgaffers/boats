@@ -1,8 +1,7 @@
 import React, { useState, isValidElement, cloneElement } from 'react';
 import { Typography, TextField } from '@material-ui/core';
 import RadioList from './radiolist';
-import ComboBox from './combobox';
-import { Step, JumpStep } from '../../util/formsteps';
+import { Step, JumpStep, Submit } from '../../util/formsteps';
 import ReallyDumbRTE from '../../util/ReallyDumbRTE';
 import Picker from '../picker';
 
@@ -76,68 +75,88 @@ export default function BoatForm({
   state, onChange, onSubmit, onClose }) {
   const [step, setStep] = useState(1);
 
-  let f = {};
-  let firstPastHandicap = 0;
-  let firstPastRacingHeadsails = 0;
-  let firstBeforeHandicap = 0;
-  let firstBeforeRacingHeadsails = 0;
-
-  function handleNext() {
-    setStep(step + 1);
-  }
-
-  function handlePrev() {
-    setStep(step - 1);
-  }
-
   let n = 1;
+  const labels = {};
 
-  function Next({ children, pos }) {
+  function Question({ children}) {
     return (
       <Step
-        step={pos}
+        step={n++}
         currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
+        onPrev={() => setStep(step - 1)}
+        onNext={() => setStep(step + 1)}
         onCancel={onClose}
     >{children}</Step>
     );
-
   }
+
+  function JumpLabel({label}) {
+    labels[label] = n;
+    return '';
+  }
+
+  function JumpQuestion({jump, jumpLabel, question}) {
+      return (
+      <JumpStep
+        step={n++}
+        currentStep={step}
+        onPrev={() => setStep(step - 1)}
+        onNext={() => setStep(step + 1)}
+        onJump={() => setStep(labels[jump])}
+        jumpLabel={jumpLabel}
+        nextLabel="Yes"
+        onCancel={onClose}
+      >
+        <Typography>{question}</Typography>
+      </JumpStep>
+    );
+  }
+
+  function Done({children}) {
+    return (
+      <Submit
+        step={n++}
+        currentStep={step}
+        onPrev={() => setStep(step - 1)}
+        onCancel={onClose}
+        onSubmit={onSubmit}
+      >{children}</Submit>
+    );
+}
+
 
   return (
     <>
-      <Next pos={n++}>
+      <Question>
+        <Typography>Thanks. Please give us an email address or phone number so we can contact you.
+          <p>If we can't contact you, we will still review the data and if we can independently verify it,
+          we will still use it on the register.</p>
+        </Typography>        
+        <TextField fullWidth variant="outlined" name="contact" value="" onChange={onChange} />
+      </Question>
+      <Question>
         <Field
           state={state}
           onChange={onChange}
           label="Previous names"
           value={state.previous_names?state.previous_names.join(', '):''}
         />
-      </Next>
-      <Next pos={n++}>
-        <Typography>Design Class</Typography>
-        <RadioList
-          name="design"
-          state={state}
-          onChange={onChange}
-          options={[
-            'One off',
-            'Standard example of a production class',
-            'Modified example of a production class',
-          ]}
-        />
-      </Next>
-      <Next pos={n++}>
-        <Picker onChange={onChange} options="design_class" label="Design Class" value={state.designClassByDesignClass.name}/>
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
+        <Typography>Design Class</Typography>        
+          <Picker onChange={onChange} options="design_class" label="Design Class" value={
+            state.designClassByDesignClass
+            ?state.designClassByDesignClass.name
+            :'One off'
+          }/>                  
+      </Question>
+      <Question>
         <Picker onChange={onChange} options="sail_type" label="Mainsail Type" value={state.mainsail_type}/>
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Picker onChange={onChange} options="rig_type" label="Rig Type" value={state.rigTypeByRigType.name}/>
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Engine</Typography>
         <RadioList
           name="engine"
@@ -145,20 +164,17 @@ export default function BoatForm({
           onChange={onChange}
           options={['None', 'Inboard', 'Outboard']}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Picker onChange={onChange} options="designer" label="Designer" value={state.designerByDesigner.name} />
-      </Next>
-      <JumpStep
-        step={(firstBeforeHandicap = n++)}
-        currentStep={step}
-        onPrev={handlePrev}
-        onNext={handleNext}
-        onJump={jumpPastHandicap}
-        nextLabel="Enter Handicapping Details"
+      </Question>
+      <JumpLabel label="handicap"/>
+      <JumpQuestion
+        question="Enter Handicapping Details"
         jumpLabel="Not Now"
-        onCancel={onClose}
-      >
+        jump="afterHandicap"
+      />
+      <Question>
         <Typography>Basic hull measurements</Typography>
         <Field
           state={state}
@@ -172,12 +188,12 @@ export default function BoatForm({
           type="number"
           label="Draft"
         />
-      </JumpStep>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Measurement Diagram</Typography>
         <img alt="measurement diagram" src="hull-measurements.png" />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Hull measurements</Typography>
         <HandicapField
           name='length_over_spars'
@@ -208,70 +224,71 @@ export default function BoatForm({
           onChange={onChange}
           type="number"
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <JumpLabel label="racingHeadsails"/>
+      <JumpQuestion
+        question="Do you set headsails when racing"
+        jumpLabel="No"
+        jump="afterRacingHeadsails"
+      />
+      <Question>
         <Sail
           state={state}
           onChange={onChange}
           label="Biggest Staysail"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Sail
           state={state}
           onChange={onChange}
           label="Biggest Jib"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Sail
           state={state}
           onChange={onChange}
           label="Biggest Downwind Sail"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Next>
-      <Step
-        step={(firstPastRacingHeadsails = n++)}
-        currentStep={step}
-        onPrev={jumpBackPastRacingHeadsails}
-        onNext={handleNext}
-        onCancel={onClose}
-      >
+      </Question>
+      <JumpLabel label="afterRacingHeadsails"/>
+      <Question>
         <Sail
           state={state}
           onChange={onChange}
           label="Main Sail"
           fields={['Luff', 'Head', 'Foot']}
         />
-      </Step>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Sail
           state={state}
           onChange={onChange}
           label="Top Sail"
           fields={['Luff', 'Perpendicular']}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Sail
           state={state}
           onChange={onChange}
           label="Mizen"
           fields={['Luff', 'Head', 'Foot']}
         />
-      </Next>
-      <Next pos={n++}>        
+      </Question>
+      <Question>        
         <Sail
           state={state}
           onChange={onChange}
           label="Mizen Topsail"
           fields={['Luff', 'Perpendicular']}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Propellor type</Typography>
         <HandicapField as={<RadioList/>}
           name="propellor"
@@ -279,8 +296,8 @@ export default function BoatForm({
           onChange={onChange}
           options={['None', 'Fixed', 'Folding', 'Feathering']}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Hull type</Typography>
         <RadioList
           name="hull_form"
@@ -297,11 +314,9 @@ export default function BoatForm({
             'centre-board dinghy',
           ]}
         />
-      </Next>
-      <Next
-        step={(firstPastHandicap = n++)}
-        onPrev={jumpBackPastHandicap}
-      >
+      </Question>
+      <JumpLabel label="afterHandicap"/>
+      <Question>
         <Typography>Spar material</Typography>
         <RadioList
           name="spar_material"
@@ -316,8 +331,8 @@ export default function BoatForm({
             'Alloy/Carbon',
           ]}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Construction method</Typography>
         <RadioList
           name="construction_method"
@@ -334,35 +349,30 @@ export default function BoatForm({
             'Strip planking / epoxy sheathed',
           ]}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Picker onChange={onChange} options="construction_material" label="Construction Material" value={state.construction_material} />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Year built / launched</Typography>
         <Field state={state} onChange={onChange} label="Year" />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Picker onChange={onChange} id="builder-name" options="builder" label="Builder" value={state.builderByBuilder.name} />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <ReallyDumbRTE
           label="Short description"
           state={state}
           onSave={onChange}
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Location</Typography>
-        <ComboBox name="home_country" 
-          label="Home Country"
-          options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']}
-          state={state}
-          onChange={onChange}
-        />
+        <Picker onChange={onChange} options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']} label="Home Country" value={state.home_country}/>
         <Field name="home_port" label="Home Port" state={state} onChange={onChange} />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Part 1 British Registry Details</Typography>
         <Field
           name="uk_part1"
@@ -381,8 +391,8 @@ export default function BoatForm({
           type="number"
           label="Year Registered"
         />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Other Registrations</Typography>
         <Field name="ssr" label="SSR" state={state} onChange={onChange} />
         <Field name="call_sign" label="VHF Call Sign" state={state} onChange={onChange} />
@@ -391,53 +401,29 @@ export default function BoatForm({
         <Field name="fishing_number" label="Fishing Number" state={state} onChange={onChange} />
         <Field name="sail_number" label="Sail Number" state={state} onChange={onChange} />
         <Field name="mssi" label="MSSI" state={state} onChange={onChange} />
+        <Field name="WIN" label="WIN" state={state} onChange={onChange} />
         <Field name="other_registrations" label="Others" state={state} onChange={onChange} />
-      </Next>
-      <Next pos={n++}>
+      </Question>
+      <Question>
         <Typography>Function</Typography>
-        <ComboBox
-          label="Current Function"
-          options={['Leisure', 'Fishing']}
-          state={state}
-          onChange={onChange}
-        />
-        <ComboBox
-          label="Original Function"
-          options={['Leisure', 'Fishing']}
-          state={state}
-          onChange={onChange}
-        />
-      </Next>
-      <Next pos={n++}>
+        <Picker onChange={onChange} options={['Leisure', 'Fishing']} label="Current" value={state.currentFunction}/>
+        <Picker onChange={onChange} options={['Leisure', 'Fishing']} label="Original" value={state.originalFunction}/>
+      </Question>
+      <Question>
       <Picker onChange={onChange} options="generic_type" label="Generic Type" value={state.generic_type}/>
-      </Next>
-      <Next
-        step={n}
-        onSubmit={onSubmit}
-        onCancel={onClose}
-      >
+      </Question>
+      <Question>
         <ReallyDumbRTE
           label="Full description"
           state={state}
           onSave={onChange}
         />
-      </Next>
+      </Question>
+      <Done>
+        We're done! Thanks so much!<p>The editor's will review your input. 
+        If we have any questions we will get back to you by email.</p>
+        <p>We'll let you know when your input is live on the site.</p>
+      </Done>
     </>
   );
-
-  function jumpPastHandicap() {
-    setStep(firstPastHandicap);
-  }
-
-  function jumpPastRacingHeadsails() {
-    setStep(firstPastRacingHeadsails);
-  }
-
-  function jumpBackPastHandicap() {
-    setStep(firstBeforeHandicap);
-  }
-
-  function jumpBackPastRacingHeadsails() {
-    setStep(firstBeforeRacingHeadsails);
-  }
 }

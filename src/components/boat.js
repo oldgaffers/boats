@@ -340,7 +340,7 @@ const engine = {
                   <UploadPhotos classes={classes} boat={boat} />
                 </Grid>
                 <Grid item xs={3} >
-                  <EditDialog classes={classes} boat={boat}>I have edits for this boat</EditDialog>
+                  <EditDialog classes={classes} boat={boat}/>
                 </Grid>
               </Grid>
             </Paper>

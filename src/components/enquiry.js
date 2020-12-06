@@ -89,7 +89,7 @@ export default function Enquiry({ boat, classes }) {
             endIcon={<Icon>send</Icon>}
             variant="contained"
             color="primary" onClick={handleClickOpen}>
-            Contact the editors about this boat
+            Contact us about this boat
           </Button>
           <Dialog top open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>

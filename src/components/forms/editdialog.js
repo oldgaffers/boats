@@ -28,7 +28,7 @@ export default function EditDialog({ className, key, disabled, children, boat, e
         endIcon={<Icon>send</Icon>}
         onClick={handleClickOpen}
       >
-        {children}
+        I have edits for this boat
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
       fullWidth maxWidth="200px" style={{minHeight: "50vh", maxHeight: "60vh" }}

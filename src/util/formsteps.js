@@ -32,15 +32,9 @@ export function Step({
         ) : (
           ''
         )}
-        {onNext ? (
-          <Button variant="contained" onClick={onNext}>
-            Next
-          </Button>
-        ) : (
-          <Button variant="contained" onClick={onSubmit}>
-            Submit
-          </Button>
-        )}
+        <Button variant="contained" onClick={onNext}>
+          Next
+        </Button>
       </DialogActions>
     </>
   );
@@ -77,6 +71,41 @@ export function JumpStep({
         </Button>
         <Button variant="contained" onClick={onJump}>
           {jumpLabel}
+        </Button>
+      </DialogActions>
+    </>
+  );
+}
+
+export function Submit({
+  step,
+  currentStep,
+  onPrev,
+  children,
+  onSubmit,
+  onCancel
+}) {
+  if (currentStep !== step) {
+    return null;
+  }
+  return (
+    <>
+    <DialogContent>
+    {children}
+    </DialogContent>
+    <DialogActions>
+        <Button onClick={onCancel} color="primary">
+            Cancel
+        </Button>
+        {onPrev ? (
+          <Button variant="contained" onClick={onPrev}>
+            Back
+          </Button>
+        ) : (
+          ''
+        )}
+        <Button variant="contained" onClick={onSubmit}>
+          Submit
         </Button>
       </DialogActions>
     </>
