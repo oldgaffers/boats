@@ -1,8 +1,9 @@
 import React, { useState, isValidElement, cloneElement } from 'react';
 import { Typography, TextField } from '@material-ui/core';
-import RadioList from './radiolist';
+import { RadioList, GqlRadioList } from './radiolist';
 import { Step, JumpStep, Submit } from '../../util/formsteps';
 import ReallyDumbRTE from '../../util/ReallyDumbRTE';
+import GqlPicker from '../gqlpicker';
 import Picker from '../picker';
 
 function Field({ name, state, onChange, as, ...props }) {
@@ -122,8 +123,7 @@ export default function BoatForm({
         onSubmit={onSubmit}
       >{children}</Submit>
     );
-}
-
+  }
 
   return (
     <>
@@ -143,30 +143,20 @@ export default function BoatForm({
         />
       </Question>
       <Question>
-        <Typography>Design Class</Typography>        
-          <Picker onChange={onChange} options="design_class" label="Design Class" value={
+          <GqlPicker onChange={onChange} list="design_class" label="Design Class" value={
             state.designClassByDesignClass
             ?state.designClassByDesignClass.name
             :'One off'
           }/>                  
       </Question>
       <Question>
-        <Picker onChange={onChange} options="sail_type" label="Mainsail Type" value={state.mainsail_type}/>
+        <GqlPicker onChange={onChange} list="sail_type" label="Mainsail Type" value={state.mainsail_type}/>
       </Question>
       <Question>
-        <Picker onChange={onChange} options="rig_type" label="Rig Type" value={state.rigTypeByRigType.name}/>
-      </Question>
+        <GqlPicker onChange={onChange} list="rig_type" label="Rig Type" value={state.rigTypeByRigType?state.rigTypeByRigType.name:''}/>
+      </Question>      
       <Question>
-        <Typography>Engine</Typography>
-        <RadioList
-          name="engine"
-          state={state}
-          onChange={onChange}
-          options={['None', 'Inboard', 'Outboard']}
-        />
-      </Question>
-      <Question>
-        <Picker onChange={onChange} options="designer" label="Designer" value={state.designerByDesigner.name} />
+        <GqlPicker onChange={onChange} list="designer" label="Designer" value={state.designerByDesigner?state.designerByDesigner.name:''} />
       </Question>
       <JumpLabel label="handicap"/>
       <JumpQuestion
@@ -299,66 +289,41 @@ export default function BoatForm({
       </Question>
       <Question>
         <Typography>Hull type</Typography>
-        <RadioList
+        <GqlRadioList
           name="hull_form"
           state={state}
           onChange={onChange}
-          options={[
-            'long keel deep forefoot',
-            'long keel sloping forefoot',
-            'cut away stern',
-            'fin keel',
-            'bilge keel',
-            'centre-boarder',
-            'dinghy',
-            'centre-board dinghy',
-          ]}
+          list="hull_form"
         />
       </Question>
       <JumpLabel label="afterHandicap"/>
       <Question>
         <Typography>Spar material</Typography>
-        <RadioList
+        <GqlRadioList
           name="spar_material"
           state={state}
           onChange={onChange}
-          options={[
-            'Wood',
-            'Alloy',
-            'Steel',
-            'Carbon',
-            'Wood/Carbon',
-            'Alloy/Carbon',
-          ]}
+          list="spar_material"
         />
       </Question>
       <Question>
         <Typography>Construction method</Typography>
-        <RadioList
+        <GqlRadioList
           name="construction_method"
+          list="construction_method"
           state={state}
           onChange={onChange}
-          options={[
-            'Carvel',
-            'Clinker',
-            'Cold moulded',
-            'Hot Moulded',
-            'Clinker-ply',
-            'Stitch and glue',
-            'Strip planking',
-            'Strip planking / epoxy sheathed',
-          ]}
         />
       </Question>
       <Question>
-        <Picker onChange={onChange} options="construction_material" label="Construction Material" value={state.construction_material} />
+        <GqlPicker onChange={onChange} list="construction_material" label="Construction Material" value={state.construction_material||'undefined'} />
       </Question>
       <Question>
         <Typography>Year built / launched</Typography>
         <Field state={state} onChange={onChange} label="Year" />
       </Question>
       <Question>
-        <Picker onChange={onChange} id="builder-name" options="builder" label="Builder" value={state.builderByBuilder.name} />
+        <GqlPicker onChange={onChange} id="builder-name" list="builder" label="Builder" value={state.builderByBuilder?state.builderByBuilder.name:''} />
       </Question>
       <Question>
         <ReallyDumbRTE
@@ -368,7 +333,7 @@ export default function BoatForm({
         />
       </Question>
       <Question>
-        <Typography>Location</Typography>
+        <Typography>Location</Typography>        
         <Picker onChange={onChange} options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']} label="Home Country" value={state.home_country}/>
         <Field name="home_port" label="Home Port" state={state} onChange={onChange} />
       </Question>
@@ -405,12 +370,7 @@ export default function BoatForm({
         <Field name="other_registrations" label="Others" state={state} onChange={onChange} />
       </Question>
       <Question>
-        <Typography>Function</Typography>
-        <Picker onChange={onChange} options={['Leisure', 'Fishing']} label="Current" value={state.currentFunction}/>
-        <Picker onChange={onChange} options={['Leisure', 'Fishing']} label="Original" value={state.originalFunction}/>
-      </Question>
-      <Question>
-      <Picker onChange={onChange} options="generic_type" label="Generic Type" value={state.generic_type}/>
+      <GqlPicker onChange={onChange} list="generic_type" label="Generic Type" value={state.generic_type}/>
       </Question>
       <Question>
         <ReallyDumbRTE
@@ -427,3 +387,15 @@ export default function BoatForm({
     </>
   );
 }
+
+/*
+<Question>
+        <Typography>Engine</Typography>
+        <RadioList
+          name="engine"
+          state={state}
+          onChange={onChange}
+          options={['None', 'Inboard', 'Outboard']}
+        />
+      </Question>
+*/

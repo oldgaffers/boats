@@ -1,11 +1,21 @@
 import React, { useState } from 'react';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import { useQuery } from '@apollo/react-hooks';
 // import { validate } from 'graphql';
+import gql from 'graphql-tag';
 
-export default function Picker({ options, id, label, onChange, value, clearable = true }) {
+export default function GqlPicker({ list, id, label, onChange, value, clearable = true }) {
 
   const [inputValue, setInputValue] = useState('');
+  console.log('GqlPicker', list);
+
+  const { loading, error, data } = useQuery(gql(`{
+    ${list}(order_by: {name: asc}){name}
+  }`));
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(GqlPicker)</p>;
 
   function handleChange(event, option, reason) {
     let val;
@@ -17,7 +27,7 @@ export default function Picker({ options, id, label, onChange, value, clearable 
         if (option) {
           val = option;          
         } else {
-          val = options[0].name;
+          val = data[0].name;
         }
         break;
       case 'clear':
@@ -44,7 +54,6 @@ export default function Picker({ options, id, label, onChange, value, clearable 
   }
 
   function v(option, val) {
-    //console.log(`${id} getOptionSelected ${option.name} !${val}!`);
     if(!val) return false;
     if(val === '""') console.log(`${id} getOptionSelected ${option.name} !${val}!`);
     if(val.name) return option.name === val.name;
@@ -59,7 +68,7 @@ export default function Picker({ options, id, label, onChange, value, clearable 
   return (
     <Autocomplete
       id={id}
-      options={options}
+      options={data[list]}
       getOptionSelected={(option, val) => v(option,val)}
       getOptionLabel={(option) => option.name?option.name:option}
       value={value||''}

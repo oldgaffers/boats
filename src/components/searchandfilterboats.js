@@ -3,6 +3,7 @@ import { usePicklists } from '../util/picklists';
 import { Divider, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles';
 import Picker from './picker'
+import GqlPicker from './gqlpicker'
 import FormGroup from '@material-ui/core/FormGroup';
 import FormHelperText from '@material-ui/core/FormHelperText';
 
@@ -57,10 +58,6 @@ export default function SearchAndFilterBoats({
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(SearchAndFilterBoats)</p>;
-
-    for (const key in data) {
-        sessionStorage.setItem(key, JSON.stringify(data[key]));
-    }
 
     const boatNames = makeBoatNameList(data.boat);
 
@@ -122,19 +119,19 @@ export default function SearchAndFilterBoats({
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
             <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['boat-name']} />
             <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
-            <Picker onChange={pl} id="designer-name" options="designer" label="Designer" value={filters['designer-name']} />
-            <Picker onChange={pl} id="builder-name" options="builder" label="Builder" value={filters['builder-name']} />
+            <GqlPicker onChange={pl} id="designer-name" list="designer" label="Designer" value={filters['designer-name']} />
+            <GqlPicker onChange={pl} id="builder-name" list="builder" label="Builder" value={filters['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
-            <Picker onChange={pl} id="rig-type" options="rig_type" label="Rig Type" value={filters['rig-type']}/>
-            <Picker onChange={pl} id="mainsail-type" options="sail_type" label="Mainsail Type" value={filters['mainsail-type']}/>
-            <Picker onChange={pl} id="generic-type" options="generic_type" label="Generic Type" value={filters['generic-type']}/>
-            <Picker onChange={pl} id="design-class" options="design_class" label="Design Class" value={filters['design-class']}/>
-            <Picker onChange={pl} id="construction-material" options="construction_material" label="Construction Material" />
+            <GqlPicker onChange={pl} id="rig-type" list="rig_type" label="Rig Type" value={filters['rig-type']}/>
+            <GqlPicker onChange={pl} id="mainsail-type" list="sail_type" label="Mainsail Type" value={filters['mainsail-type']}/>
+            <GqlPicker onChange={pl} id="generic-type" list="generic_type" label="Generic Type" value={filters['generic-type']}/>
+            <GqlPicker onChange={pl} id="design-class" list="design_class" label="Design Class" value={filters['design-class']}/>
+            <GqlPicker onChange={pl} id="construction-material" list="construction_material" label="Construction Material" />
         </Grid>
     </form>
     );

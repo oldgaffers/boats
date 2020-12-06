@@ -42,29 +42,26 @@ function FourOhFour() {
   }
   return (<Redirect to={path} />)
 }
-
 function App() {
   return (
-    // http is a check for dev mode, production will always be https
-    <Router basename={window.location.protocol==='http:'?'/':'/boats'}>
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/boat/:id">
-            <ApolloProvider client={client}><Boat /></ApolloProvider>
-          </Route>
-          <Route path="/about"><About /></Route>
-          <Route path="/designers"><Designers /></Route>
-          <Route path="/builders"><Builders /></Route>
-          <Route path="/fleets"><Fleets /></Route>
-          <Route path="/editors"><Editors /></Route>
-          <Route path="/support"><Support /></Route>
-          <Route path="/tech"><Tech /></Route>
-          <Route path="/">{}
-            <ApolloProvider client={client}><FourOhFour /></ApolloProvider>
-          </Route>
-        </Switch>
-    </Router>
+    <ApolloProvider client={client}>
+      <Router basename={
+          // http is a check for dev mode, production will always be https
+          window.location.protocol==='http:'?'/':'/boats'
+        }>
+          <Switch>
+            <Route path="/boat/:id"><Boat /></Route>
+            <Route path="/about"><About /></Route>
+            <Route path="/designers"><Designers /></Route>
+            <Route path="/builders"><Builders /></Route>
+            <Route path="/fleets"><Fleets /></Route>
+            <Route path="/editors"><Editors /></Route>
+            <Route path="/support"><Support /></Route>
+            <Route path="/tech"><Tech /></Route>
+            <Route path="/"><FourOhFour /></Route>
+          </Switch>
+      </Router>
+    </ApolloProvider>
   );}
 
 export default App;

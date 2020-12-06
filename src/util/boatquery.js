@@ -22,6 +22,7 @@ export const query = (id) => gql`{
     full_description
     image_key
     uk_part1
+    spar_material
     constructionMaterialByConstructionMaterial { name }
     constructionMethodByConstructionMethod { name }
     construction_details
