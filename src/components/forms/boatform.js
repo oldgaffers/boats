@@ -13,15 +13,30 @@ function Field({ name, state, onChange, as, ...props }) {
 
   function handleChange(event) {
     if (onChange) {
-      const s = state;
-      s[key] = event.target.value;
-      onChange(s);
+      onChange({...state, [key]: event.target.value});
     }
   }
 
   return (
     <TextField {...props} fullWidth
     variant="outlined" name={key} value={state[key]} onChange={handleChange} />
+  );
+}
+
+function ArrayField({ name, field, state, onChange, as, ...props }) {
+
+  function handleChange(event) {
+    if (onChange) {
+      const a = event.target.value.split(/, */);
+      onChange({...state, [field]: a});
+    }
+  }
+
+  const value=state[field]?state[field].join(', '):''
+
+  return (
+    <TextField {...props} fullWidth
+    variant="outlined" name={field} value={value} onChange={handleChange} />
   );
 }
 
@@ -76,9 +91,15 @@ function Sail({ label, fields, state, onChange }) {
 export default function BoatForm({ 
   state, onChange, onSubmit, onClose }) {
   const [step, setStep] = useState(1);
+  const [currentState, setCurrentState] = useState(state);
 
   let n = 1;
   const labels = {};
+
+  function onPickerChange(id, val) {
+   console.log('picker change', id, val);
+   setCurrentState({...currentState, [id]: val });
+  }
 
   function Question({ children}) {
     return (
@@ -136,30 +157,30 @@ export default function BoatForm({
         <TextField fullWidth variant="outlined" name="contact" value="" onChange={onChange} />
       </Question>
       <Question>
-        <Field
-          state={state}
+        <ArrayField
+          state={currentState}
+          field="previous_names"
           onChange={onChange}
           label="Previous names"
-          value={state.previous_names?state.previous_names.join(', '):''}
         />
       </Question>
       <Question>
-          <GqlPicker onChange={onChange} list="design_class" label="Design Class" value={
-            state.designClassByDesignClass
-            ?state.designClassByDesignClass.name
+          <GqlPicker onChange={onPickerChange} id="design_class" label="Design Class" value={
+            currentState.designClassByDesignClass
+            ?currentState.designClassByDesignClass.name
             :'One off'
           }/>
           <Typography>&nbsp;</Typography>
-          <GqlPicker onChange={onChange} list="generic_type" label="Generic Type" value={state.generic_type}/>                  
+          <GqlPicker onChange={onPickerChange} id="generic_type" label="Generic Type" value={currentState.generic_type}/>                  
       </Question>
       <Question>
-        <GqlPicker onChange={onChange} list="sail_type" label="Mainsail Type" value={state.mainsail_type}/>
+        <GqlPicker onChange={onPickerChange} id="sail_type" label="Mainsail Type" value={currentState.mainsail_type}/>
       </Question>
       <Question>
-        <GqlPicker onChange={onChange} list="rig_type" label="Rig Type" value={state.rigTypeByRigType?state.rigTypeByRigType.name:''}/>
+        <GqlPicker onChange={onPickerChange} independently="rig_type" label="Rig Type" value={currentState.rigTypeByRigType?currentState.rigTypeByRigType.name:''}/>
       </Question>      
       <Question>
-        <GqlPicker onChange={onChange} list="designer" label="Designer" value={state.designerByDesigner?state.designerByDesigner.name:''} />
+        <GqlPicker onChange={onPickerChange} id="designer" label="Designer" value={currentState.designerByDesigner?currentState.designerByDesigner.name:''} />
       </Question>
       <JumpLabel label="handicap"/>
       <JumpQuestion
@@ -170,13 +191,13 @@ export default function BoatForm({
       <Question>
         <Typography>Basic hull measurements</Typography>
         <Field
-          state={state}
+          state={currentState}
           onChange={onChange}
           type="number"
           label="Length on Deck"
         />
         <Field
-          state={state}
+          state={currentState}
           onChange={onChange}
           type="number"
           label="Draft"
@@ -191,14 +212,14 @@ export default function BoatForm({
         <HandicapField
           name='length_over_spars'
           label="Length over spars"
-          state={state}
+          state={currentState}
           onChange={onChange}
           type="number"
         />
         <HandicapField
           name='length_on_waterline'
           label="Length on the waterline"
-          state={state}
+          state={currentState}
           onChange={onChange}
           type="number"
           onCancel={onClose}
@@ -206,14 +227,14 @@ export default function BoatForm({
         <HandicapField
           name='beam'
           label="Beam"
-          state={state}
+          state={currentState}
           onChange={onChange}
           type="number"
         />
         <HandicapField
           name='depth'
           label="Depth"
-          state={state}
+          state={currentState}
           onChange={onChange}
           type="number"
         />
@@ -226,7 +247,7 @@ export default function BoatForm({
       />
       <Question>
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Biggest Staysail"
           fields={['Luff', 'Leach', 'Foot']}
@@ -234,7 +255,7 @@ export default function BoatForm({
       </Question>
       <Question>
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Biggest Jib"
           fields={['Luff', 'Leach', 'Foot']}
@@ -242,7 +263,7 @@ export default function BoatForm({
       </Question>
       <Question>
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Biggest Downwind Sail"
           fields={['Luff', 'Leach', 'Foot']}
@@ -251,7 +272,7 @@ export default function BoatForm({
       <JumpLabel label="afterRacingHeadsails"/>
       <Question>
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Main Sail"
           fields={['Luff', 'Head', 'Foot']}
@@ -259,7 +280,7 @@ export default function BoatForm({
       </Question>
       <Question>
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Top Sail"
           fields={['Luff', 'Perpendicular']}
@@ -267,7 +288,7 @@ export default function BoatForm({
       </Question>
       <Question>
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Mizen"
           fields={['Luff', 'Head', 'Foot']}
@@ -275,7 +296,7 @@ export default function BoatForm({
       </Question>
       <Question>        
         <Sail
-          state={state}
+          state={currentState}
           onChange={onChange}
           label="Mizen Topsail"
           fields={['Luff', 'Perpendicular']}
@@ -285,7 +306,7 @@ export default function BoatForm({
         <Typography>Propellor type</Typography>
         <HandicapField as={<RadioList/>}
           name="propellor"
-          state={state}
+          state={currentState}
           onChange={onChange}
           options={['None', 'Fixed', 'Folding', 'Feathering']}
         />
@@ -294,9 +315,9 @@ export default function BoatForm({
         <Typography>Hull type</Typography>
         <GqlRadioList
           name="hull_form"
-          state={state}
+          state={currentState}
           onChange={onChange}
-          list="hull_form"
+          id="hull_form"
         />
       </Question>
       <JumpLabel label="afterHandicap"/>
@@ -305,20 +326,20 @@ export default function BoatForm({
         <Grid container spacing={4}>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
-            <GqlPicker onChange={onChange} list="construction_method" label="Construction Method" value={state.constructionMethodByConstructionMethod?state.constructionMethodByConstructionMethod.name:'undefined'} />
+            <GqlPicker onChange={onPickerChange} id="construction_method" label="Construction Method" value={currentState.constructionMethodByConstructionMethod?currentState.constructionMethodByConstructionMethod.name:'undefined'} />
           </Grid>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
-            <GqlPicker onChange={onChange} list="construction_material" label="Construction Material" value={state.constructionMaterialByConstructionMaterial?state.constructionMaterialByConstructionMaterial.name:'undefined'} />
+            <GqlPicker onChange={onPickerChange} id="construction_material" label="Construction Material" value={currentState.constructionMaterialByConstructionMaterial?currentState.constructionMaterialByConstructionMaterial.name:'undefined'} />
           </Grid>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
-            <GqlPicker onChange={onChange} list="spar_material" label="Spar Material" value={state.spar_material||''} />
+            <GqlPicker onChange={onPickerChange} id="spar_material" label="Spar Material" value={currentState.spar_material||''} />
           </Grid>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
             <Field
-              state={state}
+              state={currentState}
               onChange={onChange}
               type="text"
               label="construction_details"
@@ -328,21 +349,21 @@ export default function BoatForm({
       </Question>
       <Question>
         <Typography variant="h4">Where and when built</Typography>
-        <Field state={state} onChange={onChange} label="Year" />
+        <Field state={currentState} onChange={onChange} label="Year" />
         <Typography>&nbsp;</Typography>
-        <GqlPicker onChange={onChange} id="builder-name" list="builder" label="Builder" value={state.builderByBuilder?state.builderByBuilder.name:''} />
+        <GqlPicker onChange={onPickerChange} id="builder" label="Builder" value={currentState.builderByBuilder?currentState.builderByBuilder.name:''} />
       </Question>
       <Question>
         <ReallyDumbRTE
           label="Short description"
-          state={state}
+          state={currentState}
           onSave={onChange}
         />
       </Question>
       <Question>
         <Typography variant="h4">Location</Typography>        
-        <Picker onChange={onChange} options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']} label="Home Country" value={state.home_country}/>
-        <Field name="home_port" label="Home Port" state={state} onChange={onChange} />
+        <Picker onChange={onPickerChange} options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']} label="Home Country" value={currentState.home_country}/>
+        <Field name="home_port" label="Home Port" state={currentState} onChange={onChange} />
       </Question>
       <Question>
         <Typography variant="h4">Part 1 British Registry Details</Typography>
@@ -351,20 +372,20 @@ export default function BoatForm({
             <Field
               name="uk_part1"
               label="Official Registry Number"
-              state={state}
+              state={currentState}
               onChange={onChange}
             />
           </Grid>
           <Grid item xs={6}>
             <Field
-              state={state}
+              state={currentState}
               onChange={onChange}
               label="Port of Registry"
             />
           </Grid>
           <Grid item xs={6}>
             <Field
-              state={state}
+              state={currentState}
               onChange={onChange}
               type="number"
               label="Year Registered"
@@ -376,38 +397,38 @@ export default function BoatForm({
         <Typography variant="h4">Other Registrations</Typography>
         <Grid container spacing={4}>
           <Grid item xs={3}>
-            <Field name="ssr" label="SSR" state={state} onChange={onChange} />
+            <Field name="ssr" label="SSR" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="call_sign" label="VHF Call Sign" state={state} onChange={onChange} />
+            <Field name="call_sign" label="VHF Call Sign" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="nhsr" label="National Register of Historic Vessels Number" state={state} onChange={onChange} />
+            <Field name="nhsr" label="National Register of Historic Vessels Number" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="nhbr" label="National Small Boats Register Number" state={state} onChange={onChange} />
+            <Field name="nhbr" label="National Small Boats Register Number" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="fishing_number" label="Fishing Number" state={state} onChange={onChange} />
+            <Field name="fishing_number" label="Fishing Number" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="sail_number" label="Sail Number" state={state} onChange={onChange} />
+            <Field name="sail_number" label="Sail Number" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="mssi" label="MSSI" state={state} onChange={onChange} />
+            <Field name="mssi" label="MSSI" state={currentState} onChange={onChange} />
           </Grid>
           <Grid item xs={3}>
-            <Field name="WIN" label="WIN" state={state} onChange={onChange} />
+            <Field name="WIN" label="WIN" state={currentState} onChange={onChange} />
             </Grid>
           <Grid item xs={12}>
-            <Field name="other_registrations" label="Others" state={state} onChange={onChange} />
+            <Field name="other_registrations" label="Others" state={currentState} onChange={onChange} />
           </Grid>
         </Grid>
       </Question>
       <Question>
         <ReallyDumbRTE
           label="Full description"
-          state={state}
+          state={currentState}
           onSave={onChange}
         />
       </Question>
@@ -425,7 +446,7 @@ export default function BoatForm({
         <Typography>Engine</Typography>
         <RadioList
           name="engine"
-          state={state}
+          state={currentState}
           onChange={onChange}
           options={['None', 'Inboard', 'Outboard']}
         />

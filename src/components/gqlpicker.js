@@ -5,13 +5,13 @@ import { useQuery } from '@apollo/react-hooks';
 // import { validate } from 'graphql';
 import gql from 'graphql-tag';
 
-export default function GqlPicker({ list, id, label, onChange, value, clearable = true }) {
+export default function GqlPicker({ id, label, onChange, value, clearable = true }) {
 
   const [inputValue, setInputValue] = useState('');
-  console.log('GqlPicker', list);
+  console.log('GqlPicker', id);
 
   const { loading, error, data } = useQuery(gql(`{
-    ${list}(order_by: {name: asc}){name}
+    ${id}(order_by: {name: asc}){name}
   }`));
 
   if (loading) return <p>Loading...</p>;
@@ -68,7 +68,7 @@ export default function GqlPicker({ list, id, label, onChange, value, clearable 
   return (
     <Autocomplete
       id={id}
-      options={data[list]}
+      options={data[id]}
       getOptionSelected={(option, val) => v(option,val)}
       getOptionLabel={(option) => option.name?option.name:option}
       value={value||''}
