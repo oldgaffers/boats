@@ -119,19 +119,19 @@ export default function SearchAndFilterBoats({
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
             <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['boat-name']} />
             <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
-            <GqlPicker onChange={pl} id="designer-name" list="designer" label="Designer" value={filters['designer-name']} />
-            <GqlPicker onChange={pl} id="builder-name" list="builder" label="Builder" value={filters['builder-name']} />
+            <GqlPicker onChange={pl} id="designer" label="Designer" value={filters['designer-name']} />
+            <GqlPicker onChange={pl} id="builder" label="Builder" value={filters['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
-            <GqlPicker onChange={pl} id="rig-type" list="rig_type" label="Rig Type" value={filters['rig-type']}/>
-            <GqlPicker onChange={pl} id="mainsail-type" list="sail_type" label="Mainsail Type" value={filters['mainsail-type']}/>
-            <GqlPicker onChange={pl} id="generic-type" list="generic_type" label="Generic Type" value={filters['generic-type']}/>
-            <GqlPicker onChange={pl} id="design-class" list="design_class" label="Design Class" value={filters['design-class']}/>
-            <GqlPicker onChange={pl} id="construction-material" list="construction_material" label="Construction Material" />
+            <GqlPicker onChange={pl} id="rig_type" label="Rig Type" value={filters['rig-type']}/>
+            <GqlPicker onChange={pl} id="sail_type" label="Mainsail Type" value={filters['mainsail-type']}/>
+            <GqlPicker onChange={pl} id="generic_type" label="Generic Type" value={filters['generic-type']}/>
+            <GqlPicker onChange={pl} id="design_class" label="Design Class" value={filters['design-class']}/>
+            <GqlPicker onChange={pl} id="construction_material" label="Construction Material" />
         </Grid>
     </form>
     );
