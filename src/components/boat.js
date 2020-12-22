@@ -292,7 +292,7 @@ const engine = {
                   value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
                   label="Website"
                 />
-                <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
+                <Typography dangerouslySetInnerHTML={{ __html: boat.short_description }}></Typography>
                 <References boat={boat}/>
                 <p></p>
                 <div>
