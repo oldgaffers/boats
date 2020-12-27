@@ -10,16 +10,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import { usePicklists } from '../util/picklists';
 import Picker from './picker'
 
-const pickers = {
-    designer: [],
-    builder: [],
-    rig_type: [],
-    sail_type: [],
-    generic_type: [],
-    design_class: [],
-    construction_material: [],    
-};
-
  const sortLabels = [
     { field: 'name', name: "Boat Name" },
     { field: 'oga_no', name: "OGA Boat No." },
@@ -73,6 +63,7 @@ export default function SearchAndFilterBoats({
     if (error) return <p>Error :(SearchAndFilterBoats)</p>;
 
     const boatNames = makeBoatNameList(data.boat);
+    const pickers = data;
 
     function sw(event, value) {
         if (event.target.id) {

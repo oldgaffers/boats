@@ -2,9 +2,9 @@
 import React, { useEffect,  } from 'react';
 import { Link, useParams, useLocation } from "react-router-dom";
 import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 import { BoatWrapper } from './boatwrapper';
 import { query } from '../util/boatquery';
+import { usePicklists } from '../util/picklists';
 
 export default function Boat() {
 
@@ -13,19 +13,7 @@ export default function Boat() {
 
   const boatData = useQuery(query(id));
 
-  const pickerData = useQuery(gql`
-  query {
-    design_class { name }
-    generic_type { name }
-    sail_type { name }
-    rig_type { name }
-    designer { name }
-    construction_method { name }
-    construction_material { name }
-    spar_material { name }
-    builder { name }
-    hull_form { name }
-  }`);
+  const pickerData = usePicklists();
 
   useEffect(() => {
       if (boatData.data) {
