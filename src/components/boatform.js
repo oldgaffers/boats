@@ -1,10 +1,9 @@
 import React, { useState, isValidElement, cloneElement } from 'react';
 import { Typography, TextField } from '@material-ui/core';
-import { RadioList, GqlRadioList } from './radiolist';
-import { Step, JumpStep, Submit } from '../../util/formsteps';
-import ReallyDumbRTE from '../../util/ReallyDumbRTE';
-import GqlPicker from '../gqlpicker';
-import Picker from '../picker';
+import { RadioList } from './radiolist';
+import { Step, JumpStep, Submit } from './formsteps';
+import ReallyDumbRTE from './ReallyDumbRTE';
+import Picker from './picker';
 import Grid from '@material-ui/core/Grid';
 
 function Field({ name, state, onChange, as, ...props }) {
@@ -88,8 +87,7 @@ function Sail({ label, fields, state, onChange }) {
     );
 }
 
-export default function BoatForm({ 
-  state, onChange, onSubmit, onClose }) {
+export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }) {
   const [step, setStep] = useState(1);
   const [currentState, setCurrentState] = useState(state);
 
@@ -154,7 +152,7 @@ export default function BoatForm({
           <p>If we can't contact you, we will still review the data and if we can independently verify it,
           we will still use it on the register.</p>
         </Typography>        
-        <TextField fullWidth variant="outlined" name="contact" value="" onChange={onChange} />
+        <TextField id="contact002" fullWidth variant="outlined" name="contact" value="" onChange={onChange} />
       </Question>
       <Question>
         <ArrayField
@@ -165,26 +163,26 @@ export default function BoatForm({
         />
       </Question>
       <Question>
-          <GqlPicker onChange={onPickerChange} id="design_class" label="Design Class" value={
+          <Picker onChange={onPickerChange} options={pickers.design_class} label="Design Class" value={
             currentState.designClassByDesignClass
             ?currentState.designClassByDesignClass.name
             :'One off'
           }/>
           <Typography>&nbsp;</Typography>
-          <GqlPicker onChange={onPickerChange} id="generic_type" label="Generic Type" value={currentState.generic_type}/>                  
+          <Picker onChange={onPickerChange} options={pickers.generic_type} label="Generic Type" value={currentState.generic_type}/> 
       </Question>
       <Question>
-        <GqlPicker onChange={onPickerChange} id="sail_type" label="Mainsail Type" value={currentState.mainsail_type}/>
+        <Picker onChange={onPickerChange} options={pickers.sail_type} label="Mainsail Type" value={currentState.mainsail_type}/>
       </Question>
       <Question>
-        <GqlPicker onChange={onPickerChange} id="rig_type" label="Rig Type" value={currentState.rigTypeByRigType?currentState.rigTypeByRigType.name:''}/>
+        <Picker onChange={onPickerChange} options={pickers.rig_type} label="Rig Type" value={currentState.rigTypeByRigType?currentState.rigTypeByRigType.name:''}/>
       </Question>      
       <Question>
-        <GqlPicker onChange={onPickerChange} id="designer" label="Designer" value={currentState.designerByDesigner?currentState.designerByDesigner.name:''} />
+        <Picker onChange={onPickerChange} options={pickers.designer} label="Designer" value={currentState.designerByDesigner?currentState.designerByDesigner.name:''} />
       </Question>
       <JumpLabel label="handicap"/>
       <JumpQuestion
-        question="Enter Handicapping Details"
+        question="Do you want to add or change the data used for Handicapping"
         jumpLabel="Not Now"
         jump="afterHandicap"
       />
@@ -313,28 +311,28 @@ export default function BoatForm({
       </Question>
       <Question>
         <Typography>Hull type</Typography>
-        <GqlRadioList
+        <RadioList
           name="hull_form"
           state={currentState}
           onChange={onChange}
-          id="hull_form"
+          options={pickers.hull_form}
         />
       </Question>
       <JumpLabel label="afterHandicap"/>
       <Question>
-        <Typography variant="h4"y>Construction</Typography>
+        <Typography variant="h4">Construction</Typography>
         <Grid container spacing={4}>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
-            <GqlPicker onChange={onPickerChange} id="construction_method" label="Construction Method" value={currentState.constructionMethodByConstructionMethod?currentState.constructionMethodByConstructionMethod.name:'undefined'} />
+            <Picker onChange={onPickerChange} options={pickers.construction_method} label="Construction Method" value={currentState.constructionMethodByConstructionMethod?currentState.constructionMethodByConstructionMethod.name:'undefined'} />
           </Grid>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
-            <GqlPicker onChange={onPickerChange} id="construction_material" label="Construction Material" value={currentState.constructionMaterialByConstructionMaterial?currentState.constructionMaterialByConstructionMaterial.name:'undefined'} />
+            <Picker onChange={onPickerChange} options={pickers.construction_material} label="Construction Material" value={currentState.constructionMaterialByConstructionMaterial?currentState.constructionMaterialByConstructionMaterial.name:'undefined'} />
           </Grid>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
-            <GqlPicker onChange={onPickerChange} id="spar_material" label="Spar Material" value={currentState.spar_material||''} />
+            <Picker onChange={onPickerChange} options={pickers.spar_material} label="Spar Material" value={currentState.spar_material||''} />
           </Grid>
           <Grid item xs={6}>
             <Typography>&nbsp;</Typography>
@@ -351,7 +349,7 @@ export default function BoatForm({
         <Typography variant="h4">Where and when built</Typography>
         <Field state={currentState} onChange={onChange} label="Year" />
         <Typography>&nbsp;</Typography>
-        <GqlPicker onChange={onPickerChange} id="builder" label="Builder" value={currentState.builderByBuilder?currentState.builderByBuilder.name:''} />
+        <Picker onChange={onPickerChange} options={pickers.builder} label="Builder" value={currentState.builderByBuilder?currentState.builderByBuilder.name:''} />
       </Question>
       <Question>
         <ReallyDumbRTE

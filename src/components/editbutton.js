@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Icon from '@material-ui/core/Icon';
-import EditBoat from './forms/editboat';
+import Send from '@material-ui/icons/Send';
+import EditBoat from './editboat';
 
-export default function EditButton({ classes, key, disabled, boat }) {
+export default function EditButton({ classes, key, disabled, boat, pickers }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -17,19 +17,19 @@ export default function EditButton({ classes, key, disabled, boat }) {
   };
 
   return (
-    <div>
+    <>
       <Button className={classes.button} size="small"
-            endIcon={<Icon>send</Icon>}
+            endIcon={<Send/>}
             variant="contained"
             color="primary" onClick={handleClickOpen}>
             I have edits for this boat
       </Button>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title"
-      fullWidth maxWidth="200px" style={{minHeight: "50vh", maxHeight: "60vh" }}
+	PaperProps={{ style: { minHeight: '50vh', minWidth: '50vw' }}}
       >
-      <DialogTitle id="form-dialog-title">Edit {boat.name} ({boat.oga_no})</DialogTitle>
-        <EditBoat boat={boat} onClose={handleClose} />
+        <DialogTitle id="form-dialog-title">Edit {boat.name} ({boat.oga_no})</DialogTitle>
+        <EditBoat boat={boat} pickers={pickers} onClose={handleClose} />
       </Dialog>
-    </div>
+    </>
   );
 }

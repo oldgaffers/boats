@@ -7,50 +7,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import Icon from '@material-ui/core/Icon';
-import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import Send from '@material-ui/icons/Send';
 
-const ADD_ENQUIRY = gql`
-  mutation AddEnquiry(
-      $id: uuid!, 
-      $boat_name: String!, 
-      $oga_no: Int!, 
-      $email: String!, 
-      $text: String!, 
-      $type: enquiry_type_enum!) {
-    insert_enquiry(objects: { 
-      boat: $id, 
-      boat_name: $boat_name, 
-      oga_no: $oga_no, 
-      email: $email, 
-      text: $text,
-      type: $type,
-      }) {
-      returning {
-        id
-      }
-    }
-  }
-`;
-
-/*
-const DELETE_ENQUIRY = gql`
-  mutation DeleteEnquiry($id: uuid!) {
-    delete_enquiry(where: { id: { _eq: $id } }) {
-      affected_rows
-    }
-  }
-`;
-*/
+function addEnquiry(args) {
+  console.log('addEnquiry', JSON.stringify(args));
+}
 
 export default function Enquiry({ boat, classes }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [email, setEmail] = useState('');
   const [text, setText] = useState('');
-  // eslint-disable-next-line no-unused-vars
-  const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -86,7 +53,7 @@ export default function Enquiry({ boat, classes }) {
   return (
         <form noValidate autoComplete="off">
           <Button className={classes.button} size="small"
-            endIcon={<Icon>send</Icon>}
+            endIcon={<Send/>}
             variant="contained"
             color="primary" onClick={handleClickOpen}>
             Contact us about this boat
@@ -101,7 +68,6 @@ export default function Enquiry({ boat, classes }) {
               <TextField
                 error={email === ''}
                 onChange={handleEmailChange}
-                autoFocus
                 margin="dense"
                 label="Email Address"
                 type="email"

@@ -10,7 +10,7 @@ function htmlToRTE(html) {
   return JSON.stringify(convertToRaw(contentState));
 }
 
-export default function EditBoat({ boat, email, onClose }) {
+export default function EditBoat({ boat, pickers, email, onClose }) {
 
   const [state, setState] = useState(
     {
@@ -44,6 +44,7 @@ export default function EditBoat({ boat, email, onClose }) {
       <form>
         <BoatForm
           state={state} 
+          pickers={pickers}
           onChange={handleChange} 
           onSubmit={handleSubmit} 
           onClose={onClose}
