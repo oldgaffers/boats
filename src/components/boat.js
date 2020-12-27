@@ -11,9 +11,9 @@ export default function Boat() {
   const { id } = useParams();
   const location = useLocation();
 
-  const { loading, error, data } = useQuery(query(id));
+  const boatData = useQuery(query(id));
 
-  const { plLoading, plError, pickers } = useQuery(gql`
+  const pickerData = useQuery(gql`
   query {
     design_class { name }
     generic_type { name }
@@ -28,26 +28,26 @@ export default function Boat() {
   }`);
 
   useEffect(() => {
-      if (data) {
-          document.title = data.boat[0].name;
+      if (boatData.data) {
+          document.title = boatData.data.boat[0].name;
       }
   });
 
-  if (loading || plLoading) return <p>Loading...</p>
-  if (error || plError) return <p>Error: (Boat)</p>;
+  if (boatData.loading || pickerData.loading) return <p>Loading...</p>
+  if (boatData.error || pickerData.error) return <p>Error: (Boat)</p>;
 
   console.log('Boat - location', location);
   const homeLocation = { ...location, pathname: '/' };
   console.log('Home - location', homeLocation);
 
-  const boat = data.boat[0];
+  const boat = boatData.data.boat[0];
 
   const link = `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${boat.oga_no}`;
   
   return (
     <BoatWrapper
       boat={boat}
-      pickers={pickers}
+      pickers={pickerData.data}
       link={Link}
       home={homeLocation}
       absolute={link}
