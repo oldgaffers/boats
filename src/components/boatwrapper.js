@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
+export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
 
   const classes = useStyles();
   return (
@@ -100,8 +100,6 @@ const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
      </Paper>
   );
 };
-
-export default BoatWrapper;
 
 export const queryString = `
 query BoatQuery ($oga_no: Int!){
