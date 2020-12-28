@@ -1,7 +1,11 @@
 import React, { useState, isValidElement, cloneElement } from 'react';
-import { Typography, TextField } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import MobileStepper from '@material-ui/core/MobileStepper';
+import Button from '@material-ui/core/Button';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import { RadioList } from './radiolist';
-import { Step, JumpStep, Submit } from './formsteps';
 import ReallyDumbRTE from './ReallyDumbRTE';
 import Picker from './picker';
 import Grid from '@material-ui/core/Grid';
@@ -87,82 +91,30 @@ function Sail({ label, fields, state, onChange }) {
     );
 }
 
-export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }) {
-  const [step, setStep] = useState(1);
-  const [currentState, setCurrentState] = useState(state);
-
-  let n = 1;
-  const labels = {};
-
-  function onPickerChange(id, val) {
-   console.log('picker change', id, val);
-   setCurrentState({...currentState, [id]: val });
-  }
-
-  function Question({ children}) {
-    return (
-      <Step
-        step={n++}
-        currentStep={step}
-        onPrev={() => setStep(step - 1)}
-        onNext={() => setStep(step + 1)}
-        onCancel={onClose}
-    >{children}</Step>
-    );
-  }
-
-  function JumpLabel({label}) {
-    labels[label] = n;
-    return '';
-  }
-
-  function JumpQuestion({jump, jumpLabel, question}) {
+function getStepContent(step, props) {
+  const { currentState, pickers, onChange, onPickerChange, onClose } = props;
+  switch (step) {
+    case 0:
       return (
-      <JumpStep
-        step={n++}
-        currentStep={step}
-        onPrev={() => setStep(step - 1)}
-        onNext={() => setStep(step + 1)}
-        onJump={() => setStep(labels[jump])}
-        jumpLabel={jumpLabel}
-        nextLabel="Yes"
-        onCancel={onClose}
-      >
-        <Typography>{question}</Typography>
-      </JumpStep>
-    );
-  }
-
-  function Done({children}) {
-    return (
-      <Submit
-        step={n++}
-        currentStep={step}
-        onPrev={() => setStep(step - 1)}
-        onCancel={onClose}
-        onSubmit={onSubmit}
-      >{children}</Submit>
-    );
-  }
-
-  return (
-    <>
-      <Question>
+        <>
         <Typography>Thanks. Please give us an email address or phone number so we can contact you.
           <p>If we can't contact you, we will still review the data and if we can independently verify it,
           we will still use it on the register.</p>
         </Typography>        
         <TextField id="contact002" fullWidth variant="outlined" name="contact" value="" onChange={onChange} />
-      </Question>
-      <Question>
+        </>
+      );
+    case 1:
+      return (
         <ArrayField
           state={currentState}
           field="previous_names"
           onChange={onChange}
           label="Previous names"
         />
-      </Question>
-      <Question>
+      );
+    case 2: return (
+      <>
           <Picker onChange={onPickerChange} options={pickers.design_class} label="Design Class" value={
             currentState.designClassByDesignClass
             ?currentState.designClassByDesignClass.name
@@ -170,23 +122,19 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
           }/>
           <Typography>&nbsp;</Typography>
           <Picker onChange={onPickerChange} options={pickers.generic_type} label="Generic Type" value={currentState.generic_type}/> 
-      </Question>
-      <Question>
+          </>
+      );
+    case 3: return (
         <Picker onChange={onPickerChange} options={pickers.sail_type} label="Mainsail Type" value={currentState.mainsail_type}/>
-      </Question>
-      <Question>
+        );
+    case 4: return (
         <Picker onChange={onPickerChange} options={pickers.rig_type} label="Rig Type" value={currentState.rigTypeByRigType?currentState.rigTypeByRigType.name:''}/>
-      </Question>      
-      <Question>
+        );
+    case 5: return (
         <Picker onChange={onPickerChange} options={pickers.designer} label="Designer" value={currentState.designerByDesigner?currentState.designerByDesigner.name:''} />
-      </Question>
-      <JumpLabel label="handicap"/>
-      <JumpQuestion
-        question="Do you want to add or change the data used for Handicapping"
-        jumpLabel="Not Now"
-        jump="afterHandicap"
-      />
-      <Question>
+      );
+    case 6: return (
+        <>
         <Typography>Basic hull measurements</Typography>
         <Field
           state={currentState}
@@ -200,12 +148,16 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
           type="number"
           label="Draft"
         />
-      </Question>
-      <Question>
+        </>
+        );
+    case 7: return (
+      <>      
         <Typography>Measurement Diagram</Typography>
         <img alt="measurement diagram" src="hull-measurements.png" />
-      </Question>
-      <Question>
+      </>
+    );
+    case 8: return (
+          <>
         <Typography>Hull measurements</Typography>
         <HandicapField
           name='length_over_spars'
@@ -236,71 +188,66 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
           onChange={onChange}
           type="number"
         />
-      </Question>
-      <JumpLabel label="racingHeadsails"/>
-      <JumpQuestion
-        question="Do you set headsails when racing"
-        jumpLabel="No"
-        jump="afterRacingHeadsails"
-      />
-      <Question>
+      </>
+    );
+    case 9: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Biggest Staysail"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Question>
-      <Question>
+    );
+    case 10: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Biggest Jib"
           fields={['Luff', 'Leach', 'Foot']}
-        />
-      </Question>
-      <Question>
+    />
+    );
+    case 11: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Biggest Downwind Sail"
           fields={['Luff', 'Leach', 'Foot']}
         />
-      </Question>
-      <JumpLabel label="afterRacingHeadsails"/>
-      <Question>
+    );
+    case 12: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Main Sail"
           fields={['Luff', 'Head', 'Foot']}
         />
-      </Question>
-      <Question>
+    );
+    case 13: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Top Sail"
           fields={['Luff', 'Perpendicular']}
         />
-      </Question>
-      <Question>
+    );
+    case 14: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Mizen"
           fields={['Luff', 'Head', 'Foot']}
         />
-      </Question>
-      <Question>        
+    );
+    case 15: return (
         <Sail
           state={currentState}
           onChange={onChange}
           label="Mizen Topsail"
           fields={['Luff', 'Perpendicular']}
         />
-      </Question>
-      <Question>
+    );
+    case 16: return (
+      <>
         <Typography>Propellor type</Typography>
         <HandicapField as={<RadioList/>}
           name="propellor"
@@ -308,8 +255,10 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
           onChange={onChange}
           options={['None', 'Fixed', 'Folding', 'Feathering']}
         />
-      </Question>
-      <Question>
+      </>
+    );
+    case 17: return (
+      <>
         <Typography>Hull type</Typography>
         <RadioList
           name="hull_form"
@@ -317,9 +266,10 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
           onChange={onChange}
           options={pickers.hull_form}
         />
-      </Question>
-      <JumpLabel label="afterHandicap"/>
-      <Question>
+      </>
+      );
+      case 18: return (
+        <>
         <Typography variant="h4">Construction</Typography>
         <Grid container spacing={4}>
           <Grid item xs={6}>
@@ -344,26 +294,32 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
             />
           </Grid>
         </Grid>
-      </Question>
-      <Question>
+        </>
+        );
+    case 19: return (      
+      <>
         <Typography variant="h4">Where and when built</Typography>
         <Field state={currentState} onChange={onChange} label="Year" />
         <Typography>&nbsp;</Typography>
         <Picker onChange={onPickerChange} options={pickers.builder} label="Builder" value={currentState.builderByBuilder?currentState.builderByBuilder.name:''} />
-      </Question>
-      <Question>
+      </>
+    );
+    case 20: return (
         <ReallyDumbRTE
           label="Short description"
           state={currentState}
           onSave={onChange}
         />
-      </Question>
-      <Question>
+    );
+    case 21: return (
+      <>
         <Typography variant="h4">Location</Typography>        
         <Picker onChange={onPickerChange} options={['UK', 'Ireland', 'France', 'Netherlands', 'Belgium']} label="Home Country" value={currentState.home_country}/>
         <Field name="home_port" label="Home Port" state={currentState} onChange={onChange} />
-      </Question>
-      <Question>
+      </>
+    );
+    case 22: return (
+      <>
         <Typography variant="h4">Part 1 British Registry Details</Typography>
         <Grid container spacing={4}>
           <Grid item xs={6}>
@@ -390,8 +346,10 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
             />
           </Grid>
         </Grid>
-      </Question>
-      <Question>
+      </>
+    );
+    case 23: return (
+      <>
         <Typography variant="h4">Other Registrations</Typography>
         <Grid container spacing={4}>
           <Grid item xs={3}>
@@ -422,22 +380,26 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
             <Field name="other_registrations" label="Others" state={currentState} onChange={onChange} />
           </Grid>
         </Grid>
-      </Question>
-      <Question>
+        </>
+        );
+    case 24: return (
         <ReallyDumbRTE
           label="Full description"
           state={currentState}
           onSave={onChange}
         />
-      </Question>
-      <Done>
+    );
+    case 25: return (
+      <>
         We're done! Thanks so much!<p>The editor's will review your input. 
         If we have any questions we will get back to you by email.</p>
         <p>We'll let you know when your input is live on the site.</p>
-      </Done>
     </>
   );
+  default: return null;
 }
+}
+
 
 /*
 <Question>
@@ -450,3 +412,57 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
         />
       </Question>
 */
+
+const classes = {};
+const theme = {};
+
+export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }) {
+  const [currentState, setCurrentState] = useState(state);
+  const [activeStep, setActiveStep] = useState(0);
+
+  function onPickerChange(id, val) {
+   console.log('picker change', id, val);
+   setCurrentState({...currentState, [id]: val });
+  }
+
+  function handleNext() {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  }
+
+  function handleBack() {    
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  }
+
+  return (
+    <>
+    <MobileStepper
+    variant="progress"
+    steps={6}
+    position="static"
+    activeStep={activeStep}
+    className={classes.root}
+    nextButton={
+      <Button size="small" onClick={handleNext} disabled={activeStep === 5}>
+        Next
+        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+      </Button>
+    }
+    backButton={
+      <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+        Back
+      </Button>
+    }
+  >
+    </MobileStepper>
+    {getStepContent(activeStep, {
+        onPickerChange,
+        currentState,
+        pickers,
+        onChange, 
+        onClose,
+      })}
+    </>
+    );
+}
+
