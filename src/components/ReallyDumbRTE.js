@@ -1,32 +1,31 @@
 import React from 'react';
 import MUIRichTextEditor from 'mui-rte';
-import Typography from '@material-ui/core/Typography';
+import { stateToHTML } from 'draft-js-export-html';
+import { convertFromHTML, ContentState, convertToRaw, convertFromRaw } from 'draft-js'
 
 export default function ReallyDumbRTE({
-    label,
-    state,
-    onChange = (editorState) => {},
+    value,
+    name,
     onSave = (editorState) => {},
   }) {
-    let name = label.replace(/ /g, '_').toLowerCase();
   
     function handleSave(data) {
-      // console.log(data);
-      const newstate = { ...state };
-      newstate[name] = data;
-      onSave(newstate);
+      onSave(stateToHTML(convertFromRaw(JSON.parse(data))));
     }
+
+    const contentHTML = convertFromHTML(value);
+    const contentState = ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
+    const data = JSON.stringify(convertToRaw(contentState));
   
     return (
       <>
-        <Typography variant="h4">{label}</Typography>
         <MUIRichTextEditor
           label="Start typing..."
           name={name}
-          onChange={onChange}
           onSave={handleSave}
-          value={state[name]}
+          value={data}
         />
       </>
     );
-  }
+}
+

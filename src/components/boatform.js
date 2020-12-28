@@ -5,6 +5,7 @@ import MobileStepper from '@material-ui/core/MobileStepper';
 import Button from '@material-ui/core/Button';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import Publish from '@material-ui/icons/Publish';
 import { RadioList } from './radiolist';
 import ReallyDumbRTE from './ReallyDumbRTE';
 import Picker from './picker';
@@ -305,11 +306,15 @@ function getStepContent(step, props) {
       </>
     );
     case 20: return (
+      <>
+      <Typography variant="h4">Short description</Typography>
         <ReallyDumbRTE
-          label="Short description"
+          value={currentState.short_description}
+          name="short_description"
           state={currentState}
           onSave={onChange}
         />
+        </>
     );
     case 21: return (
       <>
@@ -383,18 +388,23 @@ function getStepContent(step, props) {
         </>
         );
     case 24: return (
+        <>
+        <Typography variant="h4">Full description</Typography>
         <ReallyDumbRTE
-          label="Full description"
+          value={currentState.full_description}
           state={currentState}
           onSave={onChange}
         />
+        </>
     );
     case 25: return (
       <>
+      <Typography>
         We're done! Thanks so much!<p>The editor's will review your input. 
         If we have any questions we will get back to you by email.</p>
         <p>We'll let you know when your input is live on the site.</p>
-    </>
+        </Typography>
+      </>
   );
   default: return null;
 }
@@ -433,35 +443,50 @@ export default function BoatForm({ state, onChange, onSubmit, onClose, pickers }
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   }
 
-  return (
-    <>
-    <MobileStepper
-    variant="progress"
-    steps={6}
-    position="static"
-    activeStep={activeStep}
-    className={classes.root}
-    nextButton={
-      <Button size="small" onClick={handleNext} disabled={activeStep === 5}>
+  const steps=26;
+
+  const next = () => {
+    return (
+      <Button size="small" onClick={handleNext}>
         Next
         {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
       </Button>
-    }
+    );
+  }
+
+  const done = () => {
+    return (
+      <Button size="small" onClick={onSubmit}>
+        Submit
+        <Publish />
+      </Button>
+    );
+  }
+
+  return (
+    <>
+    {getStepContent(activeStep, {
+      onPickerChange,
+      currentState,
+      pickers,
+      onChange, 
+      onClose,
+      onSubmit,
+    })}
+    <MobileStepper
+    variant="progress"
+    steps={steps}
+    position="static"
+    activeStep={activeStep}
+    className={classes.root}
+    nextButton={((activeStep+1)===steps)?done():next()}
     backButton={
       <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
         {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
         Back
       </Button>
     }
-  >
-    </MobileStepper>
-    {getStepContent(activeStep, {
-        onPickerChange,
-        currentState,
-        pickers,
-        onChange, 
-        onClose,
-      })}
+    />
     </>
     );
 }

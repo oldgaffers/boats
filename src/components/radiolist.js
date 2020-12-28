@@ -14,6 +14,13 @@ export function RadioList({ options, name, state, onChange }) {
         onChange(s);
       }
     }
+
+    let choices;
+    if (typeof options[0] === 'object') {
+      choices = options.map(({ name }) => name.toLowerCase());
+    } else {
+      choices = options.map((name) => name.toLowerCase());
+    }
   
     let value;
     if(state && state[name]) value = state[name].toLowerCase();
@@ -23,13 +30,12 @@ export function RadioList({ options, name, state, onChange }) {
         <RadioGroup row name={name} value={value} onChange={handleChange}>
           <Grid container>
           {
-            options.map((option) => {
-              const v = option.replace(/ /g, '_').toLowerCase();
-              return (<Grid key={`${name}.${v}`} item>
+            choices.map((v) => {
+              return (<Grid key={`${name}.${v.replace(/ /g, '_')}`} item>
                 <FormControlLabel 
                 value={v}
                 control={<Radio />} 
-                label={option} 
+                label={v} 
                 />
               </Grid>)
             })
