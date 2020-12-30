@@ -36,7 +36,6 @@ function csref([, month, year, pages]) {
 }
 
 function process(ref) {
-    console.log('process', ref)
     let arr = ref.match(/Log (.*)\/(.*)/);
     if (arr) return logref(arr);
     arr = ref.match(/CB *([^ ]*) *([^ ]*) *(.*)/);

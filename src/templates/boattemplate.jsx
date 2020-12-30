@@ -3,20 +3,8 @@ import { graphql, Link } from 'gatsby';
 import { BoatWrapper } from '../components/boatwrapper';
 
 const BoatTemplate = ({ data, pageContext }) => {
-  const pickers = {
-    design_class: data.register.design_class.map(v => v.name),
-    generic_type: data.register.generic_type.map(v => v.name),
-    sail_type: data.register.sail_type.map(v => v.name),
-    rig_type: data.register.rig_type.map(v => v.name),
-    designer: data.register.designer.map(v => v.name),
-    construction_method: data.register.construction_method.map(v => v.name),
-    construction_material: data.register.construction_material.map(v => v.name),
-    spar_material: data.register.spar_material.map(v => v.name),
-    builder: data.register.builder.map(v => v.name),
-    hull_form: data.register.hull_form.map(v => v.name)
-  };
 
-  const { home, absolute } = pageContext;
+  const { home, absolute, pickers } = pageContext;
   return (<BoatWrapper
     boat={data.register.boat[0]}
     pickers={pickers}
@@ -32,16 +20,6 @@ export const query = graphql`
 query BoatQuery ($oga_no: Int!){
   __typename
   register {
-    design_class { name }
-    generic_type { name }
-    sail_type { name }
-    rig_type { name }
-    designer { name }
-    construction_method { name }
-    construction_material { name }
-    spar_material { name }
-    builder { name }
-    hull_form { name }
     boat(where: {oga_no: {_eq: $oga_no}}){
 	    id
 	    name
