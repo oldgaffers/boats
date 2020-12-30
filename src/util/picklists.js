@@ -11,5 +11,8 @@ export function usePicklists() {
         design_class(order_by: {name: asc}){name}
         generic_type(order_by: {name: asc}){name}
         construction_material(order_by: {name: asc}){name}
+        construction_method(order_by: {name: asc}){name}
+        hull_form(order_by: {name: asc}){ name }
+        spar_material(order_by: {name: asc}){ name }
     }`));
 }
