@@ -1,6 +1,7 @@
 module.exports = {
+  pathPrefix: `/boatregister`,
   siteMetadata: {
-    title: "boat-test",
+    title: "boats",
   },
   flags: {
     QUERY_ON_DEMAND: true
