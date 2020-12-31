@@ -16,7 +16,7 @@ export const query = (sort) => {
         for_sale_state { text }
       }
     }`
-    // console.log(q);
+    console.log('cardquery', q);
     return gql(q);
   }
   
@@ -40,44 +40,45 @@ export const query = (sort) => {
         ],
       });
     }
-    if (filters['designer-name']) {
+    if (filters.designer) {
       all.push({
-        designerByDesigner: { name: { _eq: filters['designer-name'] } },
+        designerByDesigner: { name: { _eq: filters.designer } },
       });
     }
-    if (filters['builder-name']) {
+    if (filters.builder) {
       all.push({
-        builderByBuilder: { name: { _eq: filters['builder-name'] } },
+        builderByBuilder: { name: { _eq: filters.builder } },
       });
     }
-    if (filters['rig-type']) {
-      all.push({ rigTypeByRigType: { name: { _eq: filters['rig-type'] } } });
+    if (filters.rig_type) {
+      all.push({ rigTypeByRigType: { name: { _eq: filters.rig_type } } });
     }
-    if (filters['mainsail-type']) {
-      all.push({ sail_type: { name: { _eq: filters['mainsail-type'] } } });
+    if (filters.mainsail_type) {
+      all.push({ sail_type: { name: { _eq: filters.mainsail_type } } });
     }
-    if (filters['generic-type']) {
+    if (filters.generic_type) {
       all.push({
-        genericTypeByGenericType: { name: { _eq: filters['generic-type'] } },
+        genericTypeByGenericType: { name: { _eq: filters.generic_type } },
       });
     }
-    if (filters['design-class']) {
+    if (filters.design_class) {
       all.push({
-        designClassByDesignClass: { name: { _eq: filters['design-class'] } },
+        designClassByDesignClass: { name: { _eq: filters.design_class } },
       });
     }
-    if (filters['construction-material']) {
+    if (filters.construction_material) {
       all.push({
         constructionMaterialByConstructionMaterial: {
-          name: { _eq: filters['construction-material'] },
+          name: { _eq: filters.construction_material },
         },
       });
     }
     if (!filters['nopics']) {
       all.push({ image_key: { _is_null: false } });
     }
-    if (filters['sale']) {
+    if (filters.sale) {
       all.push({ for_sale_state: { text: { _eq: 'for_sale' } } });
     }
+    console.log('buildWhere', all);
     return { _and: all };
   }  
