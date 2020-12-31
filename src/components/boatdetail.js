@@ -157,7 +157,7 @@ const engine = {
                 <Typography variant="h4" component="h4">Details</Typography>
                 <ConditionalText value={boat.oga_no} label="OGA no"/>
                 <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
-                <ConditionalText value={boat.rigTypeByRigType.name} label="Rig"/>
+                <ConditionalText value={boat.rigTypeByRigType && boat.rigTypeByRigType.name} label="Rig"/>
                 <ConditionalText value={boat.home_port} label="Home port or other location"/>
                 <ConditionalText 
                   value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
