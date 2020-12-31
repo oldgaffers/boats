@@ -6,7 +6,7 @@ export default function ConditionalText({ label, value }) {
     if (value) {
         let text = Array.isArray(value)?value.join(', '):value;
         if (text.name) { text = text.name; }
-        if (text !== '') {
+        if (text !== '' && text !== 'null') {
             return (<Typography><Box fontWeight="bold" component="span">{label}:</Box> <Box component="span">{text}</Box></Typography>)
         }
     }
