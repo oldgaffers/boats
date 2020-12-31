@@ -85,14 +85,14 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
                   to={home}
                   >See more boats</Button>
                 </Grid>
-                <Grid item xs={3} >
+                <Grid item xs={4} >
                   <Enquiry classes={classes} boat={boat} />
                 </Grid>
-                <Grid item xs={3} >
+                <Grid item xs={4} >
                   <UploadPhotos classes={classes} boat={boat} />
                 </Grid>
                 {
-                <Grid item xs={3} >
+                <Grid item xs={2.5} >
                   {/*<EditButton classes={classes} boat={boat} pickers={pickers}/>*/}
                 </Grid>
                 }
