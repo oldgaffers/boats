@@ -6,8 +6,68 @@ exports.createPages = async ({ graphql, actions }) => {
   const result = await graphql(`
       query {
         register {
-          boat(where: {oga_no: {_lte: 300, _gt: 0}}) {
+          boat(where: {oga_no: {_lte: 10000, _gt: 0}}) {
             oga_no
+            id
+            name
+            previous_names
+            year
+            year_is_approximate
+            public
+            place_built
+            home_port
+            home_country
+            ssr
+            sail_number
+            nhsr
+            nsbr            
+            fishing_number
+            callsign
+            mssi
+            full_description
+            image_key
+            uk_part1
+            spar_material
+            constructionMaterialByConstructionMaterial { name }
+            constructionMethodByConstructionMethod { name }
+            construction_details
+            designClassByDesignClass { name }
+            designerByDesigner { name }
+            draft
+            generic_type
+            handicap_data
+            hull_form
+            keel_laid
+            launched
+            length_on_deck
+            mainsail_type
+            rigTypeByRigType { name }
+            sail_type { name }
+            short_description
+            updated_at
+            website
+            genericTypeByGenericType { name }
+            builderByBuilder { name notes }
+            beam
+            air_draft
+            reference
+            for_sale_state { text }
+            for_sales(limit: 1, order_by: {updated_at: desc}) {
+              asking_price
+              flexibility
+              offered
+              price_flexibility { text }
+              reduced
+              sales_text
+              sold
+              summary
+              updated_at
+            }
+            engine_installations {
+              engine
+              installed
+              removed
+            }
           }
         }
       }
@@ -44,37 +104,22 @@ exports.createPages = async ({ graphql, actions }) => {
     hull_form: r.hull_form.map(v => v.name)
   };
 
-  const promises = [];
-  posts.forEach(({ oga_no }, index) => {
-    function boatpage(resolve, reject) {
-
-      const bp = () => {
-        console.log(oga_no, index);
-        const path = `/boat/${oga_no}`;
-        createPage({
-          path,
-          component: boatTemplate,
-          context: {
-            oga_no,
-            pathSlug: path,
-            home: '/',
-            absolute: 'https://oga.org.uk',
-            pickers,
-          },
-        });
-        resolve(true);
-        return;
-      };
-      try {
-        setTimeout(bp, 200*index);
-      } catch(e) {
-        reject(e);
-      }
-    };
-    promises.push(new Promise(boatpage));
+  posts.forEach((boat) => {
+    const { oga_no } = boat;
+    const path = `/boat/${oga_no}`;
+    createPage({
+      path,
+      component: boatTemplate,
+      context: {
+        boat,
+        pathSlug: path,
+        home: '/',
+        absolute: 'https://oga.org.uk',
+        pickers,
+      },
+    });
   });
-  await Promise.all(promises);
-};
+ };
 
 /* Allows named imports */
 exports.onCreateWebpackConfig = ({ actions }) => {
