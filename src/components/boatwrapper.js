@@ -77,7 +77,7 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
             <BoatDetail classes={classes} boat={boat} site={absolute} />
             <Paper>
               <Grid container direction="row" alignItems="flex-end">
-                <Grid item xs={2}>
+                <Grid item xs={1.5}>
                   <Button size="small"
                   variant="contained"
                   className={classes.button}
@@ -91,11 +91,11 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
                 <Grid item xs={3} >
                   <UploadPhotos classes={classes} boat={boat} />
                 </Grid>
-                {/*
+                {
                 <Grid item xs={3} >
-                  <EditButton classes={classes} boat={boat} pickers={pickers}/>
+                  {/*<EditButton classes={classes} boat={boat} pickers={pickers}/>*/}
                 </Grid>
-                */}
+                }
               </Grid>
             </Paper>
         </Container>

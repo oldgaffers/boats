@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 import { useTheme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
 import { useInView } from 'react-intersection-observer'
@@ -17,6 +18,7 @@ import { feet, price } from './format';
 import ReactFBLike from 'react-fb-like';
 import References from './references';
 import DetailBar from './detailbar';
+import AssignmentIcon from '@material-ui/icons/Assignment';
 
 function m2f(val) {
     if(val) {
@@ -34,10 +36,15 @@ function hullForm(boat) {
 export default function Boat({ classes, boat, site }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
 
   const { ref } = useInView({ threshold: 0 });
+  
+  function handleSnackBarClose() {
+    setSnackBarOpen(false);
+  }
   
   const panes = [
     { title: 'Registration and location', children: (
@@ -165,13 +172,20 @@ const engine = {
                 />
                 <Typography><div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div></Typography>
                 <References boat={boat}/>
-                <p></p>
                 <div>
-                  <CopyToClipboard text={link}>
-                  <Button size='small' variant='contained' className={classes.button} >
-                    Copy a link to this boat to the clipboard
+                  <CopyToClipboard text={link} onCopy={() => setSnackBarOpen(true)}>
+                    <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
+                    Copy page url
                     </Button>
                   </CopyToClipboard>
+                    <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    open={snackBarOpen}
+                    autoHideDuration={2000}
+                    onClose={handleSnackBarClose}
+                    message="URL copied to clipboard."
+                    severity="success"
+                  />
                 </div>
                 <div>
                   <ReactFBLike href={link} language="en_GB" appId="644249802921642" version="v2.12" />
