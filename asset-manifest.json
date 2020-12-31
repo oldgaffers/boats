@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/boats/static/css/main.d1b05096.chunk.css",
-    "main.js": "/boats/static/js/main.e55a0dd1.chunk.js",
-    "main.js.map": "/boats/static/js/main.e55a0dd1.chunk.js.map",
+    "main.js": "/boats/static/js/main.a2cf3aab.chunk.js",
+    "main.js.map": "/boats/static/js/main.a2cf3aab.chunk.js.map",
     "runtime-main.js": "/boats/static/js/runtime-main.189a47b1.js",
     "runtime-main.js.map": "/boats/static/js/runtime-main.189a47b1.js.map",
     "static/js/2.722d0f48.chunk.js": "/boats/static/js/2.722d0f48.chunk.js",
     "static/js/2.722d0f48.chunk.js.map": "/boats/static/js/2.722d0f48.chunk.js.map",
     "index.html": "/boats/index.html",
-    "precache-manifest.a3de6831f3a4768beb5721273253575f.js": "/boats/precache-manifest.a3de6831f3a4768beb5721273253575f.js",
+    "precache-manifest.08cf02a58a49be72f5c9a17bf6701c0e.js": "/boats/precache-manifest.08cf02a58a49be72f5c9a17bf6701c0e.js",
     "service-worker.js": "/boats/service-worker.js",
     "static/css/main.d1b05096.chunk.css.map": "/boats/static/css/main.d1b05096.chunk.css.map",
     "static/js/2.722d0f48.chunk.js.LICENSE.txt": "/boats/static/js/2.722d0f48.chunk.js.LICENSE.txt",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.189a47b1.js",
     "static/js/2.722d0f48.chunk.js",
     "static/css/main.d1b05096.chunk.css",
-    "static/js/main.e55a0dd1.chunk.js"
+    "static/js/main.a2cf3aab.chunk.js"
   ]
 }
