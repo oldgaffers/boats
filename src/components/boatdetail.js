@@ -24,6 +24,13 @@ function m2f(val) {
     }
 }
 
+function hullForm(boat) {
+  if (boat.hull_form === null) {
+    return null;
+  }
+  return boat.hull_form.replace(/_/g, ' ');
+}
+
 export default function Boat({ classes, boat, site }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
@@ -51,7 +58,7 @@ export default function Boat({ classes, boat, site }) {
     { title: 'Construction', children: (
         <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
-        <ConditionalText value={boat.hull_form.replace(/_/g, ' ')} label="Hull form"/>
+        <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
