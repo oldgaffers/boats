@@ -53,8 +53,8 @@ export const query = (sort) => {
     if (filters.rig_type) {
       all.push({ rigTypeByRigType: { name: { _eq: filters.rig_type } } });
     }
-    if (filters.mainsail_type) {
-      all.push({ sail_type: { name: { _eq: filters.mainsail_type } } });
+    if (filters.sail_type) {
+      all.push({ sail_type: { name: { _eq: filters.sail_type } } });
     }
     if (filters.generic_type) {
       all.push({
