@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import Typography from '@material-ui/core/Typography';
-import Link from '@material-ui/core/Link';
 import Activity from './Activity';
 import Descriptions from './Descriptions';
 import Rig from './Rig';
@@ -49,25 +47,19 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: theme.spacing(1),
   },
 }));
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://oga.org.uk/">
-        The members of the OGA
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
+ 
 function getActivity(boat, activity, handleClose, handleStart, classes) {
+
+  const handleSaveDescriptions = (short, full) => {
+    console.log('short saved', short);
+    console.log('full saved', full);
+    handleClose({ ...boat, short_description: short, full_description: full });
+  }
+
   console.log('getActivity', boat);
   switch(activity) {
     case -1: return (<Activity classes={classes} onCancel={handleClose} onStart={handleStart} />);
-    case 0: return (<Descriptions classes={classes} short={boat.short_description} full={boat.full_description} />);
+    case 0: return (<Descriptions classes={classes} onCancel={handleClose} onSave={handleSaveDescriptions} short={boat.short_description} full={boat.full_description} />);
     case 1: return (<Rig classes={classes} />);
     case 2: return (<Handicap classes={classes} />);
     case 3: return (<Ownership classes={classes} />);
@@ -81,7 +73,17 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   const classes = useStyles();
   const [activity, setActivity] = useState(-1);
 
-  const handleClose = () => {
+  const handleClose = (boat) => {
+    axios.post(
+      'https://ae69efba7038dcdfe87ce1c3479d2976.m.pipedream.net',
+      boat,
+    ).then(response => {
+      console.log('post', response);
+      // TODO snackbar from response.data
+      onClose();
+    }).catch(error => {
+      console.log('post', error);
+    });
     onClose();
   };
 
@@ -90,16 +92,10 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   };
 
   return (
-    <>
-      <CssBaseline />
-      <main className={classes.layout}>
-        <Dialog onClose={handleClose} aria-labelledby="updateboat-dialog-title" open={open}>
-          <DialogTitle id="updateboat-dialog-title">Update Boat</DialogTitle>
-          {getActivity(boat, activity, handleClose, handleStart, classes)}
-        </Dialog>
-        <Copyright />
-      </main>
-    </>
+    <Dialog onClose={handleClose} aria-labelledby="updateboat-dialog-title" open={open}>
+      <DialogTitle id="updateboat-dialog-title">Update Boat</DialogTitle>
+      {getActivity(boat, activity, handleClose, handleStart, classes)}
+    </Dialog>
   );
 }
 

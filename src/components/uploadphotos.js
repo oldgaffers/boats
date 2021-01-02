@@ -20,7 +20,7 @@ export default function UploadPhotos({ boat, classes }) {
         endIcon={<Icon>send</Icon>}
         variant="contained"
         color="primary" onClick={handlePhotoFormOpen}>
-        I have pictures of this boat
+        Add pictures of this boat
       </Button>
       <PhotoForm classes={classes} boat={boat} open={photoFormOpen} onClose={photoFormClose} />
     </>

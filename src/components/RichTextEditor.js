@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import Button from '@material-ui/core/Button';
 import FormatAlignLeft from '@material-ui/icons/FormatAlignLeft';
 import FormatAlignRight from '@material-ui/icons/FormatAlignRight';
 import FormatAlignCenter from '@material-ui/icons/FormatAlignCenter';
@@ -37,10 +36,12 @@ import {
   deserializeHTMLToDocumentFragment,
   serializeHTMLFromNodes,
  } from '@udecode/slate-plugins';
+import { getInlineTypes } from '@udecode/slate-plugins-core';
+import { Transforms } from 'slate';
+import { isBlockAboveEmpty } from '@udecode/slate-plugins';
 
 const withPlugins = [withReact, withHistory];
-const pluginsMin = [BoldPlugin(), ItalicPlugin(), ParagraphPlugin()];
-const pluginsMax = [
+const plugins = [
   AlignPlugin(),
   BoldPlugin(), 
   HeadingPlugin(), 
@@ -77,35 +78,63 @@ const ToolBarMax = () => {
   );  
 }
 
+const preInsert = (fragment, plugins, editor) => {
+  const inlineTypes = getInlineTypes(plugins);
+
+  const firstNodeType = fragment[0].type | undefined;
+
+  // replace the selected node type by the first block type
+  if (
+    isBlockAboveEmpty(editor) &&
+    firstNodeType &&
+    !inlineTypes.includes(firstNodeType)
+  ) {
+    Transforms.setNodes(editor, { type: fragment[0].type });
+  }
+
+  return fragment;
+};
+
+function preInsert2(fragment) {
+  if(fragment.length === 1) {
+    return fragment;
+  }
+  return fragment.map((item) => {
+    if (item.type) {
+      return item;
+    }
+    return { type: 'p', children: [item]};
+  });
+}
+
 const RichTextEditor = ({html, onUpdate, variant='min' }) => {
   const editor = useMemo(() => pipe(createEditor(), ...withPlugins), []);
   const { body } = new DOMParser().parseFromString(html, 'text/html');
-  const plugins = (variant==='min')?pluginsMin:pluginsMax;
 
   let fragment = deserializeHTMLToDocumentFragment({
     plugins,
     element: body,
   });
+  fragment = preInsert(fragment, plugins, editor);
+  fragment = preInsert2(fragment);
   const initialValue = [{
     type: 'paragraph',
     children: fragment,
   }];
-  console.log('initialValue', initialValue);
+  console.log('initialValue', JSON.stringify(initialValue));
   const [value, setValue] = useState(initialValue);
 
-  const handleSave = () => {
+  const handleChange = (val) => {
+    setValue(val);
     const html = serializeHTMLFromNodes({ nodes: value, plugins });
     onUpdate(html);
   };
 
   return (
-    <>
-    <Slate editor={editor} value={value} onChange={value => setValue(value)}>
+    <Slate editor={editor} value={value} onChange={handleChange}>
       {(variant==='min'?(<ToolBarMin/>):(<ToolBarMax/>))}
       <EditablePlugins plugins={plugins} placeholder="Enter some text..." />
     </Slate>
-    <Button variant="outlined" color="secondary" onClick={handleSave}>Save</Button>
-    </>
   )
 }
 
