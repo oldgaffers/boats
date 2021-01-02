@@ -6,7 +6,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import BoatDetail from './boatdetail';
 import UploadPhotos from './uploadphotos';
-import EditButton from './editbutton';
+// import EditButton from './editbutton';
 import Enquiry from './enquiry';
 
 const drawerWidth = 240;
@@ -93,7 +93,7 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
                 </Grid>
                 {
                 <Grid item xs={2.5} >
-                  <EditButton classes={classes} boat={boat} pickers={pickers}/>
+                  {/*<EditButton classes={classes} boat={boat} pickers={pickers}/>*/}
                 </Grid>
                 }
               </Grid>
