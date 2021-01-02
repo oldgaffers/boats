@@ -16,7 +16,6 @@ export const query = (sort) => {
         for_sale_state { text }
       }
     }`
-    console.log('cardquery', q);
     return gql(q);
   }
   
