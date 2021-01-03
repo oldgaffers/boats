@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
@@ -73,10 +74,10 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   const classes = useStyles();
   const [activity, setActivity] = useState(-1);
 
-  const handleClose = (boat) => {
+  const handleClose = (changes) => {
     axios.post(
       'https://ae69efba7038dcdfe87ce1c3479d2976.m.pipedream.net',
-      boat,
+      { old: boat, new: changes, uuid: uuidv4() },
     ).then(response => {
       console.log('post', response);
       // TODO snackbar from response.data
