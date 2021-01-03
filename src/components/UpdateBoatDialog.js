@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import Activity from './Activity';
+import OneActivity from './OneActivity';
 import Descriptions from './Descriptions';
 import Rig from './Rig';
 import Handicap from './Handicap';
@@ -31,10 +31,17 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 0, // theme.spacing(3),
     padding: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: 0, // theme.spacing(6),
-      marginBottom: 0, // theme.spacing(6),
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
+  },
+  editor: {
+    minwidth: 500,
+    margin: theme.spacing(1),
+    padding: 0,
+    border: 'none',
+    boxShadow: 'none'
   },
   stepper: {
     padding: theme.spacing(3, 0, 5),
@@ -59,7 +66,7 @@ function getActivity(boat, activity, handleClose, handleStart, classes) {
 
   console.log('getActivity', boat);
   switch(activity) {
-    case -1: return (<Activity classes={classes} onCancel={handleClose} onStart={handleStart} />);
+    case -1: return (<OneActivity classes={classes} onCancel={handleClose} onStart={handleStart} />);
     case 0: return (<Descriptions classes={classes} onCancel={handleClose} onSave={handleSaveDescriptions} short={boat.short_description} full={boat.full_description} />);
     case 1: return (<Rig classes={classes} />);
     case 2: return (<Handicap classes={classes} />);
