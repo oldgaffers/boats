@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
  
-function getActivity(boat, activity, handleClose, handleStart, classes) {
+function getActivity({ boat, activity, handleClose, handleStart, handleCancel, classes }) {
 
   const handleSaveDescriptions = (short, full) => {
     console.log('short saved', short);
@@ -64,10 +64,9 @@ function getActivity(boat, activity, handleClose, handleStart, classes) {
     handleClose({ ...boat, short_description: short, full_description: full });
   }
 
-  console.log('getActivity', boat);
   switch(activity) {
-    case -1: return (<OneActivity classes={classes} onCancel={handleClose} onStart={handleStart} />);
-    case 0: return (<Descriptions classes={classes} onCancel={handleClose} onSave={handleSaveDescriptions} short={boat.short_description} full={boat.full_description} />);
+    case -1: return (<OneActivity classes={classes} onCancel={handleCancel} onStart={handleStart} />);
+    case 0: return (<Descriptions classes={classes} onCancel={handleCancel} onSave={handleSaveDescriptions} short={boat.short_description} full={boat.full_description} />);
     case 1: return (<Rig classes={classes} />);
     case 2: return (<Handicap classes={classes} />);
     case 3: return (<Ownership classes={classes} />);
@@ -80,6 +79,10 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
 
   const classes = useStyles();
   const [activity, setActivity] = useState(-1);
+
+  const handleCancel = (changes) => {
+    onClose();
+  }
 
   const handleClose = (changes) => {
     axios.post(
@@ -102,7 +105,7 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   return (
     <Dialog onClose={handleClose} aria-labelledby="updateboat-dialog-title" open={open}>
       <DialogTitle id="updateboat-dialog-title">Update Boat</DialogTitle>
-      {getActivity(boat, activity, handleClose, handleStart, classes)}
+      {getActivity({ boat, activity, handleClose, handleStart, handleCancel, classes })}
     </Dialog>
   );
 }
