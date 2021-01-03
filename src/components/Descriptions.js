@@ -101,7 +101,7 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
         />
       </MuiThemeProvider>
       <Button variant="outlined" color="primary" onClick={onCancel}>Cancel</Button>
-      <Button variant="outlined" color="primary" onClick={handleSave}>Save</Button>
+      <Button variant="outlined" color="primary" onClick={handleSave}>Send</Button>
     </Paper>
   );
 }
