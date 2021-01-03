@@ -11,7 +11,7 @@ function RTEtoHtml(data) {
 }
 
 function htmlToRTE(html) {
-  const contentHTML = convertFromHTML(html);
+  const contentHTML = convertFromHTML(html || 'type some text ...');
   const contentState = ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
   return JSON.stringify(convertToRaw(contentState));
 }
@@ -28,29 +28,25 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
       fullRef.current.save();
       break;
     case 'full':
-      console.log('save both');
       setState({ ...state, saving: 'no' });
       onSave(state.short, state.full);
       break;
     default:
-      console.log('effect do nothing');
+      // console.log('effect do nothing');
     }
   }, [state, onSave]);
 
   const handleSaveShort = (rte) => {
     const short = RTEtoHtml(rte)
-    console.log('save short', short);
     setState({ ...state, short, saving: 'short' });
   };
 
   const handleSaveFull = (rte) => {
     const full = RTEtoHtml(rte)
-    console.log('save full', full);
     setState({ ...state, full, saving: 'full' });
   };
 
   const handleSave = () => {
-    console.log('save');
     shortRef.current.save();
   }
 
