@@ -2,9 +2,34 @@ import React, { useState, useRef, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertToRaw, convertFromRaw } from 'draft-js'
+
+const defaultTheme = createMuiTheme()
+
+Object.assign(defaultTheme, {
+  overrides: {
+      MUIRichTextEditor: {
+          root: {
+            width: "100%"
+          },
+          toolbar: {
+            borderTop: "1px solid gray",
+            borderLeft: "1px solid gray",
+            borderRight: "1px solid gray",
+            backgroundColor: "whitesmoke"
+          },
+          editor: {
+              border: "1px solid gray",
+              marginBottom: 10,
+              paddingLeft: '5px',
+              paddingRight: '5px'
+          }
+      }
+  }
+})
 
 function RTEtoHtml(data) {
   return stateToHTML(convertFromRaw(JSON.parse(data)));
@@ -51,8 +76,9 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
   }
 
   return (
-    <Paper className={classes.paper}>
-        <Typography variant="h6">Short description</Typography>
+    <Paper className={classes.editor}>
+      <Typography variant="h6">Short description</Typography>
+      <MuiThemeProvider theme={defaultTheme}>
         <MUIRichTextEditor
           controls={["bold", "italic"]}
           label="Start typing..."
@@ -62,15 +88,18 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
           maxLength="500"
           ref={shortRef}
         />
-        <Typography variant="h6">Full description</Typography>
+      </MuiThemeProvider>
+      <Typography variant="h6">Full description</Typography>
+      <MuiThemeProvider theme={defaultTheme}>
         <MUIRichTextEditor
-          controls={["title", "bold", "italic", "numberList", "bulletList", "link", "media" ]}
+          controls={["title", "bold", "italic", "numberList", "bulletList", "link" ]}
           label="Start typing..."
           name='full_description'
           onSave={handleSaveFull}
           defaultValue={htmlToRTE(state.full)}
           ref={fullRef}
         />
+      </MuiThemeProvider>
       <Button variant="outlined" color="primary" onClick={onCancel}>Cancel</Button>
       <Button variant="outlined" color="primary" onClick={handleSave}>Save</Button>
     </Paper>
