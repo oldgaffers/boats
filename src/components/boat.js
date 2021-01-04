@@ -28,13 +28,21 @@ export default function Boat() {
     //    document.title = boatData.data.boat[0].name;
     // }
     if (b.data) {
-       document.title = b.data.result.pageContext.boat.name;
+       document.title = `${b.data.result.pageContext.boat.name} (${b.data.result.pageContext.boat.oga_no})`;
     }
   });
 
-if (b.loading || p.loading) return <p>Loading...</p>
-if (b.error || p.error) return <p>Error!</p>
-
+  if (b.loading || p.loading) return <p>Loading...</p>
+  if (b.error) return (<p>
+    Sorry, we had a problem getting the data for
+    the boat with OGA number {id}</p>)
+  if(p.error) {
+    if (b.data.result.pageContext.pickers) {
+      p.data = b.data.result.pageContext.pickers;
+    } else {
+      p.data = {};
+    }
+  }
   // if (boatData.loading || pickerData.loading) return <p>Loading...</p>
   // if (boatData.error || pickerData.error) return <p>Error: (Boat)</p>;
   // const boat = boatData.data.boat[0];
