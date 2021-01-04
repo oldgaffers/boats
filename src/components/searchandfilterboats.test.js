@@ -2,7 +2,8 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
-import SearchAndFilterBoats, { makeBoatNameList } from './searchandfilterboats';
+import SearchAndFilterBoats from './searchandfilterboats';
+import { makeBoatNameList } from './browseboats';
 import { sampleBoatNames } from '../mock/sampledata';
 
 const mocks = [

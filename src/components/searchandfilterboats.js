@@ -1,11 +1,13 @@
 import React from 'react'
-import { usePicklists } from '../util/picklists';
-import { Divider, FormControlLabel, Grid, Switch, TextField } from '@material-ui/core'
+import Divider from '@material-ui/core/Divider'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Grid from '@material-ui/core/Grid'
+import Switch from '@material-ui/core/Switch'
+import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles';
-import Picker from './picker'
-import GqlPicker from './gqlpicker'
 import FormGroup from '@material-ui/core/FormGroup';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import Picker from './picker'
 
  const sortLabels = [
     { field: 'name', name: "Boat Name" },
@@ -32,16 +34,6 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
-export function makeBoatNameList(boat) {
-  const currentBoatNames = boat.map((b) => (b.name));
-  const previousBoatNames = boat.map((b) => b.previous_names).flat();
-  const setOfBoats = new Set([...currentBoatNames, ...previousBoatNames]);
-  const allBoatNames = [...setOfBoats].filter((name) => name);
-  allBoatNames.sort((a, b) => (a.toLowerCase().localeCompare(b.toLowerCase())));
-  if (allBoatNames[0] === '') allBoatNames.shift();
-  return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
-}
-
 export default function SearchAndFilterBoats({
     sortDirection,
     sortField,
@@ -51,15 +43,9 @@ export default function SearchAndFilterBoats({
     onPageSizeChange,
     onSortFieldChange,
     onSortDirectionChange,
+    pickers,
 }) {
     const classes = useStyles();
-
-    const { loading, error, data } = usePicklists();
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(SearchAndFilterBoats)</p>;
-
-    const boatNames = makeBoatNameList(data.boat);
 
     function sw(event, value) {
         if (event.target.id) {
@@ -117,21 +103,21 @@ export default function SearchAndFilterBoats({
         <Divider/>
         <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
-            <Picker onChange={pl} id="boat-name" options={boatNames} label="Boat Name" value={filters['boat-name']} />
+            <Picker onChange={pl} id="boat-name" options={pickers.boatNames} label="Boat Name" value={filters['boat-name']} />
             <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
-            <GqlPicker onChange={pl} id="designer" label="Designer" value={filters['designer-name']} />
-            <GqlPicker onChange={pl} id="builder" label="Builder" value={filters['builder-name']} />
+            <Picker onChange={pl} options={pickers.designer} label="Designer" value={filters['designer-name']} />
+            <Picker onChange={pl} options={pickers.builder} label="Builder" value={filters['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
-            <GqlPicker onChange={pl} id="rig_type" label="Rig Type" value={filters['rig-type']}/>
-            <GqlPicker onChange={pl} id="sail_type" label="Mainsail Type" value={filters['mainsail-type']}/>
-            <GqlPicker onChange={pl} id="generic_type" label="Generic Type" value={filters['generic-type']}/>
-            <GqlPicker onChange={pl} id="design_class" label="Design Class" value={filters['design-class']}/>
-            <GqlPicker onChange={pl} id="construction_material" label="Construction Material" />
+            <Picker onChange={pl} options={pickers.rig_type} label="Rig Type" value={filters['rig-type']}/>
+            <Picker onChange={pl} options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail-type']}/>
+            <Picker onChange={pl} options={pickers.generic_type} label="Generic Type" value={filters['generic-type']}/>
+            <Picker onChange={pl} options={pickers.design_class} label="Design Class" value={filters['design-class']}/>
+            <Picker onChange={pl} options={pickers.construction_material} label="Construction Material" />
         </Grid>
     </form>
     );

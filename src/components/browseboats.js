@@ -13,6 +13,7 @@ import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import BoatsForSaleIntro from './boatsforsaleintro';
 import BoatRegisterIntro from './boatregisterintro';
+import { usePicklists } from '../util/picklists';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,6 +38,16 @@ function Intro({boatsForSale}) {
   return (<BoatRegisterIntro/>);
 }
 
+export function makeBoatNameList(boat) {
+  const currentBoatNames = boat.map((b) => (b.name));
+  const previousBoatNames = boat.map((b) => b.previous_names).flat();
+  const setOfBoats = new Set([...currentBoatNames, ...previousBoatNames]);
+  const allBoatNames = [...setOfBoats].filter((name) => name);
+  allBoatNames.sort((a, b) => (a.toLowerCase().localeCompare(b.toLowerCase())));
+  if (allBoatNames[0] === '') allBoatNames.shift();
+  return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
+}
+
 function BrowseBoats({ window }) {
   const { state, search } = useLocation();
   const history = useHistory();
@@ -48,9 +59,15 @@ function BrowseBoats({ window }) {
   //  setMobileOpen(!mobileOpen);
   //};
  
+  const { loading, error, data } = usePicklists();
+
+  if (loading) return (<p>Loading...</p>);
+  if (error) return (<p>Error :(SearchAndFilterBoats)</p>);
+
+  data.boatNames = makeBoatNameList(data.boat);
+
   const handlePageSizeChange = (_, a) => {
     history.replace('/', { ...state, boatsPerPage: a });
-    // setBoatsPerPage(a)
   };
   
   function setSortField(field) {
@@ -120,6 +137,7 @@ function BrowseBoats({ window }) {
             setSortDirection(event.target.checked ? 'desc' : 'asc')
           }
           onFilterChange={(f) => setFilters(f)}
+          pickers={data}
         />
         </Container>
         <Divider />
