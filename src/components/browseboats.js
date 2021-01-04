@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
+import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -92,6 +93,8 @@ function BrowseBoats({ window }) {
 
   console.log('BrowseBoats history', history);
 
+  const blank = "_blank";
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -127,19 +130,21 @@ function BrowseBoats({ window }) {
           filters={config.filters}
         />
         <Divider />
-        <p>Other great places to look for boats are:</p>
-        <List>
-          <ListItem>
-            <a href="https://www.nationalhistoricships.org.uk">
-              National Historic Ships
-            </a>
-          </ListItem>
-          <ListItem>
-            <a href="https://nmmc.co.uk/explore/databases/">NMM Cornwall</a>{' '}
-            maintain a number of interesting databases including small boats,
-            yacht designs
-          </ListItem>
-        </List>
+        <Typography>
+          Other great places to look for boats are:
+          <List>
+            <ListItem>
+              <a target={blank} href="https://www.nationalhistoricships.org.uk">
+                National Historic Ships
+              </a>
+            </ListItem>
+            <ListItem>
+              <a target={blank} href="https://nmmc.co.uk/explore/databases/">NMM Cornwall</a>&nbsp;
+              maintain a number of interesting databases including small boats and
+              yacht designs
+            </ListItem>
+          </List>
+        </Typography>
       </Paper>
     </div>
   );
