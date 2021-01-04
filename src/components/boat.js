@@ -15,29 +15,34 @@ export default function Boat() {
   // const boatData = useQuery(query(id));
   // const pickerData = usePicklists();
 
-  const [{ data, loading, error }] = useAxios(
+  const [b] = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${id}/page-data.json`
+  )
+
+  const [p] = useAxios(
+    `https://ogauk.github.io/boatregister/pickers.json`
   )
 
   useEffect(() => {
     // if (boatData.data) {
     //    document.title = boatData.data.boat[0].name;
     // }
-    if (data) {
-       document.title = data.result.pageContext.boat.name;
+    if (b.data) {
+       document.title = b.data.result.pageContext.boat.name;
     }
   });
 
-if (loading) return <p>Loading...</p>
-if (error) return <p>Error!</p>
+if (b.loading || p.loading) return <p>Loading...</p>
+if (b.error || p.error) return <p>Error!</p>
 
   // if (boatData.loading || pickerData.loading) return <p>Loading...</p>
   // if (boatData.error || pickerData.error) return <p>Error: (Boat)</p>;
   // const boat = boatData.data.boat[0];
   // const pickers = pickerData.data;
 
-  const boat = data.result.pageContext.boat;
-  const pickers = data.result.pageContext.pickers;
+  const boat = b.data.result.pageContext.boat;
+  //const pickers = data.result.pageContext.pickers;
+  const pickers = p.data;
 
   console.log('Boat - location', location);
   const homeLocation = { ...location, pathname: '/' };
