@@ -20,6 +20,7 @@ import {
   Redirect,
   useLocation,
 } from "react-router-dom";
+import { usePicklists } from './util/picklists';
 
 const client = new ApolloClient({
   link: createHttpLink({
@@ -29,16 +30,22 @@ const client = new ApolloClient({
 });
 
 function FourOhFour() {
+
   const location = useLocation();
+  const { loading, error, data } = usePicklists();
+
+  if (loading) return (<p>Loading...</p>);
+  if (error) return (<p>Error :(SearchAndFilterBoats)</p>);
+
   if (location.search === '') {
-    return (<BrowseBoats />);
+    return (<BrowseBoats pickers={data} />);
   }
   console.log('FourOhFour', JSON.stringify(location));
   const params = new URLSearchParams(location.search);
   const path = params.get('p');
   console.log('FourOhFour path', path);
   if(!path) {
-    return (<BrowseBoats />);
+    return (<BrowseBoats pickers={data} />);
   }
   return (<Redirect to={path} />)
 }
