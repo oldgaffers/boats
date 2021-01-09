@@ -66,13 +66,10 @@ function BrowseBoats({ pathname, pickers }) {
   const handlePageSizeChange = (_, a) => {
     history.replace('/', { ...state, boatsPerPage: a });
   };
-  
-  function setSortField(field) {
-    history.replace('/', { ...state, sortField: field });
-  }
 
-  function setSortDirection(dir) {
-    history.replace('/', { ...state, sortDirection: dir });
+  const handleSortChange = (field, dir) => {
+    console.log('browseboats sortchange', field, dir);
+    history.replace('/', { ...state, sortField: field, sortDirection: dir });
   }
 
   function setFilters(f) {
@@ -129,10 +126,7 @@ function BrowseBoats({ pathname, pickers }) {
           boatsPerPage={config.boatsPerPage}
           filters={config.filters}
           onPageSizeChange={handlePageSizeChange}
-          onSortFieldChange={(field) => setSortField(field)}
-          onSortDirectionChange={(event) =>
-            setSortDirection(event.target.checked ? 'desc' : 'asc')
-          }
+          onSortChange={handleSortChange}
           onFilterChange={(f) => setFilters(f)}
           pickers={pickers}
         />
