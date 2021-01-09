@@ -50,13 +50,11 @@ export function makeBoatNameList(boat) {
   return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 }
 
-function BrowseBoats({ pathname, pickers }) {
-  const { state, search } = useLocation();
+function BrowseBoats({ sale=false, pickers }) {
+  const { state } = useLocation();
   const history = useHistory();
   const classes = useStyles();
   //const [mobileOpen, setMobileOpen] = useState(false);
-  const params = new URLSearchParams(search);
-  const options = params.get('options');
   //const handleDrawerToggle = () => {
   //  setMobileOpen(!mobileOpen);
   //};
@@ -64,6 +62,7 @@ function BrowseBoats({ pathname, pickers }) {
   pickers.boatNames = makeBoatNameList(pickers.boat);
 
   const handlePageSizeChange = (_, a) => {
+    console.log('browseboats page size change', a);
     history.replace('/', { ...state, boatsPerPage: a });
   };
 
@@ -73,28 +72,8 @@ function BrowseBoats({ pathname, pickers }) {
   }
 
   function setFilters(f) {
+    console.log('setFilters', f);
     history.replace('/', { ...state, filters: f });
-  }
-
-  let filters = {}
-  let config = state;
-  if (config) {
-    filters = config.filters;
-  }
-
-  if (options === 'forsale' || pathname === '/boat_register/boats_for_sale/boats_for_sale.html') {
-    filters.sale = true;
-  }
-  if (config) {
-    config.filters = filters;
-  } else {
-    config = { 
-      boatsPerPage: '12',
-      sortField: 'name',
-      sortDirection: 'asc',
-      filters,    
-     }
-     history.replace('/', config);
   }
 
   const blank = "_blank";
@@ -112,25 +91,24 @@ function BrowseBoats({ pathname, pickers }) {
         </Grid>
         */}
         <Container>
-          <Intro boatsForSale={filters.sale} />
+          <Intro boatsForSale={sale} />
         <SearchAndFilterBoats
-          sortDirection={config.sortDirection}
-          sortField={config.sortField}
-          boatsPerPage={config.boatsPerPage}
-          filters={config.filters}
+          sortDirection={state.sortDirection}
+          sortField={state.sortField}
+          boatsPerPage={state.boatsPerPage}
+          filters={state.filters}
           onPageSizeChange={handlePageSizeChange}
           onSortChange={handleSortChange}
           onFilterChange={(f) => setFilters(f)}
           pickers={pickers}
-          forSale={filters.sale}
         />
         </Container>
         <Divider />
         <BoatCards
-          boatsPerPage={parseInt(config.boatsPerPage)}
-          sortField={config.sortField}
-          sortDirection={config.sortDirection}
-          filters={config.filters}
+          boatsPerPage={parseInt(state.boatsPerPage || '12')}
+          sortField={state.sortField}
+          sortDirection={state.sortDirection}
+          filters={state.filters}
         />
         <Divider />
         <Typography>

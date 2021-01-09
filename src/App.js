@@ -19,6 +19,7 @@ import {
   Route,
   Redirect,
   useLocation,
+  useHistory,
 } from "react-router-dom";
 import { usePicklists } from './util/picklists';
 
@@ -29,23 +30,33 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
-// https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=1241
-// https://oldgaffers.github.io/boats/boat/1241
-
-
 function FourOhFour() {
 
   const location = useLocation();
+  const history = useHistory();
+  const sale = pathname === '/boat_register/boats_for_sale/boats_for_sale.html';
 
   const { loading, error, data } = usePicklists();
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :(SearchAndFilterBoats)</p>);
 
-  if (location.search === '') {
-    return (<BrowseBoats pathname={location.pathname} pickers={data} />);
+  const { search, pathname, state } = location;
+  console.log('app', state);
+  if (!state) {
+    console.log('app state falsy, setting defaults');
+    const initialState = {
+      boatsPerPage: '12',
+      sortField: 'editors_choice',
+      filters: { sale }
+    };
+    history.replace('/', initialState);
   }
-  const params = new URLSearchParams(location.search);
+ 
+  if (search === '') {
+    return (<BrowseBoats sale={sale} pickers={data} />);
+  }
+  const params = new URLSearchParams(search);
   const path = params.get('p');
   console.log('FourOhFour path', path);
   const oga_no = params.get('oga_no');
@@ -55,8 +66,9 @@ function FourOhFour() {
   if(path) {
     return (<Redirect to={path} />)
   }
-  return (<BrowseBoats pathname={location.pathname} pickers={data} />);
-}
+  return (<BrowseBoats sale={sale} pickers={data} />);
+} 
+
 function App() {
   return (
     <ApolloProvider client={client}>

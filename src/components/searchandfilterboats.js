@@ -37,11 +37,11 @@ export default function SearchAndFilterBoats({
     onPageSizeChange,
     onSortChange,
     pickers,
-    forSale=false
 }) {
     const classes = useStyles();
 
     function pl(id, value) {
+        console.log('picker change', id, value)
         onFilterChange({ ...filters, [id]: value });
     }
 
@@ -71,7 +71,7 @@ export default function SearchAndFilterBoats({
         { field: 'updated_at', name: "Updated", direction: 'desc' },
         { field: 'editors_choice', name: "Editor's choice", direction: 'asc' },
      ];
-     if (forSale) {
+     if (filters.sale) {
         sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });
      }
     const sortLabelByField = sortOptions.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
@@ -93,6 +93,15 @@ export default function SearchAndFilterBoats({
     }
 
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
+
+    if (!sortDirection || !sortField) {
+        if(sortField) {
+            onSortChange(sortField, sortDirectionByField[sortField]);
+        } else {
+            const f = 'editors_choice';
+            onSortChange(f, sortDirectionByField[f]);            
+        }
+    }
 
     return (
     <form className={classes.root}>
@@ -118,20 +127,20 @@ export default function SearchAndFilterBoats({
         <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
             <Picker onChange={pl} id="boat-name" options={pickers.boatNames} label="Boat Name" value={filters['boat-name']} />
-            <TextField onChange={o} id="oga-no" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
-            <Picker onChange={pl} options={pickers.designer} label="Designer" value={filters['designer-name']} />
-            <Picker onChange={pl} options={pickers.builder} label="Builder" value={filters['builder-name']} />
+            <TextField onChange={o} id="ogaNo" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
+            <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer-name']} />
+            <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder-name']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
-            <Picker onChange={pl} options={pickers.rig_type} label="Rig Type" value={filters['rig-type']}/>
-            <Picker onChange={pl} options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail-type']}/>
-            <Picker onChange={pl} options={pickers.generic_type} label="Generic Type" value={filters['generic-type']}/>
-            <Picker onChange={pl} options={pickers.design_class} label="Design Class" value={filters['design-class']}/>
-            <Picker onChange={pl} options={pickers.construction_material} label="Construction Material" />
+            <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig-type']}/>
+            <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail-type']}/>
+            <Picker onChange={pl} id='generic_type' options={pickers.generic_type} label="Generic Type" value={filters['generic-type']}/>
+            <Picker onChange={pl} id='design_class' options={pickers.design_class} label="Design Class" value={filters['design-class']}/>
+            <Picker onChange={pl} id='construction_material' options={pickers.construction_material} label="Construction Material" />
         </Grid>
     </form>
     );
