@@ -75,7 +75,7 @@ const totalCount = data?data.boat_aggregate.aggregate.totalCount:0;
         <BoatPagination items={pageItems} />
           <Box py={1} ></Box>
           <Grid container spacing={4}>
-          {data.boats.map((boat) => (
+          {data.boat.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
               <BoatCard 
                 filters={filters} boatsPerPage={`${boatsPerPage}`}
