@@ -1,21 +1,21 @@
 {
   "files": {
     "main.css": "/boats/static/css/main.ab7136cd.chunk.css",
-    "main.js": "/boats/static/js/main.3c173e7e.chunk.js",
-    "main.js.map": "/boats/static/js/main.3c173e7e.chunk.js.map",
+    "main.js": "/boats/static/js/main.7b0dc135.chunk.js",
+    "main.js.map": "/boats/static/js/main.7b0dc135.chunk.js.map",
     "runtime-main.js": "/boats/static/js/runtime-main.efbc16f9.js",
     "runtime-main.js.map": "/boats/static/js/runtime-main.efbc16f9.js.map",
-    "static/js/2.ae646e6f.chunk.js": "/boats/static/js/2.ae646e6f.chunk.js",
-    "static/js/2.ae646e6f.chunk.js.map": "/boats/static/js/2.ae646e6f.chunk.js.map",
+    "static/js/2.8b437308.chunk.js": "/boats/static/js/2.8b437308.chunk.js",
+    "static/js/2.8b437308.chunk.js.map": "/boats/static/js/2.8b437308.chunk.js.map",
     "index.html": "/boats/index.html",
     "static/css/main.ab7136cd.chunk.css.map": "/boats/static/css/main.ab7136cd.chunk.css.map",
-    "static/js/2.ae646e6f.chunk.js.LICENSE.txt": "/boats/static/js/2.ae646e6f.chunk.js.LICENSE.txt",
+    "static/js/2.8b437308.chunk.js.LICENSE.txt": "/boats/static/js/2.8b437308.chunk.js.LICENSE.txt",
     "static/media/toggle.6d50e96d.gif": "/boats/static/media/toggle.6d50e96d.gif"
   },
   "entrypoints": [
     "static/js/runtime-main.efbc16f9.js",
-    "static/js/2.ae646e6f.chunk.js",
+    "static/js/2.8b437308.chunk.js",
     "static/css/main.ab7136cd.chunk.css",
-    "static/js/main.3c173e7e.chunk.js"
+    "static/js/main.7b0dc135.chunk.js"
   ]
 }
