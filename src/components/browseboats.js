@@ -122,6 +122,7 @@ function BrowseBoats({ pathname, pickers }) {
           onSortChange={handleSortChange}
           onFilterChange={(f) => setFilters(f)}
           pickers={pickers}
+          forSale={filters.sale}
         />
         </Container>
         <Divider />
