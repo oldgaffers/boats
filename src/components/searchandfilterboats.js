@@ -5,22 +5,14 @@ import Grid from '@material-ui/core/Grid'
 import Switch from '@material-ui/core/Switch'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles';
-import FormGroup from '@material-ui/core/FormGroup';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Picker from './picker'
 
 const opposite = { asc: 'desc', desc: 'asc' };
- const sortLabels = [
-    { field: 'name', name: "Boat Name", direction: 'asc' },
-    { field: 'oga_no', name: "OGA Boat No.", direction: 'asc' },
-    { field: 'year', name: "Year Built", direction: 'asc' },
-    { field: 'updated_at', name: "Last Updated", direction: 'desc' },
-    { field: 'price', name: "Price", direction: 'desc' },
- ];
-
-const sortFieldByLabel = sortLabels.reduce((r, { field, name}) => { r[name]=field; return r;}, {});
-const sortLabelByField = sortLabels.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
-const sortDirectionByField = sortLabels.reduce((r, { field, direction}) => { r[field]=direction; return r;}, {});
 
 const pageSize = [];
 for(let i=1; i<=8; i++) {
@@ -45,14 +37,9 @@ export default function SearchAndFilterBoats({
     onPageSizeChange,
     onSortChange,
     pickers,
+    forSale=false
 }) {
     const classes = useStyles();
-
-    function sw(event, value) {
-        if (event.target.id) {
-            onFilterChange({ ...filters, [event.target.id]: value });
-        }
-    }
 
     function pl(id, value) {
         onFilterChange({ ...filters, [id]: value });
@@ -77,8 +64,22 @@ export default function SearchAndFilterBoats({
         }
     }
 
-    function handleSortFieldChange(id, value) {
-        const field = sortFieldByLabel[value];
+    const sortOptions = [
+        { field: 'name', name: "Name", direction: 'asc' },
+        { field: 'oga_no', name: "OGA No.", direction: 'asc' },
+        { field: 'year', name: "Age", direction: 'asc' },
+        { field: 'updated_at', name: "Updated", direction: 'desc' },
+        { field: 'editors_choice', name: "Editor's choice", direction: 'asc' },
+     ];
+     if (forSale) {
+        sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });
+     }
+    const sortLabelByField = sortOptions.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
+    const sortDirectionByField = sortOptions.reduce((r, { field, direction}) => { r[field]=direction; return r;}, {});
+
+    function handleSortFieldChange(event) {
+        console.log('handleSortFieldChange', event.target.value);
+        const field = event.target.value;
         const normal = sortDirectionByField[field];
         console.log('handleSortFieldChange', field, normal);
         onSortChange(field, normal);
@@ -91,9 +92,6 @@ export default function SearchAndFilterBoats({
         onSortChange(sortField, dir);
     }
 
-    console.log('SearchAndFilterBoats', sortField, sortDirection);
-    console.log('SearchAndFilterBoats', sortDirectionByField, sortLabels);
-    
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
 
     return (
@@ -101,19 +99,20 @@ export default function SearchAndFilterBoats({
         <p></p>
         <Divider/>
         <FormHelperText>Use these controls to sort the list by name, price, etc. and to choose how much you want to see</FormHelperText>
-        <Grid container direction="row" justify="space-between" alignItems="stretch" >
-            <FormGroup>
-            <Picker clearable={false} value={sortLabelByField[sortField]} id="sort-field" onChange={handleSortFieldChange} options={sortLabels} label="Currently Sorting By" />
-            <span>&nbsp;&nbsp;&nbsp;<FormControlLabel id="sort-direction" onChange={handleSortDirectionChange}
+        <Grid container direction="row" >
+            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page"/>
+            <FormControl>
+                <FormLabel>Sort By</FormLabel>
+                <RadioGroup row aria-label="sorting" name="sorting" value={sortLabelByField[sortField]} onChange={handleSortFieldChange}>
+                    {sortOptions.map(option => (
+                        <FormControlLabel value={option.field} control={<Radio checked={sortField===option.field}/>} label={option.name} />
+                    ))}
+                </RadioGroup>
+            </FormControl>
+            <FormControlLabel id="sort-direction" onChange={handleSortDirectionChange}
                 control={<Switch checked={sortDirection!==sortDirectionByField[sortField]} />} 
                 label="reversed"
-            /></span>
-            </FormGroup>
-            <FormGroup>
-            <FormControlLabel control={<Switch id="nopics" onChange={sw} checked={!!filters.nopics} />} label="include boats without pictures"  />
-            <FormControlLabel control={<Switch id="sale" onChange={sw} checked={!!filters.sale} />} label="only boats for sale"/>
-            </FormGroup>
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page"/>
+            />
         </Grid>
         <Divider/>
         <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>

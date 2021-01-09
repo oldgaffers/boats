@@ -76,8 +76,6 @@ function BrowseBoats({ pathname, pickers }) {
     history.replace('/', { ...state, filters: f });
   }
 
-  // const container = window !== undefined ? () => window().document.body : undefined;
-  //filters: { year: { firstYear: 1800, lastYear: new Date().getFullYear() }},
   let filters = {}
   let config = state;
   if (config) {
@@ -86,7 +84,6 @@ function BrowseBoats({ pathname, pickers }) {
 
   if (options === 'forsale' || pathname === '/boat_register/boats_for_sale/boats_for_sale.html') {
     filters.sale = true;
-    filters.nopics = true;
   }
   if (config) {
     config.filters = filters;
@@ -99,10 +96,6 @@ function BrowseBoats({ pathname, pickers }) {
      }
      history.replace('/', config);
   }
-
-  console.log(config);
-
-  console.log('BrowseBoats history', history);
 
   const blank = "_blank";
 

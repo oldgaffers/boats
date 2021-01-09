@@ -72,9 +72,6 @@ export const query = (sort) => {
         },
       });
     }
-    if (!filters['nopics']) {
-      all.push({ image_key: { _is_null: false } });
-    }
     if (filters.sale) {
       all.push({ for_sale_state: { text: { _eq: 'for_sale' } } });
     }
