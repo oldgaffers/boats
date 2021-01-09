@@ -47,7 +47,7 @@ export function makeBoatNameList(boat) {
   return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 }
 
-function BrowseBoats({ pickers }) {
+function BrowseBoats({ pathname, pickers }) {
   const { state, search } = useLocation();
   const history = useHistory();
   const classes = useStyles();
@@ -84,7 +84,8 @@ function BrowseBoats({ pickers }) {
     filters = config.filters;
   }
 
-  if (options === 'forsale') {
+  console.log('BrowseBoats pathname', pathname);
+  if (options === 'forsale' || pathname === '/boat_register/boats_for_sale/boats_for_sale.html') {
     filters.sale = true;
     filters.nopics = true;
   }

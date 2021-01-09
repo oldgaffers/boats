@@ -32,20 +32,20 @@ const client = new ApolloClient({
 function FourOhFour() {
 
   const location = useLocation();
+
   const { loading, error, data } = usePicklists();
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :(SearchAndFilterBoats)</p>);
 
   if (location.search === '') {
-    return (<BrowseBoats pickers={data} />);
+    return (<BrowseBoats pathname={location.pathname} pickers={data} />);
   }
-  console.log('FourOhFour', JSON.stringify(location));
   const params = new URLSearchParams(location.search);
   const path = params.get('p');
   console.log('FourOhFour path', path);
   if(!path) {
-    return (<BrowseBoats pickers={data} />);
+    return (<BrowseBoats pathname={location.pathname} pickers={data} />);
   }
   return (<Redirect to={path} />)
 }
