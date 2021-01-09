@@ -14,7 +14,7 @@
     "apollo-cache-inmemory": "^1.6.5",
     "apollo-client": "^2.6.8",
     "apollo-link-http": "^1.5.17",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-hooks": "^2.2.0",
     "draft-js-export-html": "^1.4.1",
     "draft-js-export-markdown": "^1.4.0",
