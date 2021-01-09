@@ -56,7 +56,7 @@ test('bad names are omitted', () => {
 test('renders learn react link', () => {
   const { getAllByText } = render(
     <MockedProvider mocks={mocks}>
-      <SearchAndFilterBoats />
+      <SearchAndFilterBoats filters={{}} pickers={{boatNames:[]}}/>
     </MockedProvider>
   );
   const wanted = getAllByText(/Loading.../);

@@ -38,6 +38,9 @@ function Intro({boatsForSale}) {
 }
 
 export function makeBoatNameList(boat) {
+  if (!boat) {
+    return [];
+  }
   const currentBoatNames = boat.map((b) => (b.name));
   const previousBoatNames = boat.map((b) => b.previous_names).flat();
   const setOfBoats = new Set([...currentBoatNames, ...previousBoatNames]);
@@ -84,7 +87,6 @@ function BrowseBoats({ pathname, pickers }) {
     filters = config.filters;
   }
 
-  console.log('BrowseBoats pathname', pathname);
   if (options === 'forsale' || pathname === '/boat_register/boats_for_sale/boats_for_sale.html') {
     filters.sale = true;
     filters.nopics = true;
