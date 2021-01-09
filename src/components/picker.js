@@ -31,15 +31,6 @@ export default function Picker({ options, id, label, onChange, value, clearable 
       default:
         console.log('unrecognised reason', reason);
     }
-    console.log(
-      id,
-      'onChange',
-      reason,
-      'value',
-      val || 'undefined',
-      'option',
-      option || 'undefined',
-    );
     onChange(id, val);
   }
 
