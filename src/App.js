@@ -30,6 +30,13 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+const defaultState = {
+  boatsPerPage: '12', 
+  sortField: 'editors_choice', 
+  sortDirection: 'asc',
+  filters: { sale: false }, 
+};
+
 function FourOhFour() {
 
   const location = useLocation();
@@ -46,16 +53,17 @@ function FourOhFour() {
  
   if (!state) {
     console.log('app state falsy, setting defaults');
-    const initialState = {
-      boatsPerPage: '12',
-      sortField: 'editors_choice',
-      filters: { sale }
-    };
+    const initialState = defaultState;
+    if (sale) {
+      initialState.filters.sale = true;
+      initialState.sortField = 'price';
+      initialState.sortDirection = 'desc';
+    }
     history.replace('/', initialState);
   }
  
   if (search === '') {
-    return (<BrowseBoats sale={sale} pickers={data} />);
+    return (<BrowseBoats sale={sale} pickers={data} defaultState={defaultState} />);
   }
   const params = new URLSearchParams(search);
   const path = params.get('p');
@@ -67,7 +75,7 @@ function FourOhFour() {
   if(path) {
     return (<Redirect to={path} />)
   }
-  return (<BrowseBoats sale={sale} pickers={data} />);
+  return (<BrowseBoats sale={sale} pickers={data} defaultState={defaultState} />);
 } 
 
 function App() {

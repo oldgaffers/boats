@@ -98,6 +98,7 @@ export default function SearchAndFilterBoats({
 
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
 
+    console.log('render searchandfilterboats', sortField, sortDirection, sortDirectionByField[sortDirection]);
     return (
     <form className={classes.root}>
         <p></p>

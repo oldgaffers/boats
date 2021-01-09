@@ -30,13 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const initialState = {
-  boatsPerPage: 12, 
-  sortField: 'editors_choice', 
-  sortDirection: 'asc',
-  filters: { sale: false }, 
-};
-
 function Intro({boatsForSale}) {
   if (boatsForSale) {
     return (<BoatsForSaleIntro/>)
@@ -57,7 +50,7 @@ export function makeBoatNameList(boat) {
   return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 }
 
-function BrowseBoats({ sale=false, pickers }) {
+function BrowseBoats({ sale=false, pickers, defaultState }) {
   const { state } = useLocation();
   const history = useHistory();
   const classes = useStyles();
@@ -85,8 +78,9 @@ function BrowseBoats({ sale=false, pickers }) {
 
   const blank = "_blank";
 
-  const { sortField, boatsPerPage, filters, sortDirection } = state || initialState;
+  const { boatsPerPage, sortField, sortDirection, filters } = state || defaultState;
 
+  console.log('render browseboats',  boatsPerPage, sortField, sortDirection);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -103,6 +97,7 @@ function BrowseBoats({ sale=false, pickers }) {
           <Intro boatsForSale={sale} />
         <SearchAndFilterBoats
           sortField={sortField}
+          sortDirection={sortDirection}
           boatsPerPage={boatsPerPage}
           filters={filters}
           onPageSizeChange={handlePageSizeChange}
