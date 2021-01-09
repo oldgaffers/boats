@@ -29,6 +29,10 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+// https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=1241
+// https://oldgaffers.github.io/boats/boat/1241
+
+
 function FourOhFour() {
 
   const location = useLocation();
@@ -44,10 +48,14 @@ function FourOhFour() {
   const params = new URLSearchParams(location.search);
   const path = params.get('p');
   console.log('FourOhFour path', path);
-  if(!path) {
-    return (<BrowseBoats pathname={location.pathname} pickers={data} />);
+  const oga_no = params.get('oga_no');
+  if (oga_no) {
+    return (<Redirect to={`/boat/${oga_no}`} />)
   }
-  return (<Redirect to={path} />)
+  if(path) {
+    return (<Redirect to={path} />)
+  }
+  return (<BrowseBoats pathname={location.pathname} pickers={data} />);
 }
 function App() {
   return (
