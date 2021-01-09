@@ -35,7 +35,7 @@ export default function SearchAndFilterBoats({
     filters,
     onFilterChange,
     onPageSizeChange,
-    onSortChange,
+    onSortChange=(x) => console.log(x),
     pickers,
 }) {
     const classes = useStyles();

@@ -5,6 +5,7 @@ import gql from 'graphql-tag';
 import BrowseBoats from './browseboats';
 import { query } from '../util/cardquery';
 import { MemoryRouter } from "react-router";
+import { mockPicks } from '../mock/sampledata';
 
 const mocks = [
   {
@@ -44,8 +45,8 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <MemoryRouter>
-        <BrowseBoats pickers={{}}/>
+      <MemoryRouter initialEntries={[{ pathname:'/', state: { filters: {}} }]}>
+        <BrowseBoats pickers={mockPicks}/>
       </MemoryRouter>
     </MockedProvider>
   );

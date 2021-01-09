@@ -4,7 +4,7 @@ import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import SearchAndFilterBoats from './searchandfilterboats';
 import { makeBoatNameList } from './browseboats';
-import { sampleBoatNames } from '../mock/sampledata';
+import { sampleBoatNames, mockPicks } from '../mock/sampledata';
 
 const mocks = [
   {
@@ -56,7 +56,7 @@ test('bad names are omitted', () => {
 test('renders learn react link', () => {
   const { getAllByText } = render(
     <MockedProvider mocks={mocks}>
-      <SearchAndFilterBoats filters={{}} pickers={{boatNames:[]}}/>
+      <SearchAndFilterBoats filters={{}} pickers={mockPicks}/>
     </MockedProvider>
   );
   const wanted = getAllByText(/Loading.../);

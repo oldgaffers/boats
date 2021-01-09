@@ -34,3 +34,18 @@ export const sampleMaterials = [
     { name: "- Any -"},
     { name: "wood"},
 ];
+
+export const mockPicks = {        
+    boat: [],
+    designer: [],
+    builder: [],
+    rig_type: [],
+    sail_type: [],
+    design_class: [],
+    generic_type: [],
+    construction_material: [],
+    construction_method: [],
+    hull_form: [],
+    spar_material: [],
+  };
+  
