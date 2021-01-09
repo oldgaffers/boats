@@ -32,7 +32,7 @@ export default function SearchAndFilterBoats({
     sortDirection,
     sortField,
     boatsPerPage,
-    filters,
+    filters={ sale: false },
     onFilterChange,
     onPageSizeChange,
     onSortChange=(x) => console.log(x),
@@ -71,7 +71,7 @@ export default function SearchAndFilterBoats({
         { field: 'updated_at', name: "Updated", direction: 'desc' },
         { field: 'editors_choice', name: "Editor's choice", direction: 'asc' },
      ];
-     if (filters.sale) {
+     if (filters && filters.sale) {
         sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });
      }
     const sortLabelByField = sortOptions.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
@@ -80,28 +80,23 @@ export default function SearchAndFilterBoats({
     function handleSortFieldChange(event) {
         console.log('handleSortFieldChange', event.target.value);
         const field = event.target.value;
-        const normal = sortDirectionByField[field];
-        console.log('handleSortFieldChange', field, normal);
-        onSortChange(field, normal);
+        if (field !== sortField) {
+            const normal = sortDirectionByField[field];
+            console.log('handleSortFieldChange', field, normal);
+                onSortChange(field, normal);
+        } 
     }
 
     function handleSortDirectionChange(event) {
         const normal = sortDirectionByField[sortField];
         const dir = event.target.checked ? opposite[normal] : normal;
-        console.log('handleSortDirectionChange', dir);
-        onSortChange(sortField, dir);
+        if (dir !== sortDirection) {
+            console.log('handleSortDirectionChange', dir);
+            onSortChange(sortField, dir);
+        } 
     }
 
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
-
-    if (!sortDirection || !sortField) {
-        if(sortField) {
-            onSortChange(sortField, sortDirectionByField[sortField]);
-        } else {
-            const f = 'editors_choice';
-            onSortChange(f, sortDirectionByField[f]);            
-        }
-    }
 
     return (
     <form className={classes.root}>
@@ -128,8 +123,8 @@ export default function SearchAndFilterBoats({
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
             <Picker onChange={pl} id="boat-name" options={pickers.boatNames} label="Boat Name" value={filters['boat-name']} />
             <TextField onChange={o} id="ogaNo" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
-            <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer-name']} />
-            <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder-name']} />
+            <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer']} />
+            <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
@@ -137,10 +132,10 @@ export default function SearchAndFilterBoats({
                 type="number" inputProps={yearProps} 
             />
             <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig-type']}/>
-            <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail-type']}/>
-            <Picker onChange={pl} id='generic_type' options={pickers.generic_type} label="Generic Type" value={filters['generic-type']}/>
-            <Picker onChange={pl} id='design_class' options={pickers.design_class} label="Design Class" value={filters['design-class']}/>
-            <Picker onChange={pl} id='construction_material' options={pickers.construction_material} label="Construction Material" />
+            <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail_type']}/>
+            <Picker onChange={pl} id='generic_type' options={pickers.generic_type} label="Generic Type" value={filters['generic_type']}/>
+            <Picker onChange={pl} id='design_class' options={pickers.design_class} label="Design Class" value={filters['design_class']}/>
+            <Picker onChange={pl} id='construction_material' options={pickers.construction_material} label="Construction Material" value={filters['construction_material']} />
         </Grid>
     </form>
     );

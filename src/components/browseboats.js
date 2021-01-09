@@ -30,6 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const initialState = {
+  boatsPerPage: 12, 
+  sortField: 'editors_choice', 
+  sortDirection: 'asc',
+  filters: { sale: false }, 
+};
+
 function Intro({boatsForSale}) {
   if (boatsForSale) {
     return (<BoatsForSaleIntro/>)
@@ -78,6 +85,8 @@ function BrowseBoats({ sale=false, pickers }) {
 
   const blank = "_blank";
 
+  const { sortField, boatsPerPage, filters, sortDirection } = state || initialState;
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -93,10 +102,9 @@ function BrowseBoats({ sale=false, pickers }) {
         <Container>
           <Intro boatsForSale={sale} />
         <SearchAndFilterBoats
-          sortDirection={state.sortDirection}
-          sortField={state.sortField}
-          boatsPerPage={state.boatsPerPage}
-          filters={state.filters}
+          sortField={sortField}
+          boatsPerPage={boatsPerPage}
+          filters={filters}
           onPageSizeChange={handlePageSizeChange}
           onSortChange={handleSortChange}
           onFilterChange={(f) => setFilters(f)}
@@ -105,10 +113,10 @@ function BrowseBoats({ sale=false, pickers }) {
         </Container>
         <Divider />
         <BoatCards
-          boatsPerPage={parseInt(state.boatsPerPage || '12')}
-          sortField={state.sortField}
-          sortDirection={state.sortDirection}
-          filters={state.filters}
+          boatsPerPage={parseInt(boatsPerPage)}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          filters={filters}
         />
         <Divider />
         <Typography>
