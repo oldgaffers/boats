@@ -34,7 +34,6 @@ function FourOhFour() {
 
   const location = useLocation();
   const history = useHistory();
-  const sale = pathname === '/boat_register/boats_for_sale/boats_for_sale.html';
 
   const { loading, error, data } = usePicklists();
 
@@ -42,7 +41,9 @@ function FourOhFour() {
   if (error) return (<p>Error :(SearchAndFilterBoats)</p>);
 
   const { search, pathname, state } = location;
-  console.log('app', state);
+
+  const sale = pathname === '/boat_register/boats_for_sale/boats_for_sale.html';
+ 
   if (!state) {
     console.log('app state falsy, setting defaults');
     const initialState = {
