@@ -44,6 +44,44 @@ const DELETE_ENQUIRY = gql`
 `;
 */
 
+function EnquiryDialog({ open, boat, email, onEmailChange, onSend, onCancel, onTextChange }) {
+  return (
+    <Dialog top open={open} onClose={onCancel} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
+      <DialogContent>
+        <DialogContentText variant="subtitle2">
+          Have some information or a question about <i>{boat.name}</i> ({boat.oga_no})?<p></p>
+          We'd love to hear from you.<p></p>Please enter your email address here and tell us how we can help.
+        </DialogContentText>
+        <TextField
+          error={email === ''}
+          onChange={onEmailChange}
+          autoFocus
+          margin="dense"
+          label="Email Address"
+          type="email"
+          fullWidth
+        />
+        <TextField
+          onChange={onTextChange}
+          margin="dense"
+          label="About your enquiry"
+          type="text"
+          fullWidth
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel} color="primary">
+          Cancel
+        </Button>
+        <Button onClick={onSend} color="primary" disabled={email === ''}>
+          Send
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
 export default function Enquiry({ boat, classes }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -84,46 +122,20 @@ export default function Enquiry({ boat, classes }) {
   };
 
   return (
-        <form noValidate autoComplete="off">
-          <Button className={classes.button} size="small"
-            endIcon={<Icon>send</Icon>}
-            variant="contained"
-            color="primary" onClick={handleClickOpen}>
-            Contact us about this boat
-          </Button>
-          <Dialog top open={open} onClose={handleCancel} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
-            <DialogContent>
-              <DialogContentText variant="subtitle2">
-                Have some information or a question about <i>{boat.name}</i> ({boat.oga_no})?<p></p>
-                We'd love to hear from you.<p></p>Please enter your email address here and tell us how we can help.
-              </DialogContentText>
-              <TextField
-                error={email === ''}
-                onChange={handleEmailChange}
-                autoFocus
-                margin="dense"
-                label="Email Address"
-                type="email"
-                fullWidth
-              />
-              <TextField
-                onChange={handleTextChange}
-                margin="dense"
-                label="About your enquiry"
-                type="text"
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCancel} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleSend} color="primary" disabled={email === ''}>
-                Send
-              </Button>
-            </DialogActions>
-          </Dialog>
+    <>
+      <Button className={classes.button} size="small"
+        endIcon={<Icon>send</Icon>}
+        variant="contained"
+        color="primary" onClick={handleClickOpen}>
+        Contact us about this boat
+      </Button>
+      <EnquiryDialog 
+        open={open}
+        boat={boat} email={email} 
+        onCancel={handleCancel}
+        onSend={handleSend} onEmailChange={handleEmailChange}
+        onTextChange={handleTextChange} 
+      />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={snackBarOpen}
@@ -132,6 +144,6 @@ export default function Enquiry({ boat, classes }) {
         message="Thanks, we'll get back to you."
         severity="success"
       />
-    </form>
+    </>
   );
 }
