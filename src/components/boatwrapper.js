@@ -74,7 +74,7 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
   return (
     <Paper>
         <Container maxWidth="lg" className={classes.container}>
-            <BoatDetail classes={classes} boat={boat} site={absolute} />
+            <BoatDetail classes={classes} boat={boat} link={absolute} />
             <Paper>
               <Grid container direction="row" alignItems="flex-end">
                 <Grid item xs={1.5}>

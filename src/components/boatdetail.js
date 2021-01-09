@@ -33,7 +33,7 @@ function hullForm(boat) {
   return boat.hull_form.replace(/_/g, ' ');
 }
 
-export default function Boat({ classes, boat, site }) {
+export default function Boat({ classes, boat, link }) {
   const theme = useTheme();
   const [value, setValue] = useState(0);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -143,8 +143,6 @@ const engine = {
   const handleChangeIndex = (index) => {
     setValue(index);
   };
-
-  const link = `${site}/boat_register/browse_the_register/boat.html?oga_no=${boat.oga_no}`;
 
   return (
           <Grid container spacing={3}>

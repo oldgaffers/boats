@@ -56,15 +56,13 @@ export default function Boat() {
   const homeLocation = { ...location, pathname: '/' };
   console.log('Home - location', homeLocation);
 
-  const link = `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${boat.oga_no}`;
-  
   return (
     <BoatWrapper
       boat={boat}
       pickers={pickers}
       link={Link}
       home={homeLocation}
-      absolute={link}
+      absolute={`https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${boat.oga_no}`}
     />
   );
 }
