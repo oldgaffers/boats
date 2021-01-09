@@ -20,16 +20,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// we only have boatsPerPage results so just put pictures at the top
-// TODO think about how to use the database to sort nopics to the bottom
-
-function bubblePicturesToTheTop({boat}, boatsPerPage) {  
-  console.log('bubblePicturesToTheTop', boat.length, boatsPerPage);
-  const pic = boat.filter((b) => b.thumb);
-  const nopic = boat.filter((b) => !b.thumb);
-  return pic.concat(nopic);
-}
-
 export default function BoatCards({
   boatsPerPage,
   sortField,
@@ -79,15 +69,13 @@ const totalCount = data?data.boat_aggregate.aggregate.totalCount:0;
     }
   }
 
-  const boats = bubblePicturesToTheTop(data, boatsPerPage);
-
   if (totalCount > 0) {
     return (
       <Container className={classes.cardGrid} maxWidth="md">
         <BoatPagination items={pageItems} />
           <Box py={1} ></Box>
           <Grid container spacing={4}>
-          {boats.map((boat) => (
+          {data.boats.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
               <BoatCard 
                 filters={filters} boatsPerPage={`${boatsPerPage}`}
