@@ -42,11 +42,18 @@ const mocks = [
   }
 ];
 
+const defaultState = {
+  boatsPerPage: '12', 
+  sortField: 'editors_choice', 
+  sortDirection: 'asc',
+  filters: { sale: false }, 
+};
+
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <MemoryRouter initialEntries={[{ pathname:'/', state: { filters: {}} }]}>
-        <BrowseBoats pickers={mockPicks}/>
+      <MemoryRouter>
+        <BrowseBoats pickers={mockPicks} defaultState={defaultState}/>
       </MemoryRouter>
     </MockedProvider>
   );

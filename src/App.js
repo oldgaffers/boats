@@ -61,21 +61,41 @@ function FourOhFour() {
     }
     history.replace('/', initialState);
   }
- 
-  if (search === '') {
-    return (<BrowseBoats sale={sale} pickers={data} defaultState={defaultState} />);
+
+  const handlePageSizeChange = (a) => {
+    console.log('FourOhFour page size change', a);
+    history.replace('/', { ...state, boatsPerPage: a });
+  };
+
+  const handleSortChange = (field, dir) => {
+    console.log('FourOhFour sortchange', field, dir);
+    history.replace('/', { ...state, sortField: field, sortDirection: dir });
   }
-  const params = new URLSearchParams(search);
-  const path = params.get('p');
-  console.log('FourOhFour path', path);
-  const oga_no = params.get('oga_no');
-  if (oga_no) {
-    return (<Redirect to={`/boat/${oga_no}`} />)
+
+  const handleFilterChange = (f) => {
+    console.log('FourOhFour setFilters', f);
+    history.replace('/', { ...state, filters: f });
   }
-  if(path) {
-    return (<Redirect to={path} />)
+
+  if (search !== '') {
+    const params = new URLSearchParams(search);
+    const path = params.get('p');
+    console.log('FourOhFour path', path);
+    const oga_no = params.get('oga_no');
+    if (oga_no) {
+      return (<Redirect to={`/boat/${oga_no}`} />)
+    }
+    if(path) {
+      return (<Redirect to={path} />)
+    }
   }
-  return (<BrowseBoats sale={sale} pickers={data} defaultState={defaultState} />);
+  return (
+  <BrowseBoats
+    sale={sale} pickers={data} state={state} defaultState={defaultState} 
+    onPageSizeChange={handlePageSizeChange}
+    onSortChange={handleSortChange}
+    onFilterChange={handleFilterChange}
+  />);
 } 
 
 function App() {
