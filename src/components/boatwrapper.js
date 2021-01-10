@@ -1,9 +1,14 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import clsx from 'clsx';
 import BoatDetail from './boatdetail';
+import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
+import SmugMugGallery from './smugmuggallery';
 
 const drawerWidth = 240;
 
@@ -64,18 +69,36 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatWrapper({ boat, pickers, location }) {
+export default function BoatWrapper({ boat, location }) {
 
   const classes = useStyles();
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
     <Paper>
       <Container maxWidth="lg" className={classes.container}>
-        <BoatDetail classes={classes} boat={boat} link={location.href} />
+      <Grid container spacing={3}>
+      <Grid item xs={12} md={8} lg={9}>
+          <Typography variant="h3" component="h3">{boat.name}</Typography>
+      </Grid>
+      <Grid item xs={12} md={4} lg={3}>
+          <Typography variant="h3" component="h3">{boat.year}</Typography>
+      </Grid>
+      <Grid item xs={12} md={8} lg={9}>
+        <Paper className={fixedHeightPaper}>
+          <SmugMugGallery classes={classes} albumKey={boat.image_key} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={4} lg={3}>
+        <BoatSummary classes={classes} boat={boat} link={location.href} />
+      </Grid>
+      <Grid item xs={12}>
+        <BoatDetail classes={classes} boat={boat} />
+      </Grid>
+    </Grid>
         <BoatButtons
           classes={classes}
           boat={boat}
           location={location}
-          pickers={pickers}
         />
       </Container>
     </Paper>

@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, pickers, location }) {
+export default function BoatButtons({ boat, location }) {
 
   const params = new URLSearchParams(location.search);
   const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
@@ -99,7 +99,7 @@ export default function BoatButtons({ boat, pickers, location }) {
             <UploadPhotos classes={classes} boat={boat} />
         </Grid>
         <Grid item xs={3} >
-            <EditButton classes={classes} boat={boat} pickers={pickers}/>
+            <EditButton classes={classes} boat={boat} />
         </Grid>
         </Grid>
     </Paper>

@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import UpdateBoatDialog from './UpdateBoatDialog';
 
-export default function EditButton({ classes, key, disabled, boat }) {
+export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {

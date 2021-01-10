@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import useAxios from 'axios-hooks'
 import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -78,6 +79,16 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   const classes = useStyles();
   const [activity, setActivity] = useState(-1);
 
+  const [p] = useAxios(
+    `https://ogauk.github.io/boatregister/pickers.json`
+  )
+
+  if(p.error) {
+    p.data = {};
+  }
+
+  const pickers = p.data;
+
   const handleCancel = (changes) => {
     onClose();
   }
@@ -103,10 +114,11 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   return (
     <Dialog onClose={handleClose} aria-labelledby="updateboat-dialog-title" open={open}>
       <DialogTitle id="updateboat-dialog-title">Update Boat</DialogTitle>
-      {getActivity({ boat, activity, handleClose, handleStart, handleCancel, classes })}
+      {getActivity({ pickers, boat, activity, handleClose, handleStart, handleCancel, classes })}
     </Dialog>
   );
 }
+
 
 UpdateBoatDialog.propTypes = {
   onClose: PropTypes.func.isRequired,

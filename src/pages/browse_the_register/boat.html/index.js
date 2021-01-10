@@ -22,10 +22,6 @@ export default function BoatPage({ location }) {
       `https://ogauk.github.io/boatregister/page-data/boat/${id}/page-data.json`
     )
   
-    const [p] = useAxios(
-      `https://ogauk.github.io/boatregister/pickers.json`
-    )
-  
     useEffect(() => {
       if (b.data) {
          document.title = `${b.data.result.pageContext.boat.name} (${b.data.result.pageContext.boat.oga_no})`;
@@ -48,24 +44,12 @@ export default function BoatPage({ location }) {
                 </div>);
         }
     }
-    if(p.error) {
-      if (b.data.result.pageContext.pickers) {
-        p.data = b.data.result.pageContext.pickers;
-      } else {
-        p.data = {};
-      }
-    }
   
     const boat = b.data.result.pageContext.boat;
-    const pickers = p.data;
   
     return (
     <ApolloProvider client={client}>
-        <BoatWrapper
-        boat={boat}
-        pickers={pickers}
-        location={location}
-    />
+        <BoatWrapper boat={boat} location={location} />
     </ApolloProvider>
   );
 
