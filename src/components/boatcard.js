@@ -92,9 +92,23 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat }) {
+export default function BoatCard({ filters, page, boatsPerPage, sortField, sortDirection, boat }) {
   const classes = useStyles();
-
+  let qp = `p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${(sortDirection==='asc')?1:0}`;
+  for (const field of Object.keys(filters)) {
+    if (field) {
+      console.log(field, filters[field]);
+      if (field === 'year') {
+        const f = filters.year.firstYear || '';
+        const l = filters.year.lastYear || '';
+        console.log(filters.year);
+        qp = `${qp}&y=${f}-${l}`;
+      } else {
+        qp = `${qp}&${field}=${filters[field]}`;
+      }
+    }
+  }
+  console.log(qp);
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
@@ -111,7 +125,7 @@ export default function BoatCard({ filters, boatsPerPage, sortField, sortDirecti
         <Button
           size="small" 
           component={Link}
-          to={`/browse_the_register/boat.html?oga_no=${boat.oga_no}`}
+          to={`/browse_the_register/boat.html?oga_no=${boat.oga_no}&${qp}`}
           variant="contained" 
           color="secondary"
         >More..</Button>
