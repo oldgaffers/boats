@@ -70,9 +70,10 @@ const useStyles = makeStyles((theme) => ({
 export default function BoatButtons({ boat, pickers, location }) {
 
   const params = new URLSearchParams(location.search);
-  params.delete('oga_no');
   const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
   let home = `${location.origin}/${doc}/${doc}.html`;
+
+  params.delete('oga_no');
   const qp = params.toString();
   if(qp.length>0) {
     home = `${home}?${qp}`;
