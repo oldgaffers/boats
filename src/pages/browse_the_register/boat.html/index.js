@@ -28,7 +28,7 @@ export default function BoatPage({ location }) {
       }
     });
   
-    if (b.loading || p.loading) return <p>Loading...</p>
+    if (b.loading) return <p>Loading...</p>
     if (b.error) {
         if (id) {
             return (<div>
