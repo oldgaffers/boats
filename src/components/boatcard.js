@@ -101,14 +101,12 @@ export default function BoatCard({ filters, page, boatsPerPage, sortField, sortD
       if (field === 'year') {
         const f = filters.year.firstYear || '';
         const l = filters.year.lastYear || '';
-        console.log(filters.year);
         qp = `${qp}&y=${f}-${l}`;
       } else {
         qp = `${qp}&${field}=${filters[field]}`;
       }
     }
   }
-  console.log(qp);
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
