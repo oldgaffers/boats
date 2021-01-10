@@ -91,11 +91,9 @@ export default function BoatWrapper({ boat, pickers, link, home, absolute }) {
             <Grid item xs={3} >
               <UploadPhotos classes={classes} boat={boat} />
             </Grid>
-            {
             <Grid item xs={3} >
               <EditButton classes={classes} boat={boat} pickers={pickers}/>
             </Grid>
-            }
           </Grid>
         </Paper>
       </Container>
