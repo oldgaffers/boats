@@ -79,7 +79,6 @@ export default function BoatButtons({ boat, pickers, location }) {
   if(qp.length>0) {
     home = `${home}?${qp}`;
   }
-  console.log(home);
 
   const classes = useStyles();
   return (
