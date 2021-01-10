@@ -73,6 +73,7 @@ export default function BoatButtons({ boat, pickers, location }) {
   const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
   let home = `${location.origin}/${doc}/${doc}.html`;
 
+  params.delete('sale'); // not needed as destination knows!
   params.delete('oga_no');
   const qp = params.toString();
   if(qp.length>0) {
