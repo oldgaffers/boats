@@ -46,11 +46,17 @@ export default function SearchAndFilterBoats({
 
     function pl(id, value) {
         console.log('picker change', id, value)
-        onFilterChange({ ...filters, [id]: value });
+        if (value) {
+            onFilterChange({ ...filters, [id]: value });
+        } else {
+            const f = {...filters};
+            delete f[id];
+            onFilterChange(f);
+        }
     }
 
     function o(event) {
-        onFilterChange({ ...filters, ogaNo: event.target.value });
+        onFilterChange({ ...filters, oga_no: event.target.value });
     }
 
     function sy(event) {
@@ -98,7 +104,7 @@ export default function SearchAndFilterBoats({
     }
 
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
-
+    
     return (
     <form className={classes.root}>
         <p></p>
@@ -122,8 +128,8 @@ export default function SearchAndFilterBoats({
         <Divider/>
         <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
-            <Picker onChange={pl} id="boat-name" options={pickers.boatNames} label="Boat Name" value={filters['boat-name']} />
-            <TextField onChange={o} id="ogaNo" label="OGA Boat No." variant="outlined" value={filters['ogaNo']} />
+            <Picker onChange={pl} id="name" options={pickers.boatNames} label="Boat Name" value={filters['name']} />
+            <TextField onChange={o} id="oga_no" label="OGA Boat No." variant="outlined" value={filters['oga_no']} />
             <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer']} />
             <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
@@ -132,8 +138,8 @@ export default function SearchAndFilterBoats({
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} 
             />
-            <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig-type']}/>
-            <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail_type']}/>
+            <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig_type']} />
+            <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['sail_type']}/>
             <Picker onChange={pl} id='generic_type' options={pickers.generic_type} label="Generic Type" value={filters['generic_type']}/>
             <Picker onChange={pl} id='design_class' options={pickers.design_class} label="Design Class" value={filters['design_class']}/>
             <Picker onChange={pl} id='construction_material' options={pickers.construction_material} label="Construction Material" value={filters['construction_material']} />

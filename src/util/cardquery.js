@@ -28,14 +28,14 @@ export const query = (sort) => {
       all.push({ year: { _gte: filters.year.firstYear } });
       all.push({ year: { _lte: filters.year.lastYear } });
     }
-    if (filters.ogaNo) {
-      all.push({ oga_no: { _eq: filters.ogaNo } });
+    if (filters.oga_no) {
+      all.push({ oga_no: { _eq: filters.oga_no } });
     }
-    if (filters['boat-name']) {
+    if (filters.name) {
       all.push({
         _or: [
-          { name: { _ilike: `${filters['boat-name']}%` } },
-          { previous_names: { _contains: filters['boat-name'] } },
+          { name: { _ilike: `%${filters.name}%` } },
+          { previous_names: { _contains: filters.name } },
         ],
       });
     }
@@ -52,9 +52,9 @@ export const query = (sort) => {
     if (filters.rig_type) {
       all.push({ rigTypeByRigType: { name: { _eq: filters.rig_type } } });
     }
-    if (filters.sail_type) {
-      all.push({ sail_type: { name: { _eq: filters.sail_type } } });
-    }
+    if (filters.mainsail_type) {
+      all.push({ mainsail_type: { name: { _eq: filters.mainsail_type } } });
+      }
     if (filters.generic_type) {
       all.push({
         genericTypeByGenericType: { name: { _eq: filters.generic_type } },

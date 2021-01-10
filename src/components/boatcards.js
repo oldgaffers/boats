@@ -88,12 +88,12 @@ export default function BoatCards({
 
   const { 
     rig_type, construction_material, generic_type, 
-    design_class, year, sale, sail_type,
-    designer, builder, ogaNo,
+    design_class, year, sale, mainsail_type,
+    designer, builder, oga_no, name
   } = filters;
   let message;
-  if (ogaNo) {
-    message = `The boat numbered ${ogaNo} doesn't match the filters you have set`;
+  if (oga_no) {
+    message = `The boat numbered ${oga_no} doesn't match the filters you have set`;
   } else {
     message = 'There are no';
     if (rig_type) {
@@ -106,8 +106,8 @@ export default function BoatCards({
     } else {
       message = `${message} boats`;
     }
-    if (sail_type) {
-      message = `${message} with a ${sail_type} main`;
+    if (mainsail_type) {
+      message = `${message} with a ${mainsail_type} main`;
     }
     if (designer) {
       message = `${message} by this designer`;
@@ -132,8 +132,7 @@ export default function BoatCards({
       message = `${message} for sale.`;
     }
     message = `${message} on the register`;
-    if (filters['boat-name']) {
-      const name = filters['boat-name'];
+    if (name) {
       message = `${message} which have ever been called ${name}`;
     }
   }
