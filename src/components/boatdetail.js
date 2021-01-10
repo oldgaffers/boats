@@ -145,65 +145,65 @@ const engine = {
   };
 
   return (
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-                <Typography variant="h3" component="h3">{boat.name}</Typography>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-                <Typography variant="h3" component="h3">{boat.year}</Typography>
-            </Grid>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <SmugMugGallery classes={classes} albumKey={boat.image_key} />
-              </Paper>
-            </Grid>
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fillHeightPaper}>
-                <Typography variant="h4" component="h4">Details</Typography>
-                <ConditionalText value={boat.oga_no} label="OGA no"/>
-                <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
-                <ConditionalText value={boat.rigTypeByRigType && boat.rigTypeByRigType.name} label="Rig"/>
-                <ConditionalText value={boat.home_port} label="Home port or other location"/>
-                <ConditionalText 
-                  value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
-                  label="Website"
-                />
-                <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
-                <References boat={boat}/>
-                <div>
-                  <CopyToClipboard text={link} onCopy={() => setSnackBarOpen(true)}>
-                    <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
-                    Copy page url
-                    </Button>
-                  </CopyToClipboard>
-                    <Snackbar
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                    open={snackBarOpen}
-                    autoHideDuration={2000}
-                    onClose={handleSnackBarClose}
-                    message="URL copied to clipboard."
-                    severity="success"
-                  />
-                </div>
-                <div>
-                  <ReactFBLike href={link} language="en_GB" appId="644249802921642" version="v2.12" />
-                </div>
-                </Paper>
-            </Grid>
-            <Grid item xs={12}>
-                <DetailBar onChange={handleChange} value={value} panes={panes} />
-                <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
-                    onChangeIndex={handleChangeIndex}
-                >
-                {panes.map((pane, i) => (
-                    <TabPanel key={i} value={value} index={i}>
-                        {pane.children}
-                    </TabPanel>
-                ))}
-                </SwipeableViews>
-            </Grid>
-          </Grid>
+    <Grid container spacing={3}>
+      <Grid item xs={12} md={8} lg={9}>
+          <Typography variant="h3" component="h3">{boat.name}</Typography>
+      </Grid>
+      <Grid item xs={12} md={4} lg={3}>
+          <Typography variant="h3" component="h3">{boat.year}</Typography>
+      </Grid>
+      <Grid item xs={12} md={8} lg={9}>
+        <Paper className={fixedHeightPaper}>
+          <SmugMugGallery classes={classes} albumKey={boat.image_key} />
+        </Paper>
+      </Grid>
+      <Grid item xs={12} md={4} lg={3}>
+        <Paper className={fillHeightPaper}>
+          <Typography variant="h4" component="h4">Details</Typography>
+          <ConditionalText value={boat.oga_no} label="OGA no"/>
+          <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
+          <ConditionalText value={boat.rigTypeByRigType && boat.rigTypeByRigType.name} label="Rig"/>
+          <ConditionalText value={boat.home_port} label="Home port or other location"/>
+          <ConditionalText 
+            value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
+            label="Website"
+          />
+          <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
+          <References boat={boat}/>
+          <div>
+            <CopyToClipboard text={link} onCopy={() => setSnackBarOpen(true)}>
+              <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
+              Copy page url
+              </Button>
+            </CopyToClipboard>
+              <Snackbar
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              open={snackBarOpen}
+              autoHideDuration={2000}
+              onClose={handleSnackBarClose}
+              message="URL copied to clipboard."
+              severity="success"
+            />
+          </div>
+          <div>
+            <ReactFBLike href={link} language="en_GB" appId="644249802921642" version="v2.12" />
+          </div>
+          </Paper>
+      </Grid>
+      <Grid item xs={12}>
+          <DetailBar onChange={handleChange} value={value} panes={panes} />
+          <SwipeableViews
+              axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+              index={value}
+              onChangeIndex={handleChangeIndex}
+          >
+          {panes.map((pane, i) => (
+              <TabPanel key={i} value={value} index={i}>
+                  {pane.children}
+              </TabPanel>
+          ))}
+          </SwipeableViews>
+      </Grid>
+    </Grid>
   );
 }
