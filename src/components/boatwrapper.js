@@ -64,18 +64,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatWrapper({ boat, pickers, link, home, absolute }) {
+export default function BoatWrapper({ boat, pickers, location }) {
 
   const classes = useStyles();
   return (
     <Paper>
       <Container maxWidth="lg" className={classes.container}>
-        <BoatDetail classes={classes} boat={boat} link={absolute} />
+        <BoatDetail classes={classes} boat={boat} link={location.href} />
         <BoatButtons
           classes={classes}
           boat={boat}
-          link={link}
-          home={home}
+          location={location}
           pickers={pickers}
         />
       </Container>

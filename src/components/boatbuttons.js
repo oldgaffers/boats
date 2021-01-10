@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'gatsby';
 import UploadPhotos from './uploadphotos';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
@@ -66,7 +67,18 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, pickers, link, home }) {
+export default function BoatButtons({ boat, pickers, location }) {
+
+  const params = new URLSearchParams(location.search);
+  params.delete('oga_no');
+  const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
+  let home = `${location.origin}/${doc}/${doc}.html`;
+  const qp = params.toString();
+  if(qp.length>0) {
+    home = `${home}?${qp}`;
+  }
+  console.log(home);
+
   const classes = useStyles();
   return (
     <Paper>
@@ -75,7 +87,7 @@ export default function BoatButtons({ boat, pickers, link, home }) {
             <Button size="small"
             variant="contained"
             className={classes.button}
-            component={link}
+            component={Link}
             to={home}
             >See more boats</Button>
         </Grid>

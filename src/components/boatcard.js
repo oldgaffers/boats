@@ -94,7 +94,7 @@ function AltForThumb() {
 
 export default function BoatCard({ filters, page, boatsPerPage, sortField, sortDirection, boat }) {
   const classes = useStyles();
-  let qp = `p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${(sortDirection==='asc')?1:0}`;
+  let qp = `p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${sortDirection==='asc'}`;
   for (const field of Object.keys(filters)) {
     if (field) {
       console.log(field, filters[field]);
