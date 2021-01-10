@@ -58,6 +58,10 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "babel": {
+    "presets": ["@babel/preset-react"],
+    "plugins": [ ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -73,6 +77,8 @@
   },
   "devDependencies": {
     "@apollo/react-testing": "^3.1.4",
+    "@babel/preset-react": "^7.12.10",
+    "babel-cli": "^6.26.0",
     "gh-pages": "^2.2.0"
   }
 }

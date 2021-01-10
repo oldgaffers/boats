@@ -46,7 +46,7 @@ test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
       <MemoryRouter initialEntries={[{ pathname:'/', state: { filters: {}} }]}>
-        <BrowseBoats pickers={mockPicks}/>
+        <BrowseBoats state={{filters:{ sale: false }}} pickers={mockPicks}/>
       </MemoryRouter>
     </MockedProvider>
   );

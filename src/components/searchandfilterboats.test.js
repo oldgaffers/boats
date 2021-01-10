@@ -1,3 +1,4 @@
+import {jest} from '@jest/globals';
 import React from 'react';
 import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
@@ -5,6 +6,8 @@ import gql from 'graphql-tag';
 import SearchAndFilterBoats from './searchandfilterboats';
 import { makeBoatNameList } from './browseboats';
 import { sampleBoatNames, mockPicks } from '../mock/sampledata';
+
+jest.useFakeTimers();
 
 const mocks = [
   {
@@ -56,7 +59,15 @@ test('bad names are omitted', () => {
 test('renders learn react link', () => {
   const { getAllByText } = render(
     <MockedProvider mocks={mocks}>
-      <SearchAndFilterBoats filters={{}} pickers={mockPicks}/>
+      <SearchAndFilterBoats 
+      sortDirection="asc"
+      sortField="editors_choice"
+      boatsPerPage="12"
+      filters={{sale: false}} pickers={mockPicks}
+      onFilterChange={(x)=>console.log(x)} 
+      onPageSizeChange={(x)=>console.log(x)} 
+      onSortChange={(x,y)=>console.log(x,y)}      
+      />
     </MockedProvider>
   );
   const wanted = getAllByText(/Loading.../);
