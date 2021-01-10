@@ -8,7 +8,6 @@ import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/core/styles';
-import { useLocation, useHistory } from 'react-router-dom';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import BoatsForSaleIntro from './boatsforsaleintro';
@@ -50,9 +49,13 @@ export function makeBoatNameList(boat) {
   return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 }
 
-function BrowseBoats({ sale=false, pickers, defaultState }) {
-  const { state } = useLocation();
-  const history = useHistory();
+function BrowseBoats({
+  pickers,
+  state,
+  onPageSizeChange,
+  onSortChange,
+  onFilterChange,
+}) {
   const classes = useStyles();
   //const [mobileOpen, setMobileOpen] = useState(false);
   //const handleDrawerToggle = () => {
@@ -61,24 +64,9 @@ function BrowseBoats({ sale=false, pickers, defaultState }) {
  
   pickers.boatNames = makeBoatNameList(pickers.boat);
 
-  const handlePageSizeChange = (_, a) => {
-    console.log('browseboats page size change', a);
-    history.replace('/', { ...state, boatsPerPage: a });
-  };
-
-  const handleSortChange = (field, dir) => {
-    console.log('browseboats sortchange', field, dir);
-    history.replace('/', { ...state, sortField: field, sortDirection: dir });
-  }
-
-  function setFilters(f) {
-    console.log('setFilters', f);
-    history.replace('/', { ...state, filters: f });
-  }
-
   const blank = "_blank";
 
-  const { boatsPerPage, sortField, sortDirection, filters } = state || defaultState;
+  const { boatsPerPage, sortField, sortDirection, filters } = state;
 
   console.log('render browseboats',  boatsPerPage, sortField, sortDirection);
   return (
@@ -94,15 +82,15 @@ function BrowseBoats({ sale=false, pickers, defaultState }) {
         </Grid>
         */}
         <Container>
-          <Intro boatsForSale={sale} />
+          <Intro boatsForSale={filters.sale} />
         <SearchAndFilterBoats
           sortField={sortField}
           sortDirection={sortDirection}
           boatsPerPage={boatsPerPage}
           filters={filters}
-          onPageSizeChange={handlePageSizeChange}
-          onSortChange={handleSortChange}
-          onFilterChange={(f) => setFilters(f)}
+          onPageSizeChange={onPageSizeChange}
+          onSortChange={onSortChange}
+          onFilterChange={onFilterChange}
           pickers={pickers}
         />
         </Container>

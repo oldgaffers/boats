@@ -53,29 +53,49 @@ function FourOhFour() {
  
   if (!state) {
     console.log('app state falsy, setting defaults');
-    const initialState = defaultState;
-    if (sale) {
-      initialState.filters.sale = true;
-      initialState.sortField = 'price';
-      initialState.sortDirection = 'desc';
-    }
-    history.replace('/', initialState);
+    history.replace('/', defaultState);
+  }
+
+  if (state && sale) {
+    state.filters.sale = true;
+    state.sortField = 'price';
+    state.sortDirection = 'desc';
+  }
+
+  const handlePageSizeChange = (a) => {
+    console.log('FourOhFour page size change', a);
+    history.replace('/', { ...state, boatsPerPage: a });
+  };
+
+  const handleSortChange = (field, dir) => {
+    console.log('FourOhFour sortchange', field, dir);
+    history.replace('/', { ...state, sortField: field, sortDirection: dir });
+  }
+
+  const handleFilterChange = (f) => {
+    console.log('FourOhFour filter change', f);
+    history.replace('/', { ...state, filters: f });
   }
  
-  if (search === '') {
-    return (<BrowseBoats sale={sale} pickers={data} defaultState={defaultState} />);
+  if (search !== '') {
+    const params = new URLSearchParams(search);
+    const path = params.get('p');
+    console.log('FourOhFour path', path);
+    const oga_no = params.get('oga_no');
+    if (oga_no) {
+      return (<Redirect to={`/boat/${oga_no}`} />)
+    }
+    if(path) {
+      return (<Redirect to={path} />)
+    }
   }
-  const params = new URLSearchParams(search);
-  const path = params.get('p');
-  console.log('FourOhFour path', path);
-  const oga_no = params.get('oga_no');
-  if (oga_no) {
-    return (<Redirect to={`/boat/${oga_no}`} />)
-  }
-  if(path) {
-    return (<Redirect to={path} />)
-  }
-  return (<BrowseBoats sale={sale} pickers={data} defaultState={defaultState} />);
+  return (
+    <BrowseBoats 
+      pickers={data} state={state || defaultState}
+      onPageSizeChange={handlePageSizeChange}
+      onSortChange={handleSortChange}
+      onFilterChange={handleFilterChange}
+    />);
 } 
 
 function App() {

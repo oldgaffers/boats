@@ -32,13 +32,17 @@ export default function SearchAndFilterBoats({
     sortDirection,
     sortField,
     boatsPerPage,
-    filters={ sale: false },
+    filters,
+    pickers,
     onFilterChange,
     onPageSizeChange,
-    onSortChange=(x) => console.log(x),
-    pickers,
+    onSortChange,
 }) {
     const classes = useStyles();
+
+    const handlePageSizeChange = (_, a) => {
+        onPageSizeChange(a);
+    };
 
     function pl(id, value) {
         console.log('picker change', id, value)
@@ -71,7 +75,7 @@ export default function SearchAndFilterBoats({
         { field: 'updated_at', name: "Updated", direction: 'desc' },
         { field: 'editors_choice', name: "Editor's choice", direction: 'asc' },
      ];
-     if (filters && filters.sale) {
+     if (filters.sale) {
         sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });
      }
     const sortLabelByField = sortOptions.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
@@ -91,7 +95,6 @@ export default function SearchAndFilterBoats({
         const normal = sortDirectionByField[sortField];
         const dir = event.target.checked ? opposite[normal] : normal;
         if (dir !== sortDirection) {
-            console.log('handleSortDirectionChange', dir);
             onSortChange(sortField, dir);
         } 
     }
@@ -105,7 +108,7 @@ export default function SearchAndFilterBoats({
         <Divider/>
         <FormHelperText>Use these controls to sort the list by name, price, etc. and to choose how much you want to see</FormHelperText>
         <Grid container direction="row" >
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={onPageSizeChange} options={pageSize} label="Boats Per Page"/>
+            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={handlePageSizeChange} options={pageSize} label="Boats Per Page"/>
             <FormControl>
                 <FormLabel>Sort By</FormLabel>
                 <RadioGroup row aria-label="sorting" name="sorting" value={sortLabelByField[sortField]} onChange={handleSortFieldChange}>
