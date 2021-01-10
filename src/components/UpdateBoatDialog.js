@@ -59,8 +59,6 @@ const useStyles = makeStyles((theme) => ({
 function getActivity({ boat, activity, handleClose, handleStart, handleCancel, classes }) {
 
   const handleSaveDescriptions = (short, full) => {
-    console.log('short saved', short);
-    console.log('full saved', full);
     handleClose({ ...boat, short_description: short, full_description: full });
   }
 

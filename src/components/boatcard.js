@@ -18,7 +18,6 @@ function makePreviousNamesField(n) {
     } catch(e) {
       console.log(e);
     }
-
   }
   return undefined;
 }
@@ -97,7 +96,6 @@ export default function BoatCard({ filters, page, boatsPerPage, sortField, sortD
   let qp = `p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${sortDirection==='asc'}`;
   for (const field of Object.keys(filters)) {
     if (field) {
-      console.log(field, filters[field]);
       if (field === 'year') {
         const f = filters.year.firstYear || '';
         const l = filters.year.lastYear || '';

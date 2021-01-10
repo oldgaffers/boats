@@ -11,7 +11,6 @@ export default function ReallyDumbRTE({
     let name = label.replace(/ /g, '_').toLowerCase();
   
     function handleSave(data) {
-      // console.log(data);
       const newstate = { ...state };
       newstate[name] = data;
       onSave(newstate);

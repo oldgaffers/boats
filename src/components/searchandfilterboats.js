@@ -82,11 +82,9 @@ export default function SearchAndFilterBoats({
     const sortDirectionByField = sortOptions.reduce((r, { field, direction}) => { r[field]=direction; return r;}, {});
 
     function handleSortFieldChange(event) {
-        console.log('handleSortFieldChange', event.target.value);
         const field = event.target.value;
         if (field !== sortField) {
             const normal = sortDirectionByField[field];
-            console.log('handleSortFieldChange', field, normal);
                 onSortChange(field, normal);
         } 
     }

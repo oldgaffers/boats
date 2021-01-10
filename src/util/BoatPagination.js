@@ -38,7 +38,6 @@ export function useBoatPagination( count, page, onChange ) {
         type: 'other-ellipsis'
       });
     }
-    console.log('BoatPagination', items);
     return items;
   }
   

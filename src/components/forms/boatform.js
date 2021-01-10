@@ -68,7 +68,6 @@ function Sail({ label, fields, state, onChange }) {
 
     function n(prefix, suffix) {
         const r = `${prefix}_${suffix}`.replace(/ /g, '_').toLowerCase();
-        console.log(r);
         return r;
     }
 

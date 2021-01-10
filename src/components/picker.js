@@ -41,8 +41,6 @@ export default function Picker({ options, id, label, onChange, value, clearable 
     if(val.name) return option.name === val.name;
     return option.name === val;
   }
-
-  // console.log(id, 'picker render', value);
   if (value && value !== inputValue) {
     setInputValue(value);
   }

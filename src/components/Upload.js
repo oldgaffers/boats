@@ -10,8 +10,6 @@ function Upload({ boatName, ogaNo, albumKey }) {
     const [uploading, setUploading] = useState(false);
     const [images, setImages] = useState([]);
 
-    console.log('upload', boatName, ogaNo, albumKey);
-
     const onChange = e => {
         const files = Array.from(e.target.files);
         setUploading(true );

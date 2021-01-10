@@ -121,7 +121,6 @@ const RichTextEditor = ({html, onUpdate, variant='min' }) => {
     type: 'paragraph',
     children: fragment,
   }];
-  console.log('initialValue', JSON.stringify(initialValue));
   const [value, setValue] = useState(initialValue);
 
   const handleChange = (val) => {

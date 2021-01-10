@@ -75,6 +75,5 @@ export const query = (sort) => {
     if (filters.sale) {
       all.push({ for_sale_state: { text: { _eq: 'for_sale' } } });
     }
-    console.log('buildWhere', all);
     return { _and: all };
   }  
