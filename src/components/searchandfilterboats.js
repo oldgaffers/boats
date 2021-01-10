@@ -110,7 +110,7 @@ export default function SearchAndFilterBoats({
                 <FormLabel>Sort By</FormLabel>
                 <RadioGroup row aria-label="sorting" name="sorting" value={sortLabelByField[sortField]} onChange={handleSortFieldChange}>
                     {sortOptions.map(option => (
-                        <FormControlLabel value={option.field} control={<Radio checked={sortField===option.field}/>} label={option.name} />
+                        <FormControlLabel key={option.name} value={option.field} control={<Radio checked={sortField===option.field}/>} label={option.name} />
                     ))}
                 </RadioGroup>
             </FormControl>
