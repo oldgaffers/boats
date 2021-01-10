@@ -80,7 +80,7 @@ const totalCount = data?data.boat_aggregate.aggregate.totalCount:0;
               <BoatCard 
                 filters={filters} boatsPerPage={`${boatsPerPage}`}
                 sortField={sortField} sortDirection={sortDirection} 
-                key={boat.oga_no} boat={boat}
+                key={boat.oga_no} boat={boat} page={page}
               />
             </Grid>
           ))}
