@@ -1,7 +1,8 @@
 module.exports = {
   pathPrefix: `/boat_register`,
   siteMetadata: {
-    title: "boats",
+    title: "OGA Boat Register",
+    siteURL: "https://oga.org.uk",
   },
   flags: {
     QUERY_ON_DEMAND: true

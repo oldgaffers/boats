@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
+export default function BoatWrapper({ boat, pickers, link, home, absolute }) {
 
   const classes = useStyles();
   return (
@@ -77,7 +77,7 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
             <BoatDetail classes={classes} boat={boat} link={absolute} />
             <Paper>
               <Grid container direction="row" alignItems="flex-end">
-                <Grid item xs={1.5}>
+                <Grid item xs={2}>
                   <Button size="small"
                   variant="contained"
                   className={classes.button}
@@ -85,14 +85,14 @@ export const BoatWrapper = ({ boat, pickers, link, home, absolute }) => {
                   to={home}
                   >See more boats</Button>
                 </Grid>
-                <Grid item xs={3.3} >
+                <Grid item xs={3} >
                   <Enquiry classes={classes} boat={boat} />
                 </Grid>
-                <Grid item xs={3.3} >
+                <Grid item xs={3} >
                   <UploadPhotos classes={classes} boat={boat} />
                 </Grid>
                 {
-                <Grid item xs={2.5} >
+                <Grid item xs={3} >
                   <EditButton classes={classes} boat={boat} pickers={pickers}/>
                 </Grid>
                 }

@@ -2,18 +2,12 @@
 import React, { useEffect,  } from 'react';
 import { Link, useParams, useLocation } from "react-router-dom";
 import { BoatWrapper } from './boatwrapper';
-// import { useQuery } from '@apollo/react-hooks';
-// import { query } from '../util/boatquery';
-// import { usePicklists } from '../util/picklists';
 import useAxios from 'axios-hooks'
 
 export default function Boat() {
 
   const { id } = useParams();
   const location = useLocation();
-
-  // const boatData = useQuery(query(id));
-  // const pickerData = usePicklists();
 
   const [b] = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${id}/page-data.json`
@@ -24,9 +18,6 @@ export default function Boat() {
   )
 
   useEffect(() => {
-    // if (boatData.data) {
-    //    document.title = boatData.data.boat[0].name;
-    // }
     if (b.data) {
        document.title = `${b.data.result.pageContext.boat.name} (${b.data.result.pageContext.boat.oga_no})`;
     }
@@ -43,18 +34,11 @@ export default function Boat() {
       p.data = {};
     }
   }
-  // if (boatData.loading || pickerData.loading) return <p>Loading...</p>
-  // if (boatData.error || pickerData.error) return <p>Error: (Boat)</p>;
-  // const boat = boatData.data.boat[0];
-  // const pickers = pickerData.data;
 
   const boat = b.data.result.pageContext.boat;
-  //const pickers = data.result.pageContext.pickers;
   const pickers = p.data;
 
-  console.log('Boat - location', location);
   const homeLocation = { ...location, pathname: '/' };
-  console.log('Home - location', homeLocation);
 
   return (
     <BoatWrapper

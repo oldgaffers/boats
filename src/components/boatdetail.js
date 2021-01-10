@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import { useTheme } from '@material-ui/core/styles';
 import SwipeableViews from 'react-swipeable-views';
-import { useInView } from 'react-intersection-observer'
+// import { useInView } from 'react-intersection-observer'
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import clsx from 'clsx';
 import TabPanel from './tabpanel';
@@ -40,7 +40,7 @@ export default function Boat({ classes, boat, link }) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
 
-  const { ref } = useInView({ threshold: 0 });
+  // TODO const { ref } = useInView({ threshold: 0 });
   
   function handleSnackBarClose() {
     setSnackBarOpen(false);
@@ -168,7 +168,7 @@ const engine = {
                   value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
                   label="Website"
                 />
-                <Typography><div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div></Typography>
+                <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
                 <References boat={boat}/>
                 <div>
                   <CopyToClipboard text={link} onCopy={() => setSnackBarOpen(true)}>
@@ -191,7 +191,7 @@ const engine = {
                 </Paper>
             </Grid>
             <Grid item xs={12}>
-                <DetailBar ref={ref} onChange={handleChange} value={value} panes={panes} />
+                <DetailBar onChange={handleChange} value={value} panes={panes} />
                 <SwipeableViews
                     axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
                     index={value}
