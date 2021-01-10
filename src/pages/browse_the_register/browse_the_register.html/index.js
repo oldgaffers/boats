@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import ApolloClient from "apollo-client"; // N.B. only needed for the enquiry mutation
 import { ApolloProvider } from '@apollo/react-hooks';
 import { createHttpLink } from "apollo-link-http";
@@ -20,27 +20,31 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
   });
   
-const Browser = ({location, defaultState }) => {
+const Browser = ({ defaultState }) => {
   const { loading, error, data } = usePicklists();
+  const [state, setState] = useState(defaultState);
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :(Browse the Register)</p>);
 
-  const handlePageSizeChange = (a) => {
-    console.log('Browse the Register page size change', a);
+  const handlePageSizeChange = (bpp) => {
+    console.log('Browse the Register page size change', bpp);
+    setState({...state, boatsPerPage: bpp });
   };
 
   const handleSortChange = (field, dir) => {
     console.log('Browse the Register sortchange', field, dir);
+    setState({...state, sortField: field, sortDirection: dir });
   }
 
-  const handleFilterChange = (f) => {
-    console.log('Browse the Register filter change', f);
+  const handleFilterChange = (filters) => {
+    console.log('Browse the Register filter change', filters);
+    setState({...state, filters });
   }
 
   return (
       <BrowseBoats 
-        pickers={data} state={location.state || defaultState}
+        pickers={data} state={state}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
@@ -48,10 +52,10 @@ const Browser = ({location, defaultState }) => {
   );
 };
 
-export default function BrowseTheRegisterPage({ location }) {  
+export default function BrowseTheRegisterPage() {  
   return (
     <ApolloProvider client={client}>
-      <Browser location={location} defaultState={defaultState}/>;
+      <Browser defaultState={defaultState}/>;
     </ApolloProvider>
   );
 }
