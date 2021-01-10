@@ -7,7 +7,6 @@ import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import BoatWrapper from '../../../components/boatwrapper';
 
-
 const client = new ApolloClient({
     link: createHttpLink({
       uri: "https://api-oga.herokuapp.com/v1/graphql",
@@ -62,10 +61,6 @@ export default function BoatPage({ location }) {
     const boat = b.data.result.pageContext.boat;
     const pickers = p.data;
   
-    console.log('boat', id, location);
-    console.log('boat referrer', document.referrer);
-  
-
     return (
     <ApolloProvider client={client}>
         <BoatWrapper
