@@ -56,10 +56,16 @@ function FourOhFour() {
     history.replace('/', defaultState);
   }
 
-  if (state && sale) {
-    state.filters.sale = true;
-    state.sortField = 'price';
-    state.sortDirection = 'desc';
+  if (sale) {
+    if (state) {
+      state.filters.sale = true;
+      state.sortField = 'price';
+      state.sortDirection = 'desc';
+    } else {
+      defaultState.filters.sale = true;
+      defaultState.sortField = 'price';
+      defaultState.sortDirection = 'desc';  
+    }
   }
 
   const handlePageSizeChange = (a) => {
