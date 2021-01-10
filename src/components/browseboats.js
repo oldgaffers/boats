@@ -74,7 +74,6 @@ function BrowseBoats({
     onPageChange(page);
   };
 
-  console.log('render browseboats',  boatsPerPage, sortField, sortDirection);
   return (
     <div className={classes.root}>
       <CssBaseline />

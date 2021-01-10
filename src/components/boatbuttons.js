@@ -1,9 +1,11 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import BoatDetail from './boatdetail';
-import BoatButtons from './boatbuttons';
+import UploadPhotos from './uploadphotos';
+import EditButton from './editbutton';
+import Enquiry from './enquiry';
 
 const drawerWidth = 240;
 
@@ -64,21 +66,29 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatWrapper({ boat, pickers, link, home, absolute }) {
-
+export default function BoatButtons({ boat, pickers, link, home }) {
   const classes = useStyles();
   return (
     <Paper>
-      <Container maxWidth="lg" className={classes.container}>
-        <BoatDetail classes={classes} boat={boat} link={absolute} />
-        <BoatButtons
-          classes={classes}
-          boat={boat}
-          link={link}
-          home={home}
-          pickers={pickers}
-        />
-      </Container>
+        <Grid container direction="row" alignItems="flex-end">
+        <Grid item xs={2}>
+            <Button size="small"
+            variant="contained"
+            className={classes.button}
+            component={link}
+            to={home}
+            >See more boats</Button>
+        </Grid>
+        <Grid item xs={3} >
+            <Enquiry classes={classes} boat={boat} />
+        </Grid>
+        <Grid item xs={3} >
+            <UploadPhotos classes={classes} boat={boat} />
+        </Grid>
+        <Grid item xs={3} >
+            <EditButton classes={classes} boat={boat} pickers={pickers}/>
+        </Grid>
+        </Grid>
     </Paper>
   );
 };
