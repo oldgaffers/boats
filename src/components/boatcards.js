@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
@@ -25,12 +25,10 @@ export default function BoatCards({
   sortField,
   sortDirection,
   filters,
-  onLoad = function(n) {
-    console.log('boat cards loaded total is', n);
-  },
+  page,
+  onChangePage,
 }) {
   const classes = useStyles();
-  const [page, setPage] = useState(1);
   const { loading, error, data } = useQuery(
     query(`{${sortField}: ${sortDirection}}`),
     {
@@ -43,19 +41,14 @@ export default function BoatCards({
   );
   if (error) console.log(JSON.stringify(error));
 
-// should only happen in test
-const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; 
-  
-  if (onLoad) {
-    onLoad(totalCount);
-  }
+  const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; 
+  const pages = Math.ceil(totalCount / boatsPerPage);
 
   const pageItems = useBoatPagination(
-    Math.ceil(totalCount / boatsPerPage),
+    pages,
     page,
-    function(event, p) {
-      console.log('handlePageChange', event, p);
-      setPage(p);
+    function(event, page) {
+      onChangePage({ selectedBoats: totalCount, pages, page });
     }
   );
 

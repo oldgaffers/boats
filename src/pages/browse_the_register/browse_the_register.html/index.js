@@ -7,11 +7,14 @@ import BrowseBoats from '../../../components/browseboats';
 import { usePicklists } from '../../../util/picklists';
 
 const defaultState = {
+  page: 1,
   boatsPerPage: '12', 
   sortField: 'editors_choice', 
   sortDirection: 'asc',
   filters: { sale: false }, 
 };
+
+const title = 'Browse the Register';
 
 const client = new ApolloClient({
     link: createHttpLink({
@@ -25,26 +28,32 @@ const Browser = ({ defaultState }) => {
   const [state, setState] = useState(defaultState);
 
   if (loading) return (<p>Loading...</p>);
-  if (error) return (<p>Error :(Browse the Register)</p>);
+  if (error) return (<p>Error :({title})</p>);
 
   const handlePageSizeChange = (bpp) => {
-    console.log('Browse the Register page size change', bpp);
+    console.log(`${title} page size change`, bpp);
     setState({...state, boatsPerPage: bpp });
   };
 
   const handleSortChange = (field, dir) => {
-    console.log('Browse the Register sortchange', field, dir);
+    console.log(`${title} sortchange`, field, dir);
     setState({...state, sortField: field, sortDirection: dir });
   }
 
   const handleFilterChange = (filters) => {
-    console.log('Browse the Register filter change', filters);
+    console.log(`${title} filter change`, filters);
     setState({...state, filters });
   }
+
+  const handlePageChange = (page) => {
+    console.log(`${title} page change`, page);
+    setState({...state, page });
+  };
 
   return (
       <BrowseBoats 
         pickers={data} state={state}
+        onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}

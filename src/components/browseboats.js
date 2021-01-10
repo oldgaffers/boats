@@ -52,6 +52,7 @@ export function makeBoatNameList(boat) {
 function BrowseBoats({
   pickers,
   state,
+  onPageChange,
   onPageSizeChange,
   onSortChange,
   onFilterChange,
@@ -66,7 +67,12 @@ function BrowseBoats({
 
   const blank = "_blank";
 
-  const { boatsPerPage, sortField, sortDirection, filters } = state;
+  const { page, boatsPerPage, sortField, sortDirection, filters } = state;
+
+  const handlePageChange = ({ selectedBoats, pages, page }) => {
+    console.log('handlePageChange', selectedBoats, pages, page);
+    onPageChange(page);
+  };
 
   console.log('render browseboats',  boatsPerPage, sortField, sortDirection);
   return (
@@ -96,10 +102,12 @@ function BrowseBoats({
         </Container>
         <Divider />
         <BoatCards
+          page={page}        
           boatsPerPage={parseInt(boatsPerPage)}
           sortField={sortField}
           sortDirection={sortDirection}
           filters={filters}
+          onChangePage={handlePageChange}
         />
         <Divider />
         <Typography>
