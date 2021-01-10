@@ -48,7 +48,7 @@ export default function Boat({ classes, boat, link }) {
   
   const panes = [
     { title: 'Registration and location', children: (
-        <Paper>
+      <Paper>
         <ConditionalText value={boat.previous_names} label="Previous name/s"/>
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={boat.home_country} label="Home Country"/>
@@ -60,26 +60,27 @@ export default function Boat({ classes, boat, link }) {
         <ConditionalText value={boat.callsign} label="Call Sign"/>
         <ConditionalText value={boat.nsbr} label="National Small Boat Register"/>
         <ConditionalText value={boat.uk_part1} label="Official Registration" />     
-        </Paper>)
+      </Paper>)
      },
     { title: 'Construction', children: (
-        <Paper>
+      <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
         <ConditionalText value={boat.construction_details} label="Construction details"/>
-        </Paper>
+      </Paper>
         )    
     },
-    { title: 'Hull', children: (<Paper>
+    { title: 'Hull', children: (
+      <Paper>
         <ConditionalText value={m2f(boat.length_on_deck)} label="Length on deck (LOD)"/>
         <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_overall:undefined)}/>
         <ConditionalText label="Waterline Length (LWL)" value={m2f(boat.handicap_data?boat.handicap_data.length_on_waterline:undefined)}/>
         <ConditionalText value={m2f(boat.beam)} label="Beam"/>
         <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
-    </Paper>)},
+      </Paper>)},
   ];
 
   if (boat.full_description) {
@@ -98,13 +99,13 @@ export default function Boat({ classes, boat, link }) {
     });
     if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
         panes.push({ title: 'Rig and Sails', children: (
-            <Paper>
+          <Paper>
             <ConditionalText label="fore triangle base" value={m2f(hd.fore_triangle_base)}/>
             <ConditionalText label="fore triangle height" value={m2f(hd.fore_triangle_height)}/>
             <ConditionalText label="Calculated THCF" value={hd.calculated_thcf}/>
             <ConditionalText label="THCF" value={hd.thcf}/>
             <SailTable classes={classes} rows={sails}/>
-            </Paper>
+          </Paper>
         )});    
     }
 
@@ -128,10 +129,10 @@ const engine = {
 
     panes.unshift(
         { title: 'For Sale', children: (
-             <Paper>
+          <Paper>
             <ConditionalText label="Price" value={price(fs.asking_price)}/>
             <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
-            </Paper>
+          </Paper>
         ) },
     );
   }
