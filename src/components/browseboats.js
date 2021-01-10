@@ -111,19 +111,23 @@ function BrowseBoats({
         <Divider />
         <Typography>
           Other great places to look for boats are:
-          <List>
-            <ListItem>
+        </Typography>
+        <List>
+          <ListItem>
+            <Typography>
               <a target={blank} href="https://www.nationalhistoricships.org.uk">
                 National Historic Ships
               </a>
-            </ListItem>
-            <ListItem>
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography>
               <a target={blank} href="https://nmmc.co.uk/explore/databases/">NMM Cornwall</a>&nbsp;
               maintain a number of interesting databases including small boats and
               yacht designs
-            </ListItem>
-          </List>
-        </Typography>
+            </Typography>
+          </ListItem>
+        </List>
       </Paper>
     </div>
   );
