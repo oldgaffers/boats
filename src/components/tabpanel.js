@@ -15,8 +15,8 @@ export default function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
+        <Box p={3} className='MuiTypography-body1'>
+          {children}
         </Box>
       )}
     </div>
