@@ -5,7 +5,7 @@ import ApolloClient from "apollo-client"; // N.B. only needed for the enquiry mu
 import { ApolloProvider } from '@apollo/react-hooks';
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import BoatWrapper from '../../components/boatwrapper';
+import BoatWrapper from '../../../components/boatwrapper';
 
 
 const client = new ApolloClient({
@@ -63,6 +63,8 @@ export default function BoatPage({ location }) {
     const pickers = p.data;
   
     console.log('boat', id, location);
+    console.log('boat referrer', document.referrer);
+  
 
     return (
     <ApolloProvider client={client}>

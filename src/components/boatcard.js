@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from "gatsby";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -111,10 +111,7 @@ export default function BoatCard({ filters, boatsPerPage, sortField, sortDirecti
         <Button
           size="small" 
           component={Link}
-          to={{
-            pathname: `/boat/${boat.oga_no}`,
-            state: { filters, boatsPerPage, sortField, sortDirection }
-          }}
+          to={`/browse_the_register/boat.html?oga_no=${boat.oga_no}`}
           variant="contained" 
           color="secondary"
         >More..</Button>

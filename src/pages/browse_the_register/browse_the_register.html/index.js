@@ -20,8 +20,7 @@ const client = new ApolloClient({
     cache: new InMemoryCache()
   });
   
-export default function BrowseTheRegisterPage({ location }) {
-  
+const Browser = ({location, defaultState }) => {
   const { loading, error, data } = usePicklists();
 
   if (loading) return (<p>Loading...</p>);
@@ -40,14 +39,19 @@ export default function BrowseTheRegisterPage({ location }) {
   }
 
   return (
-    <ApolloProvider client={client}>
       <BrowseBoats 
         pickers={data} state={location.state || defaultState}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
-      />);
+      />
+  );
+};
+
+export default function BrowseTheRegisterPage({ location }) {  
+  return (
+    <ApolloProvider client={client}>
+      <Browser location={location} defaultState={defaultState}/>;
     </ApolloProvider>
   );
-
-  }
+}
