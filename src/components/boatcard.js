@@ -1,5 +1,4 @@
 import React from 'react';
-// import { Link } from "gatsby";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -10,8 +9,8 @@ import Badge from '@material-ui/core/Badge';
 import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
-
-const Link = undefined;
+import { boatLink as gatsbyBoatLink } from '../util/gr';
+import { boatLink as reactrouterdomBoatLink } from '../util/rr';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -93,28 +92,13 @@ function AltForThumb() {
   return '';
 }
 
-function gatsbyBoatLink(state, oga_no) {
-  const { filters, page, boatsPerPage, sortField, sortDirection } = state;
-  let qp = `p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${sortDirection==='asc'}`;
-  for (const field of Object.keys(filters)) {
-    if (field) {
-      if (field === 'year') {
-        const f = filters.year.firstYear || '';
-        const l = filters.year.lastYear || '';
-        qp = `${qp}&y=${f}-${l}`;
-      } else {
-        qp = `${qp}&${field}=${filters[field]}`;
-      }
-    }
-  }
-  return `/browse_the_register/boat.html?oga_no=${oga_no}&${qp}`;  
-}
-
-export default function BoatCard({ state, boat, link }) {
+export default function BoatCard({ state, boat, link, location }) {
   const classes = useStyles();
   const sale = state.filters.sale;
 
-  const boatLink = link?{ pathname: `/boat/${boat.oga_no}`, state }:gatsbyBoatLink(state, boat.oga_no);
+  const boatLink = location.pathname
+                    ?reactrouterdomBoatLink(state, boat.oga_no)
+                    :gatsbyBoatLink(state, boat.oga_no);
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
@@ -131,7 +115,7 @@ export default function BoatCard({ state, boat, link }) {
       <CardActions>
         <Button
           size="small" 
-          component={link||Link}
+          component={link}
           to={boatLink}
           variant="contained" 
           color="secondary"

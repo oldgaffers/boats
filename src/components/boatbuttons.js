@@ -3,12 +3,11 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-// import { Link } from 'gatsby';
 import UploadPhotos from './uploadphotos';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
-
-const Link = undefined;
+import { home as gatsbyHome } from '../util/gr';
+import { home as reactrouterdomHome } from '../util/rr';
 
 const drawerWidth = 240;
 
@@ -69,23 +68,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function gatsbyHome(location) {
-  const params = new URLSearchParams(location.search);
-  const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
-  let home = `${location.origin}/${doc}/${doc}.html`;
+export default function BoatButtons({ boat, linkComponent, location }) {
 
-  params.delete('sale'); // not needed as destination knows!
-  params.delete('oga_no');
-  const qp = params.toString();
-  if(qp.length>0) {
-    home = `${home}?${qp}`;
-  }
-  return home;
-}
-
-export default function BoatButtons({ boat, link, location }) {
-
-  const home = link?location:gatsbyHome(location);
+  const home = location.pathname
+    ?reactrouterdomHome(location)
+    :gatsbyHome(location);
 
   const classes = useStyles();
   return (
@@ -95,7 +82,7 @@ export default function BoatButtons({ boat, link, location }) {
             <Button size="small"
             variant="contained"
             className={classes.button}
-            component={link||Link}
+            component={linkComponent}
             to={home}
             >See more boats</Button>
         </Grid>

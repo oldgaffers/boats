@@ -10,14 +10,17 @@ import ConditionalText from './conditionaltext';
 import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import { boatUrl } from '../util/gr'; // either will do
 
-export default function BoatSummary({ classes, boat, boatUrl }) {
+export default function BoatSummary({ classes, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
-
+  const href = boatUrl(boat.oga_no);
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
+
+  console.log('BoatSummary', href);
 
   return (
     <Paper className={fillHeightPaper}>
@@ -35,7 +38,7 @@ export default function BoatSummary({ classes, boat, boatUrl }) {
     </Box>
     <References boat={boat}/>
     <div>
-      <CopyToClipboard text={boatUrl} onCopy={() => setSnackBarOpen(true)}>
+      <CopyToClipboard text={href} onCopy={() => setSnackBarOpen(true)}>
         <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
         Copy page url
         </Button>
@@ -50,7 +53,7 @@ export default function BoatSummary({ classes, boat, boatUrl }) {
       />
     </div>
     <div>
-      <ReactFBLike href={boatUrl} language="en_GB" appId="644249802921642" version="v2.12" />
+      <ReactFBLike href={href} language="en_GB" appId="644249802921642" version="v2.12" />
     </div>
     </Paper>
   );

@@ -1,10 +1,7 @@
 import React from 'react';
-import ApolloClient from "apollo-client";
-import { ApolloProvider } from '@apollo/react-hooks';
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
 import './App.css';
 import GqlBoatBrowser from './components/GqlBoatBrowser';
+import OGAProvider from './util/gql';
 import Boat from './components/boat';
 import Designers from './components/designers';
 import Builders from './components/builders';
@@ -22,13 +19,6 @@ import {
   useHistory,
   Link,
 } from "react-router-dom";
-
-const client = new ApolloClient({
-  link: createHttpLink({
-    uri: "https://api-oga.herokuapp.com/v1/graphql",
-  }),
-  cache: new InMemoryCache()
-});
 
 const defaultState = {
   page: 1,
@@ -105,13 +95,14 @@ function FourOhFour() {
       onFilterChange={handleFilterChange}
       onPageChange={handlePageChange}
       link={Link}
+      location={location}
     />
   );
 } 
 
 function App() {
   return (
-    <ApolloProvider client={client}>
+    <OGAProvider>
       <Router basename={
           // http is a check for dev mode, production will always be https
           window.location.protocol==='http:'?'/':'/boats'
@@ -128,7 +119,7 @@ function App() {
             <Route path="/"><FourOhFour /></Route>
           </Switch>
       </Router>
-    </ApolloProvider>
+    </OGAProvider>
   );
 }
 
