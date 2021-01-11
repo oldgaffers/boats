@@ -9,12 +9,12 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: "gatsby-source-graphql",
+      resolve: 'gatsby-plugin-apollo',
       options: {
         typeName: "Register",
         fieldName: "register",
         url: 'https://api-oga.herokuapp.com/v1/graphql'
-      },
+      }
     },
     'gatsby-plugin-material-ui'
   ],
