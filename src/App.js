@@ -66,7 +66,7 @@ function FourOhFour() {
 
   const handlePageSizeChange = (bpp) => {
     console.log('FourOhFour page size change', bpp);
-    history.replace('/', { ...state, boatsPerPage: pp });
+    history.replace('/', { ...state, boatsPerPage: bpp });
   };
 
   const handleSortChange = (field, dir) => {
