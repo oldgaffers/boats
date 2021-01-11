@@ -52,9 +52,11 @@ export function makeBoatNameList(boat) {
 function BrowseBoats({
   pickers,
   state,
+  onPageChange,
   onPageSizeChange,
   onSortChange,
   onFilterChange,
+  link,
 }) {
   const classes = useStyles();
   //const [mobileOpen, setMobileOpen] = useState(false);
@@ -68,7 +70,11 @@ function BrowseBoats({
 
   const { boatsPerPage, sortField, sortDirection, filters } = state;
 
-  console.log('render browseboats',  boatsPerPage, sortField, sortDirection);
+  const handlePageChange = ({ selectedBoats, pages, page }) => {
+    console.log('handlePageChange', selectedBoats, pages, page);
+    onPageChange(page);
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -80,7 +86,7 @@ function BrowseBoats({
         <Grid container direction="row">
           <DrawerController onClick={handleDrawerToggle}/>
         </Grid>
-        */}
+        */} 
         <Container>
           <Intro boatsForSale={filters.sale} />
         <SearchAndFilterBoats
@@ -95,28 +101,27 @@ function BrowseBoats({
         />
         </Container>
         <Divider />
-        <BoatCards
-          boatsPerPage={parseInt(boatsPerPage)}
-          sortField={sortField}
-          sortDirection={sortDirection}
-          filters={filters}
-        />
+        <BoatCards state={state} onChangePage={handlePageChange} link={link} />
         <Divider />
         <Typography>
           Other great places to look for boats are:
-          <List>
-            <ListItem>
+        </Typography>
+        <List>
+          <ListItem>
+            <Typography>
               <a target={blank} href="https://www.nationalhistoricships.org.uk">
                 National Historic Ships
               </a>
-            </ListItem>
-            <ListItem>
+            </Typography>
+          </ListItem>
+          <ListItem>
+            <Typography>
               <a target={blank} href="https://nmmc.co.uk/explore/databases/">NMM Cornwall</a>&nbsp;
               maintain a number of interesting databases including small boats and
               yacht designs
-            </ListItem>
-          </List>
-        </Typography>
+            </Typography>
+          </ListItem>
+        </List>
       </Paper>
     </div>
   );

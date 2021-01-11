@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link } from "gatsby";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,6 +11,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
 
+// TODO make work in SPA mode
+
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
     try {
@@ -18,7 +20,6 @@ function makePreviousNamesField(n) {
     } catch(e) {
       console.log(e);
     }
-
   }
   return undefined;
 }
@@ -92,15 +93,35 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ filters, boatsPerPage, sortField, sortDirection, boat }) {
+function gatsbyBoatLink(state, oga_no) {
+  const { filters, page, boatsPerPage, sortField, sortDirection } = state;
+  let qp = `p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${sortDirection==='asc'}`;
+  for (const field of Object.keys(filters)) {
+    if (field) {
+      if (field === 'year') {
+        const f = filters.year.firstYear || '';
+        const l = filters.year.lastYear || '';
+        qp = `${qp}&y=${f}-${l}`;
+      } else {
+        qp = `${qp}&${field}=${filters[field]}`;
+      }
+    }
+  }
+  return `/browse_the_register/boat.html?oga_no=${oga_no}&${qp}`;  
+}
+
+export default function BoatCard({ state, boat, link }) {
   const classes = useStyles();
+  const sale = state.filters.sale;
+
+  const boatLink = link?{ pathname: `/boat/${boat.oga_no}`, state }:gatsbyBoatLink(state, boat.oga_no);
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
       <CardContent className={classes.cardContent} >
         <Typography gutterBottom variant="h5" component="h2">
-          <SalesBadge invisible={filters.sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
+          <SalesBadge invisible={sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
         <Typography variant="body2" 
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
@@ -110,11 +131,8 @@ export default function BoatCard({ filters, boatsPerPage, sortField, sortDirecti
       <CardActions>
         <Button
           size="small" 
-          component={Link}
-          to={{
-            pathname: `/boat/${boat.oga_no}`,
-            state: { filters, boatsPerPage, sortField, sortDirection }
-          }}
+          component={link||Link}
+          to={boatLink}
           variant="contained" 
           color="secondary"
         >More..</Button>

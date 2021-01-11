@@ -68,7 +68,6 @@ function Sail({ label, fields, state, onChange }) {
 
     function n(prefix, suffix) {
         const r = `${prefix}_${suffix}`.replace(/ /g, '_').toLowerCase();
-        console.log(r);
         return r;
     }
 
@@ -174,7 +173,7 @@ export default function BoatForm({
           <GqlPicker onChange={onPickerChange} id="generic_type" label="Generic Type" value={currentState.generic_type}/>                  
       </Question>
       <Question>
-        <GqlPicker onChange={onPickerChange} id="sail_type" label="Mainsail Type" value={currentState.mainsail_type}/>
+        <GqlPicker onChange={onPickerChange} id="mainsail_type" label="Mainsail Type" value={currentState.mainsail_type}/>
       </Question>
       <Question>
         <GqlPicker onChange={onPickerChange} id="rig_type" label="Rig Type" value={currentState.rigTypeByRigType?currentState.rigTypeByRigType.name:''}/>

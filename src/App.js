@@ -4,7 +4,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 import { createHttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import './App.css';
-import BrowseBoats from './components/browseboats';
+import GqlBoatBrowser from './components/GqlBoatBrowser';
 import Boat from './components/boat';
 import Designers from './components/designers';
 import Builders from './components/builders';
@@ -20,8 +20,8 @@ import {
   Redirect,
   useLocation,
   useHistory,
+  Link,
 } from "react-router-dom";
-import { usePicklists } from './util/picklists';
 
 const client = new ApolloClient({
   link: createHttpLink({
@@ -31,6 +31,7 @@ const client = new ApolloClient({
 });
 
 const defaultState = {
+  page: 1,
   boatsPerPage: '12', 
   sortField: 'editors_choice', 
   sortDirection: 'asc',
@@ -41,11 +42,6 @@ function FourOhFour() {
 
   const location = useLocation();
   const history = useHistory();
-
-  const { loading, error, data } = usePicklists();
-
-  if (loading) return (<p>Loading...</p>);
-  if (error) return (<p>Error :(SearchAndFilterBoats)</p>);
 
   const { search, pathname, state } = location;
 
@@ -68,9 +64,9 @@ function FourOhFour() {
     }
   }
 
-  const handlePageSizeChange = (a) => {
-    console.log('FourOhFour page size change', a);
-    history.replace('/', { ...state, boatsPerPage: a });
+  const handlePageSizeChange = (bpp) => {
+    console.log('FourOhFour page size change', bpp);
+    history.replace('/', { ...state, boatsPerPage: pp });
   };
 
   const handleSortChange = (field, dir) => {
@@ -78,9 +74,14 @@ function FourOhFour() {
     history.replace('/', { ...state, sortField: field, sortDirection: dir });
   }
 
-  const handleFilterChange = (f) => {
-    console.log('FourOhFour filter change', f);
-    history.replace('/', { ...state, filters: f });
+  const handleFilterChange = (filters) => {
+    console.log('FourOhFour filter change', filters);
+    history.replace('/', { ...state, filters });
+  }
+
+  const handlePageChange = (page) => {
+    console.log('FourOhFour page change', page);
+    history.replace('/', { ...state, page });
   }
  
   if (search !== '') {
@@ -96,12 +97,16 @@ function FourOhFour() {
     }
   }
   return (
-    <BrowseBoats 
-      pickers={data} state={state || defaultState}
+    <GqlBoatBrowser
+      title={sale?'Boats for Sale':'Browse the Register'}
+      defaultState={state || defaultState}
       onPageSizeChange={handlePageSizeChange}
       onSortChange={handleSortChange}
       onFilterChange={handleFilterChange}
-    />);
+      onPageChange={handlePageChange}
+      link={Link}
+    />
+  );
 } 
 
 function App() {
@@ -124,6 +129,7 @@ function App() {
           </Switch>
       </Router>
     </ApolloProvider>
-  );}
+  );
+}
 
 export default App;

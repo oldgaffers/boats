@@ -1,14 +1,14 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import BoatDetail from './boatdetail';
-import BoatSummary from './boatsummary';
-import BoatButtons from './boatbuttons';
-import SmugMugGallery from './smugmuggallery';
+import { Link } from 'gatsby';
+import UploadPhotos from './uploadphotos';
+import EditButton from './editbutton';
+import Enquiry from './enquiry';
+
+// TODO - make work in SPA mode
 
 const drawerWidth = 240;
 
@@ -69,39 +69,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatWrapper({ boat, link, location }) {
+function gatsbyHome(location) {
+  const params = new URLSearchParams(location.search);
+  const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
+  let home = `${location.origin}/${doc}/${doc}.html`;
+
+  params.delete('sale'); // not needed as destination knows!
+  params.delete('oga_no');
+  const qp = params.toString();
+  if(qp.length>0) {
+    home = `${home}?${qp}`;
+  }
+  return home;
+}
+
+export default function BoatButtons({ boat, link, location }) {
+
+  const home = link?location:gatsbyHome(location);
 
   const classes = useStyles();
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
     <Paper>
-      <Container maxWidth="lg" className={classes.container}>
-      <Grid container spacing={3}>
-      <Grid item xs={12} md={8} lg={9}>
-          <Typography variant="h3" component="h3">{boat.name}</Typography>
-      </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-          <Typography variant="h3" component="h3">{boat.year}</Typography>
-      </Grid>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper className={fixedHeightPaper}>
-          <SmugMugGallery classes={classes} albumKey={boat.image_key} />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary classes={classes} boat={boat} link={location.href} />
-      </Grid>
-      <Grid item xs={12}>
-        <BoatDetail classes={classes} boat={boat} />
-      </Grid>
-    </Grid>
-        <BoatButtons
-          classes={classes}
-          boat={boat}
-          link={link}
-          location={location}
-        />
-      </Container>
+        <Grid container direction="row" alignItems="flex-end">
+        <Grid item xs={2}>
+            <Button size="small"
+            variant="contained"
+            className={classes.button}
+            component={link||Link}
+            to={home}
+            >See more boats</Button>
+        </Grid>
+        <Grid item xs={3} >
+            <Enquiry classes={classes} boat={boat} />
+        </Grid>
+        <Grid item xs={3} >
+            <UploadPhotos classes={classes} boat={boat} />
+        </Grid>
+        <Grid item xs={3} >
+            <EditButton classes={classes} boat={boat} />
+        </Grid>
+        </Grid>
     </Paper>
   );
 };

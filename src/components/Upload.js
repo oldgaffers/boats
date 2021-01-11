@@ -6,11 +6,9 @@ import Buttons from './upload-buttons'
 const API_URL = 'https://7919d72bf588df2749fb8c6ed8289d51.m.pipedream.net';
 //const API_URL = 'http://localhost:5000/upload';
 
-function Upload({ boatName, ogaNo, albumKey }) {
+function Upload({ boatName, oga_no, albumKey }) {
     const [uploading, setUploading] = useState(false);
     const [images, setImages] = useState([]);
-
-    console.log('upload', boatName, ogaNo, albumKey);
 
     const onChange = e => {
         const files = Array.from(e.target.files);
@@ -22,7 +20,7 @@ function Upload({ boatName, ogaNo, albumKey }) {
         if (albumKey) {
             formData.append('album_key', albumKey);
         }
-        formData.append('oga_no', ogaNo);
+        formData.append('oga_no', oga_no);
         formData.append('copyright', 'me');
         files.forEach((file, i) => {
             formData.append(i, file);

@@ -7,7 +7,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import Icon from '@material-ui/core/Icon';
+import SendIcon from '@material-ui/icons/Send';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
@@ -124,7 +124,7 @@ export default function Enquiry({ boat, classes }) {
   return (
     <>
       <Button className={classes.button} size="small"
-        endIcon={<Icon>send</Icon>}
+        endIcon={<SendIcon/>}
         variant="contained"
         color="primary" onClick={handleClickOpen}>
         Contact us about this boat
