@@ -30,6 +30,7 @@ const client = new ApolloClient({
 });
 
 const defaultState = {
+  page: 1,
   boatsPerPage: '12', 
   sortField: 'editors_choice', 
   sortDirection: 'asc',
