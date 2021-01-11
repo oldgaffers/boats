@@ -58,7 +58,7 @@ export default function BrowseTheRegisterPage({ location }) {
 
   return (
     <ApolloProvider client={client}>
-      <GqlBoatBrowser title="Browse the Register" defaultState={state}/>
+      <GqlBoatBrowser title="Browse the Register" defaultState={state} />
     </ApolloProvider>
   );
 }

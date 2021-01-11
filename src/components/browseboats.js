@@ -56,6 +56,7 @@ function BrowseBoats({
   onPageSizeChange,
   onSortChange,
   onFilterChange,
+  link,
 }) {
   const classes = useStyles();
   //const [mobileOpen, setMobileOpen] = useState(false);
@@ -67,7 +68,7 @@ function BrowseBoats({
 
   const blank = "_blank";
 
-  const { page, boatsPerPage, sortField, sortDirection, filters } = state;
+  const { boatsPerPage, sortField, sortDirection, filters } = state;
 
   const handlePageChange = ({ selectedBoats, pages, page }) => {
     console.log('handlePageChange', selectedBoats, pages, page);
@@ -85,7 +86,7 @@ function BrowseBoats({
         <Grid container direction="row">
           <DrawerController onClick={handleDrawerToggle}/>
         </Grid>
-        */}
+        */} 
         <Container>
           <Intro boatsForSale={filters.sale} />
         <SearchAndFilterBoats
@@ -100,14 +101,7 @@ function BrowseBoats({
         />
         </Container>
         <Divider />
-        <BoatCards
-          page={page}        
-          boatsPerPage={parseInt(boatsPerPage)}
-          sortField={sortField}
-          sortDirection={sortDirection}
-          filters={filters}
-          onChangePage={handlePageChange}
-        />
+        <BoatCards state={state} onChangePage={handlePageChange} link={link} />
         <Divider />
         <Typography>
           Other great places to look for boats are:

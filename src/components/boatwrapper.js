@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatWrapper({ boat, location }) {
+export default function BoatWrapper({ boat, link, location }) {
 
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -98,6 +98,7 @@ export default function BoatWrapper({ boat, location }) {
         <BoatButtons
           classes={classes}
           boat={boat}
+          link={link}
           location={location}
         />
       </Container>

@@ -1,5 +1,5 @@
-import React, { useEffect,  } from 'react';
-import { useParams, useLocation } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { Link, useParams, useLocation } from "react-router-dom";
 import { BoatWrapper } from './boatwrapper';
 import useAxios from 'axios-hooks'
 
@@ -26,6 +26,6 @@ export default function Boat() {
   const boat = b.data.result.pageContext.boat;
 
   return (
-    <BoatWrapper boat={boat} location={{ ...location, pathname: '/' }} />
+    <BoatWrapper boat={boat} link={Link} location={{ ...location, pathname: '/' }} />
   );
 }

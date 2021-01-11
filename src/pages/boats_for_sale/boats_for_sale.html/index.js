@@ -23,7 +23,7 @@ const client = new ApolloClient({
 export default function BrowseTheRegisterPage() {  
   return (
     <ApolloProvider client={client}>
-      <GqlBoatBrowser title='Boats for Sale' defaultState={defaultState}/>
+      <GqlBoatBrowser title='Boats for Sale' defaultState={defaultState} />
     </ApolloProvider>
   );
 }

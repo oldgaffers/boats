@@ -20,21 +20,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BoatCards({
-  boatsPerPage,
-  sortField,
-  sortDirection,
-  filters,
-  page,
-  onChangePage,
-}) {
+export default function BoatCards({ state, onChangePage, link }) {
+  const { filters, page, boatsPerPage, sortField, sortDirection } = state;
   const classes = useStyles();
+  const bpp = parseInt(boatsPerPage);
   const { loading, error, data } = useQuery(
     query(`{${sortField}: ${sortDirection}}`),
     {
       variables: {
-        limit: boatsPerPage,
-        offset: boatsPerPage * (page - 1),
+        limit: bpp,
+        offset: bpp * (page - 1),
         where: buildWhere(filters),
       },
     },
@@ -70,11 +65,7 @@ export default function BoatCards({
           <Grid container spacing={4}>
           {data.boat.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard 
-                filters={filters} boatsPerPage={`${boatsPerPage}`}
-                sortField={sortField} sortDirection={sortDirection} 
-                key={boat.oga_no} boat={boat} page={page}
-              />
+              <BoatCard state={state} boat={boat} link={link} />
             </Grid>
           ))}
           </Grid>
@@ -83,8 +74,6 @@ export default function BoatCards({
         </Container>
     );
   }
-
-  console.log(filters);
 
   const { 
     rig_type, construction_material, generic_type, 

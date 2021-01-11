@@ -83,12 +83,9 @@ function gatsbyHome(location) {
   return home;
 }
 
-export default function BoatButtons({ boat, location }) {
+export default function BoatButtons({ boat, link, location }) {
 
-  // we can probably tell here if we have a Gatsby or SPA location
-  // TODO we need a router Link not a Gatsby Link in SPA mode
-
-  const home = location.state?location:gatsbyHome(location);
+  const home = link?location:gatsbyHome(location);
 
   const classes = useStyles();
   return (
@@ -98,7 +95,7 @@ export default function BoatButtons({ boat, location }) {
             <Button size="small"
             variant="contained"
             className={classes.button}
-            component={Link}
+            component={link||Link}
             to={home}
             >See more boats</Button>
         </Grid>

@@ -20,6 +20,7 @@ import {
   Redirect,
   useLocation,
   useHistory,
+  Link,
 } from "react-router-dom";
 
 const client = new ApolloClient({
@@ -103,6 +104,7 @@ function FourOhFour() {
       onSortChange={handleSortChange}
       onFilterChange={handleFilterChange}
       onPageChange={handlePageChange}
+      link={Link}
     />
   );
 } 
