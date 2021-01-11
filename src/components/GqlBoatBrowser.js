@@ -11,6 +11,7 @@ export default function GqlBoatBrowser(
     onFilterChange = (filters) => console.log(`${title} filter change`, filters),
     onPageChange = (page) => console.log(`${title} page change`, page),
     link,
+    location,
   }
 ) {
   const { loading, error, data } = usePicklists();
@@ -47,6 +48,7 @@ export default function GqlBoatBrowser(
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
         link={link}
+        location={location}
       />
   );
 };

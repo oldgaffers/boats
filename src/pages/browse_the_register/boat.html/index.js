@@ -1,18 +1,9 @@
 import React, { useEffect } from "react"
 import useAxios from 'axios-hooks'
-import ApolloClient from "apollo-client"; // N.B. only needed for the enquiry mutation
-import { ApolloProvider } from '@apollo/react-hooks';
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { Link } from 'gatsby';
 import BoatWrapper from '../../../components/boatwrapper';
+import OGAProvider from '../../../util/gql';
 
-const client = new ApolloClient({
-    link: createHttpLink({
-      uri: "https://api-oga.herokuapp.com/v1/graphql",
-    }),
-    cache: new InMemoryCache()
-  });
-  
 export default function BoatPage({ location }) {
   
     const params = new URLSearchParams(location.search);
@@ -48,9 +39,9 @@ export default function BoatPage({ location }) {
     const boat = b.data.result.pageContext.boat;
   
     return (
-    <ApolloProvider client={client}>
-        <BoatWrapper boat={boat} location={location} />
-    </ApolloProvider>
+    <OGAProvider>
+        <BoatWrapper boat={boat} location={location} linkComponent={Link} />
+    </OGAProvider>
   );
 
   }

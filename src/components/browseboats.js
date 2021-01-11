@@ -57,6 +57,7 @@ function BrowseBoats({
   onSortChange,
   onFilterChange,
   link,
+  location
 }) {
   const classes = useStyles();
   //const [mobileOpen, setMobileOpen] = useState(false);
@@ -101,7 +102,12 @@ function BrowseBoats({
         />
         </Container>
         <Divider />
-        <BoatCards state={state} onChangePage={handlePageChange} link={link} />
+        <BoatCards
+          state={state}
+          onChangePage={handlePageChange}
+          link={link}
+          location={location}
+        />
         <Divider />
         <Typography>
           Other great places to look for boats are:

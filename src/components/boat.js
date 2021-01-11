@@ -26,6 +26,6 @@ export default function Boat() {
   const boat = b.data.result.pageContext.boat;
 
   return (
-    <BoatWrapper boat={boat} link={Link} location={{ ...location, pathname: '/' }} />
+    <BoatWrapper boat={boat} linkComponent={Link} location={location} />
   );
 }
