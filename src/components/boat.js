@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams, useLocation } from "react-router-dom";
-import { BoatWrapper } from './boatwrapper';
+import BoatWrapper from './boatwrapper';
 import useAxios from 'axios-hooks'
 
 export default function Boat() {
