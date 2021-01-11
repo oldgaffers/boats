@@ -11,7 +11,7 @@ import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
-export default function BoatSummary({ classes, boat, link }) {
+export default function BoatSummary({ classes, boat, boatUrl }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
 
@@ -35,7 +35,7 @@ export default function BoatSummary({ classes, boat, link }) {
     </Box>
     <References boat={boat}/>
     <div>
-      <CopyToClipboard text={link} onCopy={() => setSnackBarOpen(true)}>
+      <CopyToClipboard text={boatUrl} onCopy={() => setSnackBarOpen(true)}>
         <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
         Copy page url
         </Button>
@@ -50,7 +50,7 @@ export default function BoatSummary({ classes, boat, link }) {
       />
     </div>
     <div>
-      <ReactFBLike href={link} language="en_GB" appId="644249802921642" version="v2.12" />
+      <ReactFBLike href={boatUrl} language="en_GB" appId="644249802921642" version="v2.12" />
     </div>
     </Paper>
   );
