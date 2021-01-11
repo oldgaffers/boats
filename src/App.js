@@ -126,6 +126,7 @@ function App() {
           </Switch>
       </Router>
     </ApolloProvider>
-  );}
+  );
+}
 
 export default App;
