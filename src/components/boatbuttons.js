@@ -3,12 +3,12 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { Link } from 'gatsby';
+// import { Link } from 'gatsby';
 import UploadPhotos from './uploadphotos';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
 
-// TODO - make work in SPA mode
+const Link = undefined;
 
 const drawerWidth = 240;
 

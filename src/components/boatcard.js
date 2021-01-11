@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "gatsby";
+// import { Link } from "gatsby";
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -11,7 +11,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
 
-// TODO make work in SPA mode
+const Link = undefined;
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
