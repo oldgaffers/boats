@@ -40,8 +40,6 @@ export default function SearchAndFilterBoats({
 }) {
     const classes = useStyles();
 
-    console.log('searchandfilterboats boatsPerPage', boatsPerPage);
-
     const handlePageSizeChange = (_, bpp) => {
         console.log('handlePageSizeChange', bpp)
         onPageSizeChange(bpp);
@@ -136,10 +134,10 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer']} />
             <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
-                type="number" inputProps={yearProps} value={filters.year?filters.year.firstYear:null}
+                type="number" inputProps={yearProps} value={filters.year?filters.year.firstYear:''}
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
-                type="number" inputProps={yearProps} value={filters.year?filters.year.lastYear:null}
+                type="number" inputProps={yearProps} value={filters.year?filters.year.lastYear:''}
             />
             <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig_type']} />
             <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['sail_type']}/>
