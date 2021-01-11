@@ -11,6 +11,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
 
+// TODO make work in SPA mode
+
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
     try {
@@ -129,3 +131,13 @@ export default function BoatCard({ filters, page, boatsPerPage, sortField, sortD
     </Card>
   );
 }
+
+/* here is the SPA mode to prop:
+import { Link } from "react-router-dom";
+          to={{
+            pathname: `/boat/${boat.oga_no}`,
+            state: { filters, boatsPerPage, sortField, sortDirection }
+          }}
+
+          we should add page to state
+*/

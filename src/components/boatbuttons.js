@@ -8,6 +8,8 @@ import UploadPhotos from './uploadphotos';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
 
+// TODO - make work in SPA mode
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -67,8 +69,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, location }) {
-
+function gatsbyHome(location) {
   const params = new URLSearchParams(location.search);
   const doc = (params.get('sale')==='true')?'boats_for_sale':'browse_the_register';
   let home = `${location.origin}/${doc}/${doc}.html`;
@@ -79,6 +80,15 @@ export default function BoatButtons({ boat, location }) {
   if(qp.length>0) {
     home = `${home}?${qp}`;
   }
+  return home;
+}
+
+export default function BoatButtons({ boat, location }) {
+
+  // we can probably tell here if we have a Gatsby or SPA location
+  // TODO we need a router Link not a Gatsby Link in SPA mode
+
+  const home = location.state?location:gatsbyHome(location);
 
   const classes = useStyles();
   return (
