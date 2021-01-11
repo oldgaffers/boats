@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BoatCards({ state, onChangePage, link }) {
+export default function BoatCards({ state, onChangePage, link, location }) {
   const { filters, page, boatsPerPage, sortField, sortDirection } = state;
   const classes = useStyles();
   const bpp = parseInt(boatsPerPage);
@@ -65,7 +65,7 @@ export default function BoatCards({ state, onChangePage, link }) {
           <Grid container spacing={4}>
           {data.boat.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} boat={boat} link={link} />
+              <BoatCard state={state} boat={boat} link={link} location={location} />
             </Grid>
           ))}
           </Grid>

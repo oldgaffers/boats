@@ -1,9 +1,8 @@
 import React from "react"
-import ApolloClient from "apollo-client";
-import { ApolloProvider } from '@apollo/react-hooks';
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { Link } from 'gatsby';
 import GqlBoatBrowser from '../../../components/GqlBoatBrowser';
+import OGAProvider from '../../../util/gql';
+import { getState } from '../../../util/gr';
 
 const defaultState = {
   page: 1,
@@ -13,52 +12,12 @@ const defaultState = {
   filters: { sale: false }, 
 };
 
-const client = new ApolloClient({
-    link: createHttpLink({
-      uri: "https://api-oga.herokuapp.com/v1/graphql",
-    }),
-    cache: new InMemoryCache()
-});
-
 export default function BrowseTheRegisterPage({ location }) {
-  const state = {...defaultState};
-  if (location.search !== '') {
-    const params = new URLSearchParams(location.search);
-    for (const [key, value] of params) {
-      switch (key) {
-        case 'p':
-          state.page = parseInt(value, 10);
-          break;
-        case 'bpp':
-          state.boatsPerPage = value;
-          break;
-        case 'sort':
-          state.sortField = value;
-          break;
-        case 'asc':
-          state.sortDirection = value==='true' ? 'asc' : 'desc';
-          break;
-        case 'y':
-          const year = {};
-          const [firstYear, lastYear] = value.split('-');
-          if (firstYear !== '') {
-            year.firstYear = firstYear;
-          }
-          if (lastYear !== '') {
-            year.lastYear = lastYear;
-          }
-          state.filters.year = year;
-          break;
-        default:
-          state.filters[key] = value;
-      }
-    }
-    // window.location.search = '';  
-  }
-
+  const state = getState(defaultState, location.search);
+  // window.location.search = '';  
   return (
-    <ApolloProvider client={client}>
-      <GqlBoatBrowser title="Browse the Register" defaultState={state} />
-    </ApolloProvider>
+    <OGAProvider>
+      <GqlBoatBrowser title="Browse the Register" defaultState={state} link={Link}/>
+    </OGAProvider>
   );
 }

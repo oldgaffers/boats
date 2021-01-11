@@ -1,9 +1,8 @@
 import React from "react"
-import ApolloClient from "apollo-client";
-import { ApolloProvider } from '@apollo/react-hooks';
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { Link } from 'gatsby';
 import GqlBoatBrowser from '../../../components/GqlBoatBrowser';
+import OGAProvider from '../../../util/gql';
+import { getState } from '../../../util/gr';
 
 const defaultState = {
   page: 1,
@@ -13,17 +12,11 @@ const defaultState = {
   filters: { sale: true }, 
 };
 
-const client = new ApolloClient({
-    link: createHttpLink({
-      uri: "https://api-oga.herokuapp.com/v1/graphql",
-    }),
-    cache: new InMemoryCache()
-});
-
-export default function BrowseTheRegisterPage() {  
+export default function BrowseTheRegisterPage({location}) {  
+  const state = getState(defaultState, location.search);
   return (
-    <ApolloProvider client={client}>
-      <GqlBoatBrowser title='Boats for Sale' defaultState={defaultState} />
-    </ApolloProvider>
+    <OGAProvider>
+      <GqlBoatBrowser title='Boats for Sale' defaultState={state} link={Link} />
+    </OGAProvider>
   );
 }
