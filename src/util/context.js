@@ -14,20 +14,34 @@ export function boatUrl(oga_no) {
     pathname: "/browse_the_register/boat.html", 
     search: "?oga_no=3212&p=1&bpp=6&sort=editors_choice&asc=true&sale=false", 
     hash: "", 
+    state: {key: "1610418091294"}
     href: "http://localhost:8000/browse_the_register/boat.htm…p=1&bpp=6&sort=editors_choice&asc=true&sale=false", 
     origin: "http://localhost:8000",
-    pathname: "/browse_the_register/boat.html"
     port: "8000"
     protocol: "http:"
-    search: "?oga_no=3212&p=1&bpp=6&sort=editors_choice&asc=true&sale=false"
-    state: {key: "1610418091294"}
 }
 
-
+{​
+    pathname: "/boat/3212"
+    search: ""
+    hash: ""
+    state: {
+        boatsPerPage: "12"
+        filters: {
+            sale: false
+        ​​}
+        page: 1
+        sortDirection: "asc"
+        sortField: "editors_choice"
+    }
+    key: "9scbbt"
+}
     */
 export function home(location) {
-    console.log('home', location);
-       return reactrouterdomHome(location);
+    if (location.key) {
+        return reactrouterdomHome(location);
+    }
+    return gatsbyHome(location);
 }
 
   /*
