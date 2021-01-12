@@ -74,3 +74,7 @@ export function getState(defaultState, search) {
   }
   return state;
 }
+
+const exports = { home, boatLink, getState };
+
+export default exports;
