@@ -10,7 +10,7 @@ import ConditionalText from './conditionaltext';
 import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import { boatUrl } from '../util/gr'; // either will do
+import { boatUrl } from '../util/context';
 
 export default function BoatSummary({ classes, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -19,8 +19,6 @@ export default function BoatSummary({ classes, boat }) {
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
-
-  console.log('BoatSummary', href);
 
   return (
     <Paper className={fillHeightPaper}>

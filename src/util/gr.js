@@ -1,13 +1,9 @@
 
-export function boatUrl(oga_no) {
-  return `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${oga_no}`;
-}
-
 export function home(location) {
   const params = new URLSearchParams(location.search);
   const doc =
     params.get("sale") === "true" ? "boats_for_sale" : "browse_the_register";
-  let home = `${location.origin}/${doc}/${doc}.html`;
+  let home = `/${doc}/${doc}.html`;
 
   params.delete("sale"); // not needed as destination knows!
   params.delete("oga_no");
