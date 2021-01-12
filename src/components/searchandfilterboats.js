@@ -63,13 +63,18 @@ export default function SearchAndFilterBoats({
     function sy(event) {
         const { id, value } = event.target;
         const year = { ...filters.year };
-        console.log('sy', id, value, year);
         if (value.length === 4) {
             year[id] = parseInt(value);
             onFilterChange({ ...filters, year });
         } else if (value === '') {
             delete year[id];
-            onFilterChange({ ...filters, year });
+            if (Object.keys(year).length === 0) {
+                const f = { ...filters };
+                delete f.year;
+                onFilterChange(f);
+            } else {
+                onFilterChange({ ...filters, year });
+            }
         } else {
             console.log('unchanged', year);
         }
@@ -140,7 +145,7 @@ export default function SearchAndFilterBoats({
                 type="number" inputProps={yearProps} value={filters.year?filters.year.lastYear:''}
             />
             <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig_type']} />
-            <Picker onChange={pl} id='sail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['sail_type']}/>
+            <Picker onChange={pl} id='mainsail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail_type']}/>
             <Picker onChange={pl} id='generic_type' options={pickers.generic_type} label="Generic Type" value={filters['generic_type']}/>
             <Picker onChange={pl} id='design_class' options={pickers.design_class} label="Design Class" value={filters['design_class']}/>
             <Picker onChange={pl} id='construction_material' options={pickers.construction_material} label="Construction Material" value={filters['construction_material']} />

@@ -32,7 +32,7 @@ export default function GqlBoatBrowser(
 
   const handleFilterChange = (filters) => {
     onFilterChange(filters);
-    setState({...state, filters });
+    setState({...state, filters, page: 1 });
   }
 
   const handlePageChange = (page) => {
