@@ -95,8 +95,6 @@ export default function BoatCard({ state, boat, link, location }) {
   const classes = useStyles();
   const sale = state.filters.sale;
 
-  console.log('BoatCard', location);
-
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
@@ -113,7 +111,7 @@ export default function BoatCard({ state, boat, link, location }) {
         <Button
           size="small" 
           component={link}
-          to={boatLink(state, boat.oga_no)}
+          to={boatLink(state, boat.oga_no, location)}
           variant="contained" 
           color="secondary"
         >More..</Button>
