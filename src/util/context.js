@@ -6,15 +6,17 @@ export function boatUrl(oga_no) {
 }
 
 export function home(location) {
-    if (location.key) {
-        return reactrouterdomHome(location);
+    if (location.href) {
+        return gatsbyHome(location);
     }
-    return gatsbyHome(location);
+    return reactrouterdomHome(location);
 }
 
 export function boatLink(state, oga_no, location) {
-    if (location.key) {
-        return reactrouterdomBoatLink(state, oga_no);
+    if (location.href) {
+        console.log('gatsby');
+        return gatsbyBoatLink(state, oga_no);
     }
-    return gatsbyBoatLink(state, oga_no);
+    console.log('not gatsby');
+    return reactrouterdomBoatLink(state, oga_no);
 }
