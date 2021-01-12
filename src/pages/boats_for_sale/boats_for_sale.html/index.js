@@ -16,7 +16,7 @@ export default function BrowseTheRegisterPage({location}) {
   const state = getState(defaultState, location.search);
   return (
     <OGAProvider>
-      <GqlBoatBrowser title='Boats for Sale' defaultState={state} link={Link} />
+      <GqlBoatBrowser title='Boats for Sale' defaultState={state} link={Link} location={location} />
     </OGAProvider>
   );
 }
