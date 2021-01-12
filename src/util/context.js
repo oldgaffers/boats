@@ -1,8 +1,11 @@
 import spa from './rr';
 import _3pa from './gr';
 
-export function boatUrl(oga_no) {
-    return `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${oga_no}`;
+export function boatUrl(oga_no, location) {
+    if (location.href) {
+        return _3pa.boatUrl(oga_no, location);
+    }
+    return spa.boatUrl(oga_no, location);
 }
 
 export function home(location) {
@@ -14,9 +17,7 @@ export function home(location) {
 
 export function boatLink(state, oga_no, location) {
     if (location.href) {
-        console.log('gatsby');
-        return _3pa.boatLink(state, oga_no);
+        return _3pa.boatLink(state, oga_no, location);
     }
-    console.log('not gatsby');
     return spa.boatLink(state, oga_no);
 }

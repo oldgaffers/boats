@@ -12,10 +12,10 @@ import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { boatUrl } from '../util/context';
 
-export default function BoatSummary({ classes, boat }) {
+export default function BoatSummary({ classes, boat, location }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
-  const href = boatUrl(boat.oga_no);
+  const href = boatUrl(boat.oga_no, location);
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }

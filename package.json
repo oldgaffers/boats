@@ -41,9 +41,10 @@
   },
   "scripts": {
     "develop": "gatsby develop",
-    "build": "gatsby build --prefix-paths",
+    "gbuild": "gatsby build --prefix-paths",
     "serve": "gatsby serve --prefix-paths",
     "clean": "gatsby clean",
+    "build": "react-scripts build",
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

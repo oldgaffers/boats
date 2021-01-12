@@ -89,7 +89,7 @@ export default function BoatWrapper({ boat, linkComponent, location }) {
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary classes={classes} boat={boat} />
+        <BoatSummary classes={classes} boat={boat} location={location} />
       </Grid>
       <Grid item xs={12}>
         <BoatDetail classes={classes} boat={boat} />

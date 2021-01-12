@@ -1,10 +1,20 @@
+function prefix(location) {
+  if (location.pathname.includes('test')) {
+    return 'test_';
+  } else {
+    return '';
+  }
+}
+
+export function boatUrl(oga_no, { origin, pathname }) {
+  return `${origin}${pathname}?oga_no=${oga_no}`;
+}
 
 export function home(location) {
   const params = new URLSearchParams(location.search);
   const doc =
     params.get("sale") === "true" ? "boats_for_sale" : "browse_the_register";
-  let home = `/${doc}/${doc}.html`;
-
+  let home = `/${doc}/${prefix(location)}${doc}.html`;
   params.delete("sale"); // not needed as destination knows!
   params.delete("oga_no");
   const qp = params.toString();
@@ -14,7 +24,7 @@ export function home(location) {
   return home;
 }
 
-export function boatLink(state, oga_no) {
+export function boatLink(state, oga_no, location) {
   let qp;
   if (state) {
     const { filters, page, boatsPerPage, sortField, sortDirection } = state;
@@ -35,7 +45,7 @@ export function boatLink(state, oga_no) {
   } else {
     qp = '';
   }
-  return `/browse_the_register/boat.html?oga_no=${oga_no}${qp}`;
+  return `/browse_the_register/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
 }
 
 export function getState(defaultState, search) {
@@ -75,6 +85,6 @@ export function getState(defaultState, search) {
   return state;
 }
 
-const exports = { home, boatLink, getState };
+const exports = { home, boatLink, getState, boatUrl };
 
 export default exports;
