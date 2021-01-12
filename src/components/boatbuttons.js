@@ -6,8 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import UploadPhotos from './uploadphotos';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
-import { home as gatsbyHome } from '../util/gr';
-import { home as reactrouterdomHome } from '../util/rr';
+import { home } from '../util/context';
 
 const drawerWidth = 240;
 
@@ -70,10 +69,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BoatButtons({ boat, linkComponent, location }) {
 
-  const home = location.pathname
-    ?reactrouterdomHome(location)
-    :gatsbyHome(location);
-
   const classes = useStyles();
   return (
     <Paper>
@@ -83,7 +78,7 @@ export default function BoatButtons({ boat, linkComponent, location }) {
             variant="contained"
             className={classes.button}
             component={linkComponent}
-            to={home}
+            to={home(location)}
             >See more boats</Button>
         </Grid>
         <Grid item xs={3} >

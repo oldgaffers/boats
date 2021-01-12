@@ -22,7 +22,7 @@ export function boatLink(state, oga_no) {
   let qp;
   if (state) {
     const { filters, page, boatsPerPage, sortField, sortDirection } = state;
-    let qp = `&p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${
+    qp = `&p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${
       sortDirection === "asc"
     }`;
     for (const field of Object.keys(filters)) {

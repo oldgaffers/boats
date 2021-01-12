@@ -17,7 +17,7 @@ export default function BrowseTheRegisterPage({ location }) {
   // window.location.search = '';  
   return (
     <OGAProvider>
-      <GqlBoatBrowser title="Browse the Register" defaultState={state} link={Link}/>
+      <GqlBoatBrowser title="Browse the Register" defaultState={state} link={Link} location={location}/>
     </OGAProvider>
   );
 }
