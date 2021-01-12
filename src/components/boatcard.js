@@ -9,8 +9,7 @@ import Badge from '@material-ui/core/Badge';
 import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
-import { boatLink as gatsbyBoatLink } from '../util/gr';
-import { boatLink as reactrouterdomBoatLink } from '../util/rr';
+import { boatLink } from '../util/context';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -96,9 +95,7 @@ export default function BoatCard({ state, boat, link, location }) {
   const classes = useStyles();
   const sale = state.filters.sale;
 
-  const boatLink = location.pathname
-                    ?reactrouterdomBoatLink(state, boat.oga_no)
-                    :gatsbyBoatLink(state, boat.oga_no);
+  console.log('BoatCard', location);
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
@@ -116,7 +113,7 @@ export default function BoatCard({ state, boat, link, location }) {
         <Button
           size="small" 
           component={link}
-          to={boatLink}
+          to={boatLink(state, boat.oga_no)}
           variant="contained" 
           color="secondary"
         >More..</Button>
