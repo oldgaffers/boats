@@ -28,7 +28,7 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
       <MockedProvider mocks={mocks}>
-        <BoatCards />
+        <BoatCards location={{}} state={{filters:{}}} />
       </MockedProvider>
     );
   const wanted = getByText(/Loading/);
