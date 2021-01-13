@@ -1,5 +1,9 @@
+const root = '/boat_register';
+const browse_root = `${root}/browse_the_register`;
+const sale_root = `${root}/boats_for_sale`;
+
 function prefix(location) {
-  if (location.pathname.includes('test')) {
+  if (location.href.includes('test')) {
     return 'test_';
   } else {
     return '';
@@ -12,9 +16,10 @@ export function boatUrl(oga_no, { origin, pathname }) {
 
 export function home(location) {
   const params = new URLSearchParams(location.search);
-  const doc =
-    params.get("sale") === "true" ? "boats_for_sale" : "browse_the_register";
-  let home = `/${doc}/${prefix(location)}${doc}.html`;
+  const sale = params.get("sale") === "true";
+  const path = sale ? sale_root : browse_root;
+  const doc = prefix(location) + sale ? 'boats_for_sale' : ' browse_the_register';
+  let home = `${path}/${doc}.html`;
   params.delete("sale"); // not needed as destination knows!
   params.delete("oga_no");
   const qp = params.toString();
@@ -45,7 +50,7 @@ export function boatLink(state, oga_no, location) {
   } else {
     qp = '';
   }
-  return `/browse_the_register/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
+  return `${browse_root}/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
 }
 
 export function getState(defaultState, search) {

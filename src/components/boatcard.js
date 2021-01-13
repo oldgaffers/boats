@@ -94,7 +94,6 @@ function AltForThumb() {
 export default function BoatCard({ state, boat, link, location }) {
   const classes = useStyles();
   const sale = state.filters.sale;
-
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
