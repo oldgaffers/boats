@@ -18,14 +18,16 @@ export function home(location) {
   const params = new URLSearchParams(location.search);
   const sale = params.get("sale") === "true";
   const path = sale ? sale_root : browse_root;
-  const doc = prefix(location) + sale ? 'boats_for_sale' : ' browse_the_register';
-  let home = `${path}/${doc}.html`;
+  const base = sale ? 'boats_for_sale' : 'browse_the_register';
+  const doc = `${prefix(location)}${base}.html`;
+  let home = `${path}/${doc}`;
   params.delete("sale"); // not needed as destination knows!
   params.delete("oga_no");
   const qp = params.toString();
   if (qp.length > 0) {
     home = `${home}?${qp}`;
   }
+  console.log('home Thursday', {home, path, doc, qp});
   return home;
 }
 

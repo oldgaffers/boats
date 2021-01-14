@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ../boat_register
-rm -r static
+rm -rf static
 cp -r ../boats/build/* .
 git add .
 git commit -m next
