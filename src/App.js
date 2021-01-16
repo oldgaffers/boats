@@ -22,8 +22,8 @@ import {
 
 const defaultState = {
   page: 1,
-  boatsPerPage: '12', 
-  sortField: 'editors_choice', 
+  bpp: '12', 
+  sort: 'editors_choice', 
   sortDirection: 'asc',
   filters: { sale: false }, 
 };
@@ -45,23 +45,23 @@ function FourOhFour() {
   if (sale) {
     if (state) {
       state.filters.sale = true;
-      state.sortField = 'price';
+      state.sort = 'price';
       state.sortDirection = 'desc';
     } else {
       defaultState.filters.sale = true;
-      defaultState.sortField = 'price';
+      defaultState.sort = 'price';
       defaultState.sortDirection = 'desc';  
     }
   }
 
   const handlePageSizeChange = (bpp) => {
     console.log('FourOhFour page size change', bpp);
-    history.replace('/', { ...state, boatsPerPage: bpp });
+    history.replace('/', { ...state, bpp });
   };
 
   const handleSortChange = (field, dir) => {
     console.log('FourOhFour sortchange', field, dir);
-    history.replace('/', { ...state, sortField: field, sortDirection: dir });
+    history.replace('/', { ...state, sort: field, sortDirection: dir });
   }
 
   const handleFilterChange = (filters) => {

@@ -6,12 +6,12 @@ import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from 'react-cookie';
 import OGAProvider from './util/gql';
 import GqlBoatBrowser from './components/GqlBoatBrowser';
-import Link from './components/link';
+import { Link } from './components/mparouter';
 
 const defaultState = {
   page: 1,
-  boatsPerPage: '12', 
-  sortField: 'price', 
+  bpp: '12', 
+  sort: 'price', 
   sortDirection: 'desc',
   filters: { sale: true }, 
 };

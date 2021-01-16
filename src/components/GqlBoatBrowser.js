@@ -1,48 +1,52 @@
 import React, { useState } from "react"
 import BrowseBoats from './browseboats';
 import { usePicklists } from '../util/picklists';
+import {mapState} from '../util/gr';
 
 export default function GqlBoatBrowser(
   {
     title, 
-    defaultState,
     onPageSizeChange = (bpp) => console.log(`${title} page size change`, bpp),
     onSortChange = (field, dir) => console.log(`${title} sortchange`, field, dir),
     onFilterChange = (filters) => console.log(`${title} filter change`, filters),
     onPageChange = (page) => console.log(`${title} page change`, page),
     link,
     location,
+    state,
   }
 ) {
   const { loading, error, data } = usePicklists();
-  const [state, setState] = useState(defaultState);
+
+  console.log('GqlBoatBrowser before', state);
+  const [currentState, setCurrentState] = useState(mapState(state));
+  console.log('GqlBoatBrowser after', currentState);
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :({title})</p>);
 
   const handlePageSizeChange = (bpp) => {
     onPageSizeChange(bpp);
-    setState({...state, boatsPerPage: bpp });
+    setCurrentState({...currentState, bpp: bpp });
   };
 
   const handleSortChange = (field, dir) => {
     onSortChange(field, dir);
-    setState({...state, sortField: field, sortDirection: dir });
+    setCurrentState({...currentState, sort: field, sortDirection: dir });
   }
 
   const handleFilterChange = (filters) => {
     onFilterChange(filters);
-    setState({...state, filters, page: 1 });
+    setCurrentState({...currentState, filters, page: 1 });
   }
 
   const handlePageChange = (page) => {
     onPageChange(page);
-    setState({...state, page });
+    setCurrentState({...currentState, page });
   };
 
   return (
       <BrowseBoats 
-        pickers={data} state={state}
+        pickers={data} state={currentState}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}

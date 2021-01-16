@@ -24,9 +24,11 @@ export const query = (sort) => {
       return { _and: true }
     }
     const all = [];
-    if (filters.year) {
-      all.push({ year: { _gte: filters.year.firstYear } });
-      all.push({ year: { _lte: filters.year.lastYear } });
+    if (filters.firstYear) {
+      all.push({ year: { _gte: filters.firstYear } });
+    }
+    if (filters.lastYear) {
+        all.push({ year: { _lte: filters.lastYear } });
     }
     if (filters.oga_no) {
       all.push({ oga_no: { _eq: filters.oga_no } });

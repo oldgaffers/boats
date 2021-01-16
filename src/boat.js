@@ -7,7 +7,7 @@ import { CookiesProvider } from 'react-cookie';
 import useAxios from 'axios-hooks'
 import OGAProvider from './util/gql';
 import BoatWrapper from './components/boatwrapper';
-import Link from './components/link';
+import { Link } from './components/mparouter';
 
 const Boat = () => {
 

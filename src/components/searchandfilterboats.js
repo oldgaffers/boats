@@ -62,21 +62,14 @@ export default function SearchAndFilterBoats({
 
     function sy(event) {
         const { id, value } = event.target;
-        const year = { ...filters.year };
         if (value.length === 4) {
-            year[id] = parseInt(value);
-            onFilterChange({ ...filters, year });
+            onFilterChange({ ...filters, [id]: parseInt(value) });
         } else if (value === '') {
-            delete year[id];
-            if (Object.keys(year).length === 0) {
-                const f = { ...filters };
-                delete f.year;
-                onFilterChange(f);
-            } else {
-                onFilterChange({ ...filters, year });
-            }
+            const f = { ...filters };
+            delete f[id];
+            onFilterChange(f);
         } else {
-            console.log('unchanged', year);
+            console.log('unchanged', id);
         }
     }
 
@@ -139,10 +132,10 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer']} />
             <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
-                type="number" inputProps={yearProps} value={filters.year?filters.year.firstYear:''}
+                type="number" inputProps={yearProps} value={filters.firstYear || ''}
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
-                type="number" inputProps={yearProps} value={filters.year?filters.year.lastYear:''}
+                type="number" inputProps={yearProps} value={filters.lastYear || ''}
             />
             <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig_type']} />
             <Picker onChange={pl} id='mainsail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail_type']}/>

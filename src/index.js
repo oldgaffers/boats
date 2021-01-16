@@ -6,9 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from 'react-cookie';
 import useAxios from 'axios-hooks'
 import OGAProvider from './util/gql';
-import Link from './components/link';
+import { Link, Router, Route } from './components/mparouter';
 import GqlBoatBrowser from './components/GqlBoatBrowser';
 import BoatWrapper from './components/boatwrapper';
+import BoatsForSaleIntro from './components/boatsforsaleintro';
+import BoatRegisterIntro from './components/boatregisterintro';
 
 const Boat = ({location}) => {
 
@@ -47,19 +49,19 @@ const Boat = ({location}) => {
 };
 
 const browse = {
-  page: 1,
-  boatsPerPage: '12', 
-  sortField: 'editors_choice', 
-  sortDirection: 'asc',
-  filters: { sale: false }, 
+  page: '1',
+  bpp: '12', 
+  sort: 'editors_choice', 
+  asc: 'true',
+  f_sale: 'false', 
 };
 
 const buy = {
-  page: 1,
-  boatsPerPage: '12', 
-  sortField: 'price', 
-  sortDirection: 'desc',
-  filters: { sale: true }, 
+  page: '1',
+  bpp: '12', 
+  sort: 'price', 
+  asc: 'false',
+  f_sale: 'true', 
 };
 
 const handlePageSizeChange = (bpp) => {
@@ -78,47 +80,43 @@ const handlePageChange = (page) => {
   console.log('page change', page);
 }
 
-const Wanted = () => {
-  const { location } = window;
-  if(location.href.includes('boats_for_sale')) {
-    console.log('sale');
-    return (
-      <GqlBoatBrowser
-        title='Boats for Sale'
-        defaultState={buy}
-        onPageSizeChange={handlePageSizeChange}
-        onSortChange={handleSortChange}
-        onFilterChange={handleFilterChange}
-        onPageChange={handlePageChange}
-        link={Link}
-        location={location}
-      />
-    );
-  }
-  if(location.href.includes('register.html')) {
-    console.log('register');
-    return (
-      <GqlBoatBrowser
-        title='Browse the Register'
-        defaultState={browse}
-        onPageSizeChange={handlePageSizeChange}
-        onSortChange={handleSortChange}
-        onFilterChange={handleFilterChange}
-        onPageChange={handlePageChange}
-        link={Link}
-        location={location}
-      />
-    );
-  }
-  console.log('boat');
-  return <Boat location={location} />;
-};
+const App = () => {
+  return (
+    <Router>
+      <Route state={buy} path='/boats_for_sale/boats_for_sale.*'>
+        <BoatsForSaleIntro/>
+        <GqlBoatBrowser
+          title='Boats for Sale'
+          onPageSizeChange={handlePageSizeChange}
+          onSortChange={handleSortChange}
+          onFilterChange={handleFilterChange}
+          onPageChange={handlePageChange}
+          link={Link}
+        />
+      </Route>
+      <Route state={browse} path='/browse_the_register/browse_the_register.*'>
+        <BoatRegisterIntro/>
+        <GqlBoatBrowser
+          title='Browse the Register'
+          onPageSizeChange={handlePageSizeChange}
+          onSortChange={handleSortChange}
+          onFilterChange={handleFilterChange}
+          onPageChange={handlePageChange}
+          link={Link}
+        />
+      </Route>
+      <Route path='/browse_the_register/boat.*' >
+        <Boat />
+      </Route>
+    </Router>
+  );
+}
 
 ReactDOM.render(
   <React.StrictMode>
     <CookiesProvider>
       <OGAProvider>
-        <Wanted />
+        <App />
       </OGAProvider>
     </CookiesProvider>
   </React.StrictMode>,
