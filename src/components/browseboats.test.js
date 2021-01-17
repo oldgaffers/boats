@@ -50,6 +50,6 @@ test('renders learn react link', () => {
       </MemoryRouter>
     </MockedProvider>
   );
-  const wanted = getByText(/We have hundreds of boats with pictures/);
+  const wanted = getByText(/Other great places to look for boats are/);
   expect(wanted).toBeInTheDocument();
 });

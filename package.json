@@ -1,7 +1,8 @@
 {
   "homepage": "/boats",
   "name": "boats",
-  "version": "0.1.0",
+  "type": "module",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
@@ -53,6 +54,9 @@
     "predeploy": "npm run build",
     "postbuild": "./postbuild.sh",
     "deploy": "gh-pages -d build"
+  },
+  "jest": {
+    "verbose": true
   },
   "eslintConfig": {
     "extends": "react-app"

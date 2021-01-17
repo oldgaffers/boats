@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BoatCards({ state, onChangePage, link, location }) {
+export default function BoatCards({
+  state, 
+  link, 
+  location,
+  onChangePage=()=>console.log('onChangePage'), 
+}) {
   const { filters, page, p, bpp, sort, sortDirection } = state;
   const classes = useStyles();
   const ibpp = parseInt(bpp);
