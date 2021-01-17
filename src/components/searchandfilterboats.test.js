@@ -70,6 +70,6 @@ test('renders learn react link', () => {
       />
     </MockedProvider>
   );
-  const wanted = getAllByText(/Loading.../);
+  const wanted = getAllByText(/sort the list/);
   expect(wanted[0]).toBeInTheDocument();
 });

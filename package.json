@@ -20,9 +20,6 @@
     "axios-hooks": "^2.2.0",
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
-    "gatsby": "^2.30.1",
-    "gatsby-plugin-apollo": "^3.0.2",
-    "gatsby-plugin-material-ui": "^2.1.10",
     "gh-pages": "^3.1.0",
     "graphql": "^14.7.0",
     "graphql-tag": "^2.11.0",
@@ -37,6 +34,7 @@
     "react-fb-like": "^0.5.1",
     "react-helmet": "^6.1.0",
     "react-iframe": "^1.8.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.1",
     "react-swipeable-views": "^0.13.9",
     "uuid": "^3.4.0"

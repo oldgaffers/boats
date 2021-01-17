@@ -94,6 +94,8 @@ function AltForThumb() {
 export default function BoatCard({ state, boat, link, location }) {
   const classes = useStyles();
   const sale = state.filters.sale;
+  console.log('BoatCard', state);
+  const bl = React.forwardRef((props, ref) => link({...props, ref}));
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
@@ -110,7 +112,7 @@ export default function BoatCard({ state, boat, link, location }) {
       <CardActions>
         <Button
           size="small" 
-          component={link}
+          component={bl}
           to={boatLink(state, boat.oga_no, location)}
           variant="contained" 
           color="secondary"

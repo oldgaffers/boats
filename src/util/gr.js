@@ -1,8 +1,12 @@
+const root = "/boat_register";
+const browse_root = `${root}/browse_the_register`;
+const sale_root = `${root}/boats_for_sale`;
+
 function prefix(location) {
-  if (location.pathname.includes('test')) {
-    return 'test_';
+  if (location.href.includes("test")) {
+    return "test_";
   } else {
-    return '';
+    return "";
   }
 }
 
@@ -12,79 +16,73 @@ export function boatUrl(oga_no, { origin, pathname }) {
 
 export function home(location) {
   const params = new URLSearchParams(location.search);
-  const doc =
-    params.get("sale") === "true" ? "boats_for_sale" : "browse_the_register";
-  let home = `/${doc}/${prefix(location)}${doc}.html`;
-  params.delete("sale"); // not needed as destination knows!
-  params.delete("oga_no");
+  const sale = params.get("f_sale") === "true";
+  const path = sale ? sale_root : browse_root;
+  const base = sale ? "boats_for_sale" : "browse_the_register";
+  const doc = `${prefix(location)}${base}.html`;
+  let home = `${path}/${doc}`;
+  params.delete("f_sale"); // not needed as destination knows!
+  params.delete("oga_no"); // but not f_oga_no
   const qp = params.toString();
   if (qp.length > 0) {
     home = `${home}?${qp}`;
   }
+  console.log("home", { home, path, doc, qp });
   return home;
 }
 
 export function boatLink(state, oga_no, location) {
   let qp;
   if (state) {
-    const { filters, page, boatsPerPage, sortField, sortDirection } = state;
-    qp = `&p=${page}&bpp=${boatsPerPage}&sort=${sortField}&asc=${
-      sortDirection === "asc"
-    }`;
+    const { filters, page, bpp, sort, sortDirection } = state;
+    qp = `&p=${page}&bpp=${bpp}&sort=${sort}&asc=${sortDirection === "asc"}`;
     for (const field of Object.keys(filters)) {
       if (field) {
-        if (field === "year") {
-          const f = filters.year.firstYear || "";
-          const l = filters.year.lastYear || "";
-          qp = `${qp}&y=${f}-${l}`;
-        } else {
-          qp = `${qp}&${field}=${filters[field]}`;
-        }
-      }
-    }  
-  } else {
-    qp = '';
-  }
-  return `/browse_the_register/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
-}
-
-export function getState(defaultState, search) {
-  const state = { ...defaultState };
-  if (search && search !== "") {
-    const params = new URLSearchParams(search);
-    for (const [key, value] of params) {
-      switch (key) {
-        case "p":
-          state.page = parseInt(value, 10);
-          break;
-        case "bpp":
-          state.boatsPerPage = value;
-          break;
-        case "sort":
-          state.sortField = value;
-          break;
-        case "asc":
-          state.sortDirection = value === "true" ? "asc" : "desc";
-          break;
-        case "y":
-          const year = {};
-          const [firstYear, lastYear] = value.split("-");
-          if (firstYear !== "") {
-            year.firstYear = firstYear;
-          }
-          if (lastYear !== "") {
-            year.lastYear = lastYear;
-          }
-          state.filters.year = year;
-          break;
-        default:
-          state.filters[key] = value;
+        qp = `${qp}&f_${field}=${filters[field]}`;
       }
     }
+  } else {
+    qp = "";
   }
+  return `${browse_root}/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
+}
+
+export function mapState(s, defaultState = {}) {
+  const state = { ...defaultState };
+  Object.keys(s).forEach((key) => {
+    const value = s[key];
+    switch (key) {
+      case "p":
+        state.page = parseInt(value, 10);
+        break;
+      case "asc":
+        state.sortDirection = value === "true" ? "asc" : "desc";
+        break;
+      case "f_sale":
+        if (state.filters) {
+          state.filters.sale = value === "true";
+        } else {
+          state.filters = { sale: value === "true" };
+        }
+        break;
+      default:
+        if (key.startsWith("f_")) {
+          const k = key.replace("f_", "");
+          console.log("f_", k, value);
+          if (state.filters) {
+            state.filters[k] = value;
+          } else {
+            state.filters = { [k]: value };
+          }
+          console.log(state);
+        } else {
+          state[key] = value;
+        }
+    }
+  });
   return state;
 }
 
-const exports = { home, boatLink, getState, boatUrl };
+const exports = { home, boatLink, mapState, boatUrl };
 
 export default exports;

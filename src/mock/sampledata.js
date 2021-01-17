@@ -34,9 +34,9 @@ export const sampleMaterials = [
     { name: "- Any -"},
     { name: "wood"},
 ];
-
+ 
 export const mockPicks = {        
-    boat: [],
+    boatNames: [],
     designer: [],
     builder: [],
     rig_type: [],
