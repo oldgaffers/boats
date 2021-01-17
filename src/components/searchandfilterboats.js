@@ -78,7 +78,7 @@ export default function SearchAndFilterBoats({
         { field: 'oga_no', name: "OGA No.", direction: 'asc' },
         { field: 'year', name: "Age", direction: 'asc' },
         { field: 'updated_at', name: "Updated", direction: 'desc' },
-        { field: 'editors_choice', name: "Editor's choice", direction: 'asc' },
+        { field: 'rank', name: "Editor's choice", direction: 'asc' },
      ];
      if (filters.sale) {
         sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });

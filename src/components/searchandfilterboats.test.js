@@ -61,7 +61,7 @@ test('renders learn react link', () => {
     <MockedProvider mocks={mocks}>
       <SearchAndFilterBoats 
       sortDirection="asc"
-      sortField="editors_choice"
+      sortField="rank"
       boatsPerPage="12"
       filters={{sale: false}} pickers={mockPicks}
       onFilterChange={(x)=>console.log(x)} 

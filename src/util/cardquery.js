@@ -40,7 +40,7 @@ export const useCardQuery = (state) => {
           limit: ibpp,
           offset: ibpp * (ip - 1),
           where: buildWhere(filters),
-          sort: {[sort==='editors_choice'?'rank':sort]: sortDirection},
+          sort: {[sort]: sortDirection},
         },
       },
     );  

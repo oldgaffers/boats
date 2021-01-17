@@ -10,7 +10,7 @@ import BoatRegisterIntro from "./components/boatregisterintro";
 const browse = {
   p: "1",
   bpp: "12",
-  sort: "editors_choice",
+  sort: "rank",
   asc: "true",
   f_sale: "false",
 };
