@@ -21,15 +21,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BoatCards({ state, onChangePage, link, location }) {
-  const { filters, page, boatsPerPage, sortField, sortDirection } = state;
+  const { filters, page, p, bpp, sort, sortDirection } = state;
   const classes = useStyles();
-  const bpp = parseInt(boatsPerPage);
+  const ibpp = parseInt(bpp);
+  const ip = page || parseInt(p);
+  console.log('BoatCards state', state);
   const { loading, error, data } = useQuery(
-    query(`{${sortField}: ${sortDirection}}`),
+    query(`{${sort}: ${sortDirection}}`),
     {
       variables: {
-        limit: bpp,
-        offset: bpp * (page - 1),
+        limit: ibpp,
+        offset: ibpp * (ip - 1),
         where: buildWhere(filters),
       },
     },
@@ -37,7 +39,7 @@ export default function BoatCards({ state, onChangePage, link, location }) {
   if (error) console.log(JSON.stringify(error));
 
   const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; 
-  const pages = Math.ceil(totalCount / boatsPerPage);
+  const pages = Math.ceil(totalCount / ibpp);
 
   const pageItems = useBoatPagination(
     pages,
@@ -77,7 +79,7 @@ export default function BoatCards({ state, onChangePage, link, location }) {
 
   const { 
     rig_type, construction_material, generic_type, 
-    design_class, year, sale, mainsail_type,
+    design_class, firstYear, lastYear, sale, mainsail_type,
     designer, builder, oga_no, name
   } = filters;
   let message;
@@ -104,21 +106,18 @@ export default function BoatCards({ state, onChangePage, link, location }) {
     if (builder) {
       message = `${message} by this builder`;
     }
-    if (year) {
-      const { firstYear, lastYear } = year;
-      if (firstYear && lastYear) {
-        message = `${message} built between ${firstYear} and ${lastYear}`;
-      } else if (firstYear) {
-        message = `${message} built after ${firstYear}`;
-      } else if (lastYear) {
-        message = `${message} built before ${lastYear}`;
-      }
+    if (firstYear && lastYear) {
+      message = `${message} built between ${firstYear} and ${lastYear}`;
+    } else if (firstYear) {
+      message = `${message} built after ${firstYear}`;
+    } else if (lastYear) {
+      message = `${message} built before ${lastYear}`;
     }
     if (construction_material) {
       message = `${message} built of ${construction_material}`;
     }
     if (sale) {
-      message = `${message} for sale.`;
+      message = `${message} for sale`;
     }
     message = `${message} on the register`;
     if (name) {

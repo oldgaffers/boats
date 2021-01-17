@@ -70,6 +70,8 @@ const useStyles = makeStyles((theme) => ({
 export default function BoatButtons({ boat, linkComponent, location }) {
 
   const classes = useStyles();
+  const homeLink = React.forwardRef((props, ref) => linkComponent({...props, ref}));
+
   return (
     <Paper>
         <Grid container direction="row" alignItems="flex-end">
@@ -77,7 +79,7 @@ export default function BoatButtons({ boat, linkComponent, location }) {
             <Button size="small"
             variant="contained"
             className={classes.button}
-            component={linkComponent}
+            component={homeLink}
             to={home(location)}
             >See more boats</Button>
         </Grid>

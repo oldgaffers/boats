@@ -1,9 +1,10 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 export default function BoatRegisterIntro() {
     return (
-        <>
+        <Paper>
         <Typography variant="body1">
           We have hundreds of boats with pictures, and many more waiting for
           pictures and more information.
@@ -29,6 +30,6 @@ export default function BoatRegisterIntro() {
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
         </Typography>
-        </>
+        </Paper>
     );
 }

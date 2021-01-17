@@ -1,9 +1,10 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 
 export default function BoatsForSaleIntro() {
     return (
-        <>
+        <Paper>
         <Typography variant="body1">
         We have lots listed for sale! 
         Filter the list using the options below, 
@@ -18,6 +19,6 @@ export default function BoatsForSaleIntro() {
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
         </Typography>
-        </>
+        </Paper>
     );
 }

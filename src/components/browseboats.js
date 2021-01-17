@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
-import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
@@ -10,8 +9,6 @@ import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import BoatsForSaleIntro from './boatsforsaleintro';
-import BoatRegisterIntro from './boatregisterintro';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,13 +25,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-function Intro({boatsForSale}) {
-  if (boatsForSale) {
-    return (<BoatsForSaleIntro/>)
-  }
-  return (<BoatRegisterIntro/>);
-}
 
 export function makeBoatNameList(boat) {
   if (!boat) {
@@ -69,12 +59,14 @@ function BrowseBoats({
 
   const blank = "_blank";
 
-  const { boatsPerPage, sortField, sortDirection, filters } = state;
+  const { bpp, sort, sortDirection, filters } = state;
 
   const handlePageChange = ({ selectedBoats, pages, page }) => {
     console.log('handlePageChange', selectedBoats, pages, page);
     onPageChange(page);
   };
+
+  console.log('BrowseBoats', state);
 
   return (
     <div className={classes.root}>
@@ -88,19 +80,16 @@ function BrowseBoats({
           <DrawerController onClick={handleDrawerToggle}/>
         </Grid>
         */} 
-        <Container>
-          <Intro boatsForSale={filters.sale} />
         <SearchAndFilterBoats
-          sortField={sortField}
+          sortField={sort}
           sortDirection={sortDirection}
-          boatsPerPage={boatsPerPage}
+          boatsPerPage={bpp}
           filters={filters}
           onPageSizeChange={onPageSizeChange}
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
           pickers={pickers}
         />
-        </Container>
         <Divider />
         <BoatCards
           state={state}
