@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import { query, buildWhere } from '../util/cardquery';
+import { query, buildWhere, getTotal, getBoats } from '../util/cardquery';
 import { useBoatPagination } from '../util/BoatPagination';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
@@ -32,19 +32,21 @@ export default function BoatCards({
   const ip = page || parseInt(p);
   console.log('BoatCards state', state);
   const { loading, error, data } = useQuery(
-    query(`{${sort}: ${sortDirection}}`),
+    query(),
     {
       variables: {
         limit: ibpp,
         offset: ibpp * (ip - 1),
         where: buildWhere(filters),
+        sort: {[sort]: sortDirection},
       },
     },
   );
   if (error) console.log(JSON.stringify(error));
 
-  const totalCount = data?data.boat_aggregate.aggregate.totalCount:0; 
+  const totalCount = getTotal(data); 
   const pages = Math.ceil(totalCount / ibpp);
+  const boats = getBoats(data);
 
   const pageItems = useBoatPagination(
     pages,
@@ -70,7 +72,7 @@ export default function BoatCards({
         <BoatPagination items={pageItems} />
           <Box py={1} ></Box>
           <Grid container spacing={4}>
-          {data.boat.map((boat) => (
+          {boats.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
               <BoatCard state={state} boat={boat} link={link} location={location} />
             </Grid>

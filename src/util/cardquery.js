@@ -1,21 +1,43 @@
 import gql from 'graphql-tag';
+ 
+export function getTotal(data) {
+  // return data?data.boatwithrank_aggregate.aggregate.totalCount:0;
+  return data?data.boat_aggregate.aggregate.totalCount:0;
+}
 
-export const query = (sort) => {
-    const q = `
-  query boats($where: boat_bool_exp!, $limit: Int!, $offset: Int!) {
-      boat_aggregate(where: $where) { aggregate { totalCount: count } }
-      boat(limit: $limit, offset: $offset, order_by: ${sort}, where: $where) {
-        name oga_no
-        place_built previous_names home_port
-        short_description year
-        builderByBuilder{name}
-        designerByDesigner{name}
-        design_class
-        thumb image_key
-        price
-        for_sale_state { text }
-      }
-    }`
+export function getBoats(data) {
+  // return data?data.boatwithrank:[];
+  return data?data.boat:[];
+}
+
+// $sort: boatwithrank_order_by!,
+// $where: boatwithrank_bool_exp!, 
+//         boatwithrank_aggregate(where: $where) {
+//         boatwithrank(
+
+export const query = () => {
+    const q = `query boats(
+      $sort: boat_order_by!,
+      $where: boat_bool_exp!, 
+      $limit: Int!, 
+      $offset: Int!) {
+        boat_aggregate(where: $where) {
+          aggregate { totalCount: count __typename } __typename  }
+        boat(
+          limit: $limit, 
+          offset: $offset, 
+          order_by: [$sort], 
+          where: $where
+        ) {
+          name oga_no place_built previous_names home_port short_description year
+          builderByBuilder { name __typename }
+          designerByDesigner { name __typename }
+          design_class thumb image_key price
+          for_sale_state { text __typename } 
+          __typename
+        }
+      }    
+    `
     return gql(q);
   }
   
