@@ -39,9 +39,9 @@ export default function GqlBoatBrowser(
     setCurrentState({...currentState, filters, page: 1 });
   }
 
-  const handlePageChange = (page) => {
-    onPageChange(page);
-    setCurrentState({...currentState, page });
+  const handlePageChange = (p) => {
+    onPageChange(p);
+    setCurrentState({...currentState, p });
   };
 
   return (

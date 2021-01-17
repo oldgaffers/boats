@@ -1,11 +1,10 @@
 import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
-import { query, buildWhere, getTotal, getBoats } from '../util/cardquery';
+import { useCardQuery, getTotal, getBoats } from '../util/cardquery';
 import { useBoatPagination } from '../util/BoatPagination';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
@@ -24,36 +23,21 @@ export default function BoatCards({
   state, 
   link, 
   location,
-  onChangePage=()=>console.log('onChangePage'), 
+  onChangePage=(arg)=>console.log('onChangePage', arg), 
 }) {
-  const { filters, page, p, bpp, sort, sortDirection } = state;
   const classes = useStyles();
-  const ibpp = parseInt(bpp);
-  const ip = page || parseInt(p);
   console.log('BoatCards state', state);
-  const { loading, error, data } = useQuery(
-    query(),
-    {
-      variables: {
-        limit: ibpp,
-        offset: ibpp * (ip - 1),
-        where: buildWhere(filters),
-        sort: {[sort]: sortDirection},
-      },
-    },
-  );
+  const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
 
   const totalCount = getTotal(data); 
-  const pages = Math.ceil(totalCount / ibpp);
+  const pages = Math.ceil(totalCount / parseInt(state.bpp));
   const boats = getBoats(data);
 
   const pageItems = useBoatPagination(
     pages,
-    page,
-    function(event, page) {
-      onChangePage({ selectedBoats: totalCount, pages, page });
-    }
+    parseInt(state.p),
+    (_, p) => { onChangePage({ selectedBoats: totalCount, pages, p })},
   );
 
   if (error) return <p>Error: (BoatCards)</p>;
@@ -88,7 +72,7 @@ export default function BoatCards({
     rig_type, construction_material, generic_type, 
     design_class, firstYear, lastYear, sale, mainsail_type,
     designer, builder, oga_no, name
-  } = filters;
+  } = state.filters;
   let message;
   if (oga_no) {
     message = `The boat numbered ${oga_no} doesn't match the filters you have set`;

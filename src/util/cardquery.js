@@ -1,29 +1,27 @@
 import gql from 'graphql-tag';
- 
+import { useQuery } from '@apollo/react-hooks';
+
 export function getTotal(data) {
-  // return data?data.boatwithrank_aggregate.aggregate.totalCount:0;
-  return data?data.boat_aggregate.aggregate.totalCount:0;
+  return data?data.boatwithrank_aggregate.aggregate.totalCount:0;
 }
 
 export function getBoats(data) {
-  // return data?data.boatwithrank:[];
-  return data?data.boat:[];
+  return data?data.boatwithrank:[];
 }
 
-// $sort: boatwithrank_order_by!,
-// $where: boatwithrank_bool_exp!, 
-//         boatwithrank_aggregate(where: $where) {
-//         boatwithrank(
-
-export const query = () => {
-    const q = `query boats(
-      $sort: boat_order_by!,
-      $where: boat_bool_exp!, 
+export const useCardQuery = (state) => {
+  const { filters, p, bpp, sort, sortDirection } = state;
+  const ibpp = parseInt(bpp);
+  const ip =parseInt(p);
+  return useQuery(
+    gql`query boats(
+      $sort: boatwithrank_order_by!,
+      $where: boatwithrank_bool_exp!, 
       $limit: Int!, 
       $offset: Int!) {
-        boat_aggregate(where: $where) {
+        boatwithrank_aggregate(where: $where) {
           aggregate { totalCount: count __typename } __typename  }
-        boat(
+        boatwithrank(
           limit: $limit, 
           offset: $offset, 
           order_by: [$sort], 
@@ -36,9 +34,16 @@ export const query = () => {
           for_sale_state { text __typename } 
           __typename
         }
-      }    
-    `
-    return gql(q);
+      }`, 
+      {
+        variables: {
+          limit: ibpp,
+          offset: ibpp * (ip - 1),
+          where: buildWhere(filters),
+          sort: {[sort==='editors_choice'?'rank':sort]: sortDirection},
+        },
+      },
+    );  
   }
   
   export function buildWhere(filters) {

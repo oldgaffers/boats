@@ -49,7 +49,7 @@ const Boat = ({location}) => {
 };
 
 const browse = {
-  page: '1',
+  p: '1',
   bpp: '12', 
   sort: 'editors_choice', 
   asc: 'true',
@@ -57,7 +57,7 @@ const browse = {
 };
 
 const buy = {
-  page: '1',
+  p: '1',
   bpp: '12', 
   sort: 'price', 
   asc: 'false',
