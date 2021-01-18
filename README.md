@@ -13,7 +13,7 @@ and then paste a fragment of the built index.html on each of the following pages
 4. https://www.oga.org.uk/boat_register/browse_the_register/boat.html
 
 The fragment should look like:
-`<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.findIndex%2CString.prototype.repeat%2CArray.prototype.flat%2CString.prototype.startsWith%2CArray.prototype.%40%40iterator"></script>
+```<script src="https://polyfill.io/v3/polyfill.min.js?features=Array.prototype.findIndex%2CString.prototype.repeat%2CArray.prototype.flat%2CString.prototype.startsWith%2CArray.prototype.%40%40iterator"></script>
 <link href="/_documents/[585642]main.6dea0f05.chunk.css" rel="stylesheet" />
 <noscript>You need to enable JavaScript to run this app.</noscript>
 <div id="root"></div>
@@ -109,4 +109,4 @@ The fragment should look like:
 </script>
 <script src="/_documents/[586431]2.ef590f88.chunk.js"></script>
 <script src="/_documents/[586432]main.edc0eb66.chunk.js"></script>
-`
+```
