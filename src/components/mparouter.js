@@ -1,7 +1,6 @@
 import React from 'react';
 
 export const Link = ({ className, to, children }) => {
-    console.log('Link', to);
     return <a className={className} href={to}>{children}</a>;
 }
 
@@ -15,10 +14,8 @@ export const Router = ({children}) => {
   }
   
   export const Route = ({location, path, children, state={}}) => {
-    console.log('Route', location.pathname, path);
     const matcher = new RegExp('.*'+path);
     if (matcher.test(location.pathname)) {
-      console.log('Route children', children);
       for (const [key, value] of new URLSearchParams(location.search)) {
         state[key] = value;
       };

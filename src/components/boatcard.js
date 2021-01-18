@@ -94,7 +94,6 @@ function AltForThumb() {
 export default function BoatCard({ state, boat, link, location }) {
   const classes = useStyles();
   const sale = state.filters.sale;
-  console.log('BoatCard', state);
   const bl = React.forwardRef((props, ref) => link({...props, ref}));
 
   return (

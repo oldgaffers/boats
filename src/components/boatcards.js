@@ -26,7 +26,6 @@ export default function BoatCards({
   onChangePage=(arg)=>console.log('onChangePage', arg), 
 }) {
   const classes = useStyles();
-  console.log('BoatCards state', state);
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
 

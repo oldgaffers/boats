@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { Link, useParams, useLocation } from "react-router-dom";
 import BoatWrapper from './boatwrapper';
 import useAxios from 'axios-hooks'
+import { Link } from './mparouter';
 
-export default function Boat() {
+export default function Boat({location}) {
 
-  const { id } = useParams();
-  const location = useLocation();
-
+  const params = new URLSearchParams(location.search);
+  const oga_no = params.get('oga_no');
+  
   const [b] = useAxios(
-    `https://ogauk.github.io/boatregister/page-data/boat/${id}/page-data.json`
+    `https://ogauk.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
   )
 
   useEffect(() => {
@@ -19,13 +19,23 @@ export default function Boat() {
   });
 
   if (b.loading) return <p>Loading...</p>
-  if (b.error) return (<p>
-    Sorry, we had a problem getting the data for
-    the boat with OGA number {id}</p>)
+  if (b.error) {
+      if (oga_no) {
+          return (<div>
+              Sorry, we had a problem getting the data for
+              the boat with OGA number {oga_no}
+              <p>Please try searching on the <a href={location.origin}>Main Page</a></p>
+              </div>);
+      } else {
+          return (<div>
+              If you were looking for a specific boat and know its OGA Number,
+              you can add ?oga_no=1 or any other number to the url.
+              <p>Otherwise try the <a href={location.origin}>Main Page</a></p>
+              </div>);
+      }
+  }
 
   const boat = b.data.result.pageContext.boat;
+  return <BoatWrapper boat={boat} linkComponent={Link} location={location} />;
+};
 
-  return (
-    <BoatWrapper boat={boat} linkComponent={Link} location={location} />
-  );
-}

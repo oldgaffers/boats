@@ -66,8 +66,6 @@ function BrowseBoats({
     onPageChange(p);
   };
 
-  console.log('BrowseBoats', state);
-
   return (
     <div className={classes.root}>
       <CssBaseline />

@@ -27,7 +27,6 @@ export function home(location) {
   if (qp.length > 0) {
     home = `${home}?${qp}`;
   }
-  console.log("home", { home, path, doc, qp });
   return home;
 }
 

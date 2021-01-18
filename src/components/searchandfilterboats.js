@@ -46,7 +46,6 @@ export default function SearchAndFilterBoats({
     };
 
     function pl(id, value) {
-        console.log('picker change', id, value)
         if (value) {
             onFilterChange({ ...filters, [id]: value });
         } else {
