@@ -10,6 +10,7 @@ test('renders learn react link', () => {
       <App />
     </MockedProvider>
   );
-  const wanted = getByText(/./);
-  expect(wanted).toBeInTheDocument();
+  const wanted = getByText();
+  // expect(wanted).toBeInTheDocument();
+  expect(wanted).toBeValid();
 });

@@ -44,7 +44,24 @@ export default function App() {
     <CookiesProvider>
       <OGAProvider>
         <Router>
-          <Route state={buy} path="/boats_for_sale/(?:test_)?boats_for_sale.*">
+          <Route
+            state={browse}
+            path="/boat_register/boat_register.html"
+          >
+            <BoatRegisterIntro />
+            <GqlBoatBrowser
+              title="Browse the Register"
+              onPageSizeChange={handlePageSizeChange}
+              onSortChange={handleSortChange}
+              onFilterChange={handleFilterChange}
+              onPageChange={handlePageChange}
+              link={Link}
+            />
+          </Route>
+          <Route
+            state={buy}
+            path="/boat_register/boats_for_sale/(?:test_)?boats_for_sale.*"
+          >
             <BoatsForSaleIntro />
             <GqlBoatBrowser
               title="Boats for Sale"
@@ -57,7 +74,7 @@ export default function App() {
           </Route>
           <Route
             state={browse}
-            path="/browse_the_register/(?:test_)?browse_the_register.*"
+            path="/boat_register/browse_the_register/(?:test_)?browse_the_register.*"
           >
             <BoatRegisterIntro />
             <GqlBoatBrowser
@@ -69,7 +86,7 @@ export default function App() {
               link={Link}
             />
           </Route>
-          <Route path="/browse_the_register/(?:test_)?boat.*">
+          <Route path="/boat_register/browse_the_register/(?:test_)?boat.*">
             <Boat />
           </Route>
         </Router>
