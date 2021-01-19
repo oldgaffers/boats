@@ -1,11 +1,15 @@
 #!/bin/sh
+SCRIPTS=https://oga.org.uk/boat_register/browse_the_register/scripts.html
 echo post build copying
-cp build/static/css/main.*.chunk.css build/static/css/main.chunk.css
-cp build/static/css/main.*.chunk.css.map build/static/css/main.chunk.css.map
-cp build/static/js/runtime-main.*.js build/static/js/runtime-main.js
-cp build/static/js/runtime-main.*.js.map build/static/js/runtime-main.js.map
-cp build/static/js/2.*.chunk.js.map build/static/js/2.chunk.js.map
-cp build/static/js/main.*.chunk.js.map build/static/js/main.chunk.js.map
-cp build/static/js/main.*.chunk.js build/static/js/main.chunk.js
-cp build/static/js/2.*.chunk.js.LICENSE.txt build/static/js/2.chunk.js.LICENSE.txt
-cp build/static/js/2.*.chunk.js build/static/js/2.chunk.js
+X=(`curl -s ${SCRIPTS}|grep _documents | sed -e 's/^.*href="//' -e 's/".*$//'|sort -u`)
+prettier build/index.html | sed \
+ -e '/DOCTYPE/d' \
+ -e '/html/d' \
+ -e '/head/d' \
+ -e '/body/d' \
+ -e '/meta/d' \
+ -e "s;/boats/static/css/main.*css;${X[0]};" \
+ -e "s;/boats/static/js/main.*js;${X[2]};" \
+ -e "s;/boats/static/js/2.*js;${X[1]};" \
+ -e '/<title>/d' \
+ > build/fragment.html
