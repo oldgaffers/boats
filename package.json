@@ -32,19 +32,10 @@
     "uuid": "^3.4.0"
   },
   "scripts": {
-    "develop": "gatsby develop",
-    "gbuild": "gatsby build --prefix-paths",
-    "serve": "gatsby serve --prefix-paths",
-    "clean": "gatsby clean",
-    "build": "react-scripts build",
-    "start": "react-scripts start",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src/*.js src/components/*.js",
-    "pretest": "npm run lint",
-    "predeploy": "npm run build",
-    "postbuild": "./postbuild.sh",
-    "deploy": "gh-pages -d build"
+    "clean": "rm dist/bundle.js",
+    "start": "parcel src/index.html",
+    "build-prod": "parcel build src/index.html",
+    "test": "jest"
   },
   "jest": {
     "verbose": true
@@ -77,11 +68,17 @@
     "@apollo/react-testing": "^4.0.0",
     "@babel/core": "^7.12.10",
     "@babel/plugin-syntax-jsx": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "github:testing-library/user-event",
-    "react-scripts": "^4.0.1",
+    "babel-jest": "^26.6.3",
+    "cssnano": "^4.1.10",
+    "eslint": "^7.18.0",
+    "eslint-plugin-react": "^7.22.0",
+    "jest": "^26.6.3",
+    "parcel-bundler": "^1.12.4",
     "typescript": "^4.1.3"
   }
 }
