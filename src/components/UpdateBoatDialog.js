@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import useAxios from 'axios-hooks'
 import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import OneActivity from './OneActivity';
+import Activity from './Activity';
 import Descriptions from './Descriptions';
 import Rig from './Rig';
 import Handicap from './Handicap';
@@ -58,16 +57,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
  
-function getActivity({ boat, activity, handleClose, handleStart, handleCancel, classes }) {
+function getActivity({ pickers, boat, activity, handleClose, handleStart, handleCancel, classes }) {
 
   const handleSaveDescriptions = (short, full) => {
     handleClose({ ...boat, short_description: short, full_description: full });
   }
 
+  const handleSaveRig = (boatChanges) => {
+    handleClose({ ...boat, ...boatChanges });
+  }
   switch(activity) {
-    case -1: return (<OneActivity classes={classes} onCancel={handleCancel} onStart={handleStart} />);
+    case -1: return (<Activity classes={classes} onCancel={handleCancel} onStart={handleStart} />);
     case 0: return (<Descriptions classes={classes} onCancel={handleCancel} onSave={handleSaveDescriptions} short={boat.short_description} full={boat.full_description} />);
-    case 1: return (<Rig classes={classes} />);
+    case 1: return (<Rig classes={classes} onCancel={handleCancel} onSave={handleSaveRig} boat={boat} pickers={pickers} />);
     case 2: return (<Handicap classes={classes} />);
     case 3: return (<Ownership classes={classes} />);
     case 4: return (<Everything classes={classes} />);

@@ -10,8 +10,8 @@ import Button from "@material-ui/core/Button";
 import DescriptionIcon from "@material-ui/icons/Description";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import FastForward from "@material-ui/icons/FastForward";
-import TableChart from "@material-ui/icons/TableChart";
 import BoatIcon from "./boaticon";
+import FleetIcon from "./fleeticon";
 
 export default function Activity({ classes, onCancel, onStart }) {
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -43,7 +43,7 @@ export default function Activity({ classes, onCancel, onStart }) {
             <ListItemIcon>
               <DescriptionIcon />
             </ListItemIcon>
-            <ListItemText primary="Update the short and long descriptions" />
+            <ListItemText primary="Update the short and full descriptions" />
           </ListItem>
           <ListItem
             button
@@ -61,7 +61,7 @@ export default function Activity({ classes, onCancel, onStart }) {
             onClick={(event) => handleListItemClick(event, 2)}
           >
             <ListItemIcon>
-              <TableChart />
+              <FleetIcon />
             </ListItemIcon>
             <ListItemText primary="Create or update a handicap" />
           </ListItem>
