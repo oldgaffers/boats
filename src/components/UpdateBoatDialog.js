@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import Activity from './Activity';
+import OneActivity from './OneActivity';
 import Descriptions from './Descriptions';
 import Rig from './Rig';
 import Handicap from './Handicap';
@@ -67,7 +67,7 @@ function getActivity({ pickers, boat, activity, handleClose, handleStart, handle
     handleClose({ ...boat, ...boatChanges });
   }
   switch(activity) {
-    case -1: return (<Activity classes={classes} onCancel={handleCancel} onStart={handleStart} />);
+    case -1: return (<OneActivity classes={classes} onCancel={handleCancel} onStart={handleStart} />);
     case 0: return (<Descriptions classes={classes} onCancel={handleCancel} onSave={handleSaveDescriptions} short={boat.short_description} full={boat.full_description} />);
     case 1: return (<Rig classes={classes} onCancel={handleCancel} onSave={handleSaveRig} boat={boat} pickers={pickers} />);
     case 2: return (<Handicap classes={classes} />);
