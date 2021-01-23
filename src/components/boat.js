@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import BoatWrapper from './boatwrapper';
 import useAxios from 'axios-hooks'
-import { Link } from './mparouter';
+import { Link } from "@ogauk/link-router";
 
 export default function Boat({location}) {
 

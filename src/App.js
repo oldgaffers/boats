@@ -1,6 +1,6 @@
 import React from "react";
 import { CookiesProvider } from "react-cookie";
-import { Link, Router, Route } from "./components/mparouter";
+import { Link, Router, Route } from "@ogauk/link-router";
 import OGAProvider from "./util/gql";
 import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import Boat from "./components/boat";
