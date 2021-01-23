@@ -12,6 +12,7 @@ import Rig from './Rig';
 import Handicap from './Handicap';
 import Ownership from './Ownership';
 import Everything from './Everything';
+import { usePicklists } from '../util/picklists';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -78,16 +79,12 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
 
   const classes = useStyles();
   const [activity, setActivity] = useState(-1);
+  const { loading, error, data } = usePicklists();
 
-  const [p] = useAxios(
-    `https://ogauk.github.io/boatregister/pickers.json`
-  )
+  if (loading) return (<p>Loading...</p>);
+  if (error) return (<p>Error :(can't get picklists)</p>);
 
-  if(p.error) {
-    p.data = {};
-  }
-
-  const pickers = p.data;
+  const pickers = data;
 
   const handleCancel = (changes) => {
     onClose();
