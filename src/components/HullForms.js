@@ -1,4 +1,4 @@
-import bk from '../images/bk.jpg';
+import bk from '../images/bk.png';
 import cas from '../images/cas.png';
 import cb from '../images/cb.png';
 import fk from '../images/fk.png';

@@ -1,5 +1,5 @@
 import dinghy from '../images/dinghy.png';
-import cbd from '../images/cbd.jpg';
+import cbd from '../images/cbd.png';
 
 const dinghy_images = [
   {
