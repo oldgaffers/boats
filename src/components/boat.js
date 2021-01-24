@@ -18,12 +18,12 @@ export default function Boat({location}) {
   const params = new URLSearchParams(location.search);
   const oga_no = params.get('oga_no');
   
-  /*
+  
   const [b] = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
   )
-  */
-  const b = useQuery(query(oga_no));
+  
+  // const b = useQuery(query(oga_no));
 
   useEffect(() => {
     if (b.data) {
