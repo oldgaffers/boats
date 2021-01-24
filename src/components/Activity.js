@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import Button from "@material-ui/core/Button";
+// import Button from "@material-ui/core/Button";
 import DescriptionIcon from "@material-ui/icons/Description";
 import ContactMailIcon from "@material-ui/icons/ContactMail";
 import FastForward from "@material-ui/icons/FastForward";
@@ -14,19 +13,20 @@ import BoatIcon from "./boaticon";
 import FleetIcon from "./fleeticon";
 
 export default function Activity({ classes, onCancel, onStart }) {
-  const [selectedIndex, setSelectedIndex] = useState(1);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
 
   const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
+    //setSelectedIndex(index);
+    onStart(index);
   };
 
-  const handleClickCancel = () => {
-    onCancel();
-  };
+  //const handleClickCancel = () => {
+  //  onCancel();
+  //};
 
-  const handleClickStart = () => {
-    onStart(selectedIndex);
-  };
+  //const handleClickStart = () => {
+  //  onStart(selectedIndex);
+  //};
 
   return (
     <>
@@ -86,26 +86,6 @@ export default function Activity({ classes, onCancel, onStart }) {
             <ListItemText primary="Do a full review/update" />
           </ListItem>
         </List>
-        <Box display="flex" justifyContent="flex-end">
-          <Box m={1}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleClickCancel}
-            >
-              Cancel
-            </Button>
-          </Box>
-          <Box m={1}>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={handleClickStart}
-            >
-              Let's go
-            </Button>
-          </Box>
-        </Box>
       </Paper>
     </>
   );

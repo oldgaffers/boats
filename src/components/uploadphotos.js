@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
-import SendIcon from '@material-ui/icons/Send';
+import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import PhotoForm from './photoform';
 
 export default function UploadPhotos({ boat, classes }) {
@@ -17,7 +17,7 @@ export default function UploadPhotos({ boat, classes }) {
   return (
     <>
       <Button className={classes.button} size="small"
-        endIcon={<SendIcon/>}
+        endIcon={<PhotoLibraryIcon/>}
         variant="contained"
         color="primary" onClick={handlePhotoFormOpen}>
         Add pictures of this boat

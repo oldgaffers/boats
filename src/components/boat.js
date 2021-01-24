@@ -2,19 +2,33 @@ import React, { useEffect } from 'react';
 import BoatWrapper from './boatwrapper';
 import useAxios from 'axios-hooks'
 import { Link } from "@ogauk/link-router";
+import { useQuery } from '@apollo/react-hooks';
+import { query } from '../util/boatquery';
+
+// gql or axios
+function getBoat(b) {
+  if (b.data.boat) {
+    return b.data.boat[0];
+  }
+  return b.data.result.pageContext.boat;
+}
 
 export default function Boat({location}) {
 
   const params = new URLSearchParams(location.search);
   const oga_no = params.get('oga_no');
   
+  /*
   const [b] = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
   )
+  */
+  const b = useQuery(query(oga_no));
 
   useEffect(() => {
     if (b.data) {
-       document.title = `${b.data.result.pageContext.boat.name} (${b.data.result.pageContext.boat.oga_no})`;
+      const boat = getBoat(b);
+      document.title = `${boat.name} (${boat.oga_no})`;
     }
   });
 
@@ -35,7 +49,7 @@ export default function Boat({location}) {
       }
   }
 
-  const boat = b.data.result.pageContext.boat;
+  const boat = getBoat(b);
   return <BoatWrapper boat={boat} linkComponent={Link} location={location} />;
 };
 

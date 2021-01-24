@@ -76,7 +76,7 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
   }
 
   return (
-    <Paper className={classes.editor}>
+    <Paper>
       <Typography variant="h6">Short description</Typography>
       <MuiThemeProvider theme={defaultTheme}>
         <MUIRichTextEditor

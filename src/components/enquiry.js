@@ -8,6 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import SendIcon from '@material-ui/icons/Send';
+import MailIcon from '@material-ui/icons/Mail';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
 
@@ -74,7 +75,7 @@ function EnquiryDialog({ open, boat, email, onEmailChange, onSend, onCancel, onT
         <Button onClick={onCancel} color="primary">
           Cancel
         </Button>
-        <Button onClick={onSend} color="primary" disabled={email === ''}>
+        <Button endIcon={<SendIcon/>} onClick={onSend} color="primary" disabled={email === ''}>
           Send
         </Button>
       </DialogActions>
@@ -114,6 +115,7 @@ export default function Enquiry({ boat, classes }) {
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
+  
   const handleSend = () => {
     const { id, name, oga_no } = boat;
     addEnquiry({ variables: { type: 'general', id, boat_name: name, oga_no, email, text } });
@@ -124,7 +126,7 @@ export default function Enquiry({ boat, classes }) {
   return (
     <>
       <Button className={classes.button} size="small"
-        endIcon={<SendIcon/>}
+        endIcon={<MailIcon/>}
         variant="contained"
         color="primary" onClick={handleClickOpen}>
         Contact us about this boat

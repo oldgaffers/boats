@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { useTheme } from '@material-ui/core/styles';
-import SwipeableViews from 'react-swipeable-views';
-// import { useInView } from 'react-intersection-observer'
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
@@ -131,17 +129,11 @@ const engine = {
   return (
     <>
       <DetailBar onChange={handleChange} value={value} panes={panes} />
-      <SwipeableViews
-          axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-          index={value}
-          onChangeIndex={handleChangeIndex}
-      >
       {panes.map((pane, i) => (
           <TabPanel key={i} value={value} index={i}>
               {pane.children}
           </TabPanel>
       ))}
-      </SwipeableViews>
     </>
   );
 }
