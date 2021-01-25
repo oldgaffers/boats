@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import BoatIcon from "./boaticon";
+import { FullKeelIcon } from './HullTypeIcons';
 
 export default function OneActivity({ classes, onCancel, onStart, onEmailChange }) {
   const [email, setEmail] = useState('');
@@ -59,12 +60,17 @@ export default function OneActivity({ classes, onCancel, onStart, onEmailChange 
                 </ListItemIcon>
                 <ListItemText primary="Update the short and long descriptions" />
               </ListItem>
-              <ListItem
-              >
+              <ListItem>
                 <ListItemIcon>
                   <BoatIcon />
                 </ListItemIcon>
                 <ListItemText primary="More options coming soon" />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <FullKeelIcon />
+                </ListItemIcon>
+                <ListItemText primary="A Hull" />
               </ListItem>
             </List>
             </Grid>

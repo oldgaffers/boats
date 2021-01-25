@@ -28,11 +28,22 @@ const useStyles = makeStyles((theme) => ({
     },
   }));
 
+function makePicklist(filteredpl, pickers, field) {
+    if (filteredpl[field]) {
+        return filteredpl[field].map((v) => { return {name: v};});
+    }
+    if (pickers[field]) {
+        return pickers[field];
+    }
+    return [];
+}
+
 export default function SearchAndFilterBoats({
     sortDirection,
     sortField,
     boatsPerPage,
     filters,
+    filteredpl = {},
     pickers,
     onFilterChange,
     onPageSizeChange,
@@ -126,21 +137,21 @@ export default function SearchAndFilterBoats({
         <Divider/>
         <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
-            <Picker onChange={pl} id="name" options={pickers.boatNames} label="Boat Name" value={filters['name']} />
+            <Picker onChange={pl} id="name" options={makePicklist(filteredpl, pickers, 'boatNames')} label="Boat Name" value={filters['name']} />
             <TextField onChange={o} id="oga_no" label="OGA Boat No." variant="outlined" value={filters['oga_no']} />
-            <Picker onChange={pl} id='designer' options={pickers.designer} label="Designer" value={filters['designer']} />
-            <Picker onChange={pl} id='builder' options={pickers.builder} label="Builder" value={filters['builder']} />
+            <Picker onChange={pl} id='designer' options={makePicklist(filteredpl, pickers, 'designer')} label="Designer" value={filters['designer']} />
+            <Picker onChange={pl} id='builder' options={makePicklist(filteredpl, pickers, 'builder')} label="Builder" value={filters['builder']} />
             <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
                 type="number" inputProps={yearProps} value={filters.firstYear || ''}
             />
             <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
                 type="number" inputProps={yearProps} value={filters.lastYear || ''}
             />
-            <Picker onChange={pl} id='rig_type' options={pickers.rig_type} label="Rig Type" value={filters['rig_type']} />
-            <Picker onChange={pl} id='mainsail_type' options={pickers.sail_type} label="Mainsail Type" value={filters['mainsail_type']}/>
-            <Picker onChange={pl} id='generic_type' options={pickers.generic_type} label="Generic Type" value={filters['generic_type']}/>
-            <Picker onChange={pl} id='design_class' options={pickers.design_class} label="Design Class" value={filters['design_class']}/>
-            <Picker onChange={pl} id='construction_material' options={pickers.construction_material} label="Construction Material" value={filters['construction_material']} />
+            <Picker onChange={pl} id='rig_type' options={makePicklist(filteredpl, pickers, 'rig_type')} label="Rig Type" value={filters['rig_type']} />
+            <Picker onChange={pl} id='mainsail_type' options={makePicklist(filteredpl, pickers, 'sail_type')} label="Mainsail Type" value={filters['mainsail_type']}/>
+            <Picker onChange={pl} id='generic_type' options={makePicklist(filteredpl, pickers, 'generic_type')} label="Generic Type" value={filters['generic_type']}/>
+            <Picker onChange={pl} id='design_class' options={makePicklist(filteredpl, pickers, 'design_class')} label="Design Class" value={filters['design_class']}/>
+            <Picker onChange={pl} id='construction_material' options={makePicklist(filteredpl, pickers, 'construction_material')} label="Construction Material" value={filters['construction_material']} />
         </Grid>
     </form>
     );

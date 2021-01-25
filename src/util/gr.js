@@ -33,11 +33,17 @@ export function home(location) {
 export function boatLink(state, oga_no, location) {
   let qp;
   if (state) {
-    const { filters, p, bpp, sort, sortDirection } = state;
+    const { picklists, filters, p, bpp, sort, sortDirection } = state;
     qp = `&p=${p}&bpp=${bpp}&sort=${sort}&asc=${sortDirection === "asc"}`;
     for (const field of Object.keys(filters)) {
       if (field) {
         qp = `${qp}&f_${field}=${filters[field]}`;
+      }
+    }
+    for (const field of Object.keys(picklists)) {
+      if (field) {
+        const pl = picklists[field].join('|');
+        qp = `${qp}&p_${field}=${pl}`;
       }
     }
   } else {
@@ -47,7 +53,7 @@ export function boatLink(state, oga_no, location) {
 }
 
 export function mapState(s, defaultState = {}) {
-  const state = { ...defaultState };
+  const state = { filters: {}, picklists: {}, ...defaultState };
   Object.keys(s).forEach((key) => {
     const value = s[key];
     switch (key) {
@@ -67,13 +73,19 @@ export function mapState(s, defaultState = {}) {
       default:
         if (key.startsWith("f_")) {
           const k = key.replace("f_", "");
-          console.log("f_", k, value);
           if (state.filters) {
             state.filters[k] = value;
           } else {
             state.filters = { [k]: value };
           }
-          console.log(state);
+        } else if (key.startsWith("p_")) {
+          const k = key.replace("p_", "");
+          const pl = value.split('|');
+          if (state.picklists) {
+            state.picklists[k] = pl;
+          } else {
+            state.picklists = { [k]: pl };
+          }
         } else {
           state[key] = value;
         }

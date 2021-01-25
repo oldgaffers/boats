@@ -6,6 +6,7 @@ import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import Boat from "./components/boat";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import BoatRegisterIntro from "./components/boatregisterintro";
+import SmallBoatsIntro from "./components/smallboatsintro";
 
 const browse = {
   p: "1",
@@ -21,6 +22,14 @@ const buy = {
   sort: "price",
   asc: "false",
   f_sale: "true",
+};
+
+const small = {
+  p: "1",
+  bpp: "12",
+  sort: "rank",
+  asc: "true",
+  p_generic_type: "Dinghy|Dayboat",
 };
 
 const handlePageSizeChange = (bpp) => {
@@ -63,6 +72,20 @@ export default function App() {
             path="/boat_register/boats_for_sale/(?:test_)?boats_for_sale.*"
           >
             <BoatsForSaleIntro />
+            <GqlBoatBrowser
+              title="Boats for Sale"
+              onPageSizeChange={handlePageSizeChange}
+              onSortChange={handleSortChange}
+              onFilterChange={handleFilterChange}
+              onPageChange={handlePageChange}
+              link={Link}
+            />
+          </Route>
+          <Route
+            state={small}
+            path="/boat_register/small_boats/(?:test_)?small_boats.*"
+          >
+            <SmallBoatsIntro />
             <GqlBoatBrowser
               title="Boats for Sale"
               onPageSizeChange={handlePageSizeChange}

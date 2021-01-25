@@ -83,6 +83,7 @@ function BrowseBoats({
           sortDirection={sortDirection}
           boatsPerPage={bpp}
           filters={filters}
+          filteredpl={state.picklists}
           onPageSizeChange={onPageSizeChange}
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
