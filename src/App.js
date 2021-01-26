@@ -13,7 +13,6 @@ const browse = {
   bpp: "12",
   sort: "rank",
   asc: "true",
-  f_sale: "false",
 };
 
 const buy = {
@@ -21,7 +20,7 @@ const buy = {
   bpp: "12",
   sort: "price",
   asc: "false",
-  f_sale: "true",
+  v_sale: "true",
 };
 
 const small = {
@@ -29,7 +28,7 @@ const small = {
   bpp: "12",
   sort: "rank",
   asc: "true",
-  p_generic_type: "Dinghy|Dayboat",
+  v_generic_type: "Dinghy|Dayboat",
 };
 
 const handlePageSizeChange = (bpp) => {

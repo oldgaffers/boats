@@ -10,7 +10,7 @@ export function getBoats(data) {
 }
 
 export const useCardQuery = (state) => {
-  const { picklists, filters, p, bpp, sort, sortDirection } = state;
+  const { view, filters, p, bpp, sort, sortDirection } = state;
   const ibpp = parseInt(bpp);
   const ip = parseInt(p);
   return useQuery(
@@ -39,7 +39,7 @@ export const useCardQuery = (state) => {
         variables: {
           limit: ibpp,
           offset: ibpp * (ip - 1),
-          where: buildWhere(filters, picklists),
+          where: buildWhere(filters, view),
           sort: {[sort]: sortDirection},
         },
       },

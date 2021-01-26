@@ -21,7 +21,6 @@ export function home(location) {
   const base = sale ? "boats_for_sale" : "browse_the_register";
   const doc = `${prefix(location)}${base}.html`;
   let home = `${path}/${doc}`;
-  params.delete("f_sale"); // not needed as destination knows!
   params.delete("oga_no"); // but not f_oga_no
   const qp = params.toString();
   if (qp.length > 0) {
@@ -33,17 +32,11 @@ export function home(location) {
 export function boatLink(state, oga_no, location) {
   let qp;
   if (state) {
-    const { picklists, filters, p, bpp, sort, sortDirection } = state;
+    const { filters, p, bpp, sort, sortDirection } = state;
     qp = `&p=${p}&bpp=${bpp}&sort=${sort}&asc=${sortDirection === "asc"}`;
     for (const field of Object.keys(filters)) {
       if (field) {
         qp = `${qp}&f_${field}=${filters[field]}`;
-      }
-    }
-    for (const field of Object.keys(picklists)) {
-      if (field) {
-        const pl = picklists[field].join('|');
-        qp = `${qp}&p_${field}=${pl}`;
       }
     }
   } else {
@@ -52,8 +45,8 @@ export function boatLink(state, oga_no, location) {
   return `${browse_root}/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
 }
 
-export function mapState(s, defaultState = {}) {
-  const state = { filters: {}, picklists: {}, ...defaultState };
+export function mapState(s) {
+  const state = { filters: {}, view: {} };
   Object.keys(s).forEach((key) => {
     const value = s[key];
     switch (key) {
@@ -63,12 +56,8 @@ export function mapState(s, defaultState = {}) {
       case "asc":
         state.sortDirection = value === "true" ? "asc" : "desc";
         break;
-      case "f_sale":
-        if (state.filters) {
-          state.filters.sale = value === "true";
-        } else {
-          state.filters = { sale: value === "true" };
-        }
+      case "v_sale":
+        state.view.sale = value === "true";
         break;
       default:
         if (key.startsWith("f_")) {
@@ -78,14 +67,9 @@ export function mapState(s, defaultState = {}) {
           } else {
             state.filters = { [k]: value };
           }
-        } else if (key.startsWith("p_")) {
-          const k = key.replace("p_", "");
-          const pl = value.split('|');
-          if (state.picklists) {
-            state.picklists[k] = pl;
-          } else {
-            state.picklists = { [k]: pl };
-          }
+        } else if (key.startsWith("v_")) {
+          const k = key.replace("v_", "");
+          state.view[k] = value.split('|');
         } else {
           state[key] = value;
         }
