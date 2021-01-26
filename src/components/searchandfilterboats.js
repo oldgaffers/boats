@@ -88,6 +88,7 @@ export default function SearchAndFilterBoats({
         { field: 'oga_no', name: "OGA No.", direction: 'asc' },
         { field: 'year', name: "Age", direction: 'asc' },
         { field: 'updated_at', name: "Updated", direction: 'desc' },
+        { field: 'length_on_deck', name: "Length", direction: 'desc' },
         { field: 'rank', name: "Editor's choice", direction: 'asc' },
      ];
      if (filters.sale) {
