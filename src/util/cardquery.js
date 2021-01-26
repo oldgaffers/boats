@@ -46,8 +46,16 @@ export const useCardQuery = (state) => {
     );  
   }
   
-  export function buildWhere(filters, picklists) {
-    const pl = {...picklists};
+  const fieldmap = {
+    builder: 'builderByBuilder',
+    designer: 'designerByDesigner',
+    design_class: 'designClassByDesignClass',
+    generic_type: 'genericTypeByGenericType',
+    rig_type: 'rigTypeByRigType',
+  };
+
+  export function buildWhere(choices, view) {
+    const filters = {...view, ...choices};
     const all = [];
     for (const key of Object.keys(filters)) {
       switch(key) {
@@ -65,118 +73,20 @@ export const useCardQuery = (state) => {
             ],
           });
           break;
-        case 'designer':
-          all.push({
-            designerByDesigner: { name: { _eq: filters.designer } },
-          });
-          break;
-        case 'builder':
-          all.push({
-            builderByBuilder: { name: { _eq: filters.builder } },
-          });
-          break;
-        case 'rig_type':
-          all.push({ rigTypeByRigType: { name: { _eq: filters.rig_type } } });
-          break;
-        case 'mainsail_type':
-          all.push({ mainsail_type: { _eq: filters.mainsail_type } });
-          break;
-        case 'generic_type':
-          all.push({
-            genericTypeByGenericType: { name: { _eq: filters.generic_type } },
-          });
-          delete pl.generic_type;
-          break;
-        case 'design_class':
-          all.push({
-            designClassByDesignClass: { name: { _eq: filters.design_class } },
-          });
-          break;
-        case 'construction_material':
-          all.push({
-            constructionMaterialByConstructionMaterial: {
-              name: { _eq: filters.construction_material },
-            },
-          });
-          break;
         case 'for_sale':
           all.push({ for_sale_state: { text: { _eq: 'for_sale' } } });
           break;
         default:
-          all.push({ [key]: { _eq: filters[key] } });
+          {
+            const vals = filters[key];
+            const condition = Array.isArray(vals)?{ _in: vals }:{ _eq: vals };
+            if (fieldmap[key]) {
+              all.push({ [fieldmap[key]]: { name: condition } });  
+            } else {
+              all.push({ [key]: condition });  
+            }  
+          }
       }
     }
-    for (const key of Object.keys(pl)) {
-      switch(key) {
-        case 'generic_type':
-          all.push({
-            genericTypeByGenericType: { name: { _in: pl.generic_type } },
-          });
-          break;
-        default:
-      }
-    }
-    console.log('x', all);
     return { _and: all };
 }
-
-export function obuildWhere(filters) {
-    if (!filters) {
-      return { _and: true }
-    }
-    const all = [];
-    if (filters.firstYear) {
-      all.push({ year: { _gte: filters.firstYear } });
-    }
-    if (filters.lastYear) {
-        all.push({ year: { _lte: filters.lastYear } });
-    }
-    if (filters.oga_no) {
-      all.push({ oga_no: { _eq: filters.oga_no } });
-    }
-    if (filters.name) {
-      all.push({
-        _or: [
-          { name: { _ilike: `%${filters.name}%` } },
-          { previous_names: { _contains: filters.name } },
-        ],
-      });
-    }
-    if (filters.designer) {
-      all.push({
-        designerByDesigner: { name: { _eq: filters.designer } },
-      });
-    }
-    if (filters.builder) {
-      all.push({
-        builderByBuilder: { name: { _eq: filters.builder } },
-      });
-    }
-    if (filters.rig_type) {
-      all.push({ rigTypeByRigType: { name: { _eq: filters.rig_type } } });
-    }
-    if (filters.mainsail_type) {
-      all.push({ mainsail_type: { _eq: filters.mainsail_type } });
-      }
-    if (filters.generic_type) {
-      all.push({
-        genericTypeByGenericType: { name: { _eq: filters.generic_type } },
-      });
-    }
-    if (filters.design_class) {
-      all.push({
-        designClassByDesignClass: { name: { _eq: filters.design_class } },
-      });
-    }
-    if (filters.construction_material) {
-      all.push({
-        constructionMaterialByConstructionMaterial: {
-          name: { _eq: filters.construction_material },
-        },
-      });
-    }
-    if (filters.sale) {
-      all.push({ for_sale_state: { text: { _eq: 'for_sale' } } });
-    }
-    return { _and: all };
-  }  
