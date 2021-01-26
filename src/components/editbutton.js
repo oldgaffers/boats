@@ -14,12 +14,12 @@ export default function EditButton({ classes, boat }) {
     setOpen(true);
   };
 
-  const handleClose = (changes) => {
+  const handleClose = (changes, email) => {
     setOpen(false);
     if (changes) {
       axios.post(
         'https://ae69efba7038dcdfe87ce1c3479d2976.m.pipedream.net',
-        { old: boat, new: changes, uuid: uuidv4() },
+        { old: boat, new: changes, uuid: uuidv4(), email },
       ).then(response => {
         console.log('post', response);
         setSnackBarOpen(true);
