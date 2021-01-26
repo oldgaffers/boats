@@ -47,13 +47,19 @@
   "eslintConfig": {
     "extends": "react-app"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-react"
-    ],
-    "plugins": [
-      "@babel/plugin-syntax-jsx"
-    ]
+  "babel": {    
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "modules": false
+          }
+        ],
+        "@babel/preset-react"
+      ],
+     "plugins": [
+        "@babel/plugin-syntax-jsx"
+      ]
   },
   "browserslist": {
     "production": [
