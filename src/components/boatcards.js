@@ -69,9 +69,10 @@ export default function BoatCards({
 
   const { 
     rig_type, construction_material, generic_type, 
-    design_class, firstYear, lastYear, sale, mainsail_type,
+    design_class, firstYear, lastYear, mainsail_type,
     designer, builder, oga_no, name
   } = state.filters;
+  const { sale } = state.view;
   let message;
   if (oga_no) {
     message = `The boat numbered ${oga_no} doesn't match the filters you have set`;
@@ -118,11 +119,11 @@ export default function BoatCards({
 
   return (
     <Grid container alignItems='stretch'>
-    <Grid xs={2}></Grid>
-      <Grid>
+    <Grid item xs={2}></Grid>
+      <Grid item>
       <Typography variant='h6'>{message}.</Typography>
       <Typography variant='h6'>Try removing some filters.</Typography>
     </Grid>
-    <Grid xs={2}></Grid>
+    <Grid item xs={2}></Grid>
   </Grid>);
 }

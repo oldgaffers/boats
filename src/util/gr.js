@@ -23,7 +23,7 @@ export function home(location) {
   params.delete("home");
   const base = main[home];
   const doc = `${prefix(location)}${base}.html`;
-  let url = `${root}/${base}/${doc}`;
+  let url = `${origin}${root}/${base}/${doc}`;
   params.delete("oga_no"); // but not f_oga_no
   const qp = params.toString();
   if (qp.length > 0) {
@@ -51,7 +51,7 @@ export function boatLink(state, oga_no, location) {
   if (location.href.includes('small')) {
     qp = `${qp}&home=small`;
   }
-  return `/${root}/${main.browse}/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
+  return `${origin}/${root}/${main.browse}/${prefix(location)}boat.html?oga_no=${oga_no}${qp}`;
 }
 
 export function mapState(s) {

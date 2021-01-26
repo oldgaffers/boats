@@ -15,8 +15,8 @@ export default function GqlBoatBrowser(
     state,
   }
 ) {
-  const { loading, error, data } = usePicklists();
   const [currentState, setCurrentState] = useState(mapState(state));
+  const { loading, error, data } = usePicklists(currentState.view);
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :({title})</p>);
