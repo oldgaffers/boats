@@ -91,13 +91,13 @@ function getActivity({ pickers, boat, activity, handleClose, handleStart, handle
   const handleSaveRig = (boatChanges) => {
     handleClose({ ...boat, ...boatChanges });
   }
+  // , , , onEmailChange
   switch(activity) {
-    case -1: return (<OneActivity classes={classes} onCancel={handleCancel} onStart={handleStart} />);
+    case -1: return (<OneActivity classes={classes} onCancel={handleCancel} onStart={handleStart} onEmailChange={handleEmailChange}/>);
     case 0: return (<Descriptions 
         classes={classes} 
         onCancel={handleCancel} 
         onSave={handleSaveDescriptions} 
-        onEmailChange={handleEmailChange}
         short={boat.short_description} full={boat.full_description}
       />);
     case 1: return (<Rig classes={classes} onCancel={handleCancel} onSave={handleSaveRig} boat={boat} pickers={pickers} />);

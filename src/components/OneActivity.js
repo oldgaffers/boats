@@ -10,7 +10,6 @@ import TextField from "@material-ui/core/TextField";
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import BoatIcon from "./boaticon";
-import { FullKeelIcon } from './HullTypeIcons';
 
 export default function OneActivity({ classes, onCancel, onStart, onEmailChange }) {
   const [email, setEmail] = useState('');
@@ -31,7 +30,7 @@ export default function OneActivity({ classes, onCancel, onStart, onEmailChange 
   return (
     <>
       <Paper className={classes.paper}>
-        <Grid container direction='column' display="flex" justifyContent="flex-end">
+        <Grid container direction='column' display="flex">
           <Grid m={1}>
             <Typography>An email address will let us discuss your suggestions</Typography>
           </Grid>
@@ -65,12 +64,6 @@ export default function OneActivity({ classes, onCancel, onStart, onEmailChange 
                   <BoatIcon />
                 </ListItemIcon>
                 <ListItemText primary="More options coming soon" />
-              </ListItem>
-              <ListItem>
-                <ListItemIcon>
-                  <FullKeelIcon />
-                </ListItemIcon>
-                <ListItemText primary="A Hull" />
               </ListItem>
             </List>
             </Grid>
