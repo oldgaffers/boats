@@ -129,7 +129,7 @@ export default function Enquiry({ boat, classes }) {
         endIcon={<MailIcon/>}
         variant="contained"
         color="primary" onClick={handleClickOpen}>
-        Contact us about this boat
+        Ask about this boat
       </Button>
       <EnquiryDialog 
         open={open}
