@@ -91,7 +91,7 @@ export default function SearchAndFilterBoats({
         { field: 'length_on_deck', name: "Length", direction: 'desc' },
         { field: 'rank', name: "Editor's choice", direction: 'asc' },
      ];
-     if (filters.sale) {
+     if (view.sale) {
         sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });
      }
     const sortLabelByField = sortOptions.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
