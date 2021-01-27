@@ -16,7 +16,7 @@ export const useCardQuery = (state) => {
   const ip = parseInt(p);
   return useQuery(
     gql`query boats(
-      $sort: boatwithrank_order_by!,
+      $order_by: [boatwithrank_order_by!],
       $where: boatwithrank_bool_exp!, 
       $limit: Int!, 
       $offset: Int!) {
@@ -25,7 +25,7 @@ export const useCardQuery = (state) => {
         boatwithrank(
           limit: $limit, 
           offset: $offset, 
-          order_by: [$sort], 
+          order_by: $order_by, 
           where: $where
         ) {
           name oga_no place_built previous_names home_port short_description year
@@ -41,12 +41,22 @@ export const useCardQuery = (state) => {
           limit: ibpp,
           offset: ibpp * (ip - 1),
           where: buildWhere(filters, view),
-          sort: {[sort]: sortDirection},
+          order_by: buildSort(sort, sortDirection),
         },
       },
     );  
 }
-  
+
+// some sorts (e.g. length, updated_at) are unstable 
+// unless augmented with a unique sort key
+export function buildSort(sort, sortDirection) {
+  if (sort === 'oga_no') {
+    return { oga_no: sortDirection };
+  }
+  const dir = `${sortDirection}_nulls_last`;
+  return [{[sort]: dir}, {oga_no: dir}];
+}
+
 export function buildWhere(choices, view) {
   return conditionBuilder({...view, ...choices});
 }
