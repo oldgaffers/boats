@@ -62,6 +62,48 @@ export const steps = (pickers) => [
     "nextStep": "dimensions",
     fields: [
       {
+        component: componentTypes.RADIO,
+        name: "hull_form",
+        label: "Hull Form",
+        "options": [
+          {label: 'cut-away stem', value: 'cut away stem'}, 
+          {label: 'cut-away stern', value: 'cut away stern'}, 
+          {label: 'long keel deep forefoot', value: 'long keel deep forefoot'},
+          {label: 'long keel sloping forefoot', value: 'long keel sloping forefoot'},
+          {label: 'fin keel', value: 'fin keel'},
+          {label: 'bilge keel', value: 'bilge keel'},
+          {label: 'centre-boarder', value: 'centre-boarder'},
+          {label: 'lifting bulb keel', value: 'lifting bulb keel'}, 
+          {label: 'lee-boarder', value: 'leeboarder'},
+        ],
+      }
+    ]
+  },
+  {
+    title: "Hull",
+    name: "dinghy-hull",
+    component: componentTypes.SUB_FORM,
+    "nextStep": "dimensions",
+    fields: [
+      {
+        component: componentTypes.RADIO,
+        name: "hull_form",
+        label: "Hull Form",
+        "options": [
+          {label: 'dinghy', value: 'dinghy'}, 
+          {label: 'centre-board dinghy', value: 'centre-board dinghy'},
+          {label: 'lee-boarder', value: 'leeboarder'},
+        ],
+      }
+    ]
+  },
+  {
+    title: "Hull",
+    name: "hull1",
+    component: componentTypes.SUB_FORM,
+    "nextStep": "dimensions",
+    fields: [
+      {
         component: 'hull-form',
         name: "hull_form",
         label: "Hull Form",
@@ -71,7 +113,7 @@ export const steps = (pickers) => [
   },
   {
     title: "Hull",
-    name: "dinghy-hull",
+    name: "dinghy-hull1",
     component: componentTypes.SUB_FORM,
     "nextStep": "dimensions",
     fields: [

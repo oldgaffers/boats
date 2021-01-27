@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function NewUpdateBoatDialog({ boat, onClose, open }) {
+export default function UpdateBoatDialog({ boat, onClose, open }) {
   const classes = useStyles();
   const { loading, error, data } = usePicklists();
 
@@ -78,7 +78,7 @@ export function NewUpdateBoatDialog({ boat, onClose, open }) {
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
       <EditBoat classes={classes} onCancel={handleCancel} onSave={handleSave} boat={boat} pickers={pickers}/>
-  </Dialog>
+    </Dialog>
   );
 }
 
@@ -108,7 +108,7 @@ function getActivity({ pickers, boat, activity, handleClose, handleStart, handle
   }
 }
 
-export default function UpdateBoatDialog({ boat, onClose, open }) {
+export function OldUpdateBoatDialog({ boat, onClose, open }) {
 
   const classes = useStyles();
   const [email, setEmail] = useState('');

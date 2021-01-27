@@ -1,10 +1,54 @@
 import React from "react";
-import Typography from '@material-ui/core/Typography';
-import FormRenderer, { componentTypes, useFieldApi } from "@data-driven-forms/react-form-renderer";
-import { componentMapper, FormTemplate } from "@data-driven-forms/mui-component-mapper";
+import RemoveIcon from '@material-ui/icons/Remove';
+import FormRenderer, { componentTypes, useFieldApi, useFormApi } from "@data-driven-forms/react-form-renderer";
+import { componentMapper } from "@data-driven-forms/mui-component-mapper";
+import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import MUIRichTextEditor from 'mui-rte';
+import { stateToHTML } from 'draft-js-export-html';
+import { convertFromHTML, ContentState, convertToRaw } from 'draft-js'
 import HullForm from './HullForm';
 import { steps as rig_steps } from "./Rig";
-import Descriptions from './Descriptions';
+import BoatIcon from "./boaticon";
+
+
+const defaultTheme = createMuiTheme()
+
+Object.assign(defaultTheme, {
+  overrides: {
+      MUIRichTextEditor: {
+          root: {
+            width: "100%"
+          },
+          toolbar: {
+            borderTop: "1px solid gray",
+            borderLeft: "1px solid gray",
+            borderRight: "1px solid gray",
+            backgroundColor: "whitesmoke"
+          },
+          editor: {
+              border: "1px solid gray",
+              marginBottom: 10,
+              paddingLeft: '5px',
+              paddingRight: '5px'
+          }
+      }
+  }
+})
+
+function htmlToRTE(html) {
+  const contentHTML = convertFromHTML(html || '');
+  const contentState = ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
+  return JSON.stringify(convertToRaw(contentState));
+}
+
+const HtmlEditor = (props) => {
+    const { input, meta } = useFieldApi(props);
+    return <MUIRichTextEditor
+    controls={props.controls}
+    onChange={(rte) => input.onChange(stateToHTML(rte.getCurrentContent()))}
+    defaultValue={htmlToRTE(input.value)}
+    />;
+}
 
 const activities_all = [
     { label: 'Edit the short and full descriptions', value: 'descriptions' },
@@ -21,31 +65,6 @@ const activities = [
     { label: 'Edit type, rig and/or basic dimensions', value: 'rig' },
 ];
 
-const DescriptionsEditor = (props) => {
-    const { input, meta } = useFieldApi(props);
-
-    const handleCancel = () => {
-        props.onCancel();
-    }
-
-    const handleSave = (short_description, full_description) => {
-        input.onChange({...input.value, short_description, full_description})
-    }
-
-    return (<>
-    <label>
-    <Typography variant="h6">{props.label}</Typography></label>
-    {meta.error && <label>{meta.error}</label>}
-    <Descriptions
-        {...props}
-        onCancel={handleCancel}
-        onSave={handleSave}
-        short={input.short_description}
-        full={input.full_description}
-        />;
-    </>);
-}
-
 const boatfields = (pickers) => {
     return [
         { 
@@ -53,7 +72,12 @@ const boatfields = (pickers) => {
             name: "activity",
             nextStep: ({values}) => values.activity,
             component: componentTypes.SUB_FORM,
-            fields: [
+            fields: [                
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: "intro",
+                    label: "An email address will let us discuss your suggestions with you",        
+                },
                 {
                     component: componentTypes.TEXT_FIELD,
                     name: "email",
@@ -62,8 +86,10 @@ const boatfields = (pickers) => {
                 {
                     component: componentTypes.RADIO,
                     name: "activity",
-                    label: "Where would you like to start?",
-                    options: activities
+                    label: "What would you like to do?",
+                    options: activities,
+                    RadioProps: { icon: <RemoveIcon color="primary"/>, checkedIcon: <BoatIcon color="primary"/> }
+                    //RadioProps: { icon: <BoatIcon color="disabled"/>, checkedIcon: <BoatIcon color="primary"/> }
                 },
             ]
         },
@@ -71,12 +97,26 @@ const boatfields = (pickers) => {
             title: "Description",
             name: "descriptions",
             component: componentTypes.SUB_FORM,
-            nextStep: "rig",
             "fields": [
                 {
-                    component: 'descriptions-editor',
-                    name: "descriptions-editor",
-                    label: "Edit the short and full descriptions",        
+                    component: componentTypes.PLAIN_TEXT,
+                    name: "short_label",
+                    label: "Edit the short description",        
+                },
+                {
+                    component: 'html',
+                    name: "short_description",
+                    controls: ["bold", "italic"],
+                },
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: "full_label",
+                    label: "Edit the full description",        
+                },
+                {
+                    component: 'html',
+                    name: "full_description",
+                    controls: ["title", "bold", "italic", "numberList", "bulletList", "link" ],
                 },
             ]
         },       
@@ -160,22 +200,37 @@ export const schema = (pickers) => {
     };
 };
 
+const FormTemplate = ({schema, formFields}) => {
+    const { handleSubmit } = useFormApi();
+    return (
+      <form onSubmit={handleSubmit}>
+        { schema.title }
+        { formFields }
+      </form>
+    )
+  }
+
 export default function EditBoat({ classes, onCancel, onSave, boat, pickers }) {
     console.log('rig steps', rig_steps(pickers));
     console.log('schema', schema(pickers));
-    return (<FormRenderer
+    const state = {...boat, activity: 'descriptions' }; 
+    console.log('rig', `'${state.rig_type}'`);
+    console.log(boat);
+    return (<MuiThemeProvider theme={defaultTheme}>
+    <FormRenderer
        schema={schema(pickers)}
        componentMapper={
          { 
            ...componentMapper,
            'hull-form': HullForm,
-           'descriptions-editor': DescriptionsEditor,
+           'html': HtmlEditor,
          }
        }
        FormTemplate={FormTemplate}
        onCancel={onCancel}
        onSubmit={onSave}
-       initialValues={boat}
-     />);
+       initialValues={state}
+     />
+     </MuiThemeProvider>);
    }
    
