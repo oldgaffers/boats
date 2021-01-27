@@ -8,8 +8,8 @@ import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertToRaw } from 'draft-js'
 import HullForm from './HullForm';
 import { steps as rig_steps } from "./Rig";
+import { steps as handicap_steps } from "./Handicap";
 import BoatIcon from "./boaticon";
-
 
 const defaultTheme = createMuiTheme()
 
@@ -63,12 +63,15 @@ const activities_all = [
 const activities = [
     { label: 'Edit the short and full descriptions', value: 'descriptions' },
     { label: 'Edit type, rig and/or basic dimensions', value: 'rig' },
+    { label: 'Add/change a handicap', value: 'handicap' },
 ];
 
 const boatfields = (pickers) => {
+
     return [
         { 
             title: "Update Boat",
+            description: "XXX",
             name: "activity",
             nextStep: ({values}) => values.activity,
             component: componentTypes.SUB_FORM,
@@ -121,19 +124,7 @@ const boatfields = (pickers) => {
             ]
         },       
         ...rig_steps(pickers),
-        { 
-            "title": "Handicap",
-            "name": "handicap",
-            component: componentTypes.SUB_FORM,
-            "nextStep": "ownership",
-            "fields": [
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "todo2",
-                    label: "TODO",        
-                },
-            ]
-        },
+        ...handicap_steps(pickers),
         { 
             "title": "Ownership",
             "name": "ownership",
