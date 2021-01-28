@@ -60,12 +60,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UpdateBoatDialog({ boat, onClose, open }) {
   const classes = useStyles();
-  const { loading, error, data } = usePicklists();
-
-  if (loading) return (<p>Loading...</p>);
-  if (error) return (<p>Error :(can't get picklists)</p>);
-
-  const pickers = data;
 
   const handleCancel = () => {
     onClose();
@@ -77,7 +71,7 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
 
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
-      <EditBoat classes={classes} onCancel={handleCancel} onSave={handleSave} boat={boat} pickers={pickers}/>
+      <EditBoat classes={classes} onCancel={handleCancel} onSave={handleSave} boat={boat}/>
     </Dialog>
   );
 }
