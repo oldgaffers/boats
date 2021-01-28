@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useRef } from "react";
 import RemoveIcon from '@material-ui/icons/Remove';
 import FormRenderer, { componentTypes, useFieldApi, useFormApi } from "@data-driven-forms/react-form-renderer";
 import { componentMapper } from "@data-driven-forms/mui-component-mapper";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
-import { convertFromHTML, ContentState, convertToRaw } from 'draft-js'
+import { convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js'
 import HullForm from './HullForm';
 import { steps as rig_steps } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
 import BoatIcon from "./boaticon";
+import { usePicklists } from '../util/picklists';
 
 const defaultTheme = createMuiTheme()
 
@@ -42,12 +43,36 @@ function htmlToRTE(html) {
 }
 
 const HtmlEditor = (props) => {
+
+    // should we use the ref from meta????
+    // todo find a way to call ref.save() when the continue/submit button is pressed
+
+    const ref = useRef(null);
     const { input, meta } = useFieldApi(props);
-    return <MUIRichTextEditor
+
+    console.log('RTE meta', meta);
+    console.log('RTE input', input);
+
+    const handleBlur = () => {
+        console.log('RTE blur', ref);
+        ref.current.save();
+    }
+
+    const handleSave = (data) => {
+        console.log('RTE save');
+        input.onChange(stateToHTML(convertFromRaw(JSON.parse(data))));
+    }
+
+    return <>
+    {props.title}
+    <MUIRichTextEditor
     controls={props.controls}
-    onChange={(rte) => input.onChange(stateToHTML(rte.getCurrentContent()))}
+    onSave={handleSave}
     defaultValue={htmlToRTE(input.value)}
-    />;
+    onBlur={handleBlur}
+    ref={ref}
+    />
+    </>;
 }
 
 const activities_all = [
@@ -66,71 +91,65 @@ const activities = [
     { label: 'Add/change a handicap', value: 'handicap' },
 ];
 
-const boatfields = (pickers) => {
-
-    return [
-        { 
-            title: "Update Boat",
-            description: "XXX",
+const activityForm = {
+    name: 'activity',
+    component: componentTypes.SUB_FORM,
+    title: "Update Boat",
+    description: "XXX",
+    fields: [                
+        {
+            component: componentTypes.PLAIN_TEXT,
+            name: "intro",
+            label: "An email address will let us discuss your suggestions with you",        
+        },
+        {
+            component: componentTypes.TEXT_FIELD,
+            name: "email",
+            label: "email",        
+        },
+        {
+            component: componentTypes.RADIO,
             name: "activity",
-            nextStep: ({values}) => values.activity,
-            component: componentTypes.SUB_FORM,
-            fields: [                
-                {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: "intro",
-                    label: "An email address will let us discuss your suggestions with you",        
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "email",
-                    label: "email",        
-                },
-                {
-                    component: componentTypes.RADIO,
-                    name: "activity",
-                    label: "What would you like to do?",
-                    options: activities,
-                    RadioProps: { icon: <RemoveIcon color="primary"/>, checkedIcon: <BoatIcon color="primary"/> }
-                    //RadioProps: { icon: <BoatIcon color="disabled"/>, checkedIcon: <BoatIcon color="primary"/> }
-                },
-            ]
+            label: "What would you like to do?",
+            options: activities,
+            RadioProps: { icon: <RemoveIcon color="primary"/>, checkedIcon: <BoatIcon color="primary"/> }
+            //RadioProps: { icon: <BoatIcon color="disabled"/>, checkedIcon: <BoatIcon color="primary"/> }
+        },
+    ]
+};
+
+const descriptionsForm = { 
+    title: "Edit Descriptions",
+    name: "descriptions",
+    component: componentTypes.SUB_FORM,
+    "fields": [
+        {
+            component: 'html',
+            title: "Short description",        
+            name: "short_description",
+            controls: ["bold", "italic"],
+            maxLength: 500,
+        },
+        {
+            component: 'html',
+            title: "Full description",        
+            name: "full_description",
+            controls: ["title", "bold", "italic", "numberList", "bulletList", "link" ],
+        },
+    ]
+};
+
+const t = (pickers) => { 
+    return [
+        {
+            name: "handicap-step",
+            nextStep: 'ownership-step',    
+            fields: handicap_steps(pickers),
         },
         { 
-            title: "Description",
-            name: "descriptions",
-            component: componentTypes.SUB_FORM,
-            "fields": [
-                {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: "short_label",
-                    label: "Edit the short description",        
-                },
-                {
-                    component: 'html',
-                    name: "short_description",
-                    controls: ["bold", "italic"],
-                },
-                {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: "full_label",
-                    label: "Edit the full description",        
-                },
-                {
-                    component: 'html',
-                    name: "full_description",
-                    controls: ["title", "bold", "italic", "numberList", "bulletList", "link" ],
-                },
-            ]
-        },       
-        ...rig_steps(pickers),
-        ...handicap_steps(pickers),
-        { 
-            "title": "Ownership",
-            "name": "ownership",
-            component: componentTypes.SUB_FORM,
-            "nextStep": "identities",
-            "fields": [
+            name: "ownership-step",
+            nextStep: "identities-step",
+            fields: [
                 {
                     component: componentTypes.TEXT_FIELD,
                     name: "todo3",
@@ -139,10 +158,8 @@ const boatfields = (pickers) => {
             ]
         },
         { 
-            "title": "Identities",
-            "name": "identities",
-            component: componentTypes.SUB_FORM,
-            "nextStep": "references",
+            "name": "identities-step",
+            "nextStep": "references-step",
             "fields": [
                 {
                     component: componentTypes.TEXT_FIELD,
@@ -152,10 +169,8 @@ const boatfields = (pickers) => {
             ]
         },
         { 
-            "title": "References",
-            "name": "references",
-            "nextStep": "everything-else",
-            component: componentTypes.SUB_FORM,
+            "name": "references-step",
+            "nextStep": "everything-else-step",
             "fields": [
                 {
                     component: componentTypes.TEXT_FIELD,
@@ -165,9 +180,7 @@ const boatfields = (pickers) => {
             ]
         },
         { 
-            "title": "Other",
-            "name": "everything-else",
-            component: componentTypes.SUB_FORM,
+            "name": "everything-else-step",
             "fields": [
                 {
                     component: componentTypes.TEXT_FIELD,
@@ -185,7 +198,19 @@ export const schema = (pickers) => {
             {
                 component: componentTypes.WIZARD,
                 name: 'boat',
-                fields: boatfields(pickers)
+                fields: [
+                    { 
+                        name: "activity-step",
+                        nextStep: ({values}) => `${values.activity}-step`,
+                        fields: [activityForm],
+                    },
+                    {
+                        name: "descriptions-step",
+                        nextStep: 'rig-step',    
+                        fields: [descriptionsForm],
+                    },
+                    ...rig_steps(pickers),
+                ]
             }
         ]
     };
@@ -201,7 +226,15 @@ const FormTemplate = ({schema, formFields}) => {
     )
   }
 
-export default function EditBoat({ classes, onCancel, onSave, boat, pickers }) {
+export default function EditBoat({ classes, onCancel, onSave, boat }) {
+
+    const { loading, error, data } = usePicklists();
+
+    if (loading) return (<p>Loading...</p>); // change to spinner
+    if (error) return (<p>Error :(can't get picklists)</p>);
+  
+    const pickers = data;  
+
     console.log('rig steps', rig_steps(pickers));
     console.log('schema', schema(pickers));
     const state = {...boat, activity: 'descriptions' }; 

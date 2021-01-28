@@ -14,150 +14,105 @@ const mapPicker = (m) => {
   });
 }
 
-export const steps = (pickers) => [
-{
-    title: "Rig",
-    name: "rig",
-    component: componentTypes.SUB_FORM,
-    "nextStep": "type",
-    fields: [
-      {
-        component: componentTypes.SELECT,
-        name: "rig_type",
-        label: "Rig",
-        "isRequired": true,
-        "options": mapPicker(pickers.rig_type)
-        },
-      {
-        component: componentTypes.SELECT,
-        name: "mainsail_type",
-        label: "Mainsail",
-        "isRequired": true,
-        "options": mapPicker(pickers.sail_type)
-      }
-    ]
-  },
-  {
-    title: "Type",
-    name: "type",
-    component: componentTypes.SUB_FORM,
-    "nextStep": ({ values }) => {
-      console.log('generic type', values)
-      return (values.generic_type === 'Dinghy') ? 'dinghy-hull' : 'hull';
+const rigForm = (pickers) => {
+  return {
+  title: "Rig",
+  name: "rig",
+  component: componentTypes.SUB_FORM,
+  fields: [
+    {
+    component: componentTypes.SELECT,
+    name: "rig_type",
+    label: "Rig",
+    "isRequired": true,
+    "options": mapPicker(pickers.rig_type)
     },
-    fields: [
-      {
-        component: componentTypes.SELECT,
-        name: "generic_type",
-        label: "Generic Type",
-        "isRequired": true,
-        "options": mapPicker(pickers.generic_type)
-      }
-    ]
-  },
   {
-    title: "Hull",
-    name: "hull",
-    component: componentTypes.SUB_FORM,
-    "nextStep": "dimensions",
-    fields: [
-      {
-        component: componentTypes.RADIO,
-        name: "hull_form",
-        label: "Hull Form",
-        "options": [
-          {label: 'cut-away stem', value: 'cut away stem'}, 
-          {label: 'cut-away stern', value: 'cut away stern'}, 
-          {label: 'long keel deep forefoot', value: 'long keel deep forefoot'},
-          {label: 'long keel sloping forefoot', value: 'long keel sloping forefoot'},
-          {label: 'fin keel', value: 'fin keel'},
-          {label: 'bilge keel', value: 'bilge keel'},
-          {label: 'centre-boarder', value: 'centre-boarder'},
-          {label: 'lifting bulb keel', value: 'lifting bulb keel'}, 
-          {label: 'lee-boarder', value: 'leeboarder'},
-        ],
-      }
-    ]
+    component: componentTypes.SELECT,
+    name: "mainsail_type",
+    label: "Mainsail",
+    "isRequired": true,
+    "options": mapPicker(pickers.sail_type)
   },
-  {
-    title: "Hull",
-    name: "dinghy-hull",
-    component: componentTypes.SUB_FORM,
-    "nextStep": "dimensions",
-    fields: [
-      {
-        component: componentTypes.RADIO,
-        name: "hull_form",
-        label: "Hull Form",
-        "options": [
-          {label: 'dinghy', value: 'dinghy'}, 
-          {label: 'centre-board dinghy', value: 'centre-board dinghy'},
-          {label: 'lee-boarder', value: 'leeboarder'},
-        ],
-      }
-    ]
-  },
-  {
-    title: "Hull",
-    name: "hull1",
-    component: componentTypes.SUB_FORM,
-    "nextStep": "dimensions",
-    fields: [
-      {
-        component: 'hull-form',
-        name: "hull_form",
-        label: "Hull Form",
-        "options": big_boat_images,
-      }
-    ]
-  },
-  {
-    title: "Hull",
-    name: "dinghy-hull1",
-    component: componentTypes.SUB_FORM,
-    "nextStep": "dimensions",
-    fields: [
-      {
-        component: 'hull-form',
-        name: "hull_form",
-        label: "Hull Form",
-        "options": dinghy_images,
-      }
-    ]
-  },
-  {
-    name: "dimensions",
-    "nextStep": "design",
-    component: componentTypes.SUB_FORM,
-    title: "Dimensions",
-    fields: [
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "length_on_deck",
-        label: "Length on Deck",
-        dataType: 'float',
-      },
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "beam",
-        label: "Beam",
-        dataType: 'float',
-      },
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "draft",
-        label: "Draft",
-        dataType: 'float',
-      },
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "air_draft",
-        label: "Air draft",
-        dataType: 'float',
-      }
-    ]
-  },
-  {
+]}
+};
+
+const hullForm =   {
+  title: "Hull",
+  name: "hull",
+  component: componentTypes.SUB_FORM,
+  fields: [
+    {
+      component: componentTypes.RADIO,
+      name: "hull_form",
+      label: "Hull Form",
+      "options": [
+        {label: 'cut-away stem', value: 'cut away stem'}, 
+        {label: 'cut-away stern', value: 'cut away stern'}, 
+        {label: 'long keel deep forefoot', value: 'long keel deep forefoot'},
+        {label: 'long keel sloping forefoot', value: 'long keel sloping forefoot'},
+        {label: 'fin keel', value: 'fin keel'},
+        {label: 'bilge keel', value: 'bilge keel'},
+        {label: 'centre-boarder', value: 'centre-boarder'},
+        {label: 'lifting bulb keel', value: 'lifting bulb keel'}, 
+        {label: 'lee-boarder', value: 'leeboarder'},
+      ],
+    }
+  ]
+};
+
+const dinghyHullForm =   {
+  title: "Hull",
+  name: "dinghy-hull",
+  component: componentTypes.SUB_FORM,
+  fields: [
+    {
+      component: componentTypes.RADIO,
+      name: "hull_form",
+      label: "Hull Form",
+      "options": [
+        {label: 'dinghy', value: 'dinghy'}, 
+        {label: 'centre-board dinghy', value: 'centre-board dinghy'},
+        {label: 'lee-boarder', value: 'leeboarder'},
+      ],
+    }
+  ]
+};
+
+const dimensionsForm = {
+  name: "dimensions",
+  component: componentTypes.SUB_FORM,
+  title: "Dimensions",
+  fields: [
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: "length_on_deck",
+      label: "Length on Deck",
+      dataType: 'float',
+    },
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: "beam",
+      label: "Beam",
+      dataType: 'float',
+    },
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: "draft",
+      label: "Draft",
+      dataType: 'float',
+    },
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: "air_draft",
+      label: "Air draft",
+      dataType: 'float',
+    }
+  ]
+};
+
+const designForm = (pickers) => { 
+  return {
     title: "Design",
     name: "design",
     component: componentTypes.SUB_FORM,
@@ -178,8 +133,11 @@ export const steps = (pickers) => [
         "options": mapPicker(pickers.designer)              
       }
     ]
-  },
-  {
+  }
+};
+
+const buildForm = (pickers) => { 
+  return {
     title: "Build",
     name: "build",
     component: componentTypes.SUB_FORM,
@@ -194,8 +152,78 @@ export const steps = (pickers) => [
         component: componentTypes.TEXT_FIELD,
         name: "place_built",
         label: "Where built",
+      }    
+    ]
+  }
+};
+
+export const steps = (pickers) => [
+  {
+    name: "rig-step",
+    nextStep: "type-step",
+    fields: [rigForm(pickers)]
+  },
+  {
+    name: "type-step",
+    "nextStep": ({ values }) => (values.generic_type === 'Dinghy') ? 'dinghy-hull-step' : 'hull-step',
+    fields: [
+      {
+        title: "Type",
+        component: componentTypes.SELECT,
+        name: "generic_type",
+        label: "Generic Type",
+        "isRequired": true,
+        "options": mapPicker(pickers.generic_type)
       }
     ]
+  },
+  {
+    name: 'hull-step',
+    "nextStep": "dimensions-step",
+    fields: [hullForm]
+  },
+  {
+    name: 'dinghy-hull-step',
+    "nextStep": "dimensions-step",
+    fields: [dinghyHullForm]
+  },
+  {
+    name: "hull1",
+    "nextStep": "dimensions-step",
+    fields: [
+      {
+        component: 'hull-form',
+        name: "hull_form",
+        label: "Hull Form",
+        "options": big_boat_images,
+      }
+    ]
+  },
+  {
+    name: "dinghy-hull1",
+    "nextStep": "dimensions-step",
+    fields: [
+      {
+        component: 'hull-form',
+        name: "hull_form",
+        label: "Hull Form",
+        "options": dinghy_images,
+      }
+    ]
+  },
+  {
+    name: "dimensions-step",
+    "nextStep": "design-step",
+    fields: [dimensionsForm]
+  },
+  {
+    name: "design-step",
+    "nextStep": "build-step",
+    fields: [designForm(pickers)]
+  },
+  {
+    name: "build-step",
+    fields: [buildForm(pickers)]
   }
 ];
 
