@@ -139,59 +139,6 @@ const descriptionsForm = {
     ]
 };
 
-const t = (pickers) => { 
-    return [
-        {
-            name: "handicap-step",
-            nextStep: 'ownership-step',    
-            fields: handicap_steps(pickers),
-        },
-        { 
-            name: "ownership-step",
-            nextStep: "identities-step",
-            fields: [
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "todo3",
-                    label: "TODO",        
-                },
-            ]
-        },
-        { 
-            "name": "identities-step",
-            "nextStep": "references-step",
-            "fields": [
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "todo4",
-                    label: "TODO",        
-                },
-            ]
-        },
-        { 
-            "name": "references-step",
-            "nextStep": "everything-else-step",
-            "fields": [
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "todo5",
-                    label: "TODO",        
-                },
-            ]
-        },
-        { 
-            "name": "everything-else-step",
-            "fields": [
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "todo6",
-                    label: "TODO",        
-                },
-            ]
-        },        
-    ];
-};
-
 export const schema = (pickers) => {
     return {
         fields: [
@@ -210,6 +157,50 @@ export const schema = (pickers) => {
                         fields: [descriptionsForm],
                     },
                     ...rig_steps(pickers),
+                    ...handicap_steps(pickers),
+                    { 
+                        name: "ownership-step",
+                        nextStep: "identities-step",
+                        fields: [
+                            {
+                                component: componentTypes.TEXT_FIELD,
+                                name: "todo3",
+                                label: "TODO",        
+                            },
+                        ]
+                    },
+                    { 
+                        "name": "identities-step",
+                        "nextStep": "references-step",
+                        "fields": [
+                            {
+                                component: componentTypes.TEXT_FIELD,
+                                name: "todo4",
+                                label: "TODO",        
+                            },
+                        ]
+                    },
+                    { 
+                        "name": "references-step",
+                        "nextStep": "everything-else-step",
+                        "fields": [
+                            {
+                                component: componentTypes.TEXT_FIELD,
+                                name: "todo5",
+                                label: "TODO",        
+                            },
+                        ]
+                    },
+                    { 
+                        "name": "everything-else-step",
+                        "fields": [
+                            {
+                                component: componentTypes.TEXT_FIELD,
+                                name: "todo6",
+                                label: "TODO",        
+                            },
+                        ]
+                    },        
                 ]
             }
         ]

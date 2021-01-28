@@ -116,7 +116,6 @@ const designForm = (pickers) => {
     title: "Design",
     name: "design",
     component: componentTypes.SUB_FORM,
-    "nextStep": "build",
     fields: [
       {
         component: componentTypes.SELECT,
@@ -165,7 +164,7 @@ export const steps = (pickers) => [
   },
   {
     name: "type-step",
-    "nextStep": ({ values }) => (values.generic_type === 'Dinghy') ? 'dinghy-hull-step' : 'hull-step',
+    nextStep: ({ values }) => (values.generic_type === 'Dinghy') ? 'dinghy-hull-step' : 'hull-step',
     fields: [
       {
         title: "Type",
@@ -179,17 +178,17 @@ export const steps = (pickers) => [
   },
   {
     name: 'hull-step',
-    "nextStep": "dimensions-step",
+    nextStep: "dimensions-step",
     fields: [hullForm]
   },
   {
     name: 'dinghy-hull-step',
-    "nextStep": "dimensions-step",
+    nextStep: "dimensions-step",
     fields: [dinghyHullForm]
   },
   {
     name: "hull1",
-    "nextStep": "dimensions-step",
+    nextStep: "dimensions-step",
     fields: [
       {
         component: 'hull-form',
@@ -201,7 +200,7 @@ export const steps = (pickers) => [
   },
   {
     name: "dinghy-hull1",
-    "nextStep": "dimensions-step",
+    nextStep: "dimensions-step",
     fields: [
       {
         component: 'hull-form',
@@ -213,12 +212,12 @@ export const steps = (pickers) => [
   },
   {
     name: "dimensions-step",
-    "nextStep": "design-step",
+    nextStep: "design-step",
     fields: [dimensionsForm]
   },
   {
     name: "design-step",
-    "nextStep": "build-step",
+    nextStep: "build-step",
     fields: [designForm(pickers)]
   },
   {
