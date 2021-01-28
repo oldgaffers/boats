@@ -16,7 +16,7 @@ handicap and the extra data for experimental and area handicaps. You can enter t
       },
       {
         component: componentTypes.RADIO,
-        name: "collect_headsail_data",
+        name: "ddf_collect_headsail_data",
         label: "Collect headsail data",
         "options": [
           {label: 'Yes', value: true},
@@ -33,24 +33,39 @@ handicap and the extra data for experimental and area handicaps. You can enter t
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: "sailarea",
+          name: "handicap_data~sailarea",
           label: "Area in square feet",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "height",
+          name: "handicap_data~fore_triangle_height",
           label: "Fore Triangle Height",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "base",
+          name: "handicap_data~fore_triangle_base",
           label: "Fore Triangle Base",
           dataType: 'float'
         },
       ]
     };
+    /*
+    length_overall
+    length_on_waterline
+    length_over_spars
+    moving_keel
+    draft_keel_up
+    draft_keel_down
+    "moving_keel_type": Centreboard|Leeboard, 
+    calculated_thcf
+  "main": {"foot": 15.9, "head": 11.3, "luff": 13.4}, 
+mizzen": {"foot": 3.33, "luff": 7.5}
+ sailarea
+ "topsail": {"luff": 16, "perpendicular": 12}
+
+    */
 
     const luffLeachFootForm = (title, name) => {
       return {
@@ -60,19 +75,19 @@ handicap and the extra data for experimental and area handicaps. You can enter t
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: "luff",
+          name: `${name}~luff`,
           label: "Luff",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "leach",
+          name: `${name}~leach`,
           label: "Leach",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "foot",
+          name: `${name}~foot`,
           label: "Foot",
           dataType: 'float'
         },
@@ -88,19 +103,19 @@ handicap and the extra data for experimental and area handicaps. You can enter t
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: "luff",
+          name: `${name}~luff`,
           label: "Luff",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "head",
+          name: `${name}~head`,
           label: "Head",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "foot",
+          name: `${name}~foot`,
           label: "Foot",
           dataType: 'float'
         },
@@ -116,13 +131,13 @@ handicap and the extra data for experimental and area handicaps. You can enter t
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: "luff",
+          name: `${name}~luff`,
           label: "Luff",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "perpendicular",
+          name: `${name}~perpendicular`,
           label: "Perpendicular",
           dataType: 'float'
         },
@@ -132,7 +147,7 @@ handicap and the extra data for experimental and area handicaps. You can enter t
 
 const propellorForm = {
       title: "Propeller type",
-      name: "prop",
+      name: "handicap_data~prop",
       component: componentTypes.SUB_FORM,
       fields: [
         {
@@ -164,37 +179,37 @@ const propellorForm = {
     {
       name: "bigs-step",
       nextStep: "bigj-step",
-      fields: [luffLeachFootForm('Biggest Staysail', 'bigs')]
+      fields: [luffLeachFootForm('Biggest Staysail', 'handicap_data~biggest_staysail')]
     },
     {
       name: "bigj-step",
       nextStep: "bigdw-step",
-      fields: [luffLeachFootForm('Biggest Jib', 'bigj')]
+      fields: [luffLeachFootForm('Biggest Jib', 'handicap_data~biggest_jib')]
     },
     {
       name: "bigdw-step",
       nextStep: "main-step",
-      fields: [luffLeachFootForm('Biggest Downwind sail', 'bigdw')]
+      fields: [luffLeachFootForm('Biggest Downwind sail', 'handicap_data~biggest_downwindsail')]
     },
     {
       name: "main-step",
       nextStep: "top-step",
-      fields: [gaffForm('Main sail', 'main')]
+      fields: [gaffForm('Main sail', 'handicap_data~main')]
     },
     {
       name: "top-step",
       nextStep: "mizen-step",
-      fields: [topslForm('topsail', 'top')]
+      fields: [topslForm('topsail', 'handicap_data~topsail')]
     },
     {
       name: "mizen-step",
       nextStep: "miztop-step",
-      fields: [gaffForm('Mizen', 'mizen')]
+      fields: [gaffForm('Mizen', 'handicap_data~mizen')]
     },
     {
       name: "miztop-step",
       nextStep: "prop-step",
-      fields: [topslForm('Mizen topsail', 'miztop')]
+      fields: [topslForm('Mizen topsail', 'handicap_data~mizen_topsail')]
     },
     {
       name: "prop-step",

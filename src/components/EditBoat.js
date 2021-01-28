@@ -95,7 +95,6 @@ const activityForm = {
     name: 'activity',
     component: componentTypes.SUB_FORM,
     title: "Update Boat",
-    description: "XXX",
     fields: [                
         {
             component: componentTypes.PLAIN_TEXT,
@@ -109,7 +108,7 @@ const activityForm = {
         },
         {
             component: componentTypes.RADIO,
-            name: "activity",
+            name: "ddf_activity",
             label: "What would you like to do?",
             options: activities,
             RadioProps: { icon: <RemoveIcon color="primary"/>, checkedIcon: <BoatIcon color="primary"/> }
@@ -148,7 +147,7 @@ export const schema = (pickers) => {
                 fields: [
                     { 
                         name: "activity-step",
-                        nextStep: ({values}) => `${values.activity}-step`,
+                        nextStep: ({values}) => `${values.ddf_activity}-step`,
                         fields: [activityForm],
                     },
                     {
@@ -217,6 +216,62 @@ const FormTemplate = ({schema, formFields}) => {
     )
   }
 
+const JC = '~';
+
+function flatten1(o, prefix) {
+    return Object.keys(o).map(key => {
+        const k2 = prefix?`${prefix}${JC}${key}`:key;
+        if(typeof o[key] === 'object') {
+            if(o[key] === null) {
+                return {[k2]: o[key]}
+            } else if(Array.isArray(o[key])) {
+                return {[k2]: o[key]}
+            } else {
+                return flatten1(o[key], k2);
+            }
+        }
+        return {[k2]: o[key]}
+    }).flat()
+}
+
+function flatten(boat) {
+    return flatten1(boat).flat().reduce((a,c)=>{return {...a,...c}});
+}
+
+function unflatten(o) {
+    const outers = new Set();
+    Object.keys(o).forEach(key => {
+        if(key.includes(JC)) {
+            const f = key.split(JC);
+            outers.add(f[0]);
+        } else {
+            outers.add(key);
+        }
+    });
+    const r = {};
+    outers.forEach(outer => {
+        if(o[outer]) {
+            r[outer] = o[outer];
+        } else {
+            const c = {};
+            const t = {};
+            Object.keys(o).forEach(key => {
+                if(key.startsWith(outer)) {
+                    const f = key.split(JC);
+                    f.shift();
+                    if(f.length == 1) {
+                        c[f[0]] = o[key];
+                    } else {
+                        t[f.join(JC)] = o[key];
+                    }
+                }
+            });
+            r[outer] = {...c, ...unflatten(t)};
+        }
+    });
+    return r;
+}
+
 export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
     const { loading, error, data } = usePicklists();
@@ -226,11 +281,9 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   
     const pickers = data;  
 
-    console.log('rig steps', rig_steps(pickers));
-    console.log('schema', schema(pickers));
-    const state = {...boat, activity: 'descriptions' }; 
-    console.log('rig', `'${state.rig_type}'`);
-    console.log(boat);
+    const state = {...flatten(boat), ddf_activity: 'descriptions'}; 
+    console.log(state);
+
     return (<MuiThemeProvider theme={defaultTheme}>
     <FormRenderer
        schema={schema(pickers)}
@@ -243,7 +296,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
        }
        FormTemplate={FormTemplate}
        onCancel={onCancel}
-       onSubmit={onSave}
+       onSubmit={(values) => onSave(unflatten(values))}
        initialValues={state}
      />
      </MuiThemeProvider>);
