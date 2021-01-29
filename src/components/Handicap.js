@@ -33,19 +33,19 @@ handicap and the extra data for experimental and area handicaps. You can enter t
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: "handicap_data~sailarea",
+          name: "handicap_data.sailarea",
           label: "Area in square feet",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "handicap_data~fore_triangle_height",
+          name: "handicap_data.fore_triangle_height",
           label: "Fore Triangle Height",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: "handicap_data~fore_triangle_base",
+          name: "handicap_data.fore_triangle_base",
           label: "Fore Triangle Base",
           dataType: 'float'
         },
@@ -75,19 +75,19 @@ mizzen": {"foot": 3.33, "luff": 7.5}
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~luff`,
+          name: `${name}.luff`,
           label: "Luff",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~leach`,
+          name: `${name}.leach`,
           label: "Leach",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~foot`,
+          name: `${name}.foot`,
           label: "Foot",
           dataType: 'float'
         },
@@ -103,19 +103,19 @@ mizzen": {"foot": 3.33, "luff": 7.5}
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~luff`,
+          name: `${name}.luff`,
           label: "Luff",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~head`,
+          name: `${name}.head`,
           label: "Head",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~foot`,
+          name: `${name}.foot`,
           label: "Foot",
           dataType: 'float'
         },
@@ -131,13 +131,13 @@ mizzen": {"foot": 3.33, "luff": 7.5}
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~luff`,
+          name: `${name}.luff`,
           label: "Luff",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: `${name}~perpendicular`,
+          name: `${name}.perpendicular`,
           label: "Perpendicular",
           dataType: 'float'
         },
@@ -147,7 +147,7 @@ mizzen": {"foot": 3.33, "luff": 7.5}
 
 const propellorForm = {
       title: "Propeller type",
-      name: "handicap_data~prop",
+      name: "handicap_data.prop",
       component: componentTypes.SUB_FORM,
       fields: [
         {
@@ -179,37 +179,37 @@ const propellorForm = {
     {
       name: "bigs-step",
       nextStep: "bigj-step",
-      fields: [luffLeachFootForm('Biggest Staysail', 'handicap_data~biggest_staysail')]
+      fields: [luffLeachFootForm('Biggest Staysail', 'handicap_data.biggest_staysail')]
     },
     {
       name: "bigj-step",
       nextStep: "bigdw-step",
-      fields: [luffLeachFootForm('Biggest Jib', 'handicap_data~biggest_jib')]
+      fields: [luffLeachFootForm('Biggest Jib', 'handicap_data.biggest_jib')]
     },
     {
       name: "bigdw-step",
       nextStep: "main-step",
-      fields: [luffLeachFootForm('Biggest Downwind sail', 'handicap_data~biggest_downwindsail')]
+      fields: [luffLeachFootForm('Biggest Downwind sail', 'handicap_data.biggest_downwindsail')]
     },
     {
       name: "main-step",
       nextStep: "top-step",
-      fields: [gaffForm('Main sail', 'handicap_data~main')]
+      fields: [gaffForm('Main sail', 'handicap_data.main')]
     },
     {
       name: "top-step",
       nextStep: "mizen-step",
-      fields: [topslForm('topsail', 'handicap_data~topsail')]
+      fields: [topslForm('topsail', 'handicap_data.topsail')]
     },
     {
       name: "mizen-step",
       nextStep: "miztop-step",
-      fields: [gaffForm('Mizen', 'handicap_data~mizen')]
+      fields: [gaffForm('Mizen', 'handicap_data.mizen')]
     },
     {
       name: "miztop-step",
       nextStep: "prop-step",
-      fields: [topslForm('Mizen topsail', 'handicap_data~mizen_topsail')]
+      fields: [topslForm('Mizen topsail', 'handicap_data.mizen_topsail')]
     },
     {
       name: "prop-step",
