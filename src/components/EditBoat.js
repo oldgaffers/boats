@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import RemoveIcon from '@material-ui/icons/Remove';
 import FormRenderer, { componentTypes, useFieldApi, useFormApi } from "@data-driven-forms/react-form-renderer";
 import { componentMapper } from "@data-driven-forms/mui-component-mapper";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
@@ -10,6 +9,7 @@ import HullForm from './HullForm';
 import { steps as rig_steps } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
 import BoatIcon from "./boaticon";
+import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from '../util/picklists';
 import { drop_ddf, flatten, unflatten } from "../util/ddf_utils";
 
@@ -112,8 +112,7 @@ const activityForm = {
             name: "ddf_activity",
             label: "What would you like to do?",
             options: activities,
-            RadioProps: { icon: <RemoveIcon color="primary"/>, checkedIcon: <BoatIcon color="primary"/> }
-            //RadioProps: { icon: <BoatIcon color="disabled"/>, checkedIcon: <BoatIcon color="primary"/> }
+            RadioProps: { icon: <BoatAnchoredIcon color="primary"/>, checkedIcon: <BoatIcon color="primary"/> }
         },
     ]
 };
