@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import CircularProgress from '@material-ui/core/CircularProgress';
 import FormRenderer, { componentTypes, useFieldApi, useFormApi } from "@data-driven-forms/react-form-renderer";
 import { componentMapper } from "@data-driven-forms/mui-component-mapper";
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
@@ -11,7 +12,6 @@ import { steps as handicap_steps } from "./Handicap";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from '../util/picklists';
-import { drop_ddf, flatten, unflatten } from "../util/ddf_utils";
 
 const defaultTheme = createMuiTheme()
 
@@ -51,18 +51,17 @@ const HtmlEditor = (props) => {
     const ref = useRef(null);
     const { input, meta } = useFieldApi(props);
 
-    console.log('RTE meta', meta);
-    console.log('RTE input', input);
-
     const handleBlur = () => {
-        console.log('RTE blur', ref);
+        console.log('RTE blur', input.name, ref);
         ref.current.save();
     }
 
     const handleSave = (data) => {
-        console.log('RTE save');
-        input.onChange(stateToHTML(convertFromRaw(JSON.parse(data))));
+        const html = stateToHTML(convertFromRaw(JSON.parse(data)));
+        console.log('RTE save', input.name, html);
+        input.onChange(html);
     }
+
 
     return <>
     {props.title}
@@ -220,13 +219,17 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
     const { loading, error, data } = usePicklists();
 
-    if (loading) return (<p>Loading...</p>); // change to spinner
+    if (loading) return (<CircularProgress/>);
     if (error) return (<p>Error :(can't get picklists)</p>);
   
     const pickers = data;  
 
-    const state = {...flatten(boat), ddf_activity: 'descriptions'}; 
-    console.log(state);
+    const state = {...boat, ddf_activity: 'descriptions'}; 
+
+    const handleSubmit = (values) => {
+        const { ddf_activity, ...result } = values;
+        onSave(result); 
+    }
 
     return (<MuiThemeProvider theme={defaultTheme}>
     <FormRenderer
@@ -240,7 +243,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
        }
        FormTemplate={FormTemplate}
        onCancel={onCancel}
-       onSubmit={(values) => onSave(unflatten(drop_ddf(values)))}
+       onSubmit={handleSubmit}
        initialValues={state}
      />
      </MuiThemeProvider>);
