@@ -58,33 +58,4 @@ export function drop_ddf(values) {
     return Object.keys(values).filter((k) => !k.startsWith('ddf_')).reduce((a,c)=>{return {...a,...c}});;
 }
 
-export default function EditBoat({ classes, onCancel, onSave, boat }) {
-
-    const { loading, error, data } = usePicklists();
-
-    if (loading) return (<p>Loading...</p>); // change to spinner
-    if (error) return (<p>Error :(can't get picklists)</p>);
-  
-    const pickers = data;  
-
-    const state = {...flatten(boat), ddf_activity: 'descriptions'}; 
-    console.log(state);
-
-    return (<MuiThemeProvider theme={defaultTheme}>
-    <FormRenderer
-       schema={schema(pickers)}
-       componentMapper={
-         { 
-           ...componentMapper,
-           'hull-form': HullForm,
-           'html': HtmlEditor,
-         }
-       }
-       FormTemplate={FormTemplate}
-       onCancel={onCancel}
-       onSubmit={(values) => onSave(unflatten(drop_ddf(values)))}
-       initialValues={state}
-     />
-     </MuiThemeProvider>);
-   }
    
