@@ -79,38 +79,6 @@ const dinghyHullForm =   {
   ]
 };
 
-const dimensionsForm = {
-  name: "dimensions",
-  component: componentTypes.SUB_FORM,
-  title: "Dimensions",
-  fields: [
-    {
-      component: componentTypes.TEXT_FIELD,
-      name: "length_on_deck",
-      label: "Length on Deck",
-      dataType: 'float',
-    },
-    {
-      component: componentTypes.TEXT_FIELD,
-      name: "beam",
-      label: "Beam",
-      dataType: 'float',
-    },
-    {
-      component: componentTypes.TEXT_FIELD,
-      name: "draft",
-      label: "Draft",
-      dataType: 'float',
-    },
-    {
-      component: componentTypes.TEXT_FIELD,
-      name: "air_draft",
-      label: "Air draft",
-      dataType: 'float',
-    }
-  ]
-};
-
 const designForm = (pickers) => { 
   return {
     title: "Design",
@@ -122,15 +90,33 @@ const designForm = (pickers) => {
         name: "design_class",
         label: "Design class",
         "isRequired": false,
+        isReadOnly: false,
+        isSearchable: true,
+        isClearable: true,
         "options": mapPicker(pickers.design_class)                
-        },
+      },
+      {
+        component: componentTypes.TEXT_FIELD,
+        name: "new_design_class",
+        label: "A design class not listed",
+        "isRequired": false,
+      },
       {
         component: componentTypes.SELECT,
         name: "designer",
         label: "Designer",
         "isRequired": false,
+        isReadOnly: false,
+        isSearchable: true,
+        isClearable: true,
         "options": mapPicker(pickers.designer)              
-      }
+      },
+      {
+        component: componentTypes.TEXT_FIELD,
+        name: "new_designer",
+        label: "A designer not listed",
+        "isRequired": false,
+      },
     ]
   }
 };
@@ -145,7 +131,16 @@ const buildForm = (pickers) => {
         component: componentTypes.SELECT,
         name: "builder",
         label: "Builder",
+        isReadOnly: false,
+        isSearchable: true,
+        isClearable: true,
         "options": mapPicker(pickers.builder)              
+      },
+      {
+        component: componentTypes.TEXT_FIELD,
+        name: "new_builder",
+        label: "A builder not listed",
+        "isRequired": false,
       },
       {
         component: componentTypes.TEXT_FIELD,
@@ -178,17 +173,17 @@ export const steps = (pickers) => [
   },
   {
     name: 'hull-step',
-    nextStep: "dimensions-step",
+    nextStep: "design-step",
     fields: [hullForm]
   },
   {
     name: 'dinghy-hull-step',
-    nextStep: "dimensions-step",
+    nextStep: "design-step",
     fields: [dinghyHullForm]
   },
   {
     name: "hull1",
-    nextStep: "dimensions-step",
+    nextStep: "design-step",
     fields: [
       {
         component: 'hull-form',
@@ -200,7 +195,7 @@ export const steps = (pickers) => [
   },
   {
     name: "dinghy-hull1",
-    nextStep: "dimensions-step",
+    nextStep: "design-step",
     fields: [
       {
         component: 'hull-form',
@@ -209,11 +204,6 @@ export const steps = (pickers) => [
         "options": dinghy_images,
       }
     ]
-  },
-  {
-    name: "dimensions-step",
-    nextStep: "design-step",
-    fields: [dimensionsForm]
   },
   {
     name: "design-step",
