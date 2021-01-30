@@ -6,23 +6,29 @@ const rig_allowance = {
 };
 
 export function fGaffSA(sail) {
-    const b = sail.foot;
-    const h = sail.luff;
-    const g = sail.head;
-    const d = Math.sqrt(b*b+h*h);
-    return 0.5*b*h+0.5*g*d;
+    if(sail) {
+        const b = sail.foot;
+        const h = sail.luff;
+        const g = sail.head;
+        const d = Math.sqrt(b*b+h*h);
+        return 0.5*b*h+0.5*g*d;    
+    }
 }
 
 export function fTopSA(sail) {
-    const i = sail.perpendicular;
-    const h = sail.luff;
-    return 0.5*i*h;
+    if(sail) {
+        const i = sail.perpendicular;
+        const h = sail.luff;
+        return 0.5*i*h;    
+    }
 }
 
 export function fForeTriangle(handicap_data) {
-    const i = handicap_data.fore_triangle_height;
-    const j = handicap_data.fore_triangle_base;
-    return 0.5*i*j;
+    if(handicap_data) {
+        const i = handicap_data.fore_triangle_height;
+        const j = handicap_data.fore_triangle_base;
+        return 0.5*i*j;    
+    }
 }
 
 // The measured sail area is the sum of:-

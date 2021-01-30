@@ -1,5 +1,6 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
 import { m2df, m2dsqf, f2m, f2m2 } from './format';
+import { thcf } from '../util/THCF';
 
 function m2fall(o) {
   if(o) {
@@ -12,6 +13,7 @@ export function hcm2f(hc) {
     return {
       ...hc,
       sailarea: m2dsqf(hc.sailarea),
+      depth: m2df(hc.depth),
       fore_triangle_height: m2df(hc.fore_triangle_height),
       fore_triangle_base: m2df(hc.fore_triangle_base),
       length_overall: m2df(hc.length_overall),
@@ -41,6 +43,7 @@ export function hcf2m(hc) {
     return {
       ...hc,
       sailarea: f2m2(hc.sailarea),
+      depth: f2m(hc.depth),
       fore_triangle_height: f2m(hc.fore_triangle_height),
       fore_triangle_base: f2m(hc.fore_triangle_base),
       length_overall: f2m(hc.length_overall),
@@ -57,6 +60,11 @@ export function hcf2m(hc) {
       biggest_downwindsail: f2mall(hc.biggest_downwindsail),
     }
   }
+}
+
+function fmt(state) {
+  console.log('fmt', state.values);
+  return thcf(state.values);
 }
 
 const handicapForm = {
@@ -76,6 +84,13 @@ handicap and the extra data for experimental and area handicaps.`,
         offText: 'metres'  
       },
       */
+     {
+       component: componentTypes.TEXT_FIELD,
+       name: 'handicap_data.calculated_thcf',
+       resolveProps: (props, {meta, input}, formOptions) => ({ 
+         label: `calculated value is ${fmt(formOptions.getState())}, stored value is`
+        })
+     },
       {
         component: componentTypes.RADIO,
         name: "ddf.collect_headsail_data",
@@ -104,12 +119,21 @@ handicap and the extra data for experimental and area handicaps.`,
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_height",
           label: "Fore Triangle Height (decimal feet)",
+          description: "measured from deck to the top of the highest headsail halyard sheave (for jib topsail if one can be flown)",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_base",
           label: "Fore Triangle Base (decimal feet)",
+          description: "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit",
+          dataType: 'float'
+        },
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: "handicap_data.depth",
+          label: "Depth (decimal feet)",
+          description: "internal depth amidships from top of keelson to a line joining the underside of the deck planking at the sides of the hull",
           dataType: 'float'
         },
       ]
