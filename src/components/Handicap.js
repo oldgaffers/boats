@@ -1,12 +1,73 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
+import { m2df, m2dsqf, f2m, f2m2 } from './format';
+
+function m2fall(o) {
+  if(o) {
+      Object.keys(o).map(k => m2df(o[k]));
+  }
+}
+
+export function hcm2f(hc) {
+  if(hc) {
+    return {
+      ...hc,
+      sailarea: m2dsqf(hc.sailarea),
+      fore_triangle_height: m2df(hc.fore_triangle_height),
+      fore_triangle_base: m2df(hc.fore_triangle_base),
+      length_overall: m2df(hc.length_overall),
+      length_on_waterline: m2df(hc.length_on_waterline),
+      length_over_spars: m2df(hc.length_over_spars),
+      draft_keel_up: m2df(hc.draft_keel_up),
+      draft_keel_down: m2df(hc.draft_keel_down),
+      main: m2fall(hc.main),
+      mizen: m2fall(hc.mizen),
+      topsail: m2fall(hc.topsail),
+      mizen_topsail: m2fall(hc.mizen_topsail),
+      biggest_staysail: m2fall(hc.biggest_staysail),
+      biggest_jib: m2fall(hc.biggest_jib),
+      biggest_downwindsail: m2fall(hc.biggest_downwindsail),
+    }
+  }
+}
+
+function f2mall(o) {
+  if(o) {
+      Object.keys(o).map(k => f2m(o[k]));
+  }
+}
+
+export function hcf2m(hc) {
+  if(hc) {
+    return {
+      ...hc,
+      sailarea: f2m2(hc.sailarea),
+      fore_triangle_height: f2m(hc.fore_triangle_height),
+      fore_triangle_base: f2m(hc.fore_triangle_base),
+      length_overall: f2m(hc.length_overall),
+      length_on_waterline: f2m(hc.length_on_waterline),
+      length_over_spars: f2m(hc.length_over_spars),
+      draft_keel_up: f2m(hc.draft_keel_up),
+      draft_keel_down: f2m(hc.draft_keel_down),
+      main: f2mall(hc.main),
+      mizen: f2mall(hc.mizen),
+      topsail: f2mall(hc.topsail),
+      mizen_topsail: f2mall(hc.mizen_topsail),
+      biggest_staysail: f2mall(hc.biggest_staysail),
+      biggest_jib: f2mall(hc.biggest_jib),
+      biggest_downwindsail: f2mall(hc.biggest_downwindsail),
+    }
+  }
+}
 
 const handicapForm = {
     name: "handicap",
     title: "Handicap Data",
-    description: `This form collects the information needed to calculate a traditional TH(C)F
-handicap and the extra data for experimental and area handicaps. You can enter the data in either decimal feet or in metres.`,
+    description: `This form collects the information needed to calculate a traditional T(H)CF
+handicap and the extra data for experimental and area handicaps.`,
+    //  You can enter the data in either decimal feet or in metres.
     component: componentTypes.SUB_FORM,
     fields: [
+      /*
       {
         name: 'units',
         component: componentTypes.SWITCH,
@@ -14,39 +75,41 @@ handicap and the extra data for experimental and area handicaps. You can enter t
         onText: 'decimal feet',
         offText: 'metres'  
       },
+      */
       {
         component: componentTypes.RADIO,
-        name: "ddf_collect_headsail_data",
+        name: "ddf.collect_headsail_data",
         label: "Collect headsail data",
+        initialValue: 'yes',
         "options": [
-          {label: 'Yes', value: true},
-          {label: 'No', value: false},
+          {label: 'Yes', value: 'yes'},
+          {label: 'No', value: 'no'},
         ],
       }
     ]
   };
 
   const sailAreaForm = {
-      title: "Sail Area",
+      title: "Basic Data",
       name: "sa",
       component: componentTypes.SUB_FORM,
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.sailarea",
-          label: "Area in square feet",
+          label: "Sail Area (decimal square feet)",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_height",
-          label: "Fore Triangle Height",
+          label: "Fore Triangle Height (decimal feet)",
           dataType: 'float'
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_base",
-          label: "Fore Triangle Base",
+          label: "Fore Triangle Base (decimal feet)",
           dataType: 'float'
         },
       ]
@@ -69,7 +132,7 @@ mizzen": {"foot": 3.33, "luff": 7.5}
 
     const luffLeachFootForm = (title, name) => {
       return {
-      title,
+      title: `${title} (decimal feet)`,
       name,
       component: componentTypes.SUB_FORM,
       fields: [
@@ -97,7 +160,7 @@ mizzen": {"foot": 3.33, "luff": 7.5}
 
   const gaffForm = (title, name) => {
     return {    
-      title,
+      title: `${title} (decimal feet)`,
       name,
       component: componentTypes.SUB_FORM,
       fields: [
@@ -125,7 +188,7 @@ mizzen": {"foot": 3.33, "luff": 7.5}
 
   const topslForm = (title, name) => {
     return {
-      title,
+      title: `${title} (decimal feet)`,
       name,
       component: componentTypes.SUB_FORM,
       fields: [
@@ -145,15 +208,21 @@ mizzen": {"foot": 3.33, "luff": 7.5}
     }
   }
 
-const propellorForm = {
-      title: "Propeller type",
+const propellerForm = {
+      title: "Propeller",
       name: "handicap_data.prop",
       component: componentTypes.SUB_FORM,
       fields: [
         {
+          component: componentTypes.TEXT_FIELD,
+          name: "handicap_data.propeller_blades",
+          label: "Blades",
+          dataType: 'integer',
+        },
+        {
           component: componentTypes.RADIO,
-          name: "propeller_type",
-          label: "Select",
+          name: "handicap_data.propeller_type",
+          label: "Propeller type",
           "options": [
             {label: 'None', value: 'none'},
             {label: 'Fixed', value: 'fixed'},
@@ -164,7 +233,7 @@ const propellorForm = {
       ]
     };
   
-  export const steps = (pickers) => [
+  export const steps = [
     {
       name: "handicap-step",
       nextStep: "hull_measurements-step",  
@@ -173,7 +242,13 @@ const propellorForm = {
     },
     {
       name: "sa-step",
-      nextStep: "bigs-step",
+      nextStep: {
+        when: 'ddf.collect_headsail_data',
+        stepMapper: {
+          yes: 'bigs-step',
+          no: 'main-step',
+        },
+      },
       fields: [sailAreaForm],
     },
     {
@@ -198,7 +273,7 @@ const propellorForm = {
     },
     {
       name: "top-step",
-      nextStep: "mizen-step",
+      nextStep: ({ values }) => (values.rig_type === 'Ketch' || values.rig_type === 'Yawl') ? 'mizen-step' : 'prop-step',
       fields: [topslForm('topsail', 'handicap_data.topsail')]
     },
     {
@@ -213,6 +288,6 @@ const propellorForm = {
     },
     {
       name: "prop-step",
-      fields: [propellorForm]
+      fields: [propellerForm]
     }
   ];

@@ -5,12 +5,13 @@ import { componentMapper } from "@data-driven-forms/mui-component-mapper";
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import HullForm from './HullForm';
 import { steps as rig_steps } from "./Rig";
-import { steps as handicap_steps } from "./Handicap";
+import { steps as handicap_steps, hcm2f, hcf2m } from "./Handicap";
 import { dimensionsForm } from './Dimensions';
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from '../util/picklists';
 import { theme, HtmlEditor } from './ddf/RTE';
+import { m2df, f2m } from './format';
 
 const activities_all = [
     { label: 'Edit the short and full descriptions', value: 'descriptions' },
@@ -107,7 +108,7 @@ export const schema = (pickers) => {
               fields: [descriptionsForm],
             },
             ...rig_steps(pickers),
-            ...handicap_steps(pickers),
+            ...handicap_steps,
             {
               name: "ownership-step",
               // nextStep: "are-we-done-step",
@@ -194,96 +195,14 @@ const FormTemplate = ({schema, formFields}) => {
     )
 }
 
-const M2F = 3.28084;
-
-function m2f(val) {
-    if(val) {
-        return Math.round((M2F*val + Number.EPSILON) * 100) / 100;
-    }
-}
-
-function m2f2(val) {
-    if(val) {
-        return Math.round((M2F*M2F*val + Number.EPSILON) * 100) / 100;
-    }
-}
-
-function m2fall(o) {
-    if(o) {
-        Object.keys(o).map(k => M2F*o[k]);
-    }
-}
-
-function hcm2f(hc) {
-    return {
-        ...hc,
-        sailarea: m2f2(hc.sailarea),
-        fore_triangle_height: m2f(hc.fore_triangle_height),
-        fore_triangle_base: m2f(hc.fore_triangle_base),
-        length_overall: m2f(hc.length_overall),
-        length_on_waterline: m2f(hc.length_on_waterline),
-        length_over_spars: m2f(hc.length_over_spars),
-        draft_keel_up: m2f(hc.draft_keel_up),
-        draft_keel_down: m2f(hc.draft_keel_down),
-        main: m2fall(hc.main),
-        mizen: m2fall(hc.mizen),
-        topsail: m2fall(hc.topsail),
-        mizen_topsail: m2fall(hc.mizen_topsail),
-        biggest_staysail: m2fall(hc.biggest_staysail),
-        biggest_jib: m2fall(hc.biggest_jib),
-        biggest_downwindsail: m2fall(hc.biggest_downwindsail),
-    }
-}
-
 function inFeet(boat) {
     return { ...boat,
-        length_on_deck: m2f(boat.length_on_deck),
-        beam: m2f(boat.beam),
-        draft: m2f(boat.draft),
-        air_draft: m2f(boat.air_draft),
+        length_on_deck: m2df(boat.length_on_deck),
+        beam: m2df(boat.beam),
+        draft: m2df(boat.draft),
+        air_draft: m2df(boat.air_draft),
         handicap_data: hcm2f(boat.handicap_data),
     };
-}
-
-function f2m(val) {
-    if(val) {
-        return val/M2F;
-    }
-}
-
-function f2m2(val) {
-    if(val) {
-        return val/M2F/M2F;
-    }
-}
-
-function f2mall(o) {
-    if(o) {
-        Object.keys(o).map(k => o[k]/M2F);
-    }
-}
-
-function hcf2m(hc) {
-  if(hc) {
-    return {
-        ...hc,
-        sailarea: f2m2(hc.sailarea),
-        fore_triangle_height: f2m(hc.fore_triangle_height),
-        fore_triangle_base: f2m(hc.fore_triangle_base),
-        length_overall: f2m(hc.length_overall),
-        length_on_waterline: f2m(hc.length_on_waterline),
-        length_over_spars: f2m(hc.length_over_spars),
-        draft_keel_up: f2m(hc.draft_keel_up),
-        draft_keel_down: f2m(hc.draft_keel_down),
-        main: f2mall(hc.main),
-        mizen: f2mall(hc.mizen),
-        topsail: f2mall(hc.topsail),
-        mizen_topsail: f2mall(hc.mizen_topsail),
-        biggest_staysail: f2mall(hc.biggest_staysail),
-        biggest_jib: f2mall(hc.biggest_jib),
-        biggest_downwindsail: f2mall(hc.biggest_downwindsail),
-    }
-  }
 }
 
 function inMetres(boat) {
