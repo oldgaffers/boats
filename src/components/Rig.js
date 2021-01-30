@@ -97,6 +97,10 @@ const designForm = (pickers) => {
       },
       {
         component: componentTypes.TEXT_FIELD,
+        condition: {
+          when: 'design_class',
+          isEmpty: true,
+        },
         name: "new_design_class",
         label: "A design class not listed",
         "isRequired": false,
@@ -113,6 +117,10 @@ const designForm = (pickers) => {
       },
       {
         component: componentTypes.TEXT_FIELD,
+        condition: {
+          when: 'designer',
+          isEmpty: true,
+        },
         name: "new_designer",
         label: "A designer not listed",
         "isRequired": false,
@@ -138,6 +146,10 @@ const buildForm = (pickers) => {
       },
       {
         component: componentTypes.TEXT_FIELD,
+        condition: {
+          when: 'builder',
+          isEmpty: true,
+        },
         name: "new_builder",
         label: "A builder not listed",
         "isRequired": false,
