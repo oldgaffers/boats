@@ -18,6 +18,7 @@
     "apollo-link-http": "^1.5.17",
     "axios": "^0.21.1",
     "axios-hooks": "^2.3.0",
+    "date-fns": "^2.16.1",
     "draft-js-export-html": "^1.4.1",
     "draft-js-import-html": "^1.4.1",
     "graphql": "^15.4.0",
@@ -42,24 +43,39 @@
     "test": "jest"
   },
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.mjs$": "babel-jest"
+    },
+    "transformIgnorePatterns": [
+      "src/node_modules/(?!@sapper)"
+    ],
+    "moduleFileExtensions": [
+      "jsx",
+      "js",
+      "mjs"
+    ]
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "babel": {    
-      "presets": [
-        [
-          "@babel/preset-env",
-          {
-            "modules": false
-          }
-        ],
-        "@babel/preset-react"
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "modules": false
+        }
       ],
-     "plugins": [
-        "@babel/plugin-syntax-jsx"
-      ]
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/plugin-syntax-jsx"
+    ]
   },
   "browserslist": {
     "production": [
