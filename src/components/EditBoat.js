@@ -35,6 +35,7 @@ const activityForm = {
     name: 'activity',
     component: componentTypes.SUB_FORM,
     title: "Update Boat",
+    description: "This form is still in development. If anything doesn't work please contact the editors.",
     fields: [                
         {
             component: componentTypes.PLAIN_TEXT,
