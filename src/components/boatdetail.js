@@ -5,14 +5,10 @@ import { useTheme } from '@material-ui/core/styles';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
-import { feet, price } from './format';
+import { m2df, price } from '../util/format';
 import DetailBar from './detailbar';
 
-function m2f(val) {
-    if(val) {
-        return feet(val*100/2.54/12);
-    }
-}
+function m2f(val) { return `${m2df(val)} ft`};
 
 function hullForm(boat) {
   if (boat.hull_form === null) {
@@ -83,8 +79,8 @@ export default function Boat({ classes, boat }) {
           <Paper>
             <ConditionalText label="fore triangle base" value={m2f(hd.fore_triangle_base)}/>
             <ConditionalText label="fore triangle height" value={m2f(hd.fore_triangle_height)}/>
-            <ConditionalText label="Calculated THCF" value={hd.calculated_thcf}/>
-            <ConditionalText label="THCF" value={hd.thcf}/>
+            <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
+            <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
             <SailTable classes={classes} rows={sails}/>
           </Paper>
         )});    

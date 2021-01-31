@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import BoatWrapper from './boatwrapper';
-import useAxios from 'axios-hooks'
+import useAxios from 'axios-hooks';
 import { Link } from "@ogauk/link-router";
-import { useQuery } from '@apollo/react-hooks';
-import { query } from '../util/boatquery';
 
 // gql or axios
 function getBoat(b) {
@@ -42,10 +40,12 @@ export default function Boat({location}) {
               </div>);
       } else {
           return (<div>
-              If you were looking for a specific boat and know its OGA Number,
-              you can add ?oga_no=1 or any other number to the url.
-              <p>Otherwise try the <a href={location.origin}>Main Page</a></p>
-              </div>);
+            <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
+            <div>If you are looking for boats for sale please visit <a href={location.origin+'/boat_register/boats_for_sale/boats_for_sale.html'}>Boats for Sale</a></div>
+            <div>If you are looking interested in trailerable boats please visit <a href={location.origin+'/boat_register/small_boats/small_boats.html'}>Small Boats</a></div>
+            <div>To browse our full register please visit <a href={location.origin+'/boat_register/browse_the_register/browse_the_register.html'}>All Boats</a></div>
+              Otherwise please visit our <a href={location.origin}>Home Page</a>
+            </div>);
       }
   }
 

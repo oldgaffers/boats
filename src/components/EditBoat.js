@@ -11,7 +11,7 @@ import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from '../util/picklists';
 import { theme, HtmlEditor } from './ddf/RTE';
-import { m2df, f2m } from './format';
+import { m2df, f2m } from '../util/format';
 
 const activities_all = [
     { label: 'Edit the short and full descriptions', value: 'descriptions' },

@@ -1,5 +1,5 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
-import { m2df, m2dsqf, f2m, f2m2 } from './format';
+import { m2df, m2dsqf, f2m, f2m2 } from '../util/format';
 import { thcf } from '../util/THCF';
 
 function m2fall(o) {
@@ -260,7 +260,6 @@ const propellerForm = {
   export const steps = [
     {
       name: "handicap-step",
-      nextStep: "hull_measurements-step",  
       nextStep: "sa-step",
       fields: [handicapForm],
     },

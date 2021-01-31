@@ -34,6 +34,10 @@ export default function BoatSummary({ classes, boat, location }) {
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
     </Box>
+    <ConditionalText
+      label="T(H)CF"
+      value={boat.handicap_data && boat.handicap_data.thcf && boat.handicap_data.thcf.toFixed(3)}
+    />
     <References boat={boat}/>
     <div>
       <CopyToClipboard text={href} onCopy={() => setSnackBarOpen(true)}>

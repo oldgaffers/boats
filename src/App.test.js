@@ -11,6 +11,6 @@ test('renders learn react link', () => {
     </MockedProvider>
   );
   const wanted = getByText();
-  // expect(wanted).toBeInTheDocument();
+  expect(wanted).toBeInTheDocument();
   expect(wanted).toBeValid();
 });
