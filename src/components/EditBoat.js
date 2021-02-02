@@ -1,6 +1,6 @@
 import React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormRenderer, { componentTypes, useFormApi } from "@data-driven-forms/react-form-renderer";
+import FormRenderer, { componentTypes } from "@data-driven-forms/react-form-renderer";
 import { componentMapper } from "@data-driven-forms/mui-component-mapper";
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import HullForm from './HullForm';
@@ -92,6 +92,7 @@ export const schema = (pickers) => {
         {
           component: componentTypes.WIZARD,
           name: "boat",
+          beforeSubmit: () => {console.log('before submit');},
           fields: [
             {
               name: "activity-step",
@@ -186,16 +187,6 @@ export const schema = (pickers) => {
     };
 };
 
-const FormTemplate = ({schema, formFields}) => {
-    const { handleSubmit } = useFormApi();
-    return (
-      <form onSubmit={handleSubmit}>
-        { schema.title }
-        { formFields }
-      </form>
-    )
-}
-
 function inFeet(boat) {
     return { ...boat,
         length_on_deck: m2df(boat.length_on_deck),
@@ -227,10 +218,31 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
     const state = {...inFeet(boat), ddf: { activity: 'descriptions' } }; 
 
-    const handleSubmit = (values) => {
+    const handleSubmit = (values, formApi, wizardState) => {
         const { ddf, ...result } = values;
-        console.log('handleSubmit', result);
-        onSave({...boat, ...inMetres(result)}); 
+        console.log('EditBoat formAPI', formApi);
+        console.log('EditBoat wizardState', wizardState);
+        console.log('EditBoat handleSubmit', result);
+        if(formApi.pristine) {
+          console.log('form is pristine');
+        } else {
+          if(wizardState.activeStep === "descriptions-step") {
+            const fd = formApi.getFieldState('full_description');
+            console.log('full_description', fd);
+            onSave({...boat, ...inMetres(result)});  
+          } else {
+            onSave({...boat, ...inMetres(result)});
+          }
+        }
+    }
+
+    const FormTemplate = ({schema, formFields}) => {
+      return (
+        <form>
+          { schema.title }
+          { formFields }
+        </form>
+      )
     }
 
     return (<MuiThemeProvider theme={theme}>

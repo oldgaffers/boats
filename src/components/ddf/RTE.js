@@ -1,4 +1,5 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
+import Typography from '@material-ui/core/Typography';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import { createMuiTheme } from '@material-ui/core/styles'
 import MUIRichTextEditor from 'mui-rte';
@@ -21,7 +22,7 @@ Object.assign(theme, {
           },
           editor: {
               border: "1px solid gray",
-              marginBottom: 10,
+              marginBottom: 30,
               paddingLeft: '5px',
               paddingRight: '5px'
           }
@@ -37,23 +38,33 @@ function htmlToRTE(html) {
 
 export const HtmlEditor = (props) => {
 
+    const [blurry, setBlurry] = useState(false);
+
     const ref = useRef(null);
     const { input, meta } = useFieldApi(props);
 
     const handleBlur = () => {
         console.log('RTE blur', input.name, ref);
+        setBlurry(true);
         ref.current.save();
     }
 
     const handleSave = (data) => {
         const html = stateToHTML(convertFromRaw(JSON.parse(data)));
         console.log('RTE save', input.name, html);
-        input.onChange(html);
+        if(blurry) {
+          setBlurry(false);          
+          input.onChange(html);  
+        } else {
+          console.log('save but not after blur', input);
+          input.onChange(html);  
+        }
     }
 
     return <>
-    {props.title}
+    <Typography>{props.title}</Typography>
     <MUIRichTextEditor
+    label='type some text'
     controls={props.controls}
     onSave={handleSave}
     defaultValue={htmlToRTE(input.value)}

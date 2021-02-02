@@ -13,6 +13,7 @@ import Ownership from './Ownership';
 import Everything from './Everything';
 import { usePicklists } from '../util/picklists';
 import EditBoat from './EditBoat';
+import { theme } from './ddf/RTE';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -29,19 +30,20 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   paper: {
-    marginTop: 0, // theme.spacing(3),
-    marginBottom: 0, // theme.spacing(3),
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     padding: theme.spacing(2),
     [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      marginTop: 0, // theme.spacing(6),
+      marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
       padding: theme.spacing(3),
     },
   },
   editor: {
     minwidth: 500,
-    margin: theme.spacing(1),
-    padding: 0,
+    minHeight: 500,
+    margin: 10,
+    padding: 10,
     border: 'none',
     boxShadow: 'none'
   },
@@ -105,7 +107,7 @@ function getActivity({ pickers, boat, activity, handleClose, handleStart, handle
 
 export function OldUpdateBoatDialog({ boat, onClose, open }) {
 
-  const classes = useStyles();
+  const classes = useStyles(theme);
   const [email, setEmail] = useState('');
   const [activity, setActivity] = useState(-1);
   const { loading, error, data } = usePicklists();
