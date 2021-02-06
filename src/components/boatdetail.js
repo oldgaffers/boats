@@ -8,7 +8,11 @@ import SailTable from './sailtable';
 import { m2df, price } from '../util/format';
 import DetailBar from './detailbar';
 
-function m2f(val) { return `${m2df(val)} ft`};
+function m2f(val) {
+  if(val) {
+    return `${m2df(val)} ft`
+  }
+};
 
 function hullForm(boat) {
   if (boat.hull_form === null) {
@@ -24,7 +28,7 @@ export default function Boat({ classes, boat }) {
   // TODO const { ref } = useInView({ threshold: 0 });
   
   const panes = [
-    { title: 'Registration and location', children: (
+    { title: 'Location & Registration', children: (
       <Paper>
         <ConditionalText value={boat.previous_names} label="Previous name/s"/>
         <ConditionalText value={boat.place_built} label="Place built"/>
@@ -39,10 +43,10 @@ export default function Boat({ classes, boat }) {
         <ConditionalText value={boat.uk_part1} label="Official Registration" />     
       </Paper>)
      },
-    { title: 'Construction', children: (
+    { title: 'Design & Construction', children: (
       <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
-        <ConditionalText value={hullForm(boat)} label="Hull form"/>
+        <ConditionalText value={boat.designClassByDesignClass} label="Desgn class"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
@@ -50,8 +54,9 @@ export default function Boat({ classes, boat }) {
       </Paper>
         )    
     },
-    { title: 'Hull', children: (
+    { title: 'Hull & Dimensions', children: (
       <Paper>
+        <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={m2f(boat.length_on_deck)} label="Length on deck (LOD)"/>
         <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_overall:undefined)}/>
         <ConditionalText label="Waterline Length (LWL)" value={m2f(boat.handicap_data?boat.handicap_data.length_on_waterline:undefined)}/>

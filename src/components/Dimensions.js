@@ -13,6 +13,18 @@ export const dimensionsForm = {
     },
     {
       component: componentTypes.TEXT_FIELD,
+      name: "handicap_data.length_overall",
+      label: "Length overall (LOA)",
+      dataType: 'float',
+    },
+    {
+      component: componentTypes.TEXT_FIELD,
+      name: "handicap_data.length_on_waterline",
+      label: "Waterline Length (LWL)",
+      dataType: 'float',
+    },
+    {
+      component: componentTypes.TEXT_FIELD,
       name: "beam",
       label: "Beam",
       dataType: 'float',
@@ -23,11 +35,5 @@ export const dimensionsForm = {
       label: "Draft",
       dataType: 'float',
     },
-    {
-      component: componentTypes.TEXT_FIELD,
-      name: "air_draft",
-      label: "Air draft",
-      dataType: 'float',
-    }
   ]
 };

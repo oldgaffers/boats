@@ -22,7 +22,7 @@ export default function BoatSummary({ classes, boat, location }) {
 
   return (
     <Paper className={fillHeightPaper}>
-    <Typography variant="h4" component="h4">Details</Typography>
+    <Typography variant="h4" component="h4">Summary</Typography>
     <ConditionalText value={boat.oga_no} label="OGA no"/>
     <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
     <ConditionalText value={boat.rigTypeByRigType && boat.rigTypeByRigType.name} label="Rig"/>

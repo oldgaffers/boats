@@ -311,6 +311,7 @@ const propellerForm = {
     },
     {
       name: "prop-step",
+      nextStep: "done-step",
       fields: [propellerForm]
     }
   ];
