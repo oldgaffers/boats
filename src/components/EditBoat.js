@@ -25,7 +25,7 @@ const activities = [
   { label: "Edit Location & Registration", value: "locations" },
   { label: "Edit Design & Construction", value: "construction" },
   { label: "Edit Hull & Dimensions", value: "dimensions" },
-  { label: "Edit Rig & Sails", value: "rig" },
+  { label: "Edit Rig & Sails (or get a handicap)", value: "rig" },
 ];
 
 const activityForm = {
