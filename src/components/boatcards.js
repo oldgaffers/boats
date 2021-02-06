@@ -82,9 +82,9 @@ export default function BoatCards({
       message = `${message} ${rig_type} rigged`;
     }
     if (design_class) {
-      message = `${message} ${design_class}'s`;
+      message = `${message} ${design_class}s`;
     } else if (generic_type) {
-      message = `${message} ${generic_type}'s`;
+      message = `${message} ${generic_type}s`;
     } else {
       message = `${message} boats`;
     }
