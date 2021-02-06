@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Typography from '@material-ui/core/Typography';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import { createMuiTheme } from '@material-ui/core/styles'
@@ -31,45 +31,41 @@ Object.assign(theme, {
 })
 
 function htmlToRTE(html) {
-  const contentHTML = convertFromHTML(html || '');
-  const contentState = ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
-  return JSON.stringify(convertToRaw(contentState));
+  const contentHTML = convertFromHTML(html || '<p><br/></p>');
+  return ContentState.createFromBlockArray(contentHTML.contentBlocks, contentHTML.entityMap)
 }
 
-export const HtmlEditor = (props) => {
+export const HtmlEditor = ({ component, name, title, ...rest }) => {
 
-    const [blurry, setBlurry] = useState(false);
+  const ref = useRef(null);
+  const { input } = useFieldApi({component, name});
 
-    const ref = useRef(null);
-    const { input, meta } = useFieldApi(props);
+ const handleBlur = () => {
+    console.log('RTE blur', input.name, ref);
+    ref.current.save();
+  }
 
-    const handleBlur = () => {
-        console.log('RTE blur', input.name, ref);
-        setBlurry(true);
-        ref.current.save();
+  const handleSave = (data) => {
+    const html = stateToHTML(convertFromRaw(JSON.parse(data)));
+    console.log('RTE save', input.name, html);
+    input.onChange(html);  
+  }
+
+  return (<div
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      e.stopPropagation();
     }
-
-    const handleSave = (data) => {
-        const html = stateToHTML(convertFromRaw(JSON.parse(data)));
-        console.log('RTE save', input.name, html);
-        if(blurry) {
-          setBlurry(false);          
-          input.onChange(html);  
-        } else {
-          console.log('save but not after blur', input);
-          input.onChange(html);  
-        }
-    }
-
-    return <>
-    <Typography>{props.title}</Typography>
-    <MUIRichTextEditor
-    label='type some text'
-    controls={props.controls}
-    onSave={handleSave}
-    defaultValue={htmlToRTE(input.value)}
-    onBlur={handleBlur}
-    ref={ref}
-    />
-    </>;
+  }}
+  >
+  <Typography>{title}</Typography>
+  <MUIRichTextEditor
+  label='type some text'
+  {...rest}
+  defaultValue={JSON.stringify(convertToRaw(htmlToRTE(input.value)))}
+  onSave={handleSave}
+  onBlur={handleBlur}
+  ref={ref}
+  />
+  </div>);
 }

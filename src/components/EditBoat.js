@@ -1,7 +1,7 @@
 import React from "react";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import FormRenderer, { componentTypes } from "@data-driven-forms/react-form-renderer";
-import { componentMapper } from "@data-driven-forms/mui-component-mapper";
+import { componentMapper, FormTemplate } from "@data-driven-forms/mui-component-mapper";
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import HullForm from './HullForm';
 import { steps as rig_steps } from "./Rig";
@@ -78,14 +78,6 @@ const descriptionsForm = {
     ]
 };
 
-function doneTest (more) {
-    console.log('doneTest', more);
-    if (more === 'yes') {
-        return 'activity-step';
-    }
-    return 'yes-we-are-done-step'
-}
-
 export const schema = (pickers) => {
     return {
       fields: [
@@ -100,20 +92,18 @@ export const schema = (pickers) => {
               fields: [activityForm],
             },
             {
-                name: "dimensions-step",
-              // nextStep: "are-we-done-step",
+              name: "dimensions-step",
               fields: [dimensionsForm]
             },
             {
               name: "descriptions-step",
-              // nextStep: "are-we-done-step",
+              nextStep: "done-step",
               fields: [descriptionsForm],
             },
             ...rig_steps(pickers),
             ...handicap_steps,
             {
               name: "ownership-step",
-              // nextStep: "are-we-done-step",
               fields: [
                 {
                   component: componentTypes.TEXT_FIELD,
@@ -124,7 +114,6 @@ export const schema = (pickers) => {
             },
             {
               name: "identities-step",
-              // nextStep: "are-we-done-step",
               fields: [
                 {
                   component: componentTypes.TEXT_FIELD,
@@ -135,7 +124,6 @@ export const schema = (pickers) => {
             },
             {
               name: "references-step",
-              // nextStep: "are-we-done-step",
               fields: [
                 {
                   component: componentTypes.TEXT_FIELD,
@@ -146,7 +134,6 @@ export const schema = (pickers) => {
             },
             {
               name: "everything-else-step",
-              // nextStep: "are-we-done-step",
               fields: [
                 {
                   component: componentTypes.TEXT_FIELD,
@@ -154,25 +141,9 @@ export const schema = (pickers) => {
                   label: "TODO",
                 },
               ],
-            },
+            },            
             {
-                name: "are-we-done-step",
-                nextStep: ({values}) => doneTest(values.ddf.more),
-                fields: [
-                {
-                  component: "radio",
-                  name: "ddf.more",
-                  initialValue: 'no',
-                  label: "Change other things?",
-                  options: [
-                    { value: 'no', label: "No" },
-                    { value: 'yes', label: "Yes" },
-                  ],
-                },
-              ],
-            },
-            {
-                name: "yes-we-are-done-step",
+                name: "done-step",
                 fields: [
                   {
                     component: componentTypes.PLAIN_TEXT,
@@ -209,41 +180,23 @@ function inMetres(boat) {
 
 export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
-    const { loading, error, data } = usePicklists();
+  const { loading, error, data } = usePicklists();
 
     if (loading) return (<CircularProgress/>);
     if (error) return (<p>Error :(can't get picklists)</p>);
   
     const pickers = data; 
 
-    const state = {...inFeet(boat), ddf: { activity: 'descriptions' } }; 
+    const state = {...inFeet(boat), ddf: { activity: 'descriptions' } };
 
-    const handleSubmit = (values, formApi, wizardState) => {
-        const { ddf, ...result } = values;
-        console.log('EditBoat formAPI', formApi);
-        console.log('EditBoat wizardState', wizardState);
-        console.log('EditBoat handleSubmit', result);
-        if(formApi.pristine) {
-          console.log('form is pristine');
-        } else {
-          if(wizardState.activeStep === "descriptions-step") {
-            const fd = formApi.getFieldState('full_description');
-            console.log('full_description', fd);
-            onSave({...boat, ...inMetres(result)});  
-          } else {
-            onSave({...boat, ...inMetres(result)});
-          }
-        }
-    }
-
-    const FormTemplate = ({schema, formFields}) => {
-      return (
-        <form>
-          { schema.title }
-          { formFields }
-        </form>
-      )
-    }
+    const handleSubmit = (values) => {
+      console.log('submit');
+      const { ddf, ...result } = values;
+      onSave({
+        ...boat, 
+        ...inMetres(result),
+      });
+  };
 
     return (<MuiThemeProvider theme={theme}>
     <FormRenderer
@@ -255,7 +208,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
            html: HtmlEditor,
          }
        }
-       FormTemplate={FormTemplate}
+       FormTemplate={(props) => <FormTemplate {...props} showFormControls={false} />}
        onCancel={onCancel}
        onSubmit={handleSubmit}
        initialValues={state}
