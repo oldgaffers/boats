@@ -3,7 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import UploadPhotos from './uploadphotos';
+import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
 import { home } from '../util/context';
@@ -87,7 +87,7 @@ export default function BoatButtons({ boat, linkComponent, location }) {
             <Enquiry classes={classes} boat={boat} />
         </Grid>
         <Grid item xs={3} >
-            <UploadPhotos classes={classes} boat={boat} />
+            <PhotoButton classes={classes} boat={boat} />
         </Grid>
         <Grid item xs={3} >
             <EditButton classes={classes} boat={boat} />
