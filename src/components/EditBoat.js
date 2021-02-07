@@ -10,7 +10,7 @@ import {
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import HullForm from "./HullForm";
 import { rigForm, mapPicker } from "./Rig";
-import { steps as handicap_steps, hcm2f, hcf2m } from "./Handicap";
+import { steps as handicap_steps,  boatm2f, boatf2m } from "./Handicap";
 import { dimensionsForm } from "./Dimensions";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
@@ -432,28 +432,6 @@ export const schema = (pickers) => {
   };
 };
 
-function inFeet(boat) {
-  return {
-    ...boat,
-    length_on_deck: m2df(boat.length_on_deck),
-    beam: m2df(boat.beam),
-    draft: m2df(boat.draft),
-    air_draft: m2df(boat.air_draft),
-    handicap_data: hcm2f(boat.handicap_data),
-  };
-}
-
-function inMetres(boat) {
-  return {
-    ...boat,
-    length_on_deck: f2m(boat.length_on_deck),
-    beam: f2m(boat.beam),
-    draft: f2m(boat.draft),
-    air_draft: f2m(boat.air_draft),
-    handicap_data: hcf2m(boat.handicap_data),
-  };
-}
-
 export default function EditBoat({ classes, onCancel, onSave, boat }) {
   const { loading, error, data } = usePicklists();
 
@@ -462,14 +440,14 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   const pickers = data;
 
-  const state = { ...inFeet(boat), ddf: { activity: "descriptions" } };
+  const state = { ...boatm2f(boat), ddf: { activity: "descriptions" } };
 
   const handleSubmit = (values) => {
     console.log("submit");
     const { ddf, ...result } = values;
     onSave({
       ...boat,
-      ...inMetres(result),
+      ...boatf2m(result),
     });
   };
 

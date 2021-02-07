@@ -25,6 +25,18 @@ export function m2dsqf(val) {
     }
 }
 
+export function m2dfn(val) {
+    if(val) {
+        return parseFloat((M2F*val).toFixed(2));
+    }
+}
+
+export function m2dsqfn(val) {
+    if(val) {
+        return parseFloat((M2F*M2F*val).toFixed(2));
+    }
+}
+
 export function f2m(val) {
     if(val) {
         return val/M2F;

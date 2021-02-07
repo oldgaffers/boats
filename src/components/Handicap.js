@@ -1,65 +1,61 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
-import { visitLexicalEnvironment } from "typescript";
-import { m2df, m2dsqf, f2m, f2m2 } from '../util/format';
+import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
 import { thcf } from '../util/THCF';
 
-function m2fall(o) {
-  if(o) {
-      Object.keys(o).map(k => m2df(o[k]));
-  }
-}
+const metreKeys = [
+  'beam','draft','perpendicular','luff','head','foot',
+  'length_on_deck','length_on_waterline','length_over_all',
+  'fore_triangle_height','fore_triangle_base',
+];
+const squareMetreKeys = ['sailarea'];
 
-export function hcm2f(hc) {
-  if(hc) {
-    return {
-      ...hc,
-      sailarea: m2dsqf(hc.sailarea),
-      depth: m2df(hc.depth),
-      fore_triangle_height: m2df(hc.fore_triangle_height),
-      fore_triangle_base: m2df(hc.fore_triangle_base),
-      length_overall: m2df(hc.length_overall),
-      length_on_waterline: m2df(hc.length_on_waterline),
-      length_over_spars: m2df(hc.length_over_spars),
-      draft_keel_up: m2df(hc.draft_keel_up),
-      draft_keel_down: m2df(hc.draft_keel_down),
-      main: m2fall(hc.main),
-      mizen: m2fall(hc.mizen),
-      topsail: m2fall(hc.topsail),
-      mizen_topsail: m2fall(hc.mizen_topsail),
-      biggest_staysail: m2fall(hc.biggest_staysail),
-      biggest_jib: m2fall(hc.biggest_jib),
-      biggest_downwindsail: m2fall(hc.biggest_downwindsail),
+export function boatm2f(obj) {
+  if(obj) {
+    if(Array.isArray(obj)) {
+      return obj.map((n) => boatm2f(n))
+    } else if (typeof obj === 'object') {
+      const r = {};
+      Object.keys(obj).forEach(k => {
+        if(metreKeys.includes(k)) {
+          r[k] = m2dfn(obj[k]);
+        } if(squareMetreKeys.includes(k)) {
+          r[k] = m2dsqfn(obj[k]);
+        }
+        r[k] = boatm2f(obj[k]);
+      });
+      return r;
+    } else {
+      return obj;
     }
   }
+  return obj;
 }
 
-function f2mall(o) {
-  if(o) {
-      Object.keys(o).map(k => f2m(o[k]));
-  }
-}
-
-export function hcf2m(hc) {
-  if(hc) {
-    return {
-      ...hc,
-      sailarea: f2m2(hc.sailarea),
-      depth: f2m(hc.depth),
-      fore_triangle_height: f2m(hc.fore_triangle_height),
-      fore_triangle_base: f2m(hc.fore_triangle_base),
-      length_overall: f2m(hc.length_overall),
-      length_on_waterline: f2m(hc.length_on_waterline),
-      length_over_spars: f2m(hc.length_over_spars),
-      draft_keel_up: f2m(hc.draft_keel_up),
-      draft_keel_down: f2m(hc.draft_keel_down),
-      main: f2mall(hc.main),
-      mizen: f2mall(hc.mizen),
-      topsail: f2mall(hc.topsail),
-      mizen_topsail: f2mall(hc.mizen_topsail),
-      biggest_staysail: f2mall(hc.biggest_staysail),
-      biggest_jib: f2mall(hc.biggest_jib),
-      biggest_downwindsail: f2mall(hc.biggest_downwindsail),
+export function boatf2m(obj) {
+  if(obj) {
+    if(Array.isArray(obj)) {
+      return obj.map((n) => boatm2f(n))
+    } else if (typeof obj === 'object') {
+      const r = {};
+      Object.keys(obj).forEach(k => {
+        if(metreKeys.includes(k)) {
+          r[k] = f2m(obj[k]);
+        } if(squareMetreKeys.includes(k)) {
+          r[k] = f2m2(obj[k]);
+        }
+        r[k] = boatf2m(obj[k]);
+      });
+      return r;
+    } else {
+      return obj;
     }
+  }
+  return obj;
+}
+
+export function m2fall(o) {
+  if(o) {
+      return Object.keys(o).map(k => m2dfn(o[k]));
   }
 }
 
