@@ -53,6 +53,7 @@ const FileUploadComponent = (props) => {
 };
 
 const schema = {
+  title: "Upload a photo",
   fields: [
     {
       component: componentTypes.TEXT_FIELD,
@@ -70,17 +71,28 @@ const schema = {
       component: componentTypes.TEXT_FIELD,
       label: 'Album',
       isReadOnly: true,
+      hideField: true,
       name: 'albumKey'
     },
     {
       component: componentTypes.TEXT_FIELD,
       label: 'email',
-      name: 'email'
+      name: 'email', 
+      description: 'an email address will let us contact you',
+      required: true,
+      validate: [
+        {
+          type: validatorTypes.PATTERN,
+          pattern: /^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/
+        }
+      ]      
     },
     {
       component: componentTypes.TEXT_FIELD,
       label: 'copyright holder',
-      name: 'copyright'
+      description: 'The owner of the copyright for the photo',
+      name: 'copyright',
+      required: true,
     },
     {
       component: 'file-upload',
@@ -113,8 +125,10 @@ const FormWithFileUpload = ({onCancel, onSave, boat}) => {
         componentMapper={{
           ...componentMapper,
           'file-upload': FileUploadComponent,
-        }}
-        FormTemplate={FormTemplate}
+        }} 
+        FormTemplate={(props) => (
+          <FormTemplate {...props} disableSubmit={['invalid']} />
+        )}
         validatorMapper={validatorMapper}
         onCancel={onCancel}
         onSubmit={async (values, formApi) => {
