@@ -228,20 +228,13 @@ const propellerForm = {
           component: componentTypes.PLAIN_TEXT,
           name: 'ddf.hcintro',
           label: `This form collects the information needed to calculate a traditional T(H)CF
-          handicap and the extra data for experimental and area handicaps.`,
+          handicap and the extra data for experimental and area handicaps. The calculations are a work in progress and feedback is welcome.`,
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'handicap_data.calculated_thcf',
           readOnly: true,
-          resolveProps: (props, {meta, input}, formOptions) => {
-            console.log('thcf props', props);
-            console.log('thcf meta', meta);
-            console.log('thcf input', input);
-            console.log('thcf formOptions', formOptions);
-            return { 
-              label: `calculated value is ${fmt(formOptions.getState())}${input.value?', stored value is':'T(H)CF'}`
-           }}
+          label: 'stored T(H)CF'
         },
         {
           component: componentTypes.TEXT_FIELD,
@@ -573,14 +566,14 @@ const propellerForm = {
               const {values} = formOptions.getState();
               const r = values.ddf.mr - values.ddf.prop_allowance * values.ddf.mr;
               formOptions.change('ddf.r', r);
-              formOptions.change('handicap_data.calculated_thcf', parseFloat((0.125*(3+Math.sqrt(values.ddf.r))).toFixed(3)));
+              formOptions.change('ddf.calculated_thcf', parseFloat((0.125*(3+Math.sqrt(values.ddf.r))).toFixed(3)));
               return { value: r }
             }
           },
           {
             component: componentTypes.TEXT_FIELD,
-            name: 'handicap_data.calculated_thcf',
-            label: 'T(H)CF',
+            name: 'ddf.calculated_thcf',
+            label: 'T(H)CF - this isn\'t right yet!',
             isReadOnly: true,
           },
       ]
