@@ -108,8 +108,8 @@ const engine = {
 
   if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
     const fs = boat.for_sales[0];
-
-    panes.unshift(
+    if(fs) {
+      panes.unshift(
         { title: 'For Sale', children: (
           <Paper>
             <ConditionalText label="Price" value={price(fs.asking_price)}/>
@@ -117,6 +117,8 @@ const engine = {
           </Paper>
         ) },
     );
+    }
+
   }
 
  const handleChange = (event, newValue) => {
