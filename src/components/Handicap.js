@@ -478,23 +478,6 @@ const propellerForm = {
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: 'ddf.root_s',
-          isReadOnly: true,
-          dataType: 'float',
-          label: 'Square root of corrected sail area',
-          resolveProps: (props, {meta, input}, formOptions) => {
-            const state = formOptions.getState();
-            const sa = sail_area(state);
-            const csa = corrected_sailarea(sa, state.values.rig_type);
-            console.log('corrected sailarea-sailarea', csa)
-            const rS = Math.sqrt(csa);
-            formOptions.change('ddf.root_s', rS);
-            return { 
-              value: rS
-           }}            
-        },
-        {
-          component: componentTypes.TEXT_FIELD,
           name: 'length_on_deck',
           label: 'LOD',
           dataType: 'float',
@@ -522,6 +505,23 @@ const propellerForm = {
       name: "calc-step",
       nextStep: "done-step",
       fields: [
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.root_s',
+          isReadOnly: true,
+          dataType: 'float',
+          label: 'Square root of corrected sail area',
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const state = formOptions.getState();
+            const sa = sail_area(state);
+            const csa = corrected_sailarea(sa, state.values.rig_type);
+            console.log('corrected sailarea-sailarea', csa)
+            const rS = Math.sqrt(csa);
+            formOptions.change('ddf.root_s', rS);
+            return { 
+              value: rS
+           }}            
+        },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'ddf.mr',
