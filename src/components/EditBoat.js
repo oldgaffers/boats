@@ -444,11 +444,12 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   const handleSubmit = (values) => {
     console.log("submit");
-    const { ddf, ...result } = values;
+    const { email, ddf, ...result } = values;
+    console.log(ddf);
     onSave({
       ...boat,
       ...boatf2m(result),
-    });
+    }, email);
   };
 
   return (
