@@ -46,7 +46,7 @@ export default function Boat({ classes, boat }) {
     { title: 'Design & Construction', children: (
       <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
-        <ConditionalText value={boat.designClassByDesignClass} label="Desgn class"/>
+        <ConditionalText value={boat.designClassByDesignClass} label="Design class"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
