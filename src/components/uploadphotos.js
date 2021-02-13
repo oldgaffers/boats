@@ -5,6 +5,7 @@ import { MuiThemeProvider } from "@material-ui/core/styles";
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import get from 'lodash/get';
+import { useAuth0 } from "@auth0/auth0-react";
 //import submitFunction from './upload-handler';
 import { theme } from "./ddf/RTE";
 
@@ -110,6 +111,8 @@ const validatorMapper = {
 
 const FormWithFileUpload = ({onCancel, onSave, boat}) => {
   const [values, setValues] = useState();
+  const { user } = useAuth0();
+
   return (
     <MuiThemeProvider theme={theme}>
       {values && (
@@ -121,7 +124,11 @@ const FormWithFileUpload = ({onCancel, onSave, boat}) => {
       )}
       <FormRenderer
         schema={schema}
-        initialValues={{name: boat.name, oga_no: boat.oga_no, albumKey: boat.image_key}}
+        initialValues={
+          { name: boat.name, oga_no: boat.oga_no, albumKey: boat.image_key,
+            email: user && user.email
+          }
+        }
         componentMapper={{
           ...componentMapper,
           'file-upload': FileUploadComponent,

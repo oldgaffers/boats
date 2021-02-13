@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
+import LoginButton from './loginbutton';
 import Enquiry from './enquiry';
 import { home } from '../util/context';
 
@@ -83,16 +84,19 @@ export default function BoatButtons({ boat, linkComponent, location }) {
             to={home(location)}
             >See more boats</Button>
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={2} >
             <Enquiry classes={classes} boat={boat} />
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={2} >
             <PhotoButton classes={classes} boat={boat} />
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={2} >
             <EditButton classes={classes} boat={boat} />
         </Grid>
+        <Grid item xs={2} >
+            <LoginButton classes={classes} boat={boat} />
         </Grid>
+      </Grid>
     </Paper>
   );
 };

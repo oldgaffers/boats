@@ -1,13 +1,9 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import FormRenderer, {
-  componentTypes,
-} from "@data-driven-forms/react-form-renderer";
-import {
-  componentMapper,
-  FormTemplate,
-} from "@data-driven-forms/mui-component-mapper";
+import FormRenderer, { componentTypes } from "@data-driven-forms/react-form-renderer";
+import { componentMapper, FormTemplate } from "@data-driven-forms/mui-component-mapper";
 import { MuiThemeProvider } from "@material-ui/core/styles";
+import { useAuth0 } from "@auth0/auth0-react";
 import HullForm from "./HullForm";
 import { rigForm, mapPicker } from "./Rig";
 import { steps as handicap_steps,  boatm2f, boatf2m } from "./Handicap";
@@ -16,7 +12,6 @@ import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from "../util/picklists";
 import { theme, HtmlEditor } from "./ddf/RTE";
-import { m2df, f2m } from "../util/format";
 
 const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },
@@ -434,13 +429,17 @@ export const schema = (pickers) => {
 
 export default function EditBoat({ classes, onCancel, onSave, boat }) {
   const { loading, error, data } = usePicklists();
+  const { user } = useAuth0();
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
 
   const pickers = data;
 
-  const state = { ...boatm2f(boat), ddf: { activity: "descriptions" } };
+  const state = {
+    ...boatm2f(boat), ddf: { activity: "descriptions" },
+    email: user && user.email,
+ };
 
   const handleSubmit = (values) => {
     console.log("submit");
