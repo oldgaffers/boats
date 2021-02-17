@@ -50,6 +50,7 @@ export default function Boat({ classes, boat }) {
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
+        <ConditionalText value={boat.spar_material} label="spar material"/>
         <ConditionalText value={boat.construction_details} label="Construction details"/>
       </Paper>
         )    
