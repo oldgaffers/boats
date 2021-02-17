@@ -300,6 +300,15 @@ const constructionForm = (pickers) => {
         options: mapPicker(pickers.construction_method),
       },
       {
+        component: componentTypes.SELECT,
+        name: "spar_material",
+        label: "Spar material",
+        isReadOnly: false,
+        isSearchable: true,
+        isClearable: true,
+        options: mapPicker(pickers.spar_material),
+      },
+      {
         component: componentTypes.TEXT_FIELD,
         name: "construction_details",
         label: "Construction details",
@@ -417,7 +426,7 @@ export const schema = (pickers) => {
                 component: componentTypes.PLAIN_TEXT,
                 name: "ddf.we_are_done",
                 label:
-                  "Thanks for helping make the register better. An email address will let us discuss your suggestions with you.",
+                  "Thanks for helping make the register better. The editor's will review your suggestions. An email address will let us discuss with you any queries we might have.",
               },
               {
                 component: componentTypes.TEXT_FIELD,
