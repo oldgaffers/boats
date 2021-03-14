@@ -72,6 +72,14 @@ export default function BoatButtons({ boat, linkComponent, location }) {
   const classes = useStyles();
   const homeLink = React.forwardRef((props, ref) => linkComponent({...props, ref}));
 
+  const photoCancelled = () => {
+    console.log('cancel');
+  }
+
+  const photoDone = () => {
+    console.log('done');
+  }
+
   return (
     <Paper>
         <Grid container direction="row" alignItems="flex-end">
@@ -87,7 +95,11 @@ export default function BoatButtons({ boat, linkComponent, location }) {
             <Enquiry classes={classes} boat={boat} />
         </Grid>
         <Grid item xs={3} >
-            <PhotoButton classes={classes} boat={boat} />
+            <PhotoButton
+              classes={classes} boat={boat} 
+              onCancel={photoCancelled}
+              onDone={photoDone}
+            />
         </Grid>
         <Grid item xs={3} >
             <EditButton classes={classes} boat={boat} />
