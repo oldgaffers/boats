@@ -18,16 +18,18 @@ export function boatm2f(obj) {
       Object.keys(obj).forEach(k => {
         if(metreKeys.includes(k)) {
           r[k] = m2dfn(obj[k]);
-        } if(squareMetreKeys.includes(k)) {
+        } else if(squareMetreKeys.includes(k)) {
           r[k] = m2dsqfn(obj[k]);
+        } else {
+          r[k] = boatm2f(obj[k]);
         }
-        r[k] = boatm2f(obj[k]);
       });
       return r;
     } else {
       return obj;
     }
   }
+  console.log(obj);
   return obj;
 }
 
@@ -40,10 +42,11 @@ export function boatf2m(obj) {
       Object.keys(obj).forEach(k => {
         if(metreKeys.includes(k)) {
           r[k] = f2m(obj[k]);
-        } if(squareMetreKeys.includes(k)) {
+        } else if(squareMetreKeys.includes(k)) {
           r[k] = f2m2(obj[k]);
+        } else {
+          r[k] = boatf2m(obj[k]);
         }
-        r[k] = boatf2m(obj[k]);
       });
       return r;
     } else {
@@ -59,14 +62,14 @@ export function m2fall(o) {
   }
 }
 
-function foretriangle_area({fore_triangle_height, fore_triangle_base}) {
+export function foretriangle_area({fore_triangle_height, fore_triangle_base}) {
   if(fore_triangle_height && fore_triangle_base) {
     return 0.85*0.5*fore_triangle_height*fore_triangle_base;
   }
   return 0;
 }
 
-function mainsail_area(type, sail) {
+export function mainsail_area(type, sail) {
   if(sail && type) {
     if(type === 'bermudan' || type === 'gunter') {
       if(sail.luff && sail.foot) {
@@ -82,7 +85,7 @@ function mainsail_area(type, sail) {
   return 0;
 }
 
-function topsail_area(sail) {
+export function topsail_area(sail) {
   if(sail) {
     if(sail.luff && sail.perpendicular) {
       return 0.5*sail.luff*sail.perpendicular;
@@ -91,7 +94,7 @@ function topsail_area(sail) {
   return 0;
 }
 
-function sail_area({values}) {
+export function sail_area({values}) {
   console.log('sail_area', values);
   let total = foretriangle_area(values.handicap_data);
   total += mainsail_area(values.mainsail_type, values.handicap_data.main);

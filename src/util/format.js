@@ -21,19 +21,19 @@ export function m2df(val) {
 
 export function m2dsqf(val) {
     if(val) {
-        return (M2F*M2F*val).toFixed(2);
+        return (M2F*M2F*val).toFixed(3);
     }
 }
 
 export function m2dfn(val) {
     if(val) {
-        return parseFloat((M2F*val).toFixed(2));
+        return Math.round(1000*M2F*val) / 1000;
     }
 }
 
 export function m2dsqfn(val) {
     if(val) {
-        return parseFloat((M2F*M2F*val).toFixed(2));
+        return parseFloat((M2F*M2F*val).toFixed(3));
     }
 }
 

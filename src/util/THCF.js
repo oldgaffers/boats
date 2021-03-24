@@ -55,8 +55,8 @@ export function fMSA(data) {
 }
 
 export function fL(data) {
-    if(data && data.length_overall && data.length_on_waterline ) {
-        return 0.5*(Number(data.length_overall)+Number(data.length_on_waterline));
+    if(data && data.length_over_all && data.length_on_waterline ) {
+        return 0.5*(data.length_over_all+data.length_on_waterline);
     }
     return 0;
 }
@@ -71,17 +71,19 @@ export function fB(boat) {
 export function fSqrtS(boat) {
     if(boat && boat.handicap_data) {
         const SA = boat.handicap_data.sailarea || fMSA(boat.handicap_data);
-        return rig_allowance(boat.rigTypeByRigType.name)*Math.sqrt(SA);
+        return rig_allowance(boat.rig_type.toLowerCase())*Math.sqrt(SA);
     }
     return 0;
 }
 
+/*
 export function fD(data) {
     if(data && data.depth) {
         return 1.25*data.depth;
     }
     return 0;
 }
+*/
 
 export function fBD(boat) {
     // John Scarlett
@@ -94,12 +96,11 @@ export function fMR(boat) {
     if(boat) {
         const L = fL(boat.handicap_data);
         const sqrtS = fSqrtS(boat);
-        const B = fB(boat);
-        const D = fD(boat.handicap_data);
         const BD = fBD(boat);
-        console.log(`L: ${L} S: ${sqrtS} B: ${B} D: ${D} BD: ${BD}`);
-        if ( BD>0) {
-            return 0.15*L*sqrtS/Math.sqrt(BD)+0.2*(L+sqrtS);    
+        if ( BD>0) {   
+            const x = 0.15*L*sqrtS/Math.sqrt(BD);
+            const y = 0.2*(L+sqrtS);    
+            return x + y;
         }
     }
     return 0;
@@ -149,8 +150,8 @@ export function fR(boat) {
     if(boat) {
         const MR = fMR(boat);
         return MR
-        - fPropellerBonus(MR, boat.data)
-        - fShoalBonus(MR, boat);    
+        - fPropellerBonus(MR, boat.handicap_data)
+        ;//- fShoalBonus(MR, boat);    
     }
     return 0;
 }
