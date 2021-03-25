@@ -1,5 +1,5 @@
-const rig_allowance = (r) => {
-    switch(r) {
+export const rig_allowance = (r) => {
+    switch(r.toLowerCase()) {
         case 'cutter': return 0.96;
         case 'yawl': return 0.94;
         case 'schooner': return 0.92;
@@ -71,7 +71,7 @@ export function fB(boat) {
 export function fSqrtS(boat) {
     if(boat && boat.handicap_data) {
         const SA = boat.handicap_data.sailarea || fMSA(boat.handicap_data);
-        return rig_allowance(boat.rig_type.toLowerCase())*Math.sqrt(SA);
+        return rig_allowance(boat.rig_type)*Math.sqrt(SA);
     }
     return 0;
 }
@@ -110,7 +110,7 @@ export function fMR(boat) {
 From the MR, bonuses, expressed as percentages are deducted.
 R = MR - Bonus.
 These bonuses are:- 
-    for a fixed propeller – 3% ; 
+    for a fixed propellor – 3% ; 
     folding prop – 1½%; 
     built pre 1930 – 2½%; (removed)
         pre 1914 - 5%; (removed)
@@ -119,9 +119,9 @@ These bonuses are:-
     less than 80% - 2%. 
     Shoal draft bonus halved if centreboard or leeboards fitted.
 */
-export function fPropellerBonus(R, data) {
+export function fPropellorBonus(R, data) {
     if(data) {
-        switch(data.prop) {
+        switch(data.propellor.type) {
             case 'fixed': return 0.03*R;
             case 'folding': return 0.015*R;
             default: return 0;
@@ -150,7 +150,7 @@ export function fR(boat) {
     if(boat) {
         const MR = fMR(boat);
         return MR
-        - fPropellerBonus(MR, boat.handicap_data)
+        - fPropellorBonus(MR, boat.handicap_data)
         ;//- fShoalBonus(MR, boat);    
     }
     return 0;

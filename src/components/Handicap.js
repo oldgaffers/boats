@@ -1,6 +1,6 @@
 import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
 import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
-import { thcf } from '../util/THCF';
+import { thcf, rig_allowance, fSqrtS } from '../util/THCF';
 
 const metreKeys = [
   'beam','draft','perpendicular','luff','head','foot',
@@ -11,6 +11,9 @@ const squareMetreKeys = ['sailarea'];
 
 export function boatm2f(obj) {
   if(obj) {
+    if(obj.mainsail_type) {
+      obj.handicap_data.main.type = obj.mainsail_type;
+    }
     if(Array.isArray(obj)) {
       return obj.map((n) => boatm2f(n))
     } else if (typeof obj === 'object') {
@@ -69,8 +72,9 @@ export function foretriangle_area({fore_triangle_height, fore_triangle_base}) {
   return 0;
 }
 
-export function mainsail_area(type, sail) {
-  if(sail && type) {
+export function mainsail_area(sail) {
+  if(sail) {
+    const type = sail.type;
     if(type === 'bermudan' || type === 'gunter') {
       if(sail.luff && sail.foot) {
         return 0.5*sail.luff*sail.foot;
@@ -95,7 +99,6 @@ export function topsail_area(sail) {
 }
 
 export function sail_area({values}) {
-  console.log('sail_area', values);
   let total = foretriangle_area(values.handicap_data);
   total += mainsail_area(values.mainsail_type, values.handicap_data.main);
   total += topsail_area(values.handicap_data.topsail);
@@ -194,27 +197,28 @@ mizzen": {"foot": 3.33, "luff": 7.5}
      return sides.map(({name, label}) => ({
       component: componentTypes.TEXT_FIELD,
       name,
-      label,
+      label: `${label} (decimal feet)`,
       type: 'number',
       dataType: dataTypes.FLOAT,
      }));
    }
 
-const propellerForm = {
-      title: "Propeller",
-      name: "handicap_data.prop",
+const propellorForm = {
+      title: "Propellor",
+      name: "handicap_data.propellor",
       component: componentTypes.SUB_FORM,
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: "handicap_data.propeller_blades",
+          name: "handicap_data.propellor.blades",
           label: "Blades",
-          dataType: 'integer',
+          type: 'number',
+          dataType: dataTypes.INTEGER,
         },
         {
           component: componentTypes.RADIO,
-          name: "handicap_data.propeller_type",
-          label: "Propeller type",
+          name: "handicap_data.propellor.type",
+          label: "propellor type",
           "options": [
             {label: 'None', value: 'none'},
             {label: 'Fixed', value: 'fixed'},
@@ -228,7 +232,7 @@ const propellerForm = {
   export const steps = [
     {
       name: "handicap-step",
-      nextStep: ({ values}) => values.handicap_data.sailarea?'prop-step':'sails-step',
+      nextStep: ({ values}) => values.handicap_data.sailarea?'hull-step':'sails-step',
       fields: [
         {
           component: componentTypes.PLAIN_TEXT,
@@ -238,7 +242,7 @@ const propellerForm = {
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: 'handicap_data.calculated_thcf',
+          name: 'handicap_data.thcf',
           readOnly: true,
           label: 'stored T(H)CF'
         },
@@ -272,36 +276,51 @@ const propellerForm = {
         {
           component: componentTypes.PLAIN_TEXT,
           name: 'ddf.handicap_sails',
-          label: 'Let\'s calculate the sail area from the foretriangle, main and topsails',
+          label: 'Foretriangle',
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_height",
-          label: "Fore Triangle Height (decimal feet)",
+          label: "Height (decimal feet)",
           description: "measured from deck to the top of the highest headsail halyard sheave (for jib topsail if one can be flown)",
           type: 'number',
-          dataType: dataTypes.FLOAT,
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_base",
-          label: "Fore Triangle Base (decimal feet)",
+          label: "Base (decimal feet)",
           description: "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit",
           type: 'number',
           dataType: dataTypes.FLOAT,
         },        
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.foretriangle',
+          label: 'Calculated Area (decimal square feet)',
+          description: '85% of the nominal triangle (½b×h)',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const fta = foretriangle_area(s.initialValues.handicap_data);
+            formOptions.change('ddf.sail_area.foretriangle', fta);
+            return { 
+              value: fta
+           }}
+        },
       ],
     },
     {
       name: 'foremast-step',
       nextStep: 'foremast-topsail-step',
       fields: [
-        {    
-          title: `Foremast main sail (decimal feet)`,
+        {
+          title: 'fore main sail',
           name: 'handicap_data.fore',
           component: componentTypes.SUB_FORM,
           condition: {
-            when: 'mainsail_type',
+            when: 'handicap_data.fore.type',
             is: 'gaff',
           },
           fields: [sailFields([
@@ -311,17 +330,17 @@ const propellerForm = {
           ])],
         },
         {
-          title: `Foremast main sail (decimal feet)`,
+          title: `fore main sail`,
           name: 'handicap_data.fore',
           component: componentTypes.SUB_FORM,
           condition: {
             or: [
               {
-                when: 'mainsail_type',
+                when: 'handicap_data.fore.type',
                 is: 'bermudan',    
               },
               {
-                when: 'mainsail_type',
+                when: 'handicap_data.fore.type',
                 is: 'gunter',    
               },
             ]
@@ -330,7 +349,59 @@ const propellerForm = {
             {name: 'handicap_data.fore.luff', label: 'Luff'},
             {name: 'handicap_data.fore.foot', label: 'Foot'},
           ])],
-        }
+        },
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.fore',
+          condition: {
+            when: 'handicap_data.fore.type',
+            is: 'gaff',
+          },
+          label: 'Calculated Area (decimal square feet)',
+          description: '½l×f+½h×√(f²+l²)',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = mainsail_area(
+                s.initialValues.handicap_data.fore,
+                );
+            formOptions.change('ddf.sail_area.fore', sa);
+            return { 
+              value: sa
+           }}
+        },        
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.fore',
+          condition: {
+            or: [
+              {
+                when: 'handicap_data.fore.type',
+                is: 'bermudan',    
+              },
+              {
+                when: 'handicap_data.fore.type',
+                is: 'gunter',    
+              },
+            ]
+          },
+          label: 'Calculated Area (decimal square feet)',
+          description:  '½l×f',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = mainsail_area(
+                s.initialValues.handicap_data.fore,
+                );
+            formOptions.change('ddf.sail_area.fore', sa);
+            return { 
+              value: sa
+           }}
+        },
       ]
     },
     {
@@ -338,7 +409,7 @@ const propellerForm = {
       nextStep: 'mainsail-step',
       fields: [
         {    
-          title: `Foremast topsail (decimal feet)`,
+          title: `foretopsail`,
           name: 'handicap_data.fore_topsail',
           component: componentTypes.SUB_FORM,
           fields: [sailFields([
@@ -346,6 +417,22 @@ const propellerForm = {
             {name: 'handicap_data.fore_topsail.perpendicular', label: 'Perpendicular'},
           ])],
         },  
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.fore_topsail',
+          label: 'Calculated Area (decimal square feet)',
+          description: '½l×p',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = topsail_area(s.initialValues.handicap_data.fore_topsail);
+            formOptions.change('ddf.sail_area.fore_topsail', sa);
+            return { 
+              value: sa
+           }}
+        },
       ]
     },
     {
@@ -353,11 +440,11 @@ const propellerForm = {
       nextStep: 'topsail-step',
       fields: [
         {    
-          title: `main sail (decimal feet)`,
+          title: 'main sail',
           name: 'handicap_data.main',
           component: componentTypes.SUB_FORM,
           condition: {
-            when: 'mainsail_type',
+            when: 'handicap_data.main.type',
             is: 'gaff',
           },
           fields: [sailFields([
@@ -367,17 +454,17 @@ const propellerForm = {
           ])],
         },
         {
-          title: `main sail (decimal feet)`,
+          title: `main sail`,
           name: 'handicap_data.main',
           component: componentTypes.SUB_FORM,
           condition: {
             or: [
               {
-                when: 'mainsail_type',
+                when: 'handicap_data.main.type',
                 is: 'bermudan',    
               },
               {
-                when: 'mainsail_type',
+                when: 'handicap_data.main.type',
                 is: 'gunter',    
               },
             ]
@@ -386,7 +473,59 @@ const propellerForm = {
             {name: 'handicap_data.main.luff', label: 'Luff'},
             {name: 'handicap_data.main.foot', label: 'Foot'},
           ])],
-        }
+        },
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.main',
+          condition: {
+            when: 'handicap_data.main.type',
+            is: 'gaff',
+          },
+          label: 'Calculated Area (decimal square feet)',
+          description: '½l×f+½h×√(f²+l²)',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = mainsail_area(
+                s.initialValues.handicap_data.main,
+                );
+            formOptions.change('ddf.sail_area.main', sa);
+            return { 
+              value: sa
+           }}
+        },        
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.main',
+          condition: {
+            or: [
+              {
+                when: 'handicap_data.main.type',
+                is: 'bermudan',    
+              },
+              {
+                when: 'handicap_data.main.type',
+                is: 'gunter',    
+              },
+            ]
+          },
+          label: 'Calculated Area (decimal square feet)',
+          description:  '½l×f',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = mainsail_area(
+                s.initialValues.handicap_data.main,
+                );
+            formOptions.change('ddf.sail_area.main', sa);
+            return { 
+              value: sa
+           }}
+        },        
       ]
     },
     {
@@ -394,7 +533,7 @@ const propellerForm = {
       nextStep: 'calculated-sailarea-step',
       fields: [
         {    
-          title: `topsail (decimal feet)`,
+          title: `topsail`,
           name: 'handicap_data.main_topsail',
           component: componentTypes.SUB_FORM,
           fields: [sailFields([
@@ -402,18 +541,34 @@ const propellerForm = {
             {name: 'handicap_data.topsail.perpendicular', label: 'Perpendicular'},
           ])],
         },  
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.topsail',
+          label: 'Calculated Area (decimal square feet)',
+          description: '½l×p',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = topsail_area(s.initialValues.handicap_data.topsail);
+            formOptions.change('ddf.sail_area.topsail', sa);
+            return { 
+              value: sa
+           }}
+        },
       ]
     },  
     {
       name: 'mizen-step',
       nextStep: 'mizen-topsail-step',
       fields: [
-        {    
-          title: `mizen sail (decimal feet)`,
+        {
+          title: 'mizen',
           name: 'handicap_data.mizen',
           component: componentTypes.SUB_FORM,
           condition: {
-            when: 'mainsail_type',
+            when: 'handicap_data.mizen.type',
             is: 'gaff',
           },
           fields: [sailFields([
@@ -423,17 +578,17 @@ const propellerForm = {
           ])],
         },
         {
-          title: `main sail (decimal feet)`,
+          title: `mizen`,
           name: 'handicap_data.mizen',
           component: componentTypes.SUB_FORM,
           condition: {
             or: [
               {
-                when: 'mainsail_type',
+                when: 'handicap_data.mizen.type',
                 is: 'bermudan',    
               },
               {
-                when: 'mainsail_type',
+                when: 'handicap_data.mizen.type',
                 is: 'gunter',    
               },
             ]
@@ -442,7 +597,59 @@ const propellerForm = {
             {name: 'handicap_data.mizen.luff', label: 'Luff'},
             {name: 'handicap_data.mizen.foot', label: 'Foot'},
           ])],
-        }
+        },
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.mizen',
+          condition: {
+            when: 'handicap_data.mizen.type',
+            is: 'gaff',
+          },
+          label: 'Calculated Area (decimal square feet)',
+          description: '½l×f+½h×√(f²+l²)',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = mainsail_area(
+                s.initialValues.handicap_data.mizen,
+                );
+            formOptions.change('ddf.sail_area.mizen', sa);
+            return { 
+              value: sa
+           }}
+        },        
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.mizen',
+          condition: {
+            or: [
+              {
+                when: 'handicap_data.mizen.type',
+                is: 'bermudan',    
+              },
+              {
+                when: 'handicap_data.mizen.type',
+                is: 'gunter',    
+              },
+            ]
+          },
+          label: 'Calculated Area (decimal square feet)',
+          description:  '½l×f',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = mainsail_area(
+                s.initialValues.handicap_data.mizen,
+                );
+            formOptions.change('ddf.sail_area.mizen', sa);
+            return {
+              value: sa
+           }}
+        },
       ]
     },
     {
@@ -450,7 +657,7 @@ const propellerForm = {
       nextStep: 'mainsail-step',
       fields: [
         {    
-          title: `Mizen topsail (decimal feet)`,
+          title: `mizen topsail`,
           name: 'handicap_data.mizen_topsail',
           component: componentTypes.SUB_FORM,
           fields: [sailFields([
@@ -458,11 +665,27 @@ const propellerForm = {
             {name: 'handicap_data.mizen_topsail.perpendicular', label: 'Perpendicular'},
           ])],
         },  
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.sail_area.mizen_topsail',
+          label: 'Calculated Area (decimal square feet)',
+          description: '½l×p',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          isReadOnly: true,
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const s = formOptions.getState()
+            const sa = topsail_area(s.initialValues.handicap_data.mizen_topsail);
+            formOptions.change('ddf.sail_area.mizen_topsail', sa);
+            return { 
+              value: sa
+           }}
+        },
       ]
     },
     {
       name: 'calculated-sailarea-step',
-      nextStep: "prop-step",
+      nextStep: "hull-step",
       fields: [
         {
         component: componentTypes.TEXT_FIELD,
@@ -472,31 +695,40 @@ const propellerForm = {
         dataType: dataTypes.FLOAT,
         isReadOnly: true,
         resolveProps: (props, {meta, input}, formOptions) => {
-          const sa = sail_area(formOptions.getState());
-          console.log('calculated-sailarea', sa)
-          formOptions.change('handicap_data.sailarea', sa);
+          const f = formOptions.getState();
+          const ddf = f.values.ddf;
+          const vals = Object.keys(ddf.sail_area).map(k=>ddf.sail_area[k]);
+          const sa = vals.reduce((p,v)=>p+v); 
+          const rsa = Math.round(1000*sa)/1000;
+          formOptions.change('handicap_data.sailarea', rsa);
           return { 
-            value: sa
+            value: rsa
          }}
         },
+      ]
+    },
+    {
+      name: 'hull-step',
+      nextStep: "prop-step",
+      fields: [
         {
           component: componentTypes.TEXT_FIELD,
-          name: 'length_on_deck',
-          label: 'LOD',
+          name: 'handicap_data.length_over_all',
+          label: 'length over all (LOA) (decimal feet)',
           type: 'number',
           dataType: dataTypes.FLOAT,
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'handicap_data.length_on_waterline',
-          label: 'LWL',
+          label: 'waterline length (LWL) (decimal feet)',
           type: 'number',
           dataType: dataTypes.FLOAT,
         },
         {
           component: componentTypes.TEXT_FIELD,
-          name: 'beam',
-          label: 'Beam',
+          name: 'handicap_data.beam',
+          label: 'Beam (decimal feet)',
           type: 'number',
           dataType: dataTypes.FLOAT,
         }
@@ -505,12 +737,30 @@ const propellerForm = {
     {
       name: "prop-step",
       nextStep: "calc-step",
-      fields: [propellerForm]
+      fields: [propellorForm]
     },
     {
       name: "calc-step",
       nextStep: "done-step",
       fields: [
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.rig_allowance',
+          isReadOnly: true,
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          label: 'Rig allowance',
+          description: 'cutter: .96, yawl: .94, schooner: .92, ketch: .90',
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const state = formOptions.getState();
+            console.log(state.values);
+            const ra = rig_allowance(state.values.rig_type)
+            console.log('rig_allowance', ra);
+            formOptions.change('ddf.rig_allowance', ra);
+            return { 
+              value: ra
+           }}
+        },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'ddf.root_s',
@@ -520,33 +770,50 @@ const propellerForm = {
           label: 'Square root of corrected sail area',
           resolveProps: (props, {meta, input}, formOptions) => {
             const state = formOptions.getState();
-            const sa = sail_area(state);
-            const csa = corrected_sailarea(sa, state.values.rig_type);
-            console.log('corrected sailarea-sailarea', csa)
-            const rS = Math.sqrt(csa);
-            formOptions.change('ddf.root_s', rS);
+            const SA = state.values.handicap_data.sailarea;
+            const ra = rig_allowance(state.values.rig_type)
+            const crsa = ra*Math.sqrt(SA)
+            formOptions.change('ddf.root_s', crsa);
             return { 
-              value: rS
+              value: crsa
+           }
+          }            
+        },
+        {
+          component: componentTypes.TEXT_FIELD,
+          name: 'ddf.c',
+          isReadOnly: true,
+          type: 'number',
+          dataType: dataTypes.FLOAT,
+          label: 'Cross section (decimal square feet)',
+          description: '0.67B²',
+          resolveProps: (props, {meta, input}, formOptions) => {
+            const state = formOptions.getState();
+            const beam =  state.initialValues.handicap_data.beam;
+            const c = 0.67*beam*beam;
+            formOptions.change('ddf.c', c);
+            return { 
+              value: c
            }}            
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'ddf.mr',
-          label: 'MR=0.15 (L√S)/√(B+0.67B)+0.2(L+√S)',
+          label: 'Measured Rating',
+          description: '0.15L(√S/√C)+0.2(L+√S)',
           type: 'number',
           dataType: dataTypes.FLOAT,
           isReadOnly: true,
           resolveProps: (props, {meta, input}, formOptions) => {
             const state = formOptions.getState();
-            const LOD = (typeof state.values.length_on_deck === 'string')?parseFloat(state.values.length_on_deck):state.values.length_on_deck;
-            const LWL = (typeof state.values.handicap_data.length_on_waterline === 'string')?parseFloat(state.values.handicap_data.length_on_waterline):state.values.handicap_data.length_on_waterline;
-            const L = (LOD+LWL)/2;
-            const B = (typeof state.values.beam === 'string')?parseFloat(state.values.beam):state.values.beam;
-            console.log(state.values);
+            const LOA = state.values.handicap_data.length_over_all;
+            const LWL = state.values.handicap_data.length_on_waterline;
+            const L = (LOA+LWL)/2;
+            const C = state.values.ddf.c;
             const rS = state.values.ddf.root_s;
-            console.log(L, B, rS);
-            const mr = 0.15*(L*rS)/Math.sqrt(1.67*B)+0.2*(L+rS)
-            console.log('MR', mr)
+            const x = 0.15*L*rS/Math.sqrt(C);
+            const y = 0.2*(L+rS);    
+            const mr = x + y;
             formOptions.change('ddf.mr', mr);
             return { 
               value: mr
@@ -562,10 +829,10 @@ const propellerForm = {
             resolveProps: (props, {meta, input}, formOptions) => {
               const {values} = formOptions.getState();
               let pa = 0.015;
-              if(values.handicap_data.propeller_type === 'none') {
+              if(values.handicap_data.propellor.type === 'none') {
                 pa = 0.0;
               }
-              if(values.handicap_data.propeller_type === 'fixed') {
+              if(values.handicap_data.propellor.type === 'fixed') {
                 pa = 0.03;
               }
               formOptions.change('ddf.prop_allowance', pa);
@@ -582,15 +849,16 @@ const propellerForm = {
             resolveProps: (props, {meta, input}, formOptions) => {
               const {values} = formOptions.getState();
               const r = values.ddf.mr - values.ddf.prop_allowance * values.ddf.mr;
+              const thcf = Math.round(1000*0.125*(Math.sqrt(r)+3))/1000;
               formOptions.change('ddf.r', r);
-              formOptions.change('ddf.calculated_thcf', parseFloat((0.125*(3+Math.sqrt(values.ddf.r))).toFixed(3)));
+              formOptions.change('handicap_data.thcf', thcf);              
               return { value: r }
             }
           },
           {
             component: componentTypes.TEXT_FIELD,
-            name: 'ddf.calculated_thcf',
-            label: 'T(H)CF - this isn\'t right yet!',
+            name: 'handicap_data.thcf',
+            label: 'T(H)CF',
             isReadOnly: true,
           },
       ]

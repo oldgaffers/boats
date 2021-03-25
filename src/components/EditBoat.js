@@ -1,7 +1,7 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import FormRenderer, {
-  componentTypes,
+  componentTypes, dataTypes,
 } from "@data-driven-forms/react-form-renderer";
 import {
   componentMapper,
@@ -16,7 +16,6 @@ import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from "../util/picklists";
 import { theme, HtmlEditor } from "./ddf/RTE";
-import { m2df, f2m } from "../util/format";
 
 const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },
@@ -93,7 +92,8 @@ const cardForm = (pickers) => {
         component: componentTypes.TEXT_FIELD,
         name: "year",
         label: "Year Built",
-        dataType: "integer",
+        type: 'number',
+        dataType: dataTypes.INTEGER,
       },
       {
         component: componentTypes.CHECKBOX,
@@ -194,7 +194,8 @@ const LocationForm = {
       component: componentTypes.TEXT_FIELD,
       name: "year",
       label: "Year Built",
-      dataType: "integer",
+      type: 'number',
+      dataType: dataTypes.INTEGER,
     },
     {
       component: componentTypes.CHECKBOX,
