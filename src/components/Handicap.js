@@ -1,6 +1,6 @@
 import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
 import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
-import { thcf, rig_allowance, fSqrtS } from '../util/THCF';
+import { thcf, rig_allowance } from '../util/THCF';
 
 const metreKeys = [
   'beam','draft','perpendicular','luff','head','foot',
@@ -12,7 +12,11 @@ const squareMetreKeys = ['sailarea'];
 export function boatm2f(obj) {
   if(obj) {
     if(obj.mainsail_type) {
-      obj.handicap_data.main.type = obj.mainsail_type;
+      if(obj.handicap_data) {
+        obj.handicap_data.main.type = obj.mainsail_type;
+      } else {
+        obj.handicap_data = { main: { type: obj.mainsail_type } };
+      }
     }
     if(Array.isArray(obj)) {
       return obj.map((n) => boatm2f(n))
