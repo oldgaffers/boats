@@ -13,7 +13,11 @@ export function boatm2f(obj) {
   if(obj) {
     if(obj.mainsail_type) {
       if(obj.handicap_data) {
-        obj.handicap_data.main.type = obj.mainsail_type;
+        if(obj.handicap_data.main) {
+          obj.handicap_data.main.type = obj.mainsail_type;
+        } else {
+          obj.handicap_data.main = { type: obj.mainsail_type };
+        }
       } else {
         obj.handicap_data = { main: { type: obj.mainsail_type } };
       }
