@@ -1,4 +1,4 @@
-import { componentTypes } from "@data-driven-forms/react-form-renderer";
+import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
 import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
 import { thcf } from '../util/THCF';
 
@@ -161,7 +161,8 @@ const handicapForm = {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.sailarea",
           label: "Sail Area (decimal square feet)",
-          dataType: 'float'
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },
 
         {
@@ -169,7 +170,8 @@ const handicapForm = {
           name: "handicap_data.depth",
           label: "Depth (decimal feet)",
           description: "internal depth amidships from top of keelson to a line joining the underside of the deck planking at the sides of the hull",
-          dataType: 'float'
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },
       ]
     };
@@ -193,7 +195,8 @@ mizzen": {"foot": 3.33, "luff": 7.5}
       component: componentTypes.TEXT_FIELD,
       name,
       label,
-      dataType: 'float'
+      type: 'number',
+      dataType: dataTypes.FLOAT,
      }));
    }
 
@@ -244,7 +247,8 @@ const propellerForm = {
           name: "handicap_data.sailarea",
           label: "Sail Area (decimal square feet)",
           description: 'If you know the sail area you can enter it here',
-          dataType: 'float'
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },
       ],
     },
@@ -275,14 +279,16 @@ const propellerForm = {
           name: "handicap_data.fore_triangle_height",
           label: "Fore Triangle Height (decimal feet)",
           description: "measured from deck to the top of the highest headsail halyard sheave (for jib topsail if one can be flown)",
-          dataType: 'float'
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: "handicap_data.fore_triangle_base",
           label: "Fore Triangle Base (decimal feet)",
           description: "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit",
-          dataType: 'float'
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },        
       ],
     },
@@ -462,7 +468,8 @@ const propellerForm = {
         component: componentTypes.TEXT_FIELD,
         name: 'calculated-sailarea',
         label: 'Calculated Sail Area',
-        dataType: 'float',
+        type: 'number',
+        dataType: dataTypes.FLOAT,
         isReadOnly: true,
         resolveProps: (props, {meta, input}, formOptions) => {
           const sa = sail_area(formOptions.getState());
@@ -476,19 +483,22 @@ const propellerForm = {
           component: componentTypes.TEXT_FIELD,
           name: 'length_on_deck',
           label: 'LOD',
-          dataType: 'float',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'handicap_data.length_on_waterline',
           label: 'LWL',
-          dataType: 'float',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         },
         {
           component: componentTypes.TEXT_FIELD,
           name: 'beam',
           label: 'Beam',
-          dataType: 'float',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
         }
       ]
     },
@@ -505,7 +515,8 @@ const propellerForm = {
           component: componentTypes.TEXT_FIELD,
           name: 'ddf.root_s',
           isReadOnly: true,
-          dataType: 'float',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
           label: 'Square root of corrected sail area',
           resolveProps: (props, {meta, input}, formOptions) => {
             const state = formOptions.getState();
@@ -522,7 +533,8 @@ const propellerForm = {
           component: componentTypes.TEXT_FIELD,
           name: 'ddf.mr',
           label: 'MR=0.15 (L√S)/√(B+0.67B)+0.2(L+√S)',
-          dataType: 'float',
+          type: 'number',
+          dataType: dataTypes.FLOAT,
           isReadOnly: true,
           resolveProps: (props, {meta, input}, formOptions) => {
             const state = formOptions.getState();
@@ -545,7 +557,8 @@ const propellerForm = {
             name: 'ddf.prop_allowance',
             label: 'Prop allowance, none: 0%, folding: 1.5%, fixed: 3%',
             isReadOnly: true,
-            dataType: 'float',
+            type: 'number',
+            dataType: dataTypes.FLOAT,
             resolveProps: (props, {meta, input}, formOptions) => {
               const {values} = formOptions.getState();
               let pa = 0.015;
@@ -563,7 +576,8 @@ const propellerForm = {
             component: componentTypes.TEXT_FIELD,
             name: 'ddf.r',
             label: 'Final Rating ',
-            dataType: 'float',
+            type: 'number',
+            dataType: dataTypes.FLOAT,
             isReadOnly: true,
             resolveProps: (props, {meta, input}, formOptions) => {
               const {values} = formOptions.getState();

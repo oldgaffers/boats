@@ -1,4 +1,4 @@
-import { componentTypes } from "@data-driven-forms/react-form-renderer";
+import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
 
 export const dimensionsForm = {
   name: "dimensions",
@@ -9,31 +9,36 @@ export const dimensionsForm = {
       component: componentTypes.TEXT_FIELD,
       name: "length_on_deck",
       label: "Length on Deck",
-      dataType: 'float',
-    },
+      type: 'number',
+      dataType: dataTypes.FLOAT,
+      },
     {
       component: componentTypes.TEXT_FIELD,
       name: "handicap_data.length_overall",
       label: "Length overall (LOA)",
-      dataType: 'float',
-    },
+      type: 'number',
+      dataType: dataTypes.FLOAT,
+      },
     {
       component: componentTypes.TEXT_FIELD,
       name: "handicap_data.length_on_waterline",
       label: "Waterline Length (LWL)",
-      dataType: 'float',
+      type: 'number',
+      dataType: dataTypes.FLOAT,
     },
     {
       component: componentTypes.TEXT_FIELD,
       name: "beam",
       label: "Beam",
-      dataType: 'float',
+      type: 'number',
+      dataType: dataTypes.FLOAT,
     },
     {
       component: componentTypes.TEXT_FIELD,
       name: "draft",
       label: "Draft",
-      dataType: 'float',
+      type: 'number',
+      dataType: dataTypes.FLOAT,
     },
   ]
 };
