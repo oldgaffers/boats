@@ -29,7 +29,7 @@ export default function SailTable( { rows, classes }) {
         <TableBody>
             {rows.map((row) => 
             (<TableRow key={row.name}>
-                <TableCell component="th" scope="row">{row.name}</TableCell>
+                <TableCell component="th" scope="row">{row.name.replace(/_/g, ' ')}</TableCell>
                 <TableCell align="right">{feet(row.luff)}</TableCell>
                 <TableCell align="right">{feet(row.head?row.head:row.leach)}</TableCell>
                 <TableCell align="right">{feet(row.foot?row.foot:row.perpendicular)}</TableCell>

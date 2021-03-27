@@ -45,9 +45,9 @@ export function fMSA(data) {
     if(data) {
         const sa = 0
         + fGaffSA(data.main)
-        + fGaffSA(data.mizen)
+        + fGaffSA(data.mizzen)
         + fTopSA(data.topsail)
-        + fTopSA(data.mizen_topsail)
+        + fTopSA(data.mizzen_topsail)
         + 0.85*fForeTriangle(data);
         return sa;
     }
