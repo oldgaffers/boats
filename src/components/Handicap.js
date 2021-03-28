@@ -1,7 +1,6 @@
 import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
-import { ShowChartRounded } from "@material-ui/icons";
 import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
-import { thcf, rig_allowance } from '../util/THCF';
+import { rig_allowance } from '../util/THCF';
 
 const metreKeys = [
   'beam','draft','perpendicular','luff','head','foot',
@@ -519,7 +518,7 @@ const propellorForm = {
     },
     {
       name: "calc-step",
-      nextStep: ({values}) => values.ddf.essex?'biggest-staysail-step':'done-step',
+      nextStep: ({values}) => values.ddf.essex?'biggest_staysail-step':'done-step',
       fields: [
         {
           component: componentTypes.TEXT_FIELD,
