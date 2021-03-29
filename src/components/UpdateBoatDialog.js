@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
-import Activity from './Activity';
 import OneActivity from './OneActivity';
 import Descriptions from './Descriptions';
 import Rig from './Rig';
