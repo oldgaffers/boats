@@ -1,5 +1,7 @@
 import React from "react";
+import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Dialog from "@material-ui/core/Dialog";
 import FormRenderer, {
   componentTypes, dataTypes,
 } from "@data-driven-forms/react-form-renderer";
@@ -81,7 +83,7 @@ const form = (pickers) => {
   };
 };
 
-export default function CreateBoat({classes, onCancel, onSave }) {
+function CreateBoat({classes, onCancel, onSave }) {
   const { loading, error, data } = usePicklists();
 
   if (loading) return <CircularProgress />;
@@ -114,3 +116,67 @@ export default function CreateBoat({classes, onCancel, onSave }) {
     </MuiThemeProvider>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+    appBar: {
+      position: 'relative',
+    },
+    layout: {
+      width: 'auto',
+      marginLeft: theme.spacing(2),
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
+        width: 600,
+        marginLeft: 'auto',
+        marginRight: 'auto',
+      },
+    },
+    paper: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+      padding: theme.spacing(2),
+      [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
+        marginTop: theme.spacing(6),
+        marginBottom: theme.spacing(6),
+        padding: theme.spacing(3),
+      },
+    },
+    editor: {
+      minwidth: 500,
+      minHeight: 500,
+      margin: 10,
+      padding: 10,
+      border: 'none',
+      boxShadow: 'none'
+    },
+    stepper: {
+      padding: theme.spacing(3, 0, 5),
+    },
+    buttons: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+    },
+    button: {
+      marginTop: theme.spacing(3),
+      marginLeft: theme.spacing(1),
+    },
+  }));
+  
+  export default function UpdateBoatDialog({ boat, onClose, open }) {
+    const classes = useStyles();
+  
+    const handleCancel = () => {
+      onClose();
+    }
+  
+    const handleSave = (changes) => { 
+      console.log(changes);   
+      onClose(changes);
+    };
+  
+    return (
+      <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
+        <CreateBoat classes={classes} onCancel={handleCancel} onSave={handleSave} />
+      </Dialog>
+    );
+  }
