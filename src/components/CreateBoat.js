@@ -12,33 +12,7 @@ import HullForm from "./HullForm";
 import { mapPicker } from "./Rig";
 import { usePicklists } from "../util/picklists";
 import { theme, HtmlEditor } from "./ddf/RTE";
-
-const extendableItems = ({pickers, name, label}) => {
-  return [
-    {
-      component: componentTypes.SELECT,
-      name,
-      label,
-      isReadOnly: false,
-      isSearchable: true,
-      isClearable: true,
-      options: mapPicker(pickers[name]),
-    },
-    {
-      component: componentTypes.TEXT_FIELD,
-      condition: {
-        when: name,
-        isEmpty: true,
-      },
-      name: `new_${name}`,
-      label: `a ${label.toLowerCase()} not listed`,
-      isRequired: false,
-    },
-  ];
-};
-
-const builderItems = (pickers) => extendableItems({pickers, name: 'builder', label: 'Builder'})
-const designerItems = (pickers) => extendableItems({pickers, name: 'designer', label: 'Designer'})
+import { designerItems, builderItems } from "./ddf/util";
 
 const form = (pickers) => {
   return {

@@ -16,6 +16,7 @@ import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from "../util/picklists";
 import { theme, HtmlEditor } from "./ddf/RTE";
+import { designerItems, builderItems, designClassItems } from "./ddf/util";
 
 const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },
@@ -46,34 +47,6 @@ const activityForm = {
     },
   ],
 };
-
-const extendableItems = ({pickers, name, label}) => {
-  return [
-    {
-      component: componentTypes.SELECT,
-      name,
-      label,
-      isReadOnly: false,
-      isSearchable: true,
-      isClearable: true,
-      options: mapPicker(pickers[name]),
-    },
-    {
-      component: componentTypes.TEXT_FIELD,
-      condition: {
-        when: name,
-        isEmpty: true,
-      },
-      name: `new_${name}`,
-      label: `a ${label.toLowerCase()} not listed`,
-      isRequired: false,
-    },
-  ];
-};
-
-const builderItems = (pickers) => extendableItems({pickers, name: 'builder', label: 'Builder'})
-const designerItems = (pickers) => extendableItems({pickers, name: 'designer', label: 'Designer'})
-const designClassItems = (pickers) => extendableItems({pickers, name: 'design_class', label: 'Design Class'})
 
 const cardForm = (pickers) => {
   return {
