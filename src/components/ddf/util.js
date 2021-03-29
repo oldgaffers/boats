@@ -1,5 +1,5 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
-import { mapPicker } from "./Rig";
+import { mapPicker } from "../Rig";
 
 export const extendableItems = ({pickers, name, label}) => {
     return [
