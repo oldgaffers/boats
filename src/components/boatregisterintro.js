@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
-import CreateBoatDialog from './CreateBoat';
+import CreateBoatButton from './CreateBoat';
 
 export default function BoatRegisterIntro() {
-    const [open, setOpen] = useState(false);
 
     return (
         <Paper>
@@ -19,8 +17,8 @@ export default function BoatRegisterIntro() {
           </Typography>
         <Typography variant="body1">
             Have a boat and can't find it here? Fill in our{' '}
-            <a href="https://form.jotform.com/jfbcable/new-boat">form</a>
-            {/*<Button color="secondary" onClick={() => { setOpen(true)}}>form</Button>*/}
+            {/*<a href="https://form.jotform.com/jfbcable/new-boat">form</a>*/}
+            <CreateBoatButton/>
              &nbsp;and we will add it.
             </Typography>
         <Typography variant="body1">
@@ -35,7 +33,6 @@ export default function BoatRegisterIntro() {
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
         </Typography>
-        <CreateBoatDialog open={open}/>
         </Paper>
     );
 }

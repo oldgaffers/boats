@@ -1,8 +1,4 @@
-import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Dialog from "@material-ui/core/Dialog";
+import React, { useState } from 'react';
 import FormRenderer, {
   componentTypes, dataTypes,
 } from "@data-driven-forms/react-form-renderer";
@@ -11,13 +7,44 @@ import {
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
 import { MuiThemeProvider } from "@material-ui/core/styles";
-import HullForm from "./HullForm";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import Dialog from '@material-ui/core/Dialog';
+import { makeStyles } from '@material-ui/core/styles';
 import { mapPicker } from "./Rig";
 import { usePicklists } from "../util/picklists";
+import { designerItems, builderItems, designClassItems } from "./ddf/util";
 import { theme, HtmlEditor } from "./ddf/RTE";
-import { designerItems, builderItems } from "./ddf/util";
 
-const form = (pickers) => {
+const useStyles = makeStyles((theme) => ({
+  editor: {
+    minwidth: 500,
+    minHeight: 500,
+    margin: 10,
+    padding: 10,
+    border: 'none',
+    boxShadow: 'none'
+  },
+  grid: {
+    margin: '10px',
+    width: 'auto'
+  },
+  dialog: {
+    maxWidth: 'max-content',
+  },
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    marginTop: theme.spacing(0),
+    marginLeft: theme.spacing(0),
+  },
+}));
+ 
+const schema = (pickers) => {
   return {
     title: "New Boat",
     name: "boat",
@@ -75,6 +102,7 @@ const form = (pickers) => {
       },      
       ...designerItems(pickers),
       ...builderItems(pickers),
+      ...designClassItems(pickers),
       {
         component: componentTypes.TEXT_FIELD,
         name: "place_built",
@@ -84,100 +112,74 @@ const form = (pickers) => {
   };
 };
 
-function CreateBoat({classes, onCancel, onSave }) {
+const CreateBoatDialog = ({ classes, onClose, open }) => {
   const { loading, error, data } = usePicklists();
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
 
   const pickers = data;
+return (
+  <Dialog open={open} onClose={onClose} className={classes.dialog} aria-labelledby="form-dialog-title">
+  <Grid spacing={4} container className={classes.grid}>
+  <MuiThemeProvider theme={theme}>
+    <FormRenderer
+      componentMapper={{
+        ...componentMapper,
+        html: HtmlEditor,
+      }}
+      FormTemplate={FormTemplate}
+      schema={schema(pickers)}
+      onSubmit={console.log}
+      onCancel={() => {console.log('Cancel action'); onClose()}}
+    />
+    </MuiThemeProvider>
+  </Grid>
+  </Dialog>
+);
+}
 
-  const handleSubmit = (values) => {
-    console.log("submit");
-    const { email, ddf, ...result } = values;
-    console.log(ddf);
-    onSave( result, email);
-  };
+function CreateBoatButton() {
+  const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+
+  const handleCancel = () => {
+    console.log('cancel');
+    setOpen(false);    
+  }
+  const handleSend = () => {
+    console.log('send');
+    setOpen(false);    
+    setSnackBarOpen(true);
+  }
+
+  const snackBarClose = () => {
+    setSnackBarOpen(false);
+  }
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <FormRenderer
-        schema={form(pickers)}
-        componentMapper={{
-          ...componentMapper,
-          "hull-form": HullForm,
-          html: HtmlEditor,
-        }}
-        FormTemplate={(props) => (
-          <FormTemplate {...props} showFormControls={false} />
-        )}
-        onCancel={onCancel}
-        onSubmit={handleSubmit}
+    <>
+      <Button className={classes.button} size="small"
+        color="secondary" onClick={() => setOpen(true)}>
+        form
+      </Button>
+      <CreateBoatDialog
+        classes={classes}
+        open={open}
+        onCancel={handleCancel}
+        onSend={handleSend}
       />
-    </MuiThemeProvider>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={snackBarOpen}
+        autoHideDuration={2000}
+        onClose={snackBarClose}
+        message="Thanks, we'll get back to you."
+        severity="success"
+      />
+    </>
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-    appBar: {
-      position: 'relative',
-    },
-    layout: {
-      width: 'auto',
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-        width: 600,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
-    },
-    paper: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3),
-      padding: theme.spacing(2),
-      [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-        marginTop: theme.spacing(6),
-        marginBottom: theme.spacing(6),
-        padding: theme.spacing(3),
-      },
-    },
-    editor: {
-      minwidth: 500,
-      minHeight: 500,
-      margin: 10,
-      padding: 10,
-      border: 'none',
-      boxShadow: 'none'
-    },
-    stepper: {
-      padding: theme.spacing(3, 0, 5),
-    },
-    buttons: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      marginTop: theme.spacing(3),
-      marginLeft: theme.spacing(1),
-    },
-  }));
-  
-  export default function UpdateBoatDialog({ boat, onClose, open }) {
-    const classes = useStyles();
-  
-    const handleCancel = () => {
-      onClose();
-    }
-  
-    const handleSave = (changes) => { 
-      console.log(changes);   
-      onClose(changes);
-    };
-  
-    return (
-      <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
-        <CreateBoat classes={classes} onCancel={handleCancel} onSave={handleSave} />
-      </Dialog>
-    );
-  }
+export default CreateBoatButton;
