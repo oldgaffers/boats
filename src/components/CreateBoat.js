@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
  
-const schema = (pickers) => {
+const schema1 = (pickers) => {
   return {
     title: "New Boat",
     name: "boat",
@@ -112,26 +112,122 @@ const schema = (pickers) => {
   };
 };
 
-const CreateBoatDialog = ({ classes, onClose, open }) => {
+const schema = (pickers) => {
+  return {
+  "fields": [
+    {
+      title: "New Boat Record",
+      "component": componentTypes.WIZARD,
+      "name": "boat",
+      "fields": [
+        {
+          "title": "Name and description",
+          "name": "step-1",
+          "nextStep": {
+            "when": "design",
+            "stepMapper": {
+              "1": "one-off",
+              "2": "production",
+              "3":  "sister-ship"
+            }
+          },
+          "fields": [
+            {
+              component: componentTypes.TEXT_FIELD,
+              name: "name",
+              label: "Name",
+              type: 'string',
+              dataType: dataTypes.STRING,
+            },
+            {
+              component: "html",
+              title: "Short description",
+              name: "short_description",
+              controls: ["bold", "italic"],
+              maxLength: 500,
+            },
+            {
+              component: componentTypes.RADIO,
+              label: "This boat is a",
+              name: "design",
+              initialValue: "1",
+              options: [
+                {
+                  "label": "One-off",
+                  "value": "1"
+                },
+                {
+                  "label": "Production design",
+                  "value": "2"
+                },
+                {
+                  "label": "Sister-ship to a boat on the register",
+                  "value": "3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "One-off Details",
+          "name": "one-off",
+          "fields": [
+            {
+              "component": "text-field",
+              "name": "x",
+              "label": "everything"
+            }
+          ]
+        },
+        {
+          "name": "production",
+          "title": "Production Boat Details",
+          "fields": [
+            ...designClassItems(pickers),
+          ]
+        },
+        {
+          "name": "sister-ship",
+          "title": "Sister-ship details",
+          "fields": [
+            {
+              component: componentTypes.TEXT_FIELD,
+              name: "like",
+              label: "OGA No. of existing boat",
+              type: 'number',
+              dataType: dataTypes.INTEGER,
+            },
+          ]
+        }
+      ]
+    }
+  ]
+  }
+};
+
+const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   const { loading, error, data } = usePicklists();
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
 
   const pickers = data;
+  
 return (
-  <Dialog open={open} onClose={onClose} className={classes.dialog} aria-labelledby="form-dialog-title">
+  <Dialog open={open} className={classes.dialog} aria-labelledby="form-dialog-title">
   <Grid spacing={4} container className={classes.grid}>
   <MuiThemeProvider theme={theme}>
     <FormRenderer
       componentMapper={{
         ...componentMapper,
         html: HtmlEditor,
-      }}
-      FormTemplate={FormTemplate}
+      }}      
+      FormTemplate={(props) => (
+        <FormTemplate {...props} showFormControls={false} />
+      )}
       schema={schema(pickers)}
-      onSubmit={console.log}
-      onCancel={() => {console.log('Cancel action'); onClose()}}
+      onSubmit={onSubmit}
+      onCancel={onCancel}
     />
     </MuiThemeProvider>
   </Grid>
@@ -148,6 +244,7 @@ function CreateBoatButton() {
     console.log('cancel');
     setOpen(false);    
   }
+
   const handleSend = () => {
     console.log('send');
     setOpen(false);    
@@ -168,7 +265,7 @@ function CreateBoatButton() {
         classes={classes}
         open={open}
         onCancel={handleCancel}
-        onSend={handleSend}
+        onSubmit={handleSend}
       />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
