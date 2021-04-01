@@ -29,7 +29,7 @@ test('renders learn react link', () => {
   const { getByText } = render(
       <MockedProvider mocks={mocks}>
           <BoatCard 
-          state={{filters:{}}} 
+          state={{filters:{}, view:{}}} 
           boat={{oga_no: 1, previous_names: []}}
           link={()=>'More'}
           location={{}} 
