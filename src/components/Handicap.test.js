@@ -127,7 +127,7 @@ test('Robinetta foretriangle_area', () => {
   });
   
   test('Transcur T(H)CF', () => {
-    expect(thcf(boatm2f(Transcur))).toEqual(1.025);
+    expect(thcf(boatm2f(Transcur)).toFixed(3)).toEqual('1.025');
   });
   
   test('t1', () => {
@@ -135,5 +135,5 @@ test('Robinetta foretriangle_area', () => {
   });
 
 test('Robinetta T(H)CF', () => {
-    expect(thcf(boatm2f(Robinetta))).toEqual(0.946);
+    expect(thcf(boatm2f(Robinetta)).toFixed(3)).toEqual('0.850');
   });

@@ -4,7 +4,7 @@ import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import BrowseBoats from './browseboats';
 import { query } from '../util/cardquery';
-import { MemoryRouter } from "react-router";
+// import { MemoryRouter } from "react-router";
 import { mockPicks } from '../mock/sampledata';
 
 const mocks = [
@@ -45,9 +45,7 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <MemoryRouter initialEntries={[{ pathname:'/', state: { filters: {}} }]}>
-        <BrowseBoats state={{filters:{ sale: false }}} pickers={mockPicks}/>
-      </MemoryRouter>
+        <BrowseBoats state={{filters:{ sale: false },view:{}}} pickers={mockPicks}/>
     </MockedProvider>
   );
   const wanted = getByText(/Other great places to look for boats are/);
