@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CookiesProvider } from "react-cookie";
 import { Link, Router, Route } from "@ogauk/link-router";
 import OGAProvider from "./util/gql";
@@ -9,51 +9,53 @@ import BoatRegisterIntro from "./components/boatregisterintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 
 const browse = {
-  p: "1",
-  bpp: "12",
   sort: "rank",
   asc: "true",
 };
 
 const buy = {
-  p: "1",
-  bpp: "12",
   sort: "price",
   asc: "false",
   v_sale: "true",
 };
 
 const small = {
-  p: "1",
-  bpp: "12",
   sort: "rank",
   asc: "true",
   v_generic_type: "Dinghy|Dayboat",
 };
 
-const handlePageSizeChange = (bpp) => {
-  console.log("page size change", bpp);
-};
-
-const handleSortChange = (field, dir) => {
-  console.log("sortchange", field, dir);
-};
-
-const handleFilterChange = (filters) => {
-  console.log("filter change", filters);
-};
-
-const handlePageChange = (page) => {
-  console.log("page change", page);
-};
-
 export default function App() {
+
+  const [page, setPage] = useState(1);
+  const [bpp, setBpp] = useState(12);
+
+  const handlePageSizeChange = (bpp) => {
+    console.log("page size change", bpp);
+    setBpp(bpp);
+    setPage(1);
+  };
+
+  const handleSortChange = (field, dir) => {
+    console.log("sortchange", field, dir);
+  };
+
+  const handleFilterChange = (filters) => {
+    console.log("filter change", filters);
+    setPage(1);
+  };
+
+  const handlePageChange = (page) => {
+    console.log("page change", page);
+    setPage(page);
+  };
+
   return (
     <CookiesProvider>
       <OGAProvider>
         <Router>
           <Route
-            state={browse}
+            state={{...browse, p: page, bpp}}
             path="/boat_register/boat_register.html"
           >
             <BoatRegisterIntro />
@@ -67,7 +69,7 @@ export default function App() {
             />
           </Route>
           <Route
-            state={buy}
+            state={{...buy, p: page, bpp}}
             path="/boat_register/boats_for_sale/(?:test_)?boats_for_sale.*"
           >
             <BoatsForSaleIntro />
@@ -81,7 +83,7 @@ export default function App() {
             />
           </Route>
           <Route
-            state={small}
+            state={{...small, p: page, bpp}}
             path="/boat_register/small_boats/(?:test_)?small_boats.*"
           >
             <SmallBoatsIntro />
@@ -95,7 +97,7 @@ export default function App() {
             />
           </Route>
           <Route
-            state={browse}
+            state={{...browse, p: page, bpp}}
             path="/boat_register/browse_the_register/(?:test_)?browse_the_register.*"
           >
             <BoatRegisterIntro />
