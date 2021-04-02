@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import CreateBoatButton from './CreateBoat';
 
-export default function BoatRegisterIntro() {
+export default function BoatRegisterIntro({pickers}) {
 
     return (
         <Paper>
@@ -17,8 +17,8 @@ export default function BoatRegisterIntro() {
           </Typography>
         <Typography variant="body1">
             Have a boat and can't find it here? Fill in our{' '}
-            {/*<a href="https://form.jotform.com/jfbcable/new-boat">form</a>*/}
-            <CreateBoatButton/>
+            <a href="https://form.jotform.com/jfbcable/new-boat">form</a>
+            {/*<CreateBoatButton pickers={pickers}/>*/}
              &nbsp;and we will add it.
             </Typography>
         <Typography variant="body1">

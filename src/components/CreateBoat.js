@@ -13,9 +13,10 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import Dialog from '@material-ui/core/Dialog';
 import { makeStyles } from '@material-ui/core/styles';
-import { mapPicker } from "./Rig";
+// import { mapPicker } from "./Rig";
 import { usePicklists } from "../util/picklists";
-import { designerItems, builderItems, designClassItems } from "./ddf/util";
+import { // designerItems, builderItems, 
+  designClassItems } from "./ddf/util";
 import { theme, HtmlEditor } from "./ddf/RTE";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
  
+/*
 const schema1 = (pickers) => {
   return {
     title: "New Boat",
@@ -111,7 +113,7 @@ const schema1 = (pickers) => {
     ],
   };
 };
-
+*/
 const schema = (pickers) => {
   return {
   "fields": [
@@ -135,9 +137,10 @@ const schema = (pickers) => {
             {
               component: componentTypes.TEXT_FIELD,
               name: "name",
-              label: "Name",
+              label: "Boat Name",
               type: 'string',
               dataType: dataTypes.STRING,
+              isRequired: true,
             },
             {
               component: "html",
@@ -145,9 +148,11 @@ const schema = (pickers) => {
               name: "short_description",
               controls: ["bold", "italic"],
               maxLength: 500,
+              isRequired: true,
             },
             {
               component: componentTypes.RADIO,
+              isRequired: true,
               label: "This boat is a",
               name: "design",
               initialValue: "1",
