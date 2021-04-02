@@ -3,12 +3,27 @@ import BoatWrapper from './boatwrapper';
 import useAxios from 'axios-hooks';
 import { Link } from "@ogauk/link-router";
 
+function upgradeBoat(b) {
+  const handicap_data = b.handicap_data || {};
+  if (b.beam) {
+    b.handicap_data.beam = b.beam;
+    delete b.beam;
+  }
+  if (handicap_data.length_over_all === undefined) {
+    if (b.length_on_deck) {
+      handicap_data.length_over_all = b.length_on_deck;
+    }  
+  }
+  b.handicap_data = handicap_data;
+  return b;
+}
+
 // gql or axios
 function getBoat(b) {
   if (b.data.boat) {
-    return b.data.boat[0];
+    return upgradeBoat(b.data.boat[0]);
   }
-  return b.data.result.pageContext.boat;
+  return upgradeBoat(b.data.result.pageContext.boat);
 }
 
 export default function Boat({location}) {

@@ -8,9 +8,9 @@ const aft = {fore_triangle_height: 10, fore_triangle_base: 10};
 const aboat2 = {
   hull_type: '',
   rig_type: 'Cutter',
-  beam: 9.68,
   draft: 4.92,
   handicap_data: {
+    beam: 9.68,
     sailarea: undefined,
     fore_triangle_height: 30.58,
     fore_triangle_base: 19.26,
@@ -37,9 +37,9 @@ const aboat2 = {
 const aboat = {
   hull_type: '',
   rig_type: 'Cutter',
-  beam: 7,
   draft: 2.75,
   handicap_data: {
+    beam: 7,
     sailarea: undefined,
     fore_triangle_height: 19.5,
     fore_triangle_base: 9.3,

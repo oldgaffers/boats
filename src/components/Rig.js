@@ -1,4 +1,4 @@
-import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
+import { componentTypes, dataTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 
 export const mapPicker = (m) => {
   return m.map((val) => {
@@ -21,6 +21,11 @@ export const rigForm = (pickers) => {
       label: "Mainsail",
       isRequired: true,
       options: mapPicker(pickers.sail_type),
+      validate: [
+        {
+          type: validatorTypes.REQUIRED
+        }
+      ]
     },
     {
       component: componentTypes.SELECT,
@@ -28,6 +33,11 @@ export const rigForm = (pickers) => {
       label: "Rig",
       isRequired: true,
       options: mapPicker(pickers.rig_type),
+      validate: [
+        {
+          type: validatorTypes.REQUIRED
+        }
+      ]
     },
     {
     component: componentTypes.TEXT_FIELD,

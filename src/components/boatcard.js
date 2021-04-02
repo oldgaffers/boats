@@ -1,4 +1,5 @@
 import React from 'react';
+import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -6,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Badge from '@material-ui/core/Badge';
+import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
@@ -73,6 +75,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  checkBox: { textAlign: 'right' }
 }));
 
 function normaliseDescription(boat) {
@@ -91,10 +94,16 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, boat, link, location }) {
+export default function BoatCard({ state, boat, link, location, onMarkChange }) {
   const classes = useStyles();
   const sale = state.view.sale;
   const bl = React.forwardRef((props, ref) => link({...props, ref}));
+
+  const mark = (event) => {
+    if(onMarkChange) {
+      onMarkChange(event.target.checked, boat);
+    }
+  };
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
@@ -109,6 +118,8 @@ export default function BoatCard({ state, boat, link, location }) {
         <TextList fields={wanted} data={boat} />
       </CardContent>
       <CardActions>
+        <Grid container justify="space-between">
+        <Grid item>
         <Button
           size="small" 
           component={bl}
@@ -116,6 +127,14 @@ export default function BoatCard({ state, boat, link, location }) {
           variant="contained" 
           color="secondary"
         >More..</Button>
+        </Grid>
+        <Grid item>
+        <Checkbox className={classes.checkBox}
+        color="primary" onChange={mark}
+        inputProps={{ 'aria-label': 'add to list' }}
+      />
+        </Grid>
+        </Grid>
       </CardActions>
     </Card>
   );

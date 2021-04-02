@@ -426,13 +426,16 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   const state = { ...boatm2f(boat), ddf: { activity: "descriptions" } };
 
   const handleSubmit = (values) => {
-    console.log("submit");
+    console.log("submit", JSON.stringify(values));
     const { email, ddf, ...result } = values;
-    console.log(ddf);
-    onSave({
-      ...boat,
-      ...boatf2m(result),
-    }, email);
+    const updates = boatf2m(result);
+    // the following is because sail data might be skipped in the form
+    const ohd = boat.handicap_data;
+    const nhd = updates.handicap_data;
+    updates.handicap_data = {...ohd, ...nhd};
+    const updatedBoat = { ...boat, ...updates};
+    console.log(updatedBoat);
+    onSave(updatedBoat, email);
   };
 
   return (

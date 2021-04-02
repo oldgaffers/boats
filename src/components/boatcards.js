@@ -49,6 +49,10 @@ export default function BoatCards({
     }
   }
 
+  const onMarkChange = (marked, boat) => {
+    console.log(`boat ${boat.oga_no} is ${marked?'marked':'not marked'}`);
+  }
+
   if (totalCount > 0) {
     return (
       <Container className={classes.cardGrid} maxWidth="md">
@@ -57,7 +61,7 @@ export default function BoatCards({
           <Grid container spacing={4}>
           {boats.map((boat) => (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} boat={boat} link={link} location={location} />
+              <BoatCard state={state} boat={boat} link={link} location={location} onMarkChange={onMarkChange} />
             </Grid>
           ))}
           </Grid>

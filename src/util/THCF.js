@@ -61,13 +61,6 @@ export function fL(data) {
     return 0;
 }
 
-export function fB(boat) {
-    if(boat) {
-        return boat.beam;
-    }
-    return 0;
-}
-
 export function fSqrtS(boat) {
     if(boat && boat.handicap_data) {
         const SA = boat.handicap_data.sailarea || fMSA(boat.handicap_data);
@@ -89,7 +82,7 @@ export function fBD(boat) {
     // John Scarlett
     // return fB(boat)*fD(boat.handicap_data);
     // old online register
-    return 0.67*boat.beam*boat.beam;
+    return 0.67*boat.handicap_data.beam*boat.handicap_data.beam;
 }
 
 export function fMR(boat) {

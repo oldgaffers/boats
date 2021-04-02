@@ -28,7 +28,7 @@ export const dimensionsForm = {
     },
     {
       component: componentTypes.TEXT_FIELD,
-      name: "beam",
+      name: "handicap_data.beam",
       label: "Beam",
       type: 'number',
       dataType: dataTypes.FLOAT,

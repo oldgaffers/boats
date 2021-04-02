@@ -1,4 +1,4 @@
-import { componentTypes, dataTypes } from "@data-driven-forms/react-form-renderer";
+import { componentTypes, dataTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
 import { rig_allowance } from '../util/THCF';
 
@@ -32,9 +32,9 @@ export function boatm2f(obj) {
     } else {
       return obj;
     }
+  } else {
+    return undefined;
   }
-  console.log(obj);
-  return obj;
 }
 
 export function boatf2m(obj) {
@@ -494,6 +494,12 @@ const propellorForm = {
           label: 'length over all (LOA) (decimal feet)',
           type: 'number',
           dataType: dataTypes.FLOAT,
+          isRequired: true,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED
+            }
+          ]    
         },
         {
           component: componentTypes.TEXT_FIELD,
@@ -501,6 +507,12 @@ const propellorForm = {
           label: 'waterline length (LWL) (decimal feet)',
           type: 'number',
           dataType: dataTypes.FLOAT,
+          isRequired: true,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED
+            }
+          ]
         },
         {
           component: componentTypes.TEXT_FIELD,
@@ -508,6 +520,12 @@ const propellorForm = {
           label: 'Beam (decimal feet)',
           type: 'number',
           dataType: dataTypes.FLOAT,
+          isRequired: true,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED
+            }
+          ]    
         }
       ]
     },
@@ -529,8 +547,8 @@ const propellorForm = {
           label: 'Rig allowance',
           description: 'cutter: .96, yawl: .94, schooner: .92, ketch: .90',
           resolveProps: (props, {meta, input}, formOptions) => {
-            const state = formOptions.getState();
-            const ra = rig_allowance(state.values.rig_type)
+            const {values} = formOptions.getState();
+            const ra = rig_allowance(values.rig_type)
             formOptions.change('ddf.rig_allowance', ra);
             return { 
               value: ra
@@ -544,9 +562,9 @@ const propellorForm = {
           dataType: dataTypes.FLOAT,
           label: 'Square root of corrected sail area',
           resolveProps: (props, {meta, input}, formOptions) => {
-            const state = formOptions.getState();
-            const SA = state.values.handicap_data.sailarea;
-            const ra = rig_allowance(state.values.rig_type)
+            const {values} = formOptions.getState();
+            const SA = values.handicap_data.sailarea;
+            const ra = rig_allowance(values.rig_type)
             const crsa = ra*Math.sqrt(SA)
             formOptions.change('ddf.root_s', crsa);
             return { 
@@ -563,12 +581,11 @@ const propellorForm = {
           label: 'Cross section (decimal square feet)',
           description: '0.67B²',
           resolveProps: (props, {meta, input}, formOptions) => {
-            const state = formOptions.getState();
-            const hd = state.values.handicap_data;
+            const {values} = formOptions.getState();
+            const hd = values.handicap_data;
             let c = 0;
             if (hd) {
-              const beam = hd.beam;
-              c = 0.67*beam*beam;
+              c = 0.67*hd.beam*hd.beam;
               formOptions.change('ddf.c', c);  
             }
             return { 
@@ -584,12 +601,12 @@ const propellorForm = {
           dataType: dataTypes.FLOAT,
           isReadOnly: true,
           resolveProps: (props, {meta, input}, formOptions) => {
-            const state = formOptions.getState();
-            const LOA = state.values.handicap_data.length_over_all;
-            const LWL = state.values.handicap_data.length_on_waterline;
+            const {values} = formOptions.getState();
+            const LOA = values.handicap_data.length_over_all || 0.0;
+            const LWL = values.handicap_data.length_on_waterline || 0.0;
             const L = (LOA+LWL)/2;
-            const C = state.values.ddf.c;
-            const rS = state.values.ddf.root_s;
+            const C = values.ddf.c;
+            const rS = values.ddf.root_s;
             const x = 0.15*L*rS/Math.sqrt(C);
             const y = 0.2*(L+rS);    
             const mr = x + y;
