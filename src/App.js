@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CookiesProvider } from "react-cookie";
-import { Link, Router, Route } from "@ogauk/link-router";
+import { Router } from "@reach/router"
 import OGAProvider from "./util/gql";
 import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import Boat from "./components/boat";
@@ -25,94 +25,125 @@ const small = {
   v_generic_type: "Dinghy|Dayboat",
 };
 
-export default function App() {
+function Browse(props) {
+  return (
+    <>
+    <BoatRegisterIntro />
+    <GqlBoatBrowser
+      title="Browse the Register"
+      {...props}
+    />
+    </>
+  );
+}
 
-  const [page, setPage] = useState(1);
-  const [bpp, setBpp] = useState(12);
+function Buy(props) {
+  return (
+    <>
+    <BoatsForSaleIntro />
+    <GqlBoatBrowser
+      title="Boats for Sale"
+      {...props}
+    />
+    </>
+  );
+}
+
+function Small(props) {
+  return (
+    <>
+    <SmallBoatsIntro />
+    <GqlBoatBrowser
+      title="Browse our small boats"
+      {...props}
+    />
+    </>
+  );
+}
+
+const Home = props => (
+  <>
+    {props.children}
+  </>
+)
+
+export default function App() {
+  const [state, setState] = useState(JSON.parse(sessionStorage.getItem("BOAT_BROWSE_STATE"))||{ bpp: '12', p: '1'});
+  
+  useEffect(() => {
+    sessionStorage.setItem("BOAT_BROWSE_STATE", JSON.stringify(state));
+  }, [state]);
 
   const handlePageSizeChange = (bpp) => {
     console.log("page size change", bpp);
-    setBpp(bpp);
-    setPage(1);
+    setState({p:'1', bpp: `${bpp}`});
   };
 
   const handleSortChange = (field, dir) => {
     console.log("sortchange", field, dir);
+    setState({...state, sort: field, asc: `${dir==='asc'}`});
   };
 
   const handleFilterChange = (filters) => {
     console.log("filter change", filters);
-    setPage(1);
+    setState({...state, p:'1', filters});
   };
 
   const handlePageChange = (page) => {
     console.log("page change", page);
-    setPage(page);
+    setState({...state, p: `${page}`});
   };
 
   return (
     <CookiesProvider>
       <OGAProvider>
         <Router>
-          <Route
-            state={{...browse, p: page, bpp}}
-            path="/boat_register/boat_register.html"
-          >
-            <BoatRegisterIntro />
-            <GqlBoatBrowser
-              title="Browse the Register"
+          <Home path="/boat_register">
+          <Browse            
+            path="boat_register.html"
+            onPageSizeChange={handlePageSizeChange}
+            onSortChange={handleSortChange}
+            onFilterChange={handleFilterChange}
+            onPageChange={handlePageChange}
+            state={{...browse, ...state}}
+          />
+          <Home path="browse_the_register">
+            <Browse            
+              path="browse_the_register.html"
               onPageSizeChange={handlePageSizeChange}
               onSortChange={handleSortChange}
               onFilterChange={handleFilterChange}
               onPageChange={handlePageChange}
-              link={Link}
+              state={{...browse, ...state}}
             />
-          </Route>
-          <Route
-            state={{...buy, p: page, bpp}}
-            path="/boat_register/boats_for_sale/(?:test_)?boats_for_sale.*"
-          >
-            <BoatsForSaleIntro />
-            <GqlBoatBrowser
-              title="Boats for Sale"
+            <Browse            
+              path="test_browse_the_register.html"
               onPageSizeChange={handlePageSizeChange}
               onSortChange={handleSortChange}
               onFilterChange={handleFilterChange}
               onPageChange={handlePageChange}
-              link={Link}
+              state={{...browse, ...state}}
             />
-          </Route>
-          <Route
-            state={{...small, p: page, bpp}}
-            path="/boat_register/small_boats/(?:test_)?small_boats.*"
-          >
-            <SmallBoatsIntro />
-            <GqlBoatBrowser
-              title="Boats for Sale"
-              onPageSizeChange={handlePageSizeChange}
-              onSortChange={handleSortChange}
-              onFilterChange={handleFilterChange}
-              onPageChange={handlePageChange}
-              link={Link}
-            />
-          </Route>
-          <Route
-            state={{...browse, p: page, bpp}}
-            path="/boat_register/browse_the_register/(?:test_)?browse_the_register.*"
-          >
-            <BoatRegisterIntro />
-            <GqlBoatBrowser
-              title="Browse the Register"
-              onPageSizeChange={handlePageSizeChange}
-              onSortChange={handleSortChange}
-              onFilterChange={handleFilterChange}
-              onPageChange={handlePageChange}
-              link={Link}
-            />
-          </Route>
-          <Route path="/boat_register/browse_the_register/(?:test_)?boat.*">
-            <Boat />
-          </Route>
+            <Boat path="boat.html"/>
+            <Boat path="test_boat.html"/>
+          </Home>
+          <Buy            
+            path="boats_for_sale/boats_for_sale.html"
+            onPageSizeChange={handlePageSizeChange}
+            onSortChange={handleSortChange}
+            onFilterChange={handleFilterChange}
+            onPageChange={handlePageChange}
+            state={{...buy, ...state}}
+          />
+          <Small            
+            path="small_boats/small_boats.html"
+            onPageSizeChange={handlePageSizeChange}
+            onSortChange={handleSortChange}
+            onFilterChange={handleFilterChange}
+            onPageChange={handlePageChange}
+            state={{...small, ...state}}
+          />
+          </Home>
         </Router>
       </OGAProvider>
     </CookiesProvider>

@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
-import { home } from '../util/context';
 
 const drawerWidth = 240;
 
@@ -70,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
 export default function BoatButtons({ boat, linkComponent, location }) {
 
   const classes = useStyles();
-  const homeLink = React.forwardRef((props, ref) => linkComponent({...props, ref}));
 
   const photoCancelled = () => {
     console.log('cancel');
@@ -84,12 +82,25 @@ export default function BoatButtons({ boat, linkComponent, location }) {
     <Paper>
         <Grid container direction="row" alignItems="flex-end">
         <Grid item xs={2}>
-            <Button size="small"
-            variant="contained"
-            className={classes.button}
-            component={homeLink}
-            to={home(location)}
-            >See more boats</Button>
+            {
+              (document.referrer.includes('boat_register'))?
+              (
+                <Button size="small"
+                variant="contained"
+                className={classes.button}
+                onClick={() => window.history.back()}
+                >See more boats</Button>
+              )
+              :
+              (
+                <Button size="small"
+                variant="contained"
+                className={classes.button}
+                component={'a'}
+                href='/boat_register/boat_register.html'
+                >See more boats</Button>
+              )
+            }
         </Grid>
         <Grid item xs={3} >
             <Enquiry classes={classes} boat={boat} />

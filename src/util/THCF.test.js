@@ -100,7 +100,6 @@ test('thcf thcf aboat', () => {
 
 test('thcf thcf aboat2', () => {
   expect(fL(aboat2.handicap_data)).toBe((27.87+27.23)/2);
-  expect(fB(aboat2)).toBe(9.68);
   expect(fSqrtS(aboat2)).toBeGreaterThan(20);
   expect(thcf(aboat2).toFixed(3)).toEqual("0.972");
 });

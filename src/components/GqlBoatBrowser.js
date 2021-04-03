@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React from "react"
 import BrowseBoats from './browseboats';
 import { usePicklists } from '../util/picklists';
 import {mapState} from '../util/gr';
@@ -15,7 +15,8 @@ export default function GqlBoatBrowser(
     state,
   }
 ) {
-  const [currentState, setCurrentState] = useState(mapState(state));
+  const currentState = mapState(state);
+  // const [currentState, setCurrentState] = useState(mapState(state));
   const { loading, error, data } = usePicklists(currentState.view);
 
   if (loading) return (<p>Loading...</p>);
@@ -23,23 +24,25 @@ export default function GqlBoatBrowser(
 
   const handlePageSizeChange = (bpp) => {
     onPageSizeChange(bpp);
-    setCurrentState({...currentState, bpp: bpp });
+    // setCurrentState({...currentState, bpp: bpp });
   };
 
   const handleSortChange = (field, dir) => {
     onSortChange(field, dir);
-    setCurrentState({...currentState, sort: field, sortDirection: dir });
+    // setCurrentState({...currentState, sort: field, sortDirection: dir });
   }
 
   const handleFilterChange = (filters) => {
     onFilterChange(filters);
-    setCurrentState({...currentState, filters, page: 1 });
+    // setCurrentState({...currentState, filters, page: 1 });
   }
 
   const handlePageChange = (page) => {
     onPageChange(page);
-    setCurrentState({...currentState, page });
+   // setCurrentState({...currentState, page });
   };
+
+  console.log('GqlBoatBrowser', currentState);
 
   return (
       <BrowseBoats 

@@ -11,7 +11,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
-import { boatLink } from '../util/context';
+import { useLocation } from '@reach/router';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -94,16 +94,21 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, boat, link, location, onMarkChange }) {
+export default function BoatCard({ state, boat, link, onMarkChange }) {
+  const location = useLocation();
   const classes = useStyles();
   const sale = state.view.sale;
-  const bl = React.forwardRef((props, ref) => link({...props, ref}));
 
   const mark = (event) => {
     if(onMarkChange) {
       onMarkChange(event.target.checked, boat);
     }
   };
+
+  let href = '/boat_register/browse_the_register/boat.html';
+  if (location.pathname.includes('test')) {
+    href = '/boat_register/browse_the_register/test_boat.html';
+  }
 
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
@@ -122,8 +127,8 @@ export default function BoatCard({ state, boat, link, location, onMarkChange }) 
         <Grid item>
         <Button
           size="small" 
-          component={bl}
-          to={boatLink(state, boat.oga_no, location)}
+          component={'a'}
+          href={`${href}?oga_no=${boat.oga_no}`}
           variant="contained" 
           color="secondary"
         >More..</Button>
