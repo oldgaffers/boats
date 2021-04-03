@@ -61,9 +61,8 @@ function BrowseBoats({
 
   const { bpp, sort, sortDirection, filters } = state;
 
-  const handlePageChange = ({ selectedBoats, pages, p }) => {
-    console.log('handlePageChange', selectedBoats, pages, p);
-    onPageChange(p);
+  const handlePageChange = ({ selectedBoats, pages, page }) => {
+    onPageChange(page);
   };
 
   return (

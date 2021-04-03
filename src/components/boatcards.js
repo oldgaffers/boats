@@ -30,13 +30,13 @@ export default function BoatCards({
   if (error) console.log(JSON.stringify(error));
 
   const totalCount = getTotal(data); 
-  const pages = Math.ceil(totalCount / parseInt(state.bpp));
+  const pages = Math.ceil(totalCount / state.bpp);
   const boats = getBoats(data);
 
   const pageItems = useBoatPagination(
     pages,
-    parseInt(state.p),
-    (_, p) => { onChangePage({ selectedBoats: totalCount, pages, p })},
+    state.page,
+    (_, page) => { onChangePage({ selectedBoats: totalCount, pages, page })},
   );
 
   if (error) return <p>Error: (BoatCards)</p>;
@@ -119,7 +119,6 @@ export default function BoatCards({
       message = `${message} which have ever been called ${name}`;
     }
   }
-
 
   return (
     <Grid container alignItems='stretch'>

@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
        fontWeight: 'bold'
     }
   }));
-  
+
 export default function BoatPagination({items}) {
     const classes = useStyles();
     return (

@@ -11,9 +11,7 @@ export function getBoats(data) {
 }
 
 export const useCardQuery = (state) => {
-  const { view, filters, p, bpp, sort, sortDirection } = state;
-  const ibpp = parseInt(bpp);
-  const ip = parseInt(p);
+  const { view, filters, page, bpp, sort, sortDirection } = state;
   return useQuery(
     gql`query boats(
       $order_by: [boatwithrank_order_by!],
@@ -38,8 +36,8 @@ export const useCardQuery = (state) => {
       }`, 
       {
         variables: {
-          limit: ibpp,
-          offset: ibpp * (ip - 1),
+          limit: bpp,
+          offset: bpp * (page - 1),
           where: buildWhere(filters, view),
           order_by: buildSort(sort, sortDirection),
         },

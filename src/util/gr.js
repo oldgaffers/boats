@@ -35,8 +35,8 @@ export function home(location) {
 export function boatLink(state, oga_no, location) {
   let qp;
   if (state) {
-    const { filters, p, bpp, sort, sortDirection } = state;
-    qp = `&p=${p}&bpp=${bpp}&sort=${sort}&asc=${sortDirection === "asc"}`;
+    const { filters, page, bpp, sort, sortDirection } = state;
+    qp = `&p=${page}&bpp=${bpp}&sort=${sort}&asc=${sortDirection === "asc"}`;
     for (const field of Object.keys(filters)) {
       if (field) {
         qp = `${qp}&f_${field}=${filters[field]}`;
@@ -59,8 +59,11 @@ export function mapState(s) {
   Object.keys(s).forEach((key) => {
     const value = s[key];
     switch (key) {
-      case "p":
-        state.p = value;
+      case "bpp":
+        state.bpp = parseInt(value, 10);
+        break;
+     case "p":
+        state.page = parseInt(value, 10);
         break;
       case "asc":
         state.sortDirection = value === "true" ? "asc" : "desc";

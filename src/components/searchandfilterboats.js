@@ -52,8 +52,7 @@ export default function SearchAndFilterBoats({
     const classes = useStyles();
 
     const handlePageSizeChange = (_, bpp) => {
-        console.log('handlePageSizeChange', bpp)
-        onPageSizeChange(bpp);
+        onPageSizeChange(parseInt(bpp,10));
     };
 
     function pl(id, value) {
@@ -121,7 +120,7 @@ export default function SearchAndFilterBoats({
         <Divider/>
         <FormHelperText>Use these controls to sort the list by name, price, etc. and to choose how much you want to see</FormHelperText>
         <Grid container direction="row" >
-            <Picker clearable={false} value={boatsPerPage} id="page-size" onChange={handlePageSizeChange} options={pageSize} label="Boats Per Page"/>
+            <Picker clearable={false} value={`${boatsPerPage}`} id="page-size" onChange={handlePageSizeChange} options={pageSize} label="Boats Per Page"/>
             <FormControl>
                 <FormLabel>Sort By</FormLabel>
                 <RadioGroup row aria-label="sorting" name="sorting" value={sortLabelByField[sortField]} onChange={handleSortFieldChange}>
