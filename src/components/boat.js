@@ -6,7 +6,7 @@ import { Link } from "@ogauk/link-router";
 function upgradeBoat(b) {
   const handicap_data = b.handicap_data || {};
   if (b.beam) {
-    b.handicap_data.beam = b.beam;
+    handicap_data.beam = b.beam;
     delete b.beam;
   }
   if (handicap_data.length_over_all === undefined) {
