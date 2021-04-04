@@ -37,28 +37,6 @@ function htmlToRTE(html) {
   return JSON.stringify(convertToRaw(contentState));
 }
 
-
-/*
-public
-website
-year_is_approximate
-air_draft
-oga_no
-keel_laid
-launched
-place_built
-current_location
-reference
-construction_details
-WIN
-
-selling_status
-
-handicap_data
-image_key
-thumb
-*/
-
 export default function RequestHandicap() {
 
   const [state, setState] = useState({

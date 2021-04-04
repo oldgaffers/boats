@@ -3,11 +3,12 @@ import { m2dfn, m2dsqfn, f2m, f2m2 } from '../util/format';
 import { rig_allowance } from '../util/THCF';
 
 const metreKeys = [
-  'beam','draft','perpendicular','luff','head','foot',
+  'beam','draft','perpendicular','luff','head','leech','foot',
   'length_on_deck','length_on_waterline','length_over_all',
   'fore_triangle_height','fore_triangle_base',
 ];
 const squareMetreKeys = ['sailarea'];
+const booleanKeys = ['year_is_approximate'];
 /*
 biggest staysail (luff, leech, foot)
 biggest jib (luff, leech, foot)
@@ -24,6 +25,8 @@ export function boatm2f(obj) {
           r[k] = m2dfn(obj[k]);
         } else if(squareMetreKeys.includes(k)) {
           r[k] = m2dsqfn(obj[k]);
+        } else if(booleanKeys.includes(k)) {
+          r[k] = !!obj[k];
         } else {
           r[k] = boatm2f(obj[k]);
         }

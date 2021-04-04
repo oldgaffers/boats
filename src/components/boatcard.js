@@ -94,7 +94,7 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, boat, link, onMarkChange }) {
+export default function BoatCard({ state, boat, onMarkChange }) {
   const location = useLocation();
   const classes = useStyles();
   const sale = state.view.sale;

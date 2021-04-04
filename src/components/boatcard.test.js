@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import BoatCard from './boatcard';
+import { Router } from "@reach/router"
 
 const mocks = [
   {
@@ -24,16 +25,17 @@ const mocks = [
     error: new Error("Something went wrong")
   }
 ];
-
+ 
 test('renders learn react link', () => {
   const { getByText } = render(
       <MockedProvider mocks={mocks}>
+        <Router>
           <BoatCard 
+          path='/'
           state={{filters:{}, view:{}}} 
           boat={{oga_no: 1, previous_names: []}}
-          link={()=>'More'}
-          location={{}} 
-        />
+          />
+        </Router>
       </MockedProvider>
   );
   const wanted = getByText(/More/);
