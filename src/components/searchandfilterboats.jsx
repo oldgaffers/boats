@@ -66,7 +66,13 @@ export default function SearchAndFilterBoats({
     }
 
     function o(event) {
-        onFilterChange({ ...filters, oga_no: event.target.value });
+        console.log('oga no', event.target.value);
+        if (event.target.value === '') {
+            const { oga_no, ...f } = filters;
+            onFilterChange(f);
+        } else {
+            onFilterChange({ ...filters, oga_no: parseInt(event.target.value, 10) });
+        }
     }
 
     function sy(event) {
