@@ -12,7 +12,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
-import { boatUrl } from 'util/rr';
+import { boatUrl } from '../util/rr';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {

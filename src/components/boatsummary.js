@@ -11,7 +11,7 @@ import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { useLocation } from '@reach/router';
-import { boatUrl } from 'util/rr';
+import { boatUrl } from '../util/rr';
 
 export default function BoatSummary({ classes, boat }) {
   const location = useLocation();
