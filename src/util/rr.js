@@ -1,16 +1,12 @@
 
-export function boatUrl(oga_no) {
-    return `https://www.oga.org.uk/boat_register/browse_the_register/boat.html?oga_no=${oga_no}`;
+export function boatUrl(oga_no, location ) {
+    let test = '';
+    if (location.pathname.includes('test')) {
+      test = 'test_';
+    }
+    return `/boat_register/browse_the_register/${test}boat.html?oga_no=${oga_no}`;
 }
 
-export function home(location) {
-    return { ...location, pathname: '/' };
-}
-
-export function boatLink(state, oga_no) {
-    return { pathname: `/boat/${oga_no}`, state };
-}
-
-const exports = { home, boatLink, boatUrl };
+const exports = { boatUrl };
 
 export default exports;

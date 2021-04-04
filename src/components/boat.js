@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import BoatWrapper from './boatwrapper';
 import useAxios from 'axios-hooks';
-import { Link } from "@ogauk/link-router";
 
 function upgradeBoat(b) {
   const handicap_data = b.handicap_data || {};
@@ -65,6 +64,6 @@ export default function Boat({location}) {
   }
 
   const boat = getBoat(b);
-  return <BoatWrapper boat={boat} linkComponent={Link} location={location} />;
+  return <BoatWrapper boat={boat} />;
 };
 

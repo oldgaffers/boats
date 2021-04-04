@@ -23,6 +23,7 @@
     "draft-js-import-html": "^1.4.1",
     "graphql": "^15.4.0",
     "graphql-tag": "^2.11.0",
+    "material-ui-dropzone": "^3.5.0",
     "mui-rte": "^1.26.2",
     "parcel": "^2.0.0-beta.2",
     "prop-types": "^15.7.2",

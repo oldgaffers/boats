@@ -10,9 +10,11 @@ import ConditionalText from './conditionaltext';
 import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import { boatUrl } from '../util/context';
+import { useLocation } from '@reach/router';
+import { boatUrl } from 'util/rr';
 
-export default function BoatSummary({ classes, boat, location }) {
+export default function BoatSummary({ classes, boat }) {
+  const location = useLocation();
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
   const href = boatUrl(boat.oga_no, location);

@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatWrapper({ boat, linkComponent, location }) {
+export default function BoatWrapper({ boat }) {
 
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -89,7 +89,7 @@ export default function BoatWrapper({ boat, linkComponent, location }) {
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary classes={classes} boat={boat} location={location} />
+        <BoatSummary classes={classes} boat={boat} />
       </Grid>
       <Grid item xs={12}>
         <BoatDetail classes={classes} boat={boat} />
@@ -98,8 +98,6 @@ export default function BoatWrapper({ boat, linkComponent, location }) {
         <BoatButtons
           classes={classes}
           boat={boat}
-          linkComponent={linkComponent}
-          location={location}
         />
       </Container>
     </Paper>

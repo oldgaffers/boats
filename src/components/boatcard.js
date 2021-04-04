@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from '@reach/router';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -11,7 +12,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
-import { useLocation } from '@reach/router';
+import { boatUrl } from 'util/rr';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -105,11 +106,6 @@ export default function BoatCard({ state, boat, onMarkChange }) {
     }
   };
 
-  let href = '/boat_register/browse_the_register/boat.html';
-  if (location.pathname.includes('test')) {
-    href = '/boat_register/browse_the_register/test_boat.html';
-  }
-
   return (
     <Card className={boat.thumb ? classes.card : classes.cardSmall}>
       {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
@@ -128,7 +124,7 @@ export default function BoatCard({ state, boat, onMarkChange }) {
         <Button
           size="small" 
           component={'a'}
-          href={`${href}?oga_no=${boat.oga_no}`}
+          href={boatUrl(boat.oga_no, location)}
           variant="contained" 
           color="secondary"
         >More..</Button>
