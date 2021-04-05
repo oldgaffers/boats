@@ -34,6 +34,7 @@ export const query = gql`query boats(
 
 export const useCardQuery = (state) => {
   const { view, filters, page, bpp, sort, sortDirection } = state;
+  console.log(state);
   return useQuery(
     query, 
       {
