@@ -89,7 +89,7 @@ export default function App(props) {
     setState({...state, p:'1', filters});
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = ({page}) => {
     console.log("page change", page);
     setState({...state, p: `${page}`});
   };
