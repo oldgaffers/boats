@@ -10,7 +10,8 @@ import {
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import HullForm from "./HullForm";
 import { rigForm, mapPicker } from "./Rig";
-import { steps as handicap_steps,  boatm2f, boatf2m, boatDefined } from "./Handicap";
+import { steps as handicap_steps } from "./Handicap";
+import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { dimensionsForm } from "./Dimensions";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
@@ -425,8 +426,6 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   const state = { ...boatm2f(boat), ddf: { activity: "descriptions" } };
 
-  console.log('EditBoat', boat, state);
-
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;
     const updates = boatf2m(result);
@@ -437,7 +436,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates};
     console.log('boat to save', updatedBoat);
-    onSave(updatedBoat, email);
+    onSave({old: before, new: updatedBoat, email});
   };
 
   return (
