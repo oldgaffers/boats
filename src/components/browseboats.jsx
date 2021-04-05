@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Paper from '@material-ui/core/Paper';
@@ -46,37 +46,58 @@ function BrowseBoats({
   onPageSizeChange,
   onSortChange,
   onFilterChange,
-  link,
-  location
 }) {
   const classes = useStyles();
-  //const [mobileOpen, setMobileOpen] = useState(false);
-  //const handleDrawerToggle = () => {
-  //  setMobileOpen(!mobileOpen);
-  //};
- 
+  const [ marked, setMarked] = useState([]);
+  const [ isMarkedOnly, setIsMarkedOnly] = useState(false);
   pickers.boatNames = makeBoatNameList(pickers.boat);
-
   const blank = "_blank";
-
   const { bpp, sort, sortDirection, filters } = state;
 
-  const handlePageChange = ({ selectedBoats, pages, page }) => {
-    onPageChange(page);
+  const updateMarkedFilter = (on, marks) => {
+    if (on && marks.length > 0) {
+      onFilterChange({...filters, oga_nos: marks });
+    } else {
+      const f = { ...filters };
+      delete f.oga_nos;
+      onFilterChange(f);
+    }
+  }
+
+  const handleMarkChange = (isMarked, boat) => {
+    console.log('handleMarkChange', isMarked, boat);
+    if (isMarked) {
+      if (marked.includes(boat)) {
+        console.log('already in', boat);
+      } else {
+        const nm = [...marked, boat];
+        setMarked(nm);
+        updateMarkedFilter(isMarkedOnly, nm);
+      }
+    } else if (marked.includes(boat)) {
+      const nm = marked.filter((value) => value !== boat);
+      setMarked(nm);
+      updateMarkedFilter(isMarkedOnly, nm);
+      if (nm.length === 0) {
+        setIsMarkedOnly(false);
+      }
+    }
   };
+
+  const handleMarkedOnly = (isMarkedOnly) => {
+    console.log('handleMarkedOnly', isMarkedOnly);
+    updateMarkedFilter(isMarkedOnly, marked);
+    if (isMarkedOnly && marked.length>0) {
+      setIsMarkedOnly(true);
+    } else {
+      setIsMarkedOnly(false);
+    }
+  }
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      {/*
-      <LeftMenu open={mobileOpen} onClose={handleDrawerToggle} container={container} />
-      */}
-      <Paper>
-        {/*
-        <Grid container direction="row">
-          <DrawerController onClick={handleDrawerToggle}/>
-        </Grid>
-        */} 
+      <CssBaseline />      
+      <Paper> 
         <SearchAndFilterBoats
           sortField={sort}
           sortDirection={sortDirection}
@@ -86,14 +107,16 @@ function BrowseBoats({
           onPageSizeChange={onPageSizeChange}
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
+          onMarkedOnly={handleMarkedOnly}
           pickers={pickers}
+          haveMarks={marked.length>0}
+          isMarkedOnly={isMarkedOnly}
         />
         <Divider />
         <BoatCards
-          state={state}
-          onChangePage={handlePageChange}
-          link={link}
-          location={location}
+          state={state} marked={marked}
+          onChangePage={onPageChange}
+          onMarkChange = {handleMarkChange}
         />
         <Divider />
         <Typography>

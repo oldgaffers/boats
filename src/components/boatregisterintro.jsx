@@ -1,14 +1,14 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import CreateBoatButton from './CreateBoat';
+// import CreateBoatButton from './CreateBoat';
 
 export default function BoatRegisterIntro({pickers}) {
 
     return (
         <Paper>
         <Typography variant="body1">
-          We have hundreds of boats with pictures, and many more waiting for
+          We have hundreds of boats with pictures, and more waiting for
           pictures and more information.
         </Typography>
         <Typography variant="body1">

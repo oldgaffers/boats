@@ -95,14 +95,14 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, boat, onMarkChange }) {
+export default function BoatCard({ state, boat, marked, onMarkChange }) {
   const location = useLocation();
   const classes = useStyles();
   const sale = state.view.sale;
 
   const mark = (event) => {
     if(onMarkChange) {
-      onMarkChange(event.target.checked, boat);
+      onMarkChange(event.target.checked, boat.oga_no);
     }
   };
 
@@ -131,6 +131,7 @@ export default function BoatCard({ state, boat, onMarkChange }) {
         </Grid>
         <Grid item>
         <Checkbox className={classes.checkBox}
+        checked={marked}
         color="primary" onChange={mark}
         inputProps={{ 'aria-label': 'add to list' }}
       />

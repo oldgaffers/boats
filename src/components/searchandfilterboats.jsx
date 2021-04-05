@@ -48,6 +48,9 @@ export default function SearchAndFilterBoats({
     onFilterChange,
     onPageSizeChange,
     onSortChange,
+    onMarkedOnly,
+    haveMarks,
+    isMarkedOnly,
 }) {
     const classes = useStyles();
 
@@ -118,6 +121,10 @@ export default function SearchAndFilterBoats({
         } 
     }
 
+    function handleOnlyMarkedChange(event) {
+        onMarkedOnly(event.target.checked);
+    }
+
     const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
     
     return (
@@ -143,6 +150,14 @@ export default function SearchAndFilterBoats({
         <Divider/>
         <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-between" alignItems="stretch" >
+
+            {haveMarks?
+            <FormControlLabel id="marked" onChange={handleOnlyMarkedChange}
+                control={<Switch checked={isMarkedOnly} />} 
+                label="Only My Marked Boats"
+            />:''
+            }
+
             <Picker onChange={pl} id="name" options={makePicklist(view, pickers, 'boatNames')} label="Boat Name" value={filters['name']} />
             <TextField onChange={o} id="oga_no" label="OGA Boat No." variant="outlined" value={filters['oga_no']} />
             <Picker onChange={pl} id='designer' options={makePicklist(view, pickers, 'designer')} label="Designer" value={filters['designer']} />

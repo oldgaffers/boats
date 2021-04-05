@@ -9,12 +9,12 @@ const fieldmap = {
 
 export function singleConditionBuilder(key, filters) {
     switch(key) {
+        case 'oga_nos':
+          return { oga_no: { _in: filters.oga_nos } };
         case 'firstYear':
           return { year: { _gte: filters.firstYear } };
-          break;
         case 'lastYear':
           return { year: { _lte: filters.lastYear } };
-          break;
         case 'name':
           return {
             _or: [
@@ -22,10 +22,8 @@ export function singleConditionBuilder(key, filters) {
               { previous_names: { _contains: filters.name } },
             ],
           };
-          break;
         case 'sale':
           return { for_sale_state: { text: { _eq: 'for_sale' } } };
-          break;
         default:
           {
             const vals = filters[key];

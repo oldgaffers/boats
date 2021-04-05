@@ -21,9 +21,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BoatCards({
   state, 
-  link, 
-  location,
+  marked,
   onChangePage=(arg)=>console.log('onChangePage', arg), 
+  onMarkChange = (marked, boat) => 
+    console.log(`boat ${boat} is ${marked?'marked':'not marked'}`),
 }) {
   const classes = useStyles();
   const { loading, error, data } = useCardQuery(state);
@@ -49,23 +50,24 @@ export default function BoatCards({
     }
   }
 
-  const onMarkChange = (marked, boat) => {
-    console.log(`boat ${boat.oga_no} is ${marked?'marked':'not marked'}`);
-  }
-
   if (totalCount > 0) {
     return (
       <Container className={classes.cardGrid} maxWidth="md">
         <BoatPagination items={pageItems} />
-          <Box py={1} ></Box>
+          <Box py={1} />
           <Grid container spacing={4}>
-          {boats.map((boat) => (
+          {boats.map((boat) => {
+            console.log('map', boat, marked);
+            return (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} boat={boat} link={link} location={location} onMarkChange={onMarkChange} />
+              <BoatCard state={state} boat={boat} marked={marked.includes(boat.oga_no)} onMarkChange={onMarkChange} />
             </Grid>
-          ))}
+            );
+          }
+          )
+          }
           </Grid>
-          <Box py={1} ></Box>
+          <Box py={1}/>
           <BoatPagination items={pageItems} />
         </Container>
     );
