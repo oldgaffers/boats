@@ -9,6 +9,11 @@ const metreKeys = [
 ];
 const squareMetreKeys = ['sailarea'];
 const booleanKeys = ['year_is_approximate'];
+const keysToOmit = [
+  'builderByBuilder','constructionMaterialByConstructionMaterial',
+  'constructionMethodByConstructionMethod','designClassByDesignClass',
+  'designerByDesigner','genericTypeByGenericType','rigTypeByRigType',
+];
 /*
 biggest staysail (luff, leech, foot)
 biggest jib (luff, leech, foot)
@@ -27,7 +32,7 @@ export function boatm2f(obj) {
           r[k] = m2dsqfn(obj[k]);
         } else if(booleanKeys.includes(k)) {
           r[k] = !!obj[k];
-        } else {
+        } else if (obj[k]){
           r[k] = boatm2f(obj[k]);
         }
       });
@@ -51,9 +56,42 @@ export function boatf2m(obj) {
           r[k] = f2m(obj[k]);
         } else if(squareMetreKeys.includes(k)) {
           r[k] = f2m2(obj[k]);
+        } else if(booleanKeys.includes(k)) {
+          r[k] = !!obj[k];
         } else {
-          r[k] = boatf2m(obj[k]);
-        }
+          if (obj[k]) {
+            r[k] = boatf2m(obj[k]);
+          }
+        } 
+      });
+      return r;
+    } else {
+      return obj;
+    }
+  }
+  return obj;
+}
+
+export function boatDefined(obj) {
+  if(obj) {
+    if(Array.isArray(obj)) {
+      return obj.map((n) => boatDefined(n))
+    } else if (typeof obj === 'object') {
+      const r = {};
+      Object.keys(obj).forEach(k => {
+        if(metreKeys.includes(k)) {
+          r[k] = obj[k];
+        } else if(squareMetreKeys.includes(k)) {
+          r[k] = obj[k];
+        } else if(booleanKeys.includes(k)) {
+          r[k] = !!obj[k];
+        } else if (keysToOmit.includes(k)) {
+          // console.log('omitting', k);
+        } else {
+          if (obj[k]) {
+            r[k] = boatDefined(obj[k]);
+          }
+        } 
       });
       return r;
     } else {
@@ -148,6 +186,12 @@ const propellorForm = {
             {label: 'Folding', value: 'folding'},
             {label: 'Feathering', value: 'feathering'},
           ],
+          isRequired: true,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED
+            },
+          ],
         }
       ]
     };
@@ -188,8 +232,7 @@ const propellorForm = {
           const s = formOptions.getState();
           const hd = s.values.handicap_data;
           if (hd) {
-            const sa = mainsail_area(hd[sail]);
-            formOptions.change(`ddf.sail_area.${sail}`, sa);
+            formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
           }
         }
       },
@@ -203,8 +246,7 @@ const propellorForm = {
           const s = formOptions.getState();
           const hd = s.values.handicap_data;
           if (hd) {
-            const sa = mainsail_area(hd[sail]);
-            formOptions.change(`ddf.sail_area.${sail}`, sa);
+            formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
           }
         }
       },
@@ -224,8 +266,7 @@ const propellorForm = {
           const s = formOptions.getState();
           const hd = s.values.handicap_data;
           if (hd) {
-            const sa = mainsail_area(hd[sail]);
-            formOptions.change(`ddf.sail_area.${sail}`, sa);
+            formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
           }
         },
       },
@@ -239,7 +280,6 @@ const propellorForm = {
         resolveProps: (props, {meta, input}, formOptions) => {
           const r = { description: '½l×f' };
           const s = formOptions.getState();
-          console.log(`ddf.sail_area.${sail}`, s.values);
           const hd = s.values.handicap_data;
           if (hd) {
             r.value = mainsail_area(hd[sail]);
@@ -268,7 +308,7 @@ const propellorForm = {
       resolveProps: (props, {meta, input}, formOptions) => {
         const s = formOptions.getState()
         const hd = s.values.handicap_data;
-        if (hd) {
+        if (hd && hd[sail]) {
           formOptions.change(`ddf.sail_area.${sail}`, topsail_area(hd[sail]));  
         };            
       }        
@@ -282,7 +322,7 @@ const propellorForm = {
       resolveProps: (props, {meta, input}, formOptions) => {
         const s = formOptions.getState()
         const hd = s.values.handicap_data;
-        if (hd) {
+        if (hd && hd[sail]) {
           formOptions.change(`ddf.sail_area.${sail}`, topsail_area(hd[sail]));  
         };            
       }        
@@ -469,7 +509,7 @@ const propellorForm = {
       fields: [
         {
         component: componentTypes.TEXT_FIELD,
-        name: 'calculated-sailarea',
+        name: 'ddf.calculated-sailarea',
         label: 'Calculated Sail Area',
         type: 'number',
         dataType: dataTypes.FLOAT,

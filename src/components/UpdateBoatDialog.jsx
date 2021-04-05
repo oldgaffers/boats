@@ -57,7 +57,6 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
   }
 
   const handleSave = (changes) => { 
-    console.log(changes);   
     onClose(changes);
   };
 
