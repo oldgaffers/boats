@@ -57,7 +57,6 @@ export default function BoatCards({
           <Box py={1} />
           <Grid container spacing={4}>
           {boats.map((boat) => {
-            console.log('map', boat, marked);
             return (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
               <BoatCard state={state} boat={boat} marked={marked.includes(boat.oga_no)} onMarkChange={onMarkChange} />
