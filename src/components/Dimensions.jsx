@@ -14,7 +14,7 @@ export const dimensionsForm = {
       },
     {
       component: componentTypes.TEXT_FIELD,
-      name: "handicap_data.length_overall",
+      name: "handicap_data.length_over_all",
       label: "Length overall (LOA)",
       type: 'number',
       dataType: dataTypes.FLOAT,

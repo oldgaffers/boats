@@ -59,7 +59,7 @@ export default function Boat({ classes, boat }) {
       <Paper>
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={m2f(boat.length_on_deck)} label="Length on deck (LOD)"/>
-        <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_overall:undefined)}/>
+        <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_over_all:undefined)}/>
         <ConditionalText label="Waterline Length (LWL)" value={m2f(boat.handicap_data?boat.handicap_data.length_on_waterline:undefined)}/>
         <ConditionalText value={m2f(boat.handicap_data.beam)} label="Beam"/>
         <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
