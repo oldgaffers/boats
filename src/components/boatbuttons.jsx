@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, linkComponent, location }) {
+export default function BoatButtons({ boat }) {
 
   const classes = useStyles();
 
