@@ -67,7 +67,7 @@ const Home = props => (
   </>
 )
 
-export default function App() {
+export default function App(props) {
   const [state, setState] = useState(JSON.parse(sessionStorage.getItem("BOAT_BROWSE_STATE"))||{ bpp: '12', p: '1'});
   
   useEffect(() => {
@@ -98,6 +98,14 @@ export default function App() {
     <CookiesProvider>
       <OGAProvider>
         <Router>
+          <Browse            
+            path="/"
+            onPageSizeChange={handlePageSizeChange}
+            onSortChange={handleSortChange}
+            onFilterChange={handleFilterChange}
+            onPageChange={handlePageChange}
+            state={{...browse, ...state}}
+          />
           <Home path="/boat_register">
           <Browse            
             path="boat_register.html"

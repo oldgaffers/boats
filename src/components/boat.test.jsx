@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'reach/router';
+import { Router } from "@reach/router"
 import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
@@ -29,9 +29,9 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <Route>
+      <Router>
         <Boat path='/'/>
-      </Route>
+      </Router>
     </MockedProvider>
   );
   const wanted = getByText(/Loading/);

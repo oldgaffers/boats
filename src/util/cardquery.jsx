@@ -10,30 +10,32 @@ export function getBoats(data) {
   return data?data.boatwithrank:[];
 }
 
+export const query = gql`query boats(
+  $order_by: [boatwithrank_order_by!],
+  $where: boatwithrank_bool_exp!, 
+  $limit: Int!, 
+  $offset: Int!) {
+    boatwithrank_aggregate(where: $where) {
+      aggregate { totalCount: count __typename } __typename  }
+    boatwithrank(
+      limit: $limit, 
+      offset: $offset, 
+      order_by: $order_by, 
+      where: $where
+    ) {
+      name oga_no place_built previous_names home_port short_description year
+      builderByBuilder { name __typename }
+      designerByDesigner { name __typename }
+      design_class thumb image_key price
+      for_sale_state { text __typename } 
+      __typename
+    }
+  }`;
+
 export const useCardQuery = (state) => {
   const { view, filters, page, bpp, sort, sortDirection } = state;
   return useQuery(
-    gql`query boats(
-      $order_by: [boatwithrank_order_by!],
-      $where: boatwithrank_bool_exp!, 
-      $limit: Int!, 
-      $offset: Int!) {
-        boatwithrank_aggregate(where: $where) {
-          aggregate { totalCount: count __typename } __typename  }
-        boatwithrank(
-          limit: $limit, 
-          offset: $offset, 
-          order_by: $order_by, 
-          where: $where
-        ) {
-          name oga_no place_built previous_names home_port short_description year
-          builderByBuilder { name __typename }
-          designerByDesigner { name __typename }
-          design_class thumb image_key price
-          for_sale_state { text __typename } 
-          __typename
-        }
-      }`, 
+    query, 
       {
         variables: {
           limit: bpp,

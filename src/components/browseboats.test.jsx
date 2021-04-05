@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'reach/router';
+import { Router } from '@reach/router';
 import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
@@ -11,7 +11,7 @@ import { mockPicks } from '../mock/sampledata';
 const mocks = [
   {
     request: {
-      query: query({name: 'asc'}),
+      query,
       variables: { 
         $limit: 1,
         $offset: 1,
@@ -21,7 +21,8 @@ const mocks = [
             { year: { _lte: '2021' } },
             {image_key: { _is_null: false } } ,
           ],
-        }
+        },
+        $order_by: { oga_no: 'asc'}
       }
     },
     result: {
@@ -46,9 +47,9 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <Route>
+      <Router>
         <BrowseBoats path='/' state={{filters:{ sale: false },view:{}}} pickers={mockPicks}/>
-      </Route>
+      </Router>
     </MockedProvider>
   );
   const wanted = getByText(/Other great places to look for boats are/);
