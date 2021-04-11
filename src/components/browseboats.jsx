@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/core/styles';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
+import TabularView from './tabularview';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -96,6 +97,7 @@ function BrowseBoats({
     <div className={classes.root}>
       <CssBaseline />      
       <Paper> 
+        {isMarkedOnly?<TabularView state={state} marked={marked} />:''}
         <SearchAndFilterBoats
           sortField={sort}
           sortDirection={sortDirection}
