@@ -48,11 +48,11 @@ function BrowseBoats({
   onFilterChange,
 }) {
   const classes = useStyles();
-  const [ marked, setMarked] = useState([]);
-  const [ isMarkedOnly, setIsMarkedOnly] = useState(false);
+  const { bpp, sort, sortDirection, filters } = state;
+  const [ marked, setMarked] = useState(filters.oga_nos || []);
+  const [ isMarkedOnly, setIsMarkedOnly] = useState(!!filters.oga_nos);
   pickers.boatNames = makeBoatNameList(pickers.boat);
   const blank = "_blank";
-  const { bpp, sort, sortDirection, filters } = state;
 
   const updateMarkedFilter = (on, marks) => {
     if (on && marks.length > 0) {
@@ -65,7 +65,6 @@ function BrowseBoats({
   }
 
   const handleMarkChange = (isMarked, boat) => {
-    console.log('handleMarkChange', isMarked, boat);
     if (isMarked) {
       if (marked.includes(boat)) {
         console.log('already in', boat);
@@ -85,7 +84,6 @@ function BrowseBoats({
   };
 
   const handleMarkedOnly = (isMarkedOnly) => {
-    console.log('handleMarkedOnly', isMarkedOnly);
     updateMarkedFilter(isMarkedOnly, marked);
     if (isMarkedOnly && marked.length>0) {
       setIsMarkedOnly(true);
