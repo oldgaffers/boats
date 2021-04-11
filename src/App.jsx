@@ -107,17 +107,8 @@ export default function App(props) {
             state={{...browse, ...state}}
           />
           <Home path="/boat_register">
-          <Browse            
-            path="boat_register.html"
-            onPageSizeChange={handlePageSizeChange}
-            onSortChange={handleSortChange}
-            onFilterChange={handleFilterChange}
-            onPageChange={handlePageChange}
-            state={{...browse, ...state}}
-          />
-          <Home path="browse_the_register">
             <Browse            
-              path="browse_the_register.html"
+              path="boat_register.html"
               onPageSizeChange={handlePageSizeChange}
               onSortChange={handleSortChange}
               onFilterChange={handleFilterChange}
@@ -125,32 +116,59 @@ export default function App(props) {
               state={{...browse, ...state}}
             />
             <Browse            
-              path="test_browse_the_register.html"
+              path="index.html"
               onPageSizeChange={handlePageSizeChange}
               onSortChange={handleSortChange}
               onFilterChange={handleFilterChange}
               onPageChange={handlePageChange}
               state={{...browse, ...state}}
             />
-            <Boat path="boat.html"/>
-            <Boat path="test_boat.html"/>
-          </Home>
-          <Buy            
-            path="boats_for_sale/boats_for_sale.html"
-            onPageSizeChange={handlePageSizeChange}
-            onSortChange={handleSortChange}
-            onFilterChange={handleFilterChange}
-            onPageChange={handlePageChange}
-            state={{...buy, ...state}}
-          />
-          <Small            
-            path="small_boats/small_boats.html"
-            onPageSizeChange={handlePageSizeChange}
-            onSortChange={handleSortChange}
-            onFilterChange={handleFilterChange}
-            onPageChange={handlePageChange}
-            state={{...small, ...state}}
-          />
+            <Home path="browse_the_register">
+            <Browse            
+              path="index.html"
+                onPageSizeChange={handlePageSizeChange}
+                onSortChange={handleSortChange}
+                onFilterChange={handleFilterChange}
+                onPageChange={handlePageChange}
+                state={{...browse, ...state}}
+              />
+              <Browse            
+                path="browse_the_register.html"
+                onPageSizeChange={handlePageSizeChange}
+                onSortChange={handleSortChange}
+                onFilterChange={handleFilterChange}
+                onPageChange={handlePageChange}
+                state={{...browse, ...state}}
+              />
+              <Browse            
+                path="test_browse_the_register.html"
+                onPageSizeChange={handlePageSizeChange}
+                onSortChange={handleSortChange}
+                onFilterChange={handleFilterChange}
+                onPageChange={handlePageChange}
+                state={{...browse, ...state}}
+              />
+              <Boat path="boat.html"/>
+              <Boat path="test_boat.html"/>
+            </Home>
+            <Buy            
+              path="boats_for_sale/boats_for_sale.html"
+              onPageSizeChange={handlePageSizeChange}
+              onSortChange={handleSortChange}
+              onFilterChange={handleFilterChange}
+              onPageChange={handlePageChange}
+              state={{...buy, ...state}}
+            />
+            <Small            
+              path="small_boats/small_boats.html"
+              onPageSizeChange={handlePageSizeChange}
+              onSortChange={handleSortChange}
+              onFilterChange={handleFilterChange}
+              onPageChange={handlePageChange}
+              state={{...small, ...state}}
+            />
+            <Boat path="boat/index.html"/>
+            <Boat path="boat"/>
           </Home>
         </Router>
       </OGAProvider>
