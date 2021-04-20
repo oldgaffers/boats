@@ -108,6 +108,29 @@ const propellorForm = {
         ]
       };    
     };
+
+    const main_required_props = (sail, rig_type) => {
+      const required_fields = {
+          isRequired: true,
+          validate: [
+            {
+              type: validatorTypes.REQUIRED
+            }
+          ],
+        };
+      if (sail === 'main') return required_fields;
+      switch(rig_type) {
+        case 'Yawl':
+        case 'Ketch':
+          if (sail === 'mizzen') return required_fields;
+          break;
+        case 'Schooner':
+          if (sail === 'fore') return required_fields;
+          break;
+        default:
+          return { isRequired: false };
+      }      
+    }
   
     const mainsail_fields = (sail) => {
       return [
@@ -128,6 +151,7 @@ const propellorForm = {
           if (hd) {
             formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
           }
+          return main_required_props(sail, s.values.rig_type);
         }
       },
       {
@@ -142,6 +166,7 @@ const propellorForm = {
           if (hd) {
             formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
           }
+          return main_required_props(sail, s.values.rig_type);
         }
       },
       {
@@ -162,7 +187,8 @@ const propellorForm = {
           if (hd) {
             formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
           }
-        },
+          return main_required_props(sail, s.values.rig_type);
+        }
       },
       {
         component: componentTypes.TEXT_FIELD,
@@ -305,7 +331,26 @@ const propellorForm = {
             if (handicap_data) {
               const fta = foretriangle_area(handicap_data);
               formOptions.change('ddf.sail_area.foretriangle', fta);
-            };            
+            };
+            switch(s.values.rig_type) {
+              case 'Cutter':
+              case 'Sloop':
+              case 'Ketch':
+              case 'Yawl':
+              case 'Schooner':
+                return { 
+                  isRequired: true,
+                  validate: [
+                    {
+                      type: validatorTypes.REQUIRED
+                    }
+                  ],        
+                };
+              default:
+                return { 
+                  isRequired: false,
+                }
+            }
           }        
         },
         {
@@ -321,7 +366,27 @@ const propellorForm = {
             if (handicap_data) {
               const fta = foretriangle_area(handicap_data);
               formOptions.change('ddf.sail_area.foretriangle', fta);
-            };            
+            };
+            console.log('fore_triangle_base', s.values.rig_type);
+            switch(s.values.rig_type) {
+              case 'Cutter':
+              case 'Sloop':
+              case 'Ketch':
+              case 'Yawl':
+              case 'Schooner':
+                return { 
+                  isRequired: true,
+                  validate: [
+                    {
+                      type: validatorTypes.REQUIRED
+                    }
+                  ],        
+                };
+              default:
+                return { 
+                  isRequired: false,
+                }
+            }
           }        
         },        
         {
