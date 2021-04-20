@@ -4,7 +4,8 @@ export function boatUrl(oga_no, location ) {
     if (location.pathname.includes('test')) {
       test = 'test_';
     }
-    return `/boat_register/browse_the_register/${test}boat.html?oga_no=${oga_no}`;
+    // TODO https://www.oga.org.uk/boat_register/boat/?oga_no=315
+    return `${location.origin}/boat_register/browse_the_register/${test}boat.html?oga_no=${oga_no}`;
 }
 
 export function mapState(s) {
