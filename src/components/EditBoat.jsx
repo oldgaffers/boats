@@ -33,8 +33,8 @@ const activityForm = {
   name: "activity",
   component: componentTypes.SUB_FORM,
   title: "Update Boat",
-  description:
-    "This form is still in development. If anything doesn't work please contact the editors.",
+  description: "Choose one of the options and then click CONTINUE. "
+    +"Once we have your proposed changes we'll review them and contact you if we have any questions",
   fields: [
     {
       component: componentTypes.RADIO,
