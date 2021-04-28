@@ -278,7 +278,7 @@ const propellorForm = {
         {
           component: componentTypes.PLAIN_TEXT,
           name: 'ddf.hcintro',
-          label: `This form collects the information needed to calculate a traditional T(H)CF
+          label: `The information needed to calculate a traditional T(H)CF
           handicap and the extra data for experimental and area handicaps.`,
         },
         {
