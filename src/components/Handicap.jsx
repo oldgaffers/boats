@@ -296,8 +296,7 @@ export const steps = [
         name: 'ddf.hcd',
         component: componentTypes.SUB_FORM,
         description: `The following steps collect the information needed to calculate a traditional T(H)CF
-        handicap and the extra data for experimental and area handicaps.`,
-        fields: [
+        handicap and the extra data for experimental and area handicaps.`,        fields: [
           {
             component: componentTypes.TEXT_FIELD,
             name: "handicap_data.thcf",
