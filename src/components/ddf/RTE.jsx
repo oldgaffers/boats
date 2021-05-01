@@ -12,7 +12,8 @@ Object.assign(theme, {
   overrides: {
       MUIRichTextEditor: {
           root: {
-            width: "100%"
+            width: "100%",
+            clear: "both"
           },
           toolbar: {
             borderTop: "1px solid gray",

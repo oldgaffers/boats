@@ -152,7 +152,6 @@ const schema = (pickers) => {
                   },
                   {
                     component: componentTypes.RADIO,
-                    isRequired: true,
                     label: "This boat is a",
                     name: "design",
                     initialValue: "1",
@@ -206,7 +205,7 @@ const schema = (pickers) => {
                     component: componentTypes.PLAIN_TEXT,
                     name: "picture.desc",
                     label:
-                      "If you have more than one picture upload the best one here, ideally of her sailing. Email the other pictures to the editors. Please let us know who owns the copyright for each picture.",
+                      "If you have more than one picture upload the best one(s) here, ideally of her sailing. All pictures uploaded at one time should have the same copyright owner. You will be able to add more pictures later from the boat's detail page.",
                   },
                   {
                     component: "pic",
@@ -246,6 +245,11 @@ const schema = (pickers) => {
                     name: "rig_type",
                     label: "Rig",
                     isRequired: true,
+                    validate: [
+                      {
+                        type: validatorTypes.REQUIRED,
+                      },
+                    ],
                     options: mapPicker(pickers.rig_type),
                   },
                   {
@@ -253,6 +257,11 @@ const schema = (pickers) => {
                     name: "mainsail_type",
                     label: "Mainsail",
                     isRequired: true,
+                    validate: [
+                      {
+                        type: validatorTypes.REQUIRED,
+                      },
+                    ],
                     options: mapPicker(pickers.sail_type),
                   },
                 ],
@@ -297,9 +306,28 @@ const schema = (pickers) => {
                   {
                     component: componentTypes.TEXT_FIELD,
                     name: "lod",
-                    label: "Length on deck",
+                    label: "Length on deck  (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.INTEGER,
+                    dataType: dataTypes.FLOAT,
+                    isRequired: true,
+                    validate: [
+                      {
+                        type: validatorTypes.REQUIRED,
+                      },
+                    ],
+                  },
+                  {
+                    component: componentTypes.TEXT_FIELD,
+                    name: "handicap_data.beam",
+                    label: "Beam (decimal feet)",
+                    type: "number",
+                    dataType: dataTypes.FLOAT,
+                    isRequired: true,
+                    validate: [
+                      {
+                        type: validatorTypes.REQUIRED,
+                      },
+                    ],
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
@@ -400,8 +428,48 @@ const schema = (pickers) => {
               },
             ],
           },
-          yachtHullStep("handicap-step"),
-          dinghyHullStep("handicap-step"),
+          yachtHullStep("skip-handicap-step"),
+          dinghyHullStep("skip-handicap-step"),
+          {
+            name: "skip-handicap-step",
+            nextStep: {
+              when: "ddf.skip-handicap",
+              stepMapper: {
+                1: "handicap-step",
+                2: "done-step",
+              },
+            },
+            fields: [
+              {
+                name: "skip-handicap",
+                title: "Do you want a handicap",
+                description: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
+                component: componentTypes.SUB_FORM,
+                fields: [
+                  {
+                    component: componentTypes.RADIO,
+                    name: "ddf.skip-handicap",
+                    initialValue: "1",
+                    validate: [
+                      {
+                        type: validatorTypes.REQUIRED,
+                      },
+                    ],
+                    options: [
+                      {
+                        label: "I want a handicap",
+                        value: "1",
+                      },
+                      {
+                        label: "I'll skip this for now",
+                        value: "2",
+                      },
+                    ],
+                  },    
+                ],
+              },
+            ],
+          },
           ...handicap_steps,
           {
             name: "done-step",
