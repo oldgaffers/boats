@@ -2,7 +2,7 @@ import {
   componentTypes,
   dataTypes,
 } from "@data-driven-forms/react-form-renderer";
-import { mapPicker } from "../Rig";
+import { mapPicker } from "./util";
 import {
   designerItems,
   builderItems,
