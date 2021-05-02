@@ -124,11 +124,11 @@ const schema = (pickers) => {
             title: "Name and description",
             name: "step-1",
             nextStep: {
-              when: "design",
+              when: "ddf.design",
               stepMapper: {
                 1: "picture-step",
-                2: "production",
-                3: "sister-ship",
+                2: "production-boat-step",
+                3: "similar-boat-step",
               },
             },
             fields: [
@@ -153,7 +153,7 @@ const schema = (pickers) => {
                   {
                     component: componentTypes.RADIO,
                     label: "This boat is a",
-                    name: "design",
+                    name: "ddf.design",
                     initialValue: "1",
                     options: [
                       {
@@ -165,7 +165,7 @@ const schema = (pickers) => {
                         value: "2",
                       },
                       {
-                        label: "Sister-ship to a boat on the register",
+                        label: "Similar to another boat on the register",
                         value: "3",
                       },
                     ],
@@ -175,35 +175,54 @@ const schema = (pickers) => {
             ],
           },
           {
-            name: "production",
-            title: "Production Boat Details",
-            fields: [...designClassItems(pickers)],
-          },
-          {
-            name: "sister-ship",
-            title: "Sister-ship details",
+            name: "production-boat-step",
+            nextStep: "picture-step",
             fields: [
               {
-                component: componentTypes.TEXT_FIELD,
-                name: "like",
-                label: "OGA No. of existing boat",
-                type: "number",
-                dataType: dataTypes.INTEGER,
-              },
-            ],
+                title: "Production Boat Design Class",
+                component: componentTypes.SUB_FORM,
+                name: 'ddf.prod',
+                fields: [...designClassItems(pickers)],    
+              }
+            ]
+          },
+          {
+            name: "similar-boat-step",
+            nextStep: "picture-step",
+            fields: [
+              {
+                title: "Production Boat Design Class",
+                component: componentTypes.SUB_FORM,
+                name: 'ddf.similar',
+                fields: [
+                  {
+                    component: componentTypes.TEXT_FIELD,
+                    name: "ddf.like",
+                    label: "OGA No. of existing boat",
+                    type: "number",
+                    dataType: dataTypes.INTEGER,    
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const { values } = formOptions.getState();
+                      console.log('like', input);
+                      console.log('like', values);
+                    },
+                  }
+                ],    
+              }
+            ]
           },
           {
             name: "picture-step",
-            nextStep: "basic",
+            nextStep: "basic-step",
             fields: [
               {
                 title: "I have a digital photo of this boat",
-                name: "picture.form",
+                name: "ddf.picture.form",
                 component: componentTypes.SUB_FORM,
                 fields: [
                   {
                     component: componentTypes.PLAIN_TEXT,
-                    name: "picture.desc",
+                    name: "ddf.picture.desc",
                     label:
                       "If you have more than one picture upload the best one(s) here, ideally of her sailing. All pictures uploaded at one time should have the same copyright owner. You will be able to add more pictures later from the boat's detail page.",
                   },
@@ -223,8 +242,8 @@ const schema = (pickers) => {
           },
           {
             title: "Basic Details",
-            name: "basic",
-            nextStep: "build",
+            name: "basic-step",
+            nextStep: "build-step",
             fields: [
               {
                 component: componentTypes.SUB_FORM,
@@ -269,8 +288,8 @@ const schema = (pickers) => {
             ],
           },
           {
-            name: "build",
-            nextStep: "design",
+            name: "build-step",
+            nextStep: "design-step",
             fields: [
               {
                 title: "Build",
@@ -294,7 +313,7 @@ const schema = (pickers) => {
             ],
           },
           {
-            name: "design",
+            name: "design-step",
             nextStep: "references-step",
             fields: [
               {
@@ -524,6 +543,7 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
             onSubmit={onSubmit}
             onCancel={onCancel}
             initialValues={{ short_description: "A fine example of her type." }}
+            subscription={{ values: true }}
           />
         </MuiThemeProvider>
       </Grid>
