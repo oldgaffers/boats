@@ -1,5 +1,13 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
-import { mapPicker } from "../Rig";
+
+export const mapPicker = (m) => {
+  return m.map((val) => {
+    if (val.id) {
+      return { label: val.name, value: val.id }
+    }
+    return { label: val.name, value: val.name }
+  });
+}
 
 export const constructionItems = (pickers) => {
   return [

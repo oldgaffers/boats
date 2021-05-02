@@ -1,13 +1,5 @@
 import { componentTypes, dataTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
-
-export const mapPicker = (m) => {
-  return m.map((val) => {
-    if (val.id) {
-      return { label: val.name, value: val.id }
-    }
-    return { label: val.name, value: val.name }
-  });
-}
+import { mapPicker } from "./ddf/util";
 
 export const rigForm = (pickers) => {
   return {

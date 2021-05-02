@@ -17,6 +17,7 @@ import Dialog from "@material-ui/core/Dialog";
 import { makeStyles } from "@material-ui/core/styles";
 import { usePicklists } from "../util/picklists";
 import {
+  mapPicker,
   designerItems,
   builderItems,
   designClassItems,
@@ -24,7 +25,6 @@ import {
 } from "./ddf/util";
 import { theme, HtmlEditor } from "./ddf/RTE";
 import { DropzoneArea } from "material-ui-dropzone";
-import { mapPicker } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
 import {
   yearItems,
@@ -34,6 +34,8 @@ import {
   yachtHullStep,
   dinghyHullStep,
 } from "./ddf/SubForms";
+import gql from 'graphql-tag';
+import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles((theme) => ({
   editor: {
@@ -112,7 +114,38 @@ created_at	timestamp with time zone
 updated_at	timestamp with time zone
 */
 
-const schema = (pickers) => {
+/*
+ other fields we might get:
+      builderByBuilder { name }
+      construction_details
+      designClassByDesignClass { name }
+      designerByDesigner { name }
+ */
+const query = gql`query dc($dc: uuid = "") {
+  design_class(where: {id: {_eq: $dc}}) {
+    boatByArchetype {
+      air_draft
+      beam
+      builder
+      construction_material
+      construction_method
+      design_class
+      designer
+      draft
+      generic_type
+      handicap_data
+      hull_form
+      length_on_deck
+      mainsail_type
+      place_built
+      rig_type
+      sail_type { name }
+      spar_material
+    }
+  }
+}`;
+
+const schema = (pickers, onChooseDesignClass) => {
   return {
     fields: [
       {
@@ -121,20 +154,91 @@ const schema = (pickers) => {
         name: "boat",
         fields: [
           {
-            title: "Name and description",
-            name: "step-1",
-            nextStep: {
-              when: "ddf.design",
-              stepMapper: {
-                1: "picture-step",
-                2: "production-boat-step",
-                3: "similar-boat-step",
-              },
-            },
+            name: "prefill-step",
+            nextStep: "name-and-picture-step",
             fields: [
               {
-                title: "Name",
-                name: "name",
+                title: "Welcome to the new boat form",
+                component: componentTypes.SUB_FORM,
+                name: 'ddf.dc',
+                fields: [
+                  {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: "ddf.dc.desc",
+                    label:
+                      " If your boat is in a design class we will pre-fill the form from another boat in the class."
+                      // +" On each page enter the data and then continue to the next page."
+                      // +" On the last page we'll ask you for an email address so we can discuss any queries we have."
+                      +" Only fields marked with a * are mandatory."
+                      +" Once your boat has an entry you can add more pictures and information."
+                      +" As a minimum, we'd like a name, picture, rig type, mainsail type, length, beam and short description."
+                      ,
+                  },
+                  {
+                    component: componentTypes.RADIO,
+                    label: "This boat is a",
+                    name: "ddf.design",
+                    initialValue: "1",
+                    options: [
+                      {
+                        label: "Production design",
+                        value: "1",
+                      },
+                      {
+                        label: "One-off",
+                        value: "2",
+                      },
+                    ],
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      if(input.value === "2") {
+                        onChooseDesignClass(undefined);
+                      }
+                    },
+                  },
+                  {
+                    component: componentTypes.SELECT,
+                    condition: {
+                      when: 'ddf.design',
+                      is: "1",
+                    },
+                    name: 'design_class',
+                    label: 'Design Class',
+                    isReadOnly: false,
+                    isSearchable: true,
+                    isClearable: true,
+                    options: mapPicker(pickers['design_class']),
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const state = formOptions.getState();
+                      console.log(state);
+                      console.log('dc', input);
+                      if (state.dirty) {
+                        onChooseDesignClass(input.value);
+                      }
+                    },
+                  },
+                  {
+                    component: componentTypes.TEXT_FIELD,
+                    condition: {
+                      and: [
+                        { when: 'ddf.design', is: "1" },
+                        { when: 'design_class', isEmpty: true }
+                      ]
+                    },
+                    name: 'new_design_class',
+                    label: 'a design class not listed',
+                    isRequired: false,
+                  },                  
+                ]  
+              }
+            ]
+          },
+          {
+            name: "name-and-picture-step",
+            nextStep: "basic-step",
+            fields: [
+              {
+                title: 'Name and picture',
+                name: "ddf.name-picture",
                 component: componentTypes.SUB_FORM,
                 fields: [
                   {
@@ -151,80 +255,10 @@ const schema = (pickers) => {
                     ],
                   },
                   {
-                    component: componentTypes.RADIO,
-                    label: "This boat is a",
-                    name: "ddf.design",
-                    initialValue: "1",
-                    options: [
-                      {
-                        label: "One-off",
-                        value: "1",
-                      },
-                      {
-                        label: "Production design",
-                        value: "2",
-                      },
-                      {
-                        label: "Similar to another boat on the register",
-                        value: "3",
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: "production-boat-step",
-            nextStep: "picture-step",
-            fields: [
-              {
-                title: "Production Boat Design Class",
-                component: componentTypes.SUB_FORM,
-                name: 'ddf.prod',
-                fields: [...designClassItems(pickers)],    
-              }
-            ]
-          },
-          {
-            name: "similar-boat-step",
-            nextStep: "picture-step",
-            fields: [
-              {
-                title: "Production Boat Design Class",
-                component: componentTypes.SUB_FORM,
-                name: 'ddf.similar',
-                fields: [
-                  {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "ddf.like",
-                    label: "OGA No. of existing boat",
-                    type: "number",
-                    dataType: dataTypes.INTEGER,    
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                      const { values } = formOptions.getState();
-                      console.log('like', input);
-                      console.log('like', values);
-                    },
-                  }
-                ],    
-              }
-            ]
-          },
-          {
-            name: "picture-step",
-            nextStep: "basic-step",
-            fields: [
-              {
-                title: "I have a digital photo of this boat",
-                name: "ddf.picture.form",
-                component: componentTypes.SUB_FORM,
-                fields: [
-                  {
                     component: componentTypes.PLAIN_TEXT,
                     name: "ddf.picture.desc",
                     label:
-                      "If you have more than one picture upload the best one(s) here, ideally of her sailing. All pictures uploaded at one time should have the same copyright owner. You will be able to add more pictures later from the boat's detail page.",
+                      "Please add a picture. If you have more than one picture upload the best one(s) here, ideally of her sailing. All pictures uploaded at one time should have the same copyright owner. You will be able to add more pictures later from the boat's detail page.",
                   },
                   {
                     component: "pic",
@@ -351,16 +385,16 @@ const schema = (pickers) => {
                   {
                     component: componentTypes.TEXT_FIELD,
                     name: "draft",
-                    label: "Draft",
+                    label: "Draft (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.INTEGER,
+                    dataType: dataTypes.FLOAT,
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
                     name: "air_draft",
-                    label: "Air Draft",
+                    label: "Air Draft (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.INTEGER,
+                    dataType: dataTypes.FLOAT,
                   },
                 ],
               },
@@ -435,7 +469,7 @@ const schema = (pickers) => {
           {
             name: "construction-step",
             nextStep: ({ values }) =>
-              values.generic_type === "Dinghy"
+              ["Dinghy", "Dayboat"].includes(values.generic_type)
                 ? "dinghy-hull-step"
                 : "yacht-hull-step",
             fields: [
@@ -515,12 +549,26 @@ const schema = (pickers) => {
 };
 
 const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
-  const { loading, error, data } = usePicklists();
+  const [dc, setDc] = useState('00000000-0000-0000-0000-000000000000');
+  const pl = usePicklists();
+  const bt = useQuery( query, { variables: { dc: dc  } } ); 
 
-  if (loading) return <CircularProgress />;
-  if (error) return <p>Error :(can't get picklists)</p>;
+  if (pl.loading || bt.loading) return <CircularProgress />;
+  if (pl.error) return <p>Error :(can't get picklists)</p>;
 
-  const pickers = data;
+  const pickers = pl.data;
+  const boat = bt.data.design_class.length>0?bt.data.design_class[0].boatByArchetype:{};
+  boat.short_description = "A fine example of her type.";
+  console.log('CreateBoatDialog', boat);
+
+  const onChooseDesignClass = (id) => {
+    console.log('onChooseDesignClass', id);
+    if (id) {
+      setDc(id);
+    } else {
+      setDc('00000000-0000-0000-0000-000000000000');
+    }
+  };
 
   return (
     <Dialog
@@ -539,11 +587,10 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
             FormTemplate={(props) => (
               <FormTemplate {...props} showFormControls={false} />
             )}
-            schema={schema(pickers)}
+            schema={schema(pickers, onChooseDesignClass)}
             onSubmit={onSubmit}
             onCancel={onCancel}
-            initialValues={{ short_description: "A fine example of her type." }}
-            subscription={{ values: true }}
+            initialValues={boat}
           />
         </MuiThemeProvider>
       </Grid>
@@ -561,11 +608,56 @@ function CreateBoatButton() {
     setOpen(false);
   };
 
-  const handleSend = () => {
-    console.log("send");
+  const handleSend = (args) => {
+    console.log("send", args);
     setOpen(false);
     setSnackBarOpen(true);
   };
+
+  /* 
+air_draft: undefined
+builder: undefined
+callsign: undefined
+construction_details: undefined
+construction_material: undefined
+construction_method: undefined
+ddf: {design: "1", skip-handicap: "2"}
+design_class: undefined
+designer: undefined
+draft: undefined
+email: undefined
+fishing_number: undefined
+full_description: undefined
+generic_type: undefined
+handicap_data: {beam: 1}
+hin: undefined
+home_country: undefined
+home_port: undefined
+hull_form: undefined
+lod: 1
+mainsail_type: "gaff"
+name: "Salutation"
+new_builder: undefined
+new_design_class: undefined
+new_designer: undefined
+nhsr: undefined
+nsbr: undefined
+picture: {copyright: undefined}
+place: undefined
+place_built: undefined
+previous_names: undefined
+reference: undefined
+rig_type: "cat_boat"
+sail_number: undefined
+short_description: "A fine example of her type."
+spar_material: undefined
+ssr: undefined
+uk_part1: undefined
+website: undefined
+year: undefined
+year_is_approximate: undefined
+  */
+
 
   const snackBarClose = () => {
     setSnackBarOpen(false);
