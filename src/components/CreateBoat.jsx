@@ -243,9 +243,15 @@ const schema = (pickers, onChooseDesignClass) => {
                 component: componentTypes.SUB_FORM,
                 fields: [
                   {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: "ddf.boat_name",
+                    label: " The Name of the boat",
+                    variant: "h6",
+                  },
+                  {
                     component: componentTypes.TEXT_FIELD,
                     name: "name",
-                    label: "Boat Name",
+                    label: "the current name",
                     type: "string",
                     dataType: dataTypes.STRING,
                     isRequired: true,
@@ -254,6 +260,12 @@ const schema = (pickers, onChooseDesignClass) => {
                         type: validatorTypes.REQUIRED,
                       },
                     ],
+                  },
+                  {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: "ddf.pics",
+                    label: "Pictures",
+                    variant: "h6",
                   },
                   {
                     component: componentTypes.PLAIN_TEXT,
@@ -271,7 +283,6 @@ const schema = (pickers, onChooseDesignClass) => {
                     label: "copyright owner",
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
-                      console.log('copyright', values);
                       if(values.ddf.fileList && values.ddf.fileList.length>0) {
                         return {
                           isRequired: true,
@@ -428,13 +439,19 @@ const schema = (pickers, onChooseDesignClass) => {
                   {
                     component: componentTypes.PLAIN_TEXT,
                     name: "website.label",
-                    label: "Website URL",
+                    label: "Website Link",
                     variant: "h6",
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
                     name: "website",
-                    label: "website url",
+                    label: "a valid website url",
+                    validate: [
+                      {
+                        type: validatorTypes.PATTERN,
+                        pattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/i                
+                      }
+                    ]
                   },
                 ],
               },
@@ -562,7 +579,6 @@ const PhotoUpload = ({ component, name, title }) => {
   const { input } = useFieldApi({component, name});
 
   const onDrop = (p) => {
-    console.log('onDrop', component, name, p);
     input.onChange(p);  
   };
 
@@ -588,7 +604,6 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   boat.short_description = "She is a fine example of her type.";
 
   const onChooseDesignClass = (id) => {
-    console.log('onChooseDesignClass', id);
     if (id) {
       setDc(id);
     } else {
@@ -631,7 +646,6 @@ function CreateBoatButton() {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   const handleCancel = () => {
-    console.log("cancel");
     setOpen(false);
   };
 
@@ -640,7 +654,6 @@ function CreateBoatButton() {
     const { new_design_class, new_designer, new_builder, ...boat} = b;
     const { fileList, copyright } = ddf;
     setOpen(false);
-    console.log('handleSend', fileList);
     const formData = new FormData();
     if (fileList && fileList.length>0) {
       for(let i=0; i<fileList.length; i++) {
@@ -674,7 +687,6 @@ function CreateBoatButton() {
         },
       },
     ).then(response => {
-      console.log('post', response);
       setSnackBarOpen(true);
     }).catch(error => {
       console.log('post', error);
@@ -693,9 +705,7 @@ function CreateBoatButton() {
         size="small"
         color="secondary"
         onClick={() => setOpen(true)}
-      >
-        form
-      </Button>
+      >form</Button>
       <CreateBoatDialog
         classes={classes}
         open={open}
