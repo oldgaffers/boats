@@ -387,7 +387,6 @@ export const steps = [
             const fta = foretriangle_area(handicap_data);
             formOptions.change("ddf.sail_area.foretriangle", fta);
           }
-          console.log("fore_triangle_base", s.values.rig_type);
           switch (s.values.rig_type) {
             case "Cutter":
             case "Sloop":
