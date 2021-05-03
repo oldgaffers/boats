@@ -212,8 +212,6 @@ const schema = (pickers, onChooseDesignClass) => {
                     options: mapPicker(pickers['design_class']),
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const state = formOptions.getState();
-                      console.log(state);
-                      console.log('dc', input);
                       if (state.dirty) {
                         onChooseDesignClass(input.value);
                       }
@@ -271,6 +269,16 @@ const schema = (pickers, onChooseDesignClass) => {
                     component: componentTypes.TEXT_FIELD,
                     name: "ddf.copyright",
                     label: "copyright owner",
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const { values } = formOptions.getState();
+                      console.log('copyright', values);
+                      if(values.ddf.fileList && values.ddf.fileList.length>0) {
+                        return {
+                          isRequired: true,
+                          validate: [{ type: validatorTypes.REQUIRED }],                          
+                        };
+                      }
+                    },
                   },
                 ],
               },
@@ -578,7 +586,6 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   const pickers = pl.data;
   const boat = bt.data.design_class.length>0?bt.data.design_class[0].boatByArchetype:{};
   boat.short_description = "She is a fine example of her type.";
-  console.log('CreateBoatDialog', boat);
 
   const onChooseDesignClass = (id) => {
     console.log('onChooseDesignClass', id);
@@ -610,7 +617,8 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
             onSubmit={onSubmit}
             onCancel={onCancel}
             initialValues={boatm2f(boat)}
-          />
+            subscription={{ values: true }}
+            />
         </MuiThemeProvider>
       </Grid>
     </Dialog>
@@ -673,48 +681,6 @@ function CreateBoatButton() {
       // TODO snackbar from response.data
     });      
   };
-
-  /* 
-air_draft: undefined
-builder: undefined
-callsign: undefined
-construction_details: undefined
-construction_material: undefined
-construction_method: undefined
-ddf: {design: "1", skip-handicap: "2"}
-design_class: undefined
-designer: undefined
-draft: undefined
-email: undefined
-fishing_number: undefined
-full_description: undefined
-generic_type: undefined
-handicap_data: {beam: 1}
-hin: undefined
-home_country: undefined
-home_port: undefined
-hull_form: undefined
-length_on_deck: 1
-mainsail_type: "gaff"
-name: "Salutation"
-nhsr: undefined
-nsbr: undefined
-picture: {copyright: undefined}
-place: undefined
-place_built: undefined
-previous_names: undefined
-reference: undefined
-rig_type: "cat_boat"
-sail_number: undefined
-short_description: "A fine example of her type."
-spar_material: undefined
-ssr: undefined
-uk_part1: undefined
-website: undefined
-year: undefined
-year_is_approximate: undefined
-  */
-
 
   const snackBarClose = () => {
     setSnackBarOpen(false);
