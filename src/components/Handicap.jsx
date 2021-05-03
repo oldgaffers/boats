@@ -286,10 +286,18 @@ const topsail_fields = (sail) => [
 export const steps = [
   {
     name: "handicap-step",
-    nextStep: ({ values }) =>
-      values.handicap_data && values.handicap_data.sailarea
-        ? "hull-step"
-        : "sails-step",
+    nextStep: ({ values }) => {
+      if(values.handicap_data && values.handicap_data.sailarea) {
+        return 'hull-step'
+      }
+      if(['cat_boat','single_sail'].includes(values.rig_type)) {
+        return 'mainsail-step';
+      }
+      if(['None'].includes(values.rig_type)) {
+        return 'no-handicap-step';
+      }
+      return "sails-step";
+    },
     fields: [
       {
         title: "Handicap Details",
