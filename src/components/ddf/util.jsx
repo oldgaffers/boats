@@ -64,7 +64,7 @@ export const extendableItems = ({pickers, name, label}) => {
           isEmpty: true,
         },
         name: `new_${name}`,
-        label: `a ${label.toLowerCase()} not listed`,
+        label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
         isRequired: false,
       },
     ];

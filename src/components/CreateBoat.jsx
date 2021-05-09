@@ -226,7 +226,7 @@ const schema = (pickers, onChooseDesignClass) => {
                       ]
                     },
                     name: 'new_design_class',
-                    label: 'a design class not listed',
+                    label: 'if the design class is not listed and you know the name add it here',
                     isRequired: false,
                   },                  
                 ]  
@@ -354,7 +354,7 @@ const schema = (pickers, onChooseDesignClass) => {
                   ...yearItems,
                   {
                     component: componentTypes.TEXT_FIELD,
-                    name: "place",
+                    name: "place_built",
                     label: "Place Built",
                   },
                   ...builderItems(pickers),
@@ -478,11 +478,6 @@ const schema = (pickers, onChooseDesignClass) => {
                 name: "locations",
                 component: componentTypes.SUB_FORM,
                 fields: [
-                  {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "place_built",
-                    label: "Place built",
-                  },
                   ...homeItems,
                 ],
               },
