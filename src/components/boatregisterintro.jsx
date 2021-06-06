@@ -1,14 +1,23 @@
 import React from 'react';
+import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import CreateBoatButton from './CreateBoat';
+import LoginButton from './loginbutton';
+
+export const theme = createMuiTheme();
+
+const useStyles = makeStyles((theme) => {});
 
 export default function BoatRegisterIntro({pickers}) {
-
-    return (
-        <Paper>
+  const classes = useStyles();
+  return (
+    <Paper>
+      <Grid container direction="row" alignItems="flex-start">
+      <Grid item xs={10} >
         <Typography variant="body1">
           We have hundreds of boats with pictures, and more waiting for
           pictures and more information.
@@ -31,12 +40,16 @@ export default function BoatRegisterIntro({pickers}) {
         <Typography variant="body1">
             Know about a boat and can't find it here? Fill in our
         </Typography>
-        {/*<a href="https://form.jotform.com/jfbcable/new-boat">form</a>*/}
         <CreateBoatButton pickers={pickers}/>
         <Typography variant="body1">
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
         </Typography>
-        </Paper>
+        </Grid>
+        <Grid item xs={2} >
+          <LoginButton classes={classes}/>
+        </Grid>
+      </Grid>
+    </Paper>
     );
 }

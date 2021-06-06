@@ -53,8 +53,8 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
   const { user } = useAuth0();
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
-  const [email, setEmail] = useState(user.email);
-  const [copyright, setCopyright] = useState(undefined);
+  const [email, setEmail] = useState(user && user.email);
+  const [copyright, setCopyright] = useState(user && user.name);
 
   const onDrop = (p) => {
     setPictures(p);
@@ -99,13 +99,14 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
           </Grid>
           <Grid item xs={12}>
             <DropzoneArea
-,              maxFileSize={5242880}
+              maxFileSize={5242880}
               acceptedFiles={["image/*"]}
               onChange={onDrop}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
+              value={copyright}
               required={true}
               type="text"
               label="Copyright Owner"

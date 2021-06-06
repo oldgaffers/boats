@@ -1,7 +1,7 @@
 import React from "react"
 import BrowseBoats from './browseboats';
 import { usePicklists } from '../util/picklists';
-import {mapState} from '../util/rr';
+import { mapState } from '../util/rr';
 
 export default function GqlBoatBrowser(
   {
