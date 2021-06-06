@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { DropzoneArea } from "material-ui-dropzone";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export const theme = createMuiTheme();
 
@@ -49,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function UpdatePhotoDialog({ boat, onClose, open }) {
+  const { user } = useAuth0();
   const classes = useStyles();
   const [pictures, setPictures] = useState([]);
-  const [email, setEmail] = useState(undefined);
+  const [email, setEmail] = useState(user.email);
   const [copyright, setCopyright] = useState(undefined);
 
   const onDrop = (p) => {
@@ -97,7 +99,7 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
           </Grid>
           <Grid item xs={12}>
             <DropzoneArea
-              maxFileSize={5242880}
+,              maxFileSize={5242880}
               acceptedFiles={["image/*"]}
               onChange={onDrop}
             />
@@ -112,6 +114,7 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
           </Grid>
           <Grid item xs={12}>
             <TextField
+              value={email}
               required={true}
               type="email"
               label="Your Email"

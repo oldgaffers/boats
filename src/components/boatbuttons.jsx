@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
+import LoginButton from './loginbutton';
 import Enquiry from './enquiry';
 
 const drawerWidth = 240;
@@ -115,7 +116,10 @@ export default function BoatButtons({ boat }) {
         <Grid item xs={3} >
             <EditButton classes={classes} boat={boat} />
         </Grid>
+        <Grid item xs={2} >
+            <LoginButton classes={classes} boat={boat} />
         </Grid>
+      </Grid>
     </Paper>
   );
 };
