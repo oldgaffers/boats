@@ -6,6 +6,7 @@ import {
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
 import { MuiThemeProvider } from "@material-ui/core/styles";
+import { useAuth0 } from "@auth0/auth0-react";
 import HullForm from "./HullForm";
 import { rigForm } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
@@ -141,13 +142,18 @@ export const schema = (pickers) => {
 
 export default function EditBoat({ classes, onCancel, onSave, boat }) {
   const { loading, error, data } = usePicklists();
+  const { user } = useAuth0();
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
 
   const pickers = data;
 
-  const state = { ...boatm2f(boat), ddf: { activity: "descriptions" } };
+  const state = { 
+    ...boatm2f(boat), 
+    ddf: { activity: "descriptions" },
+    email: user && user.email,
+  };
 
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;

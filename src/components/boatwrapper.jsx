@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
+import { useAuth0 } from "@auth0/auth0-react";
 import BoatDetail from './boatdetail';
 import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
@@ -70,8 +71,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BoatWrapper({ boat }) {
-
   const classes = useStyles();
+  const { isLoading } = useAuth0();
+  if (isLoading) {
+       return <div>Loading ...</div>;
+  }
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
     <Paper>

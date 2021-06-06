@@ -11,6 +11,7 @@ import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/react-hooks';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const ADD_ENQUIRY = gql`
   mutation AddEnquiry(
@@ -55,6 +56,7 @@ function EnquiryDialog({ open, boat, email, onEmailChange, onSend, onCancel, onT
           We'd love to hear from you.<p></p>Please enter your email address here and tell us how we can help.
         </DialogContentText>
         <TextField
+          value={email}
           error={email === ''}
           onChange={onEmailChange}
           autoFocus
@@ -86,7 +88,8 @@ function EnquiryDialog({ open, boat, email, onEmailChange, onSend, onCancel, onT
 export default function Enquiry({ boat, classes }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [email, setEmail] = useState('');
+  const { user } = useAuth0();
+  const [email, setEmail] = useState(user && user.email);
   const [text, setText] = useState('');
   // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
