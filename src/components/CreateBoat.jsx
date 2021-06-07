@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer, {
   componentTypes,
   dataTypes,
@@ -283,12 +284,16 @@ const schema = (pickers, onChooseDesignClass) => {
                     label: "copyright owner",
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
-                      if(values.ddf.fileList && values.ddf.fileList.length>0) {
-                        return {
-                          isRequired: true,
-                          validate: [{ type: validatorTypes.REQUIRED }],                          
-                        };
+                      const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
+                      const validate = [];
+                      if (isRequired) {
+                        validate.push({ type: validatorTypes.REQUIRED });
                       }
+                      return {
+                        initialValue: values.user && values.user.name,
+                        isRequired,
+                        validate,                          
+                      };
                     },
                   },
                 ],
@@ -561,6 +566,12 @@ const schema = (pickers, onChooseDesignClass) => {
                 component: componentTypes.TEXT_FIELD,
                 name: "email",
                 label: "email",
+                resolveProps: (props, { meta, input }, formOptions) => {
+                  const { values } = formOptions.getState();
+                  return {
+                    initialValue: values.user && values.user.email,
+                  };
+                },
               },
             ],
           },
@@ -590,6 +601,7 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   const [dc, setDc] = useState('00000000-0000-0000-0000-000000000000');
   const pl = usePicklists();
   const bt = useQuery( query, { variables: { dc: dc  } } ); 
+  const { user } = useAuth0();
 
   if (pl.loading || bt.loading) return <CircularProgress />;
   if (pl.error) return <p>Error :(can't get picklists)</p>;
@@ -626,7 +638,7 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
             schema={schema(pickers, onChooseDesignClass)}
             onSubmit={onSubmit}
             onCancel={onCancel}
-            initialValues={boatm2f(boat)}
+            initialValues={{ ...boatm2f(boat), user }}
             subscription={{ values: true }}
             />
         </MuiThemeProvider>
@@ -645,7 +657,7 @@ function CreateBoatButton() {
   };
 
   const handleSend = (values) => {
-    const { email, ddf, ...b } = values;
+    const { user, email, ddf, ...b } = values;
     const { new_design_class, new_designer, new_builder, ...boat} = b;
     const { fileList, copyright } = ddf;
     setOpen(false);
