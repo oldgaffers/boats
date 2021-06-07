@@ -1,5 +1,6 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 import Avatar from '@material-ui/core/Avatar';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { useAuth0 } from "@auth0/auth0-react";
@@ -10,6 +11,7 @@ export default function LoginButton({ classes }) {
     if(isAuthenticated) {
         console.log(JSON.stringify(user));
         return (
+    <Tooltip title="Anyone can have a login. They aren't very useful yet.">
         <Button className={classes.button} size="small"
             startIcon={<Avatar alt={user.name} src={user.picture} />}
             variant="contained"
@@ -17,7 +19,8 @@ export default function LoginButton({ classes }) {
             onClick={() => logout({ returnTo: window.location.origin+window.location.pathname })}
         >
             Logout
-        </Button>      
+        </Button>  
+    </Tooltip>    
         );
     }
     return (
