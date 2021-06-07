@@ -14,7 +14,7 @@ export default function LoginButton({ classes }) {
             startIcon={<Avatar alt={user.name} src={user.picture} />}
             variant="contained"
             color="primary"
-            onClick={() => logout()}
+            onClick={() => logout({ returnTo: window.location.origin+window.location.pathname })}
         >
             Logout
         </Button>      
