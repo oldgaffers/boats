@@ -9,7 +9,7 @@ test('renders intro', () => {
         <App/>
     </MockedProvider>
   );
-  const wanted = getByText(/Have a boat/);
+  const wanted = getByText(/We have/);
   expect(wanted).toBeInTheDocument();
   expect(wanted).toBeValid();
 });
