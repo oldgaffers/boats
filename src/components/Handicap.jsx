@@ -520,8 +520,8 @@ export const steps = [
     fields: [
       {
         component: componentTypes.TEXT_FIELD,
-        name: "handicap_data.length_over_all",
-        label: "length over all (LOA) (decimal feet)",
+        name: "handicap_data.length_on_deck",
+        label: "length on deck (LOD) (decimal feet)",
         type: "number",
         dataType: dataTypes.FLOAT,
         isRequired: true,
@@ -635,9 +635,9 @@ export const steps = [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const LOA = values.handicap_data.length_over_all || 0.0;
+          const LOD = values.handicap_data.length_on_deck || 0.0;
           const LWL = values.handicap_data.length_on_waterline || 0.0;
-          const L = (LOA + LWL) / 2;
+          const L = (LOD + LWL) / 2;
           const C = values.ddf.c;
           const rS = values.ddf.root_s;
           const x = (0.15 * L * rS) / Math.sqrt(C);

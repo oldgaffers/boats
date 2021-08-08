@@ -14,7 +14,7 @@ const aboat2 = {
     sailarea: undefined,
     fore_triangle_height: 30.58,
     fore_triangle_base: 19.26,
-    length_over_all: 27.87,
+    length_on_deck: 27.87,
     length_on_waterline: 27.23,
     depth: 5,
     main: {
@@ -43,7 +43,7 @@ const aboat = {
     sailarea: undefined,
     fore_triangle_height: 19.5,
     fore_triangle_base: 9.3,
-    length_over_all: 21,
+    length_on_deck: 21,
     length_on_waterline: 17,
     depth: 5,
     main: {

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
 import Paper from '@material-ui/core/Paper';
-import { useTheme } from '@material-ui/core/styles';
+// import { useTheme } from '@material-ui/core/styles';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
@@ -22,10 +22,12 @@ function hullForm(boat) {
 }
 
 export default function Boat({ classes, boat }) {
-  const theme = useTheme();
+  // const theme = useTheme();
   const [value, setValue] = useState(0);
 
   // TODO const { ref } = useInView({ threshold: 0 });
+
+  const hd = boat.handicap_data || {};
   
   const panes = [
     { title: 'Location & Registration', children: (
@@ -58,10 +60,10 @@ export default function Boat({ classes, boat }) {
     { title: 'Hull & Dimensions', children: (
       <Paper>
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
-        <ConditionalText value={m2f(boat.length_on_deck)} label="Length on deck (LOD)"/>
-        <ConditionalText label="Length overall (LOA)" value={m2f(boat.handicap_data?boat.handicap_data.length_over_all:undefined)}/>
-        <ConditionalText label="Waterline Length (LWL)" value={m2f(boat.handicap_data?boat.handicap_data.length_on_waterline:undefined)}/>
-        <ConditionalText value={m2f(boat.handicap_data.beam)} label="Beam"/>
+        <ConditionalText value={m2f(hd.length_on_deck||boat.length_on_deck)} label="Length on deck (LOD)"/>
+        <ConditionalText label="Length overall (LOA)" value={m2f(hd.length_over_all)}/>
+        <ConditionalText label="Waterline Length (LWL)" value={m2f(hd.length_on_waterline)}/>
+        <ConditionalText value={m2f(hd.beam)} label="Beam"/>
         <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
       </Paper>)},
   ];
@@ -72,25 +74,23 @@ export default function Boat({ classes, boat }) {
     );
   }
   
-  if (boat.handicap_data) {
-    const hd = boat.handicap_data;
-    const sails = [];
-    Object.entries(hd).forEach(([key, val]) => {
-        if (val.luff) {
-            sails.push({ name: key, ...val });
-        }
-    });
-    if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
-        panes.push({ title: 'Rig and Sails', children: (
-          <Paper>
-            <ConditionalText label="fore triangle base" value={m2f(hd.fore_triangle_base)}/>
-            <ConditionalText label="fore triangle height" value={m2f(hd.fore_triangle_height)}/>
-            <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
-            <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
-            <SailTable classes={classes} rows={sails}/>
-          </Paper>
-        )});    
-    }
+  const sails = [];
+  Object.entries(hd).forEach(([key, val]) => {
+      if (val.luff) {
+          sails.push({ name: key, ...val });
+      }
+  });
+  if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
+      panes.push({ title: 'Rig and Sails', children: (
+        <Paper>
+          <ConditionalText label="fore triangle base" value={m2f(hd.fore_triangle_base)}/>
+          <ConditionalText label="fore triangle height" value={m2f(hd.fore_triangle_height)}/>
+          <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
+          <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
+          <SailTable classes={classes} rows={sails}/>
+        </Paper>
+      )});    
+  }
 
 /*
 const engine = {
@@ -105,7 +105,6 @@ const engine = {
 };
 
 */
-  }
 
   if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
     const fs = boat.for_sales[0];
@@ -124,10 +123,6 @@ const engine = {
 
  const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const handleChangeIndex = (index) => {
-    setValue(index);
   };
 
   return (

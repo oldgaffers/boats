@@ -8,14 +8,14 @@ export const dimensionsForm = {
     {
       component: componentTypes.TEXT_FIELD,
       name: "length_on_deck",
-      label: "Length on Deck",
+      label: "Length on Deck (LOD)",
       type: 'number',
       dataType: dataTypes.FLOAT,
       },
     {
       component: componentTypes.TEXT_FIELD,
       name: "handicap_data.length_over_all",
-      label: "Length overall (LOA)",
+      label: "Length overall (LOA) (excluding spars)",
       type: 'number',
       dataType: dataTypes.FLOAT,
       },

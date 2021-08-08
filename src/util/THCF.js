@@ -55,8 +55,8 @@ export function fMSA(data) {
 }
 
 export function fL(data) {
-    if(data && data.length_over_all && data.length_on_waterline ) {
-        return 0.5*(data.length_over_all+data.length_on_waterline);
+    if(data && data.length_on_deck && data.length_on_waterline ) {
+        return 0.5*(data.length_on_deck+data.length_on_waterline);
     }
     return 0;
 }

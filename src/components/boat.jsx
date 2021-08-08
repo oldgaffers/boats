@@ -8,10 +8,9 @@ function upgradeBoat(b) {
     handicap_data.beam = b.beam;
     delete b.beam;
   }
-  if (handicap_data.length_over_all === undefined) {
-    if (b.length_on_deck) {
-      handicap_data.length_over_all = b.length_on_deck;
-    }  
+  if (b.length_on_deck) {
+    handicap_data.length_on_deck = b.length_on_deck;
+    delete b.length_on_deck;
   }
   b.handicap_data = handicap_data;
   return b;
