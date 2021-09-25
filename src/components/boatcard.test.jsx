@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import BoatCard from './boatcard';
-import { Router } from "@reach/router"
+import { BrowserRouter as Router } from "react-router-dom";
 
 const mocks = [
   {

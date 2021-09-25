@@ -10,7 +10,7 @@ import ConditionalText from './conditionaltext';
 import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
-import { useLocation } from '@reach/router';
+import { useLocation } from "react-router-dom";
 import { boatUrl } from '../util/rr';
 
 export default function BoatSummary({ classes, boat }) {

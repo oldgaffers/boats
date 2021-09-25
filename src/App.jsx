@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { CookiesProvider } from "react-cookie";
-import { Router } from "@reach/router"
+import { BrowserRouter as Router } from "react-router-dom";
 import OGAProvider from "./util/gql";
 import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import Boat from "./components/boat";
