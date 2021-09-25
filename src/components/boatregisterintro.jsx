@@ -12,7 +12,7 @@ export const theme = createMuiTheme();
 
 const useStyles = makeStyles((theme) => {});
 
-export default function BoatRegisterIntro({pickers}) {
+export default function BoatRegisterIntro() {
   const classes = useStyles();
   return (
     <Paper>
@@ -40,7 +40,7 @@ export default function BoatRegisterIntro({pickers}) {
         <Typography variant="body1">
             Know about a boat and can't find it here? Fill in our
         </Typography>
-        <CreateBoatButton pickers={pickers}/>
+        <CreateBoatButton/>
         <Typography variant="body1">
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
