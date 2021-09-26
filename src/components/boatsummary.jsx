@@ -14,44 +14,40 @@ import { boatUrl } from '../util/rr';
 
 function ReactFBLike({
   language='en_GB',
-  version='v2.12',
-  layout='standard',
-  action='like',
-  size='small',
-  share=true,
-  showFaces=true,
-  colorscheme='light',
-  kidDirectedSite=false,
-  href,
+  version='v12.0',
   width,
-  reference,
+  href,
   appId,
 }) {
 
   useEffect(() => {
     const id = 'facebook-jssdk';
     if (document.getElementById(id)) return;
+    const r = document.createElement('div');
+    r.id = "fb-root";
+    const body = document.getElementsByTagName('body')[0];
+    body.insertBefore(r, body.childNodes[0]);
     const scripts = document.getElementsByTagName('script');
     const last = scripts[scripts.length - 1];
     const js = document.createElement('script');
     js.id = id;
+    js.async = true;
+    js.defer = true;
+    js.crossOrigin = 'anonymous';
+    js.nonce = 'u3igJ9S2';
     js.src = `//connect.facebook.net/${language}/sdk.js#xfbml=1&version=${version}&appId=${appId}`;
     last.parentNode.insertBefore(js, last);
   }, [appId, language, version]);
   return (
-      <div
-        className="fb-like"
-        data-href={href}
-        data-layout={layout}
-        data-action={action}
-        data-size={size}
-        data-show-faces={showFaces}
-        data-share={share}
-        data-width={width}
-        data-ref={reference}
-        data-colorscheme={colorscheme}
-        data-kid-directed-site={kidDirectedSite}
-      />
+    <div
+      className="fb-like" 
+      data-href={href}
+      data-width={width}
+      data-layout="standard" 
+      data-action="like" 
+      data-size="small" 
+      data-share="true">
+      </div>     
     );
 }
 
@@ -99,7 +95,7 @@ export default function BoatSummary({ classes, boat }) {
       />
     </div>
     <div>
-      <ReactFBLike href={href} appId="644249802921642" />
+      <ReactFBLike href={'https://oga.org.uk'+href} appId="644249802921642" />
     </div>
     </Paper>
   );
