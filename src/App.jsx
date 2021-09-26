@@ -92,7 +92,7 @@ export default function App(props) {
       </>
     );
   }
-  
+  // https://www.oga.org.uk/boat_register/browse_the_register/test_browse_the_register.html
   return (
     <CookiesProvider>
       <OGAProvider>
@@ -105,8 +105,12 @@ export default function App(props) {
           <Route component={Browse} path="/browse_the_register" exact/> 
           <Route component={Browse} path="/browse_the_register/index.html" exact/> 
           <Route component={Browse} path="/browse_the_register/boat_register.html" exact/> 
-          <Route component={Browse} path="/browse_the_register/test_boat_register.html" exact/> 
-          <Route component={Boat} path="/boat" exact/> 
+          <Route component={Browse} path="/browse_the_register/test_boat_register.html" exact/>
+          <Route component={Browse} path="/boat_register/browse_the_register" exact/>
+          <Route component={Browse} path="/boat_register/browse_the_register/index.html" exact/>
+          <Route component={Browse} path="/boat_register/browse_the_register/browse_the_register.html" exact/>
+          <Route component={Browse} path="/boat_register/browse_the_register/test_browse_the_register.html" exact/>
+          <Route component={Boat} path="/boat" exact/>
           <Route component={Boat} path="/boat/index.html" exact/> 
           <Route component={Boat} path="/boat_register/boat" exact/> 
           <Route component={Boat} path="/boat_register/boat/index.html" exact/> 
