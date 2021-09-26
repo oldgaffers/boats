@@ -566,6 +566,14 @@ const schema = (pickers, onChooseDesignClass) => {
                 component: componentTypes.TEXT_FIELD,
                 name: "email",
                 label: "email",
+                isRequired: true,
+                validate: [
+                  { type: validatorTypes.REQUIRED },
+                  {
+                    type: validatorTypes.PATTERN,
+                    pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+                  }
+                ],
                 resolveProps: (props, { meta, input }, formOptions) => {
                   const { values } = formOptions.getState();
                   return {

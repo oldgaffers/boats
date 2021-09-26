@@ -1,6 +1,6 @@
 import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import FormRenderer, {  componentTypes } from "@data-driven-forms/react-form-renderer";
+import FormRenderer, {  componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import {
   componentMapper,
   FormTemplate,
@@ -131,6 +131,14 @@ export const schema = (pickers) => {
                 component: componentTypes.TEXT_FIELD,
                 name: "email",
                 label: "email",
+                isRequired: true,
+                validate: [
+                  { type: validatorTypes.REQUIRED },
+                  {
+                    type: validatorTypes.PATTERN,
+                    pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+                  }
+                ]
               },
             ],
           },
