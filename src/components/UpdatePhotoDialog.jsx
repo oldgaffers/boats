@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles, createTheme } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import { DropzoneArea } from "material-ui-dropzone";
 import { useAuth0 } from "@auth0/auth0-react";
 
-export const theme = createMuiTheme();
+export const theme = createTheme();
 
 Object.assign(theme, {
   overrides: {

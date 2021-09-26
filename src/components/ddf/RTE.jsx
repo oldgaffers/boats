@@ -1,12 +1,12 @@
 import React, { useRef } from "react";
 import Typography from '@material-ui/core/Typography';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createTheme } from '@material-ui/core/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js'
 
-export const theme = createMuiTheme()
+export const theme = createTheme()
 
 Object.assign(theme, {
   overrides: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, createMuiTheme } from "@material-ui/core/styles";
+import { makeStyles, createTheme } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem';
 import CreateBoatButton from './CreateBoat';
 import LoginButton from './loginbutton';
 
-export const theme = createMuiTheme();
+export const theme = createTheme();
 
 const useStyles = makeStyles((theme) => {});
 

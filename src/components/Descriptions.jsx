@@ -2,12 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertToRaw, convertFromRaw } from 'draft-js'
 
-const defaultTheme = createMuiTheme()
+const defaultTheme = createTheme()
 
 Object.assign(defaultTheme, {
   overrides: {
