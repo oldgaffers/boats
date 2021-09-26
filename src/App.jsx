@@ -92,7 +92,6 @@ export default function App(props) {
       </>
     );
   }
-  // https://www.oga.org.uk/boat_register/browse_the_register/test_browse_the_register.html
   return (
     <CookiesProvider>
       <OGAProvider>
