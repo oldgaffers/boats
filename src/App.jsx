@@ -117,9 +117,15 @@ export default function App(props) {
           <Route component={Boat} path="/boat_register/test_boat/index.html" exact/>
           <Route component={Boat} path="/boat_register/boat.html" exact/> 
           <Route component={Boat} path="/boat_register/test_boat.html" exact/> 
+          <Route component={Buy} path="/boat_register/boats_for_sale/boats_for_sale.html" exact/> 
+          <Route component={Buy} path="/boat_register/boats_for_sale/index.html" exact/> 
+          <Route component={Buy} path="/boat_register/boats_for_sale" exact/>
           <Route component={Buy} path="/boats_for_sale/boats_for_sale.html" exact/> 
           <Route component={Buy} path="/boats_for_sale" exact/> 
           <Route component={Buy} path="/boats_for_sale/index.html" exact/> 
+          <Route component={Small} path="/boat_register/small_boats/small_boats.html" exact/>
+          <Route component={Small} path="/boat_register/small_boats/index.html" exact/>
+          <Route component={Small} path="/boat_register/small_boats" exact/>
           <Route component={Small} path="/small_boats/small_boats.html" exact/> 
           <Route component={Small} path="/small_boats/index.html" exact/> 
           <Route component={Small} path="/small_boats" exact/>
