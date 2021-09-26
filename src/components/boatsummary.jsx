@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
@@ -7,11 +7,53 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import clsx from 'clsx';
 import ConditionalText from './conditionaltext';
-import ReactFBLike from 'react-fb-like';
 import References from './references';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { useLocation } from "react-router-dom";
 import { boatUrl } from '../util/rr';
+
+function ReactFBLike({
+  language='en_GB',
+  version='v2.12',
+  layout='standard',
+  action='like',
+  size='small',
+  share=true,
+  showFaces=true,
+  colorscheme='light',
+  kidDirectedSite=false,
+  href,
+  width,
+  reference,
+  appId,
+}) {
+
+  useEffect(() => {
+    const id = 'facebook-jssdk';
+    if (document.getElementById(id)) return;
+    const scripts = document.getElementsByTagName('script');
+    const last = scripts[scripts.length - 1];
+    const js = document.createElement('script');
+    js.id = id;
+    js.src = `//connect.facebook.net/${language}/sdk.js#xfbml=1&version=${version}&appId=${appId}`;
+    last.parentNode.insertBefore(js, last);
+  }, [appId, language, version]);
+  return (
+      <div
+        className="fb-like"
+        data-href={href}
+        data-layout={layout}
+        data-action={action}
+        data-size={size}
+        data-show-faces={showFaces}
+        data-share={share}
+        data-width={width}
+        data-ref={reference}
+        data-colorscheme={colorscheme}
+        data-kid-directed-site={kidDirectedSite}
+      />
+    );
+}
 
 export default function BoatSummary({ classes, boat }) {
   const location = useLocation();
@@ -57,7 +99,7 @@ export default function BoatSummary({ classes, boat }) {
       />
     </div>
     <div>
-      <ReactFBLike href={href} language="en_GB" appId="644249802921642" version="v2.12" />
+      <ReactFBLike href={href} appId="644249802921642" />
     </div>
     </Paper>
   );
