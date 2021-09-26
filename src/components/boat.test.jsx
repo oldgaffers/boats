@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
@@ -29,9 +29,9 @@ const mocks = [
 test('renders learn react link', () => {
   const { getByText } = render(
     <MockedProvider mocks={mocks}>
-      <Router>
-        <Boat path='/'/>
-      </Router>
+      <MemoryRouter initialEntries={['/', '/?oga_no=1']} initialIndex={1} >
+        <Boat/>
+      </MemoryRouter>
     </MockedProvider>
   );
   const wanted = getByText(/Loading/);
