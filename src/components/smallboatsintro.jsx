@@ -7,7 +7,7 @@ export default function SmallBoatsIntro() {
     return (
         <Paper>
         <Typography variant="body1">
-          Browse our newest feature - just the  dayboats and dinghies.
+          Browse just the dayboats and dinghies.
           All are on the main register too.
         </Typography>
         <Typography variant="body1">
