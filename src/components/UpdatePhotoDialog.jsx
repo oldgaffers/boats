@@ -123,7 +123,7 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
             />
           </Grid>
           <Grid item xs={12}>
-            <Grid container justify="space-between">
+            <Grid container justifyContent="space-between">
               <Grid item>
                 <Button size="small" variant="contained" onClick={onClose}>
                   Cancel
