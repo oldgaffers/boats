@@ -70,6 +70,28 @@ export const schema = (pickers, roles) => {
             fields: [activityForm(roles)],
           },
           {
+            name: "sell-step",
+            nextStep: "done-step",
+            fields: [
+              {
+                component: componentTypes.PLAIN_TEXT,
+                name: "ddf.sell",
+                label: "sorry, not yet",
+              }
+          ],
+          },
+          {
+            name: "sold-step",
+            nextStep: "done-step",
+            fields: [
+              {
+                component: componentTypes.PLAIN_TEXT,
+                name: "ddf.sold",
+                label: "sorry, not yet",
+              }
+          ],
+          },
+          {
             name: "card-step",
             nextStep: "done-step",
             fields: [cardForm(pickers)],
