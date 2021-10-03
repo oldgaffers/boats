@@ -49,7 +49,7 @@ const activityForm = (roles) => {
         component: componentTypes.RADIO,
         name: "ddf.activity",
         label: "What would you like to do?",
-        options: ('editor' in roles)?editorActivities:activities,
+        options: roles.includes('editor')?editorActivities:activities,
         RadioProps: {
           icon: <BoatAnchoredIcon color="primary" />,
           checkedIcon: <BoatIcon color="primary" />,
