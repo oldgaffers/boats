@@ -31,11 +31,13 @@ const activities = [
   { label: "Edit Rig & Sails (or get a handicap)", value: "rig" },
 ];
 
+const editorActivities = [
+  ...activities,
+  { label: 'set for-sale', value: 'sell'},
+  { label: 'set sold', value: 'sold'},
+];
+
 const activityForm = (roles) => { 
-  if ('editor' in roles) {
-    activities.push({ label: 'set for-sale', value: 'sell'});
-    activities.push({ label: 'set sold', value: 'sold'});
-  }
   return {
     name: "activity",
     component: componentTypes.SUB_FORM,
@@ -47,7 +49,7 @@ const activityForm = (roles) => {
         component: componentTypes.RADIO,
         name: "ddf.activity",
         label: "What would you like to do?",
-        options: activities,
+        options: ('editor' in roles)?editorActivities:activities,
         RadioProps: {
           icon: <BoatAnchoredIcon color="primary" />,
           checkedIcon: <BoatIcon color="primary" />,
