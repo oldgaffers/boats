@@ -94,7 +94,6 @@ export default function Enquiry({ boat, classes }) {
   // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
 
-  console.log('enquiry', JSON.stringify(user));
   const handleClickOpen = () => {
     setOpen(true);
   };
