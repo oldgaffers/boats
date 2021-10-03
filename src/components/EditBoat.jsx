@@ -178,13 +178,13 @@ export const schema = (pickers, roles) => {
 
 export default function EditBoat({ classes, onCancel, onSave, boat }) {
   const { loading, error, data } = usePicklists();
-  const { user } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
-  console.log(JSON.stringify(user, user['https://oga.org.uk/roles']));
+  console.log('auth', isAuthenticated, JSON.stringify(user));
   let roles = [];
-  if (user && user['https://oga.org.uk/roles']) {
+  if (isAuthenticated && user['https://oga.org.uk/roles']) {
     roles = user['https://oga.org.uk/roles'];
   }
   const pickers = data;
