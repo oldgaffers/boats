@@ -80,7 +80,7 @@ export default function BoatSummary({ classes, boat }) {
     />
     <References boat={boat}/>
     <div>
-      <CopyToClipboard text={href} onCopy={() => setSnackBarOpen(true)}>
+      <CopyToClipboard text={window.location.href} onCopy={() => setSnackBarOpen(true)}>
         <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
         Copy page url
         </Button>
