@@ -31,27 +31,33 @@ const activities = [
   { label: "Edit Rig & Sails (or get a handicap)", value: "rig" },
 ];
 
-const activityForm = {
-  name: "activity",
-  component: componentTypes.SUB_FORM,
-  title: "Update Boat",
-  description: "Choose one of the options and then click CONTINUE. "
-    +"Once we have your proposed changes we'll review them and contact you if we have any questions",
-  fields: [
-    {
-      component: componentTypes.RADIO,
-      name: "ddf.activity",
-      label: "What would you like to do?",
-      options: activities,
-      RadioProps: {
-        icon: <BoatAnchoredIcon color="primary" />,
-        checkedIcon: <BoatIcon color="primary" />,
+const activityForm = (roles) => { 
+  if ('editor' in roles) {
+    activities.push({ label: 'set for-sale', value: 'sell'});
+    activities.push({ label: 'set sold', value: 'sold'});
+  }
+  return {
+    name: "activity",
+    component: componentTypes.SUB_FORM,
+    title: "Update Boat",
+    description: "Choose one of the options and then click CONTINUE. "
+      +"Once we have your proposed changes we'll review them and contact you if we have any questions",
+    fields: [
+      {
+        component: componentTypes.RADIO,
+        name: "ddf.activity",
+        label: "What would you like to do?",
+        options: activities,
+        RadioProps: {
+          icon: <BoatAnchoredIcon color="primary" />,
+          checkedIcon: <BoatIcon color="primary" />,
+        },
       },
-    },
-  ],
+    ],
+  };
 };
 
-export const schema = (pickers) => {
+export const schema = (pickers, roles) => {
   return {
     fields: [
       {
@@ -61,7 +67,7 @@ export const schema = (pickers) => {
           {
             name: "activity-step",
             nextStep: ({ values }) => `${values.ddf.activity}-step`,
-            fields: [activityForm],
+            fields: [activityForm(roles)],
           },
           {
             name: "card-step",
@@ -154,7 +160,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
-
+  console.log(JSON.stringify(user));
   const pickers = data;
 
   const state = { 
@@ -179,7 +185,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   return (
     <MuiThemeProvider theme={theme}>
       <FormRenderer
-        schema={schema(pickers)}
+        schema={schema(pickers, user['https://oga.org.uk/roles'])}
         componentMapper={{
           ...componentMapper,
           "hull-form": HullForm,
