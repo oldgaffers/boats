@@ -182,7 +182,11 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
-  console.log(JSON.stringify(user));
+  console.log(JSON.stringify(user, user['https://oga.org.uk/roles']));
+  let roles = [];
+  if (user && user['https://oga.org.uk/roles']) {
+    roles = user['https://oga.org.uk/roles'];
+  }
   const pickers = data;
 
   const state = { 
@@ -207,7 +211,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   return (
     <MuiThemeProvider theme={theme}>
       <FormRenderer
-        schema={schema(pickers, user['https://oga.org.uk/roles'])}
+        schema={schema(pickers, roles)}
         componentMapper={{
           ...componentMapper,
           "hull-form": HullForm,
