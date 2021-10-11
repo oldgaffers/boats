@@ -184,10 +184,11 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   if (loading) return <CircularProgress />;
   if (error) return <p>Error :(can't get picklists)</p>;
-  console.log('editboat auth', isAuthenticated, JSON.stringify(user));
   let roles = [];
-  if (isAuthenticated && user['https://oga.org.uk/roles']) {
-    roles = user['https://oga.org.uk/roles'];
+  if (isAuthenticated && user) {
+    if (user['https://oga.org.uk/roles']) {
+      roles = user['https://oga.org.uk/roles'];
+    }
   }
   const pickers = data;
 
