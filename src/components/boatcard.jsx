@@ -119,7 +119,7 @@ export default function BoatCard({ state, boat, marked, onMarkChange }) {
         <TextList fields={wanted} data={boat} />
       </CardContent>
       <CardActions>
-        <Grid container justify="space-between">
+        <Grid container justifyContent="space-between">
         <Grid item>
         <Button
           size="small" 
