@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import Paper from '@material-ui/core/Paper';
-// import { useTheme } from '@material-ui/core/styles';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
@@ -22,10 +22,17 @@ function hullForm(boat) {
 }
 
 export default function Boat({ classes, boat }) {
-  // const theme = useTheme();
+  const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(0);
 
   // TODO const { ref } = useInView({ threshold: 0 });
+  let roles = [];
+  if (isAuthenticated && user) {
+    if (user['https://oga.org.uk/roles']) {
+      roles = user['https://oga.org.uk/roles'];
+    }
+  }
+  console.log('roles', roles);
 
   const hd = boat.handicap_data || {};
   
