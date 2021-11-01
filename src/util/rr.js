@@ -1,6 +1,5 @@
 
 export function boatUrl(oga_no, location ) {
-  console.log( "boatUrl", oga_no, location );
     let test = '';
     if (location.pathname.includes('test')) {
       test = 'test_';
