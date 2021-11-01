@@ -11,16 +11,14 @@ const useStyles = makeStyles((theme) => ({
 export default function DetailBar({ onChange, value, panes }) {
   const classes = useStyles();
   return (
-    <AppBar position="static" color="inherit" classes={classes}>
-        <Tabs
+    <Tabs
         onChange={onChange}
             value={value}
             indicatorColor="primary"
             textColor="primary"
-            centered
+            scrollable
         >
         { panes.map((pane, i) => (<Tab key={i} label={pane.title}/>))}
-        </Tabs>
-    </AppBar>
+    </Tabs>
   );
 }
