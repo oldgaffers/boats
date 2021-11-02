@@ -104,7 +104,7 @@ export default function Boat({ classes, boat }) {
   if(roles.includes('member')) {
     panes.push({ title: 'Owners', children: (
       <Paper>
-        <Owners/>
+        <Owners boat={boat} classes={classes}/>
       </Paper>
     )});    
   }
@@ -112,7 +112,7 @@ export default function Boat({ classes, boat }) {
   if(roles.includes('editor')) {
     panes.push({ title: 'Admin Tasks', children: (
       <Paper>
-        <Admin/>
+        <Admin boat={boat} classes={classes}/>
       </Paper>
     )});    
   }

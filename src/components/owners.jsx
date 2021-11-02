@@ -5,7 +5,7 @@ import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
 export default function Owners({ classes, boat }) {
-    const owner = useQuery(gql(`query boat(where: {oga_no: {_eq: $${boat.oga_no}}}) {
+    const owner = useQuery(gql(`query boat(where: {oga_no: {_eq: ${boat.oga_no}}}) {
           name oga_no current_owners
         }`));
     const member = 5004
