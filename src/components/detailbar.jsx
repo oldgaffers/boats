@@ -17,7 +17,8 @@ export default function DetailBar({ onChange, value, panes }) {
             value={value}
             indicatorColor="primary"
             textColor="primary"
-            scrollable
+            variant="scrollable"
+            scrollButtons="auto"
         >
         { panes.map((pane, i) => (<Tab key={i} label={pane.title}/>))}
         </Tabs>
