@@ -11,6 +11,22 @@ import Typography from '@material-ui/core/Typography';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
+function Owner({ owner }) {
+    const member = useQuery(gql(`query member {
+        member(member: ${owner.member}, id: ${owner.id}) {
+          firstname
+          lastname
+        }
+      }`)); 
+    if (member.loading) return <CircularProgress />;
+    return (
+    <TableRow key={owner.id}>
+        <TableCell align="right">{member.data}</TableCell>
+        <TableCell align="right">{owner.share}</TableCell>
+    </TableRow>
+    );
+}
+
 export default function Owners({ classes, boat }) {
     const owner = useQuery(gql(`query boat {
         boat(where: {oga_no: {_eq: ${boat.oga_no}}}) {
@@ -19,15 +35,8 @@ export default function Owners({ classes, boat }) {
       }`));
       /*
     const member = 5004
-    const members = useQuery(gql(`query members {
-        members(member: ${member}) {
-          firstname
-          lastname
-          id
-        }
-      }`)); */
+*/
     if (owner.loading) return <CircularProgress />;
-    console.log(members, owner);
     return (
         <TableContainer component={Paper}>
         <Table className={classes.table} size="small" aria-label="owners">
@@ -39,13 +48,9 @@ export default function Owners({ classes, boat }) {
             </TableRow>
         </TableHead>
         <TableBody>
-            {owner.data.boat[0].current_owners.map((row) => 
-            (<TableRow key={row.id}>
-                <TableCell align="right">{row.id}</TableCell>
-                <TableCell align="right">{row.share}</TableCell>
-            </TableRow>
-            ))}
+            {owner.data.boat[0].current_owners.map((row) => (<Owner owner={row}/>))}
         </TableBody>
         </Table>
     </TableContainer>
- 
+    );
+}
