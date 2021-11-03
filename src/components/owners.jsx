@@ -41,7 +41,7 @@ export default function Owners({ classes, boat }) {
         <TableHead>
             <TableRow>
             <TableCell align="left">Name</TableCell>
-            <TableCell align="right">Share/leach</TableCell>
+            <TableCell align="right">Share</TableCell>
             </TableRow>
         </TableHead>
         <TableBody>
