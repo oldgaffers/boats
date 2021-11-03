@@ -22,7 +22,7 @@ function Owner({ owner }) {
     const { firstname, lastname } = member.data.member;
     return (
     <TableRow key={owner.id}>
-        <TableCell align="right">{firstname} {lastname}</TableCell>
+        <TableCell align="left">{firstname} {lastname}</TableCell>
         <TableCell align="right">{owner.share}/64</TableCell>
     </TableRow>
     );
