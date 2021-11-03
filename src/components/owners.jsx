@@ -18,8 +18,7 @@ function Owner({ owner }) {
         }
       }`)); 
     if (member.loading) return <CircularProgress />;
-    console.log(member.data);
-    const { firstname, lastname } = member.data.member;
+    const { firstname, lastname } = member.data ? member.data.member : { firstname: '', lastname: '' };
     return (
     <TableRow key={owner.id}>
         <TableCell align="left">{firstname} {lastname}</TableCell>
