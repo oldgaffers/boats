@@ -19,9 +19,10 @@ function Owner({ owner }) {
         }
       }`)); 
     if (member.loading) return <CircularProgress />;
+    console.log(member.data);
     return (
     <TableRow key={owner.id}>
-        <TableCell align="right">{member.data}</TableCell>
+        <TableCell align="right">XXX</TableCell>
         <TableCell align="right">{owner.share}</TableCell>
     </TableRow>
     );
