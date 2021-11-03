@@ -7,7 +7,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
@@ -20,9 +19,10 @@ function Owner({ owner }) {
       }`)); 
     if (member.loading) return <CircularProgress />;
     console.log(member.data);
+    const { firstname, lastname } = member.data.member;
     return (
     <TableRow key={owner.id}>
-        <TableCell align="right">XXX</TableCell>
+        <TableCell align="right">{firstname} {lastname}</TableCell>
         <TableCell align="right">{owner.share}</TableCell>
     </TableRow>
     );
@@ -40,8 +40,7 @@ export default function Owners({ classes, boat }) {
         <Table className={classes.table} size="small" aria-label="owners">
         <TableHead>
             <TableRow>
-            <TableCell></TableCell>
-            <TableCell align="right">Name</TableCell>
+            <TableCell align="left">Name</TableCell>
             <TableCell align="right">Share/leach</TableCell>
             </TableRow>
         </TableHead>
