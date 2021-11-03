@@ -23,7 +23,7 @@ function Owner({ owner }) {
     return (
     <TableRow key={owner.id}>
         <TableCell align="right">{firstname} {lastname}</TableCell>
-        <TableCell align="right">{owner.share}</TableCell>
+        <TableCell align="right">{owner.share}/64</TableCell>
     </TableRow>
     );
 }
