@@ -34,9 +34,6 @@ export default function Owners({ classes, boat }) {
           current_owners
         }
       }`));
-      /*
-    const member = 5004
-*/
     if (owner.loading) return <CircularProgress />;
     return (
         <TableContainer component={Paper}>
