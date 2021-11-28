@@ -286,6 +286,10 @@ const schema = (pickers, onChooseDesignClass) => {
                       const { values } = formOptions.getState();
                       const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
                       let initialValue = values.user && values.user.name;
+                      console.log('props', props);
+                      console.log('meta', meta);
+                      console.log('input', input);
+                      console.log('values.ddf', JSON.stringify(values.ddf));
                       console.log('isRequired', isRequired);
                       const validate = [];
                       if (isRequired) {
