@@ -259,11 +259,8 @@ const schema = (pickers, onChooseDesignClass) => {
                     isRequired: true,
                     validate: [{ type: validatorTypes.REQUIRED }],
                     resolveProps: (props, { meta, input }, formOptions) => {
-                      const user = formOptions.getFieldState('user');
-                      console.log(props);
-                      console.log(meta);
-                      console.log(input);
-                      console.log(formOptions.getState());
+                      const { values } = formOptions.getState();
+                      const user = values.user;
                       console.log(user);
                       return { initialValue: user && user.value && user.value.name };
                     },
