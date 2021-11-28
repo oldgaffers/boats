@@ -20,9 +20,12 @@ export default function OGAProvider({children}) {
     const [accessToken, setAccessToken] = useState();
     const [client, setClient] = useState(anonymousClient);
 
+    console.log('token', accessToken);
+
     useEffect(() => {
       const getAccessToken = async () => {
-      if (isAuthenticated) {
+        if (isAuthenticated) {
+          console.log('authenticated');
           const token = await getAccessTokenSilently()
           setAccessToken(token)
         }
@@ -46,7 +49,9 @@ export default function OGAProvider({children}) {
             },
           }
         }
-      })
+      });
+
+      console.log('authlink', authLink);
   
       const client = new ApolloClient({
         link: authLink.concat(httpLink),
