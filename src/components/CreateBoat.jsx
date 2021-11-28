@@ -159,7 +159,7 @@ const schema = (pickers, onChooseDesignClass) => {
         fields: [
           {
             name: "prefill-step",
-            nextStep: "name-and-picture-step",
+            nextStep: ({ values }) => (values.ddf && values.ddf.have_pictures) ? "picture-step" : "basic-step",
             fields: [
               {
                 title: "Welcome to the new boat form",
@@ -170,89 +170,16 @@ const schema = (pickers, onChooseDesignClass) => {
                     component: componentTypes.PLAIN_TEXT,
                     name: "ddf.dc.desc",
                     label:
-                      " If your boat is in a design class we will pre-fill the form from another boat in the class."
-                      // +" On each page enter the data and then continue to the next page."
-                      // +" On the last page we'll ask you for an email address so we can discuss any queries we have."
-                      +" Only fields marked with a * are mandatory."
+                      " Only fields marked with a * are mandatory."
                       +" Once your boat has an entry you can add more pictures and information."
                       +" As a minimum, we'd like a name, picture, rig type, mainsail type, length, beam and short description."
                       ,
                   },
                   {
-                    component: componentTypes.RADIO,
-                    label: "This boat is a",
-                    name: "ddf.design",
-                    initialValue: "1",
-                    options: [
-                      {
-                        label: "Production design",
-                        value: "1",
-                      },
-                      {
-                        label: "One-off",
-                        value: "2",
-                      },
-                    ],
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                      if(input.value === "2") {
-                        onChooseDesignClass(undefined);
-                      }
-                    },
-                  },
-                  {
-                    component: componentTypes.SELECT,
-                    condition: {
-                      when: 'ddf.design',
-                      is: "1",
-                    },
-                    name: 'design_class',
-                    label: 'Design Class',
-                    isReadOnly: false,
-                    isSearchable: true,
-                    isClearable: true,
-                    options: mapPicker(pickers['design_class']),
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                      const state = formOptions.getState();
-                      if (state.dirty) {
-                        onChooseDesignClass(input.value);
-                      }
-                    },
-                  },
-                  {
-                    component: componentTypes.TEXT_FIELD,
-                    condition: {
-                      and: [
-                        { when: 'ddf.design', is: "1" },
-                        { when: 'design_class', isEmpty: true }
-                      ]
-                    },
-                    name: 'new_design_class',
-                    label: 'if the design class is not listed and you know the name add it here',
-                    isRequired: false,
-                  },                  
-                ]  
-              }
-            ]
-          },
-          {
-            name: "name-and-picture-step",
-            nextStep: "basic-step",
-            fields: [
-              {
-                title: 'Name and picture',
-                name: "ddf.name-picture",
-                component: componentTypes.SUB_FORM,
-                fields: [
-                  {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: "ddf.boat_name",
-                    label: " The Name of the boat",
-                    variant: "h6",
-                  },
-                  {
                     component: componentTypes.TEXT_FIELD,
                     name: "name",
-                    label: "the current name",
+                    label: "the name of the boat",
+                    helperText: 'if the boat has had other names in the past they can be added later in this form',
                     type: "string",
                     dataType: dataTypes.STRING,
                     isRequired: true,
@@ -263,16 +190,62 @@ const schema = (pickers, onChooseDesignClass) => {
                     ],
                   },
                   {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: "ddf.pics",
-                    label: "Pictures",
-                    variant: "h6",
+                    component: componentTypes.SELECT,
+                    name: 'design_class',
+                    label: 'Design Class',
+                    helperText: 'If your boat is in a design class we have data for, will pre-fill the form from another boat in the class.'
+                    +' You will be able to change the values as boats do vary within a class.',
+                    isReadOnly: false,
+                    isSearchable: true,
+                    isClearable: true,
+                    noOptionsMessage: 'we dont\' have that class - you can add it as a new one below',
+                    options: mapPicker(pickers['design_class']),
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const state = formOptions.getState();
+                      if (state.dirty) {
+                        onChooseDesignClass(input.value);
+                      }
+                    },
                   },
+                  {
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'new_design_class',
+                    label: 'New design class',
+                    helperText: 'if the design class is not listed and you know the name add it here',
+                    isRequired: false,
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const designClass = formOptions.getFieldState('design_class');
+                      if (designClass && designClass.value) {
+                        return { isReadOnly: true };
+                      }
+                    },
+                  },
+                  {
+                    component: componentTypes.CHECKBOX,
+                    name: 'ddf.have_pictures',
+                    label: 'I have pictures to upload',
+                    initialValue: true,
+                    helperText: 'pictures are really important',
+                  },                 
+                ]  
+              }
+            ]
+          },
+          {
+            name: "picture-step",
+            nextStep: "basic-step",
+            fields: [
+              {
+                title: 'Picture(s)',
+                name: "ddf.picture",
+                component: componentTypes.SUB_FORM,
+                fields: [
                   {
                     component: componentTypes.PLAIN_TEXT,
                     name: "ddf.picture.desc",
-                    label:
-                      "Please add a picture. If you have more than one picture upload the best one(s) here, ideally of her sailing. All pictures uploaded at one time should have the same copyright owner. You will be able to add more pictures later from the boat's detail page.",
+                    label: "Please add some pictures, ideally of her sailing."
+                      +" If you have more than one picture upload the best one(s) here."
+                      +" You will be able to add more pictures later from the boat's detail page.",
                   },
                   {
                     component: "pic",
@@ -282,25 +255,12 @@ const schema = (pickers, onChooseDesignClass) => {
                     component: componentTypes.TEXT_FIELD,
                     name: "ddf.copyright",
                     label: "copyright owner",
+                    helperText: "All the pictures you add now must have the same copyright owner",
+                    isRequired: true,
+                    validate: [{ type: validatorTypes.REQUIRED }],
                     resolveProps: (props, { meta, input }, formOptions) => {
-                      const { values } = formOptions.getState();
-                      const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
-                      const initialValue = values.user && values.user.name;
-                      if (isRequired) {
-                        input.onChange(initialValue || '');
-                        return {
-                          initialValue,
-                          isRequired,
-                          validate: [
-                            { type: validatorTypes.REQUIRED },
-                            {
-                              type: validatorTypes.MIN_LENGTH,
-                              threshold: 5,
-                            }
-                          ],
-                        };
-                      }
-                      return { initialValue };
+                      const user = formOptions.getFieldState('user');
+                      return { initialValue: user && user.value && user.value.name };
                     },
                   },
                 ],
