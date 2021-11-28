@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Divider from '@material-ui/core/Divider'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import Switch from '@material-ui/core/Switch'
 import Typography from '@material-ui/core/Typography'
+import { Autocomplete } from '@material-ui/lab';
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
@@ -14,7 +15,8 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import Slider from '@material-ui/core/Slider';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Picker from './picker'
- 
+import useDebounce from '../util/debounce';
+
 const opposite = { asc: 'desc', desc: 'asc' };
 const yearProps = { max: new Date().getFullYear()+1, step: 10 };
 yearProps.min = yearProps.max - 20*yearProps.step;
@@ -58,6 +60,30 @@ export default function SearchAndFilterBoats({
     isMarkedOnly,
 }) {
     const classes = useStyles();
+
+    const [ogaNo, setOgaNo] = useState(`${filters.oga_no || ''}`);
+  
+    const debouncedOgaNo = useDebounce(ogaNo, 500);
+  
+    useEffect(
+      () => {
+        if (debouncedOgaNo) {
+            console.log('debounced oga no', debouncedOgaNo);
+            if (debouncedOgaNo === '') {
+                const { oga_no, ...f } = filters;
+                onFilterChange(f);
+            } else {
+                console.log('new', debouncedOgaNo, 'old', filters.oga_no);
+                const newNo = parseInt(debouncedOgaNo, 10);
+                if (newNo !== filters.oga_no) {
+                    onFilterChange({ ...filters, oga_no: newNo });
+                }
+            }    
+        }
+      },
+      [debouncedOgaNo]
+    );
+
     const dateRange = [
         filters.firstYear || yearProps.min, 
         filters.lastYear || yearProps.max
@@ -82,9 +108,11 @@ export default function SearchAndFilterBoats({
         console.log('oga no', event.target.value);
         if (event.target.value === '') {
             const { oga_no, ...f } = filters;
-            onFilterChange(f);
+            if (oga_no) {
+                onFilterChange(f);
+            }
         } else {
-            onFilterChange({ ...filters, oga_no: parseInt(event.target.value, 10) });
+            setOgaNo(event.target.value);
         }
     }
 
@@ -173,7 +201,24 @@ export default function SearchAndFilterBoats({
             }
 
             <Picker onChange={pl} id="name" options={makePicklist(view, pickers, 'boatNames')} label="Boat Name" value={filters['name']} />
-            <TextField onChange={o} id="oga_no" label="OGA Boat No." variant="outlined" value={filters['oga_no']} />
+            <Autocomplete
+                id="oga_no"
+                value={ogaNo}
+                freeSolo
+                onInputChange={(event, value, reason)=>{
+                    if (reason === 'input') {
+                        setOgaNo(value);
+                    }
+                    if (reason === 'clear') {
+                        const { oga_no, ...f } = filters;
+                        if (oga_no) {
+                            onFilterChange(f);
+                        }
+                    }
+                }}
+                options={[]}
+                renderInput={(params) => <TextField {...params} label="OGA Boat No." variant="outlined" />}
+            />
             <Picker onChange={pl} id='designer' options={makePicklist(view, pickers, 'designer')} label="Designer" value={filters['designer']} />
             <Picker onChange={pl} id='builder' options={makePicklist(view, pickers, 'builder')} label="Builder" value={filters['builder']} />
             <Box sx={{ paddingLeft: 6, paddingRight: 15, width: 250 }}>
