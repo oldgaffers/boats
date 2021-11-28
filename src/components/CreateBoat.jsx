@@ -282,27 +282,24 @@ const schema = (pickers, onChooseDesignClass) => {
                     component: componentTypes.TEXT_FIELD,
                     name: "ddf.copyright",
                     label: "copyright owner",
+                    initialValue: values.user && values.user.name,
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
                       const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
-                      let initialValue = values.user && values.user.name;
-                      console.log('props', props);
-                      console.log('meta', meta);
-                      console.log('input', input);
-                      console.log('values.ddf', JSON.stringify(values.ddf));
-                      console.log('isRequired', isRequired);
-                      const validate = [];
                       if (isRequired) {
-                        validate.push({ type: validatorTypes.REQUIRED });
-                        initialValue = initialValue || '';
+                        return {
+                          initialValue,
+                          isRequired,
+                          validate: [
+                            { type: validatorTypes.REQUIRED },
+                            {
+                              type: validatorTypes.MIN_LENGTH,
+                              threshold: 5,
+                            }
+                          ],
+                        };
                       }
-                      const r = {
-                        initialValue,
-                        isRequired,
-                        validate,                          
-                      };
-                      console.log('copyright', JSON.stringify(r));
-                      return r;
+                      return {};
                     },
                   },
                 ],
