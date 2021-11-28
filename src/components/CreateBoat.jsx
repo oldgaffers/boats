@@ -285,7 +285,7 @@ const schema = (pickers, onChooseDesignClass) => {
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
                       const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
-                      const initialValue = values.user && values.user.name,
+                      const initialValue = values.user && values.user.name;
                       if (isRequired) {
                         return {
                           initialValue,
