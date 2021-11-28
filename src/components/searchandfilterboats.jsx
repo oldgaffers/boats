@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Divider from '@material-ui/core/Divider'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Box from '@material-ui/core/Box'
 import Grid from '@material-ui/core/Grid'
 import Switch from '@material-ui/core/Switch'
+import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
+import Slider from '@material-ui/core/Slider';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Picker from './picker'
-
+ 
 const opposite = { asc: 'desc', desc: 'asc' };
+const yearProps = { max: new Date().getFullYear()+1, step: 10 };
+yearProps.min = yearProps.max - 20*yearProps.step;
 
 const pageSize = [];
 for(let i=1; i<=8; i++) {
@@ -53,6 +58,11 @@ export default function SearchAndFilterBoats({
     isMarkedOnly,
 }) {
     const classes = useStyles();
+    const dateRange = [
+        filters.firstYear || yearProps.min, 
+        filters.lastYear || yearProps.max
+    ];
+    const [dr, setDr] = useState(dateRange);
 
     const handlePageSizeChange = (_, bpp) => {
         onPageSizeChange(parseInt(bpp,10));
@@ -78,17 +88,23 @@ export default function SearchAndFilterBoats({
         }
     }
 
-    function sy(event) {
-        const { id, value } = event.target;
-        if (value.length === 4) {
-            onFilterChange({ ...filters, [id]: parseInt(value) });
-        } else if (value === '') {
-            const f = { ...filters };
-            delete f[id];
-            onFilterChange(f);
+    function handleDateRange(event, newValue) {
+        setDr(newValue);
+    }
+
+    function handleDateRangeCommitted(event, [min, max]) {
+        const f = { ...filters };
+        if (min === yearProps.min) {
+            delete f.firstYear
         } else {
-            console.log('unchanged', id);
+            f.firstYear = min;
         }
+        if (max === yearProps.max) {
+            delete f.lastYear
+        } else {
+            f.lastYear = max;
+        }
+        onFilterChange(f);
     }
 
     const sortOptions = [
@@ -124,8 +140,6 @@ export default function SearchAndFilterBoats({
     function handleOnlyMarkedChange(event) {
         onMarkedOnly(event.target.checked);
     }
-
-    const yearProps = { min: "1800", max: `${new Date().getFullYear()+1}`, step: "10" };
     
     return (
     <form className={classes.root}>
@@ -162,12 +176,21 @@ export default function SearchAndFilterBoats({
             <TextField onChange={o} id="oga_no" label="OGA Boat No." variant="outlined" value={filters['oga_no']} />
             <Picker onChange={pl} id='designer' options={makePicklist(view, pickers, 'designer')} label="Designer" value={filters['designer']} />
             <Picker onChange={pl} id='builder' options={makePicklist(view, pickers, 'builder')} label="Builder" value={filters['builder']} />
-            <TextField onChange={sy} id="firstYear" label="Built After" variant="outlined"
-                type="number" inputProps={yearProps} value={filters.firstYear || ''}
-            />
-            <TextField onChange={sy} id="lastYear" label="Built Before" variant="outlined"
-                type="number" inputProps={yearProps} value={filters.lastYear || ''}
-            />
+            <Box sx={{ paddingLeft: 6, paddingRight: 15, width: 250 }}>
+                <Typography align="center" id="date-slider" gutterBottom>
+                    Built Between: {dateRange[0]} and {dateRange[1]}
+                </Typography>
+                <Slider
+                    getAriaLabel={() => 'Date Range'}
+                    value={dr}
+                    onChange={handleDateRange}
+                    onChangeCommitted={handleDateRangeCommitted}
+                    valueLabelDisplay="auto"
+                    min={yearProps.min}
+                    max={yearProps.max}
+                    step={yearProps.step}
+                />
+            </Box>
             <Picker onChange={pl} id='rig_type' options={makePicklist(view, pickers, 'rig_type')} label="Rig Type" value={filters['rig_type']} />
             <Picker onChange={pl} id='mainsail_type' options={makePicklist(view, pickers, 'sail_type')} label="Mainsail Type" value={filters['mainsail_type']}/>
             <Picker onChange={pl} id='generic_type' options={makePicklist(view, pickers, 'generic_type')} label="Generic Type" value={filters['generic_type']}/>
