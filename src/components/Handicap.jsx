@@ -567,7 +567,7 @@ export const steps = [
   {
     name: "calc-step",
     nextStep: ({ values }) =>
-      values.ddf.essex ? "biggest_staysail-step" : "done-step",
+      values.ddf.east_coast ? "biggest_staysail-step" : "done-step",
     fields: [
       {
         component: componentTypes.TEXT_FIELD,
@@ -693,7 +693,7 @@ export const steps = [
       },
       {
         component: componentTypes.CHECKBOX,
-        name: "ddf.essex",
+        name: "ddf.east_coast",
         label: "Add racing headsails (e.g. for the East Coast Race)",
         dataType: "boolean",
       },
