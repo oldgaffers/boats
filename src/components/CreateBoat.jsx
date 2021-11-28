@@ -261,8 +261,7 @@ const schema = (pickers, onChooseDesignClass) => {
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
                       const user = values.user;
-                      console.log(user);
-                      return { initialValue: user && user.value && user.value.name };
+                      return { initialValue: user && user.name };
                     },
                   },
                 ],
