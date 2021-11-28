@@ -63,7 +63,7 @@ export default function SearchAndFilterBoats({
 
     const [ogaNo, setOgaNo] = useState(`${filters.oga_no || ''}`);
   
-    const debouncedOgaNo = useDebounce(ogaNo, 500);
+    const debouncedOgaNo = useDebounce(ogaNo, 1000);
   
     useEffect(
       () => {
