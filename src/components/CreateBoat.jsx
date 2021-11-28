@@ -287,6 +287,7 @@ const schema = (pickers, onChooseDesignClass) => {
                       const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
                       const initialValue = values.user && values.user.name;
                       if (isRequired) {
+                        input.onChange(initialValue || '');
                         return {
                           initialValue,
                           isRequired,
