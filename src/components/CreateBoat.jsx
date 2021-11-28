@@ -282,10 +282,10 @@ const schema = (pickers, onChooseDesignClass) => {
                     component: componentTypes.TEXT_FIELD,
                     name: "ddf.copyright",
                     label: "copyright owner",
-                    initialValue: values.user && values.user.name,
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
                       const isRequired = values.ddf.fileList && values.ddf.fileList.length>0;
+                      const initialValue = values.user && values.user.name,
                       if (isRequired) {
                         return {
                           initialValue,
@@ -299,7 +299,7 @@ const schema = (pickers, onChooseDesignClass) => {
                           ],
                         };
                       }
-                      return {};
+                      return { initialValue };
                     },
                   },
                 ],
