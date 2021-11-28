@@ -260,6 +260,11 @@ const schema = (pickers, onChooseDesignClass) => {
                     validate: [{ type: validatorTypes.REQUIRED }],
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const user = formOptions.getFieldState('user');
+                      console.log(props);
+                      console.log(meta);
+                      console.log(input);
+                      console.log(formOptions.getState());
+                      console.log(user);
                       return { initialValue: user && user.value && user.value.name };
                     },
                   },
@@ -577,6 +582,8 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   const pl = usePicklists();
   const bt = useQuery( query, { variables: { dc: dc  } } ); 
   const { user } = useAuth0();
+
+  console.log('CreateBoatDialog user', user);
 
   if (pl.loading || bt.loading) return <CircularProgress />;
   if (pl.error) return <p>Error :(can't get picklists)</p>;
