@@ -80,7 +80,7 @@ export default function BoatButtons({ boat }) {
   const photoDone = () => {
     console.log('done');
   }
-
+  console.log('referrer', document.referrer);
   return (
     <Paper>
         <Grid container direction="row" alignItems="flex-end">

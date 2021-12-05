@@ -1,5 +1,6 @@
 
 export function prefix(location) {
+  console.log('prefix location: ', JSON.stringify(location));
   let origin = '/';
   if (location.origin) {
     origin = location.origin;
