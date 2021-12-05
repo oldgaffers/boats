@@ -17,7 +17,7 @@ export default function BoatRegisterIntro() {
   return (
     <Paper>
       <Grid container direction="row" alignItems="flex-start">
-      <Grid item xs={10} >
+        <Grid item xs={10} >
         <Typography variant="body1">
           We have hundreds of boats with pictures, and more waiting for
           pictures and more information.
@@ -48,6 +48,7 @@ export default function BoatRegisterIntro() {
         </Grid>
         <Grid item xs={2} >
           <LoginButton classes={classes}/>
+          {/*<Typography>Try out our latest beta</Typography>*/}
         </Grid>
       </Grid>
     </Paper>
