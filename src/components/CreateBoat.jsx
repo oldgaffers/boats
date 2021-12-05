@@ -585,7 +585,7 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   if (pl.error) return <p>Error :(can't get picklists)</p>;
 
   const pickers = pl.data;
-  const boat = bt.data.design_class.length>0?bt.data.design_class[0].boatByArchetype:{};
+  const boat = bt.data ? (bt.data.design_class.length>0 ? bt.data.design_class[0].boatByArchetype : {}) : {};
   boat.short_description = "She is a fine example of her type.";
 
   const onChooseDesignClass = (id) => {
