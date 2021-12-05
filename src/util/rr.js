@@ -1,15 +1,14 @@
 
 export function prefix(location) {
-  console.log('prefix location: ', JSON.stringify(location));
-  let origin = '/';
-  if (location.origin) {
-    origin = location.origin;
-  }
+  const origin = location.origin || window.location.origin;
+  console.log('prefix origin', origin);
   let test = '';
   if (location.pathname.includes('test')) {
     test = 'test_';
   }
-  return `${origin}/boat_register/${test}`;
+  const r = `${origin}/boat_register/${test}`;
+  console.log('prefix', r);
+  return r;
 }
 
 export function boatUrl(oga_no, location ) {
