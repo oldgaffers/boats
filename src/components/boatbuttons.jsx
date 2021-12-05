@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from "react-router-dom";
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -6,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import Enquiry from './enquiry';
+import { prefix } from '../util/rr';
 
 const drawerWidth = 240;
 
@@ -67,6 +69,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BoatButtons({ boat }) {
+  const location = useLocation();
 
   const classes = useStyles();
 
@@ -97,7 +100,7 @@ export default function BoatButtons({ boat }) {
                 variant="contained"
                 className={classes.button}
                 component={'a'}
-                href='/boat_register/boat_register.html'
+                href={`${prefix(location)}browse_the_register/`}
                 >See more boats</Button>
               )
             }

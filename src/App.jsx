@@ -99,9 +99,11 @@ export default function App(props) {
           <Switch>
           <Route component={Browse} path="/" exact /> 
           <Route component={Browse} path="/boat_register" exact/> 
+          <Route component={Browse} path="/boat_register/" exact/> 
           <Route component={Browse} path="/boat_register/index.html" exact/> 
           <Route component={Browse} path="/boat_register/boat_register.html" exact/> 
           <Route component={Browse} path="/browse_the_register" exact/> 
+          <Route component={Browse} path="/browse_the_register/" exact/> 
           <Route component={Browse} path="/browse_the_register/index.html" exact/> 
           <Route component={Browse} path="/browse_the_register/boat_register.html" exact/> 
           <Route component={Browse} path="/browse_the_register/test_boat_register.html" exact/>
@@ -109,7 +111,11 @@ export default function App(props) {
           <Route component={Browse} path="/boat_register/browse_the_register/index.html" exact/>
           <Route component={Browse} path="/boat_register/browse_the_register/browse_the_register.html" exact/>
           <Route component={Browse} path="/boat_register/browse_the_register/test_browse_the_register.html" exact/>
+          <Route component={Browse} path="/boat_register/test_browse_the_register" exact/>
+          <Route component={Browse} path="/boat_register/test_browse_the_register/" exact/>
+          <Route component={Browse} path="/boat_register/test_browse_the_register/index.html" exact/>
           <Route component={Boat} path="/boat" exact/>
+          <Route component={Boat} path="/boat/" exact/>
           <Route component={Boat} path="/boat/index.html" exact/> 
           <Route component={Boat} path="/boat_register/boat" exact/> 
           <Route component={Boat} path="/boat_register/boat/index.html" exact/> 
@@ -121,14 +127,14 @@ export default function App(props) {
           <Route component={Buy} path="/boat_register/boats_for_sale/index.html" exact/> 
           <Route component={Buy} path="/boat_register/boats_for_sale" exact/>
           <Route component={Buy} path="/boats_for_sale/boats_for_sale.html" exact/> 
-          <Route component={Buy} path="/boats_for_sale" exact/> 
+          <Route component={Buy} path="/boats_for_sale/" exact/> 
           <Route component={Buy} path="/boats_for_sale/index.html" exact/> 
           <Route component={Small} path="/boat_register/small_boats/small_boats.html" exact/>
           <Route component={Small} path="/boat_register/small_boats/index.html" exact/>
           <Route component={Small} path="/boat_register/small_boats" exact/>
           <Route component={Small} path="/small_boats/small_boats.html" exact/> 
           <Route component={Small} path="/small_boats/index.html" exact/> 
-          <Route component={Small} path="/small_boats" exact/>
+          <Route component={Small} path="/small_boats/" exact/>
           </Switch>
         </Router>
       </OGAProvider>

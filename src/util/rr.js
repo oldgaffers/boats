@@ -1,14 +1,18 @@
 
+export function prefix(location) {
+  let origin = '/';
+  if (location.origin) {
+    origin = location.origin;
+  }
+  let test = '';
+  if (location.pathname.includes('test')) {
+    test = 'test_';
+  }
+  return `${origin}/boat_register/${test}`;
+}
+
 export function boatUrl(oga_no, location ) {
-    let test = '';
-    if (location.pathname.includes('test')) {
-      test = 'test_';
-    }
-    let origin = '';
-    if (location.origin) {
-      origin = location.origin;
-    }
-    return `${origin}/boat_register/${test}boat?oga_no=${oga_no}`;
+    return `${prefix(location)}boat?oga_no=${oga_no}`;
 }
 
 export function mapState(s) {
