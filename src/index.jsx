@@ -17,6 +17,8 @@ ReactDOM.render(
       domain="dev-uf87e942.eu.auth0.com"
       clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
       redirectUri={url()}
+      audience="https://oga.org.uk/boatregister"
+      scope="member"
     >
       <App />
     </Auth0Provider>
