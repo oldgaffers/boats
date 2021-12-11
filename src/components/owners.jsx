@@ -10,11 +10,12 @@ import Paper from '@material-ui/core/Paper';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
-function Owner({ id, share, firstname, lastname }) {
+function Owner({ owner }) {
+  console.log('Owner', owner);
     return (
-    <TableRow key={id}>
-        <TableCell align="left">{firstname} {lastname}</TableCell>
-        <TableCell align="right">{share}/64</TableCell>
+    <TableRow key={owner.id}>
+        <TableCell align="left">{owner.firstname} {owner.lastname}</TableCell>
+        <TableCell align="right">{owner.share}/64</TableCell>
     </TableRow>
     );
 }
@@ -43,7 +44,6 @@ function OwnersTable({ classes, owners }) {
       firstname, lastname,
     }
   });
-  console.log('ownersWithNames', ownersWithNames);
   return (
     <Table className={classes.table} size="small" aria-label="owners">
     <TableHead>
