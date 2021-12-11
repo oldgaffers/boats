@@ -68,5 +68,6 @@ export const query = (id) => gql`{
       installed
       removed
     }
+    current_owners
   }
 }`
