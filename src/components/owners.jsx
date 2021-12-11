@@ -24,7 +24,7 @@ function OwnersTable({ classes, owners }) {
   const memberNumbers = owners.map((owner) => owner.member);
   console.log(memberNumbers);
   const membersResults = useQuery(gql(`query members {
-    members(members: ${memberNumbers}) {
+    members(members: ${JSON.stringify(memberNumbers)}) {
       firstname
       lastname
       member
