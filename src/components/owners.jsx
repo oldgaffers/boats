@@ -10,52 +10,65 @@ import Paper from '@material-ui/core/Paper';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
-const getnames = (members, id) => {
-  if (!members) return undefined;
-  const m = members.filter((member) => member.id === id);
-  if (m.length>0) {
-    return m[0];
-  }
-  return undefined;
+function Owner({ id, share, firstname, lastname }) {
+    return (
+    <TableRow key={id}>
+        <TableCell align="left">{firstname} {lastname}</TableCell>
+        <TableCell align="right">{share}/64</TableCell>
+    </TableRow>
+    );
+}
+
+function OwnersTable(classes, current_owners) {
+  const member = useQuery(gql(`query member {
+    member(member: ${current_owners[0].member}, id: ${current_owners[0].id}) {
+      firstname
+      lastname
+      member
+      id
+    }
+  }`)); 
+  if (member.loading) return <CircularProgress />;
+  const owners = current_owners.map((owner) => {
+    let firstname = '';
+    let lastname = '';
+    member.data.forEach((m) => {
+      if (m.id === owner.id) {
+        firstname = m.firstname;
+        lastname = m.lastname;
+      }
+    });
+    return {
+      ...owner,
+      firstname, lastname,
+    }
+  });
+  console.log('owner', owners, 'member', member.data);
+  return (
+    <Table className={classes.table} size="small" aria-label="owners">
+    <TableHead>
+        <TableRow>
+        <TableCell align="left">Name</TableCell>
+        <TableCell align="right">Share</TableCell>
+        </TableRow>
+    </TableHead>
+    <TableBody>
+        {owners.map((owner) => (<Owner owner={owner}/>))}
+    </TableBody>
+    </Table>
+  );
 }
 
 export default function Owners({ classes, boat }) {
-  const { current_owners } = boat;
-  const member = current_owners ? current_owners[0].member : 0;
-  const members = useQuery(gql(`query member {
-        member(member: ${member}) {
-          member
-          id
-          firstname
-          lastname
+    const owner = useQuery(gql(`query boat {
+        boat(where: {oga_no: {_eq: ${boat.oga_no}}}) {
+          current_owners
         }
-    }`)); 
-    if (members.loading) return <CircularProgress />;
-    console.log('owner', current_owners, 'member', members.data);
-    const owners = current_owners.map((owner) => {
-      return {
-        ...owner,
-        ...getnames(members, owner.id),
-      }
-    })
+      }`));
+    if (owner.loading) return <CircularProgress />;
     return (
-        <TableContainer component={Paper}>
-        <Table className={classes.table} size="small" aria-label="owners">
-        <TableHead>
-            <TableRow>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="right">Share</TableCell>
-            </TableRow>
-        </TableHead>
-        <TableBody>
-            {owners.map(({ id, firstname, lastname, share }) => (
-              <TableRow key={id}>
-                <TableCell align="left">{firstname} {lastname}</TableCell>
-                <TableCell align="right">{share}/64</TableCell>
-              </TableRow>
-            ))}
-        </TableBody>
-        </Table>
-    </TableContainer>
+      <TableContainer component={Paper}>
+        <OwnersTable classes={classes} owners={owner.data.boat[0].current_owners}/>
+      </TableContainer>
     );
 }
