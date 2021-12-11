@@ -28,18 +28,16 @@ function OwnersTable({ classes, owners }) {
       member
       id
     }
-  }`)); 
+  }`));
   if (member.loading) return <CircularProgress />;
-  console.log('member', JSON.stringify(member.data));
+  console.log('member', JSON.stringify(member.data.member));
   const ownersWithNames = owners.map((owner) => {
     let firstname = '';
     let lastname = '';
-    member.data.forEach((m) => {
-      if (m.id === owner.id) {
-        firstname = m.firstname;
-        lastname = m.lastname;
-      }
-    });
+    if (member.data.member.id === owner.id) {
+      firstname = member.data.member.firstname;
+      lastname = member.data.member.lastname;
+    }
     return {
       ...owner,
       firstname, lastname,
