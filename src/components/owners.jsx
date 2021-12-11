@@ -19,7 +19,7 @@ function Owner({ id, share, firstname, lastname }) {
     );
 }
 
-function OwnersTable(classes, current_owners) {
+function OwnersTable({ classes, current_owners }) {
   console.log('first owner', current_owners[0]);
   const member = useQuery(gql(`query member {
     member(member: ${current_owners[0].member}, id: ${current_owners[0].id}) {
