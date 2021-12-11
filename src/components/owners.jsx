@@ -29,6 +29,8 @@ function OwnersTable(classes, current_owners) {
     }
   }`)); 
   if (member.loading) return <CircularProgress />;
+  console.log('current_owners', JSON.stringify(current_owners));
+  console.log('member', JSON.stringify(member));
   const owners = current_owners.map((owner) => {
     let firstname = '';
     let lastname = '';
