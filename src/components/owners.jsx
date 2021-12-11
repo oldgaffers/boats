@@ -68,9 +68,14 @@ export default function Owners({ classes, boat }) {
         }
       }`));
     if (owner.loading) return <CircularProgress />;
-    return (
-      <TableContainer component={Paper}>
-        <OwnersTable classes={classes} owners={owner.data.boat[0].current_owners}/>
-      </TableContainer>
-    );
+    const { current_owners } = owner.data.boat[0];
+    console.log('current_owners', current_owners);
+    if (current_owners) {
+      return (
+        <TableContainer component={Paper}>
+          <OwnersTable classes={classes} owners={current_owners}/>
+        </TableContainer>
+      );  
+    }
+    return (<div/>);
 }
