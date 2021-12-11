@@ -21,23 +21,26 @@ function Owner({ owner }) {
 }
 
 function OwnersTable({ classes, owners }) {
-  console.log('first owner', owners[0]);
-  const member = useQuery(gql(`query member {
-    member(member: ${owners[0].member}, id: ${owners[0].id}) {
+  const memberNumbers = owners.map((owner) => owner.member);
+  console.log(memberNumbers);
+  const membersResults = useQuery(gql(`query members {
+    members(members: ${memberNumbers}) {
       firstname
       lastname
       member
       id
     }
   }`));
-  if (member.loading) return <CircularProgress />;
-  console.log('member', JSON.stringify(member.data.member));
+  if (membersResults.loading) return <CircularProgress />;
+  const { members } = membersResults.data;
+  console.log('members', JSON.stringify(members));
   const ownersWithNames = owners.map((owner) => {
     let firstname = '';
     let lastname = '';
-    if (member.data.member.id === owner.id) {
-      firstname = member.data.member.firstname;
-      lastname = member.data.member.lastname;
+    const m = members.filter((member) => member.id === owner.id);
+    if (m.length > 0) {
+      firstname = m[0].firstname;
+      lastname = m[0].lastname;
     }
     return {
       ...owner,
