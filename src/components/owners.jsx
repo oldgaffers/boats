@@ -20,6 +20,7 @@ function Owner({ id, share, firstname, lastname }) {
 }
 
 function OwnersTable(classes, current_owners) {
+  console.log('first owner', current_owners[0]);
   const member = useQuery(gql(`query member {
     member(member: ${current_owners[0].member}, id: ${current_owners[0].id}) {
       firstname
@@ -69,13 +70,14 @@ export default function Owners({ classes, boat }) {
       }`));
     if (owner.loading) return <CircularProgress />;
     const { current_owners } = owner.data.boat[0];
-    console.log('current_owners', current_owners);
-    if (current_owners) {
+
+    if (current_owners && current_owners.length > 0) {
       return (
         <TableContainer component={Paper}>
           <OwnersTable classes={classes} owners={current_owners}/>
         </TableContainer>
       );  
     }
+    console.log('current_owners', current_owners);
     return (<div/>);
 }
