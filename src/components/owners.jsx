@@ -54,7 +54,7 @@ function OwnersTable({ classes, owners }) {
         </TableRow>
     </TableHead>
     <TableBody>
-        {owners.map((owner) => (<Owner owner={owner}/>))}
+        {ownersWithNames.map((owner) => (<Owner owner={owner}/>))}
     </TableBody>
     </Table>
   );
@@ -68,9 +68,7 @@ export default function Owners({ classes, boat }) {
       }`));
     if (owner.loading) return <CircularProgress />;
     const { current_owners } = owner.data.boat[0];
-
     if (current_owners && current_owners.length > 0) {
-      console.log('Owners current_owners', current_owners);
       return (
         <TableContainer component={Paper}>
           <OwnersTable classes={classes} owners={current_owners}/>
