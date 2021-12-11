@@ -19,10 +19,10 @@ function Owner({ id, share, firstname, lastname }) {
     );
 }
 
-function OwnersTable({ classes, current_owners }) {
-  console.log('first owner', current_owners[0]);
+function OwnersTable({ classes, owners }) {
+  console.log('first owner', owners[0]);
   const member = useQuery(gql(`query member {
-    member(member: ${current_owners[0].member}, id: ${current_owners[0].id}) {
+    member(member: ${owners[0].member}, id: ${owners[0].id}) {
       firstname
       lastname
       member
@@ -30,9 +30,8 @@ function OwnersTable({ classes, current_owners }) {
     }
   }`)); 
   if (member.loading) return <CircularProgress />;
-  console.log('current_owners', JSON.stringify(current_owners));
   console.log('member', JSON.stringify(member));
-  const owners = current_owners.map((owner) => {
+  const ownersWithNames = owners.map((owner) => {
     let firstname = '';
     let lastname = '';
     member.data.forEach((m) => {
@@ -46,7 +45,6 @@ function OwnersTable({ classes, current_owners }) {
       firstname, lastname,
     }
   });
-  console.log('owner', owners, 'member', member.data);
   return (
     <Table className={classes.table} size="small" aria-label="owners">
     <TableHead>
@@ -72,6 +70,7 @@ export default function Owners({ classes, boat }) {
     const { current_owners } = owner.data.boat[0];
 
     if (current_owners && current_owners.length > 0) {
+      console.log('Owners current_owners', current_owners);
       return (
         <TableContainer component={Paper}>
           <OwnersTable classes={classes} owners={current_owners}/>
