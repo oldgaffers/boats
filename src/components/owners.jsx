@@ -43,6 +43,7 @@ function OwnersTable({ classes, owners }) {
       firstname, lastname,
     }
   });
+  console.log('ownersWithNames', ownersWithNames);
   return (
     <Table className={classes.table} size="small" aria-label="owners">
     <TableHead>
