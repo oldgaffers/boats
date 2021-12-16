@@ -1,11 +1,13 @@
 import React from 'react';
 import { useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
+import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
 import { prefix } from '../util/rr';
 
@@ -70,6 +72,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function BoatButtons({ boat }) {
   const location = useLocation();
+  const { user, isAuthenticated } = useAuth0();
+  let roles = [];
+  if (isAuthenticated) {
+      roles = user['https://oga.org.uk/roles'] || [];
+  }
+  if(document.referrer.includes('localhost')) { roles.push('editor')}
 
   const classes = useStyles();
 
@@ -83,8 +91,8 @@ export default function BoatButtons({ boat }) {
   console.log('referrer', document.referrer);
   return (
     <Paper>
-        <Grid container direction="row" alignItems="flex-end">
-        <Grid item xs={2}>
+        <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
+        <Grid item xs={'auto'}>
             {
               (document.referrer.includes('boat_register'))?
               (
@@ -105,19 +113,23 @@ export default function BoatButtons({ boat }) {
               )
             }
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={'auto'} >
             <Enquiry classes={classes} boat={boat} />
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={'auto'} >
             <PhotoButton
               classes={classes} boat={boat} 
               onCancel={photoCancelled}
               onDone={photoDone}
             />
         </Grid>
-        <Grid item xs={3} >
+        <Grid item xs={'auto'} >
             <EditButton classes={classes} boat={boat} />
         </Grid>
+        {roles.includes('editor')
+          ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} /></Grid>)
+          : ''
+        }
       </Grid>
     </Paper>
   );
