@@ -101,7 +101,7 @@ export default function Boat({ classes, boat }) {
       )});    
   }
 
-  if(roles.includes('member') && window.location.href.includes('test')) {
+  if(roles.includes('member')) {
     panes.push({ title: 'Owners', children: (
       <Paper>
         <Owners boat={boat} classes={classes}/>
