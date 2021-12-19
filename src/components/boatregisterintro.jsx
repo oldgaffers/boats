@@ -47,8 +47,12 @@ export default function BoatRegisterIntro() {
         </Typography>
         </Grid>
         <Grid item xs={2} >
-          <LoginButton classes={classes}/>
-          {/*<Typography>Try out our latest beta</Typography>*/}
+          {
+            (window.BrowserDetect && window.BrowserDetect.browser==='Safari')
+            ?
+            (<Typography>Safari is a great browser. We are working on supporting logins for this browser.</Typography>)
+            : (<LoginButton classes={classes}/>)
+          }
         </Grid>
       </Grid>
     </Paper>
