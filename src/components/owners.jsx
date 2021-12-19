@@ -74,8 +74,7 @@ function OwnersTable({ classes, owners }) {
 }
 
 export default function Owners({ classes, boat }) {
-  console.log('ownerships', boat.ownerships);
-  const { current, owners } = boat.ownerships;
+  const { current, owners } = boat.ownerships || { current: [], owners: [] };
   if (owners && owners.length > 0) {
     return (
       <TableContainer component={Paper}>
