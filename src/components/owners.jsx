@@ -14,8 +14,10 @@ function Owner({ owner }) {
   console.log('Owner', owner);
     return (
     <TableRow key={owner.id}>
-        <TableCell align="left">{owner.firstname} {owner.lastname}</TableCell>
-        <TableCell align="right">{owner.share}/64</TableCell>
+        <TableCell align="left">{owner.name}</TableCell>
+        <TableCell align="left">{owner.start || '?'}</TableCell>
+        <TableCell align="left">{owner.end || '-'}</TableCell>
+        <TableCell align="left">{owner.share}/64</TableCell>
     </TableRow>
     );
 }
@@ -32,51 +34,59 @@ function OwnersTable({ classes, owners }) {
     }
   }`));
   if (membersResults.loading) return <CircularProgress />;
-  const { members } = membersResults.data;
+  const { members } = membersResults.data || { members: [] };
   console.log('members', JSON.stringify(members));
   const ownersWithNames = owners.map((owner) => {
-    let firstname = '';
-    let lastname = '';
+    if (owner.name) {
+      return owner;
+    }
+    let name = '';
     const m = members.filter((member) => member.id === owner.id);
     if (m.length > 0) {
-      firstname = m[0].firstname;
-      lastname = m[0].lastname;
+      name = `${m[0].firstname} ${m[0].lastname}`;
     }
     return {
       ...owner,
-      firstname, lastname,
-    }
+      name,
+    }  
   });
   return (
     <Table className={classes.table} size="small" aria-label="owners">
     <TableHead>
         <TableRow>
         <TableCell align="left">Name</TableCell>
-        <TableCell align="right">Share</TableCell>
+        <TableCell align="left">From</TableCell>
+        <TableCell align="left">To</TableCell>
+        <TableCell align="left">Share</TableCell>
         </TableRow>
     </TableHead>
     <TableBody>
-        {ownersWithNames.map((owner) => (<Owner owner={owner}/>))}
+        {ownersWithNames
+          .sort((a, b) => a.start>b.start)
+          .map((owner) => (<Owner id={owner.id} owner={owner}/>))
+        }
     </TableBody>
     </Table>
   );
 }
 
 export default function Owners({ classes, boat }) {
-    const owner = useQuery(gql(`query boat {
-        boat(where: {oga_no: {_eq: ${boat.oga_no}}}) {
-          current_owners
-        }
-      }`));
-    if (owner.loading) return <CircularProgress />;
-    const { current_owners } = owner.data.boat[0];
-    if (current_owners && current_owners.length > 0) {
-      return (
-        <TableContainer component={Paper}>
-          <OwnersTable classes={classes} owners={current_owners}/>
-        </TableContainer>
-      );  
-    }
-    console.log('current_owners', current_owners);
-    return (<div/>);
+  console.log('ownerships', boat.ownerships);
+  const { current, owners } = boat.ownerships;
+  if (owners && owners.length > 0) {
+    return (
+      <TableContainer component={Paper}>
+        <OwnersTable classes={classes} owners={owners}/>
+      </TableContainer>
+    );  
+  }
+  if (current && current.length > 0) {
+    return (
+      <TableContainer component={Paper}>
+        <OwnersTable classes={classes} owners={current}/>
+      </TableContainer>
+    );  
+  }
+  console.log('current_owners', current);
+  return (<div/>);
 }
