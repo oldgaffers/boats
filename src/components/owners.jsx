@@ -23,7 +23,9 @@ function Owner({ owner }) {
 }
 
 function OwnersTable({ classes, owners }) {
-  const memberNumbers = owners.map((owner) => owner.member);
+  const memberNumbers = owners
+    .map((owner) => owner.member)
+    .filter((n, index, array) => n && array.indexOf(n) === index);
   console.log(memberNumbers);
   const membersResults = useQuery(gql(`query members {
     members(members: ${JSON.stringify(memberNumbers)}) {
@@ -34,6 +36,7 @@ function OwnersTable({ classes, owners }) {
     }
   }`));
   if (membersResults.loading) return <CircularProgress />;
+  console.log(membersResults);
   const { members } = membersResults.data || { members: [] };
   console.log('members', JSON.stringify(members));
   const ownersWithNames = owners.map((owner) => {
