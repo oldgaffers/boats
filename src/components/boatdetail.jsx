@@ -8,7 +8,6 @@ import SailTable from './sailtable';
 import { m2df, price } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
-import Admin from './admin';
 
 function m2f(val) {
   if(val) {
@@ -109,13 +108,6 @@ export default function Boat({ classes, boat }) {
     )});    
   }
 
-  if(roles.includes('editor')) {
-    panes.push({ title: 'Admin Tasks', children: (
-      <Paper>
-        <Admin boat={boat} classes={classes}/>
-      </Paper>
-    )});    
-  }
 
 /*
 const engine = {
