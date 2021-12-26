@@ -36,13 +36,7 @@ export default function Boat({ classes, boat }) {
   }
 
   const hd = boat.handicap_data || {};
-  /*
-        <ConditionalText value={boat.previous_names} label="Previous name/s"/>
-        <ConditionalText value={boat.place_built} label="Place built"/>
-        <ConditionalText value={boat.home_country} label="Home Country"/>
-        <ConditionalText value={boat.year_is_approximate?'around ':''+boat.year} label="Year of Build"/>
 
-  */
   const panes = [
     { title: 'Registrations', children: (
       <Paper>
@@ -62,6 +56,8 @@ export default function Boat({ classes, boat }) {
         <ConditionalText value={boat.designerByBuilder} label="Designer"/>
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
+        <ConditionalText value={boat.place_built} label="Place built"/>
+        <ConditionalText value={boat.year_is_approximate?'around ':''+boat.year} label="Year of Build"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
         <ConditionalText value={boat.spar_material} label="Spar material"/>
