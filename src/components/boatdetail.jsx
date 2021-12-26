@@ -38,17 +38,6 @@ export default function Boat({ classes, boat }) {
   const hd = boat.handicap_data || {};
 
   const panes = [
-    { title: 'Registrations', children: (
-      <Paper>
-        <ConditionalText value={boat.sail_number} label="Sail No."/>
-        <ConditionalText value={boat.ssr} label="Small Ships Registry no. (SSR)"/>
-        <ConditionalText value={boat.nhsr} label="National Register of Historic Vessels no. (NRHV)"/>
-        <ConditionalText value={boat.fishing_number} label="Fishing No."/>
-        <ConditionalText value={boat.callsign} label="Call Sign"/>
-        <ConditionalText value={boat.nsbr} label="National Small Boat Register"/>
-        <ConditionalText value={boat.uk_part1} label="Official Registration" />     
-      </Paper>)
-     },
     { title: 'Design & Build', children: (
       <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
@@ -80,7 +69,20 @@ export default function Boat({ classes, boat }) {
         { title: 'Details', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
     );
   }
-  
+  if (boat.sail_number || boat.ssr || boat.nhsr || boat.fishing_number || boat.callsign || boat.nsbr || boat.uk_part1) {
+    panes.unshift(
+      { title: 'Registrations', children: (
+        <Paper>
+          <ConditionalText value={boat.sail_number} label="Sail No."/>
+          <ConditionalText value={boat.ssr} label="Small Ships Registry no. (SSR)"/>
+          <ConditionalText value={boat.nhsr} label="National Register of Historic Vessels no. (NRHV)"/>
+          <ConditionalText value={boat.fishing_number} label="Fishing No."/>
+          <ConditionalText value={boat.callsign} label="Call Sign"/>
+          <ConditionalText value={boat.nsbr} label="National Small Boat Register"/>
+          <ConditionalText value={boat.uk_part1} label="Official Registration" />     
+        </Paper>
+      )});    
+  }
   if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
       panes.push({ title: 'Rig and Sails', children: (
         <Paper>
