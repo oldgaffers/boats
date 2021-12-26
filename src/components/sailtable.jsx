@@ -14,7 +14,7 @@ function feet(val) {
     }
 }
 
-export default function SailTable( { rows, classes }) {
+export default function SailTable( { handicapData, classes }) {
     return (
     <TableContainer component={Paper}>
         <Table className={classes.table} size="small" aria-label="sail data">
@@ -27,14 +27,16 @@ export default function SailTable( { rows, classes }) {
             </TableRow>
         </TableHead>
         <TableBody>
-            {rows.map((row) => 
-            (<TableRow key={row.name}>
-                <TableCell component="th" scope="row">{row.name.replace(/_/g, ' ')}</TableCell>
-                <TableCell align="right">{feet(row.luff)}</TableCell>
-                <TableCell align="right">{feet(row.head?row.head:row.leach)}</TableCell>
-                <TableCell align="right">{feet(row.foot?row.foot:row.perpendicular)}</TableCell>
+            {Object.entries(handicapData)
+                .filter(([, val]) => val.luff)
+                .map(([name, sail]) => 
+            (<TableRow key={name}>
+                <TableCell component="th" scope="row">{name.replace(/_/g, ' ')}</TableCell>
+                <TableCell align="right">{feet(sail.luff)}</TableCell>
+                <TableCell align="right">{feet(sail.head?sail.head:sail.leach)}</TableCell>
+                <TableCell align="right">{feet(sail.foot?sail.foot:sail.perpendicular)}</TableCell>
             </TableRow>
-            ))}
+            ))})
         </TableBody>
         </Table>
     </TableContainer>

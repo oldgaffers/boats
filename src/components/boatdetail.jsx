@@ -36,14 +36,16 @@ export default function Boat({ classes, boat }) {
   }
 
   const hd = boat.handicap_data || {};
-  
-  const panes = [
-    { title: 'Location & Registration', children: (
-      <Paper>
+  /*
         <ConditionalText value={boat.previous_names} label="Previous name/s"/>
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={boat.home_country} label="Home Country"/>
         <ConditionalText value={boat.year_is_approximate?'around ':''+boat.year} label="Year of Build"/>
+
+  */
+  const panes = [
+    { title: 'Registrations', children: (
+      <Paper>
         <ConditionalText value={boat.sail_number} label="Sail No."/>
         <ConditionalText value={boat.ssr} label="Small Ships Registry no. (SSR)"/>
         <ConditionalText value={boat.nhsr} label="National Register of Historic Vessels no. (NRHV)"/>
@@ -53,21 +55,22 @@ export default function Boat({ classes, boat }) {
         <ConditionalText value={boat.uk_part1} label="Official Registration" />     
       </Paper>)
      },
-    { title: 'Design & Construction', children: (
+    { title: 'Design & Build', children: (
       <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
         <ConditionalText value={boat.designClassByDesignClass} label="Design class"/>
+        <ConditionalText value={boat.designerByBuilder} label="Designer"/>
+        <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
-        <ConditionalText value={boat.spar_material} label="spar material"/>
+        <ConditionalText value={boat.spar_material} label="Spar material"/>
         <ConditionalText value={boat.construction_details} label="Construction details"/>
       </Paper>
         )    
     },
-    { title: 'Hull & Dimensions', children: (
+    { title: 'Dimensions', children: (
       <Paper>
-        <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={m2f(hd.length_on_deck||boat.length_on_deck)} label="Length on deck (LOD)"/>
         <ConditionalText label="Length overall (LOA)" value={m2f(hd.length_over_all)}/>
         <ConditionalText label="Waterline Length (LWL)" value={m2f(hd.length_on_waterline)}/>
@@ -78,24 +81,18 @@ export default function Boat({ classes, boat }) {
 
   if (boat.full_description) {
     panes.unshift(
-        { title: 'Full Description', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
+        { title: 'Details', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
     );
   }
   
-  const sails = [];
-  Object.entries(hd).forEach(([key, val]) => {
-      if (val.luff) {
-          sails.push({ name: key, ...val });
-      }
-  });
   if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
       panes.push({ title: 'Rig and Sails', children: (
         <Paper>
-          <ConditionalText label="fore triangle base" value={m2f(hd.fore_triangle_base)}/>
-          <ConditionalText label="fore triangle height" value={m2f(hd.fore_triangle_height)}/>
+          <ConditionalText label="Fore triangle base" value={m2f(hd.fore_triangle_base)}/>
+          <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)}/>
           <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
           <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
-          <SailTable classes={classes} rows={sails}/>
+          <SailTable classes={classes} handicapData={hd}/>
         </Paper>
       )});    
   }
