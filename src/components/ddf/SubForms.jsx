@@ -36,11 +36,7 @@ export const cardForm = (pickers) => {
         label: "Approximate",
         dataType: "boolean",
       },
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "home_port",
-        label: "Home Port",
-      },
+      ...homeItems,
       ...designerItems(pickers),
       ...builderItems(pickers),
       {
@@ -77,6 +73,12 @@ export const summaryForm = (pickers) => {
         name: "home_port",
         label: "Home Port",
       },
+      {
+        component: componentTypes.FIELD_ARRAY,
+        name: "previous_names",
+        label: "Previous name/s",
+        fields: [{ component: "text-field" }],
+      }
       {
         component: componentTypes.TEXT_FIELD,
         name: "website",
@@ -145,27 +147,6 @@ export const descriptionsForm = {
   fields: descriptionsItems,
 };
 
-export const LocationForm = {
-  title: "History",
-  name: "history",
-  component: componentTypes.SUB_FORM,
-  fields: [
-    {
-      component: componentTypes.FIELD_ARRAY,
-      name: "previous_names",
-      label: "Previous name/s",
-      fields: [{ component: "text-field" }],
-    },
-    ...yearItems,
-    {
-      component: componentTypes.TEXT_FIELD,
-      name: "place_built",
-      label: "Place built",
-    },
-    ...homeItems,
-  ],
-};
-
 export const RegistrationForm = {
   title: "Registrations",
   name: "registrations",
@@ -211,7 +192,7 @@ export const RegistrationForm = {
 
 export const constructionForm = (pickers) => {
   return {
-    title: "Design & Construction",
+    title: "Design & Build",
     name: "construction",
     component: componentTypes.SUB_FORM,
     fields: [
@@ -226,7 +207,13 @@ export const constructionForm = (pickers) => {
       },
       ...designerItems(pickers),
       ...designClassItems(pickers),
-      ...builderItems(pickers),
+      ...yearItems,
+      {
+        component: componentTypes.TEXT_FIELD,
+        name: "place_built",
+        label: "Place built",
+      },
+        ...builderItems(pickers),
       ...constructionItems(pickers),
     ],
   };

@@ -78,6 +78,7 @@ export default function BoatSummary({ classes, boat }) {
       label="T(H)CF"
       value={boat.handicap_data && boat.handicap_data.thcf && boat.handicap_data.thcf.toFixed(3)}
     />
+    <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
     <div>
       <CopyToClipboard text={window.location.href} onCopy={() => setSnackBarOpen(true)}>
