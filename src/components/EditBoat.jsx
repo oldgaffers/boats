@@ -17,7 +17,7 @@ import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from "../util/picklists";
 import { theme, HtmlEditor } from "./ddf/RTE";
 import { 
-  cardForm, summaryForm, descriptionsForm, LocationForm, 
+  cardForm, summaryForm, descriptionsForm, 
   RegistrationForm, constructionForm,
   yachtHullStep, dinghyHullStep } from "./ddf/SubForms";
 
@@ -25,9 +25,9 @@ const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },
   { label: "Edit the summary", value: "summary" },
   { label: "Edit the short and full descriptions", value: "descriptions" },
-  { label: "Edit Location & Registration", value: "locations" },
-  { label: "Edit Design & Construction", value: "construction" },
-  { label: "Edit Hull & Dimensions", value: "dimensions" },
+  { label: "Edit Registrations", value: "registrations" },
+  { label: "Edit Design & Build", value: "construction" },
+  { label: "Edit Dimensions", value: "dimensions" },
   { label: "Edit Rig & Sails (or get a handicap)", value: "rig" },
 ];
 
@@ -119,11 +119,6 @@ export const schema = (pickers, roles) => {
             name: "descriptions-step",
             nextStep: "done-step",
             fields: [descriptionsForm],
-          },
-          {
-            name: "locations-step",
-            nextStep: "registrations-step",
-            fields: [LocationForm],
           },
           {
             name: "registrations-step",
