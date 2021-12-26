@@ -36,7 +36,7 @@ export default function SailTable( { handicapData, classes }) {
                 <TableCell align="right">{feet(sail.head?sail.head:sail.leach)}</TableCell>
                 <TableCell align="right">{feet(sail.foot?sail.foot:sail.perpendicular)}</TableCell>
             </TableRow>
-            ))})
+            ))}
         </TableBody>
         </Table>
     </TableContainer>
