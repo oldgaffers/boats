@@ -109,16 +109,17 @@ function EnquiryDialog({
 }
 
 const text = (user, members) => {
+  const r = `This boat is owned by ${(members?.length > 1) ? "members" : "a member"} of the OGA.`;
   if (user) {
     if (members.find((member) => member.GDPR)) {
-      return `We'll contact them for you from the boat register
+      return `${r} We'll contact them for you from the boat register
     and copy you so you can chat.`;
     } else {
-      return `We'll contact them for you from the boat register
+      return `${r} We'll contact them for you from the boat register
     and give them your email so they can respond.`;
     }
   } else {
-    return `We'll contact them for you from the boat register
+    return `${r} We'll contact them for you from the boat register
   and give them your email so they can respond.`;
   }
 };
@@ -128,13 +129,12 @@ function ContactDialog({
   boat,
   email,
   user,
+  members,
   onEmailChange,
   onSend,
   onCancel,
   onTextChange,
 }) {  
-  const members = [];
-  const s = boat.ownerships.current.length > 1 ? "s" : "";
   return (
     <Dialog
       top
@@ -142,10 +142,9 @@ function ContactDialog({
       onClose={onCancel}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Contact The Owner{s}</DialogTitle>
+      <DialogTitle id="form-dialog-title">Contact The Owner${(members?.length > 1) ? "s" : ""}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          This boat is owned by {s === "" ? "a member" : "members"} of the OGA.
           {text(user, members)}
         </DialogContentText>
         <TextField
@@ -268,6 +267,7 @@ export default function Enquiry({ boat, classes }) {
         boat={boat}
         email={email}
         user={user}
+        members={data?.members}
         onCancel={handleCancel}
         onSend={handleSend}
         onEmailChange={handleEmailChange}
