@@ -7,10 +7,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import CircularProgress from "@material-ui/core/CircularProgress";
 import SendIcon from '@material-ui/icons/Send';
 import MailIcon from '@material-ui/icons/Mail';
 import gql from 'graphql-tag';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const ADD_ENQUIRY = gql`
@@ -52,8 +53,74 @@ function EnquiryDialog({ open, boat, email, onEmailChange, onSend, onCancel, onT
       <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          Have some information or a question about <i>{boat.name}</i> ({boat.oga_no})?<p></p>
+          Own <i>{boat.name}</i> ({boat.oga_no}) or have some information or a question about her?<p></p>
           We'd love to hear from you.<p></p>Please enter your email address here and tell us how we can help.
+        </DialogContentText>
+        <TextField
+          value={email}
+          error={email === ''}
+          onChange={onEmailChange}
+          autoFocus
+          margin="dense"
+          label="Email Address"
+          type="email"
+          fullWidth
+        />
+        <TextField
+          onChange={onTextChange}
+          margin="dense"
+          label="About your enquiry"
+          type="text"
+          fullWidth
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onCancel} color="primary">
+          Cancel
+        </Button>
+        <Button endIcon={<SendIcon/>} onClick={onSend} color="primary" disabled={email === ''}>
+          Send
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
+
+function ContactDialog({ open, boat, email, user, onEmailChange, onSend, onCancel, onTextChange }) {
+  console.log('user', user);
+  const memberNumbers = [...new Set(boat.ownerships.current.map((owner) => owner.member))];
+  console.log(memberNumbers);
+  const membersResults = useQuery(gql(`query members {
+    members(members: ${JSON.stringify(memberNumbers)}) { GDPR email }
+  }`));
+  if (membersResults.loading) return <CircularProgress />;
+  console.log(membersResults);
+  const { members } = membersResults.data || { members: [] };
+  console.log('members', JSON.stringify(members));
+
+  const s = boat.ownerships.current.length > 1 ? 's' : '';
+  return (
+    <Dialog top open={open} onClose={onCancel} aria-labelledby="form-dialog-title">
+      <DialogTitle id="form-dialog-title">Contact The Owner{s}</DialogTitle>
+      <DialogContent>
+        <DialogContentText variant="subtitle2">
+          This boat is owned by {(s==='') ? 'a member' : 'members'} of the OGA.
+          {
+            (user) => {
+              if (user) {
+                if (members.find((member) => member.GDPR)) {
+                  return `We'll contact them for you from the boat register
+                  and copy you so you can chat.`;  
+                } else {
+                  return `We'll contact them for you from the boat register
+                  and give them your email so they can respond.`;  
+                }
+              } else {
+                return `We'll contact them for you from the boat register
+                and give them your email so they can respond.`;
+              }
+            }
+          }
         </DialogContentText>
         <TextField
           value={email}
@@ -126,17 +193,30 @@ export default function Enquiry({ boat, classes }) {
     setSnackBarOpen(true);
   };
 
+  const { current } = boat.ownerships;
+
+  let enquireText = 'Ask about this boat';
+  let ChosenDialog = EnquiryDialog;
+
+  if (current) {
+    enquireText = 'Contact the Owner';
+    if (boat.ownerships.current.length > 1) {
+      enquireText = enquireText + 's';
+    }
+    ChosenDialog = ContactDialog;
+  }
+  console.log('enquireText', enquireText);
   return (
     <>
       <Button className={classes.button} size="small"
         endIcon={<MailIcon/>}
         variant="contained"
         color="primary" onClick={handleClickOpen}>
-        Ask about this boat
+        {enquireText}
       </Button>
-      <EnquiryDialog 
+      <ChosenDialog 
         open={open}
-        boat={boat} email={email} 
+        boat={boat} email={email} user={user}
         onCancel={handleCancel}
         onSend={handleSend} onEmailChange={handleEmailChange}
         onTextChange={handleTextChange} 

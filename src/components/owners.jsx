@@ -26,7 +26,6 @@ function OwnersTable({ classes, owners }) {
   const memberNumbers = owners
     .map((owner) => owner.member)
     .filter((n, index, array) => n && array.indexOf(n) === index);
-  console.log(memberNumbers);
   const membersResults = useQuery(gql(`query members {
     members(members: ${JSON.stringify(memberNumbers)}) {
       firstname
