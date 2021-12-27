@@ -190,7 +190,7 @@ export default function Enquiry({ boat, classes }) {
   const [text, setText] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
-  const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members {
+  const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]) {
     members(members: $members) { GDPR email }
   }`));
   if (loading) return <p>Loading ...</p>;
