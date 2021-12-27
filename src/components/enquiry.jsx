@@ -109,9 +109,9 @@ function EnquiryDialog({
 }
 
 const text = (user, members) => {
-  const r = `This boat is owned by ${(members?.length > 1) ? "members" : "a member"} of the OGA.`;
+  const r = `This boat is owned by ${(members && members.length > 1) ? "members" : "a member"} of the OGA.`;
   if (user) {
-    if (members.find((member) => member.GDPR)) {
+    if (members && members.find((member) => member.GDPR)) {
       return `${r} We'll contact them for you from the boat register
     and copy you so you can chat.`;
     } else {
@@ -267,7 +267,7 @@ export default function Enquiry({ boat, classes }) {
         boat={boat}
         email={email}
         user={user}
-        members={data?.members}
+        members={data && data.members}
         onCancel={handleCancel}
         onSend={handleSend}
         onEmailChange={handleEmailChange}
