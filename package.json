@@ -40,7 +40,8 @@
     "clean": "rm -r dist .parcel-cache",
     "start": "parcel serve src/index.html",
     "build": "parcel build src/index.html",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "q": "printf '%s' ${npm_package_version}"
   },
   "eslintConfig": {
     "extends": [

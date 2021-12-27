@@ -100,11 +100,8 @@ export default function BoatWrapper({ boat }) {
         <BoatDetail classes={classes} boat={boat} />
       </Grid>
     </Grid>
-        <BoatButtons
-          classes={classes}
-          boat={boat}
-        />
-      </Container>
+    <BoatButtons classes={classes} boat={boat}/>
+    </Container>
     </Paper>
   );
 };
