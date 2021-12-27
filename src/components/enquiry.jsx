@@ -58,6 +58,11 @@ function EnquiryDialog({
   onCancel,
   onTextChange,
 }) {
+
+  const onClickSend = () => {
+    onSend(boat.id, boat.name, boat.oga_no, 'general');
+  }
+
   return (
     <Dialog
       top
@@ -97,7 +102,7 @@ function EnquiryDialog({
         </Button>
         <Button
           endIcon={<SendIcon />}
-          onClick={onSend}
+          onClick={onClickSend}
           color="primary"
           disabled={email === ""}
         >
@@ -108,19 +113,24 @@ function EnquiryDialog({
   );
 }
 
-const text = (user, members) => {
-  const r = `This boat is owned by ${(members && members.length > 1) ? "members" : "a member"} of the OGA.`;
-  if (user) {
+const atext = (userRoles, members) => {
+  const plural = members && members.length > 1;
+  if (userRoles.includes('member')) {
+    return plural?'fellow members':'a fellow member';
+  } else {
+    return plural?'members':'a member';
+  }
+};
+
+const btext = (userRoles, members) => {
+  if (userRoles.includes('member')) {
     if (members && members.find((member) => member.GDPR)) {
-      return `${r} We'll contact them for you from the boat register
-    and copy you so you can chat.`;
+      return 'copy you so you can chat.';
     } else {
-      return `${r} We'll contact them for you from the boat register
-    and give them your email so they can respond.`;
+      return 'give them your email so they can respond.';
     }
   } else {
-    return `${r} We'll contact them for you from the boat register
-  and give them your email so they can respond.`;
+    return 'give them your email so they can respond.';
   }
 };
 
@@ -128,13 +138,18 @@ function ContactDialog({
   open,
   boat,
   email,
-  user,
+  userRoles,
   members,
   onEmailChange,
   onSend,
   onCancel,
   onTextChange,
-}) {  
+}) {
+
+  const onClickSend = () => {
+    onSend(boat.id, boat.name, boat.oga_no, 'contact');
+  }
+
   return (
     <Dialog
       top
@@ -145,7 +160,10 @@ function ContactDialog({
       <DialogTitle id="form-dialog-title">Contact The Owner${(members?.length > 1) ? "s" : ""}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          {text(user, members)}
+          <i>{boat.name}</i> ({boat.oga_no})
+          is owned by {atext(userRoles, members)} of the OGA.
+          We'll contact them for you from the boat register and
+          {btext(userRoles, members)}
         </DialogContentText>
         <TextField
           value={email}
@@ -171,7 +189,7 @@ function ContactDialog({
         </Button>
         <Button
           endIcon={<SendIcon />}
-          onClick={onSend}
+          onClick={onClickSend}
           color="primary"
           disabled={email === ""}
         >
@@ -191,7 +209,7 @@ export default function Enquiry({ boat, classes }) {
   // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
   const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]) {
-    members(members: $members) { GDPR email }
+    members(members: $members) { GDPR }
   }`));
   if (loading) return <p>Loading ...</p>;
   if (error) return `Error! ${error}`;
@@ -228,10 +246,9 @@ export default function Enquiry({ boat, classes }) {
     setSnackBarOpen(false);
   }
 
-  const handleSend = () => {
-    const { id, name, oga_no } = boat;
+  const handleSend = (id, boat_name, oga_no, type) => {
     addEnquiry({
-      variables: { type: "general", id, boat_name: name, oga_no, email, text },
+      variables: { type, id, boat_name, oga_no, email, text },
     });
     setOpen(false);
     setSnackBarOpen(true);
@@ -266,7 +283,7 @@ export default function Enquiry({ boat, classes }) {
         open={open}
         boat={boat}
         email={email}
-        user={user}
+        userRoles={(user && user['https://oga.org.uk/roles']) || []}
         members={data && data.members}
         onCancel={handleCancel}
         onSend={handleSend}
