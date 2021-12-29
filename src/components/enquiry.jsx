@@ -19,6 +19,7 @@ const ADD_ENQUIRY = gql`
     $boat_name: String!
     $oga_no: Int!
     $email: String!
+    $name: String!
     $text: String!
     $type: enquiry_type_enum!
   ) {
@@ -28,6 +29,7 @@ const ADD_ENQUIRY = gql`
         boat_name: $boat_name
         oga_no: $oga_no
         email: $email
+        name: $name
         text: $text
         type: $type
       }
@@ -247,8 +249,9 @@ export default function Enquiry({ boat, classes }) {
   }
 
   const handleSend = (id, boat_name, oga_no, type) => {
+    const name = (user && user.name) || '';
     addEnquiry({
-      variables: { type, id, boat_name, oga_no, email, text },
+      variables: { type, id, boat_name, oga_no, email, name, text },
     });
     setOpen(false);
     setSnackBarOpen(true);
