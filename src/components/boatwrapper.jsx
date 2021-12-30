@@ -3,84 +3,21 @@ import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
-import clsx from 'clsx';
 import { useAuth0 } from "@auth0/auth0-react";
 import BoatDetail from './boatdetail';
 import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  title: {
-    flexGrow: 1,
-  },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing(7),
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing(9),
-    },
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 600,
-  },
-  fillHeight: {
-    height: "100%",
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  iframe: {
-    border: 'none !important'
-  }
-}));
-
 export default function BoatWrapper({ boat }) {
-  const classes = useStyles();
   const { isLoading } = useAuth0();
   if (isLoading) {
        return <div>Loading ...</div>;
   }
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   return (
     <Paper>
-      <Container maxWidth="lg" className={classes.container}>
+      <Container maxWidth="lg">
       <Grid container spacing={3}>
       <Grid item xs={12} md={8} lg={9}>
           <Typography variant="h3" component="h3">{boat.name}</Typography>
@@ -89,18 +26,18 @@ export default function BoatWrapper({ boat }) {
           <Typography variant="h3" component="h3">{boat.year}</Typography>
       </Grid>
       <Grid item xs={12} md={8} lg={9}>
-        <Paper className={fixedHeightPaper}>
-          <SmugMugGallery classes={classes} albumKey={boat.image_key} />
+        <Paper>
+          <SmugMugGallery albumKey={boat.image_key} />
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary classes={classes} boat={boat} />
+        <BoatSummary boat={boat} />
       </Grid>
       <Grid item xs={12}>
-        <BoatDetail classes={classes} boat={boat} />
+        <BoatDetail boat={boat} />
       </Grid>
     </Grid>
-    <BoatButtons classes={classes} boat={boat}/>
+    <BoatButtons  boat={boat}/>
     </Container>
     </Paper>
   );

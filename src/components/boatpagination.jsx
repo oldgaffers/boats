@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme) => ({
     ul: {
@@ -14,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 export default function BoatPagination({items}) {
-    const classes = useStyles();
+    const classes = useStyles(useTheme());
     return (
       <nav>
         <ul className={classes.ul}>

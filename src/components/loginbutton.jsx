@@ -11,7 +11,7 @@ export default function LoginButton({ classes }) {
     if(isAuthenticated) {
         console.log(JSON.stringify(user));
         return (
-        <Button className={classes.button} size="small"
+        <Button size="small"
             startIcon={<Avatar alt={user.name} src={user.picture} />}
             variant="contained"
             color="primary"
@@ -22,8 +22,8 @@ export default function LoginButton({ classes }) {
         );
     }
     return (
-    <Tooltip title="Anyone can have a login. They aren't very useful yet.">
-        <Button className={classes.button} size="small"
+    <Tooltip title="Anyone can have a login. It's most useful for members of the association.">
+        <Button size="small"
             startIcon={<AccountCircle/>}
             variant="contained"
             color="primary"
