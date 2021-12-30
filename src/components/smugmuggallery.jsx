@@ -5,7 +5,7 @@ const url = 'https://oga.smugmug.com/frame/slideshow'
 const queryString = 'autoStart=1&captions=1&navigation=1'
     +'&playButton=1&randomize=1&speed=3&transition=fade&transitionSpeed=2'
 
-const SmugMugGallery = ({ classes, albumKey }) => {
+const SmugMugGallery = ({ albumKey }) => {
     if (albumKey) {
         return (
             <Iframe
@@ -14,6 +14,7 @@ const SmugMugGallery = ({ classes, albumKey }) => {
             height="600" 
             frameborder="no" 
             scrolling="no"
+            styles={{ border: 'none !important' }}
             className={classes.iframe}
             />
         );    
