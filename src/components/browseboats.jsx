@@ -117,6 +117,7 @@ function BrowseBoats({
             </Typography>
           </ListItem>
         </List>
+        $VERSION$
       </Paper>
     </div>
   );

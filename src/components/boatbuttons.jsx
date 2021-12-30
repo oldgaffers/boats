@@ -96,7 +96,7 @@ export default function BoatButtons({ boat }) {
             variant="contained"
             className={classes.button}
             component={'a'}
-            href={`${document.window.origin}/boat_register/${window.location.pathname.includes('test')?'test_':''}browse_the_register`}
+            href={`${document.location.origin}/boat_register/${window.location.pathname.includes('test')?'test_':''}browse_the_register`}
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
