@@ -202,7 +202,7 @@ function ContactDialog({
   );
 }
 
-export default function Enquiry({ boat }) {
+export default function Enquiry({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
@@ -274,6 +274,7 @@ export default function Enquiry({ boat }) {
   return (
     <>
       <Button
+        className={classes.button}
         size="small"
         endIcon={<MailIcon />}
         variant="contained"

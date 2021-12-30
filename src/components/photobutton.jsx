@@ -66,6 +66,7 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
       <Button
         size="small"
         endIcon={<PhotoLibraryIcon />}
+        className={classes.button}
         variant="contained"
         color="primary"
         onClick={handleClickOpen}
