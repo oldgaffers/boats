@@ -257,14 +257,14 @@ export default function Enquiry({ boat, classes }) {
     setSnackBarOpen(true);
   };
 
-  const { current } = boat.ownerships;
+  const { current } = (boat.ownerships || {});
 
   let enquireText = "Ask about this boat";
   let ChosenDialog = EnquiryDialog;
 
   if (current) {
     enquireText = "Contact the Owner";
-    if (boat.ownerships.current.length > 1) {
+    if (current.length > 1) {
       enquireText = enquireText + "s";
     }
     ChosenDialog = ContactDialog;
