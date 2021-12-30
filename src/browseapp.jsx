@@ -27,7 +27,6 @@ export default function App({variant}) {
   };
 
   const handlePageChange = ({page}) => {
-    console.log("page change", page);
     setState({...state, p: `${page}`});
   };
 

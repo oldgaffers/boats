@@ -34,7 +34,7 @@ export default function App() {
   };
 
   const handlePageChange = ({page}) => {
-    console.log("page change", page);
+    console.log("APP page change", page);
     setState({...state, p: `${page}`});
   };
 

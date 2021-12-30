@@ -29,7 +29,6 @@ export default function Boat({ classes, boat }) {
   // TODO const { ref } = useInView({ threshold: 0 });
   let roles = [];
   if (isAuthenticated && user) {
-    console.log('user', user);
     if (user['https://oga.org.uk/roles']) {
       roles = user['https://oga.org.uk/roles'];
     }
