@@ -1,31 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import CssBaseline from '@mui/material/CssBaseline';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { makeStyles } from '@mui/material/styles';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import TabularView from './tabularview';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-}));
 
 export function makeBoatNameList(boat) {
   if (!boat) {
@@ -48,11 +30,9 @@ function BrowseBoats({
   onSortChange,
   onFilterChange,
 }) {
-  const classes = useStyles();
   const { bpp, sort, sortDirection, filters } = state;
   const [ marked, setMarked] = useState(filters.oga_nos || []);
   const [ isMarkedOnly, setIsMarkedOnly] = useState(!!filters.oga_nos);
-  pickers.boatNames = makeBoatNameList(pickers.boat);
   const blank = "_blank";
 
   const updateMarkedFilter = (on, marks) => {
@@ -94,8 +74,7 @@ function BrowseBoats({
   }
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />      
+    <div>
       <Paper> 
         {isMarkedOnly?<TabularView state={state} marked={marked} />:''}
         <SearchAndFilterBoats
@@ -108,7 +87,7 @@ function BrowseBoats({
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
           onMarkedOnly={handleMarkedOnly}
-          pickers={pickers}
+          pickers={{ boatNames: makeBoatNameList(pickers.boat), ...pickers }}
           haveMarks={marked.length>0}
           isMarkedOnly={isMarkedOnly}
         />

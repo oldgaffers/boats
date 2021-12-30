@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { CookiesProvider } from "react-cookie";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import OGAProvider from "./util/gql";
 import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import Boat from "./components/boat";
@@ -8,7 +9,9 @@ import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import BoatRegisterIntro from "./components/boatregisterintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 
-export default function App(props) {
+const theme = createTheme();
+
+export default function App() {
   const [state, setState] = useState(JSON.parse(sessionStorage.getItem("BOAT_BROWSE_STATE"))||{ bpp: '12', p: '1'});
   
   useEffect(() => {
@@ -92,51 +95,22 @@ export default function App(props) {
       </>
     );
   }
+  console.log('App');
   return (
     <CookiesProvider>
       <OGAProvider>
-        <Router>
-          <Switch>
-          <Route component={Browse} path="/" exact /> 
-          <Route component={Browse} path="/boat_register" exact/> 
-          <Route component={Browse} path="/boat_register/" exact/> 
-          <Route component={Browse} path="/boat_register/index.html" exact/> 
-          <Route component={Browse} path="/boat_register/boat_register.html" exact/> 
-          <Route component={Browse} path="/browse_the_register" exact/> 
-          <Route component={Browse} path="/browse_the_register/" exact/> 
-          <Route component={Browse} path="/browse_the_register/index.html" exact/> 
-          <Route component={Browse} path="/browse_the_register/boat_register.html" exact/> 
-          <Route component={Browse} path="/browse_the_register/test_boat_register.html" exact/>
-          <Route component={Browse} path="/boat_register/browse_the_register" exact/>
-          <Route component={Browse} path="/boat_register/browse_the_register/index.html" exact/>
-          <Route component={Browse} path="/boat_register/browse_the_register/browse_the_register.html" exact/>
-          <Route component={Browse} path="/boat_register/browse_the_register/test_browse_the_register.html" exact/>
-          <Route component={Browse} path="/boat_register/test_browse_the_register" exact/>
-          <Route component={Browse} path="/boat_register/test_browse_the_register/" exact/>
-          <Route component={Browse} path="/boat_register/test_browse_the_register/index.html" exact/>
-          <Route component={Boat} path="/boat" exact/>
-          <Route component={Boat} path="/boat/" exact/>
-          <Route component={Boat} path="/boat/index.html" exact/> 
-          <Route component={Boat} path="/boat_register/boat" exact/> 
-          <Route component={Boat} path="/boat_register/boat/index.html" exact/> 
-          <Route component={Boat} path="/boat_register/test_boat" exact/> 
-          <Route component={Boat} path="/boat_register/test_boat/index.html" exact/>
-          <Route component={Boat} path="/boat_register/boat.html" exact/> 
-          <Route component={Boat} path="/boat_register/test_boat.html" exact/> 
-          <Route component={Buy} path="/boat_register/boats_for_sale/boats_for_sale.html" exact/> 
-          <Route component={Buy} path="/boat_register/boats_for_sale/index.html" exact/> 
-          <Route component={Buy} path="/boat_register/boats_for_sale" exact/>
-          <Route component={Buy} path="/boats_for_sale/boats_for_sale.html" exact/> 
-          <Route component={Buy} path="/boats_for_sale/" exact/> 
-          <Route component={Buy} path="/boats_for_sale/index.html" exact/> 
-          <Route component={Small} path="/boat_register/small_boats/small_boats.html" exact/>
-          <Route component={Small} path="/boat_register/small_boats/index.html" exact/>
-          <Route component={Small} path="/boat_register/small_boats" exact/>
-          <Route component={Small} path="/small_boats/small_boats.html" exact/> 
-          <Route component={Small} path="/small_boats/index.html" exact/> 
-          <Route component={Small} path="/small_boats/" exact/>
-          </Switch>
-        </Router>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Routes>
+              <Route element={<Browse/>} path="/" exact /> 
+              <Route element={<Browse/>} path="/boat_register/" exact /> 
+              <Route element={<Buy/>} path="/boats_for_sale/index.html" exact/> 
+              <Route element={<Small/>} path="/small_boats/index.html" exact/>
+              <Route element={<Boat/>} path="/boat" exact/>
+              <Route element={<Boat/>} path="/boat_register/boat" exact/>
+            </Routes>
+          </Router>
+        </ThemeProvider>
       </OGAProvider>
     </CookiesProvider>
   );

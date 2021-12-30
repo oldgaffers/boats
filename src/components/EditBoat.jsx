@@ -5,7 +5,6 @@ import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import { ThemeProvider } from "@mui/material/styles";
 import { useAuth0 } from "@auth0/auth0-react";
 import HullForm from "./HullForm";
 import { rigForm } from "./Rig";
@@ -15,7 +14,7 @@ import { dimensionsForm } from "./Dimensions";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from "../util/picklists";
-import { theme, HtmlEditor } from "./ddf/RTE";
+import { HtmlEditor } from "./ddf/RTE";
 import { 
   cardForm, summaryForm, descriptionsForm, 
   RegistrationForm, constructionForm,
@@ -207,21 +206,19 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <FormRenderer
-        schema={schema(pickers, roles)}
-        componentMapper={{
-          ...componentMapper,
-          "hull-form": HullForm,
-          html: HtmlEditor,
-        }}
-        FormTemplate={(props) => (
-          <FormTemplate {...props} showFormControls={false} />
-        )}
-        onCancel={onCancel}
-        onSubmit={handleSubmit}
-        initialValues={state}
-      />
-    </ThemeProvider>
+    <FormRenderer
+      schema={schema(pickers, roles)}
+      componentMapper={{
+        ...componentMapper,
+        "hull-form": HullForm,
+        html: HtmlEditor,
+      }}
+      FormTemplate={(props) => (
+        <FormTemplate {...props} showFormControls={false} />
+      )}
+      onCancel={onCancel}
+      onSubmit={handleSubmit}
+      initialValues={state}
+    />
   );
 }

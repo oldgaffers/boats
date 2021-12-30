@@ -2,12 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertToRaw, convertFromRaw } from 'draft-js'
-
-const defaultTheme = createTheme()
 
 Object.assign(defaultTheme, {
   overrides: {
@@ -78,28 +75,24 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
   return (
     <Paper>
       <Typography variant="h6">Short description</Typography>
-      <ThemeProvider theme={defaultTheme}>
-        <MUIRichTextEditor
-          controls={["bold", "italic"]}
-          label="Start typing..."
-          name='short_description'
-          onSave={handleSaveShort}
-          defaultValue={htmlToRTE(state.short)}
-          maxLength="500"
-          ref={shortRef}
-        />
-      </ThemeProvider>
+      <MUIRichTextEditor
+        controls={["bold", "italic"]}
+        label="Start typing..."
+        name='short_description'
+        onSave={handleSaveShort}
+        defaultValue={htmlToRTE(state.short)}
+        maxLength="500"
+        ref={shortRef}
+      />
       <Typography variant="h6">Full description</Typography>
-      <ThemeProvider theme={defaultTheme}>
-        <MUIRichTextEditor
-          controls={["title", "bold", "italic", "numberList", "bulletList", "link" ]}
-          label="Start typing..."
-          name='full_description'
-          onSave={handleSaveFull}
-          defaultValue={htmlToRTE(state.full)}
-          ref={fullRef}
-        />
-      </ThemeProvider>
+      <MUIRichTextEditor
+        controls={["title", "bold", "italic", "numberList", "bulletList", "link" ]}
+        label="Start typing..."
+        name='full_description'
+        onSave={handleSaveFull}
+        defaultValue={htmlToRTE(state.full)}
+        ref={fullRef}
+      />
       <Button variant="outlined" color="primary" onClick={onCancel}>Cancel</Button>
       <Button variant="outlined" color="primary" onClick={handleSave}>Send</Button>
     </Paper>

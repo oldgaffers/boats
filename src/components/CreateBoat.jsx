@@ -11,13 +11,11 @@ import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import { ThemeProvider } from "@mui/material/styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import Dialog from "@mui/material/Dialog";
-import { makeStyles } from "@mui/material/styles";
 import { usePicklists } from "../util/picklists";
 import {
   mapPicker,
@@ -25,7 +23,7 @@ import {
   builderItems,
   constructionItems,
 } from "./ddf/util";
-import { theme, HtmlEditor } from "./ddf/RTE";
+import { HtmlEditor } from "./ddf/RTE";
 import { DropzoneArea } from "material-ui-dropzone";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -41,32 +39,6 @@ import { useQuery } from '@apollo/react-hooks';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { boatm2f, boatf2m } from "../util/format";
-
-const useStyles = makeStyles((theme) => ({
-  editor: {
-    minwidth: 500,
-    minHeight: 500,
-    margin: 10,
-    padding: 10,
-    border: "none",
-    boxShadow: "none",
-  },
-  grid: {
-    margin: "10px",
-    width: "auto",
-  },
-  dialog: {
-    maxWidth: "max-content",
-  },
-  buttons: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-  button: {
-    marginTop: theme.spacing(0),
-    marginLeft: theme.spacing(0),
-  },
-}));
 
 /* 
 ✅ name	text
@@ -574,13 +546,11 @@ const PhotoUpload = ({ component, name, title }) => {
   );
 };
 
-const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
+const CreateBoatDialog = ({ open, onCancel, onSubmit }) => {
   const [dc, setDc] = useState('00000000-0000-0000-0000-000000000000');
   const pl = usePicklists();
   const bt = useQuery( query, { variables: { dc: dc  } } ); 
   const { user } = useAuth0();
-
-  console.log('CreateBoatDialog user', user);
 
   if (pl.loading || bt.loading) return <CircularProgress />;
   if (pl.error) return <p>Error :(can't get picklists)</p>;
@@ -600,34 +570,30 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
   return (
     <Dialog
       open={open}
-      className={classes.dialog}
       aria-labelledby="form-dialog-title"
     >
-      <Grid spacing={4} container className={classes.grid}>
-        <ThemeProvider theme={theme}>
-          <FormRenderer
-            componentMapper={{
-              ...componentMapper,
-              html: HtmlEditor,
-              pic: PhotoUpload,
-            }}
-            FormTemplate={(props) => (
-              <FormTemplate {...props} showFormControls={false} />
-            )}
-            schema={schema(pickers, onChooseDesignClass)}
-            onSubmit={onSubmit}
-            onCancel={onCancel}
-            initialValues={{ ...boatm2f(boat), user }}
-            subscription={{ values: true }}
-            />
-        </ThemeProvider>
+      <Grid spacing={4} container>
+        <FormRenderer
+          componentMapper={{
+            ...componentMapper,
+            html: HtmlEditor,
+            pic: PhotoUpload,
+          }}
+          FormTemplate={(props) => (
+            <FormTemplate {...props} showFormControls={false} />
+          )}
+          schema={schema(pickers, onChooseDesignClass)}
+          onSubmit={onSubmit}
+          onCancel={onCancel}
+          initialValues={{ ...boatm2f(boat), user }}
+          subscription={{ values: true }}
+          />
       </Grid>
     </Dialog>
   );
 };
 
 function CreateBoatButton() {
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
@@ -687,13 +653,11 @@ function CreateBoatButton() {
   return (
     <>
       <Button
-        className={classes.button}
         size="small"
         color="secondary"
         onClick={() => setOpen(true)}
       >form</Button>
       <CreateBoatDialog
-        classes={classes}
         open={open}
         onCancel={handleCancel}
         onSubmit={handleSend}

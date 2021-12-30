@@ -9,7 +9,7 @@ import clsx from 'clsx';
 import ConditionalText from './conditionaltext';
 import References from './references';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { boatUrl } from '../util/rr';
 
 function ReactFBLike({
@@ -52,7 +52,7 @@ function ReactFBLike({
 }
 
 export default function BoatSummary({ classes, boat }) {
-  const location = useLocation();
+  const location = {} // useLocation();
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
   const href = boatUrl(boat.oga_no, location);

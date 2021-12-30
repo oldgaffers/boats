@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { makeStyles, createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 import Dialog from "@mui/material/Dialog";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";

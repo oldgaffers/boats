@@ -25,6 +25,7 @@ function getBoat(b) {
 }
 
 export default function Boat({location}) {
+  console.log('Boat');
   let oga_no = 1;
   if (location) {
     const params = new URLSearchParams(location.search);

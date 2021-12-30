@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -9,7 +9,6 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
-import { makeStyles } from '@mui/material/styles';
 import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
@@ -54,31 +53,6 @@ function SalesBadge({ boat, invisible, children }) {
   }
 }
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '100%',
-  },
-  cardMediaSmall: {
-    paddingTop: '56.25%',
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-  footer: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(6),
-  },
-  checkBox: { textAlign: 'right' }
-}));
-
 function normaliseDescription(boat) {
   if (boat && boat.short_description) {
     const desc = boat.short_description.trim();
@@ -96,8 +70,7 @@ function AltForThumb() {
 }
 
 export default function BoatCard({ state, boat, marked, onMarkChange }) {
-  const location = useLocation();
-  const classes = useStyles();
+  // const location = useLocation();
   const sale = state.view.sale;
 
   const mark = (event) => {
@@ -107,9 +80,12 @@ export default function BoatCard({ state, boat, marked, onMarkChange }) {
   };
 
   return (
-    <Card className={boat.thumb ? classes.card : classes.cardSmall}>
-      {boat.thumb?(<CardMedia className={classes.cardMedia} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
-      <CardContent className={classes.cardContent} >
+    <Card sx={boat.thumb ? {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'} : {}}>
+      {boat.thumb?(<CardMedia sx={{paddingTop: '100%'}} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
+      <CardContent sx={{flexGrow: 1}} >
         <Typography gutterBottom variant="h5" component="h2">
           <SalesBadge invisible={sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
@@ -124,13 +100,13 @@ export default function BoatCard({ state, boat, marked, onMarkChange }) {
         <Button
           size="small" 
           component={'a'}
-          href={boatUrl(boat.oga_no, location)}
+          href={boatUrl(boat.oga_no, {})}
           variant="contained" 
           color="secondary"
         >More..</Button>
         </Grid>
         <Grid item>
-        <Checkbox className={classes.checkBox}
+        <Checkbox sx={{textAlign: 'right'}}
         checked={marked}
         color="primary" onChange={mark}
         inputProps={{ 'aria-label': 'add to list' }}

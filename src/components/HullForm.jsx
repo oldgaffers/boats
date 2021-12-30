@@ -1,6 +1,6 @@
 import React from 'react';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 
