@@ -1,35 +1,9 @@
 import React, { useRef } from "react";
 import Typography from '@mui/material/Typography';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
-import { createTheme } from '@mui/material/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js'
-
-export const theme = createTheme()
-
-Object.assign(theme, {
-  overrides: {
-      MUIRichTextEditor: {
-          root: {
-            width: "100%",
-            clear: "both"
-          },
-          toolbar: {
-            borderTop: "1px solid gray",
-            borderLeft: "1px solid gray",
-            borderRight: "1px solid gray",
-            backgroundColor: "whitesmoke"
-          },
-          editor: {
-              border: "1px solid gray",
-              marginBottom: 30,
-              paddingLeft: '5px',
-              paddingRight: '5px'
-          }
-      }
-  }
-})
 
 function htmlToRTE(html) {
   const contentHTML = convertFromHTML(html || '<p><br/></p>');

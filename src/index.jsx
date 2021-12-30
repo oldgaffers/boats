@@ -8,8 +8,31 @@ import { CookiesProvider } from "react-cookie";
 import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
+import red from '@mui/material/colors/red';
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    secondary: red,
+  },
+  MUIRichTextEditor: {
+    root: {
+      width: "100%",
+      clear: "both"
+    },
+    toolbar: {
+      borderTop: "1px solid gray",
+      borderLeft: "1px solid gray",
+      borderRight: "1px solid gray",
+      backgroundColor: "whitesmoke"
+    },
+    editor: {
+        border: "1px solid gray",
+        marginBottom: 30,
+        paddingLeft: '5px',
+        paddingRight: '5px'
+    }
+  }
+});
 
 function url() {
   const r = window.location.origin + window.location.pathname;
