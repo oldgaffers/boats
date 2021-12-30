@@ -9,7 +9,8 @@ export default function Picker({ options, id, label, onChange, value, clearable=
   const opt = options.map(o => o.name);
   opt.push(''); // not set is an allowed value
 
-  return (<Autocomplete      
+  return (<Autocomplete  
+    sx={{boxSizing: 'content-box'}}    
     disableClearable={!clearable}
     options={opt}
     id={id}
@@ -18,7 +19,9 @@ export default function Picker({ options, id, label, onChange, value, clearable=
         setValue0(newValue);
         onChange(id, newValue===''?undefined:newValue);
     }}
-    renderInput={(params) => <TextField {...params} label={label} margin="normal" variant="outlined"/>}
+    renderInput={(params) => <TextField sx={{
+      marginTop: '3px', marginLeft: '1em', marginRight: '1em', borderRightWidth: '1vw', width: '100%'
+      }} {...params} label={label} variant="outlined"/>}
     />);
 };
 

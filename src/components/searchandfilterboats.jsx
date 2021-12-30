@@ -146,33 +146,38 @@ export default function SearchAndFilterBoats({
     }
     
     return (
-    <form>
-        <p></p>
-        <Divider/>
-        <FormHelperText>Use these controls to sort the list by name, price, etc. and to choose how much you want to see</FormHelperText>
-        <Grid container direction="row">
+    <form>        
+        <FormHelperText sx={{marginLeft: '1em', marginBottom: '3px'}}>Use these controls to sort the list by name, price, etc. and to choose how much you want to see</FormHelperText>
+        <Grid container direction="row" justify="space-evenly" alignItems="flex-end">
             <Grid>
             <Picker clearable={false} value={`${boatsPerPage}`} id="page-size" onChange={handlePageSizeChange} options={pageSize} label="Boats Per Page"/>
             </Grid>
             <Grid>
-            <FormControl>
+            <FormControl sx={{marginLeft: '1.5em'}}>
                 <FormLabel>Sort By</FormLabel>
                 <RadioGroup row aria-label="sorting" name="sorting" value={sortLabelByField[sortField]} onChange={handleSortFieldChange}>
                     {sortOptions.map(option => (
-                        <FormControlLabel key={option.name} value={option.field} control={<Radio checked={sortField===option.field}/>} label={option.name} />
-                    ))}
+                        <FormControlLabel key={option.name} value={option.field}
+                        sx={{marginRight: '1em', borderRightWidth: '1vw'}}
+                        control={<Radio checked={sortField===option.field}/>} label={option.name}
+                        />
+                        )
+                    )}
                 </RadioGroup>
             </FormControl>
             </Grid>
             <Grid>
+            <FormControl sx={{marginLeft: '1.5em'}}>
+                <FormLabel>Sort Direction</FormLabel>
             <FormControlLabel id="sort-direction" onChange={handleSortDirectionChange}
                 control={<Switch checked={sortDirection!==sortDirectionByField[sortField]} />} 
                 label="reversed"
             />
+            </FormControl>
             </Grid>
         </Grid>
         <Divider/>
-        <FormHelperText>Use these controls to filter the list in one or more ways</FormHelperText>
+        <FormHelperText sx={{marginLeft: '1em', marginBottom: '3px'}}>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-evenly" alignItems="baseline">
         <Grid>
             {haveMarks ?
@@ -187,6 +192,7 @@ export default function SearchAndFilterBoats({
             </Grid>
             <Grid>
             <Autocomplete
+                 sx={{boxSizing: 'content-box'}}
                 id="oga_no"
                 value={ogaNo}
                 freeSolo
@@ -202,7 +208,10 @@ export default function SearchAndFilterBoats({
                     }
                 }}
                 options={[]}
-                renderInput={(params) => <TextField {...params} label="OGA Boat No." variant="outlined" />}
+                renderInput={(params) => <TextField 
+                    sx={{marginTop: '3px', marginLeft: '15px', marginRight: '15px', borderRightWidth: '10px',
+                width: '100%'}}
+                    {...params} label="OGA Boat No." variant="outlined" />}
             />
             </Grid>
             <Grid>
@@ -230,11 +239,15 @@ export default function SearchAndFilterBoats({
             </Grid>
             <Grid>
             <Picker onChange={pl} id='rig_type' options={makePicklist(view, pickers, 'rig_type')} label="Rig Type" value={filters['rig_type']} />
-            <Picker onChange={pl} id='mainsail_type' options={makePicklist(view, pickers, 'sail_type')} label="Mainsail Type" value={filters['mainsail_type']}/>
+            </Grid>
+            <Grid>
+                <Picker onChange={pl} id='mainsail_type' options={makePicklist(view, pickers, 'sail_type')} label="Mainsail Type" value={filters['mainsail_type']}/>
             </Grid>
             <Grid>
             <Picker onChange={pl} id='generic_type' options={makePicklist(view, pickers, 'generic_type')} label="Generic Type" value={filters['generic_type']}/>
-            <Picker onChange={pl} id='design_class' options={makePicklist(view, pickers, 'design_class')} label="Design Class" value={filters['design_class']}/>
+            </Grid>
+            <Grid>
+                <Picker onChange={pl} id='design_class' options={makePicklist(view, pickers, 'design_class')} label="Design Class" value={filters['design_class']}/>
             </Grid>
             <Grid>
             <Picker onChange={pl} id='construction_material' options={makePicklist(view, pickers, 'construction_material')} label="Construction Material" value={filters['construction_material']} />
