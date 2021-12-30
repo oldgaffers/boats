@@ -3,14 +3,6 @@ import Container from '@mui/material/Container';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useCardQuery, getBoats } from '../util/cardquery';
 
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles((theme) => ({
-    container: {
-        maxHeight: '40vh'
-    },
-  }));
-
 const nested = {
     type: 'string',
     valueFormatter: ({ value }) => value && value.name,
@@ -41,7 +33,6 @@ const columns = [
   ];
   
 export default function TablularView({ state, marked }) {
-  const classes = useStyles();
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
 
@@ -60,7 +51,7 @@ export default function TablularView({ state, marked }) {
   console.log(boats[0]);
   
   return (
-      <Container className={classes.container}>
+      <Container sx={{maxHeight: '40vh'}}>
             <DataGrid
                 rows={boats} columns={columns} 
                 autoHeight={true} autoPageSize={true} 

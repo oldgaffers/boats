@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 
@@ -82,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
 
 const HullForm = (props) => {
     const { input, meta } = useFieldApi(props);
-    const classes = useStyles();
+    const classes = useStyles(useTheme());
 
     return (
     <div className={classes.root}>

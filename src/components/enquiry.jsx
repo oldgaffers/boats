@@ -269,11 +269,9 @@ export default function Enquiry({ boat, classes }) {
     }
     ChosenDialog = ContactDialog;
   }
-  console.log("enquireText", enquireText);
   return (
     <>
       <Button
-        className={classes.button}
         size="small"
         endIcon={<MailIcon />}
         variant="contained"
