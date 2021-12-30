@@ -10,7 +10,6 @@ import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
-import { prefix } from '../util/rr';
 
 const drawerWidth = 240;
 
@@ -72,7 +71,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function BoatButtons({ boat }) {
-  // const location = useLocation();
   const { user, isAuthenticated } = useAuth0();
   let roles = [];
   if (isAuthenticated) {
@@ -90,7 +88,6 @@ export default function BoatButtons({ boat }) {
   const photoDone = () => {
     console.log('done');
   }
-  console.log('referrer', document.referrer);
   return (
     <Paper>
         <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
@@ -99,7 +96,7 @@ export default function BoatButtons({ boat }) {
             variant="contained"
             className={classes.button}
             component={'a'}
-            href={document.referrer}
+            href={`${document.window.origin}/boat_register/${window.location.pathname.includes('test')?'test_':''}browse_the_register`}
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
