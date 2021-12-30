@@ -99,7 +99,7 @@ export default function BoatButtons({ boat }) {
             variant="contained"
             className={classes.button}
             component={'a'}
-            href={`${prefix({})}`}
+            href={document.referrer}
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
