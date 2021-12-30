@@ -15,7 +15,6 @@ const SmugMugGallery = ({ albumKey }) => {
             frameborder="no" 
             scrolling="no"
             styles={{ border: 'none !important' }}
-            className={classes.iframe}
             />
         );    
     }
