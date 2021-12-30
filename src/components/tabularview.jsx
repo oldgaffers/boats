@@ -1,9 +1,9 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import { DataGrid, GridToolbar } from '@material-ui/data-grid';
+import Container from '@mui/material/Container';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useCardQuery, getBoats } from '../util/cardquery';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme) => ({
     container: {

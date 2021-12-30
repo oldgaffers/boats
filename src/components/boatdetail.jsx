@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';

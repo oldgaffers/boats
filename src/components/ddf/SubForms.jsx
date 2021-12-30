@@ -78,7 +78,7 @@ export const summaryForm = (pickers) => {
         name: "previous_names",
         label: "Previous name/s",
         fields: [{ component: "text-field" }],
-      }
+      },
       {
         component: componentTypes.TEXT_FIELD,
         name: "website",

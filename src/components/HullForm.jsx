@@ -1,8 +1,8 @@
 import React from 'react';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
-import { makeStyles } from '@material-ui/core/styles';
-import ButtonBase from '@material-ui/core/ButtonBase';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@mui/material/styles';
+import ButtonBase from '@mui/material/ButtonBase';
+import Typography from '@mui/material/Typography';
 
 const useStyles = makeStyles((theme) => ({
   root: {

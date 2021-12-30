@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import clsx from 'clsx';
 import ConditionalText from './conditionaltext';
 import References from './references';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useLocation } from "react-router-dom";
 import { boatUrl } from '../util/rr';
 

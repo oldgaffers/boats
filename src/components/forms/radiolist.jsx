@@ -1,11 +1,9 @@
 import React from 'react';
-import {
-  Grid,
-  RadioGroup,
-  FormControl,
-  FormControlLabel,
-  Radio,
-} from "@material-ui/core";
+import RadioGroup from '@mui/material/RadioGroup';
+import Radio from '@mui/material/Radio';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Grid from '@mui/material/Grid';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 

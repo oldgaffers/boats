@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
+import { makeStyles } from '@mui/material/styles';
+import Dialog from '@mui/material/Dialog';
 import AdminForm from './adminform';
 
 const useStyles = makeStyles((theme) => ({

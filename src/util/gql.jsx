@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import ApolloClient from "apollo-client"; // N.B. only needed for the enquiry mutation
-import { createHttpLink } from "apollo-link-http";
-import { InMemoryCache } from "apollo-cache-inmemory";
+import { InMemoryCache, ApolloClient, HttpLink } from '@apollo/client';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useAuth0 } from "@auth0/auth0-react";
 import { setContext } from 'apollo-link-context'
 
-const httpLink = createHttpLink({
+const httpLink = new HttpLink({
   uri: "https://api-oga.herokuapp.com/v1/graphql",
 })
 

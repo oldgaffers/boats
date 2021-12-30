@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles, createTheme } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import { makeStyles, createTheme } from "@mui/material/styles";
+import Typography from '@mui/material/Typography';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import CreateBoatButton from './CreateBoat';
 import LoginButton from './loginbutton';
 

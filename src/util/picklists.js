@@ -14,9 +14,23 @@ export function usePicklists(view={}) {
         bwhere = singleConditionBuilder('sale', view);
         where = {boats: bwhere};
     }
+    let query = gql(`{
+        boat{name previous_names}
+        designer(order_by: {name: asc}){name id}
+        builder(order_by: {name: asc}){name id}
+        rig_type(order_by: {name: asc}){name}
+        design_class(order_by: {name: asc}){name id}
+        generic_type(order_by: {name: asc}){name}
+        sail_type(order_by: {name: asc}){name}
+        construction_material(order_by: {name: asc}){name}
+        construction_method(order_by: {name: asc}){name}
+        hull_form(order_by: {name: asc}){ name }
+        spar_material(order_by: {name: asc}){ name }
+    }`);
+    let variables;
     if (where) {
         // can we have a generic _bool_exp?
-        return useQuery(gql(`query lists(
+        query = gql(`query lists(
             $w1: designer_bool_exp!
             $w2: builder_bool_exp!
             $w3: rig_type_bool_exp!
@@ -39,24 +53,11 @@ export function usePicklists(view={}) {
             construction_material(order_by: {name: asc}, where: $w7){name}
             construction_method(order_by: {name: asc}, where: $w8){name}
             hull_form(order_by: {name: asc}, where: $w9){ name }
-        }`),
-        { variables: {
+        }`);
+        variables = { variables: {
             w1: where, w2: where, w3: where, w4: where, w5: where,
             w6: where, w7: where, w8: where, w9: where, wa: bwhere,
         } }
-        );
     }
-    return useQuery(gql(`{
-        boat{name previous_names}
-        designer(order_by: {name: asc}){name id}
-        builder(order_by: {name: asc}){name id}
-        rig_type(order_by: {name: asc}){name}
-        design_class(order_by: {name: asc}){name id}
-        generic_type(order_by: {name: asc}){name}
-        sail_type(order_by: {name: asc}){name}
-        construction_material(order_by: {name: asc}){name}
-        construction_method(order_by: {name: asc}){name}
-        hull_form(order_by: {name: asc}){ name }
-        spar_material(order_by: {name: asc}){ name }
-    }`));
+    return useQuery(query, variables);
 }

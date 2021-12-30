@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import DescriptionIcon from "@material-ui/icons/Description";
-import TextField from "@material-ui/core/TextField";
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DescriptionIcon from "@mui/icons-material/Description";
+import TextField from "@mui/material/TextField";
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 import BoatIcon from "./boaticon";
 
 export default function OneActivity({ classes, onCancel, onStart, onEmailChange }) {

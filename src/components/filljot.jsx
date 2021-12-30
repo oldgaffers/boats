@@ -1,7 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
-import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
+import Button from '@mui/material/Button';
+import Icon from '@mui/material/Icon';
 
 export default function FillJot({ className, boat, email, disabled, children }) {
 

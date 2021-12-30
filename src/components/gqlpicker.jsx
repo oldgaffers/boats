@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useQuery } from '@apollo/react-hooks';
 // import { validate } from 'graphql';
 import gql from 'graphql-tag';

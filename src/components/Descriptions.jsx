@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { createTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import { createTheme, ThemeProvider } from '@mui/material/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertToRaw, convertFromRaw } from 'draft-js'
@@ -78,7 +78,7 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
   return (
     <Paper>
       <Typography variant="h6">Short description</Typography>
-      <MuiThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={defaultTheme}>
         <MUIRichTextEditor
           controls={["bold", "italic"]}
           label="Start typing..."
@@ -88,9 +88,9 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
           maxLength="500"
           ref={shortRef}
         />
-      </MuiThemeProvider>
+      </ThemeProvider>
       <Typography variant="h6">Full description</Typography>
-      <MuiThemeProvider theme={defaultTheme}>
+      <ThemeProvider theme={defaultTheme}>
         <MUIRichTextEditor
           controls={["title", "bold", "italic", "numberList", "bulletList", "link" ]}
           label="Start typing..."
@@ -99,7 +99,7 @@ export default function Descriptions({ classes, onCancel, onSave, short, full })
           defaultValue={htmlToRTE(state.full)}
           ref={fullRef}
         />
-      </MuiThemeProvider>
+      </ThemeProvider>
       <Button variant="outlined" color="primary" onClick={onCancel}>Cancel</Button>
       <Button variant="outlined" color="primary" onClick={handleSave}>Send</Button>
     </Paper>

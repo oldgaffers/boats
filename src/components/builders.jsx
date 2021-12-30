@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import CssBaseline from '@mui/material/CssBaseline';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/material/styles';
 import Iframe from 'react-iframe'
-import Container from '@material-ui/core/Container';
+import Container from '@mui/material/Container';
 
 const useStyles = makeStyles((theme) => ({
   root: {

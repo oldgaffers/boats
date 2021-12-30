@@ -1,11 +1,11 @@
 import React from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import FormRenderer, {  componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
+import CircularProgress from "@mui/material/CircularProgress";
+import { FormRenderer, componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import { MuiThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { useAuth0 } from "@auth0/auth0-react";
 import HullForm from "./HullForm";
 import { rigForm } from "./Rig";
@@ -207,7 +207,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   };
 
   return (
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <FormRenderer
         schema={schema(pickers, roles)}
         componentMapper={{
@@ -222,6 +222,6 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
         onSubmit={handleSubmit}
         initialValues={state}
       />
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }

@@ -1,10 +1,10 @@
 import React from "react";
-import FormRenderer, {  componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
+import { FormRenderer, componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import { MuiThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { theme, HtmlEditor } from "./ddf/RTE";
@@ -141,7 +141,7 @@ export default function AdminForm({ classes, onCancel, onSave, boat }) {
   };
 
   return (
-    <MuiThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <FormRenderer
         schema={schema()}
         componentMapper={{
@@ -155,6 +155,6 @@ export default function AdminForm({ classes, onCancel, onSave, boat }) {
         onSubmit={handleSubmit}
         initialValues={state}
       />
-    </MuiThemeProvider>
+    </ThemeProvider>
   );
 }

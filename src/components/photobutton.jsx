@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
-import Snackbar from "@material-ui/core/Snackbar";
+import Button from "@mui/material/Button";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
+import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import UpdatePhotoDialog from "./UpdatePhotoDialog";
 

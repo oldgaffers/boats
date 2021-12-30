@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import FormRenderer, {
+import {
+  FormRenderer,
   componentTypes,
   dataTypes,
   validatorTypes,
@@ -10,13 +11,13 @@ import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import { MuiThemeProvider } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import Snackbar from "@material-ui/core/Snackbar";
-import Dialog from "@material-ui/core/Dialog";
-import { makeStyles } from "@material-ui/core/styles";
+import { ThemeProvider } from "@mui/material/styles";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Snackbar from "@mui/material/Snackbar";
+import Dialog from "@mui/material/Dialog";
+import { makeStyles } from "@mui/material/styles";
 import { usePicklists } from "../util/picklists";
 import {
   mapPicker,
@@ -603,7 +604,7 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
       aria-labelledby="form-dialog-title"
     >
       <Grid spacing={4} container className={classes.grid}>
-        <MuiThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
           <FormRenderer
             componentMapper={{
               ...componentMapper,
@@ -619,7 +620,7 @@ const CreateBoatDialog = ({ classes, open, onCancel, onSubmit }) => {
             initialValues={{ ...boatm2f(boat), user }}
             subscription={{ values: true }}
             />
-        </MuiThemeProvider>
+        </ThemeProvider>
       </Grid>
     </Dialog>
   );

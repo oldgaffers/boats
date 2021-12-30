@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export default function Picker({ options, id, label, onChange, value, clearable=true}) {
 

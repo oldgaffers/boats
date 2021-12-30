@@ -1,7 +1,7 @@
 import React from 'react';
-import Typography from "@material-ui/core/Typography";
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import TextField from "@material-ui/core/TextField";
+import Typography from "@mui/material/Typography";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 export default function ComboBox({ name, label, state, onChange, options }) {
     const key = name || label.replace(/ /g, '_').toLowerCase();

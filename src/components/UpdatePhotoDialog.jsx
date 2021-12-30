@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { makeStyles, createTheme } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles, createTheme } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { DropzoneArea } from "material-ui-dropzone";
 import { useAuth0 } from "@auth0/auth0-react";
 

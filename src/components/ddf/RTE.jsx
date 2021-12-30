@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
-import { createTheme } from '@material-ui/core/styles'
+import { createTheme } from '@mui/material/styles'
 import MUIRichTextEditor from 'mui-rte';
 import { stateToHTML } from 'draft-js-export-html';
 import { convertFromHTML, ContentState, convertFromRaw, convertToRaw } from 'draft-js'

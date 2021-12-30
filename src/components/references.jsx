@@ -1,6 +1,6 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 
 function logref([, year, edition]) {
     return (<a href='https://www.oga.org.uk/news/archive/gaffers_log.html'>Gaffers Log {year} edition {edition}</a>);
