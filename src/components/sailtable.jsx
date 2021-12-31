@@ -6,18 +6,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { m2df } from '../util/format';
+import { feet } from '../util/format';
 
-function feet(val) { 
-    if(val) {
-        return `${m2df(val)} ft`
-    }
-}
-
-export default function SailTable( { handicapData, classes }) {
+export default function SailTable( { handicapData }) {
     return (
     <TableContainer component={Paper}>
-        <Table className={classes.table} size="small" aria-label="sail data">
+        <Table size="small" aria-label="sail data">
         <TableHead>
             <TableRow>
             <TableCell></TableCell>

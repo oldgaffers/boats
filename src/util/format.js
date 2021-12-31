@@ -155,3 +155,8 @@ const metreKeys = [
     }
   }
   
+  export function feet(val) { 
+    if(val) {
+        return `${m2df(val)} ft`
+    }
+}
