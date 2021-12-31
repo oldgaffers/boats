@@ -7,7 +7,10 @@ const queryString = 'autoStart=1&captions=1&navigation=1'
     +'&playButton=1&randomize=1&speed=3&transition=fade&transitionSpeed=2'
 
 const SlideShowIframe = styled(Iframe)(({ theme }) => ({
-    padding: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
     border: 'none !important',
     }));
 
