@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { useTheme, MuiThemeProvider } from '@mui/material/styles'
+import { useTheme, ThemeProvider } from '@mui/material/styles'
 import Typography from "@mui/material/Typography";
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import MUIRichTextEditor from "mui-rte";
@@ -67,7 +67,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
       }}
     >
       <Typography sx={{ paddingTop: "1em" }}>{title}</Typography>
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <MUIRichTextEditor
           label="type some text"
           {...rest}
@@ -76,7 +76,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
           onBlur={handleBlur}
           ref={ref}
         />
-      </MuiThemeProvider>
+      </ThemeProvider>
     </div>
   );
 };
