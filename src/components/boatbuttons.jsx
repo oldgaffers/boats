@@ -1,15 +1,15 @@
 import React from 'react';
-import { useLocation } from "react-router-dom";
+// import { useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import { makeStyles } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
-import { prefix } from '../util/rr';
 
 const drawerWidth = 240;
 
@@ -70,8 +70,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat }) {
-  const location = useLocation();
+export default function BoatButtons({ boat, location }) {
   const { user, isAuthenticated } = useAuth0();
   let roles = [];
   if (isAuthenticated) {
@@ -79,7 +78,8 @@ export default function BoatButtons({ boat }) {
   }
   if(document.referrer.includes('localhost')) { roles.push('editor')}
 
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
 
   const photoCancelled = () => {
     console.log('cancel');
@@ -88,30 +88,16 @@ export default function BoatButtons({ boat }) {
   const photoDone = () => {
     console.log('done');
   }
-  console.log('referrer', document.referrer);
   return (
     <Paper>
         <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
         <Grid item xs={'auto'}>
-            {
-              (document.referrer.includes('boat_register'))?
-              (
-                <Button size="small"
-                variant="contained"
-                className={classes.button}
-                onClick={() => window.history.back()}
-                >See more boats</Button>
-              )
-              :
-              (
-                <Button size="small"
-                variant="contained"
-                className={classes.button}
-                component={'a'}
-                href={`${prefix(location)}browse_the_register/`}
-                >See more boats</Button>
-              )
-            }
+          <Button size="small"
+            variant="contained"
+            className={classes.button}
+            component={'a'}
+            href={`${location.origin}/boat_register/${location.pathname.includes('test')?'test_':''}browse_the_register`}
+          >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
             <Enquiry classes={classes} boat={boat} />

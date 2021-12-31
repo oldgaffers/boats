@@ -5,11 +5,9 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import clsx from 'clsx';
 import ConditionalText from './conditionaltext';
 import References from './references';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import { useLocation } from "react-router-dom";
 import { boatUrl } from '../util/rr';
 
 function ReactFBLike({
@@ -51,17 +49,15 @@ function ReactFBLike({
     );
 }
 
-export default function BoatSummary({ classes, boat }) {
-  const location = useLocation();
+export default function BoatSummary({ location, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const fillHeightPaper = clsx(classes.paper, classes.fillHeight);
   const href = boatUrl(boat.oga_no, location);
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
 
   return (
-    <Paper className={fillHeightPaper}>
+    <Paper sx={{height: "100%", paddingLeft: '0.5em', paddingRight: '0.5em'}}>
     <Typography variant="h4" component="h4">Summary</Typography>
     <ConditionalText value={boat.oga_no} label="OGA no"/>
     <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
@@ -82,7 +78,7 @@ export default function BoatSummary({ classes, boat }) {
     <References boat={boat}/>
     <div>
       <CopyToClipboard text={window.location.href} onCopy={() => setSnackBarOpen(true)}>
-        <Button endIcon={<AssignmentIcon/>} size='small' variant='contained' className={classes.button} >
+        <Button endIcon={<AssignmentIcon/>} size='small' variant='contained'>
         Copy page url
         </Button>
       </CopyToClipboard>

@@ -4,7 +4,8 @@ import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
-import { makeStyles } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import Iframe from 'react-iframe'
 import Container from '@mui/material/Container';
 
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 
 function About({ window }) {
 
-  const classes = useStyles();
+  const classes = useStyles(useTheme());
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {

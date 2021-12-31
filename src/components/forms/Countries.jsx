@@ -21,11 +21,8 @@ export default function CountrySelect({ onChange }) {
   return (
     <Autocomplete
           id="country-select"
-          style={{ width: 300 }}
+          sx={{ width: 300 }}
           options={countries}
-          classes={{
-            option: classes.option
-          }}
           autoHighlight
           getOptionLabel={option => option.label}
           renderOption={(option, { selected }) => option.label}

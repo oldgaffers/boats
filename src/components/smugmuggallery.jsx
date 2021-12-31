@@ -1,20 +1,28 @@
 import React from 'react';
+import { styled } from '@mui/system';
 import Iframe from 'react-iframe'
 
 const url = 'https://oga.smugmug.com/frame/slideshow'
 const queryString = 'autoStart=1&captions=1&navigation=1'
     +'&playButton=1&randomize=1&speed=3&transition=fade&transitionSpeed=2'
 
-const SmugMugGallery = ({ classes, albumKey }) => {
+const SlideShowIframe = styled(Iframe)(({ theme }) => ({
+    border: 'none !important',
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(9),
+    paddingTop: theme.spacing(1),
+    paddingBottom: theme.spacing(1),
+}));
+
+const SmugMugGallery = ({ albumKey }) => {
     if (albumKey) {
         return (
-            <Iframe
+            <SlideShowIframe
             url={`${url}?key=${albumKey}&${queryString}`}
             width="800" 
             height="600" 
-            frameborder="no" 
+            frameborder="no"
             scrolling="no"
-            className={classes.iframe}
             />
         );    
     }

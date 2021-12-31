@@ -4,10 +4,9 @@ import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import { ThemeProvider } from "@mui/material/styles";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
-import { theme, HtmlEditor } from "./ddf/RTE";
+import { HtmlEditor } from "./ddf/RTE";
 
 export const schema = () => {
   return {
@@ -141,20 +140,18 @@ export default function AdminForm({ classes, onCancel, onSave, boat }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <FormRenderer
-        schema={schema()}
-        componentMapper={{
-          ...componentMapper,
-          html: HtmlEditor,
-        }}
-        FormTemplate={(props) => (
-          <FormTemplate {...props} showFormControls={false} />
-        )}
-        onCancel={onCancel}
-        onSubmit={handleSubmit}
-        initialValues={state}
-      />
-    </ThemeProvider>
+    <FormRenderer
+      schema={schema()}
+      componentMapper={{
+        ...componentMapper,
+        html: HtmlEditor,
+      }}
+      FormTemplate={(props) => (
+        <FormTemplate {...props} showFormControls={false} />
+      )}
+      onCancel={onCancel}
+      onSubmit={handleSubmit}
+      initialValues={state}
+    />
   );
 }

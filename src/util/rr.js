@@ -1,13 +1,12 @@
 
 export function prefix(location) {
   const origin = location.origin || window.location.origin;
-  console.log('prefix origin', origin);
+  const pathname = location.pathname || window.location.pathname;
   let test = '';
-  if (location.pathname.includes('test')) {
+  if (pathname && pathname.includes('test')) {
     test = 'test_';
   }
   const r = `${origin}/boat_register/${test}`;
-  console.log('prefix', r);
   return r;
 }
 

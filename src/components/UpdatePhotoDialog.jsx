@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { makeStyles, createTheme } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -9,19 +8,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { DropzoneArea } from "material-ui-dropzone";
 import { useAuth0 } from "@auth0/auth0-react";
-
-export const theme = createTheme();
-
-Object.assign(theme, {
-  overrides: {
-    root: {
-      width: "100%",
-      border: "1px",
-      paddingLeft: "50px",
-      paddingRight: "50px",
-    },
-  },
-});
+import { makeStyles } from "@mui/styles";
+import { useTheme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme) => ({
   layout: {
@@ -51,7 +39,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UpdatePhotoDialog({ boat, onClose, open }) {
   const { user } = useAuth0();
-  const classes = useStyles();
+  const theme = useTheme();
+  const classes = useStyles(theme);
   const [pictures, setPictures] = useState([]);
   const [email, setEmail] = useState(user && user.email);
   const [copyright, setCopyright] = useState(user && user.name);

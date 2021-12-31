@@ -18,9 +18,7 @@ export default function GqlBoatBrowser(
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :({title})</p>);
-
-  console.log('GqlBoatBrowser', currentState);
-
+  
   return (
       <BrowseBoats 
         pickers={data} state={currentState}

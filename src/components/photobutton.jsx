@@ -64,9 +64,9 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
   return (
     <div>
       <Button
-        className={classes.button}
         size="small"
         endIcon={<PhotoLibraryIcon />}
+        className={classes.button}
         variant="contained"
         color="primary"
         onClick={handleClickOpen}

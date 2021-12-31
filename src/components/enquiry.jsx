@@ -159,13 +159,12 @@ function ContactDialog({
       onClose={onCancel}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Contact The Owner${(members?.length > 1) ? "s" : ""}</DialogTitle>
+      <DialogTitle id="form-dialog-title">Contact The Owner{(members?.length > 1) ? "s" : ""}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
           <i>{boat.name}</i> ({boat.oga_no})
           is owned by {atext(userRoles, members)} of the OGA.
-          We'll contact them for you from the boat register and
-          {btext(userRoles, members)}
+          We'll contact them for you from the boat register and {btext(userRoles, members)}
         </DialogContentText>
         <TextField
           value={email}
@@ -202,7 +201,7 @@ function ContactDialog({
   );
 }
 
-export default function Enquiry({ boat, classes }) {
+export default function Enquiry({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
@@ -269,7 +268,8 @@ export default function Enquiry({ boat, classes }) {
     }
     ChosenDialog = ContactDialog;
   }
-  console.log("enquireText", enquireText);
+  console.log('enquiry user', user);
+  console.log('enquiry email', email);
   return (
     <>
       <Button

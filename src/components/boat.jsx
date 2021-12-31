@@ -25,6 +25,7 @@ function getBoat(b) {
 }
 
 export default function Boat({location}) {
+  console.log('Boat');
   let oga_no = 1;
   if (location) {
     const params = new URLSearchParams(location.search);
@@ -64,6 +65,6 @@ export default function Boat({location}) {
   }
 
   const boat = getBoat(b);
-  return <BoatWrapper boat={boat} />;
+  return <BoatWrapper location={location} boat={boat} />;
 };
 

@@ -21,7 +21,6 @@ export default function OGAProvider({children}) {
     useEffect(() => {
       const getAccessToken = async () => {
         if (isAuthenticated) {
-          console.log('authenticated');
           const token = await getAccessTokenSilently()
           setAccessToken(token)
         }

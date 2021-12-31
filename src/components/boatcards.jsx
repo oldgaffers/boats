@@ -3,21 +3,10 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { makeStyles } from '@mui/material/styles';
 import { useCardQuery, getTotal, getBoats } from '../util/cardquery';
 import { useBoatPagination } from '../util/BoatPagination';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
-
-const useStyles = makeStyles((theme) => ({
-  CenterItem: {
-    margin: 'auto'
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-}));
 
 export default function BoatCards({
   state, 
@@ -26,7 +15,6 @@ export default function BoatCards({
   onMarkChange = (marked, boat) => 
     console.log(`boat ${boat} is ${marked?'marked':'not marked'}`),
 }) {
-  const classes = useStyles();
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
 
@@ -52,7 +40,7 @@ export default function BoatCards({
 
   if (totalCount > 0) {
     return (
-      <Container className={classes.cardGrid} maxWidth="md">
+      <Container maxWidth="md">
         <BoatPagination items={pageItems} />
           <Box py={1} />
           <Grid container spacing={4}>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles, createTheme } from "@mui/material/styles";
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -8,12 +7,7 @@ import ListItem from '@mui/material/ListItem';
 import CreateBoatButton from './CreateBoat';
 import LoginButton from './loginbutton';
 
-export const theme = createTheme();
-
-const useStyles = makeStyles((theme) => {});
-
 export default function BoatRegisterIntro() {
-  const classes = useStyles();
   return (
     <Paper>
       <Grid container direction="row" alignItems="flex-start">
@@ -47,12 +41,7 @@ export default function BoatRegisterIntro() {
         </Typography>
         </Grid>
         <Grid item xs={2} >
-          {
-            (window.BrowserDetect && window.BrowserDetect.browser==='Safari')
-            ?
-            (<Typography>Safari is a great browser. We are working on supporting logins for this browser.</Typography>)
-            : (<LoginButton classes={classes}/>)
-          }
+          <LoginButton/>
         </Grid>
       </Grid>
     </Paper>
