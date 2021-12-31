@@ -78,6 +78,8 @@ export default function BoatCard({ state, boat, marked, onMarkChange }) {
     }
   };
 
+  // TODO marking is not working
+
   return (
     <Card sx={boat.thumb ? {
       height: '100%',
