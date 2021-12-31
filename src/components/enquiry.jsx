@@ -164,8 +164,7 @@ function ContactDialog({
         <DialogContentText variant="subtitle2">
           <i>{boat.name}</i> ({boat.oga_no})
           is owned by {atext(userRoles, members)} of the OGA.
-          We'll contact them for you from the boat register and
-          {btext(userRoles, members)}
+          We'll contact them for you from the boat register and {btext(userRoles, members)}
         </DialogContentText>
         <TextField
           value={email}
