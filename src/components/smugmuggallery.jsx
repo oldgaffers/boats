@@ -12,9 +12,9 @@ const SmugMugGallery = ({ albumKey }) => {
             url={`${url}?key=${albumKey}&${queryString}`}
             width="800" 
             height="600" 
-            frameborder="no" 
+            frameborder="no"
             scrolling="no"
-            styles={{ border: 'none !important' }}
+            style='border: none !important'
             />
         );    
     }
