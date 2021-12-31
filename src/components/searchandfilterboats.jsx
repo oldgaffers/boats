@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Switch from '@mui/material/Switch'
-import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import Slider from '@mui/material/Slider';
 import FormHelperText from '@mui/material/FormHelperText';
 import Picker from './picker'
+import NumberEntry from './numberentry';
+import DateRangePicker from './daterangepicker';
 import useDebounce from '../util/debounce';
 
 const opposite = { asc: 'desc', desc: 'asc' };
@@ -191,51 +188,18 @@ export default function SearchAndFilterBoats({
             <Picker onChange={pl} id="name" options={makePicklist(view, pickers, 'boatNames')} label="Boat Name" value={filters['name']} />
             </Grid>
             <Grid>
-            <Autocomplete
-                 sx={{boxSizing: 'content-box'}}
-                id="oga_no"
-                value={ogaNo}
-                freeSolo
-                onInputChange={(event, value, reason)=>{
-                    if (reason === 'input') {
-                        setOgaNo(value);
-                    }
-                    if (reason === 'clear') {
-                        const { oga_no, ...f } = filters;
-                        if (oga_no) {
-                            onFilterChange(f);
-                        }
-                    }
-                }}
-                options={[]}
-                renderInput={(params) => <TextField 
-                    sx={{marginTop: '3px', marginLeft: '15px', marginRight: '15px', borderRightWidth: '10px',
-                width: '100%'}}
-                    {...params} label="OGA Boat No." variant="outlined" />}
-            />
+            <NumberEntry id='oga_no' label="OGA Boat No." value={ogaNo} onSet={setOgaNo} onClear={()=>{
+                const { oga_no, ...f } = filters;
+                if (oga_no) {
+                  onFilterChange(f);
+                }
+            }}/>
             </Grid>
             <Grid>
             <Picker onChange={pl} id='designer' options={makePicklist(view, pickers, 'designer')} label="Designer" value={filters['designer']} />
             </Grid>
             <Grid>
             <Picker onChange={pl} id='builder' options={makePicklist(view, pickers, 'builder')} label="Builder" value={filters['builder']} />
-            </Grid>
-            <Grid>
-            <Box sx={{ paddingLeft: 5, paddingRight: 5, width: 250 }}>
-                <Typography align="center" id="date-slider" gutterBottom>
-                    Built Between: {dateRange[0]} and {dateRange[1]}
-                </Typography>
-                <Slider
-                    getAriaLabel={() => 'Date Range'}
-                    value={dr}
-                    onChange={handleDateRange}
-                    onChangeCommitted={handleDateRangeCommitted}
-                    valueLabelDisplay="auto"
-                    min={yearProps.min}
-                    max={yearProps.max}
-                    step={yearProps.step}
-                />
-            </Box>
             </Grid>
             <Grid>
             <Picker onChange={pl} id='rig_type' options={makePicklist(view, pickers, 'rig_type')} label="Rig Type" value={filters['rig_type']} />
@@ -250,8 +214,20 @@ export default function SearchAndFilterBoats({
                 <Picker onChange={pl} id='design_class' options={makePicklist(view, pickers, 'design_class')} label="Design Class" value={filters['design_class']}/>
             </Grid>
             <Grid>
-            <Picker onChange={pl} id='construction_material' options={makePicklist(view, pickers, 'construction_material')} label="Construction Material" value={filters['construction_material']} />
-        </Grid>
+                <Picker onChange={pl} id='construction_material' options={makePicklist(view, pickers, 'construction_material')} label="Construction Material" value={filters['construction_material']} />
+            </Grid>
+            <Grid>
+                <DateRangePicker
+                  value={dr}
+                  yearProps={yearProps}
+                  label={`Built Between: ${dateRange[0]} and ${dateRange[1]}`}
+                  onChange={handleDateRange}
+                  onChangeCommitted={handleDateRangeCommitted}
+                  min={yearProps.min}
+                  max={yearProps.max}
+                  step={yearProps.step}          
+                />
+            </Grid>
         </Grid>
     </form>
     );
