@@ -50,7 +50,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
         },
         editor: {
           border: "1px solid gray",
-          marginBottom: theme.spacing(4),
+          marginBottom: theme.spacing(2),
           paddingLeft: theme.spacing(1),
           paddingRight: theme.spacing(1),
         }
