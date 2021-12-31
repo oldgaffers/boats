@@ -16,7 +16,7 @@ export default function BoatWrapper({ boat }) {
   }
 
   return (
-    <Paper>
+    <Paper sx={{paddingTop: '32px', paddingBottom: '32px'}}>
       <Container maxWidth="lg">
       <Grid container spacing={3}>
       <Grid item xs={12} md={8} lg={9}>

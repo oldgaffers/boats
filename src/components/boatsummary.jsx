@@ -58,7 +58,7 @@ export default function BoatSummary({ classes, boat }) {
   }
 
   return (
-    <Paper>
+    <Paper sx={{height: "100%"}}>
     <Typography variant="h4" component="h4">Summary</Typography>
     <ConditionalText value={boat.oga_no} label="OGA no"/>
     <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
