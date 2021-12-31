@@ -117,7 +117,7 @@ export default function BrowseBoats({
             </Typography>
           </ListItem>
         </List>
-        <Typography variant='h6'>OGA Boat Register %%VERSION%%</Typography>
+        <Typography variant='subtitle1'>OGA Boat Register %%VERSION%%</Typography>
       </Paper>
     </div>
   );
