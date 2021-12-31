@@ -65,6 +65,6 @@ export default function Boat({location}) {
   }
 
   const boat = getBoat(b);
-  return <BoatWrapper boat={boat} />;
+  return <BoatWrapper location={location} boat={boat} />;
 };
 

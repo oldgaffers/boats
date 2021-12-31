@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat }) {
+export default function BoatButtons({ boat, location }) {
   const { user, isAuthenticated } = useAuth0();
   let roles = [];
   if (isAuthenticated) {
@@ -96,7 +96,7 @@ export default function BoatButtons({ boat }) {
             variant="contained"
             className={classes.button}
             component={'a'}
-            href={`${document.location.origin}/boat_register/${window.location.pathname.includes('test')?'test_':''}browse_the_register`}
+            href={`${location.origin}/boat_register/${location.pathname.includes('test')?'test_':''}browse_the_register`}
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >

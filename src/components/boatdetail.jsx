@@ -139,7 +139,7 @@ const engine = {
     <>
       <DetailBar onChange={handleChange} value={value} panes={panes} />
       {panes.map((pane, i) => (
-          <TabPanel key={i} value={value} index={i}>
+          <TabPanel sx={{padding: '20px 0px'}} key={i} value={value} index={i}>
               {pane.children}
           </TabPanel>
       ))}

@@ -9,7 +9,7 @@ import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
 
-export default function BoatWrapper({ boat }) {
+export default function BoatWrapper({ boat, location }) {
   const { isLoading } = useAuth0();
   if (isLoading) {
        return <div>Loading ...</div>;
@@ -31,13 +31,13 @@ export default function BoatWrapper({ boat }) {
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary boat={boat} />
+        <BoatSummary boat={boat} location={location} />
       </Grid>
       <Grid item xs={12}>
         <BoatDetail boat={boat} />
       </Grid>
     </Grid>
-    <BoatButtons  boat={boat}/>
+    <BoatButtons  boat={boat} location={location} />
     </Container>
     </Paper>
   );

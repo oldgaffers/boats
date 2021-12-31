@@ -49,8 +49,7 @@ function ReactFBLike({
     );
 }
 
-export default function BoatSummary({ classes, boat }) {
-  const location = {} // useLocation();
+export default function BoatSummary({ location, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const href = boatUrl(boat.oga_no, location);
   function handleSnackBarClose() {
