@@ -9,7 +9,6 @@ export default function LoginButton({ classes }) {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
     if(isAuthenticated) {
-        console.log(JSON.stringify(user));
         return (
         <Button size="small"
             startIcon={<Avatar alt={user.name} src={user.picture} />}

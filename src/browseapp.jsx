@@ -12,17 +12,14 @@ export default function App({variant}) {
   }, [state]);
 
   const handlePageSizeChange = (bpp) => {
-    console.log("page size change", bpp);
     setState({p:'1', bpp: `${bpp}`});
   };
 
   const handleSortChange = (field, dir) => {
-    console.log("sortchange", field, dir);
     setState({...state, sort: field, asc: `${dir==='asc'}`});
   };
 
   const handleFilterChange = (filters) => {
-    console.log("filter change", filters);
     setState({...state, p:'1', filters});
   };
 
