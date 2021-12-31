@@ -22,7 +22,7 @@ function hullForm(boat) {
   return boat.hull_form.replace(/_/g, ' ');
 }
 
-export default function Boat({ classes, boat }) {
+export default function BoatDetail({ boat }) {
   const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(0);
 
@@ -89,7 +89,7 @@ export default function Boat({ classes, boat }) {
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)}/>
           <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
           <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
-          <SailTable classes={classes} handicapData={hd}/>
+          <SailTable handicapData={hd}/>
         </Paper>
       )});    
   }
@@ -97,11 +97,10 @@ export default function Boat({ classes, boat }) {
   if(roles.includes('member')) {
     panes.push({ title: 'Owners', children: (
       <Paper>
-        <Owners boat={boat} classes={classes}/>
+        <Owners boat={boat}/>
       </Paper>
     )});    
   }
-
 
 /*
 const engine = {
