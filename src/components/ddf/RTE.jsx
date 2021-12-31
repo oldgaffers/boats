@@ -54,7 +54,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
       }
     }}
     >
-    <Typography>{title}</Typography>
+    <Typography paddingTop={'0.5em'}>{title}</Typography>
     <MUIHtmlEditor
       label='type some text'
       {...rest}
