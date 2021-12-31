@@ -22,7 +22,7 @@ export function makeBoatNameList(boat) {
   return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
 }
 
-function BrowseBoats({
+export default function BrowseBoats({
   pickers,
   state,
   onPageChange,
@@ -117,7 +117,7 @@ function BrowseBoats({
             </Typography>
           </ListItem>
         </List>
-        $VERSION$
+        <Typography variant='h6'>OGA Boat Register %%VERSION%%</Typography>
       </Paper>
     </div>
   );
@@ -130,4 +130,3 @@ BrowseBoats.propTypes = {
    */
   window: PropTypes.func,
 };
-export default BrowseBoats;
