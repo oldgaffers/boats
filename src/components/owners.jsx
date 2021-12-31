@@ -22,7 +22,7 @@ function Owner({ owner }) {
     );
 }
 
-function OwnersTable({ classes, owners }) {
+function OwnersTable({ owners }) {
   const memberNumbers = owners
     .map((owner) => owner.member)
     .filter((n, index, array) => n && array.indexOf(n) === index);
@@ -53,7 +53,7 @@ function OwnersTable({ classes, owners }) {
     }  
   });
   return (
-    <Table className={classes.table} size="small" aria-label="owners">
+    <Table size="small" aria-label="owners">
     <TableHead>
         <TableRow>
         <TableCell align="left">Name</TableCell>
@@ -72,22 +72,21 @@ function OwnersTable({ classes, owners }) {
   );
 }
 
-export default function Owners({ classes, boat }) {
+export default function Owners({ boat }) {
   const { current, owners } = boat.ownerships || { current: [], owners: [] };
   if (owners && owners.length > 0) {
     return (
       <TableContainer component={Paper}>
-        <OwnersTable classes={classes} owners={owners}/>
+        <OwnersTable owners={owners}/>
       </TableContainer>
     );  
   }
   if (current && current.length > 0) {
     return (
       <TableContainer component={Paper}>
-        <OwnersTable classes={classes} owners={current}/>
+        <OwnersTable owners={current}/>
       </TableContainer>
     );  
   }
-  console.log('current_owners', current);
   return (<div/>);
 }

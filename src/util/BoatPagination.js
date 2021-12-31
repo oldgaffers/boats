@@ -1,4 +1,4 @@
-import { usePagination } from '@mui/material/Pagination';
+import usePagination from '@mui/material/usePagination';
 
 export function useBoatPagination( count, page, onChange ) {
     const { items } = usePagination({ count, page, onChange });

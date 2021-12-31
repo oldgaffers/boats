@@ -1,7 +1,7 @@
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import Icon from '@mui/material/Icon';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {

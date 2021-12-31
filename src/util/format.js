@@ -9,14 +9,20 @@ export function price(n) {
     return pounds.format(n);
 }
 
-export function feet(n) {
-    return `${n.toFixed(2)} ft`;
-}
-
 export function m2df(val) {
     if(val) {
         return (M2F*val).toFixed(2);
     }
+}
+
+export function feet(n) {
+  return `${n.toFixed(2)} ft`;
+}
+
+export function m2feet(val) { 
+  if(val) {
+      return `${m2df(val)} ft`
+  }
 }
 
 export function m2dsqf(val) {
@@ -154,4 +160,3 @@ const metreKeys = [
         return Object.keys(o).map(k => m2dfn(o[k]));
     }
   }
-  

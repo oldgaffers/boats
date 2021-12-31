@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
 import LeftMenu from './leftmenu';
 import DrawerController from './drawercontroller';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import Iframe from 'react-iframe'
 import Container from '@mui/material/Container';
 

@@ -22,14 +22,13 @@ function hullForm(boat) {
   return boat.hull_form.replace(/_/g, ' ');
 }
 
-export default function Boat({ classes, boat }) {
+export default function BoatDetail({ boat }) {
   const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(0);
 
   // TODO const { ref } = useInView({ threshold: 0 });
   let roles = [];
   if (isAuthenticated && user) {
-    console.log('user', user);
     if (user['https://oga.org.uk/roles']) {
       roles = user['https://oga.org.uk/roles'];
     }
@@ -90,7 +89,7 @@ export default function Boat({ classes, boat }) {
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)}/>
           <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
           <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
-          <SailTable classes={classes} handicapData={hd}/>
+          <SailTable handicapData={hd}/>
         </Paper>
       )});    
   }
@@ -98,11 +97,10 @@ export default function Boat({ classes, boat }) {
   if(roles.includes('member')) {
     panes.push({ title: 'Owners', children: (
       <Paper>
-        <Owners boat={boat} classes={classes}/>
+        <Owners boat={boat}/>
       </Paper>
     )});    
   }
-
 
 /*
 const engine = {
@@ -141,7 +139,14 @@ const engine = {
     <>
       <DetailBar onChange={handleChange} value={value} panes={panes} />
       {panes.map((pane, i) => (
-          <TabPanel key={i} value={value} index={i}>
+          <TabPanel sx={
+            {
+              paddingTop: '20px',
+              paddingBottom: '20px',
+              paddingLeft: 0,
+              paddingRight: 0,
+            }
+            } key={i} value={value} index={i}>
               {pane.children}
           </TabPanel>
       ))}

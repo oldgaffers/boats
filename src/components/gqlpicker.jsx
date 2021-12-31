@@ -8,7 +8,6 @@ import gql from 'graphql-tag';
 export default function GqlPicker({ id, label, onChange, value, clearable = true }) {
 
   const [inputValue, setInputValue] = useState('');
-  console.log('GqlPicker', id);
 
   const { loading, error, data } = useQuery(gql(`{
     ${id}(order_by: {name: asc}){name}
