@@ -29,7 +29,7 @@ const MUIHtmlEditor = styled(MUIRichTextEditor)(({ theme }) => ({
         paddingRight: theme.spacing(1)
     }
   }
-);
+));
 
 export const HtmlEditor = ({ component, name, title, ...rest }) => {
 
