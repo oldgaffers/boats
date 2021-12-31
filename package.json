@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "boat_register",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
