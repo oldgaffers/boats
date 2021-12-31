@@ -55,7 +55,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
     }}
     >
     <Typography>{title}</Typography>
-    <MUIRichTextEditor
+    <MUIHtmlEditor
       label='type some text'
       {...rest}
       defaultValue={JSON.stringify(convertToRaw(htmlToRTE(input.value)))}

@@ -207,6 +207,7 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
 
   return (
     <FormRenderer
+      sx={{ paddingTop: '1em' }}
       schema={schema(pickers, roles)}
       componentMapper={{
         ...componentMapper,
