@@ -14,7 +14,7 @@ const SmugMugGallery = ({ albumKey }) => {
             height="600" 
             frameborder="no"
             scrolling="no"
-            style='border: none !important'
+            style={{ border: 'none !important' }}
             />
         );    
     }
