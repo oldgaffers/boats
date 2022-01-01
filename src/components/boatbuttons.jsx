@@ -88,6 +88,21 @@ export default function BoatButtons({ boat, location }) {
   const photoDone = () => {
     console.log('done');
   }
+
+  const state = JSON.parse(sessionStorage.getItem("BOAT_BROWSE_STATE")||'{"view":"app"}');
+  console.log('view', state.view);
+  let main_page = `${location.origin}/boat_register/`;
+  if (location.pathname.includes('test')) {
+    main_page = `${main_page}test_`;
+  }
+  if (state.view === 'sell') {
+    main_page = `${main_page}boats_for_sale`;
+  } else if (state.view === 'smal') {
+    main_page = `${main_page}small_boats`;
+  } else {
+    main_page = `${main_page}browse_the_register`;
+  }
+
   return (
     <Paper>
         <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
@@ -96,7 +111,7 @@ export default function BoatButtons({ boat, location }) {
             variant="contained"
             className={classes.button}
             component={'a'}
-            href={`${location.origin}/boat_register/${location.pathname.includes('test')?'test_':''}browse_the_register`}
+            href={main_page}
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >

@@ -19,7 +19,7 @@ function sessionStore() {
 }
 
 export default function App({ variant }) {
-  const [state, setState] = useState({...sessionStore(), view: variant});
+  const [state, setState] = useState({...sessionStore(), view: variant||'boat'});
 
   const markedOnly = !!(state.filters && state.filters.oga_nos);
   const markSet = useRef(new Set());
@@ -86,7 +86,8 @@ export default function App({ variant }) {
     );
   }
 
-  if (variant === 'sell') {
+  switch (state.view) {
+    case 'sell':
     return (<>
       <BoatsForSaleIntro />
       <BB
@@ -100,8 +101,7 @@ export default function App({ variant }) {
         }} 
       />
     </>);
-  }
-  if (variant === 'small') {
+    case 'small':
     return (
       <>
         <SmallBoatsIntro />
@@ -114,9 +114,10 @@ export default function App({ variant }) {
         />
       </>
     );
-  }
+  default:
   return (<>
     <BoatRegisterIntro />
     <BB title="Browse the Register" state={state}/>
     </>);
+  }
 }
