@@ -11,13 +11,13 @@ export default function DateRangePicker({
     <Box
       sx={{
         position: 'relative',
-        top: '4px',
+        top: '2px',
         border: "1px solid lightgray",
         borderRadius: '4px',
         margin: '1em',
         paddingLeft: 2,
         paddingRight: 2,
-        paddingBottom: '8px',
+        paddingBottom: '6px',
       }}
     >
       <Typography align="center" id="date-slider">
