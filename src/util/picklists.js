@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
-import { singleConditionBuilder } from './gqlutils';
 
 export function usePicklists(view={}) {
     // for now we only support boats for sale and small boats
