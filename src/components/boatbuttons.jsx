@@ -97,7 +97,7 @@ export default function BoatButtons({ boat, location }) {
   }
   if (state.view === 'sell') {
     main_page = `${main_page}boats_for_sale`;
-  } else if (state.view === 'smal') {
+  } else if (state.view === 'small') {
     main_page = `${main_page}small_boats`;
   } else {
     main_page = `${main_page}browse_the_register`;
