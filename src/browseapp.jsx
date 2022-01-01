@@ -19,12 +19,13 @@ function sessionStore() {
 }
 
 export default function App({ variant }) {
-  const [state, setState] = useState(sessionStore());
+  const [state, setState] = useState({...sessionStore(), view: variant});
 
   const markedOnly = !!(state.filters && state.filters.oga_nos);
   const markSet = useRef(new Set());
 
   useEffect(() => {
+    console.log('storing state');
     sessionStorage.setItem("BOAT_BROWSE_STATE", JSON.stringify(state));
   }, [state]);
 
@@ -93,7 +94,6 @@ export default function App({ variant }) {
         state={{
           // price/descending is an initial decision, not fixed/forced
           ...state,
-          view: 'sell',
           sort: 'price', 
           sortDirection: 'desc',
           filters: { sale: true }
@@ -109,7 +109,6 @@ export default function App({ variant }) {
           title="Browse our small boats"
           state={{
             ...state,
-            view: 'small',
             filters: { generic_type:  ['Dinghy', 'Dayboat'] },
           }}
         />
