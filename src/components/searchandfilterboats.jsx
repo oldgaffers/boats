@@ -184,10 +184,10 @@ export default function SearchAndFilterBoats({
                     borderRadius: '4px',
                     marginLeft: '1em',
                     marginRight: '1px',
-                    paddingTop: 1,
+                    paddingTop: 0.5,
                     paddingLeft: 2,
                     paddingRight: 0,
-                    paddingBottom: 1,
+                    paddingBottom: 0.5,
                 }}
               >
                 <FormControlLabel
