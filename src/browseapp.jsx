@@ -4,12 +4,22 @@ import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 
+const DEFAULT_BOAT_BROWSE_STATE = { bpp: 12, page: 1, sort: 'rank', sortDirection: 'asc' };
+
+function sessionStore() {
+  const ss = sessionStorage.getItem("BOAT_BROWSE_STATE")
+  if (ss) {
+    const parsed = JSON.parse(ss);
+    if (parsed.sortDirection) { // new layout
+      return parsed;
+    }
+    return DEFAULT_BOAT_BROWSE_STATE; // old layout
+  }
+  return DEFAULT_BOAT_BROWSE_STATE; // new session
+}
+
 export default function App({ variant }) {
-  const [state, setState] = useState(JSON.parse(
-    sessionStorage.getItem("BOAT_BROWSE_STATE"))
-    ||
-    { bpp: 12, page: 1, sort: "rank", sortDirection: 'asc' }
-  );
+  const [state, setState] = useState(sessionStore());
 
   const markedOnly = !!(state.filters && state.filters.oga_nos);
   const markSet = useRef(new Set());
