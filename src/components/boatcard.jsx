@@ -39,12 +39,12 @@ const wanted = {
     price: { label: 'Price', access: (n) => showPrice(n)},
 };
 
-function SalesBadge({ boat, invisible, children }) {
+function SalesBadge({ boat, view, children }) {
   if (!boat.thumb) return children;
   if (!boat.for_sale_state) return children;
   switch (boat.for_sale_state.text) {
     case 'for_sale':
-      return (<Badge invisible={invisible} badgeContent="For sale" color="secondary">{children}</Badge>);
+      return (<Badge invisible={view && view.sell} badgeContent="For sale" color="secondary">{children}</Badge>);
     case 'sold':
       return (<Badge badgeContent="Sold" color="primary">{children}</Badge>);
     default:
@@ -70,12 +70,10 @@ function AltForThumb() {
 
 export default function BoatCard({ state, marked, onMarkChange, boat }) {
   const [markChecked, setMarkChecked] = useState(marked);
-  console.log('BoatCard', boat.name);
   const handleMarked = (checked) => {
     setMarkChecked(checked);
     onMarkChange(checked, boat.oga_no);
   }
-  const sale = state.view.sale;
   return (
     <Card sx={boat.thumb ? {
       height: '100%',
@@ -84,7 +82,7 @@ export default function BoatCard({ state, marked, onMarkChange, boat }) {
       {boat.thumb?(<CardMedia sx={{paddingTop: '100%'}} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
       <CardContent sx={{flexGrow: 1}} >
         <Typography gutterBottom variant="h5" component="h2">
-          <SalesBadge invisible={sale} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
+          <SalesBadge view={state.view} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
         <Typography variant="body2" 
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}

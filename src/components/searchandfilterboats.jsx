@@ -24,9 +24,9 @@ for(let i=1; i<=8; i++) {
 }
 
 function makePicklist(view, pickers, field) {
-    if (view[field]) {
-        return view[field].map((v) => { return {name: v};});
-    }
+   //if (view[field]) {
+   //     return view[field].map((v) => { return {name: v};});
+   // }
     if (pickers[field]) {
         return pickers[field];
     }
@@ -46,7 +46,8 @@ export default function SearchAndFilterBoats({
     onMarkedOnly,
     isMarkedOnly,
 }) {
-    const [ogaNo, setOgaNo] = useState(`${filters.oga_no || ''}`);
+    const currentFilters = filters || {};
+    const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
     const debouncedOgaNo = useDebounce(ogaNo, 1000);
   
     useEffect(
@@ -58,7 +59,7 @@ export default function SearchAndFilterBoats({
                 onFilterChange(f);
             } else {
                 console.log('new', debouncedOgaNo, 'old', filters.oga_no);
-                const newNo = parseInt(debouncedOgaNo, 10);
+                const newNo = debouncedOgaNo;
                 if (newNo !== filters.oga_no) {
                     onFilterChange({ ...filters, oga_no: newNo });
                 }
@@ -69,8 +70,8 @@ export default function SearchAndFilterBoats({
     );
 
     const dateRange = [
-        filters.firstYear || yearProps.min, 
-        filters.lastYear || yearProps.max
+        currentFilters.firstYear || yearProps.min, 
+        currentFilters.lastYear || yearProps.max
     ];
     const [dr, setDr] = useState(dateRange);
 
@@ -80,9 +81,9 @@ export default function SearchAndFilterBoats({
 
     function pl(id, value) {
         if (value) {
-            onFilterChange({ ...filters, [id]: value });
+            onFilterChange({ ...currentFilters, [id]: value });
         } else {
-            const f = {...filters};
+            const f = {...currentFilters};
             delete f[id];
             onFilterChange(f);
         }
@@ -93,7 +94,7 @@ export default function SearchAndFilterBoats({
     }
 
     function handleDateRangeCommitted(event, [min, max]) {
-        const f = { ...filters };
+        const f = { ...currentFilters };
         if (min === yearProps.min) {
             delete f.firstYear
         } else {
@@ -199,36 +200,36 @@ export default function SearchAndFilterBoats({
             </Box>
             </Grid>
             <Grid>
-            <Picker onChange={pl} id="name" options={makePicklist(view, pickers, 'boatNames')} label="Boat Name" value={filters['name']} />
+            <Picker onChange={pl} id="name" options={makePicklist(view, pickers, 'boatNames')} label="Boat Name" value={currentFilters['name']} />
             </Grid>
             <Grid>
             <NumberEntry id='oga_no' label="OGA Boat No." value={ogaNo} onSet={setOgaNo} onClear={()=>{
-                const { oga_no, ...f } = filters;
+                const { oga_no, ...f } = currentFilters;
                 if (oga_no) {
                   onFilterChange(f);
                 }
             }}/>
             </Grid>
             <Grid>
-            <Picker onChange={pl} id='designer' options={makePicklist(view, pickers, 'designer')} label="Designer" value={filters['designer']} />
+            <Picker onChange={pl} id='designer' options={makePicklist(view, pickers, 'designer')} label="Designer" value={currentFilters['designer']} />
             </Grid>
             <Grid>
-            <Picker onChange={pl} id='builder' options={makePicklist(view, pickers, 'builder')} label="Builder" value={filters['builder']} />
+            <Picker onChange={pl} id='builder' options={makePicklist(view, pickers, 'builder')} label="Builder" value={currentFilters['builder']} />
             </Grid>
             <Grid>
-            <Picker onChange={pl} id='rig_type' options={makePicklist(view, pickers, 'rig_type')} label="Rig Type" value={filters['rig_type']} />
+            <Picker onChange={pl} id='rig_type' options={makePicklist(view, pickers, 'rig_type')} label="Rig Type" value={currentFilters['rig_type']} />
             </Grid>
             <Grid>
-                <Picker onChange={pl} id='mainsail_type' options={makePicklist(view, pickers, 'sail_type')} label="Mainsail Type" value={filters['mainsail_type']}/>
+                <Picker onChange={pl} id='mainsail_type' options={makePicklist(view, pickers, 'sail_type')} label="Mainsail Type" value={currentFilters['mainsail_type']}/>
             </Grid>
             <Grid>
-            <Picker onChange={pl} id='generic_type' options={makePicklist(view, pickers, 'generic_type')} label="Generic Type" value={filters['generic_type']}/>
+            <Picker onChange={pl} id='generic_type' options={makePicklist(view, pickers, 'generic_type')} label="Generic Type" value={currentFilters['generic_type']}/>
             </Grid>
             <Grid>
-                <Picker onChange={pl} id='design_class' options={makePicklist(view, pickers, 'design_class')} label="Design Class" value={filters['design_class']}/>
+                <Picker onChange={pl} id='design_class' options={makePicklist(view, pickers, 'design_class')} label="Design Class" value={currentFilters['design_class']}/>
             </Grid>
             <Grid>
-                <Picker onChange={pl} id='construction_material' options={makePicklist(view, pickers, 'construction_material')} label="Construction Material" value={filters['construction_material']} />
+                <Picker onChange={pl} id='construction_material' options={makePicklist(view, pickers, 'construction_material')} label="Construction Material" value={currentFilters['construction_material']} />
             </Grid>
             <Grid>
                 <DateRangePicker

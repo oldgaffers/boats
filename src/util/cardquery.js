@@ -40,7 +40,7 @@ export const useCardQuery = (state) => {
         variables: {
           limit: bpp,
           offset: bpp * (page - 1),
-          where: buildWhere(filters, view),
+          where: buildWhere(filters),
           order_by: buildSort(sort, sortDirection),
         },
       },
@@ -57,6 +57,6 @@ export function buildSort(sort, sortDirection) {
   return [{[sort]: dir}, {oga_no: dir}];
 }
 
-export function buildWhere(choices, view) {
-  return conditionBuilder({...view, ...choices});
+export function buildWhere(choices) {
+  return conditionBuilder({...choices});
 }

@@ -1,11 +1,9 @@
 import React from "react"
 import BrowseBoats from './browseboats';
 import { usePicklists } from '../util/picklists';
-import { mapState } from '../util/rr';
 
 export default function GqlBoatBrowser({ title, state, ...props }) {
-  const currentState = mapState(state);
-  const { loading, error, data } = usePicklists(currentState.view);
+  const { loading, error, data } = usePicklists(state.view || {});
 
   if (loading) return (<p>Loading...</p>);
   if (error) return (<p>Error :({title})</p>);
@@ -14,7 +12,7 @@ export default function GqlBoatBrowser({ title, state, ...props }) {
       <BrowseBoats 
         title={title}
         pickers={data}
-        state={currentState}
+        state={state}
         {...props}
       />
   );

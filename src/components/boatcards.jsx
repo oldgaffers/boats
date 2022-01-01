@@ -16,7 +16,6 @@ export default function BoatCards({
 }) {
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
-  console.log('=========== render cards ===========');
   const totalCount = getTotal(data); 
   const pages = Math.ceil(totalCount / state.bpp);
   const boats = getBoats(data);
@@ -53,7 +52,6 @@ export default function BoatCards({
           <Grid container spacing={4}>
           {boats.map((boat) => {
             const marked = markList.includes(boat.oga_no);
-            console.log('boatcards', boat.oga_no, marked, markList);
             return (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
               <BoatCard state={state} marked={marked} boat={boat} onMarkChange={handleMarkChange} />
@@ -72,12 +70,23 @@ export default function BoatCards({
   const { 
     rig_type, construction_material, generic_type, 
     design_class, firstYear, lastYear, mainsail_type,
-    designer, builder, oga_no, name
+    designer, builder, oga_no, oga_nos, name
   } = state.filters;
-  const { sale } = state.view;
+  const { sale } = state.view || {};
   let message;
   if (oga_no) {
     message = `The boat numbered ${oga_no} doesn't match the filters you have set`;
+  } else if (oga_nos) {
+    switch (oga_nos.length) {
+      case 0:
+      message = `You need to mark one or more boats. Click on the box at the bottom right-hand corner of the boat's card`;  
+      break;
+      case 1:
+        message = `The boat numbered ${oga_nos[0]} doesn't match the filters you have set`;  
+        break;
+      default:
+      message = `The boats numbered ${oga_nos.join(', ')} don't match the filters you have set`;
+    }
   } else {
     message = 'There are no';
     if (rig_type) {

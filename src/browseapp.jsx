@@ -5,9 +5,13 @@ import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 
 export default function App({ variant }) {
-  const [state, setState] = useState(JSON.parse(sessionStorage.getItem("BOAT_BROWSE_STATE"))||{ bpp: '12', p: '1'});
-  const [markedOnly, setMarkedOnly] = useState(false);
+  const [state, setState] = useState(JSON.parse(
+    sessionStorage.getItem("BOAT_BROWSE_STATE"))
+    ||
+    { bpp: 12, page: 1, sort: "rank", sortDirection: 'asc' }
+  );
 
+  const markedOnly = !!(state.filters && state.filters.oga_nos);
   const markSet = useRef(new Set());
 
   useEffect(() => {
@@ -15,31 +19,27 @@ export default function App({ variant }) {
   }, [state]);
 
   const handlePageSizeChange = (bpp) => {
-    setState({p:'1', bpp: `${bpp}`});
+    setState({...state, page: 1, bpp });
   };
 
   const handleSortChange = (field, dir) => {
-    setState({...state, sort: field, asc: `${dir==='asc'}`});
+    setState({...state, sort: field, asc: dir === 'asc'});
   };
 
   const handlePageChange = ({page}) => {
-    setState({...state, p: `${page}`});
+    setState({...state, page });
   };
 
   const handleFilterChange = useCallback((filters) => {
-    console.log('handleFilterChange', filters);
-    setState({...state, p:'1', filters});
+    setState({...state, page: 1, filters});
   }, [state]);
 
   const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
-    setMarkedOnly(isMarkedOnly);
     const markList = [...markSet.current];
     if (isMarkedOnly) {
-      console.log('only marked', markList, state.filters);
       handleFilterChange({ ...state.filters, oga_nos: markList });
     } else {
       const { oga_nos, ...f } = state.filters;
-      console.log('not only marked', [...markSet.current], f);
       if (oga_nos) {
         handleFilterChange(f);
       }
@@ -78,56 +78,37 @@ export default function App({ variant }) {
     );
   }
 
-  const Browse = props => {
-    return (
-      <>
-      <BoatRegisterIntro />
-      <BB title="Browse the Register" state={{sort: "rank", asc: "true", ...state}} {...props} />
-      </>
-    );
+  if (variant === 'sell') {
+    return (<>
+      <BoatsForSaleIntro />
+      <BB
+        title="Boats for Sale"
+        state={{
+          // price/descending is an initial decision, not fixed/forced
+          sort: "price", 
+          sortDirection: 'desc',
+          ...state,
+          filters: { for_sale_state: 'for_sale' }
+        }} 
+      />
+    </>);
   }
-  
-  const Sell = props => {
-    return (
-      <>
-        <BoatsForSaleIntro />
-        <BB
-          title="Boats for Sale"
-          state={{
-            sort: "price",
-            asc: "false",
-            v_sale: "true", 
-            ...state,
-          }} 
-          {...props}
-        />
-      </>
-    );
-  }
-  
-  const Small = props => {
+  if (variant === 'small') {
     return (
       <>
         <SmallBoatsIntro />
         <BB
           title="Browse our small boats"
           state={{
-            sort: "rank",
-            asc: "true",
-            v_generic_type: "Dinghy|Dayboat",
             ...state,
+            filters: { generic_type:  ['Dinghy', 'Dayboat'] },
           }}
-          {...props}
         />
       </>
     );
   }
-
-  if (variant === 'sell') {
-    return (<Sell/>);
-  }
-  if (variant === 'small') {
-    return (<Small/>);
-  }
-  return (<Browse/>);
+  return (<>
+    <BoatRegisterIntro />
+    <BB title="Browse the Register" state={state}/>
+    </>);
 }
