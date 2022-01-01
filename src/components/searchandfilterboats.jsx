@@ -179,7 +179,7 @@ export default function SearchAndFilterBoats({
             <Box
                 sx={{
                     position: 'relative',
-                    top: '17px',
+                    top: '18px',
                     border: "1px solid lightgray",
                     borderRadius: '4px',
                     marginLeft: '1em',
