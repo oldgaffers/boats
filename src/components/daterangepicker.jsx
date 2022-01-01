@@ -11,7 +11,7 @@ export default function DateRangePicker({
     <Box
       sx={{
         position: 'relative',
-        top: '4px',
+        top: '7px',
         border: "1px solid lightgray",
         borderRadius: '4px',
         margin: '1em',
