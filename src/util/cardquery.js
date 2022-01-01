@@ -33,18 +33,18 @@ export const query = gql`query boats(
   }`;
 
 export const useCardQuery = (state) => {
-  const { view, filters, page, bpp, sort, sortDirection } = state;
-  return useQuery(
-    query, 
-      {
-        variables: {
-          limit: bpp,
-          offset: bpp * (page - 1),
-          where: buildWhere(filters),
-          order_by: buildSort(sort, sortDirection),
-        },
-      },
-    );  
+  const { filters, page, bpp, sort, sortDirection } = state;
+  const variables = {
+    variables: {
+      limit: bpp,
+      offset: bpp * (page - 1),
+      where: buildWhere(filters),
+      order_by: buildSort(sort, sortDirection),
+    },
+  };
+  console.log(query);
+  console.log(variables);
+  return useQuery(query, variables);  
 }
 
 // some sorts (e.g. length, updated_at) are unstable 
