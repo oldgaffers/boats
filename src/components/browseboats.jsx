@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -7,7 +7,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import TabularView from './tabularview';
+// import TabularView from './tabularview';
 
 export function makeBoatNameList(boat) {
   if (!boat) {
@@ -25,77 +25,45 @@ export function makeBoatNameList(boat) {
 export default function BrowseBoats({
   pickers,
   state,
+  markList,
   onPageChange,
   onPageSizeChange,
   onSortChange,
   onFilterChange,
+  onMarkedOnlyChange,
+  isMarkedOnly,
+  onBoatMarked,
+  onBoatUnMarked,
 }) {
   const { bpp, sort, sortDirection, filters } = state;
-  const [ marked, setMarked] = useState(filters.oga_nos || []);
-  const [ isMarkedOnly, setIsMarkedOnly] = useState(!!filters.oga_nos);
   const blank = "_blank";
 
-  const updateMarkedFilter = (on, marks) => {
-    if (on && marks.length > 0) {
-      onFilterChange({...filters, oga_nos: marks });
-    } else {
-      const f = { ...filters };
-      delete f.oga_nos;
-      onFilterChange(f);
-    }
+  const handleMarkedOnly = (value) => {
+    onMarkedOnlyChange(value);
   }
 
-  const handleMarkChange = (isMarked, boat) => {
-    if (isMarked) {
-      if (marked.includes(boat)) {
-        console.log('already in', boat);
-      } else {
-        const nm = [...marked, boat];
-        setMarked(nm);
-        updateMarkedFilter(isMarkedOnly, nm);
-      }
-    } else if (marked.includes(boat)) {
-      const nm = marked.filter((value) => value !== boat);
-      setMarked(nm);
-      updateMarkedFilter(isMarkedOnly, nm);
-      if (nm.length === 0) {
-        setIsMarkedOnly(false);
-      }
-    }
-  };
-
-  const handleMarkedOnly = (isMarkedOnly) => {
-    updateMarkedFilter(isMarkedOnly, marked);
-    if (isMarkedOnly && marked.length>0) {
-      setIsMarkedOnly(true);
-    } else {
-      setIsMarkedOnly(false);
-    }
-  }
+  // {markedOnly?<TabularView state={state} marked={markedBoats} />:''}
 
   return (
     <div>
       <Paper> 
-        {isMarkedOnly?<TabularView state={state} marked={marked} />:''}
         <SearchAndFilterBoats
           sortField={sort}
           sortDirection={sortDirection}
           boatsPerPage={bpp}
           filters={filters}
           view={state.view}
+          pickers={{ boatNames: makeBoatNameList(pickers.boat), ...pickers }}
           onPageSizeChange={onPageSizeChange}
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
-          onMarkedOnly={handleMarkedOnly}
-          pickers={{ boatNames: makeBoatNameList(pickers.boat), ...pickers }}
-          haveMarks={marked.length>0}
+          onMarkedOnly={(value) => handleMarkedOnly(value)}
           isMarkedOnly={isMarkedOnly}
         />
         <Divider />
         <BoatCards
-          state={state} marked={marked}
-          onChangePage={onPageChange}
-          onMarkChange = {handleMarkChange}
+          state={state} markList={markList} onChangePage={onPageChange}
+          onBoatMarked={onBoatMarked} onBoatUnMarked={onBoatUnMarked}
         />
         <Divider />
         <Typography>

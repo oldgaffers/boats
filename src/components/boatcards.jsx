@@ -9,15 +9,14 @@ import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
 
 export default function BoatCards({
-  state, 
-  marked,
+  state, markList,
   onChangePage=(arg)=>console.log('onChangePage', arg), 
-  onMarkChange = (marked, boat) => 
-    console.log(`boat ${boat} is ${marked?'marked':'not marked'}`),
+  onBoatMarked,
+  onBoatUnMarked,
 }) {
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
-
+  console.log('=========== render cards ===========');
   const totalCount = getTotal(data); 
   const pages = Math.ceil(totalCount / state.bpp);
   const boats = getBoats(data);
@@ -38,6 +37,14 @@ export default function BoatCards({
     }
   }
 
+  const handleMarkChange = (value, ogaNo) => {
+    if (value) {
+      onBoatMarked(ogaNo);
+    } else {
+      onBoatUnMarked(ogaNo);
+    }
+  }
+
   if (totalCount > 0) {
     return (
       <Container maxWidth="md">
@@ -45,9 +52,11 @@ export default function BoatCards({
           <Box py={1} />
           <Grid container spacing={4}>
           {boats.map((boat) => {
+            const marked = markList.includes(boat.oga_no);
+            console.log('boatcards', boat.oga_no, marked, markList);
             return (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} boat={boat} marked={marked.includes(boat.oga_no)} onMarkChange={onMarkChange} />
+              <BoatCard state={state} marked={marked} boat={boat} onMarkChange={handleMarkChange} />
             </Grid>
             );
           }

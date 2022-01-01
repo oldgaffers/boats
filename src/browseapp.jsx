@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 
-export default function App({variant}) {
+export default function App({ variant }) {
   const [state, setState] = useState(JSON.parse(sessionStorage.getItem("BOAT_BROWSE_STATE"))||{ bpp: '12', p: '1'});
-  
+  const [markedOnly, setMarkedOnly] = useState(false);
+
+  const markSet = useRef(new Set());
+
   useEffect(() => {
     sessionStorage.setItem("BOAT_BROWSE_STATE", JSON.stringify(state));
   }, [state]);
@@ -19,12 +22,42 @@ export default function App({variant}) {
     setState({...state, sort: field, asc: `${dir==='asc'}`});
   };
 
-  const handleFilterChange = (filters) => {
-    setState({...state, p:'1', filters});
-  };
-
   const handlePageChange = ({page}) => {
     setState({...state, p: `${page}`});
+  };
+
+  const handleFilterChange = useCallback((filters) => {
+    console.log('handleFilterChange', filters);
+    setState({...state, p:'1', filters});
+  }, [state]);
+
+  const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
+    setMarkedOnly(isMarkedOnly);
+    const markList = [...markSet.current];
+    if (isMarkedOnly) {
+      console.log('only marked', markList, state.filters);
+      handleFilterChange({ ...state.filters, oga_nos: markList });
+    } else {
+      const { oga_nos, ...f } = state.filters;
+      console.log('not only marked', [...markSet.current], f);
+      if (oga_nos) {
+        handleFilterChange(f);
+      }
+    }
+  }, [state, handleFilterChange]);
+
+  const handleBoatMarked = (ogaNo) => {
+    markSet.current.add(ogaNo);
+    console.log('marked', [...markSet.current]);
+  };
+
+  const handleBoatUnMarked = (ogaNo) => {
+    markSet.current.delete(ogaNo);
+    console.log('marked', [...markSet.current]);
+    if (markedOnly) {
+      console.log('should remove from filter');
+      handleFilterChange({ ...state.filters, oga_nos: [...markSet.current] });
+    }
   };
 
   const BB = ({title, state}) => {
@@ -32,10 +65,15 @@ export default function App({variant}) {
       <GqlBoatBrowser
         title={title}
         state={state}
+        markList={[...markSet.current]}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
         onPageChange={handlePageChange}
+        onMarkedOnlyChange={handleMarkedOnlyChange}
+        isMarkedOnly={markedOnly}
+        onBoatMarked={handleBoatMarked}
+        onBoatUnMarked={handleBoatUnMarked}
       />
     );
   }

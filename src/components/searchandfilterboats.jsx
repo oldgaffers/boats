@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
 import Switch from '@mui/material/Switch'
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
@@ -43,11 +44,9 @@ export default function SearchAndFilterBoats({
     onPageSizeChange,
     onSortChange,
     onMarkedOnly,
-    haveMarks,
     isMarkedOnly,
 }) {
     const [ogaNo, setOgaNo] = useState(`${filters.oga_no || ''}`);
-  
     const debouncedOgaNo = useDebounce(ogaNo, 1000);
   
     useEffect(
@@ -177,12 +176,27 @@ export default function SearchAndFilterBoats({
         <FormHelperText sx={{marginLeft: '1em', marginBottom: '3px'}}>Use these controls to filter the list in one or more ways</FormHelperText>
         <Grid container direction="row" justify="space-evenly" alignItems="baseline">
         <Grid>
-            {haveMarks ?
-            <FormControlLabel id="marked" onChange={handleOnlyMarkedChange}
-                control={<Switch checked={isMarkedOnly} />} 
-                label="Only My Marked Boats"
-            />:''
-            }
+            <Box
+                sx={{
+                    position: 'relative',
+                    top: '21px',
+                    border: "1px solid lightgray",
+                    borderRadius: '4px',
+                    marginLeft: '1em',
+                    marginRight: '1px',
+                    paddingTop: 1,
+                    paddingLeft: 2,
+                    paddingRight: 0,
+                    paddingBottom: 1,
+                }}
+              >
+                <FormControlLabel
+                    id="marked"
+                    onChange={handleOnlyMarkedChange}
+                    control={<Switch checked={isMarkedOnly} />} 
+                    label="Only Marked Boats"
+                />
+            </Box>
             </Grid>
             <Grid>
             <Picker onChange={pl} id="name" options={makePicklist(view, pickers, 'boatNames')} label="Boat Name" value={filters['name']} />

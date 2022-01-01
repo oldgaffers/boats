@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -68,18 +68,14 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, boat, marked, onMarkChange }) {
-  // const location = useLocation();
+export default function BoatCard({ state, marked, onMarkChange, boat }) {
+  const [markChecked, setMarkChecked] = useState(marked);
+  console.log('BoatCard', boat.name);
+  const handleMarked = (checked) => {
+    setMarkChecked(checked);
+    onMarkChange(checked, boat.oga_no);
+  }
   const sale = state.view.sale;
-
-  const mark = (event) => {
-    if(onMarkChange) {
-      onMarkChange(event.target.checked, boat.oga_no);
-    }
-  };
-
-  // TODO marking is not working
-
   return (
     <Card sx={boat.thumb ? {
       height: '100%',
@@ -108,8 +104,8 @@ export default function BoatCard({ state, boat, marked, onMarkChange }) {
         </Grid>
         <Grid item>
         <Checkbox sx={{textAlign: 'right'}}
-        checked={marked}
-        color="primary" onChange={mark}
+        checked={markChecked}
+        color="primary" onChange={(event, checked) => handleMarked(checked)}
         inputProps={{ 'aria-label': 'add to list' }}
       />
         </Grid>
