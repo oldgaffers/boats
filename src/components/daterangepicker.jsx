@@ -17,7 +17,7 @@ export default function DateRangePicker({
         margin: '1em',
         paddingLeft: 2,
         paddingRight: 2,
-        paddingBottom: '6px',
+        paddingBottom: '1px',
       }}
     >
       <Typography align="center" id="date-slider">
