@@ -23,7 +23,6 @@ export function singleConditionBuilder(key, filters) {
             ],
           };
         case 'sale':
-        case 'sell':
           return { for_sale_state: { text: { _eq: 'for_sale' } } };
         default:
           {

@@ -44,7 +44,6 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
           }
         )
         .then((response) => {
-          console.log("post", response);
           setSnackBarOpen(true);
         })
         .catch((error) => {

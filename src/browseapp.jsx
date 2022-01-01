@@ -58,14 +58,11 @@ export default function App({ variant }) {
 
   const handleBoatMarked = (ogaNo) => {
     markSet.current.add(ogaNo);
-    console.log('marked', [...markSet.current]);
   };
 
   const handleBoatUnMarked = (ogaNo) => {
     markSet.current.delete(ogaNo);
-    console.log('marked', [...markSet.current]);
     if (markedOnly) {
-      console.log('should remove from filter');
       handleFilterChange({ ...state.filters, oga_nos: [...markSet.current] });
     }
   };
@@ -95,10 +92,11 @@ export default function App({ variant }) {
         title="Boats for Sale"
         state={{
           // price/descending is an initial decision, not fixed/forced
-          sort: "price", 
-          sortDirection: 'desc',
           ...state,
-          filters: { for_sale_state: 'for_sale' }
+          view: 'sell',
+          sort: 'price', 
+          sortDirection: 'desc',
+          filters: { sale: true }
         }} 
       />
     </>);
@@ -111,6 +109,7 @@ export default function App({ variant }) {
           title="Browse our small boats"
           state={{
             ...state,
+            view: 'small',
             filters: { generic_type:  ['Dinghy', 'Dayboat'] },
           }}
         />

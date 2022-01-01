@@ -19,7 +19,6 @@ export default function BoatCards({
   const totalCount = getTotal(data); 
   const pages = Math.ceil(totalCount / state.bpp);
   const boats = getBoats(data);
-
   const pageItems = useBoatPagination(
     pages,
     state.page,

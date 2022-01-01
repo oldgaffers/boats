@@ -42,8 +42,6 @@ export const useCardQuery = (state) => {
       order_by: buildSort(sort, sortDirection),
     },
   };
-  console.log(query);
-  console.log(variables);
   return useQuery(query, variables);  
 }
 

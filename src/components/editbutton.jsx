@@ -15,14 +15,12 @@ export default function EditButton({ classes, boat }) {
   };
 
   const handleClose = (changes) => {
-    console.log('handleClose', changes);
     setOpen(false);
     if (changes) {
       axios.post(
         'https://ae69efba7038dcdfe87ce1c3479d2976.m.pipedream.net',
         { ...changes, uuid: uuidv4() },
       ).then(response => {
-        console.log('post', response);
         setSnackBarOpen(true);
       }).catch(error => {
         console.log('post', error);

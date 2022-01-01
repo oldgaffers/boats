@@ -17,7 +17,7 @@ function makePreviousNamesField(n) {
     try {
       return n.join(', ');
     } catch(e) {
-      console.log(e);
+      console.log('makePreviousNamesField', e);
     }
   }
   return undefined;
@@ -44,7 +44,7 @@ function SalesBadge({ boat, view, children }) {
   if (!boat.for_sale_state) return children;
   switch (boat.for_sale_state.text) {
     case 'for_sale':
-      return (<Badge invisible={view && view.sell} badgeContent="For sale" color="secondary">{children}</Badge>);
+      return (<Badge invisible={view === 'sell'} badgeContent="For sale" color="secondary">{children}</Badge>);
     case 'sold':
       return (<Badge badgeContent="Sold" color="primary">{children}</Badge>);
     default:

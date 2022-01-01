@@ -201,7 +201,6 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
     updates.handicap_data = {...ohd, ...nhd};
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates};
-    console.log('boat to save', updatedBoat);
     onSave({old: before, new: updatedBoat, email});
   };
 

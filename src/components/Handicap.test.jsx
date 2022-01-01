@@ -60,15 +60,12 @@ test('boatm2f Transcur feet', () => {
   
 test('boatm2f Robinetta feet', () => {
     const m = Robinetta.handicap_data;
-    console.log(m);
     const f = boatm2f(m);
-    console.log(f);
     expect(f).toStrictEqual(rcf);
   });
   
   test('boatm2f Transcur metres', () => {
     const t = boatm2f(Transcur);
-    console.log(t);
     expect(boatf2m(t)).toStrictEqual(Transcur);
   });
   

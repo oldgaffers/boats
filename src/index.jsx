@@ -41,7 +41,7 @@ if (div.length>0) {
                 ?
                 (<Boat location={window.location}/>)
                 :
-                (<BrowseApp variant={app}/>)
+                (<BrowseApp variant={'small'}/>)
               }
             </ThemeProvider>
           </OGAProvider>

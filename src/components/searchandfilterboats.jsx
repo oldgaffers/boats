@@ -49,7 +49,6 @@ export default function SearchAndFilterBoats({
     const currentFilters = filters || {};
     const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
     const debouncedOgaNo = useDebounce(ogaNo, 1000);
-  
     useEffect(
       () => {
         if (debouncedOgaNo) {
@@ -116,7 +115,7 @@ export default function SearchAndFilterBoats({
         { field: 'length_on_deck', name: "Length", direction: 'desc' },
         { field: 'rank', name: "Editor's choice", direction: 'asc' },
      ];
-     if (view.sale) {
+     if (view.sell) {
         sortOptions.push({ field: 'price', name: "Price", direction: 'desc' });
      }
     const sortLabelByField = sortOptions.reduce((r, { field, name}) => { r[field]=name; return r;}, {});
@@ -223,7 +222,15 @@ export default function SearchAndFilterBoats({
                 <Picker onChange={pl} id='mainsail_type' options={makePicklist(view, pickers, 'sail_type')} label="Mainsail Type" value={currentFilters['mainsail_type']}/>
             </Grid>
             <Grid>
-            <Picker onChange={pl} id='generic_type' options={makePicklist(view, pickers, 'generic_type')} label="Generic Type" value={currentFilters['generic_type']}/>
+            <Picker onChange={pl} id='generic_type' options={makePicklist(view, pickers, 'generic_type')} label="Generic Type" value={
+                () => {
+                    const f = currentFilters['generic_type'];
+                    if (Array.isArray(f)) {
+                        return '' // don't make a selection if multiple selected
+                    }
+                    return f;
+                }
+                }/>
             </Grid>
             <Grid>
                 <Picker onChange={pl} id='design_class' options={makePicklist(view, pickers, 'design_class')} label="Design Class" value={currentFilters['design_class']}/>

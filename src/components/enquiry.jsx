@@ -214,9 +214,6 @@ export default function Enquiry({ classes, boat }) {
   }`));
   if (loading) return <p>Loading ...</p>;
   if (error) return `Error! ${error}`;
-  if (data) {
-    console.log(data);
-  }
  
   const handleClickOpen = () => {
     setOpen(true);
@@ -232,7 +229,6 @@ export default function Enquiry({ classes, boat }) {
 
   const handleEmailChange = (e) => {
     if (e.target.reportValidity()) {
-      console.log("email", e.target);
       setEmail(e.target.value);
     } else {
       console.log("invalid email");
@@ -268,8 +264,6 @@ export default function Enquiry({ classes, boat }) {
     }
     ChosenDialog = ContactDialog;
   }
-  console.log('enquiry user', user);
-  console.log('enquiry email', email);
   return (
     <>
       <Button

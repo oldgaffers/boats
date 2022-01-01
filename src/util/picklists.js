@@ -6,14 +6,6 @@ export function usePicklists(view={}) {
     // for now we only support boats for sale and small boats
     let where = undefined;
     let bwhere = undefined;
-    if(view.generic_type) {
-        bwhere = singleConditionBuilder('generic_type', view);
-        where = {boats: bwhere};
-    }
-    if(view.sale) {
-        bwhere = singleConditionBuilder('sale', view);
-        where = {boats: bwhere};
-    }
     let query = gql(`{
         boat{name previous_names}
         designer(order_by: {name: asc}){name id}
