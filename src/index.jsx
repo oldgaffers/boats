@@ -16,11 +16,6 @@ const theme = createTheme({
   },
 });
 
-function url() {
-  const r = window.location.origin + window.location.pathname;
-  return r;
-}
-
 const tags = ['app', 'boat', 'sell', 'small'];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length>0) {
@@ -30,7 +25,7 @@ if (div.length>0) {
       <Auth0Provider
         domain="dev-uf87e942.eu.auth0.com"
         clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
-        redirectUri={url()}
+        redirectUri={window.location.origin + window.location.pathname}
         audience="https://oga.org.uk/boatregister"
         scope="member"
       >
