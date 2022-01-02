@@ -4,8 +4,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { useCardQuery, getTotal, getBoats } from '../util/cardquery';
-import { useBoatPagination } from '../util/BoatPagination';
-import BoatPagination from './boatpagination';
+import BoatPagination, { NewBoatPagination } from './boatpagination';
 import BoatCard from './boatcard';
 
 export default function BoatCards({
@@ -17,13 +16,8 @@ export default function BoatCards({
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
   const totalCount = getTotal(data); 
-  const pages = Math.ceil(totalCount / state.bpp);
   const boats = getBoats(data);
-  const pageItems = useBoatPagination(
-    pages,
-    state.page,
-    (_, page) => { onChangePage({ selectedBoats: totalCount, pages, page })},
-  );
+  
 
   if (error) return <p>Error: (BoatCards)</p>;
 
@@ -44,9 +38,11 @@ export default function BoatCards({
   }
 
   if (totalCount > 0) {
+    const pageCount = Math.ceil(totalCount / state.bpp);
+    const handlePageChange = (_, page) => { onChangePage({ selectedBoats: totalCount, pages: pageCount, page })};
     return (
       <Container maxWidth="md">
-        <BoatPagination items={pageItems} />
+        <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}/>
           <Box py={1} />
           <Grid container spacing={4}>
           {boats.map((boat) => {
@@ -61,7 +57,7 @@ export default function BoatCards({
           }
           </Grid>
           <Box py={1}/>
-          <BoatPagination items={pageItems} />
+          <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}/>
         </Container>
     );
   }
