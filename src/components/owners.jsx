@@ -23,7 +23,6 @@ function Owner({ owner }) {
 }
 
 function OwnersTable({ owners }) {
-  const memberNumbers = owners.filter((o) => o.member && !o.name).wanted.map((o) => o.id)
   const [getMembersResults, { loading, error, data }] = useLazyQuery(gql(`query members {
     members(members: ${JSON.stringify(memberNumbers)}) {
       firstname
@@ -34,6 +33,7 @@ function OwnersTable({ owners }) {
   }`));
   if (loading) return <CircularProgress />;
   if (error) console.log(`Error! ${error}`);
+  const memberNumbers = owners.filter((o) => o.member && !o.name).map((o) => o.id);
   if (memberNumbers.length > 0) {
     getMembersResults();
   }
