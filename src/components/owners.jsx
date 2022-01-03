@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useLazyQuery } from '@apollo/react-hooks';
 
 function Owner({ owner }) {
   console.log('Owner', owner);
@@ -23,10 +23,8 @@ function Owner({ owner }) {
 }
 
 function OwnersTable({ owners }) {
-  const memberNumbers = owners
-    .map((owner) => owner.member)
-    .filter((n, index, array) => n && array.indexOf(n) === index);
-  const membersResults = useQuery(gql(`query members {
+  const memberNumbers = owners.filter((o) => o.member && !o.name).wanted.map((o) => o.id)
+  const [getMembersResults, { loading, error, data }] = useLazyQuery(gql(`query members {
     members(members: ${JSON.stringify(memberNumbers)}) {
       firstname
       lastname
@@ -34,9 +32,12 @@ function OwnersTable({ owners }) {
       id
     }
   }`));
-  if (membersResults.loading) return <CircularProgress />;
-  console.log(membersResults);
-  const { members } = membersResults.data || { members: [] };
+  if (loading) return <CircularProgress />;
+  if (error) console.log(`Error! ${error}`);
+  if (memberNumbers.length > 0) {
+    getMembersResults();
+  }
+  const { members } = data || { members: [] };
   console.log('members', JSON.stringify(members));
   const ownersWithNames = owners.map((owner) => {
     if (owner.name) {
