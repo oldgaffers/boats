@@ -62,12 +62,6 @@ export default function BoatDetail({ boat }) {
         <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
       </Paper>)},
   ];
-
-  if (boat.full_description) {
-    panes.unshift(
-        { title: 'Details', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
-    );
-  }
   if (boat.sail_number || boat.ssr || boat.nhsr || boat.fishing_number || boat.callsign || boat.nsbr || boat.uk_part1) {
     panes.unshift(
       { title: 'Registrations', children: (
@@ -115,6 +109,11 @@ const engine = {
 };
 
 */
+  if (boat.full_description) {
+    panes.unshift(
+        { title: 'Details', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
+    );
+  }
 
   if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
     const fs = boat.for_sales[0];
@@ -128,7 +127,6 @@ const engine = {
         ) },
     );
     }
-
   }
 
  const handleChange = (event, newValue) => {
