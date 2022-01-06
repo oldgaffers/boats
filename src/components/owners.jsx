@@ -37,7 +37,16 @@ function OwnersTable({ owners }) {
   if (memberNumbers.length > 0) {
     getMembersResults();
   }
-  const { members } = data || { members: [] };
+  console.log('data', data);
+  if (data) {
+    console.log(data.members);
+  }
+  let members = [];
+  if (data && data.members) {
+    members = data.members;
+  }
+  
+  // const { members } = data || { members: [] };
   console.log('members', JSON.stringify(members));
   const ownersWithNames = owners.map((owner) => {
     if (owner.name) {
