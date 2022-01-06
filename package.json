@@ -31,6 +31,7 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
+    "get_version": "printf 'v%s' ${npm_package_version}",
     "postversion": "git push && git push --tags",
     "start": "react-scripts start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
