@@ -31,6 +31,7 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
+    "postversion": "git push && git push --tags",
     "start": "react-scripts start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
@@ -71,6 +72,7 @@
     ]
   },
   "devDependencies": {
+    "@apollo/react-testing": "^4.0.0",
     "source-map-explorer": "^2.5.2"
   }
 }
