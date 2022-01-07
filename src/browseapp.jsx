@@ -4,7 +4,7 @@ import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 
-const DEFAULT_BOAT_BROWSE_STATE = { bpp: 12, page: 1, sort: 'rank', sortDirection: 'asc' };
+const DEFAULT_BOAT_BROWSE_STATE = { bpp: 12, page: 1, sort: 'rank', sortDirection: 'asc', filters: {} };
 
 function sessionStore() {
   const ss = sessionStorage.getItem("BOAT_BROWSE_STATE")

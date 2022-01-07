@@ -37,7 +37,7 @@ export default function SearchAndFilterBoats({
   sortDirection,
   sortField,
   boatsPerPage,
-  filters,
+  filters = {},
   view = {},
   pickers,
   onFilterChange,
@@ -46,8 +46,7 @@ export default function SearchAndFilterBoats({
   onMarkedOnly,
   isMarkedOnly,
 }) {
-  const currentFilters = filters || {};
-  const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
+  const [ogaNo, setOgaNo] = useState(filters.oga_no || "");
   const debouncedOgaNo = useDebounce(ogaNo, 1000);
   useEffect(() => {
     if (debouncedOgaNo) {
@@ -66,8 +65,8 @@ export default function SearchAndFilterBoats({
   }, [debouncedOgaNo, filters, onFilterChange]);
 
   const dateRange = [
-    currentFilters.firstYear || yearProps.min,
-    currentFilters.lastYear || yearProps.max,
+    filters.firstYear || yearProps.min,
+    filters.lastYear || yearProps.max,
   ];
   const [dr, setDr] = useState(dateRange);
 
@@ -77,9 +76,9 @@ export default function SearchAndFilterBoats({
 
   function pl(id, value) {
     if (value) {
-      onFilterChange({ ...currentFilters, [id]: value });
+      onFilterChange({ ...filters, [id]: value });
     } else {
-      const f = { ...currentFilters };
+      const f = { ...filters };
       delete f[id];
       onFilterChange(f);
     }
@@ -90,7 +89,7 @@ export default function SearchAndFilterBoats({
   }
 
   function handleDateRangeCommitted(event, [min, max]) {
-    const f = { ...currentFilters };
+    const f = { ...filters };
     if (min === yearProps.min) {
       delete f.firstYear;
     } else {
@@ -220,7 +219,7 @@ export default function SearchAndFilterBoats({
             id="name"
             options={makePicklist(view, pickers, "boatNames")}
             label="Boat Name"
-            value={currentFilters["name"]}
+            value={filters["name"]}
           />
         </Grid>
         <Grid>
@@ -230,7 +229,7 @@ export default function SearchAndFilterBoats({
             value={ogaNo}
             onSet={setOgaNo}
             onClear={() => {
-              const { oga_no, ...f } = currentFilters;
+              const { oga_no, ...f } = filters;
               if (oga_no) {
                 onFilterChange(f);
               }
@@ -243,7 +242,7 @@ export default function SearchAndFilterBoats({
             id="designer"
             options={makePicklist(view, pickers, "designer")}
             label="Designer"
-            value={currentFilters["designer"]}
+            value={filters["designer"]}
           />
         </Grid>
         <Grid>
@@ -252,7 +251,7 @@ export default function SearchAndFilterBoats({
             id="builder"
             options={makePicklist(view, pickers, "builder")}
             label="Builder"
-            value={currentFilters["builder"]}
+            value={filters["builder"]}
           />
         </Grid>
         <Grid>
@@ -261,7 +260,7 @@ export default function SearchAndFilterBoats({
             id="rig_type"
             options={makePicklist(view, pickers, "rig_type")}
             label="Rig Type"
-            value={currentFilters["rig_type"]}
+            value={filters["rig_type"]}
           />
         </Grid>
         <Grid>
@@ -270,7 +269,7 @@ export default function SearchAndFilterBoats({
             id="mainsail_type"
             options={makePicklist(view, pickers, "sail_type")}
             label="Mainsail Type"
-            value={currentFilters["mainsail_type"]}
+            value={filters["mainsail_type"]}
           />
         </Grid>
         <Grid>
@@ -280,7 +279,7 @@ export default function SearchAndFilterBoats({
             options={makePicklist(view, pickers, "generic_type")}
             label="Generic Type"
             value={() => {
-              const f = currentFilters["generic_type"];
+              const f = filters["generic_type"];
               if (Array.isArray(f)) {
                 return ""; // don't make a selection if multiple selected
               }
@@ -294,7 +293,7 @@ export default function SearchAndFilterBoats({
             id="design_class"
             options={makePicklist(view, pickers, "design_class")}
             label="Design Class"
-            value={currentFilters["design_class"]}
+            value={filters["design_class"]}
           />
         </Grid>
         <Grid>
@@ -303,7 +302,7 @@ export default function SearchAndFilterBoats({
             id="construction_material"
             options={makePicklist(view, pickers, "construction_material")}
             label="Construction Material"
-            value={currentFilters["construction_material"]}
+            value={filters["construction_material"]}
           />
         </Grid>
         <Grid>
