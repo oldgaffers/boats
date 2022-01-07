@@ -1,6 +1,6 @@
 import React from 'react';
 import { MemoryRouter } from "react-router-dom";
-import { render } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import gql from 'graphql-tag';
 import Boat from './boat';
@@ -27,13 +27,13 @@ const mocks = [
 ];
 
 test('renders learn react link', () => {
-  const { getByText } = render(
+  render(
     <MockedProvider mocks={mocks}>
       <MemoryRouter initialEntries={['/', '/?oga_no=1']} initialIndex={1} >
         <Boat/>
       </MemoryRouter>
     </MockedProvider>
   );
-  const wanted = getByText(/Loading/);
+  const wanted = screen.getByText(/Loading/);
   expect(wanted).toBeInTheDocument();
 });
