@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import { useCardQuery, getTotal, getBoats } from '../util/cardquery';
-import BoatPagination, { NewBoatPagination } from './boatpagination';
+import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
 
 export default function BoatCards({

@@ -1,22 +1,7 @@
 import React from "react";
-import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
 import usePagination from "@mui/material/usePagination";
-import Stack from "@mui/material/Stack";
 import { styled } from '@mui/material/styles';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-
-export function NewBoatPagination({ count, page, onChange }) {
-  const middle = Math.floor(count / 2);
-  return (
-    <Stack spacing={2}>
-      <Pagination count={count} page={page} color="primary"
-        onChange={onChange}
-      />
-    </Stack>
-  );
-}
 
 const List = styled('ul')({
   listStyle: 'none',
