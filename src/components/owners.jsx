@@ -33,19 +33,19 @@ function OwnersTable({ owners }) {
     }
   }`));
   if (loading) return <CircularProgress />;
-  if (error) console.log(`Error! ${error}`);
-  if (memberNumbers.length > 0) {
-    getMembersResults();
-  }
-  if (data) {
-    console.log(data.members);
+  let ownersWithNames = owners;
+  if (error) {
+    console.log(`Error! ${error}`);
   }
   let members = [];
-  if (data && data.members) {
-    members = data.members;
+  if (data) {
+    if (data.members) {
+      members = data.members;
+    }
+  } else if (memberNumbers.length > 0) {
+    getMembersResults();
   }
-  console.log('members', JSON.stringify(members));
-  const ownersWithNames = owners.map((owner) => {
+  ownersWithNames = owners.map((owner) => {
     if (owner.name) {
       return owner;
     }
@@ -72,7 +72,7 @@ function OwnersTable({ owners }) {
     <TableBody>
         {ownersWithNames
           .sort((a, b) => a.start>b.start)
-          .map((owner) => (<Owner id={owner.id} owner={owner}/>))
+          .map((owner) => (<Owner key={owner.id} id={owner.id} owner={owner}/>))
         }
     </TableBody>
     </Table>
@@ -88,6 +88,7 @@ export default function Owners({ boat }) {
       </TableContainer>
     );  
   }
+  console.log('no owners, using current')
   if (current && current.length > 0) {
     return (
       <TableContainer component={Paper}>
@@ -95,5 +96,6 @@ export default function Owners({ boat }) {
       </TableContainer>
     );  
   }
+  console.log('no current, returning empty div');
   return (<div/>);
 }
