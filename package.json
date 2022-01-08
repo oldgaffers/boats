@@ -27,7 +27,6 @@
     "react-iframe": "^1.8.0",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
-    "recoil": "^0.5.2",
     "web-vitals": "^2.1.2"
   },
   "scripts": {
