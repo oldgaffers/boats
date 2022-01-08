@@ -1,8 +1,9 @@
+#!/bin/sh
+CURRENT=`git branch --show-current`
+git checkout gh-pages
 cp build/static/js/main.*.js.map .
 git add *.map
 cp build/static/js/main.*.js $1.js
-VERSION=`npm run -s get_version`
-echo ${VERSION}
-sed -i -e "s/%%VERSION%%/${VERSION}/" $1.js
-git commit . -m ${VERSION}
+git commit . -m ${npm_package_version}
 git push
+git checkout ${CURRENT}

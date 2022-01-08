@@ -30,11 +30,12 @@
     "web-vitals": "^2.1.2"
   },
   "scripts": {
-    "get_version": "printf 'v%s' ${npm_package_version}",
     "postversion": "git push && git push --tags",
     "start": "react-scripts start",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
+    "postbuild": "sed -i -e s/%%VERSION%%/v${npm_package_version}/ build/static/js/main.*.js",
+    "deploy": "./deploy.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
