@@ -5,10 +5,14 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import PhotoButton from './photobutton';
-import EditButton from './editbutton';
-import AdminButton from './adminbutton';
-import Enquiry from './enquiry';
+// import PhotoButton from './photobutton';
+const PhotoButton = React.lazy(() => import('./photobutton'));
+// import EditButton from './editbutton';
+const EditButton = React.lazy(() => import('./editbutton'));
+// import AdminButton from './adminbutton';
+const AdminButton = React.lazy(() => import('./adminbutton'));
+// import Enquiry from './enquiry';
+const Enquiry = React.lazy(() => import('./Enquiry'));
 
 const drawerWidth = 240;
 
