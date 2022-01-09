@@ -49,9 +49,9 @@ export default function Boat({location}) {
       if (oga_no === '') {
         return (<div>
           <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
-          <div>If you are looking for boats for sale please visit <a href={location.origin+'/boat_register/boats_for_sale/boats_for_sale.html'}>Boats for Sale</a></div>
-          <div>If you are looking interested in trailerable boats please visit <a href={location.origin+'/boat_register/small_boats/small_boats.html'}>Small Boats</a></div>
-          <div>To browse our full register please visit <a href={location.origin+'/boat_register/browse_the_register/browse_the_register.html'}>All Boats</a></div>
+          <div>If you are looking for boats for sale please visit <a href={location.origin+'/boat_register/boats_for_sale/'}>Boats for Sale</a></div>
+          <div>If you are looking interested in trailerable boats please visit <a href={location.origin+'/boat_register/small_boats/'}>Small Boats</a></div>
+          <div>To browse our full register please visit <a href={location.origin+'/boat_register/browse_the_register/'}>All Boats</a></div>
             Otherwise please visit our <a href={location.origin}>Home Page</a>
           </div>);
     } else {
