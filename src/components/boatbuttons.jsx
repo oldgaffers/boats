@@ -12,7 +12,7 @@ import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 // const AdminButton = React.lazy(() => import('./adminbutton'));
 import Enquiry from './enquiry';
-const Enquiry = React.lazy(() => import('./Enquiry'));
+// const Enquiry = React.lazy(() => import('./Enquiry'));
 
 const drawerWidth = 240;
 

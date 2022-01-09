@@ -23,7 +23,6 @@ import {
   builderItems,
   constructionItems,
 } from "./ddf/util";
-import { HtmlEditor } from "./ddf/RTE";
 import { DropzoneArea } from "material-ui-dropzone";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -39,6 +38,8 @@ import { useQuery } from '@apollo/react-hooks';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { boatm2f, boatf2m } from "../util/format";
+import { HtmlEditor } from "./ddf/RTE";
+// const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
 
 /* 
 ✅ name	text

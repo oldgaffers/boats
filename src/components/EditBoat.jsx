@@ -11,14 +11,19 @@ import { rigForm } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { dimensionsForm } from "./Dimensions";
-import BoatIcon from "./boaticon";
-import BoatAnchoredIcon from "./boatanchoredicon";
 import { usePicklists } from "../util/picklists";
-import { HtmlEditor } from "./ddf/RTE";
 import { 
   cardForm, summaryForm, descriptionsForm, 
   RegistrationForm, constructionForm,
   yachtHullStep, dinghyHullStep } from "./ddf/SubForms";
+import BoatIcon from "./boaticon";
+import BoatAnchoredIcon from "./boatanchoredicon";
+import { HtmlEditor } from "./ddf/RTE";
+/*
+const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
+const BoatIcon = React.lazy(() => import("./boaticon"));
+const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
+*/
 
 const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },

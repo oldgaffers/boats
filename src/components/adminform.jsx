@@ -7,6 +7,11 @@ import {
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { HtmlEditor } from "./ddf/RTE";
+/*
+const BoatIcon = React.lazy(() => import("./boaticon"));
+const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
+const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
+*/
 
 export const schema = () => {
   return {
