@@ -5,8 +5,8 @@ import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import LoginButton from './loginbutton';
-// import CreateBoatButton from './CreateBoat';
-const CreateBoatButton = React.lazy(() => import('./CreateBoat'));
+import CreateBoatButton from './CreateBoat';
+// const CreateBoatButton = React.lazy(() => import('./CreateBoat'));
 
 export default function BoatRegisterIntro() {
   return (
