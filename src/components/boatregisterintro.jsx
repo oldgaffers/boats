@@ -5,14 +5,13 @@ import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import LoginButton from './loginbutton';
-import CreateBoatButton from './CreateBoat';
-// const CreateBoatButton = React.lazy(() => import('./CreateBoat'));
+import CreateBoatButton from './createboatbutton';
 
 export default function BoatRegisterIntro() {
   return (
     <Paper>
       <Grid container direction="row" alignItems="flex-start">
-        <Grid item xs={10} >
+        <Grid item xs={8} >
         <Typography variant="body1">
           We have hundreds of boats with pictures, and more waiting for
           pictures and more information.
@@ -33,17 +32,19 @@ export default function BoatRegisterIntro() {
         <ListItem>get a link to share the boat with friends or on other sites</ListItem>
         </List>
         <Typography variant="body1">
-            Know about a boat and can't find it here? Fill in our
+            Know about a boat and can't find it here? Fill in our Form
         </Typography>
-        <CreateBoatButton/>
         <Typography variant="body1">
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
         </Typography>
         </Grid>
         <Grid item xs={2} >
-          <LoginButton/>
+          <CreateBoatButton/>
         </Grid>
+        <Grid item xs={2} >
+          <LoginButton/>
+          </Grid>
       </Grid>
     </Paper>
     );

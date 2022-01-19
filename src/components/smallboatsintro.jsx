@@ -1,12 +1,15 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import CreateBoatButton from './CreateBoat';
-// const CreateBoatButton = React.lazy(() => import('./CreateBoat'));
+import Grid from '@mui/material/Grid';
+import LoginButton from './loginbutton';
+import CreateBoatButton from './createboatbutton';
 
 export default function SmallBoatsIntro() {
     return (
         <Paper>
+      <Grid container direction="row" alignItems="flex-start">
+        <Grid item xs={8} >
         <Typography variant="body1">
           Browse just the dayboats and dinghies.
           All are on the main register too.
@@ -16,9 +19,8 @@ export default function SmallBoatsIntro() {
           to see all the pictures and information we have for that boat.
           </Typography>
           <Typography variant="body1">
-            Know about a boat and can't find it here? Fill in our
+            Know about a boat and can't find it here? Fill in our Form
         </Typography>
-        <CreateBoatButton/>
         <Typography variant="body1">
             You can submit pictures, additions, and corrections to boats, or
             contact the owner from the boat's detail page.
@@ -27,6 +29,14 @@ export default function SmallBoatsIntro() {
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
         </Typography>
+        </Grid>
+        <Grid item xs={2}>
+          <CreateBoatButton/>
+          </Grid>
+        <Grid item xs={2} >
+          <LoginButton/>
+          </Grid>
+        </Grid>
         </Paper>
     );
 }

@@ -19,11 +19,9 @@ import {
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { HtmlEditor } from "./ddf/RTE";
-/*
-const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
-const BoatIcon = React.lazy(() => import("./boaticon"));
-const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
-*/
+// const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
+// const BoatIcon = React.lazy(() => import("./boaticon"));
+// const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
 
 const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },
@@ -210,20 +208,20 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
   };
 
   return (
-    <FormRenderer
-      sx={{ paddingTop: '1em' }}
-      schema={schema(pickers, roles)}
-      componentMapper={{
-        ...componentMapper,
-        "hull-form": HullForm,
-        html: HtmlEditor,
-      }}
-      FormTemplate={(props) => (
-        <FormTemplate {...props} showFormControls={false} />
-      )}
-      onCancel={onCancel}
-      onSubmit={handleSubmit}
-      initialValues={state}
-    />
+      <FormRenderer
+        sx={{ paddingTop: '1em' }}
+        schema={schema(pickers, roles)}
+        componentMapper={{
+          ...componentMapper,
+          "hull-form": HullForm,
+          html: HtmlEditor,
+        }}
+        FormTemplate={(props) => (
+          <FormTemplate {...props} showFormControls={false} />
+        )}
+        onCancel={onCancel}
+        onSubmit={handleSubmit}
+        initialValues={state}
+      />
   );
 }

@@ -12,9 +12,7 @@ import {
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
-import Button from "@mui/material/Button";
-import Snackbar from "@mui/material/Snackbar";
+import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import { usePicklists } from "../util/picklists";
 import {
@@ -35,11 +33,9 @@ import {
 } from "./ddf/SubForms";
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
-import { boatm2f, boatf2m } from "../util/format";
+import { boatm2f } from "../util/format";
 import { HtmlEditor } from "./ddf/RTE";
-// const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
+import { Typography } from "@mui/material";
 
 /* 
 ✅ name	text
@@ -136,7 +132,7 @@ const schema = (pickers, onChooseDesignClass) => {
             nextStep: ({ values }) => (values.ddf && values.ddf.have_pictures) ? "picture-step" : "basic-step",
             fields: [
               {
-                title: "Welcome to the new boat form",
+                // title: "Welcome to the new boat form",
                 component: componentTypes.SUB_FORM,
                 name: 'ddf.dc',
                 fields: [
@@ -210,7 +206,6 @@ const schema = (pickers, onChooseDesignClass) => {
             nextStep: "basic-step",
             fields: [
               {
-                title: 'Picture(s)',
                 name: "ddf.picture",
                 component: componentTypes.SUB_FORM,
                 fields: [
@@ -547,7 +542,7 @@ const PhotoUpload = ({ component, name, title }) => {
   );
 };
 
-const CreateBoatDialog = ({ open, onCancel, onSubmit }) => {
+export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const [dc, setDc] = useState('00000000-0000-0000-0000-000000000000');
   const pl = usePicklists();
   const bt = useQuery( query, { variables: { dc: dc  } } ); 
@@ -573,7 +568,9 @@ const CreateBoatDialog = ({ open, onCancel, onSubmit }) => {
       open={open}
       aria-labelledby="form-dialog-title"
     >
-      <Grid spacing={4} container>
+      <Box sx={{marginLeft: '1.5rem', marginTop: '1rem'}}>
+      <Typography variant="h5" >Welcome to the new boat form</Typography>
+      </Box>
         <FormRenderer
           componentMapper={{
             ...componentMapper,
@@ -589,90 +586,7 @@ const CreateBoatDialog = ({ open, onCancel, onSubmit }) => {
           initialValues={{ ...boatm2f(boat), user }}
           subscription={{ values: true }}
           />
-      </Grid>
+          
     </Dialog>
   );
-};
-
-function CreateBoatButton() {
-  const [open, setOpen] = useState(false);
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
-
-  const handleCancel = () => {
-    setOpen(false);
-  };
-
-  const handleSend = (values) => {
-    const { user, email, ddf, ...b } = values;
-    const { new_design_class, new_designer, new_builder, ...boat} = b;
-    const { fileList, copyright } = ddf;
-    setOpen(false);
-    const formData = new FormData();
-    if (fileList && fileList.length>0) {
-      for(let i=0; i<fileList.length; i++) {
-        formData.set(`file[${i}]`, fileList[i]);
-      }
-    }
-    const create = {};
-    if(new_design_class) {
-      create.design_class = new_design_class;
-    }
-    if(new_designer) {
-      create.designer = new_designer;
-    }
-    if(new_builder) {
-      create.builder = new_builder;
-    }
-    formData.set("boat", JSON.stringify(boatf2m(boat)));
-    formData.set("create", JSON.stringify(create));
-    formData.set("copyright", copyright);
-    formData.set("email", email);
-    formData.set("uuid", uuidv4());
-    axios.post(
-      'https://ac861c76e041d1b288fba6a2f1d52bdb.m.pipedream.net',
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        params: {
-          pipedream_upload_body: 1,
-        },
-      },
-    ).then(response => {
-      setSnackBarOpen(true);
-    }).catch(error => {
-      console.log('post', error);
-      // TODO snackbar from response.data
-    });      
-  };
-
-  const snackBarClose = () => {
-    setSnackBarOpen(false);
-  };
-
-  return (
-    <>
-      <Button
-        size="small"
-        color="secondary"
-        onClick={() => setOpen(true)}
-      >form</Button>
-      <CreateBoatDialog
-        open={open}
-        onCancel={handleCancel}
-        onSubmit={handleSend}
-      />
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={snackBarOpen}
-        autoHideDuration={2000}
-        onClose={snackBarClose}
-        message="Thanks, we'll get back to you."
-        severity="success"
-      />
-    </>
-  );
 }
-
-export default CreateBoatButton;

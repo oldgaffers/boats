@@ -6,13 +6,13 @@ import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import PhotoButton from './photobutton';
-// const PhotoButton = React.lazy(() => import('./photobutton'));
 import EditButton from './editbutton';
-// const EditButton = React.lazy(() => import('./editbutton'));
 import AdminButton from './adminbutton';
-// const AdminButton = React.lazy(() => import('./adminbutton'));
 import Enquiry from './enquiry';
-// const Enquiry = React.lazy(() => import('./Enquiry'));
+// const PhotoButton = React.lazy(() => import('./photobutton'));
+// const EditButton = React.lazy(() => import('./editbutton'));
+// const AdminButton = React.lazy(() => import('./adminbutton'));
+// const Enquiry = React.lazy(() => import('./enquiry'));
 
 const drawerWidth = 240;
 
@@ -134,7 +134,7 @@ export default function BoatButtons({ boat, location }) {
           ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} /></Grid>)
           : ''
         }
-      </Grid>
+        </Grid>
     </Paper>
   );
 };
