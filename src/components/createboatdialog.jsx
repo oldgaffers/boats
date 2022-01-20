@@ -14,7 +14,7 @@ import {
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
-import { usePicklists } from "../util/picklists";
+import { useLazyPicklists } from "../util/picklists";
 import {
   mapPicker,
   designerItems,
@@ -31,8 +31,7 @@ import {
   yachtHullStep,
   dinghyHullStep,
 } from "./ddf/SubForms";
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { gql, useLazyQuery } from '@apollo/client';
 import { boatm2f } from "../util/format";
 import { HtmlEditor } from "./ddf/RTE";
 import { Typography } from "@mui/material";
@@ -544,16 +543,27 @@ const PhotoUpload = ({ component, name, title }) => {
 
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const [dc, setDc] = useState('00000000-0000-0000-0000-000000000000');
-  const pl = usePicklists();
-  const bt = useQuery( query, { variables: { dc: dc  } } ); 
+  const [getPickLists, pl] = useLazyPicklists();
+  const [getBoat, bt] = useLazyQuery( query, { variables: { dc } } ); 
   const { user } = useAuth0();
 
+  if (!open) return '';
   if (pl.loading || bt.loading) return <CircularProgress />;
   if (pl.error) return <p>Error :(can't get picklists)</p>;
-
+  if (!pl.data) {
+    getPickLists();
+    return <CircularProgress />;
+  }
+  if (!bt.data) {
+    getBoat();
+    return <CircularProgress />;
+  }
   const pickers = pl.data;
-  const boat = bt.data ? (bt.data.design_class.length>0 ? bt.data.design_class[0].boatByArchetype : {}) : {};
-  boat.short_description = "She is a fine example of her type.";
+  let boat = { short_description: 'She\'s a real one-off.' };
+  if (bt.data.design_class.length>0) {
+    const archetype = bt.data.design_class[0].boatByArchetype
+    boat =  { ...archetype, short_description: "She is a fine example of her type." };
+  }
 
   const onChooseDesignClass = (id) => {
     if (id) {

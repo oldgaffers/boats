@@ -11,7 +11,7 @@ import { rigForm } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { dimensionsForm } from "./Dimensions";
-import { usePicklists } from "../util/picklists";
+import { useLazyPicklists } from "../util/picklists";
 import { 
   cardForm, summaryForm, descriptionsForm, 
   RegistrationForm, constructionForm,
@@ -175,8 +175,8 @@ export const schema = (pickers, roles) => {
   };
 };
 
-export default function EditBoat({ classes, onCancel, onSave, boat }) {
-  const { loading, error, data } = usePicklists();
+export default function EditBoat({ onCancel, onSave, boat }) {
+  const [getPickLists, { loading, error, data }] = useLazyPicklists();
   const { user, isAuthenticated } = useAuth0();
 
   if (loading) return <CircularProgress />;
@@ -187,8 +187,13 @@ export default function EditBoat({ classes, onCancel, onSave, boat }) {
       roles = user['https://oga.org.uk/roles'];
     }
   }
-  const pickers = data;
-
+  let pickers = {};
+  if (data) {
+    pickers = data;
+  } else {
+    getPickLists();
+    return <CircularProgress />;
+  }
   const state = { 
     ...boatm2f(boat), 
     ddf: { activity: "descriptions" },
