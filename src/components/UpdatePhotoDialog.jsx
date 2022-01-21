@@ -43,7 +43,7 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
   const classes = useStyles(theme);
   const [pictures, setPictures] = useState([]);
   const [email, setEmail] = useState(user && user.email);
-  const [copyright, setCopyright] = useState(user && user.name);
+  const [copyright, setCopyright] = useState(''); // user && user.name);
 
   const onDrop = (p) => {
     setPictures(p);
