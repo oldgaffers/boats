@@ -7,24 +7,18 @@ import { gql, useMutation } from "@apollo/client";
 import UpdateBoatDialog from './UpdateBoatDialog';
 
 const UPDATE_BOAT = gql`
-mutation MyMutation(
-  $boat: uuid = ""
-  $originator: String = "", 
-  $data: jsonb = "", 
-  $uuid: uuid = ""
-) {
-insert_boat_pending_updates_one(object: {
-  boat: $boat,
-  data: $data, 
-  originator: $originator, 
-  uuid: $uuid
-})`;
+mutation MyMutation($originator: String = "", $data: jsonb = "", $boat: uuid, $uuid: uuid = "") {
+  insert_boat_pending_updates(objects: {boat: $boat, data: $data, originator: $originator, uuid: $uuid}) {
+    affected_rows
+  }
+}
+`;
 
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [addChangeRequest, result] = useMutation(UPDATE_BOAT);
-
+  console.log('mutation', result);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -36,7 +30,7 @@ export default function EditButton({ classes, boat }) {
         variables: { 
           boat: boat.id,
           originator: changes.email, 
-          data: changes, 
+          data: { old: changes.old, new: changes.new }, 
           uuid: uuidv4()
          },
       });
