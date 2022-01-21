@@ -9,8 +9,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
-import gql from "graphql-tag";
-import { useMutation, useLazyQuery } from "@apollo/react-hooks";
+import { gql, useMutation, useLazyQuery } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const ADD_ENQUIRY = gql`

@@ -2,13 +2,28 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
-import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { gql, useMutation } from "@apollo/client";
 import UpdateBoatDialog from './UpdateBoatDialog';
+
+const UPDATE_BOAT = gql`
+mutation MyMutation(
+  $boat: uuid = ""
+  $originator: String = "", 
+  $data: jsonb = "", 
+  $uuid: uuid = ""
+) {
+insert_boat_pending_updates_one(object: {
+  boat: $boat,
+  data: $data, 
+  originator: $originator, 
+  uuid: $uuid
+})`;
 
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [addChangeRequest, result] = useMutation(UPDATE_BOAT);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -17,15 +32,15 @@ export default function EditButton({ classes, boat }) {
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
-      axios.post(
-        'https://ae69efba7038dcdfe87ce1c3479d2976.m.pipedream.net',
-        { ...changes, uuid: uuidv4() },
-      ).then(response => {
-        setSnackBarOpen(true);
-      }).catch(error => {
-        console.log('post', error);
-        // TODO snackbar from response.data
-      });      
+      addChangeRequest({
+        variables: { 
+          boat: boat.id,
+          originator: changes.email, 
+          data: changes, 
+          uuid: uuidv4()
+         },
+      });
+      setSnackBarOpen(true);
     }
   };
 
