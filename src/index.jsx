@@ -17,7 +17,7 @@ const theme = createTheme({
   },
 });
 
-const Pages = (app) => {
+const Pages = ({app}) => {
   switch (app) {
     case 'boat':
       console.log('boat');
