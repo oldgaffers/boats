@@ -5,10 +5,11 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import * as serviceWorker from './serviceWorker';
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { CookiesProvider } from "react-cookie";
+import red from '@mui/material/colors/red';
 import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
-import red from '@mui/material/colors/red';
+import ProcessUpdates from './components/processupdates';
 
 const theme = createTheme({
   palette: {
@@ -16,7 +17,18 @@ const theme = createTheme({
   },
 });
 
-const tags = ['app', 'boat', 'sell', 'small'];
+const Pages = (app) => {
+  switch (app) {
+    case 'boat':
+      return (<Boat/>);
+    case 'pending':
+      return (<ProcessUpdates/>);
+    default:
+      return (<BrowseApp variant={app}/>);
+  }
+};
+
+const tags = ['app', 'boat', 'sell', 'small', 'pending'];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length>0) {
   const app = div[0];
@@ -32,12 +44,7 @@ if (div.length>0) {
         <CookiesProvider>
           <OGAProvider>
             <ThemeProvider theme={theme}>
-              { (app === 'boat')
-                ?
-                (<Boat location={window.location}/>)
-                :
-                (<BrowseApp variant={app}/>)
-              }
+              <Pages app={app} />
             </ThemeProvider>
           </OGAProvider>
         </CookiesProvider>

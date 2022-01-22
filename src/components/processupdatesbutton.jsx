@@ -10,7 +10,7 @@ export default function ProcessUpdatesButton() {
         variant="contained"
         color='primary'
         href="/boat_register/pending/"
-      >Process Boat Updates</Button>
+      >Process Updates</Button>
     </>
   );
 }
