@@ -1,13 +1,23 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from './loginbutton';
 import CreateBoatButton from './createboatbutton';
+import ProcessUpdatesButton from './processupdatesbutton';
 
 export default function BoatRegisterIntro() {
+  const { user } = useAuth0();
+  let editor = false;
+  if (user) {
+    const roles = user['https://oga.org.uk/roles'];
+    editor = roles && roles.includes('editor');
+  }
+
   return (
     <Paper>
       <Grid container direction="row" alignItems="flex-start">
@@ -44,7 +54,8 @@ export default function BoatRegisterIntro() {
         </Grid>
         <Grid item xs={2} >
           <LoginButton/>
-          </Grid>
+          {editor?(<Box sx={{marginTop: '1rem'}}><ProcessUpdatesButton/></Box>):''}
+        </Grid>
       </Grid>
     </Paper>
     );
