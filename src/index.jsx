@@ -20,10 +20,13 @@ const theme = createTheme({
 const Pages = (app) => {
   switch (app) {
     case 'boat':
+      console.log('boat');
       return (<Boat/>);
     case 'pending':
+      console.log('pending');
       return (<ProcessUpdates/>);
     default:
+      console.log('browse', app);
       return (<BrowseApp variant={app}/>);
   }
 };
