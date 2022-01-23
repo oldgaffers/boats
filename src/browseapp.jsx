@@ -6,6 +6,7 @@ import SmallBoatsIntro from "./components/smallboatsintro";
 import { getState, saveState, setView } from "./util/statemanagement";
 
 export default function BrowseApp({ view='app' }) {
+  setView(view);
   const [state, setState] = useState(getState(view));
 
   const markedOnly = !!(state.filters && state.filters.oga_nos);
@@ -53,7 +54,6 @@ export default function BrowseApp({ view='app' }) {
   };
 
   const BB = ({title, state}) => {
-    setView(state.view);
     return (
       <GqlBoatBrowser
         title={title}
