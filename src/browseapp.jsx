@@ -3,7 +3,7 @@ import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
-import { getState, saveState } from "./util/statemanagement";
+import { getState, saveState, setView } from "./util/statemanagement";
 
 export default function App({ view='app' }) {
   const [state, setState] = useState(getState(view));
@@ -53,6 +53,7 @@ export default function App({ view='app' }) {
   };
 
   const BB = ({title, state}) => {
+    setView(state.view);
     return (
       <GqlBoatBrowser
         title={title}

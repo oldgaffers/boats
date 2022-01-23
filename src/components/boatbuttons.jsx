@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { getState } from "./util/statemanagement";
+import { getState } from "../util/statemanagement";
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';

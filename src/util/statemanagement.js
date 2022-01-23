@@ -27,17 +27,23 @@ const DEFAULT_BROWSE_STATE = {
 
 const key = (view) => `${view.toUpperCase()}_BROWSE_STATE`;
 
+export function setView(view) {
+    console.log('storing current view', view);
+    sessionStorage.setItem('BOAT_CURRENT_VIEW', view);
+}
+
 export function saveState(state, view='app') {
     console.log('storing state for view', view);
     sessionStorage.setItem(key(view), JSON.stringify(state));
 }
 
-export function getState(view='app') {
-    const ss = sessionStorage.getItem(key(view))
+export function getState(view) {
+    const wantedView = view || sessionStorage.getItem('BOAT_CURRENT_VIEW') || 'app';
+    const ss = sessionStorage.getItem(key(wantedView))
     if (ss) {
         return JSON.parse(ss);
     }
-    const r = DEFAULT_BROWSE_STATE[view]; // new session
-    saveState(r, view);
+    const r = DEFAULT_BROWSE_STATE[wantedView]; // new session
+    saveState(r, wantedView);
     return r;
 }
