@@ -24,12 +24,9 @@ function getBoat(b) {
   return upgradeBoat(b.data.result.pageContext.boat);
 }
 
-export default function Boat({location}) {
-  let oga_no = '';
-  if (location) {
-    const params = new URLSearchParams(location.search);
-    oga_no = params.get('oga_no');  
-  }
+export default function Boat({location={search:''}}) {
+  const params = new URLSearchParams(location.search);
+  const oga_no = params.get('oga_no');  
 
   const [b] = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`

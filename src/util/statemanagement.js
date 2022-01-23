@@ -35,6 +35,7 @@ export function setView(view) {
 export function saveState(state, view='app') {
     console.log('storing state for view', view);
     sessionStorage.setItem(key(view), JSON.stringify(state));
+    sessionStorage.removeItem('BOAT_BROWSE_STATE'); // TODO remove eventually
 }
 
 export function getState(view) {
