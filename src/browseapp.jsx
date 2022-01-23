@@ -3,31 +3,15 @@ import GqlBoatBrowser from "./components/GqlBoatBrowser";
 import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
+import { getState, saveState } from "./util/statemanagement";
 
-const DEFAULT_BOAT_BROWSE_STATE = { bpp: 12, page: 1, sort: 'rank', sortDirection: 'asc', filters: {} };
-
-function sessionStore() {
-  const ss = sessionStorage.getItem("BOAT_BROWSE_STATE")
-  if (ss) {
-    const parsed = JSON.parse(ss);
-    if (parsed.sortDirection) { // new layout
-      return parsed;
-    }
-    return DEFAULT_BOAT_BROWSE_STATE; // old layout
-  }
-  return DEFAULT_BOAT_BROWSE_STATE; // new session
-}
-
-export default function App({ variant }) {
-  const [state, setState] = useState({...sessionStore(), view: variant||'boat'});
+export default function App({ view='app' }) {
+  const [state, setState] = useState(getState(view));
 
   const markedOnly = !!(state.filters && state.filters.oga_nos);
   const markSet = useRef(new Set());
 
-  useEffect(() => {
-    console.log('storing state');
-    sessionStorage.setItem("BOAT_BROWSE_STATE", JSON.stringify(state));
-  }, [state]);
+  useEffect(() => { saveState(state, view); }, [state, view]);
 
   const handlePageSizeChange = (bpp) => {
     setState({...state, page: 1, bpp });
@@ -90,34 +74,19 @@ export default function App({ variant }) {
     case 'sell':
     return (<>
       <BoatsForSaleIntro />
-      <BB
-        title="Boats for Sale"
-        state={{
-          // price/descending is an initial decision, not fixed/forced
-          ...state,
-          sort: 'price', 
-          sortDirection: 'desc',
-          filters: { sale: true }
-        }} 
-      />
+      <BB title="Boats for Sale" state={state} />
     </>);
     case 'small':
     return (
       <>
         <SmallBoatsIntro />
-        <BB
-          title="Browse our small boats"
-          state={{
-            ...state,
-            filters: { generic_type:  ['Dinghy', 'Dayboat'] },
-          }}
-        />
+        <BB title="Browse our small boats" state={state} />
       </>
     );
   default:
-  return (<>
-    <BoatRegisterIntro />
-    <BB title="Browse the Register" state={state}/>
-    </>);
-  }
+    return (<>
+      <BoatRegisterIntro />
+      <BB title="Browse the Register" state={state}/>
+      </>);
+    }
 }
