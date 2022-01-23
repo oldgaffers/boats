@@ -26,7 +26,7 @@ function getBoat(b) {
 
 export default function Boat({location={search:'?oga_no='}}) {
   const params = new URLSearchParams(location.search);
-  const oga_no = params.get('oga_no');  
+  const oga_no = params.get('oga_no') || '';  
   console.log('Boat', location.search, oga_no, params);
 
   const [b] = useAxios(
