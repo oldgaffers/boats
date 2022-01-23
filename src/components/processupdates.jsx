@@ -9,7 +9,7 @@ const columns = [
 ];
 
 const pending = [
-    { oga_no: 315, name: 'Robinetta' },
+    { id: '315-1', oga_no: 315, name: 'Robinetta' },
 ];
 
 export default function ProcessUpdates() {
