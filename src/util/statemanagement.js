@@ -40,8 +40,10 @@ export function saveState(state, view='app') {
 
 export function getState(view) {
     const wantedView = view || sessionStorage.getItem('BOAT_CURRENT_VIEW') || 'app';
+    console.log(`statemanagement getState view ${view} wantedView ${wantedView}`)
     const ss = sessionStorage.getItem(key(wantedView))
     if (ss) {
+        console.log(`statemanagement getState got ${ss}`)
         return JSON.parse(ss);
     }
     const r = DEFAULT_BROWSE_STATE[wantedView]; // new session
