@@ -42,21 +42,20 @@ const smallQuery = gql(`{
     spar_material(order_by: {name: asc}, where: {boats: {generic_type: {_in: ["Dayboat", "Dinghy"]}}}) { name }
 }`);
 
-export function usePicklists(view={}) {
+export function usePicklists(view) {
     // for now we only support boats for sale and small boats
     let query = basicQuery;
     switch (view) {
         case 'small':
-            // { "where":{"_and":[{"genericTypeByGenericType":{"name":{"_in":["Dinghy","Dayboat"]}}}]}
-            console.log('small boats view');
+            console.log('picklists for small boats view');
             query = smallQuery;
             break;
         case 'sell':
-            console.log('boats for sale view');
+            console.log('picklists for boats for sale view');
             query = saleQuery;
             break;
         default:
-            console.log('main register');
+            console.log('picklists for main register');
     }
     return useQuery(query);
 }

@@ -21,7 +21,7 @@ const DEFAULT_BROWSE_STATE = {
         sort: 'rank', 
         sortDirection: 'asc',
         filters: { generic_type:  ['Dinghy', 'Dayboat'] },
-        view: 'app',    
+        view: 'small',    
     }
 };
 
