@@ -5,7 +5,7 @@ import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
 import { getState, saveState, setView } from "./util/statemanagement";
 
-export default function App({ view='app' }) {
+export default function BrowseApp({ view='app' }) {
   const [state, setState] = useState(getState(view));
 
   const markedOnly = !!(state.filters && state.filters.oga_nos);
