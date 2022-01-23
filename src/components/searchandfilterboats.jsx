@@ -38,7 +38,7 @@ export default function SearchAndFilterBoats({
   sortField,
   boatsPerPage,
   filters,
-  view = {},
+  view,
   pickers,
   onFilterChange,
   onPageSizeChange,
@@ -114,7 +114,7 @@ export default function SearchAndFilterBoats({
     { field: "length_on_deck", name: "Length", direction: "desc" },
     { field: "rank", name: "Editor's choice", direction: "asc" },
   ];
-  if (view.sell) {
+  if (view === 'sell') {
     sortOptions.push({ field: "price", name: "Price", direction: "desc" });
   }
   const sortLabelByField = sortOptions.reduce((r, { field, name }) => {
