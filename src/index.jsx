@@ -27,7 +27,7 @@ const Pages = ({app}) => {
       return (<ProcessUpdates/>);
     default:
       console.log('browse', app);
-      return (<BrowseApp variant={app}/>);
+      return (<BrowseApp view={app}/>);
   }
 };
 
