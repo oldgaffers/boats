@@ -21,7 +21,7 @@ const Pages = ({app}) => {
   switch (app) {
     case 'boat':
       console.log('boat');
-      return (<Boat/>);
+      return (<Boat location={window.location} />);
     case 'pending':
       console.log('pending');
       return (<ProcessUpdates/>);
