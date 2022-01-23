@@ -33,17 +33,14 @@ export function setView(view) {
 }
 
 export function saveState(state, view='app') {
-    console.log('storing state for view', view);
     sessionStorage.setItem(key(view), JSON.stringify(state));
     sessionStorage.removeItem('BOAT_BROWSE_STATE'); // TODO remove eventually
 }
 
 export function getState(view) {
     const wantedView = view || sessionStorage.getItem('BOAT_CURRENT_VIEW') || 'app';
-    console.log(`statemanagement getState view ${view} wantedView ${wantedView}`)
     const ss = sessionStorage.getItem(key(wantedView))
     if (ss) {
-        console.log(`statemanagement getState got ${ss}`)
         return JSON.parse(ss);
     }
     const r = DEFAULT_BROWSE_STATE[wantedView]; // new session
