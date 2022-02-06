@@ -19,6 +19,7 @@
     "apollo-link-context": "^1.0.20",
     "axios": "^0.24.0",
     "axios-hooks": "^3.0.0",
+    "diff": "^5.0.0",
     "draft-js-export-html": "^1.4.1",
     "graphql": "^15.8.0",
     "material-ui-dropzone": "^3.5.0",
@@ -75,11 +76,11 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "5.0.0",
+    "@apollo/react-testing": "^4.0.0",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "@apollo/react-testing": "^4.0.0",
+    "react-scripts": "5.0.0",
     "source-map-explorer": "^2.5.2"
   }
 }
