@@ -2,58 +2,59 @@ import React from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import YAML from 'yaml'
-import { diffLines } from 'diff';
 
-export default function ChangeViewer({ onClose, open, change }) {
+const renderCell = (value) => {
+    if (Array.isArray(value)) {
+        return JSON.stringify(value);
+    } else if (typeof value === 'object') {
+        return (<pre align="left">{YAML.stringify(value)}</pre>);
+    }
+    return value;
+};
+
+export default function ChangeViewer({ onClose, open, different, change }) {
     const handleClose = () => {
         console.log('ChangeViewer close');
         onClose();
     }
-    const oldy = YAML.stringify(change.old);
-    const newy = YAML.stringify(change.new);
-    const json = diffLines(oldy, newy, { context: 0 });
-    const ok = Object.keys(change.old);
-    const different = Object.keys(change.new).filter((key) => {
-        console.log(key, change.old[key], change.new[key]);
-        if (ok.includes(key)) {
-            if (Array.isArray(change.old[key])) {
-                if (change.old[key].length !== change.new[key].length) {
-                    return true;
-                }
-                if (change.old[key].length === 0) {
-                    return false;
-                }
-                return change.old[key] == change.new[key];
-            } else if (change.old[key] === change.new[key]) {
-                return false;
-            }
-        }
-        return true;
-    });
-    console.log(different);
+    console.log('ChangeViewer', different, change.old, change.new);
     return (
-        <>
-        <Dialog open={open}>
+        <Dialog open={open} fullWidth={true} maxWidth='xl'>
         <DialogTitle>Change for {change.old.name} ({change.old.oga_no})</DialogTitle>
         <DialogContent>
-          <DialogContentText id="change-viewer">
-              {json.map((part) => {
-            const text = part.value.trim();
-        if (part.added) return (<div style={{backgroundColor:'palegreen'}}>{text}</div>);
-        if (part.removed) return (<div style={{backgroundColor:'lightpink'}}>{text}</div>);
-        return (<div>&nbsp;</div>);
-            })}
-          </DialogContentText>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell align="left">Current</TableCell>
+            <TableCell align="left">Proposed</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {different.map((key) => (
+            <TableRow key={key} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} >
+              <TableCell component="th" scope="row">
+                {key}
+              </TableCell>
+              <TableCell align="right">{renderCell(change.old[key])}</TableCell>
+              <TableCell align="right">{renderCell(change.new[key])}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleClose}>OK</Button>
         </DialogActions>
         </Dialog>
-        </>
     );
 }

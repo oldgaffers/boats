@@ -22,6 +22,7 @@
     "diff": "^5.0.0",
     "draft-js-export-html": "^1.4.1",
     "graphql": "^15.8.0",
+    "json-diff": "^0.7.1",
     "material-ui-dropzone": "^3.5.0",
     "mui-rte": "^2.0.1",
     "react": "^17.0.2",
