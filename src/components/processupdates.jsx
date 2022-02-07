@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import EmailIcon from '@mui/icons-material/Email';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -8,7 +8,7 @@ import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
 
 const query = gql`query MyQuery {
   boat_pending_updates {
@@ -28,30 +28,76 @@ const query = gql`query MyQuery {
 */
 
 const renderValue = (key, value) => {
+  
+  if(['handicap_data'].includes(key)) {
+    return JSON.stringify(JSON.stringify(value));
+  }
   if(['spar_material'].includes(key)) {
     return value;
   }
-  if(['beam'].includes(key)) {
+  if(['beam','length_on_deck'].includes(key)) {
     return value;
   }
   return `"${value}"`;
 }
 
-const mutation = (changes) => `mutation updateBoat(
-  $id: uuid = "") {
-  update_boat(where: {id: {_eq: $id}}, _set: {
-    ${
-      changes.map(({ key, value }) => key + ': ' + renderValue(key, value)).join(', ')
+const mutation = (changes) => gql`mutation updateBoat($id: uuid) {
+  update_boat(
+    where: {id: {_eq: $id}},
+    _set: {
+      ${
+        (changes) ? changes.map(({ key, value }) => key + ': ' + renderValue(key, value)).join(', ') : 'spar_material: wood'
+      }
     }
-  })
+  )
   {
     affected_rows
   }
 }`;
 
+const changedKeys = (change) => {
+  const oldKeys = Object.keys(change.old);
+  return Object.keys(change.new).filter((key) => {
+    if (oldKeys.includes(key)) {
+        if (Array.isArray(change.old[key])) {
+            if (change.old[key].length !== change.new[key].length) {
+                return true;
+            }
+            if (change.old[key].length === 0) {
+                return false;
+            }
+            return change.old[key] === change.new[key];
+        } else if (typeof change.old[key] === 'object') {
+            return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
+        } else if (change.old[key] === change.new[key]) {
+            return false;
+        }
+    }
+    return true;
+  });
+}
+
+const differences = (change) => {
+  const keys = changedKeys(change);
+  return keys.map((key) => ({ key, value: change.new[key]}));
+}
+
 export default function ProcessUpdates() {
+  const [change, setChange] = useState();
+  console.log('XX', change);
+  const [updateBoat, result] = useMutation(mutation(change ? change.differences : undefined));
   const { user, isAuthenticated } = useAuth0();
   let roles = [];
+
+  useEffect(() => {
+    if (change && change.boat) {
+      updateBoat({ variables: { id: change.boat }})
+      setChange();
+    }
+  }, [change, updateBoat]);
+
+  console.log('mutation', result);
+
   if (isAuthenticated) {
       roles = user['https://oga.org.uk/roles'] || [];
   }
@@ -86,7 +132,6 @@ export default function ProcessUpdates() {
             return 'double click to see the change';
         },
         renderEditCell: (cellValues) => {
-            // console.log(cellValues);
             const handleChangeViewerClose = () => {
                 console.log('handleChangeViewerClose');
                 const { id, field } = cellValues;
@@ -94,25 +139,7 @@ export default function ProcessUpdates() {
                 cellValues.api.setCellMode(id, field, 'view');
             };
             const change = cellValues.row.data;
-            const oldKeys = Object.keys(change.old);
-            const different = Object.keys(change.new).filter((key) => {
-                if (oldKeys.includes(key)) {
-                    if (Array.isArray(change.old[key])) {
-                        if (change.old[key].length !== change.new[key].length) {
-                            return true;
-                        }
-                        if (change.old[key].length === 0) {
-                            return false;
-                        }
-                        return change.old[key] === change.new[key];
-                    } else if (typeof change.old[key] === 'object') {
-                        return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
-                    } else if (change.old[key] === change.new[key]) {
-                        return false;
-                    }
-                }
-                return true;
-            });
+            const different = changedKeys(change);
             if (different.length === 0) {
               return (<Alert variant="filled" severity="info">
               No changes identified.
@@ -146,8 +173,10 @@ export default function ProcessUpdates() {
             icon={<DoneIcon />}
             label="Commit"
             onClick={() => {
-              console.log(params);
-              console.log('mutation', mutation([{key: 'spar_material', value: 'wood'}]));
+              setChange({
+                differences: differences(params.row.data),
+                boat: params.row.data.new.id,
+              });
             }}
           />,      
         ]

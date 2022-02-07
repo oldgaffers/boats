@@ -25,7 +25,7 @@ export default function ChangeViewer({ onClose, open, different, change }) {
         console.log('ChangeViewer close');
         onClose();
     }
-    console.log('ChangeViewer', different, change.old, change.new);
+    // console.log('ChangeViewer', different, change.old, change.new);
     return (
         <Dialog open={open} fullWidth={true} maxWidth='xl'>
         <DialogTitle>Change for {change.old.name} ({change.old.oga_no})</DialogTitle>
