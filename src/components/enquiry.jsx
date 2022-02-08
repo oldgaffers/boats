@@ -204,6 +204,7 @@ export default function Enquiry({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
+  const userRoles = (user && user['https://oga.org.uk/roles']) || [];
   const [email, setEmail] = useState(user && user.email);
   const [text, setText] = useState("");
   // eslint-disable-next-line no-unused-vars
@@ -216,7 +217,7 @@ export default function Enquiry({ classes, boat }) {
  
   const handleClickOpen = () => {
     setOpen(true);
-    if (user) {
+    if (userRoles.includes('member')) {
       const memberNumbers = [...new Set(boat.ownerships.current.map((owner) => owner.member))];
       getOwners({ variables: { members: memberNumbers } })
     }
@@ -279,7 +280,7 @@ export default function Enquiry({ classes, boat }) {
         open={open}
         boat={boat}
         email={email}
-        userRoles={(user && user['https://oga.org.uk/roles']) || []}
+        userRoles={userRoles}
         members={data && data.members}
         onCancel={handleCancel}
         onSend={handleSend}
