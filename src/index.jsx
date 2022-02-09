@@ -18,16 +18,45 @@ const theme = createTheme({
 });
 
 const Pages = ({app}) => {
+  const auth = {
+    domain: "dev-uf87e942.eu.auth0.com",
+    clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
+    redirectUri: {window.location.origin + window.location.pathname},
+    audience: "https://oga.org.uk/boatregister",
+  }
   switch (app) {
     case 'boat':
       console.log('boat');
-      return (<Boat location={window.location} />);
+      return (
+        <Auth0Provider
+        domain="dev-uf87e942.eu.auth0.com"
+        clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+        redirectUri={window.location.origin + window.location.pathname}
+        audience="https://oga.org.uk/boatregister"
+        scope="member"
+      >
+        <Boat location={window.location} />
+      </Auth0Provider>
+      );
     case 'pending':
-      console.log('pending');
-      return (<ProcessUpdates/>);
+      return (
+      <Auth0Provider {...auth} scope="editor">
+        <ProcessUpdates/>
+      </Auth0Provider>)
+      ;
     default:
       console.log('browse', app);
-      return (<BrowseApp view={app}/>);
+      return (
+        <Auth0Provider
+        domain="dev-uf87e942.eu.auth0.com"
+        clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+        redirectUri={window.location.origin + window.location.pathname}
+        audience="https://oga.org.uk/boatregister"
+        scope="member"
+      >
+        <BrowseApp view={app}/>
+      </Auth0Provider>
+      );
   }
 };
 
@@ -37,21 +66,13 @@ if (div.length>0) {
   const app = div[0];
   ReactDOM.render(
     <React.StrictMode>
-      <Auth0Provider
-        domain="dev-uf87e942.eu.auth0.com"
-        clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
-        redirectUri={window.location.origin + window.location.pathname}
-        audience="https://oga.org.uk/boatregister"
-        scope="member"
-      >
-        <CookiesProvider>
-          <OGAProvider>
-            <ThemeProvider theme={theme}>
-              <Pages app={app} />
-            </ThemeProvider>
-          </OGAProvider>
-        </CookiesProvider>
-      </Auth0Provider>
+      <CookiesProvider>
+        <OGAProvider>
+          <ThemeProvider theme={theme}>
+            <Pages app={app} />
+          </ThemeProvider>
+        </OGAProvider>
+      </CookiesProvider>
     </React.StrictMode>,
     document.getElementById(app)
   );
