@@ -53,7 +53,7 @@ const mutation = (changes) => {
       }
     }`
   }
-  const r = `mutation updateBoat($id: uuid) {
+  const r = `mutation updateBoat($id: uuid!, $row_to_delete: Int!) {
     update_boat(
       where: {id: {_eq: $id}},
       _set: {
@@ -64,6 +64,9 @@ const mutation = (changes) => {
     )
     {
       affected_rows
+    }
+    delete_boat_pending_updates_by_pk(id: $row_to_delete) {
+      id
     }
   }`
   console.log('mutation', r);
@@ -105,7 +108,7 @@ export default function ProcessUpdates() {
 
   useEffect(() => {
     if (change && change.boat && !updateBoatResult.called) {
-      const params = { variables: { id: change.boat }};
+      const params = { variables: { id: change.boat, row_to_delete: change.row_to_delete }};
       console.log('updateBoat', params);
       updateBoat(params);
       setChange();
@@ -200,6 +203,7 @@ export default function ProcessUpdates() {
               setChange({
                 differences: differences(params.row.data),
                 boat: params.row.data.new.id,
+                row_to_delete: params.row.id,
               });
             }}
           />,      
