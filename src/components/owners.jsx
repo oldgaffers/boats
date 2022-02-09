@@ -11,13 +11,14 @@ import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/client';
 
 function Owner({ owner }) {
-  console.log('Owner', owner);
-    return (
+  const name = owner.name || owner.note
+  const share = owner.share ? `${owner.share}/64` : '';
+  return (
     <TableRow key={owner.id}>
-        <TableCell align="left">{owner.name}</TableCell>
+        <TableCell align="left">{name}</TableCell>
         <TableCell align="left">{owner.start || '?'}</TableCell>
         <TableCell align="left">{owner.end || '-'}</TableCell>
-        <TableCell align="left">{owner.share}/64</TableCell>
+        <TableCell align="left">{share}</TableCell>
     </TableRow>
     );
 }
@@ -74,7 +75,7 @@ function OwnersTable({ owners }) {
     <TableBody>
         {ownersWithNames
           .sort((a, b) => a.start>b.start)
-          .map((owner) => (<Owner key={owner.id} id={owner.id} owner={owner}/>))
+          .map((owner, index) => (<Owner key={index} id={index} owner={owner}/>))
         }
     </TableBody>
     </Table>

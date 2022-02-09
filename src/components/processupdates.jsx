@@ -41,19 +41,34 @@ const renderValue = (key, value) => {
   return `"${value}"`;
 }
 
-const mutation = (changes) => gql`mutation updateBoat($id: uuid) {
-  update_boat(
-    where: {id: {_eq: $id}},
-    _set: {
-      ${
-        (changes) ? changes.map(({ key, value }) => key + ': ' + renderValue(key, value)).join(', ') : 'spar_material: wood'
+const mutation = (changes) => {
+  console.log('mutation changes', changes);
+  if (!changes) {
+    return gql`mutation updateBoat($id: uuid) {
+      update_boat(
+        where: {id: {_eq: $id}}
+      )
+      {
+        affected_rows
       }
-    }
-  )
-  {
-    affected_rows
+    }`
   }
-}`;
+  const r = `mutation updateBoat($id: uuid) {
+    update_boat(
+      where: {id: {_eq: $id}},
+      _set: {
+        ${
+          changes.map(({ key, value }) => key + ': ' + renderValue(key, value)).join(', ')
+        }
+      }
+    )
+    {
+      affected_rows
+    }
+  }`
+  console.log('mutation', r);
+  return gql(r);
+};
 
 const changedKeys = (change) => {
   const oldKeys = Object.keys(change.old);
@@ -84,31 +99,40 @@ const differences = (change) => {
 
 export default function ProcessUpdates() {
   const [change, setChange] = useState();
-  console.log('XX', change);
-  const [updateBoat, result] = useMutation(mutation(change ? change.differences : undefined));
+  const [updateBoat, updateBoatResult] = useMutation(mutation(change ? change.differences : undefined));
+  const [getPending, pd] = useLazyQuery( query ); 
   const { user, isAuthenticated } = useAuth0();
-  let roles = [];
 
   useEffect(() => {
-    if (change && change.boat) {
-      updateBoat({ variables: { id: change.boat }})
+    if (change && change.boat && !updateBoatResult.called) {
+      const params = { variables: { id: change.boat }};
+      console.log('updateBoat', params);
+      updateBoat(params);
       setChange();
     }
-  }, [change, updateBoat]);
+  }, [change, updateBoat, updateBoatResult]);
 
-  console.log('mutation', result);
-
-  if (isAuthenticated) {
-      roles = user['https://oga.org.uk/roles'] || [];
+  if (!isAuthenticated) {
+    return (<div>Please log in to view this page</div>);
   }
-  if(document.referrer.includes('localhost')) { roles.push('editor')}
-  const [getPending, pd] = useLazyQuery( query ); 
+
+  const roles = user['https://oga.org.uk/roles'] || [];
+  if (!roles.includes('editor')) {
+    return (<div>This pag is only useful to editors of the boat register</div>);
+  }
+
+  console.log('updateBoatResult',  updateBoatResult);
+
   if (!pd.called) {
     getPending();
     return <CircularProgress />;
   }
   if (pd.loading) {
     return <CircularProgress />;
+  }
+
+  if(updateBoatResult.error) {
+    console.log('updateBoatResult error');
   }
 
   const handlePageChange = (page) => {
@@ -184,20 +208,18 @@ export default function ProcessUpdates() {
   ];
 
   return (
-    <div style={{ height: 350, width: '100%' }}>
-      <div style={{ display: 'flex', height: '100%' }}>
-        <div style={{ flexGrow: 1 }}>
-          <DataGrid
-            rows={pd.data.boat_pending_updates}
-            columns={columns} 
-            components={{ Toolbar: GridToolbar }}
-            autoHeight={true}
-            onPageChange={(page, details) => handlePageChange(page, details)}
-            onPageSizeChange={(pageSize) => handlePageSizeChange(pageSize)}
-            onCellEditCommit={(params) => handleEditCellCommit(params)}
-          />
-        </div>
+    <div style={{ display: 'flex', height: '100%' }}>
+      <div style={{ flexGrow: 1 }}>
+        <DataGrid
+          rows={pd.data.boat_pending_updates}
+          columns={columns} 
+          components={{ Toolbar: GridToolbar }}
+          autoHeight={true}
+          onPageChange={(page, details) => handlePageChange(page, details)}
+          onPageSizeChange={(pageSize) => handlePageSizeChange(pageSize)}
+          onCellEditCommit={(params) => handleEditCellCommit(params)}
+        />
       </div>
-      </div>
+    </div>
   );
 }

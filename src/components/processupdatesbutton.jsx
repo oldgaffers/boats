@@ -21,7 +21,6 @@ export default function ProcessUpdatesButton() {
   }
   if(document.referrer.includes('localhost')) { roles.push('editor')}
   const [getPending, pd] = useLazyQuery( query ); 
-  console.log(pd);
   if (!pd.called) {
     getPending();
     return <CircularProgress />;

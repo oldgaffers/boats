@@ -35,13 +35,17 @@ const Pages = ({app}) => {
         audience="https://oga.org.uk/boatregister"
         scope="member"
       >
-        <Boat location={window.location} />
+        <OGAProvider>
+          <Boat location={window.location} />
+        </OGAProvider>
       </Auth0Provider>
       );
     case 'pending':
       return (
-      <Auth0Provider {...auth} scope="editor">
-        <ProcessUpdates/>
+      <Auth0Provider {...auth} scope="edit">
+        <OGAProvider>
+          <ProcessUpdates/>
+        </OGAProvider>
       </Auth0Provider>)
       ;
     default:
@@ -54,7 +58,9 @@ const Pages = ({app}) => {
         audience="https://oga.org.uk/boatregister"
         scope="member"
       >
-        <BrowseApp view={app}/>
+        <OGAProvider>
+          <BrowseApp view={app}/>
+        </OGAProvider>
       </Auth0Provider>
       );
   }
@@ -67,11 +73,9 @@ if (div.length>0) {
   ReactDOM.render(
     <React.StrictMode>
       <CookiesProvider>
-        <OGAProvider>
-          <ThemeProvider theme={theme}>
-            <Pages app={app} />
-          </ThemeProvider>
-        </OGAProvider>
+        <ThemeProvider theme={theme}>
+          <Pages app={app} />
+        </ThemeProvider>
       </CookiesProvider>
     </React.StrictMode>,
     document.getElementById(app)
