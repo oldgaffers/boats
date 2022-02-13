@@ -6,13 +6,54 @@ import { v4 as uuidv4 } from 'uuid';
 import { gql, useMutation } from "@apollo/client";
 import UpdateBoatDialog from './UpdateBoatDialog';
 
-const UPDATE_BOAT = gql`
-mutation MyMutation($originator: String = "", $data: jsonb = "", $boat: uuid, $uuid: uuid = "") {
-  insert_boat_pending_updates(objects: {boat: $boat, data: $data, originator: $originator, uuid: $uuid}) {
-    affected_rows
-  }
+const changedKeys = (change) => {
+  const oldKeys = Object.keys(change.old);
+  return Object.keys(change.new).filter((key) => {
+    if (oldKeys.includes(key)) {
+        if (Array.isArray(change.old[key])) {
+            if (change.old[key].length !== change.new[key].length) {
+                return true;
+            }
+            if (change.old[key].length === 0) {
+                return false;
+            }
+            return change.old[key] === change.new[key];
+        } else if (typeof change.old[key] === 'object') {
+            return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
+        } else if (change.old[key] === change.new[key]) {
+            return false;
+        }
+    }
+    return true;
+  });
 }
-`;
+
+const differences = (change) => {
+  const fields = changedKeys(change);
+  return fields.map((field) => ({ field, current: change.old[field], proposed: change.new[field]}));
+}
+
+const UPDATE_BOAT = gql`mutation insertUpdate(
+  $uuid: uuid!,
+  $originator: String!, 
+  $boat: uuid!, 
+  $field: String!, 
+  $current: String!, 
+  $proposed: String!) {
+  insert_boat_pending_updates_one(
+    object: {
+      uuid: $uuid,
+      boat: $boat,
+      current: $current,
+      field: $field,
+      originator: $originator,
+      proposed: $proposed
+    }
+  ) {
+    id
+    uuid
+  }
+}`;
 
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
@@ -26,13 +67,30 @@ export default function EditButton({ classes, boat }) {
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
-      addChangeRequest({
-        variables: { 
-          boat: boat.id,
-          originator: changes.email, 
-          data: { old: changes.old, new: changes.new }, 
-          uuid: uuidv4()
-         },
+      const d = differences(changes);
+      console.log('D', d);
+      d.forEach((c) => {
+        switch (typeof c.current) {
+          case 'string':
+            break;
+          case 'object':
+          case 'number':
+            c.current = JSON.stringify(c.current);
+            break;
+          case 'undefined':
+            c.current = '';
+            break;
+          default:            
+        }
+        console.log('C', c);
+        addChangeRequest({
+          variables: { 
+            boat: boat.id,
+            originator: changes.email, 
+            uuid: uuidv4(),
+            ...c,
+           },
+        });  
       });
       setSnackBarOpen(true);
     }
