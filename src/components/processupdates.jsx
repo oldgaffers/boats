@@ -28,7 +28,7 @@ const query = gql`query MyQuery {
 
 const UPDATE_BOAT = gql`mutation updateBoat($id: uuid!, $change: boat_set_input) {
   update_boat_by_pk(pk_columns: {id: $id}, _set: $change) {
-      id
+      id update_id
   }
 }`;
 
@@ -36,6 +36,15 @@ const UPDATE_STATUS = gql`mutation updateStatus($row: Int!, $status: pending_sta
   update_boat_pending_updates_by_pk(pk_columns: {id: $row}, _set: {status: $status})
   {
     status id
+  }
+}`;
+
+const UPDATE_STATUS_BY_UUID = gql`mutation updateStatusByUuid($uuid: uuid!, $status: pending_status_enum!) {
+  update_boat_pending_updates(where: {uuid: {_eq: $uuid}}, _set: {status: $status}) {
+    returning {
+      id
+      status
+    }
   }
 }`;
 
@@ -71,33 +80,45 @@ const differences = (change) => {
 }
 
 export default function ProcessUpdates() {
+  const [updateInProgress, setUpdateInProgress] = useState(false);
   const [updateBoat, updateBoatResult] = useMutation(UPDATE_BOAT);
+  const [updatePendingItemByUuid, updatePendingItemByUuidResult] = useMutation(UPDATE_STATUS_BY_UUID);
   const [updatePendingItem, updatePendingItemResult] = useMutation(UPDATE_STATUS);
   const [deletePendingItem, deletePendingItemResult] = useMutation(DELETE_PENDING);
-  const [getPending, pd] = useLazyQuery( query ); 
+  const [getPending, getPendingResult] = useLazyQuery( query ); 
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    console.log('UP', updatePendingItemResult);
-    if ((!updatePendingItemResult.error) && (!updatePendingItemResult.loading) && updatePendingItemResult.called) {
-      const { data } = updatePendingItemResult;
+    const { data, loading, error, called } = updatePendingItemByUuidResult;
+    if ((!error) && (!loading) && called) {
+      console.log('successfully updated the status of a row', data.update_boat_pending_updates);
+      setUpdateInProgress(false);
+    }
+  }, [updatePendingItemByUuidResult]);
+
+  useEffect(() => {
+    const { data, loading, error, called } = updatePendingItemResult;
+    if ((!error) && (!loading) && called) {
       console.log('successfully updated the status of a row', data.update_boat_pending_updates_by_pk);
     }
   }, [updatePendingItemResult]);
 
   useEffect(() => {
-    console.log('UB', updateBoatResult);
-    if ((!updateBoatResult.error) && (!updateBoatResult.loading) && updateBoatResult.called) {
-      console.log('successfully deleted a row');
+    const { data, loading, error, called } = updateBoatResult;
+    if ((!error) && (!loading) && called && updateInProgress) {
+      const u = data.update_boat_by_pk;
+      console.log('successfully updated a boat', u);
+      updatePendingItemByUuid({ variables: { uuid: u.update_id, status: 'done' }})
     }
-  }, [updateBoatResult]);
+  }, [updateBoatResult, updatePendingItemByUuid, updateInProgress]);
 
   useEffect(() => {
-    console.log('DP', deletePendingItemResult);
-    if ((!deletePendingItemResult.error) && (!deletePendingItemResult.loading) && deletePendingItemResult.called) {
-      console.log('successfully deleted a row');
+    const { data, loading, error, called } = deletePendingItemResult;
+    if ((!error) && (!loading) && called) {
+      console.log('successfully deleted a row', data.delete_boat_pending_updates_by_pk.id);
+      getPendingResult.refetch();
     }
-  }, [deletePendingItemResult]);
+  }, [deletePendingItemResult, getPendingResult]);
 
   if (!isAuthenticated) {
     return (<div>Please log in to view this page</div>);
@@ -108,14 +129,11 @@ export default function ProcessUpdates() {
     return (<div>This pag is only useful to editors of the boat register</div>);
   }
 
-  console.log('updateBoatResult',  updateBoatResult);
-  console.log('updatePendingItemResult',  updatePendingItemResult);
-
-  if (!pd.called) {
+  if (!getPendingResult.called) {
     getPending();
     return <CircularProgress />;
   }
-  if (pd.loading) {
+  if (getPendingResult.loading) {
     return <CircularProgress />;
   }
 
@@ -126,18 +144,6 @@ export default function ProcessUpdates() {
   if(updatePendingItemResult.error) {
     console.log('updatePendingItemResult error');
   }
-
-  const handlePageChange = (page) => {
-        console.log('handlePageChange', page);
-  };
-
-  const handlePageSizeChange = (pageSize) => {
-        console.log('handlePageSizeChange', pageSize);
-  }
-
-  const handleEditCellCommit = (params) => {
-        console.log('handleEditCellCommit', params);
-  };
 
   const columns = [
     { field: 'name', headerName: 'Boat Name', width: 150, valueGetter: (params) => params.row.boat_by_id.name },
@@ -172,7 +178,8 @@ export default function ProcessUpdates() {
             label="Commit"
             onClick={() => {
               const { boat, field, proposed } = params.row;
-              updateBoat({ variables: { id: boat, change: { [field]: proposed } } });
+              setUpdateInProgress(true);
+              updateBoat({ variables: { id: boat, change: { [field]: proposed, update_id: params.row.uuid } } });
             }}
           />,      
           <GridActionsCellItem
@@ -187,7 +194,7 @@ export default function ProcessUpdates() {
   ];
 
   const data = [];
-  pd.data.boat_pending_updates.forEach((update) => {
+  getPendingResult.data.boat_pending_updates.forEach((update) => {
     if (update.data) {
       const d = differences(update.data);
       d.forEach(({ field, current, proposed }, index) => {
@@ -208,9 +215,6 @@ export default function ProcessUpdates() {
           columns={columns} 
           components={{ Toolbar: GridToolbar }}
           autoHeight={true}
-          onPageChange={(page, details) => handlePageChange(page, details)}
-          onPageSizeChange={(pageSize) => handlePageSizeChange(pageSize)}
-          onCellEditCommit={(params) => handleEditCellCommit(params)}
         />
       </div>
     </div>
