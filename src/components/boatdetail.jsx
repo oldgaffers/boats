@@ -82,8 +82,8 @@ export default function BoatDetail({ boat }) {
         <Paper>
           <ConditionalText label="Fore triangle base" value={m2f(hd.fore_triangle_base)}/>
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)}/>
-          <ConditionalText label="Calculated THCF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
-          <ConditionalText label="THCF" value={hd.thcf && hd.thcf.toFixed(3)}/>
+          <ConditionalText label="Calculated T(H)CF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
+          <ConditionalText label="T(H)CF" value={hd.thcf && hd.thcf.toFixed(3)}/>
           <SailTable handicapData={hd}/>
         </Paper>
       )});    

@@ -77,7 +77,7 @@ import { Typography } from "@mui/material";
 ✅ home_country	text
 price	numeric
 selling_status	text
-current_owners	jsonb
+ownerships	jsonb
 oga_no	integer
 keel_laid	date
 launched	date
