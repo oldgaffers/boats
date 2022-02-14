@@ -34,7 +34,7 @@ export const rigForm = (pickers) => {
     {
     component: componentTypes.TEXT_FIELD,
     name: "air_draft",
-    label: "Air draft",
+    label: "Air Draft (decimal feet)",
     type: 'number',
     dataType: dataTypes.FLOAT,
   }
