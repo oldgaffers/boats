@@ -10,6 +10,10 @@ import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
 
+const jsonbFields = [
+  "previous_names", "handicap_data", "current_owners", "reference", "ownerships"
+];
+
 const query = gql`query MyQuery {
   boat_pending_updates {
     boat
@@ -51,33 +55,6 @@ const UPDATE_STATUS_BY_UUID = gql`mutation updateStatusByUuid($uuid: uuid!, $sta
 const DELETE_PENDING = gql`mutation deleteStatus($row: Int!) {
   delete_boat_pending_updates_by_pk(id: $row) { id }
 }`;
-
-const changedKeys = (change) => {
-  const oldKeys = Object.keys(change.old);
-  return Object.keys(change.new).filter((key) => {
-    if (oldKeys.includes(key)) {
-        if (Array.isArray(change.old[key])) {
-            if (change.old[key].length !== change.new[key].length) {
-                return true;
-            }
-            if (change.old[key].length === 0) {
-                return false;
-            }
-            return change.old[key] === change.new[key];
-        } else if (typeof change.old[key] === 'object') {
-            return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
-        } else if (change.old[key] === change.new[key]) {
-            return false;
-        }
-    }
-    return true;
-  });
-}
-
-const differences = (change) => {
-  const keys = changedKeys(change);
-  return keys.map((field) => ({ field, current: change.old[field], proposed: change.new[field]}));
-}
 
 export default function ProcessUpdates() {
   const [updateInProgress, setUpdateInProgress] = useState(false);
@@ -178,8 +155,12 @@ export default function ProcessUpdates() {
             label="Commit"
             onClick={() => {
               const { boat, field, proposed } = params.row;
+              let newData = proposed;
+              if (jsonbFields.includes(field)) {
+                newData = JSON.parse(proposed);
+              }
               setUpdateInProgress(true);
-              updateBoat({ variables: { id: boat, change: { [field]: proposed, update_id: params.row.uuid } } });
+              updateBoat({ variables: { id: boat, change: { [field]: newData, update_id: params.row.uuid } } });
             }}
           />,      
           <GridActionsCellItem
@@ -193,25 +174,11 @@ export default function ProcessUpdates() {
     }
   ];
 
-  const data = [];
-  getPendingResult.data.boat_pending_updates.forEach((update) => {
-    if (update.data) {
-      const d = differences(update.data);
-      d.forEach(({ field, current, proposed }, index) => {
-        data.push({
-          ...update, field, current, proposed, id: `${update.id}-${index}`
-        })
-      });  
-    } else {
-      data.push(update);
-    }
-  });
-
   return (
     <div style={{ display: 'flex', height: '100%' }}>
       <div style={{ flexGrow: 1 }}>
         <DataGrid
-          rows={data}
+          rows={getPendingResult.data.boat_pending_updates}
           columns={columns} 
           components={{ Toolbar: GridToolbar }}
           autoHeight={true}
