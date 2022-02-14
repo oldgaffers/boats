@@ -55,6 +55,20 @@ const UPDATE_BOAT = gql`mutation insertUpdate(
   }
 }`;
 
+function asString(c) {
+  switch (typeof c) {
+    case 'string':
+      return c;
+    case 'object':
+    case 'number':
+      return JSON.stringify(c);
+    case 'undefined':
+      return '';
+    default:
+      return c;
+  }  
+}
+
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -68,29 +82,19 @@ export default function EditButton({ classes, boat }) {
     setOpen(false);
     if (changes) {
       const d = differences(changes);
-      console.log('D', d);
       d.forEach((c) => {
-        switch (typeof c.current) {
-          case 'string':
-            break;
-          case 'object':
-          case 'number':
-            c.current = JSON.stringify(c.current);
-            break;
-          case 'undefined':
-            c.current = '';
-            break;
-          default:            
-        }
-        console.log('C', c);
-        addChangeRequest({
+        const v = {
           variables: { 
             boat: boat.id,
             originator: changes.email, 
             uuid: uuidv4(),
-            ...c,
+            field: c.field,
+            current: asString(c.current),
+            proposed: asString(c.proposed),
            },
-        });  
+        };
+        console.log('C', v);
+        addChangeRequest(v);  
       });
       setSnackBarOpen(true);
     }
