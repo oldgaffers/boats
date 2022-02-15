@@ -127,19 +127,53 @@ const schema = (pickers, onChooseDesignClass) => {
         name: "boat",
         fields: [
           {
+            name: "check-step",
+            nextStep: "prefill-step",
+            fields: [
+              {
+                component: componentTypes.PLAIN_TEXT,
+                name: "ddf.dc.check1",
+                label: "If the boat you want to add has an OGA Number it is already on the register."
+                  +" Over 3,000 boats already are."
+              },
+              {
+                component: componentTypes.PLAIN_TEXT,
+                name: "ddf.dc.check2",
+                label: "You can search the register by the current or a previous name or by OGA Number."
+                  +" Or you can filter by age, length, type, etc.",
+              },
+              {
+                component: componentTypes.PLAIN_TEXT,
+                name: "ddf.dc.check3",
+                label: "If you can find the boat on the register, please click on the MORE button on the boat's card."
+                  +" Then use the ADD PICTURES or the I HAVE EDITS buttons instead of using this form."
+              },
+              {
+                component: componentTypes.PLAIN_TEXT,
+                name: "ddf.dc.check4",
+                label: " If you aren't sure, please contact the boat register editors."
+              },
+              {
+                component: componentTypes.CHECKBOX,
+                name: "ddf.dc.isnew",
+                label: "I've checked and the boat isn't already on the register.",
+                isRequired: true,
+                validate: [{type: validatorTypes.REQUIRED}],
+          }
+            ]
+          },
+          {
             name: "prefill-step",
             nextStep: ({ values }) => (values.ddf && values.ddf.have_pictures) ? "picture-step" : "basic-step",
             fields: [
               {
-                // title: "Welcome to the new boat form",
                 component: componentTypes.SUB_FORM,
                 name: 'ddf.dc',
                 fields: [
                   {
                     component: componentTypes.PLAIN_TEXT,
                     name: "ddf.dc.desc",
-                    label:
-                      " Only fields marked with a * are mandatory."
+                    label: " Fields marked with a * are mandatory, everything else is optional."
                       +" Once your boat has an entry you can add more pictures and information."
                       +" As a minimum, we'd like a name, picture, rig type, mainsail type, length, beam and short description."
                       ,
@@ -579,7 +613,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
       aria-labelledby="form-dialog-title"
     >
       <Box sx={{marginLeft: '1.5rem', marginTop: '1rem'}}>
-      <Typography variant="h5" >Welcome to the new boat form</Typography>
+      <Typography variant="h5" >Add a boat to the Register</Typography>
       </Box>
         <FormRenderer
           componentMapper={{
