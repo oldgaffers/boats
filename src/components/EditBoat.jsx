@@ -23,6 +23,8 @@ import { HtmlEditor } from "./ddf/RTE";
 // const BoatIcon = React.lazy(() => import("./boaticon"));
 // const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
 
+export const CLEARED_VALUE = '[remove]';
+
 const activities = [
   { label: "Edit the fields used on the boat's card", value: "card" },
   { label: "Edit the summary", value: "summary" },
@@ -35,8 +37,8 @@ const activities = [
 
 const editorActivities = [
   ...activities,
-  { label: 'set for-sale', value: 'sell'},
-  { label: 'set sold', value: 'sold'},
+  { label: 'Put up for sale', value: 'sell'},
+  { label: 'Set sold', value: 'sold'},
 ];
 
 const activityForm = (roles) => { 
@@ -203,6 +205,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;
     const updates = boatf2m(result);
+    console.log('BOAT', updates, result);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
@@ -227,6 +230,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
         onCancel={onCancel}
         onSubmit={handleSubmit}
         initialValues={state}
+        clearedValue={CLEARED_VALUE}
       />
   );
 }
