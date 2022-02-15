@@ -24,13 +24,13 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
   const { input } = useFieldApi({ component, name });
 
   const handleBlur = () => {
-    console.log("RTE blur", input.name, ref);
+    // console.log("RTE blur", input.name, ref);
     ref.current.save();
   };
 
   const handleSave = (data) => {
     const html = stateToHTML(convertFromRaw(JSON.parse(data)));
-    console.log("RTE save", input.name, html);
+    // console.log("RTE save", input.name, html);
     input.onChange(html);
   };
 
