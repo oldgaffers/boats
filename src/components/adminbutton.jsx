@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import AdminDialog from './admindialog';
+import { gql, useMutation } from '@apollo/client';
+
+const UPDATE_BOAT = gql`mutation updateBoat($id: uuid!, $change: boat_set_input) {
+  update_boat_by_pk(pk_columns: {id: $id}, _set: $change) {
+      id
+  }
+}`;
 
 export default function AdminButton({ classes, boat }) {
+  const [updateInProgress, setUpdateInProgress] = useState(false);
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [updateBoat, updateBoatResult] = useMutation(UPDATE_BOAT);
+
+  useEffect(() => {
+    const { data, loading, error, called } = updateBoatResult;
+    if ((!error) && (!loading) && called && updateInProgress) {
+      const u = data.update_boat_by_pk;
+      console.log('successfully updated a boat', u);
+      setSnackBarOpen(true);
+      setUpdateInProgress(false);
+    }
+  }, [updateBoatResult, updateInProgress]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -16,19 +35,9 @@ export default function AdminButton({ classes, boat }) {
     console.log('handleClose', changes);
     setOpen(false);
     if (changes) {
-      /*
-      axios.post(
-        'https://ae69efba7038dcdfe87ce1c3479d2976.m.pipedream.net',
-        { ...changes, uuid: uuidv4() },
-      ).then(response => {
-        console.log('post', response);
-        setSnackBarOpen(true);
-      }).catch(error => {
-        console.log('post', error);
-        // TODO snackbar from response.data
-      });
-      */
-     console.log('admin post');      
+     console.log('admin post'); 
+     setUpdateInProgress(true);
+     updateBoat({ variables: { id: boat.id, change: { ownerships: changes.boat.ownerships } } });
     }
   };
 
@@ -50,7 +59,7 @@ export default function AdminButton({ classes, boat }) {
         open={snackBarOpen}
         autoHideDuration={2000}
         onClose={handleSnackBarClose}
-        message="Thanks, we'll get back to you."
+        message="Record updated."
         severity="success"
       />
     </div>

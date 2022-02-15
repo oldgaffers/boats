@@ -1,16 +1,91 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import _debounce from 'lodash/debounce';
 import { useLazyQuery, gql } from '@apollo/client';
-import { FormRenderer, componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
-import {
-  componentMapper,
-  FormTemplate,
-} from "@data-driven-forms/mui-component-mapper";
+import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
+import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
+import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template';
+import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
+import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
+import TextField from '@data-driven-forms/mui-component-mapper/text-field';
+import Select from '@data-driven-forms/mui-component-mapper/select';
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { HtmlEditor } from "./ddf/RTE";
 // const BoatIcon = React.lazy(() => import("./boaticon"));
 // const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
 // const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
+
+const MEMBER_QUERY = gql(`query members($members: [Int]!) {
+  members(members: $members) {
+    firstname
+    lastname
+    member
+    id
+  }
+}`);
+
+const FieldListener = (props) => {
+  console.log('PROPS', props);
+  const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
+  const [field, setField] = useState();
+  const { getFieldState, getState, change } = useFormApi();
+  const modified = getState().modified;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const dbGetMembers = useCallback(_debounce(getMembers, 1000), []);
+  
+  if (field && modified[field]) {
+    const member = getFieldState(field).value;
+    console.log('V', member);
+    if (!getMembersResults.called) {
+      dbGetMembers({ variables: { members: [member] }});
+    }
+  }
+
+  useEffect(() => {
+    const f = Object.keys(modified).find((key) => modified[key]);
+    if (f) {
+      console.log('CHANGE', f);
+      setField(f);
+    }
+  }, [modified]);
+
+  if (getMembersResults.called) {
+    if (getMembersResults.loading) {
+      console.log('still loading');
+    } else {
+      if (getMembersResults.error) {
+        console.log(getMembersResults.error);
+      } else {
+        const m = getMembersResults.data.members;
+        if (m.length > 0) {
+          console.log(m);
+          const member = getFieldState(field).value;
+          if (m[0].member === member) {
+            console.log('got a good answer');
+            if(m.length === 1) {
+              change(field.replace('member', 'id'), m[0].id);
+              change(field.replace('member', 'share'), 64);
+              change(field.replace('member', 'current'), true);
+              return (<TextField {...props} value={`${m[0].firstname} ${m[0].lastname}`}/>);
+            }
+            return (<Select {...props} options={m.map((o) => ({
+              label: `${o.firstname} ${o.lastname}`,
+              value: o,
+            }))}/>);
+          } else {
+            console.log('user field has changed - refetch');
+            getMembers({ variables: { members: [member] }});
+          }
+        }
+      }
+    }
+  }
+  return (<TextField {...props}/>);
+};
+
+const FieldListenerWrapper = (props) => <FormSpy subcription={{ values: true }}>{() => <FieldListener {...props} />}</FormSpy>;
 
 export const schema = () => {
   return {
@@ -87,40 +162,59 @@ export const schema = () => {
                     label: "Owners",
                     fields: [
                       { 
+                        name: 'member',
+                        label: 'Membership Number',
+                        component: componentTypes.TEXT_FIELD,
+                        type: 'string',
+                        dataType: dataTypes.INTEGER,
+                      },
+                      { 
+                        name: 'id',
+                        label: 'GOLD ID',
+                        component: componentTypes.TEXT_FIELD,
+                        type: 'string',
+                        dataType: dataTypes.INTEGER,
+                        /*
+                        resolveProps: (props, { meta, input }, formOptions) => {
+                          const state = formOptions.getState();
+                          if (state.dirty) {
+                            onChooseDesignClass(input.value);
+                          }
+                        },*/
+                      },
+                      { 
                         name: 'name',
                         label: 'Owner',
-                        component: componentTypes.TEXT_FIELD,
-                        resolveProps: (props, { meta, input }, formOptions) => {
-                          const { values } = formOptions.getState();
-                          const index = parseInt(input.name.split(/[[\]]/)[1]);
-                          const r = values.boat.ownerships.owners[index];
-                          if (r.name) {
-                            return { initialValue: r.name };
-                          }
-                          return { initialValue: `${r.member}/${r.id}` };
-                        }
+                        component: 'field-listener',
                       },
                       { 
                         name: 'start',
                         label: 'From',
-                        component: componentTypes.TEXT_FIELD
+                        component: componentTypes.TEXT_FIELD,
+                        type: 'string',
+                        dataType: dataTypes.INTEGER,
                       },
                       { 
                         name: 'end',
                         label: 'To',
-                        component: componentTypes.TEXT_FIELD
+                        component: componentTypes.TEXT_FIELD,
+                        type: 'string',
+                        dataType: dataTypes.INTEGER,
+                      },
+                      { 
+                        name: 'current',
+                        label: 'current',
+                        component: componentTypes.CHECKBOX,
                       },
                       { 
                         name: 'share',
                         label: 'Share',
                         component: componentTypes.TEXT_FIELD,
-                      }
+                        type: 'string',
+                        dataType: dataTypes.INTEGER,
+                        default: 64,
+                      },
                     ],
-                  },
-                  {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "boat.name",
-                    label: "name",
                   },
                 ],
               },
@@ -157,19 +251,6 @@ export const schema = () => {
                 label:
                   "Thanks for helping make the register better.",
               },
-              {
-                component: componentTypes.TEXT_FIELD,
-                name: "email",
-                label: "email",
-                isRequired: true,
-                validate: [
-                  { type: validatorTypes.REQUIRED },
-                  {
-                    type: validatorTypes.PATTERN,
-                    pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-                  }
-                ]
-              },
             ],
           },
         ],
@@ -181,29 +262,45 @@ export const schema = () => {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 export default function AdminForm({ onCancel, onSave, boat }) {
-  const memberNumbers = boat.ownerships.owners.filter((o) => queryIf(o)).map((o) => o.member);
-  const [getMembers, getMembersResults] = useLazyQuery(gql(`query members($members: [Int]!) {
-    members(members: $members) {
-      firstname
-      lastname
-      member
-      id
+  const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
+  if (boat.ownerships) {
+    const { current } = boat.ownerships;
+    if ((!boat.ownerships.owners) && current) {
+      boat.ownerships.owners = current;
     }
-  }`));
-
-  if (memberNumbers.length > 0 && !getMembersResults.called) {
-    getMembers(memberNumbers);
-  }
-  if (getMembersResults.called && !getMembersResults.loading && !getMembersResults.error) {
-    boat.ownerships.owners = boat.ownerships.owners.map((owner) => {
-      if (owner.name) {
-        return owner;
+    const memberNumbers = [...new Set(boat.ownerships.owners.filter((o) => queryIf(o)).map((o) => o.member))];
+    if (memberNumbers.length > 0 && !getMembersResults.called) {
+      getMembers({ variables: { members: memberNumbers }});
+    }
+    if (getMembersResults.called) {
+      if (getMembersResults.loading) {
+        console.log('still loading');
+      } else {
+        if (getMembersResults.error) {
+          console.log(getMembersResults.error);
+        } else {
+          boat.ownerships.owners = boat.ownerships.owners.map((owner) => {
+            if (owner.name) {
+              return owner;
+            }
+            const m = getMembersResults.data.members.find((r) => owner.member === r.member && owner.id === r.id);
+            return {
+              ...owner,
+              name: `${m.firstname} ${m.lastname} (${m.member}:${m.id})`
+            };
+          });    
+        }
       }
-      const m = getMembersResults.data.members.find((r) => owner.member === r.member && owner.id === r.id);
-      return {
-        ...owner,
-        name: `${m[0].firstname} ${m[0].lastname}`
-      };
+    }
+
+    boat.ownerships.owners = boat.ownerships.owners.map((owner) => {
+      if (owner.member && current) {
+        const c = current.find((r) => owner.member === r.member && owner.id === r.id);
+        if (c) {
+          return { ...owner, current: true }
+        }
+      }
+      return owner;
     });
   }
 
@@ -213,7 +310,14 @@ export default function AdminForm({ onCancel, onSave, boat }) {
   };
 
   const handleSubmit = (values) => {
-    onSave(values);
+    if (values.boat.ownerships) {
+      values.boat.ownerships.owners.forEach((owner) => {
+        if (owner.member) {
+          delete owner.name;
+        }
+      });
+    }
+    onSave({ boat: values.boat });
   };
 
   return (
@@ -222,6 +326,7 @@ export default function AdminForm({ onCancel, onSave, boat }) {
         componentMapper={{
           ...componentMapper,
           html: HtmlEditor,
+          'field-listener': FieldListenerWrapper,
         }}
         FormTemplate={(props) => (
           <FormTemplate {...props} showFormControls={false} />
@@ -229,6 +334,7 @@ export default function AdminForm({ onCancel, onSave, boat }) {
         onCancel={onCancel}
         onSubmit={handleSubmit}
         initialValues={state}
+        subcription={{ modified: true }}
       />
   );
 }
