@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import { v4 as uuidv4 } from 'uuid';
 import { gql, useMutation } from "@apollo/client";
 import UpdateBoatDialog from './UpdateBoatDialog';
+import { CLEARED_VALUE } from './EditBoat';
 
 const changedKeys = (change) => {
   const oldKeys = Object.keys(change.old);
@@ -30,28 +31,16 @@ const changedKeys = (change) => {
 
 const differences = (change) => {
   const fields = changedKeys(change);
-  return fields.map((field) => ({ field, current: change.old[field], proposed: change.new[field]}));
+  return fields.map((field) => {
+    const proposed = (change.new[field] === CLEARED_VALUE) ? undefined : change.new[field];
+    return { field, current: change.old[field], proposed};
+  });
 }
 
-const UPDATE_BOAT = gql`mutation insertUpdate(
-  $uuid: uuid!,
-  $originator: String!, 
-  $boat: uuid!, 
-  $field: String!, 
-  $current: String!, 
-  $proposed: String!) {
-  insert_boat_pending_updates_one(
-    object: {
-      uuid: $uuid,
-      boat: $boat,
-      current: $current,
-      field: $field,
-      originator: $originator,
-      proposed: $proposed
-    }
-  ) {
-    id
-    uuid
+const PROPOSE_UPDATES = gql`mutation propose_updates(
+  $objects: [boat_pending_updates_insert_input!]!) {
+  insert_boat_pending_updates(objects: $objects) {
+    affected_rows
   }
 }`;
 
@@ -71,32 +60,51 @@ function asString(c) {
 
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
+  const [complete, setComplete] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [addChangeRequest, result] = useMutation(UPDATE_BOAT);
-  console.log('mutation', result);
+  const [addChangeRequests, addChangeRequestsResult] = useMutation(PROPOSE_UPDATES);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    const { data, loading, error, called } = addChangeRequestsResult;
+    if (called) {
+      if (loading) {
+        // console.log('still loading');
+      } else {
+        if (error) {
+          console.log('error submitting a change', error);
+        } else {
+          if (complete) {
+            // console.log('complete');
+          } else {
+            console.log(`successfully submitted ${data.insert_boat_pending_updates.affected_rows} changes`);
+            setSnackBarOpen(true);
+            setComplete(true);
+          }
+        }  
+      }
+    } else {      
+      // console.log('idle');
+    }
+  }, [addChangeRequestsResult, complete]);
 
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
       const d = differences(changes);
-      d.forEach((c) => {
-        const v = {
-          variables: { 
-            boat: boat.id,
-            originator: changes.email, 
-            uuid: uuidv4(),
-            field: c.field,
-            current: asString(c.current),
-            proposed: asString(c.proposed),
-           },
-        };
-        console.log('C', v);
-        addChangeRequest(v);  
-      });
-      setSnackBarOpen(true);
+      // console.log('differences', d);
+      setComplete(false);
+      addChangeRequests({ variables: { objects: d.map((c) => ({
+        boat: boat.id,
+        originator: changes.email, 
+        uuid: uuidv4(),
+        field: c.field,
+        current: asString(c.current),
+        proposed: asString(c.proposed),
+      }))}});
     }
   };
 
