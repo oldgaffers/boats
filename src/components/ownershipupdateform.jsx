@@ -24,6 +24,13 @@ export const ownershipUpdateForm = {
     component: componentTypes.SUB_FORM,
     fields: [
         {
+            component: componentTypes.PLAIN_TEXT,
+            name: 'ddf.ownerships_label',   
+            label: 'You can add, remove and edit ownership records on this page.'
+            +' If you are listed as an owner and this is no-longer true just add an end year.'
+            +' Your changes will be send to the editors who will update the boat\'s record'
+        },
+        {
             component: "ownership-form",
             name: "ownerships",
             label: "Known Owners",
@@ -45,19 +52,29 @@ export default function OwnershipForm(props) {
             id: parseInt(user['https://oga.org.uk/id']),
             member: parseInt(user['https://oga.org.uk/member']),
         };
+        console.log(user);  
+        console.log(membership);  
     }
-    console.log(membership);  
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
     if (getMembersResults.loading) return <CircularProgress />;
     const { owners } = ownerships;
+
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
     }
+
     const memberNumbers = [...new Set(owners.filter((o) => queryIf(o)).map((o) => o.member))];
     if (membership && !memberNumbers.includes(membership.member)) {
         memberNumbers.push(membership.member);
+        // be nice to use user.name but this isn't always provided.
+        // unless we add it to user metadata from GOLD
     }
-    console.log('memberNumbers', memberNumbers);
+
+    const current = ownerships.current || owners.filter((o) => o.current);
+    const currentIds = current.map((o) => o.id);
+
+    const theirBoat = currentIds.includes(membership.id);
+
     let members = [];
     if (getMembersResults.data) {
         if (getMembersResults.data.members) {
@@ -87,18 +104,18 @@ export default function OwnershipForm(props) {
     console.log('new owner could start at', lastEnd);
 
     const handleClaim = () => {
-        console.log('members', members);
         const family = members.filter((m) => m.member === membership.member);
-        console.log(family);
         family.forEach((m) => {
             const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64/family.length) };
-            console.log('claim', o);
             owners.push(o);    
         })
         setOwnerships({ ...ownerships, owners });
     }
 
-    const handleAddRow = () => console.log('add');
+    const handleAddRow = () => {
+        owners.push({ name: '', start: lastEnd, share: 64 });
+        setOwnerships({ ...ownerships, owners });
+    }
 
     const deleteRow = (row) => {
         console.log('delete', row);
@@ -111,7 +128,7 @@ export default function OwnershipForm(props) {
         return {
             ...owner,
             id: index,
-            ID: owner.id, // TODO - not sure we need this
+            ID: owner.id, // needed for ownerName
         }
     }).sort((a, b) => a.start > b.start);
 
@@ -136,6 +153,7 @@ export default function OwnershipForm(props) {
                           ]
                     }
                 ]}
+                autoPageSize={true}
             />
             <Stack
                 sx={{ width: '100%', mb: 1 }}
@@ -143,11 +161,13 @@ export default function OwnershipForm(props) {
                 alignItems="flex-start"
                 columnGap={1}
             >
+                {theirBoat?'':(
                 <Button size="small" onClick={handleClaim}>
                     This is my boat
-                </Button>
+                </Button>)
+                }
                 <Button size="small" onClick={handleAddRow}>
-                    I know of other people who have owned her
+                    Add a record
                 </Button>
             </Stack>
         </div>
