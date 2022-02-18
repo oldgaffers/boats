@@ -9,6 +9,55 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
+import { BasicHtmlEditor } from "./ddf/RTE";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
+function HtmlEditDialog({ text, open, onSave }) {
+  const [html, setHtml] = useState(text);
+  const [isOpen, setIsOpen] = useState(open);
+
+  return (
+    <div>
+      <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Edits here can be saved back to the table and then accepted into the boat record.
+          </DialogContentText>
+          <BasicHtmlEditor
+            data={html}
+            onSave={(data) => setHtml(data)}
+            controls={["title", "bold", "italic", "numberList", "bulletList", "link"]}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => { setIsOpen(false); }}>Cancel</Button>
+          <Button onClick={() => {setIsOpen(false); onSave(html);}}>Update</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+function renderHtmlEditInputCell(params) {
+  const { id, api, field, value } = params;
+  console.log(id, field);
+  const handleSave = (html) => {
+    console.log('save', html);
+    api.commitCellChange({ id, field, props: { value: html }});
+    api.setCellMode(id, field, 'view');
+  };
+
+  if (params.row.field === 'full_description') {
+    return (<HtmlEditDialog open={true} text={value} onSave={handleSave} />);
+  }
+  return undefined;
+}
 
 const jsonbFields = [
   "previous_names", "handicap_data", "current_owners", "reference", "ownerships"
@@ -62,7 +111,7 @@ export default function ProcessUpdates() {
   const [updatePendingItemByUuid, updatePendingItemByUuidResult] = useMutation(UPDATE_STATUS_BY_UUID);
   const [updatePendingItem, updatePendingItemResult] = useMutation(UPDATE_STATUS);
   const [deletePendingItem, deletePendingItemResult] = useMutation(DELETE_PENDING);
-  const [getPending, getPendingResult] = useLazyQuery( query ); 
+  const [getPending, getPendingResult] = useLazyQuery(query);
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
@@ -85,7 +134,7 @@ export default function ProcessUpdates() {
     if ((!error) && (!loading) && called && updateInProgress) {
       const u = data.update_boat_by_pk;
       console.log('successfully updated a boat', u);
-      updatePendingItemByUuid({ variables: { uuid: u.update_id, status: 'done' }})
+      updatePendingItemByUuid({ variables: { uuid: u.update_id, status: 'done' } })
     }
   }, [updateBoatResult, updatePendingItemByUuid, updateInProgress]);
 
@@ -114,11 +163,11 @@ export default function ProcessUpdates() {
     return <CircularProgress />;
   }
 
-  if(updateBoatResult.error) {
+  if (updateBoatResult.error) {
     console.log('updateBoatResult error');
   }
 
-  if(updatePendingItemResult.error) {
+  if (updatePendingItemResult.error) {
     console.log('updatePendingItemResult error');
   }
 
@@ -127,50 +176,52 @@ export default function ProcessUpdates() {
     { field: 'oga_no', headerName: 'OGA No.', width: 90, valueGetter: (params) => params.row.boat_by_id.oga_no },
     { field: 'originator', headerName: 'Contact', width: 200 },
     { field: 'field', headerName: 'Change of', width: 150, valueFormatter: (params) => params.value.replace(/_/g, ' ') },
-    { field: 'current', headerName: 'Existing', width: 300, valueFormatter: (params) => {
-      if (params.value === 'null') return '';
-      if (params.value == null) return undefined;
-      return params.value;
-    } },
-    { field: 'proposed', headerName: 'Proposed', flex: 1, editable: true },
+    {
+      field: 'current', headerName: 'Existing', width: 300, valueFormatter: (params) => {
+        if (params.value === 'null') return '';
+        if (params.value == null) return undefined;
+        return params.value;
+      }
+    },
+    { field: 'proposed', headerName: 'Proposed', flex: 1, editable: true, renderEditCell: renderHtmlEditInputCell },
     { field: 'status', headerName: 'Done', width: 50 },
     {
       field: 'actions',
       type: 'actions',
       getActions: (params) => [
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={() => deletePendingItem({ variables: { row: params.row.id }})}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            icon={<EmailIcon />}
-            label="Contact Originator"
-            onClick={() => console.log(params)}
-            showInMenu
-          />,
-          <GridActionsCellItem
-            icon={<DoneIcon />}
-            label="Commit"
-            onClick={() => {
-              const { boat, field, proposed } = params.row;
-              let newData = proposed;
-              if (jsonbFields.includes(field)) {
-                newData = JSON.parse(proposed);
-              }
-              setUpdateInProgress(true);
-              updateBoat({ variables: { id: boat, change: { [field]: newData, update_id: params.row.uuid } } });
-            }}
-          />,      
-          <GridActionsCellItem
-            icon={<CancelIcon />}
-            label="Reject"
-            onClick={() => {
-              updatePendingItem({ variables: { row: params.row.id, status: 'rejected' }})
-            }}
-          />,      
-        ]
+        <GridActionsCellItem
+          icon={<DeleteIcon />}
+          label="Delete"
+          onClick={() => deletePendingItem({ variables: { row: params.row.id } })}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<EmailIcon />}
+          label="Contact Originator"
+          onClick={() => console.log(params)}
+          showInMenu
+        />,
+        <GridActionsCellItem
+          icon={<DoneIcon />}
+          label="Commit"
+          onClick={() => {
+            const { boat, field, proposed } = params.row;
+            let newData = proposed;
+            if (jsonbFields.includes(field)) {
+              newData = JSON.parse(proposed);
+            }
+            setUpdateInProgress(true);
+            updateBoat({ variables: { id: boat, change: { [field]: newData, update_id: params.row.uuid } } });
+          }}
+        />,
+        <GridActionsCellItem
+          icon={<CancelIcon />}
+          label="Reject"
+          onClick={() => {
+            updatePendingItem({ variables: { row: params.row.id, status: 'rejected' } })
+          }}
+        />,
+      ]
     }
   ];
 
@@ -179,7 +230,7 @@ export default function ProcessUpdates() {
       <div style={{ flexGrow: 1 }}>
         <DataGrid
           rows={getPendingResult.data.boat_pending_updates}
-          columns={columns} 
+          columns={columns}
           components={{ Toolbar: GridToolbar }}
           autoHeight={true}
         />
