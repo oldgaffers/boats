@@ -6,6 +6,7 @@ import {
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
 import { useAuth0 } from "@auth0/auth0-react";
+import OwnershipForm, { ownershipUpdateForm } from "./ownershipupdateform";
 import HullForm from "./HullForm";
 import { rigForm } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
@@ -33,6 +34,7 @@ const activities = [
   { label: "Edit Design & Build", value: "construction" },
   { label: "Edit Dimensions", value: "dimensions" },
   { label: "Edit Rig & Sails (or get a handicap)", value: "rig" },
+  { label: "Add or update current or previous owners", value: "own" },
 ];
 
 const editorActivities = [
@@ -96,6 +98,11 @@ export const schema = (pickers, roles) => {
                 label: "sorry, not yet",
               }
           ],
+          },
+          {
+            name: "own-step",
+            nextStep: "done-step",
+            fields: [ownershipUpdateForm],
           },
           {
             name: "card-step",
@@ -222,6 +229,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
         componentMapper={{
           ...componentMapper,
           "hull-form": HullForm,
+          "ownership-form": OwnershipForm,
           html: HtmlEditor,
         }}
         FormTemplate={(props) => (
