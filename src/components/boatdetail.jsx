@@ -28,9 +28,14 @@ export default function BoatDetail({ boat }) {
 
   // TODO const { ref } = useInView({ threshold: 0 });
   let roles = [];
+  let membership;
   if (isAuthenticated && user) {
     if (user['https://oga.org.uk/roles']) {
       roles = user['https://oga.org.uk/roles'];
+      membership = {
+        id: user['https://oga.org.uk/id'],
+        member: user['https://oga.org.uk/member'],
+      };
     }
   }
   console.log('roles', roles);
@@ -92,7 +97,7 @@ export default function BoatDetail({ boat }) {
   if(roles.includes('member')) {
     panes.push({ title: 'Owners', children: (
       <Paper>
-        <Owners boat={boat}/>
+        <Owners boat={boat} membership={membership} email={user.email} />
       </Paper>
     )});    
   }

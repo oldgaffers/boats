@@ -47,15 +47,16 @@ export function usePicklists(view) {
     let query = basicQuery;
     switch (view) {
         case 'small':
-            console.log('picklists for small boats view');
+            // console.log('picklists for small boats view');
             query = smallQuery;
             break;
         case 'sell':
-            console.log('picklists for boats for sale view');
+            // console.log('picklists for boats for sale view');
             query = saleQuery;
             break;
         default:
-            console.log('picklists for main register');
+            // console.log('picklists for main register');
+            query = basicQuery;
     }
     return useQuery(query);
 }

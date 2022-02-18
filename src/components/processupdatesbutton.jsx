@@ -19,8 +19,11 @@ export default function ProcessUpdatesButton() {
   if (isAuthenticated) {
       roles = user['https://oga.org.uk/roles'] || [];
   }
-  if(document.referrer.includes('localhost')) { roles.push('editor')}
+  // if(document.referrer.includes('localhost')) { roles.push('editor')}
   const [getPending, pd] = useLazyQuery( query ); 
+  if(!roles.includes('editor')) {
+    return 'this page is just for editors';
+  }
   if (!pd.called) {
     getPending();
     return <CircularProgress />;

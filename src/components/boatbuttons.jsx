@@ -80,7 +80,7 @@ export default function BoatButtons({ boat, location }) {
   if (isAuthenticated) {
       roles = user['https://oga.org.uk/roles'] || [];
   }
-  if(document.referrer.includes('localhost')) { roles.push('editor')}
+  // if(document.referrer.includes('localhost')) { roles.push('editor')}
 
   const theme = useTheme();
   const classes = useStyles(theme);

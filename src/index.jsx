@@ -2,7 +2,7 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from "@auth0/auth0-react";
-import * as serviceWorker from './serviceWorker';
+// import * as serviceWorker from './serviceWorker';
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { CookiesProvider } from "react-cookie";
 import red from '@mui/material/colors/red';
@@ -90,4 +90,4 @@ if (div.length>0) {
   );
 }
 
-serviceWorker.unregister();
+// serviceWorker.unregister();
