@@ -5,7 +5,8 @@ import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { DataGrid } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { useLazyQuery, gql } from '@apollo/client';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
@@ -49,12 +50,11 @@ export default function OwnershipForm(props) {
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
     if (getMembersResults.loading) return <CircularProgress />;
     const { owners } = ownerships;
-    let ownersWithNames = owners;
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
     }
-    const memberNumbers = owners.filter((o) => queryIf(o)).map((o) => o.member);
-    if (membership) {
+    const memberNumbers = [...new Set(owners.filter((o) => queryIf(o)).map((o) => o.member))];
+    if (membership && !memberNumbers.includes(membership.member)) {
         memberNumbers.push(membership.member);
     }
     console.log('memberNumbers', memberNumbers);
@@ -66,21 +66,21 @@ export default function OwnershipForm(props) {
     } else if (memberNumbers.length > 0) {
         getMembers({ variables: {members: memberNumbers }});
     }
-    ownersWithNames = owners.map((owner, index) => {
+
+    const ownerName = (owner) => {
+        console.log('ownerName', owner);
         if (owner.name) {
-            return { ...owner, id: index };
+            return owner.name;
         }
-        let name = '';
-        const m = members.filter((member) => member.id === owner.id);
+        const m = members.filter((member) => member.id === owner.ID);
         if (m.length > 0) {
-            name = `${m[0].firstname} ${m[0].lastname}`;
+            return `${m[0].firstname} ${m[0].lastname}`;
         }
-        return {
-            ...owner,
-            name,
-            id: index,
+        if (owner.note) {
+            return owner.note;
         }
-    }).sort((a, b) => a.start > b.start);
+        return '';
+    }
 
     const ends = owners.filter((o) => o.end).sort((a, b) => a.end < b.end);
     const lastEnd = (ends.length > 0) ? ends[0].end : undefined;
@@ -100,15 +100,41 @@ export default function OwnershipForm(props) {
 
     const handleAddRow = () => console.log('add');
 
+    const deleteRow = (row) => {
+        console.log('delete', row);
+        const o = owners.filter((o, index) => index !== row.id);
+        console.log('delete', o);
+        setOwnerships({ ...ownerships,  owners: o });
+    }
+
+    const ownersWithId = owners.map((owner, index) => {
+        return {
+            ...owner,
+            id: index,
+            ID: owner.id, // TODO - not sure we need this
+        }
+    }).sort((a, b) => a.start > b.start);
+
     return (
         <div style={{ height: 300, width: '100%' }}>
             <DataGrid
-                rows={ownersWithNames}
+                rows={ownersWithId}
                 columns={[
-                    { field: 'name', headerName: 'Name', flex: 1, valueGetter: ({ row }) => row.name || row.note },
-                    { field: 'start', headerName: 'Start', width: 90, valueGetter: ({ row }) => row.start || '?' },
-                    { field: 'end', headerName: 'End', width: 90, valueGetter: ({ row }) => row.end || '-' },
-                    { field: 'share', headerName: 'Share', width: 90, valueGetter: ({ row }) => row.share ? `${row.share}/64` : '' },
+                    { field: 'name', headerName: 'Name', flex: 1, editable: true, valueGetter: ({ row }) => ownerName(row) },
+                    { field: 'start', headerName: 'Start', width: 90, editable: true, valueGetter: ({ row }) => row.start || '?' },
+                    { field: 'end', headerName: 'End', width: 90, editable: true, valueGetter: ({ row }) => row.end || '-' },
+                    { field: 'share', headerName: 'Share', width: 90, editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
+                    {
+                        field: 'actions',
+                        type: 'actions',
+                        getActions: ({ row }) => [
+                            <GridActionsCellItem
+                              icon={<DeleteIcon />}
+                              label="Delete"
+                              onClick={() => deleteRow(row)}
+                            />,
+                          ]
+                    }
                 ]}
             />
             <Stack
