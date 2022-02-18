@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
@@ -43,21 +43,22 @@ const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === ''
 export default function OwnershipForm(props) {
     const { user } = useAuth0();
     const { input, meta } = useFieldApi(props);
-    const [ownerships, setOwnerships] = useState(input.value);
+    // const [ownerships, setOwnerships] = useState(input.value);
+
+    // useEffect(() => input.onChange(ownerships), [input, ownerships]);
+    
     console.log('meta', meta);
-    console.log('owners', ownerships);
+    console.log('ownerships', input.value);
     let membership;
     if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
         membership = {
             id: parseInt(user['https://oga.org.uk/id']),
             member: parseInt(user['https://oga.org.uk/member']),
         };
-        console.log(user);  
-        console.log(membership);  
     }
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
     if (getMembersResults.loading) return <CircularProgress />;
-    const { owners } = ownerships;
+    const { owners, current } = input.value; // ownerships;
 
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
@@ -72,8 +73,8 @@ export default function OwnershipForm(props) {
 
     let theirBoat = false;
     if (membership) {
-        const current = ownerships.current || owners.filter((o) => o.current);
-        const currentIds = current.map((o) => o.id);    
+        const currentRecords = current || owners.filter((o) => o.current);
+        const currentIds = currentRecords.map((o) => o.id);    
         theirBoat = currentIds.includes(membership.id);
     }
 
@@ -87,7 +88,6 @@ export default function OwnershipForm(props) {
     }
 
     const ownerName = (owner) => {
-        console.log('ownerName', owner);
         if (owner.name) {
             return owner.name;
         }
@@ -111,24 +111,34 @@ export default function OwnershipForm(props) {
             const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64/family.length) };
             owners.push(o);    
         })
-        setOwnerships({ ...ownerships, owners });
+        // setOwnerships({ ...ownerships, owners });
+        input.onChange({ owners });
     }
 
     const handleAddRow = () => {
         owners.push({ name: '', start: lastEnd, share: 64 });
-        setOwnerships({ ...ownerships, owners });
-    }
+        // setOwnerships({ ...ownerships, owners });
+        input.onChange({ owners });
+        }
 
     const deleteRow = (row) => {
-        console.log('delete', row);
         const o = owners.filter((o, index) => index !== row.id);
-        console.log('delete', o);
-        setOwnerships({ ...ownerships,  owners: o });
+        // setOwnerships({ ...ownerships,  owners: o });
+        input.onChange({ owners: o });
     }
 
     // set current = false if and end year is added
-    const handleCellEditCommit = (params) => {
-        console.log('handleCellEditCommit', params)
+    const handleCellEditCommit = ({ field, value, id }) => {
+        if (field === 'end' && value && value !== '') {
+            console.log('end updated');
+            console.log('entry is', owners[id])
+            if (owners[id].current) {
+                delete owners[id].current;
+                // setOwnerships({ ...ownerships,  owners });
+            }
+        }
+        owners[id][field] = value;
+        input.onChange({ owners });
     };
 
     const ownersWithId = owners.map((owner, index) => {
