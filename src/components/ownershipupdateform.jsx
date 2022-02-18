@@ -70,10 +70,12 @@ export default function OwnershipForm(props) {
         // unless we add it to user metadata from GOLD
     }
 
-    const current = ownerships.current || owners.filter((o) => o.current);
-    const currentIds = current.map((o) => o.id);
-
-    const theirBoat = currentIds.includes(membership.id);
+    let theirBoat = false;
+    if (membership) {
+        const current = ownerships.current || owners.filter((o) => o.current);
+        const currentIds = current.map((o) => o.id);    
+        theirBoat = currentIds.includes(membership.id);
+    }
 
     let members = [];
     if (getMembersResults.data) {
@@ -124,6 +126,11 @@ export default function OwnershipForm(props) {
         setOwnerships({ ...ownerships,  owners: o });
     }
 
+    // set current = false if and end year is added
+    const handleCellEditCommit = (params) => {
+        console.log('handleCellEditCommit', params)
+    };
+
     const ownersWithId = owners.map((owner, index) => {
         return {
             ...owner,
@@ -154,6 +161,7 @@ export default function OwnershipForm(props) {
                     }
                 ]}
                 autoPageSize={true}
+                onCellEditCommit={handleCellEditCommit}
             />
             <Stack
                 sx={{ width: '100%', mb: 1 }}
