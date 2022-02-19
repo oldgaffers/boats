@@ -147,7 +147,7 @@ export const descriptionsForm = {
   fields: descriptionsItems,
 };
 
-export const RegistrationForm = {
+export const registrationForm = {
   title: "Registrations",
   name: "registrations",
   component: componentTypes.SUB_FORM,

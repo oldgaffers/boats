@@ -15,7 +15,7 @@ import { dimensionsForm } from "./Dimensions";
 import { useLazyPicklists } from "../util/picklists";
 import { 
   cardForm, summaryForm, descriptionsForm, 
-  RegistrationForm, constructionForm,
+  registrationForm, constructionForm,
   yachtHullStep, dinghyHullStep } from "./ddf/SubForms";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
@@ -134,7 +134,7 @@ export const schema = (pickers, roles) => {
           {
             name: "registrations-step",
             nextStep: "done-step",
-            fields: [RegistrationForm],
+            fields: [registrationForm],
           },
           {
             name: "construction-step",
