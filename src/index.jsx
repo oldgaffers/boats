@@ -10,6 +10,7 @@ import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
 import ProcessUpdates from './components/processupdates';
+import Yearbook from './components/yearbook';
 
 const theme = createTheme({
   palette: {
@@ -48,7 +49,16 @@ const Pages = ({app}) => {
         </OGAProvider>
       </Auth0Provider>)
       ;
-    default:
+      case 'yearbook':
+        return (
+        <Auth0Provider {...auth} scope="edit">
+          <OGAProvider>
+            <Yearbook/>
+          </OGAProvider>
+        </Auth0Provider>)
+        ;
+
+          default:
       console.log('browse', app);
       return (
         <Auth0Provider
@@ -66,7 +76,7 @@ const Pages = ({app}) => {
   }
 };
 
-const tags = ['app', 'boat', 'sell', 'small', 'pending'];
+const tags = ['app', 'boat', 'sell', 'small', 'pending', 'yearbook'];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length>0) {
   const app = div[0];
