@@ -1,9 +1,9 @@
 import React from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
+import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
-import Typography from '@mui/material/Typography';
 
 function currentOwners(ownerships) {
     let currentOwners = [];
@@ -109,11 +109,11 @@ export default function YearbookBoats() {
             }
             return false;
         });
-        return boats.map((b) => b.name).join(', ');
+        return boats.map((b) => b.name).sort().join(', ');
     }
 
     function renderBoat(params) {
-        return (<Typography fontStyle={'italic'}>{params.value}</Typography>);
+        return (<Typography variant={'body2'} fontStyle={'italic'}>{params.value}</Typography>);
     }
 
     function boatFormatter(params) {
@@ -140,6 +140,11 @@ export default function YearbookBoats() {
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     autoHeight={true}
+                    initialState={{
+                        sorting: {
+                          sortModel: [{ field: 'lastname', sort: 'asc' },{ field: 'member', sort: 'asc' },{ field: 'id', sort: 'asc' }],
+                        },
+                      }}
                 />
             </div>
         </div>
