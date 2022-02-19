@@ -45,13 +45,13 @@ export function m2dsqfn(val) {
 
 export function f2m(val) {
     if(val) {
-        return val/M2F;
+        return Math.round(1000*val/M2F)/1000;
     }
 }
 
 export function f2m2(val) {
     if(val) {
-        return val/M2F/M2F;
+        return Math.round(1000*val/M2F/M2F)/1000;
     }
 }
 
