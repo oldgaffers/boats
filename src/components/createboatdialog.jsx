@@ -26,7 +26,7 @@ import { steps as handicap_steps } from "./Handicap";
 import {
   yearItems,
   homeItems,
-  RegistrationForm,
+  registrationForm,
   descriptionsItems,
   yachtHullStep,
   dinghyHullStep,
@@ -461,7 +461,7 @@ const schema = (pickers, onChooseDesignClass) => {
           {
             name: "registrations-step",
             nextStep: "construction-step",
-            fields: [RegistrationForm],
+            fields: [registrationForm],
           },
           {
             name: "construction-step",
