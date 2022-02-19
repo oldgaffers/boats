@@ -9,7 +9,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
-import { BasicHtmlEditor } from "./ddf/RTE";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -17,6 +16,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { JsonEditor as Editor } from 'jsoneditor-react';
+import 'jsoneditor-react/es/editor.min.css';
+import { BasicHtmlEditor } from "./ddf/RTE";
 
 function TextEditDialog({ title, text, open, onSave, ...props }) {
   const [value, setValue] = useState(text);
@@ -43,6 +45,39 @@ function TextEditDialog({ title, text, open, onSave, ...props }) {
            onChange={(e) => setValue(e.target.value)}
             {...props}
           />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsOpen(false)}>Cancel</Button>
+          <Button onClick={handleSave}>Update</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+function JSONEditDialog({ title, value, open, onSave }) {
+  const [edited, setEdited] = useState(JSON.parse(value));
+  const [isOpen, setIsOpen] = useState(open);
+
+  const handleChange = (value) => {
+    setEdited(value);
+  }
+
+  const handleSave = () => {
+    console.log('handleSave', edited);
+    setIsOpen(false); 
+    onSave(JSON.stringify(edited));
+  };
+
+  return (
+    <div>
+      <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Edits here can be saved back to the table and then accepted into the boat record.
+          </DialogContentText>
+          <Editor value={edited} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsOpen(false)}>Cancel</Button>
@@ -117,6 +152,11 @@ function renderProposedEditInputCell(params) {
         onSave={handleSave}
         controls={["title", "bold", "italic", "numberList", "bulletList", "link"]}
         />);
+      case 'handicap_data':
+      case 'previous_names':
+      case 'reference':
+      case 'ownerships':
+        return (<JSONEditDialog title={title} open={true} value={value} onSave={handleSave}/>);
     default:
       return (<TextEditDialog title={title} open={true} text={value} onSave={handleSave}/>)
   }
