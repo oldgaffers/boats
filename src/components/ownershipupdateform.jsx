@@ -22,6 +22,7 @@ export const ownershipUpdateForm = {
     title: "Update Ownerships",
     name: "ownerships",
     component: componentTypes.SUB_FORM,
+    TitleProps: { sx: { marginBottom: '1em' } },
     fields: [
         {
             component: componentTypes.PLAIN_TEXT,
