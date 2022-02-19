@@ -16,15 +16,51 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
 
-function HtmlEditDialog({ text, open, onSave }) {
+function TextEditDialog({ title, text, open, onSave, ...props }) {
+  const [value, setValue] = useState(text);
+  const [isOpen, setIsOpen] = useState(open);
+
+  const handleSave = () => {
+    console.log('handleSave', value);
+    setIsOpen(false); 
+    onSave(value);
+  };
+
+  return (
+    <div>
+      <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
+        <DialogTitle>{title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Edits here can be saved back to the table and then accepted into the boat record.
+          </DialogContentText>
+          <TextField
+           variant='standard'
+           fullWidth
+           value={value}
+           onChange={(e) => setValue(e.target.value)}
+            {...props}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsOpen(false)}>Cancel</Button>
+          <Button onClick={handleSave}>Update</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+function HtmlEditDialog({ title, text, open, onSave, ...props }) {
   const [html, setHtml] = useState(text);
   const [isOpen, setIsOpen] = useState(open);
 
   return (
     <div>
       <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Edits here can be saved back to the table and then accepted into the boat record.
@@ -32,7 +68,7 @@ function HtmlEditDialog({ text, open, onSave }) {
           <BasicHtmlEditor
             data={html}
             onSave={(data) => setHtml(data)}
-            controls={["title", "bold", "italic", "numberList", "bulletList", "link"]}
+            {...props}
           />
         </DialogContent>
         <DialogActions>
@@ -44,19 +80,46 @@ function HtmlEditDialog({ text, open, onSave }) {
   );
 }
 
-function renderHtmlEditInputCell(params) {
+function renderProposedEditInputCell(params) {
   const { id, api, field, value } = params;
-  console.log(id, field);
-  const handleSave = (html) => {
-    console.log('save', html);
-    api.commitCellChange({ id, field, props: { value: html }});
-    api.setCellMode(id, field, 'view');
+/*
+  const handleSave = async (data) => {
+    const change = { id, field, value: data };
+    console.log('save', change);
+    console.log('Q', await api.commitCellChange(change));
+    await api.setCellMode(id, field, 'view');
+  };
+  */
+  const handleSave = async (data) => {
+    api.setEditCellValue({ id, field, value: data });
+    const isValid = await api.commitCellChange({ id, field });
+    if (isValid) {
+      api.setCellMode(id, field, 'view');
+    }
   };
 
-  if (params.row.field === 'full_description') {
-    return (<HtmlEditDialog open={true} text={value} onSave={handleSave} />);
+  const title = params.row.field.replace(/_/g, ' ');
+
+  switch (params.row.field) {
+    case 'short_description':
+      return (<HtmlEditDialog
+        title={title}
+        open={true}
+        text={value}
+        onSave={handleSave}
+        controls={["bold", "italic"]}
+        />);
+    case 'full_description':
+      return (<HtmlEditDialog
+        title={title}
+        open={true}
+        text={value}
+        onSave={handleSave}
+        controls={["title", "bold", "italic", "numberList", "bulletList", "link"]}
+        />);
+    default:
+      return (<TextEditDialog title={title} open={true} text={value} onSave={handleSave}/>)
   }
-  return undefined;
 }
 
 const jsonbFields = [
@@ -183,7 +246,7 @@ export default function ProcessUpdates() {
         return params.value;
       }
     },
-    { field: 'proposed', headerName: 'Proposed', flex: 1, editable: true, renderEditCell: renderHtmlEditInputCell },
+    { field: 'proposed', headerName: 'Proposed', flex: 1, editable: true, renderEditCell: renderProposedEditInputCell },
     { field: 'status', headerName: 'Done', width: 50 },
     {
       field: 'actions',
