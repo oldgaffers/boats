@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
+import PhoneNumber from 'awesome-phonenumber';
 
 function currentOwners(ownerships) {
     let currentOwners = [];
@@ -14,17 +15,53 @@ function currentOwners(ownerships) {
         }
         if (owners) {
             currentOwners.push(...owners.filter((o) => o.current));
-        }    
+        }
     }
     return currentOwners;
 }
 
-function nameGetter({row}) {
+function nameGetter({ row }) {
     return `${row.salutation} ${row.firstname}`;
 }
 
-function phoneGetter({row}) {
-    return row.mobile || row.telephone;
+function phone(n, area) {
+    if (n.startsWith('+')) {
+        return PhoneNumber(n);
+    } else if (n.startsWith('00')) {
+        return PhoneNumber(n.replace('00', '+'));
+    } else if (area === 'Dublin Bay') {
+        return PhoneNumber(n, 'IE');
+    } else if (area === 'Overseas') {
+        return PhoneNumber(`+${n}`);
+    }
+    return PhoneNumber(n, 'GB');
+}
+
+function phoneGetter({ row }) {
+    let pn;
+    if (row.mobile && row.mobile.trim() !== '') {
+        pn = phone(row.mobile, row.area);
+        if (pn.isValid()) {
+            if (pn.getCountryCode() === 44) {
+                return pn.getNumber('national');
+            }
+            return pn.getNumber('international');
+        }
+    }
+    if (row.telephone && row.telephone.trim() !== '') {
+        pn = phone(row.telephone, row.area);
+        if (pn.isValid()) {
+            if (pn.getCountryCode() === 44) {
+                return pn.getNumber('national');
+            }
+            return pn.getNumber('international');
+        }
+    }
+    if (pn) {
+        // console.log('INVALID', row.mobile, row.telephone, row.area);
+        return `${row.mobile} ${row.telephone}`
+    }
+    return '';
 }
 
 function memberPredicate(id, member) {
@@ -37,7 +74,7 @@ function memberPredicate(id, member) {
     return member.GDPR;
 }
 
-function areaFormatter({value}) {
+function areaFormatter({ value }) {
     return {
         'Bristol Channel': 'BC',
         'Dublin Bay': 'DB',
@@ -91,7 +128,7 @@ export default function YearbookBoats() {
         return false;
     });
 
-    function boatGetter({row}) {
+    function boatGetter({ row }) {
         const { id, member } = row;
         const boats = ownedBoats.filter((b) => {
             const o = currentOwners(b.ownerships);
@@ -150,9 +187,9 @@ export default function YearbookBoats() {
                     autoHeight={true}
                     initialState={{
                         sorting: {
-                          sortModel: [{ field: 'lastname', sort: 'asc' },{ field: 'member', sort: 'asc' },{ field: 'id', sort: 'asc' }],
+                            sortModel: [{ field: 'lastname', sort: 'asc' }, { field: 'member', sort: 'asc' }, { field: 'id', sort: 'asc' }],
                         },
-                      }}
+                    }}
                 />
             </div>
         </div>
