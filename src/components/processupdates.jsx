@@ -17,8 +17,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { JsonEditor as Editor } from 'jsoneditor-react';
-import 'jsoneditor-react/es/editor.min.css';
 import { BasicHtmlEditor } from "./ddf/RTE";
+require('jsoneditor-react/es/editor.min.css');
 
 function TextEditDialog({ title, text, open, onSave, ...props }) {
   const [value, setValue] = useState(text);
