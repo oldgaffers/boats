@@ -14,7 +14,7 @@ export default function SharedFleets() {
   const onBoatUnMarked = () => console.log('unmarked');
   const onPageChange = () => console.log('pageChange');
   const [getFleets, getFleetsResult] = useLazyQuery(gql`query fleet {
-    fleet(where: {owner_gold_id: {_eq: $id}}) { name filters }
+    fleet(where: {public: {_eq: true}}) { name filters }
   }`);
 
   if (!getFleetsResult.called) {
