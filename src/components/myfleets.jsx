@@ -24,8 +24,6 @@ export default function MyFleets() {
     return (<div>Please log in to view this page</div>);
   }
 
-  console.log(user);
-
   if (!getFleetsResult.called) {
     getFleets({ variables: { id: user['https://oga.org.uk/id'] }});
     return <CircularProgress />;
