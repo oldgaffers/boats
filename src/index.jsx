@@ -11,6 +11,7 @@ import BrowseApp from './browseapp';
 import Boat from './components/boat';
 import ProcessUpdates from './components/processupdates';
 import Yearbook from './components/yearbook';
+import MyFleets from './components/myfleets';
 
 const theme = createTheme({
   palette: {
@@ -27,7 +28,6 @@ const Pages = ({app}) => {
   }
   switch (app) {
     case 'boat':
-      console.log('boat');
       return (
         <Auth0Provider
         domain="dev-uf87e942.eu.auth0.com"
@@ -41,7 +41,21 @@ const Pages = ({app}) => {
         </OGAProvider>
       </Auth0Provider>
       );
-    case 'pending':
+      case 'my_fleets':
+        return (
+          <Auth0Provider
+          domain="dev-uf87e942.eu.auth0.com"
+          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          redirectUri={window.location.origin + window.location.pathname}
+          audience="https://oga.org.uk/boatregister"
+          scope="member"
+        >
+          <OGAProvider>
+            <MyFleets location={window.location} />
+          </OGAProvider>
+        </Auth0Provider>
+        );
+      case 'pending':
       return (
       <Auth0Provider {...auth} scope="edit">
         <OGAProvider>
@@ -57,8 +71,7 @@ const Pages = ({app}) => {
           </OGAProvider>
         </Auth0Provider>)
         ;
-
-          default:
+        default:
       console.log('browse', app);
       return (
         <Auth0Provider
@@ -76,7 +89,7 @@ const Pages = ({app}) => {
   }
 };
 
-const tags = ['app', 'boat', 'sell', 'small', 'pending', 'yearbook'];
+const tags = ['app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets'];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length>0) {
   const app = div[0];
