@@ -43,13 +43,8 @@ const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === ''
 
 export default function OwnershipForm(props) {
     const { user } = useAuth0();
-    const { input, meta } = useFieldApi(props);
-    // const [ownerships, setOwnerships] = useState(input.value);
-
-    // useEffect(() => input.onChange(ownerships), [input, ownerships]);
+    const { input } = useFieldApi(props);
     
-    console.log('meta', meta);
-    console.log('ownerships', input.value);
     let membership;
     if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
         membership = {
@@ -59,7 +54,8 @@ export default function OwnershipForm(props) {
     }
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
     if (getMembersResults.loading) return <CircularProgress />;
-    const { owners, current } = input.value; // ownerships;
+
+    const owners = input.value.owners || [];
 
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
@@ -74,7 +70,7 @@ export default function OwnershipForm(props) {
 
     let theirBoat = false;
     if (membership) {
-        const currentRecords = current || owners.filter((o) => o.current);
+        const currentRecords = input.value.current || owners.filter((o) => o.current);
         const currentIds = currentRecords.map((o) => o.id);    
         theirBoat = currentIds.includes(membership.id);
     }
