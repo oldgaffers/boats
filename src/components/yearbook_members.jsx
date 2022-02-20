@@ -20,7 +20,7 @@ function currentOwners(ownerships) {
 }
 
 function nameGetter({row}) {
-    return `${row.firstname} ${row.lastname}`;
+    return `${row.salutation} ${row.firstname}`;
 }
 
 function phoneGetter({row}) {
@@ -55,7 +55,7 @@ function areaFormatter({value}) {
 
 export default function YearbookBoats() {
     const boatsResult = useQuery(gql`query boats { boat { id name oga_no ownerships } }`);
-    const membersResult = useQuery(gql`query members { members { firstname lastname member id GDPR status telephone mobile area town } }`);
+    const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR status telephone mobile area town } }`);
 
     const { user, isAuthenticated } = useAuth0();
 
@@ -120,8 +120,16 @@ export default function YearbookBoats() {
         return params.value;
     }
 
+    function renderLastname(params) {
+        return (<Typography variant={'body2'} fontWeight={'bold'}>{params.value}</Typography>);
+    }
+
+    function lastnameFormatter(params) {
+        return params.value;
+    }
+
     const columns = [
-        { field: 'lastname', headerName: 'Last Name', width: 90 },
+        { field: 'lastname', headerName: 'Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
         { field: 'name', headerName: 'Name', width: 150, valueGetter: nameGetter },
         { field: 'member', headerName: 'No', width: 90 },
         { field: 'telephone', headerName: 'Telephone', width: 150, valueGetter: phoneGetter },
