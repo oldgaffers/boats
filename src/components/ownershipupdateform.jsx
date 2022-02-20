@@ -15,6 +15,7 @@ const MEMBER_QUERY = gql(`query members($members: [Int]!) {
       lastname
       member
       id
+      GDPR
     }
   }`);
 
@@ -90,7 +91,12 @@ export default function OwnershipForm(props) {
         }
         const m = members.filter((member) => member.id === owner.ID);
         if (m.length > 0) {
-            return `${m[0].firstname} ${m[0].lastname}`;
+            const { firstname, lastname, GDPR } = m[0];
+            if (GDPR) {
+                return `${firstname} ${lastname}`;
+            } else {
+                return `name of member ${m[0].member}:${m[0].id} withheld`
+            }
         }
         if (owner.note) {
             return owner.note;
