@@ -114,8 +114,8 @@ export default function BoatButtons({ boat, location }) {
           <Button size="small"
             variant="contained"
             className={classes.button}
-            component={'a'}
-            href={main_page}
+            // eslint-disable-next-line no-restricted-globals
+            onClick={() => history.back()}
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
