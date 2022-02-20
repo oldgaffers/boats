@@ -33,6 +33,7 @@ function OwnersTable({ owners }) {
       lastname
       member
       id
+      GDPR
     }
   }`));
   if (loading) return <CircularProgress />;
@@ -55,7 +56,12 @@ function OwnersTable({ owners }) {
     let name = '';
     const m = members.filter((member) => member.id === owner.id);
     if (m.length > 0) {
-      name = `${m[0].firstname} ${m[0].lastname}`;
+      const { GDPR, firstname, lastname } = m[0];
+      if (GDPR) {
+        name = `${firstname} ${lastname}`;
+      } else {
+        name = 'owner on record but withheld'
+      }
     }
     return {
       ...owner,
