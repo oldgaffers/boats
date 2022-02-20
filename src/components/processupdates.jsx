@@ -18,7 +18,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { JsonEditor as Editor } from 'jsoneditor-react';
 import { BasicHtmlEditor } from "./ddf/RTE";
-require('jsoneditor-react/es/editor.min.css');
+import 'jsoneditor-react/es/editor.min.css';
 
 function TextEditDialog({ title, text, open, onSave, ...props }) {
   const [value, setValue] = useState(text);
@@ -255,7 +255,7 @@ export default function ProcessUpdates() {
 
   const roles = user['https://oga.org.uk/roles'] || [];
   if (!roles.includes('editor')) {
-    return (<div>This pag is only useful to editors of the boat register</div>);
+    return (<div>This page is only useful to editors of the boat register</div>);
   }
 
   if (!getPendingResult.called) {
