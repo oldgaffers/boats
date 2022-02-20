@@ -64,15 +64,15 @@ export default function YearbookBoats() {
     const { members } = membersResult.data;
     const { boat } = boatsResult.data;
 
-    function ownerValueFormatter({ value }) {
+    function ownerValueGetter({ value }) {
         let co = currentOwners(value);
         // const names = co.map((owner) => ({ ...owner, ...members.find((m) => memberPredicate(owner.id, m)) }));
-        const names = co.map((owner) => ({ ...owner, ...members.find((m) => owner.id === m.id) }));
-        const lastNames = [...new Set(names.map((owner) => owner.lastname))];
-        console.log('CO', co);
+        const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => owner.id === m.id) }));
+        console.log('N', owningMembers);
+        const lastNames = [...new Set(owningMembers.map((owner) => owner.lastname))].filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
-                const fn = names.filter((o) => o.lastname === ln).map((o) => o.firstname);
+                const fn = owningMembers.filter((o) => o.lastname === ln).map((o) => `${o.firstname}${o.GDPR?'':'*'}`);
                 const r = `${joinList(fn, ', ', ' & ')}  ${ln}`;
                 return r;
             }),
@@ -93,7 +93,7 @@ export default function YearbookBoats() {
     const columns = [
         { field: 'name', headerName: 'BOAT', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'oga_no', headerName: 'No.', width: 90 },
-        { field: 'ownerships', headerName: 'Owner', flex: 1, valueFormatter: ownerValueFormatter },
+        { field: 'ownerships', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
     ];
 
     const ybboats = boat.filter((b) => {
