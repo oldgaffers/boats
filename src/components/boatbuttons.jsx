@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-import { getState } from "../util/statemanagement";
+// import { getState } from "../util/statemanagement";
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, location }) {
+export default function BoatButtons({ boat, /* location */ }) {
   const { user, isAuthenticated } = useAuth0();
   let roles = [];
   if (isAuthenticated) {
@@ -93,6 +93,7 @@ export default function BoatButtons({ boat, location }) {
     console.log('done');
   }
 
+  /*
   const state = getState();
   let main_page = `${location.origin}/boat_register/`;
   if (location.pathname.includes('test')) {
@@ -105,6 +106,7 @@ export default function BoatButtons({ boat, location }) {
   } else {
     main_page = `${main_page}browse_the_register`;
   }
+  */
 
   return (
     <Paper>
