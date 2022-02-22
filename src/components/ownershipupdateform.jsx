@@ -56,7 +56,11 @@ export default function OwnershipForm(props) {
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
     if (getMembersResults.loading) return <CircularProgress />;
 
-    const owners = input.value.owners || input.value.current || [];
+    const owners = input.value.owners || [];
+    if (owners.length === 0 && input.value.current) {
+        const current = input.value.current.map((c) => ({...c, current: true}));
+        owners.push(...current);
+    }
 
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
@@ -85,7 +89,23 @@ export default function OwnershipForm(props) {
         getMembers({ variables: {members: memberNumbers }});
     }
 
-    const ownerName = (owner) => {
+    const ownerNameGetter = (owner) => {
+        if (owner.name) {
+            return { name: owner.name };
+        }
+        const m = members.filter((member) => member.id === owner.ID);
+        if (m.length > 0) {
+            const { firstname, lastname, GDPR } = m[0];
+            return { firstname, lastname, GDPR, ...owner }
+        }
+        if (owner.note) {
+            return owner.note;
+        }
+        return '';
+    }
+
+    const ownerNameFormatter = (owner) => {
+        console.log('F', owner);
         if (owner.name) {
             return owner.name;
         }
@@ -103,6 +123,14 @@ export default function OwnershipForm(props) {
         }
         return '';
     }
+
+    /*
+    const ownerNameEditor = (params) => {
+        const { id, api, field, value } = params;
+        console.log('E', value);
+        return ''; // TODO
+    }
+    */
 
     const ends = owners.filter((o) => o.end).sort((a, b) => a.end < b.end);
     const lastEnd = (ends.length > 0) ? ends[0].end : undefined;
@@ -156,7 +184,15 @@ export default function OwnershipForm(props) {
             <DataGrid
                 rows={ownersWithId}
                 columns={[
-                    { field: 'name', headerName: 'Name', flex: 1, editable: true, valueGetter: ({ row }) => ownerName(row) },
+                    {
+                        field: 'name',
+                        headerName: 'Name',
+                        flex: 1,
+                        editable: true,
+                        valueGetter: ({ row }) => ownerNameGetter(row),
+                        valueFormatter: ({ value }) => ownerNameFormatter(value),
+                        // renderEditCell: ownerNameEditor,
+                    },
                     { field: 'start', headerName: 'Start', width: 90, editable: true, valueGetter: ({ row }) => row.start || '?' },
                     { field: 'end', headerName: 'End', width: 90, editable: true, valueGetter: ({ row }) => row.end || '-' },
                     { field: 'share', headerName: 'Share', width: 90, editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
