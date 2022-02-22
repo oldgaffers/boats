@@ -1,9 +1,22 @@
 import React from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from '@mui/material/Typography';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
+
+function CustomToolbar() {
+    return (
+        <GridToolbarContainer>
+            <GridToolbarFilterButton />
+            <GridToolbarExport csvOptions={{
+                fileName: 'members_boats',
+                delimiter: '\t',
+                utf8WithBom: true,
+            }} />
+        </GridToolbarContainer>
+    );
+}
 
 function currentOwners(ownerships) {
     let currentOwners = [];
@@ -71,7 +84,7 @@ export default function YearbookBoats() {
         const lastNames = [...new Set(owningMembers.map((owner) => owner.lastname))].filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
-                const fn = owningMembers.filter((o) => o.lastname === ln).map((o) => `${o.firstname}${o.GDPR?'':'*'}`);
+                const fn = owningMembers.filter((o) => o.lastname === ln).map((o) => `${o.firstname}${o.GDPR ? '' : '*'}`);
                 const r = `${joinList(fn, ', ', ' & ')} ${ln}`;
                 return r;
             }),
@@ -116,7 +129,7 @@ export default function YearbookBoats() {
                 <DataGrid
                     rows={ybboats}
                     columns={columns}
-                    components={{ Toolbar: GridToolbar }}
+                    components={{ Toolbar: CustomToolbar }}
                     autoHeight={true}
                     initialState={{
                         sorting: {

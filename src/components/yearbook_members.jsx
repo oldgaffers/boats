@@ -1,10 +1,23 @@
 import React from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from '@mui/material/Typography';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
 import PhoneNumber from 'awesome-phonenumber';
+
+function CustomToolbar() {
+    return (
+        <GridToolbarContainer>
+            <GridToolbarFilterButton />
+            <GridToolbarExport csvOptions={{
+                fileName: 'members',
+                delimiter: '\t',
+                utf8WithBom: true,
+            }} />
+        </GridToolbarContainer>
+    );
+}
 
 function currentOwners(ownerships) {
     let currentOwners = [];
@@ -24,44 +37,64 @@ function nameGetter({ row }) {
     return `${row.salutation} ${row.firstname}`;
 }
 
-function phone(n, area) {
+function fettlePhone(n, area) {
+    if (!n) {
+        return undefined;
+    }
+    if (n.trim() === '') {
+        return undefined;
+    }
     if (n.startsWith('+')) {
         return PhoneNumber(n);
     } else if (n.startsWith('00')) {
         return PhoneNumber(n.replace('00', '+'));
     } else if (area === 'Dublin Bay') {
-        return PhoneNumber(n, 'IE');
+        const pn = PhoneNumber(n, 'IE');
+        if (pn.isValid()) {
+            return pn;            
+        }
+        return PhoneNumber(n, 'GB');
     } else if (area === 'Overseas') {
         return PhoneNumber(`+${n}`);
     }
     return PhoneNumber(n, 'GB');
 }
 
-function phoneGetter({ row }) {
-    let pn;
-    if (row.mobile && row.mobile.trim() !== '') {
-        pn = phone(row.mobile, row.area);
-        if (pn.isValid()) {
-            if (pn.getCountryCode() === 44) {
-                return pn.getNumber('national');
-            }
-            return pn.getNumber('international');
-        }
-    }
-    if (row.telephone && row.telephone.trim() !== '') {
-        pn = phone(row.telephone, row.area);
-        if (pn.isValid()) {
-            if (pn.getCountryCode() === 44) {
-                return pn.getNumber('national');
-            }
-            return pn.getNumber('international');
-        }
-    }
+function formatPhone(pn) {
     if (pn) {
-        // console.log('INVALID', row.mobile, row.telephone, row.area);
-        return `${row.mobile} ${row.telephone}`
+        if (pn.isValid()) {
+            if (pn.getCountryCode() === 44) {
+                return pn.getNumber('national');
+            }
+            return pn.getNumber('international');
+        }
     }
-    return '';
+    return undefined;
+}
+
+function phoneGetter({ row }) {
+    const mobile = formatPhone(fettlePhone(row.mobile, row.area));
+    const landline = formatPhone(fettlePhone(row.telephone, row.area));
+    const n = [];
+    if (mobile) {
+        n.push(mobile);
+    }
+    if (landline) {
+        n.push(landline);
+    }
+    if (n.length > 0) {
+        return n.join(' / ');
+    }
+    if (row.mobile === '' && row.telephone === '') {
+        return '';
+    }
+    if (row.mobile.includes('@')) {
+        return row.mobile;
+    }
+    if (row.telephone.includes('@')) {
+        return row.telephone;
+    }
+    return `*** M: ${row.mobile} T: ${row.telephone} ***`;
 }
 
 function memberPredicate(id, member) {
@@ -169,7 +202,7 @@ export default function YearbookBoats() {
         { field: 'lastname', headerName: 'Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
         { field: 'name', headerName: 'Name', width: 150, valueGetter: nameGetter },
         { field: 'member', headerName: 'No', width: 90 },
-        { field: 'telephone', headerName: 'Telephone', width: 150, valueGetter: phoneGetter },
+        { field: 'telephone', headerName: 'Telephone', width: 250, valueGetter: phoneGetter },
         { field: 'town', headerName: 'Town', width: 150 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'area', headerName: 'Area', width: 90, valueFormatter: areaFormatter },
@@ -183,7 +216,7 @@ export default function YearbookBoats() {
                 <DataGrid
                     rows={ybmembers}
                     columns={columns}
-                    components={{ Toolbar: GridToolbar }}
+                    components={{ Toolbar: CustomToolbar }}
                     autoHeight={true}
                     initialState={{
                         sorting: {
