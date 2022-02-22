@@ -56,7 +56,7 @@ export default function OwnershipForm(props) {
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
     if (getMembersResults.loading) return <CircularProgress />;
 
-    const owners = input.value.owners || [];
+    const owners = input.value.owners || input.value.current || [];
 
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
@@ -106,7 +106,6 @@ export default function OwnershipForm(props) {
 
     const ends = owners.filter((o) => o.end).sort((a, b) => a.end < b.end);
     const lastEnd = (ends.length > 0) ? ends[0].end : undefined;
-    console.log('new owner could start at', lastEnd);
 
     const handleClaim = () => {
         const family = members.filter((m) => m.member === membership.member);
