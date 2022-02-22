@@ -94,7 +94,6 @@ export default function BoatButtons({ boat, location }) {
   }
 
   const state = getState();
-  console.log('view', state.view);
   let main_page = `${location.origin}/boat_register/`;
   if (location.pathname.includes('test')) {
     main_page = `${main_page}test_`;

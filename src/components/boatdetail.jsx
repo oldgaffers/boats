@@ -38,8 +38,6 @@ export default function BoatDetail({ boat }) {
       };
     }
   }
-  console.log('roles', roles);
-  console.log('user', user);
   const hd = boat.handicap_data || {};
 
   const panes = [
