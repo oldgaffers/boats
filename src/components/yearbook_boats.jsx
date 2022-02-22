@@ -68,12 +68,11 @@ export default function YearbookBoats() {
         let co = currentOwners(value);
         const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => memberPredicate(owner.id, m)) }));
         // const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => owner.id === m.id) }));
-        console.log('N', owningMembers);
         const lastNames = [...new Set(owningMembers.map((owner) => owner.lastname))].filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
                 const fn = owningMembers.filter((o) => o.lastname === ln).map((o) => `${o.firstname}${o.GDPR?'':'*'}`);
-                const r = `${joinList(fn, ', ', ' & ')}  ${ln}`;
+                const r = `${joinList(fn, ', ', ' & ')} ${ln}`;
                 return r;
             }),
             ', ',
