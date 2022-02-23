@@ -81,7 +81,6 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
   );
 };
 
-
 export const BasicHtmlEditor = ({ onSave, data, name, title, ...rest }) => {
   const ref = useRef(null);
 
