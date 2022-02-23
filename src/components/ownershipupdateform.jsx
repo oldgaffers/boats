@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
@@ -6,8 +6,17 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
 import { useLazyQuery, gql } from '@apollo/client';
+import Switch from "@mui/material/Switch";
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Autocomplete } from '@mui/material';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
@@ -27,10 +36,10 @@ export const ownershipUpdateForm = {
     fields: [
         {
             component: componentTypes.PLAIN_TEXT,
-            name: 'ddf.ownerships_label',   
+            name: 'ddf.ownerships_label',
             label: 'You can add, remove and edit ownership records on this page.'
-            +' If you are listed as an owner and this is no-longer true just add an end year.'
-            +' Your changes will be send to the editors who will update the boat\'s record'
+                + ' If you are listed as an owner and this is no-longer true just add an end year.'
+                + ' Your changes will be send to the editors who will update the boat\'s record'
         },
         {
             component: "ownership-form",
@@ -42,10 +51,90 @@ export const ownershipUpdateForm = {
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
+function MemberEditInputCell(props) {
+    const [name, setName] = useState(props.value);
+    const [inputName, setInputName] = useState(props.value);
+    const [isMember, setIsMember] = useState(true);
+    const [isOpen, setIsOpen] = useState(true);
+
+    const handleTextChange = (event) => {
+        setName(event.target.value);
+    };
+
+    const onIsMemberChange = (event) => {
+        console.log('onIsMemberChange', event.target.checked);
+        setIsMember(event.target.checked);
+    };
+
+    const handleSave = (event) => {
+        const { id, api, field } = props;
+        console.log('handleSave', name);
+        setIsOpen(false);
+        if (isMember) {
+            console.log('member - TODO set cell and add membership number and gold id to row');
+            //  { firstname: "Alison", lastname: "Cable", GDPR: true, id: 7, share: 32, start: 2007, member: 5004, ID: 1219 }​
+        } else {
+            api.setEditCellValue({ id, field, value: name }, event);
+        }
+    };
+
+    return (
+        <div>
+            <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
+                <DialogTitle>Owner Identity</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Ownership records are held on public storage so OGA Members are stored by their membership Id.
+                    </DialogContentText>
+                    <FormControlLabel
+                        onChange={onIsMemberChange}
+                        control={<Switch checked={isMember} />}
+                        label="OGA Member"
+                    />
+                    {isMember ?
+                        <Autocomplete
+                            options={['me', 'you']}
+                            autoComplete
+                            onChange={(event, newValue) => {
+                                setName(newValue);
+                            }}
+                            inputValue={inputName}
+                            onInputChange={(event, newInputValue) => {
+                                setInputName(newInputValue);
+                            }}
+                            renderInput={(params) => (
+                                <TextField {...params} 
+                                    variant='outlined'
+                                    label='Name'
+                                    fullWidth
+                                    value={name}
+                                    onChange={handleTextChange}
+                                />
+                            )}
+                        />
+                        :
+                        <TextField
+                            variant='outlined'
+                            label='Name'
+                            fullWidth
+                            value={name}
+                            onChange={handleTextChange}
+                        />
+                    }
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setIsOpen(false)}>Cancel</Button>
+                    <Button onClick={handleSave}>Update</Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}
+
 export default function OwnershipForm(props) {
     const { user } = useAuth0();
     const { input } = useFieldApi(props);
-    
+
     let membership;
     if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
         membership = {
@@ -58,7 +147,7 @@ export default function OwnershipForm(props) {
 
     const owners = input.value.owners || [];
     if (owners.length === 0 && input.value.current) {
-        const current = input.value.current.map((c) => ({...c, current: true}));
+        const current = input.value.current.map((c) => ({ ...c, current: true }));
         owners.push(...current);
     }
 
@@ -76,7 +165,7 @@ export default function OwnershipForm(props) {
     let theirBoat = false;
     if (membership) {
         const currentRecords = input.value.current || owners.filter((o) => o.current);
-        const currentIds = currentRecords.map((o) => o.id);    
+        const currentIds = currentRecords.map((o) => o.id);
         theirBoat = currentIds.includes(membership.id);
     }
 
@@ -86,17 +175,25 @@ export default function OwnershipForm(props) {
             members = getMembersResults.data.members;
         }
     } else if (memberNumbers.length > 0) {
-        getMembers({ variables: {members: memberNumbers }});
+        getMembers({ variables: { members: memberNumbers } });
     }
+
+    const ownerNameSetter = ({ value, row }) => {
+        if (row.ID) {
+            return row;
+        }
+        return { ...row, name: value };
+    };
 
     const ownerNameGetter = (owner) => {
         if (owner.name) {
-            return { name: owner.name };
+            return owner.name;
         }
         const m = members.filter((member) => member.id === owner.ID);
         if (m.length > 0) {
             const { firstname, lastname, GDPR } = m[0];
-            return { firstname, lastname, GDPR, ...owner }
+            console.log('N', { firstname, lastname, GDPR, ...owner })
+            return { firstname, lastname, GDPR, ...owner };
         }
         if (owner.note) {
             return owner.note;
@@ -105,9 +202,8 @@ export default function OwnershipForm(props) {
     }
 
     const ownerNameFormatter = (owner) => {
-        console.log('F', owner);
-        if (owner.name) {
-            return owner.name;
+        if (typeof owner === 'string') {
+            return owner;
         }
         const m = members.filter((member) => member.id === owner.ID);
         if (m.length > 0) {
@@ -124,13 +220,14 @@ export default function OwnershipForm(props) {
         return '';
     }
 
-    /*
     const ownerNameEditor = (params) => {
-        const { id, api, field, value } = params;
-        console.log('E', value);
-        return ''; // TODO
+        const { id, api, field, value, row } = params;
+        if (typeof value === 'string' && value !== '') {
+            return (<GridEditInputCell {...params} />);
+        } else {
+            return (<MemberEditInputCell id={id} field={field} value={value} row={row} api={api} />);
+        }
     }
-    */
 
     const ends = owners.filter((o) => o.end).sort((a, b) => a.end < b.end);
     const lastEnd = (ends.length > 0) ? ends[0].end : undefined;
@@ -138,8 +235,8 @@ export default function OwnershipForm(props) {
     const handleClaim = () => {
         const family = members.filter((m) => m.member === membership.member);
         family.forEach((m) => {
-            const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64/family.length) };
-            owners.push(o);    
+            const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64 / family.length) };
+            owners.push(o);
         })
         // setOwnerships({ ...ownerships, owners });
         input.onChange({ owners });
@@ -149,7 +246,7 @@ export default function OwnershipForm(props) {
         owners.push({ name: '', start: lastEnd, share: 64 });
         // setOwnerships({ ...ownerships, owners });
         input.onChange({ owners });
-        }
+    }
 
     const deleteRow = (row) => {
         const o = owners.filter((o, index) => index !== row.id);
@@ -158,7 +255,9 @@ export default function OwnershipForm(props) {
     }
 
     // set current = false if and end year is added
-    const handleCellEditCommit = ({ field, value, id }) => {
+    const handleCellEditCommit = (params) => {
+        const { field, value, id } = params;
+        console.log('P', params);
         if (field === 'end' && value && value !== '') {
             console.log('end updated');
             console.log('entry is', owners[id])
@@ -191,25 +290,28 @@ export default function OwnershipForm(props) {
                         editable: true,
                         valueGetter: ({ row }) => ownerNameGetter(row),
                         valueFormatter: ({ value }) => ownerNameFormatter(value),
-                        // renderEditCell: ownerNameEditor,
+                        valueSetter: ownerNameSetter,
+                        renderEditCell: ownerNameEditor,
                     },
                     { field: 'start', headerName: 'Start', width: 90, editable: true, valueGetter: ({ row }) => row.start || '?' },
                     { field: 'end', headerName: 'End', width: 90, editable: true, valueGetter: ({ row }) => row.end || '-' },
                     { field: 'share', headerName: 'Share', width: 90, editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
                     {
+                        width: 40,
                         field: 'actions',
                         type: 'actions',
                         getActions: ({ row }) => [
                             <GridActionsCellItem
-                              icon={<DeleteIcon />}
-                              label="Delete"
-                              onClick={() => deleteRow(row)}
+                                icon={<DeleteIcon />}
+                                label="Delete"
+                                onClick={() => deleteRow(row)}
                             />,
-                          ]
+                        ]
                     }
                 ]}
                 autoPageSize={true}
                 onCellEditCommit={handleCellEditCommit}
+                isCellEditable={(params) => !params.row.ID || params.field !== 'name'}
             />
             <Stack
                 sx={{ width: '100%', mb: 1 }}
@@ -217,10 +319,10 @@ export default function OwnershipForm(props) {
                 alignItems="flex-start"
                 columnGap={1}
             >
-                {theirBoat?'':(
-                <Button size="small" onClick={handleClaim}>
-                    This is my boat
-                </Button>)
+                {theirBoat ? '' : (
+                    <Button size="small" onClick={handleClaim}>
+                        This is my boat
+                    </Button>)
                 }
                 <Button size="small" onClick={handleAddRow}>
                     Add a record
