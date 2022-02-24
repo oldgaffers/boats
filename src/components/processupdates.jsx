@@ -278,10 +278,9 @@ export default function ProcessUpdates() {
   const columns = [
     { field: 'name', headerName: 'Boat Name', width: 150, valueGetter: (params) => params.row.boat_by_id.name },
     { field: 'oga_no', headerName: 'OGA No.', width: 90, valueGetter: (params) => params.row.boat_by_id.oga_no },
-    { field: 'originator', headerName: 'Contact', width: 200 },
     { field: 'field', headerName: 'Change of', width: 150, valueFormatter: (params) => params.value.replace(/_/g, ' ') },
     {
-      field: 'current', headerName: 'Existing', width: 300, valueFormatter: (params) => {
+      field: 'current', headerName: 'Existing', width: 200, valueFormatter: (params) => {
         if (params.value === 'null') return '';
         if (params.value == null) return undefined;
         return params.value;
@@ -289,6 +288,7 @@ export default function ProcessUpdates() {
     },
     { field: 'proposed', headerName: 'Proposed', flex: 1, editable: true, renderEditCell: renderProposedEditInputCell },
     { field: 'status', headerName: 'Done', width: 50 },
+    { field: 'originator', headerName: 'Contact', width: 200 },
     {
       field: 'actions',
       type: 'actions',
@@ -337,6 +337,14 @@ export default function ProcessUpdates() {
           columns={columns}
           components={{ Toolbar: GridToolbar }}
           autoHeight={true}
+          initialState={{
+            columns: {
+              columnVisibilityModel: {
+                current: false,
+                originator: false,
+              },
+            },
+          }}
         />
       </div>
     </div>

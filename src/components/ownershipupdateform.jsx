@@ -28,6 +28,17 @@ const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     }
   }`);
 
+const MEMBER_NAME_QUERY = gql(`query members($name: String!) {
+    members(lastname: $name) {
+      firstname
+      lastname
+      member
+      id
+      GDPR
+      town area
+    }
+  }`);
+
 export const ownershipUpdateForm = {
     title: "Update Ownerships",
     name: "ownerships",
@@ -52,13 +63,25 @@ export const ownershipUpdateForm = {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 function MemberEditInputCell(props) {
-    const [name, setName] = useState(props.value);
+    const [getMembers, getMembersResults] = useLazyQuery(MEMBER_NAME_QUERY);
+    const [nameOrMember, setNameOrMember] = useState(props.value);
     const [inputName, setInputName] = useState(props.value);
     const [isMember, setIsMember] = useState(true);
     const [isOpen, setIsOpen] = useState(true);
 
+    let members = [];
+    if (getMembersResults.data) {
+        if (getMembersResults.data.members) {
+            members = getMembersResults.data.members;
+        }        
+    }
+
     const handleTextChange = (event) => {
-        setName(event.target.value);
+        const n = event.target.value;
+        setNameOrMember(n);
+        if (n.length > 1) {
+            getMembers({ variables: { name: n } });
+        }
     };
 
     const onIsMemberChange = (event) => {
@@ -66,16 +89,17 @@ function MemberEditInputCell(props) {
         setIsMember(event.target.checked);
     };
 
-    const handleSave = (event) => {
-        const { id, api, field } = props;
-        console.log('handleSave', name);
-        setIsOpen(false);
+    const handleSave = async (event) => {
+        console.log('handleSave', nameOrMember);
+        const { id, api } = props;
         if (isMember) {
-            console.log('member - TODO set cell and add membership number and gold id to row');
-            //  { firstname: "Alison", lastname: "Cable", GDPR: true, id: 7, share: 32, start: 2007, member: 5004, ID: 1219 }​
+            await api.setEditCellValue({ id, field: 'ID', value: nameOrMember.id }, event);
+            await api.setEditCellValue({ id, field: 'member', value: nameOrMember.member }, event);
         } else {
-            api.setEditCellValue({ id, field, value: name }, event);
+            await api.setEditCellValue({ id, field: 'name', value: nameOrMember }, event);
         }
+        
+        setIsOpen(false);
     };
 
     return (
@@ -93,21 +117,29 @@ function MemberEditInputCell(props) {
                     />
                     {isMember ?
                         <Autocomplete
-                            options={['me', 'you']}
+                            options={members}
                             autoComplete
+                            filterOptions={(x) => x}
+                            isOptionEqualToValue={(option, value) => option.id === value.id}
+                            loading={getMembersResults.loading}
+                            getOptionLabel={(m) => {
+                                return `${m.firstname} ${m.lastname} (${m.town}, ${m.area})`
+                            }}
                             onChange={(event, newValue) => {
-                                setName(newValue);
+                                console.log('OCV', newValue);
+                                setNameOrMember(newValue);
                             }}
                             inputValue={inputName}
-                            onInputChange={(event, newInputValue) => {
-                                setInputName(newInputValue);
+                            onInputChange={(event, val) => {
+                                console.log('OICV', val);
+                                setInputName(val);
                             }}
                             renderInput={(params) => (
-                                <TextField {...params} 
+                                <TextField {...params}
                                     variant='outlined'
                                     label='Name'
                                     fullWidth
-                                    value={name}
+                                    value={nameOrMember}
                                     onChange={handleTextChange}
                                 />
                             )}
@@ -117,7 +149,7 @@ function MemberEditInputCell(props) {
                             variant='outlined'
                             label='Name'
                             fullWidth
-                            value={name}
+                            value={nameOrMember}
                             onChange={handleTextChange}
                         />
                     }
@@ -192,7 +224,6 @@ export default function OwnershipForm(props) {
         const m = members.filter((member) => member.id === owner.ID);
         if (m.length > 0) {
             const { firstname, lastname, GDPR } = m[0];
-            console.log('N', { firstname, lastname, GDPR, ...owner })
             return { firstname, lastname, GDPR, ...owner };
         }
         if (owner.note) {
@@ -263,10 +294,10 @@ export default function OwnershipForm(props) {
             console.log('entry is', owners[id])
             if (owners[id].current) {
                 delete owners[id].current;
-                // setOwnerships({ ...ownerships,  owners });
             }
         }
         owners[id][field] = value;
+        console.log('O', owners);
         input.onChange({ owners });
     };
 
