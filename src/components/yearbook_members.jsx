@@ -162,8 +162,9 @@ export default function YearbookBoats() {
                     return true
                 }
                 // a few ownership records are missing a GOLD ID
-                const p = o.find((os) => os.member === member && os.share === 64);
+                const p = o.find((os) => os.id === undefined && os.member === member && os.share === 64);
                 if (p) {
+                    console.log('Boat with owner with no GOLD ID', b.oga_no);
                     return true;
                 }
                 return false;
