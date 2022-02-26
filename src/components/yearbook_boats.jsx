@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
+import { memberPredicate } from './util/membership';
 
 function CustomToolbar() {
     return (
@@ -28,16 +29,6 @@ function currentOwners(ownerships) {
         currentOwners.push(...owners.filter((o) => o.current));
     }
     return currentOwners;
-}
-
-function memberPredicate(id, member) {
-    if (id !== member.id) {
-        return false;
-    }
-    if (member.status === 'Left OGA') {
-        return false;
-    }
-    return member.GDPR;
 }
 
 function joinList(strings, sep, lastSep) {

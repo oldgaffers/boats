@@ -5,6 +5,7 @@ import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterBut
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
 import PhoneNumber from 'awesome-phonenumber';
+import { memberPredicate } from './util/membership';
 
 function CustomToolbar() {
     return (
@@ -95,16 +96,6 @@ function phoneGetter({ row }) {
         return row.telephone;
     }
     return `*** M: ${row.mobile} T: ${row.telephone} ***`;
-}
-
-function memberPredicate(id, member) {
-    if (id !== member.id) {
-        return false;
-    }
-    if (member.status === 'Left OGA') {
-        return false;
-    }
-    return member.GDPR;
 }
 
 function areaFormatter({ value }) {
