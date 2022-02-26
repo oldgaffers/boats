@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
-import { memberPredicate } from './util/membership';
+import { memberPredicate } from '../util/membership';
 
 function CustomToolbar() {
     return (

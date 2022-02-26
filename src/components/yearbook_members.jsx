@@ -5,7 +5,7 @@ import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterBut
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useQuery } from '@apollo/client';
 import PhoneNumber from 'awesome-phonenumber';
-import { memberPredicate } from './util/membership';
+import { memberPredicate } from '../util/membership';
 
 function CustomToolbar() {
     return (
