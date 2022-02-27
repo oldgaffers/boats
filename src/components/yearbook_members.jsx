@@ -98,8 +98,9 @@ function phoneGetter({ row }) {
     return `*** M: ${row.mobile} T: ${row.telephone} ***`;
 }
 
-function areaFormatter({ value }) {
-    return {
+function areaFormatter(params) {
+    const { id, value, api } = params;
+    const abbrev = {
         'Bristol Channel': 'BC',
         'Dublin Bay': 'DB',
         'East Coast': 'EC',
@@ -112,11 +113,15 @@ function areaFormatter({ value }) {
         'South West': 'SW',
         'Overseas': 'OS',
     }[value];
+    if (api.getRow(id).smallboats) {
+        return `${abbrev}/sb`;
+    }
+    return abbrev;
 }
 
 export default function YearbookBoats() {
     const boatsResult = useQuery(gql`query boats { boat { id name oga_no ownerships } }`);
-    const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR status telephone mobile area town } }`);
+    const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
 
     const { user, isAuthenticated } = useAuth0();
 
