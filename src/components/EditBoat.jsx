@@ -15,7 +15,7 @@ import { dimensionsForm } from "./Dimensions";
 import { useLazyPicklists } from "../util/picklists";
 import { 
   cardForm, summaryForm, descriptionsForm, 
-  registrationForm, constructionForm,
+  registrationForm, constructionForm, sellForm,
   yachtHullStep, dinghyHullStep } from "./ddf/SubForms";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
@@ -80,13 +80,7 @@ export const schema = (pickers, roles) => {
           {
             name: "sell-step",
             nextStep: "done-step",
-            fields: [
-              {
-                component: componentTypes.PLAIN_TEXT,
-                name: "ddf.sell",
-                label: "sorry, not yet",
-              }
-          ],
+            fields: [sellForm(pickers)],
           },
           {
             name: "sold-step",
@@ -94,7 +88,7 @@ export const schema = (pickers, roles) => {
             fields: [
               {
                 component: componentTypes.PLAIN_TEXT,
-                name: "ddf.sold",
+                name: "ddf.sell",
                 label: "sorry, not yet",
               }
           ],

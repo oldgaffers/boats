@@ -1,5 +1,6 @@
 import {
   componentTypes,
+  validatorTypes,
   dataTypes,
 } from "@data-driven-forms/react-form-renderer";
 import { mapPicker } from "./util";
@@ -215,6 +216,43 @@ export const constructionForm = (pickers) => {
       },
         ...builderItems(pickers),
       ...constructionItems(pickers),
+    ],
+  };
+};
+
+
+export const sellForm = (pickers) => {
+  return {
+    title: "Put Boat For Sale",
+    name: "sell",
+    component: componentTypes.SUB_FORM,
+    fields: [
+      {
+        component: componentTypes.TEXT_FIELD,
+        name: "price",
+        label: "Price (pounds)",
+        type: "number",
+        dataType: dataTypes.FLOAT,
+        isRequired: true,
+        validate: [
+          {
+            type: validatorTypes.REQUIRED,
+          },
+        ],
+      },
+      {
+        component: "html",
+        title: "Sales Text",
+        name: "sales_text",
+        controls: ["bold", "italic"],
+        maxLength: 500,
+        isRequired: true,
+        validate: [
+          {
+            type: validatorTypes.REQUIRED,
+          },
+        ],
+      },
     ],
   };
 };
