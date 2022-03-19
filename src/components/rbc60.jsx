@@ -53,7 +53,20 @@ const legfield = (name, label) => {
 };
 
 const schema = (ports) => {
-    const fields = [];
+    const fields = [
+        { 
+            component: componentTypes.TEXT_FIELD,
+            name: 'boat',
+            helperText: 'this ought to be a dropdown of boats on the register',
+            label: 'Boat Name',
+        },     
+        { 
+            component: componentTypes.TEXT_FIELD,
+            name: 'skipper_email',
+            helperText: 'this ought to be auto-filled with the email of the logged-in user',
+            label: 'Email',
+        }        
+    ];
     ports.forEach(({ name, start, end, via }, index, list) => {
         if (index > 0) {
             if (via) {
