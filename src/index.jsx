@@ -13,6 +13,7 @@ import ProcessUpdates from './components/processupdates';
 import Yearbook from './components/yearbook';
 import MyFleets from './components/myfleets';
 import SharedFleets from './components/sharedfleets';
+import RBC60 from './components/rbc60';
 
 const theme = createTheme({
   palette: {
@@ -20,7 +21,7 @@ const theme = createTheme({
   },
 });
 
-const Pages = ({app}) => {
+const Pages = ({ app }) => {
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
@@ -31,20 +32,20 @@ const Pages = ({app}) => {
     case 'boat':
       return (
         <Auth0Provider
-        domain="dev-uf87e942.eu.auth0.com"
-        clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
-        redirectUri={window.location.origin + window.location.pathname}
-        audience="https://oga.org.uk/boatregister"
-        scope="member"
-      >
-        <OGAProvider>
-          <Boat location={window.location} />
-        </OGAProvider>
-      </Auth0Provider>
+          domain="dev-uf87e942.eu.auth0.com"
+          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          redirectUri={window.location.origin + window.location.pathname}
+          audience="https://oga.org.uk/boatregister"
+          scope="member"
+        >
+          <OGAProvider>
+            <Boat location={window.location} />
+          </OGAProvider>
+        </Auth0Provider>
       );
-      case 'my_fleets':
-        return (
-          <Auth0Provider
+    case 'my_fleets':
+      return (
+        <Auth0Provider
           domain="dev-uf87e942.eu.auth0.com"
           clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
           redirectUri={window.location.origin + window.location.pathname}
@@ -55,58 +56,66 @@ const Pages = ({app}) => {
             <MyFleets location={window.location} />
           </OGAProvider>
         </Auth0Provider>
-        );
-        case 'shared_fleets':
-          return (
-            <Auth0Provider
-            domain="dev-uf87e942.eu.auth0.com"
-            clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
-            redirectUri={window.location.origin + window.location.pathname}
-            audience="https://oga.org.uk/boatregister"
-            scope="member"
-          >
-            <OGAProvider>
-              <SharedFleets location={window.location} />
-            </OGAProvider>
-          </Auth0Provider>
-          );
-      case 'pending':
+      );
+    case 'shared_fleets':
       return (
-      <Auth0Provider {...auth} scope="edit">
-        <OGAProvider>
-          <ProcessUpdates/>
-        </OGAProvider>
-      </Auth0Provider>)
-      ;
-      case 'yearbook':
-        return (
+        <Auth0Provider
+          domain="dev-uf87e942.eu.auth0.com"
+          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          redirectUri={window.location.origin + window.location.pathname}
+          audience="https://oga.org.uk/boatregister"
+          scope="member"
+        >
+          <OGAProvider>
+            <SharedFleets location={window.location} />
+          </OGAProvider>
+        </Auth0Provider>
+      );
+    case 'pending':
+      return (
         <Auth0Provider {...auth} scope="edit">
           <OGAProvider>
-            <Yearbook/>
+            <ProcessUpdates />
           </OGAProvider>
         </Auth0Provider>)
         ;
-        default:
+    case 'yearbook':
+      return (
+        <Auth0Provider {...auth} scope="edit">
+          <OGAProvider>
+            <Yearbook />
+          </OGAProvider>
+        </Auth0Provider>)
+        ;
+    case 'rbc60':
+      return (
+        <Auth0Provider {...auth} scope="edit">
+          <OGAProvider>
+            <RBC60 />
+          </OGAProvider>
+        </Auth0Provider>)
+        ;
+    default:
       console.log('browse', app);
       return (
         <Auth0Provider
-        domain="dev-uf87e942.eu.auth0.com"
-        clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
-        redirectUri={window.location.origin + window.location.pathname}
-        audience="https://oga.org.uk/boatregister"
-        scope="member"
-      >
-        <OGAProvider>
-          <BrowseApp view={app}/>
-        </OGAProvider>
-      </Auth0Provider>
+          domain="dev-uf87e942.eu.auth0.com"
+          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          redirectUri={window.location.origin + window.location.pathname}
+          audience="https://oga.org.uk/boatregister"
+          scope="member"
+        >
+          <OGAProvider>
+            <BrowseApp view={app} />
+          </OGAProvider>
+        </Auth0Provider>
       );
   }
 };
 
-const tags = ['app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets'];
+const tags = ['app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets', 'rbc60'];
 const div = tags.filter((id) => document.getElementById(id));
-if (div.length>0) {
+if (div.length > 0) {
   const app = div[0];
   ReactDOM.render(
     <React.StrictMode>
