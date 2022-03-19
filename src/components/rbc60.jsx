@@ -34,42 +34,32 @@ const port = (name, start, end) => {
     return name;
 }
 
+const legfield = (name, label) => {
+    return { 
+        component: componentTypes.TEXT_FIELD,
+        name: name,
+        helperText: 'leave blank or enter a number',
+        label: `crew spaces for the ${label} leg`,
+        type: 'number',
+        dataType: dataTypes.INTEGER,
+        validate: [
+            {
+            type: validatorTypes.MIN_NUMBER_VALUE,
+            includeThreshold: true,
+            value: 0,
+            }
+        ],
+    };
+};
+
 const schema = (ports) => {
     const fields = [];
     ports.forEach(({ name, start, end, via }, index, list) => {
         if (index > 0) {
             if (via) {
-                fields.push(...via.map((leg) => {
-                    return { 
-                        component: componentTypes.TEXT_FIELD,
-                        name: leg,
-                        label: `crew spaces for the ${leg} leg`,
-                        type: 'number',
-                        dataType: dataTypes.INTEGER,
-                        validate: [
-                            {
-                            type: validatorTypes.MIN_NUMBER_VALUE,
-                            includeThreshold: true,
-                            value: 0,
-                            }
-                        ],
-                    };
-                }));
+                fields.push(...via.map((leg) => legfield(leg, leg)));
             } else {
-                fields.push({ 
-                    component: componentTypes.TEXT_FIELD,
-                    name: `${list[index-1].name}_${name}`,
-                    label: `crew spaces for the ${list[index-1].name} - ${name} leg`,
-                    type: 'number',
-                    dataType: dataTypes.INTEGER,
-                    validate: [
-                        {
-                        type: validatorTypes.MIN_NUMBER_VALUE,
-                        includeThreshold: true,
-                        value: 0,
-                        }
-                    ],
-                });
+                fields.push(legfield(`${list[index-1].name}_${name}`, `${list[index-1].name} - ${name}`));
             }
         }
         fields.push({ 
