@@ -14,10 +14,10 @@ import { PayPalButtons } from "@paypal/react-paypal-js";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-const DDFPayPalButtons = ({ component, name, label }) => {
+const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     // const ref = useRef(null);
     const { input } = useFieldApi({ component, name });
-  
+
     const createOrder = (data, actions) => {
         console.log('Paypal createOrder', data);
         return actions.order.create({
@@ -37,61 +37,61 @@ const DDFPayPalButtons = ({ component, name, label }) => {
         });
     }
     return (
-      <Box display="block">
-        <Typography variant="h4" sx={{ paddingTop: "1em" }}>{label}</Typography>
-        <PayPalButtons style={{
-            shape: 'rect',
-            color: 'blue',
-            layout: 'vertical',
-            label: 'paypal',
+        <Box display="block">
+            <Typography variant="h4" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
+            <PayPalButtons style={{
+                shape: 'rect',
+                color: 'blue',
+                layout: 'vertical',
+                label: 'paypal',
             }}
-            createOrder={createOrder}
-            onApprove={approve}
-        />
-        <div></div>
-      </Box>
+                createOrder={createOrder}
+                onApprove={approve}
+            />
+            <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
+        </Box>
     );
-  };
-  
+};
+
 const ports = [
-    { name: 'Ramsgate', start: '2023-04-27'},
-    { name: 'Cowes', start: '2023-05-06', end: '2023-05-07'},
-    { name: 'Plymouth', start: '2023-05-10', end: '2023-05-11'},
-    { name: 'Milford Haven', start: '2023-05-20', end: '2023-05-21'},
-    { name: 'Dublin', start: '2023-05-27', end: '2023-05-28'},
+    { name: 'Ramsgate', start: '2023-04-27' },
+    { name: 'Cowes', start: '2023-05-06', end: '2023-05-07' },
+    { name: 'Plymouth', start: '2023-05-10', end: '2023-05-11' },
+    { name: 'Milford Haven', start: '2023-05-20', end: '2023-05-21' },
+    { name: 'Dublin', start: '2023-05-27', end: '2023-05-28' },
     { name: 'Oban', start: '2023-06-17', end: '2023-06-18' },
-    { name: 'Arbroath', start: '2023-07-15', end: '2023-07-16', via: ['Caledonian Canal', 'Cape Wrath']},
-    { name: 'Blyth', start: '2023-07-21', end: '2023-07-24'},
-    { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06'},
+    { name: 'Arbroath', start: '2023-07-15', end: '2023-07-16', via: ['Caledonian Canal', 'Cape Wrath'] },
+    { name: 'Blyth', start: '2023-07-21', end: '2023-07-24' },
+    { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06' },
 ];
 
 const port = (name, start, end) => {
     if (start) {
         const st = new Date(start);
-        const s = new Intl.DateTimeFormat('en-GB', {month: 'short', day: 'numeric'}).format(st);
+        const s = new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(st);
         if (end) {
             const ed = new Date(end);
-            const e = new Intl.DateTimeFormat('en-GB', {month: 'short', day: 'numeric'}).format(ed);
+            const e = new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(ed);
             return `${s}-${e} ${name}`;
         }
-        return `${s} ${name}`;    
+        return `${s} ${name}`;
     }
     return name;
 }
 
 const legfield = (name, label) => {
-    return { 
+    return {
         component: componentTypes.TEXT_FIELD,
-        name: name,
+        name: `leg.${name}`,
         helperText: 'leave blank or enter the maximum number of spaces you might have',
         label: `crew spaces for the ${label} leg`,
         type: 'number',
         dataType: dataTypes.INTEGER,
         validate: [
             {
-            type: validatorTypes.MIN_NUMBER_VALUE,
-            includeThreshold: true,
-            value: 0,
+                type: validatorTypes.MIN_NUMBER_VALUE,
+                includeThreshold: true,
+                value: 0,
             }
         ],
     };
@@ -100,25 +100,25 @@ const legfield = (name, label) => {
 export default function RBC60() {
     const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no } }`);
     const { user, isAuthenticated } = useAuth0();
-    
+
     if (loading) return <CircularProgress />;
     if (error) return <p>Error :(can't get picklists)</p>;
     let roles = [];
     if (isAuthenticated && user) {
-      if (user['https://oga.org.uk/roles']) {
-        roles = user['https://oga.org.uk/roles'];
-      }
+        if (user['https://oga.org.uk/roles']) {
+            roles = user['https://oga.org.uk/roles'];
+        }
     }
     let pickers = {};
     if (data) {
-      pickers = data;
+        pickers = data;
     } else {
-      getBoats();
-      return <CircularProgress />;
+        getBoats();
+        return <CircularProgress />;
     }
 
-    const state = { 
-      skipper_email: user && user.email,
+    const state = {
+        skipper_email: user && user.email,
     };
 
     console.log('roles', roles);
@@ -127,19 +127,19 @@ export default function RBC60() {
     const boatOptions = [
         {
             label: "My boat isn't listed",
-            value: 'select-none',
+            value: "My boat isn't listed",
             selectNone: true,
         },
         ...pickers.boat.map((boat) => {
             const text = `${boat.name} (${boat.oga_no})`;
             return { label: text, value: text };
-        }).sort((a, b) => a.label > b.label )
+        }).sort((a, b) => a.label > b.label)
     ];
-  
+
     const handleSubmit = (values) => {
-      const { skipper_email, boat, ...rest } = values;
-      console.log('submit', skipper_email, boat);
-      console.log('submit', rest);
+        const { skipper_email, boat, ...rest } = values;
+        console.log('submit', skipper_email, boat);
+        console.log('submit', rest);
     };
 
     const schema = (ports) => {
@@ -149,12 +149,12 @@ export default function RBC60() {
                 if (via) {
                     fields.push(...via.map((leg) => legfield(leg, leg)));
                 } else {
-                    fields.push(legfield(`${list[index-1].name}_${name}`, `${list[index-1].name} - ${name}`));
+                    fields.push(legfield(`${list[index - 1].name}_${name}`, `${list[index - 1].name} - ${name}`));
                 }
             }
-            fields.push({ 
+            fields.push({
                 component: componentTypes.CHECKBOX,
-                name: name,
+                name: `port.${name}`,
                 label: port(name, start, end),
                 dataType: dataTypes.BOOLEAN,
             });
@@ -162,52 +162,158 @@ export default function RBC60() {
         return {
             fields: [
                 {
-                    component: 'paypal',
-                    name: 'payment',
-                    label: 'Register Interest and reserve your flag',
-                },
-                {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.about',
-                    label: "Tell us about you and your boat",
+                    label: "Tell us about your boat",
                     variant: 'h4',
+                    sx: { marginTop: ".8em" }
                 },
-                { 
+                {
                     component: componentTypes.SELECT,
                     name: 'boat',
                     helperText: "if you can't find your boat on the register, we will add it",
                     label: 'Boat Name',
                     options: boatOptions,
                     isSearchable: true,
-                }, 
+                    isRequired: true,
+                    validate: [
+                        {
+                            type: validatorTypes.REQUIRED,
+                        },
+                    ],
+                },
                 {
-                    component: componentTypes.PLAIN_TEXT,
+                    component: componentTypes.TEXT_FIELD,
                     name: 'ddf.np',
                     label: "The boat register editors will be in touch to get your boat added",
+                    isReadOnly: true,
                     condition: {
                         when: 'boat',
                         is: 'select-none',
                     },
                 },
-                { 
+                {
+                    component: 'paypal',
+                    name: 'payment',
+                    label: 'Reserve your flag',
+                    helperText: 'We are asking all skippers to reserve a flag up front for £15.'
+                        + 'This will help us know how many boats to plan for. ',
+                    validate: [{ type: validatorTypes.REQUIRED }],
+                },
+                {
                     component: componentTypes.TEXT_FIELD,
                     name: 'skipper_email',
                     helperText: 'this ought to be auto-filled with the email of the logged-in user',
                     label: 'Email',
+                    type: 'email',
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        const paypal = formOptions.getFieldState('payment');
+                        if (paypal && paypal.value) {
+                            console.log('email', paypal.value.payer);
+                            return { initialValue: paypal.value.payer.email_address }
+                        }
+                        return { initialValue: '' };
+                    },
+                    validate: [
+                        { type: validatorTypes.REQUIRED },
+                        {
+                          type: validatorTypes.PATTERN,
+                          pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+                        }
+                    ]
                 },
-                { 
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.rbc',
+                    label: "Are you planning to complete a circumnavigation?",
+                    variant: 'h4',
+                    sx: { marginTop: ".5em" }
+                },
+                {
+                    component: componentTypes.CHECKBOX,
+                    name: 'rbc',
+                    label: "I plan to take my boat all the way round",
+                    dataType: dataTypes.BOOLEAN,
+                },
+                {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.ports1',
                     label: "Please check all the 'party' ports you plan to bring your boat to.",
                     variant: 'h4',
+                    sx: { marginTop: ".5em" }
                 },
-                { 
+                {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.ports2',
                     label: 'If you can offer crewing opportunities for any of the legs please indicate how many spaces you might have',
                     // variant: 'h4',
                 },
-                ...fields,       
+                ...fields,
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.ecc',
+                    label: "The East Coast annual Summer Cruise follows OGA 60.",
+                    variant: 'h4',
+                    sx: { marginTop: ".5em" }
+                },
+                {
+                    component: componentTypes.CHECKBOX,
+                    name: 'ecc',
+                    label: "I'd like to bring my boat along to the East Coast Summer Cruise",
+                    dataType: dataTypes.BOOLEAN,
+                },
+                {
+                    component: componentTypes.TEXT_FIELD,
+                    isReadOnly: true,
+                    hideField: true,
+                    initialValue: 0,
+                    name: 'ddf.count',
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        const fields = formOptions.getRegisteredFields();
+                        return { initialValue: fields.reduce((acc, field) => {
+                            if (field.startsWith('port')) {
+                                const port = formOptions.getFieldState(field);
+                                if (port.value) {
+                                    return acc + 1;
+                                }
+                            }
+                            return acc;
+                            }, 0) };
+                    },
+                    // validate: [{ type: validatorTypes.MIN_NUMBER_VALUE, threshold: 1 }]
+                },
+                {
+                    component: componentTypes.TEXT_FIELD,
+                    isReadOnly: true,
+                    name: 'ddf.val',
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        const countField = formOptions.getFieldState('ddf.count');
+                        console.log(countField);
+                        const count = countField && countField.value;
+                        console.log('count', count);
+                        const boatField = formOptions.getFieldState('boat');
+                        let boat = 'your boat';
+                        if (boatField && boatField.valid && boatField.value !== "My boat isn't listed") {
+                            boat = boatField.value;
+                        }
+                        let flag = false;
+                        const paypal = formOptions.getFieldState('payment');
+                        if (paypal && paypal.value) {
+                            console.log('flag', paypal.value.status);
+                            if (paypal.value.status === 'COMPLETED') {
+                                flag = true;
+                            }
+                        }
+                        switch (count) {
+                            case 0:
+                                return { initialValue: 'You havent checked any ports' };
+                            case 1:
+                                return { initialValue: `You are planning to bring ${boat} to one port` };
+                            default:
+                                return { initialValue: `You are planning to bring ${boat} to ${count} ports!` };
+                        }
+                    },
+                }
             ]
         };
     };
@@ -220,9 +326,10 @@ export default function RBC60() {
             </Typography>
             <FormRenderer
                 schema={schema(ports)}
+                subscription={{ values: true }}
                 componentMapper={{
-                  ...componentMapper,
-                  paypal: DDFPayPalButtons,
+                    ...componentMapper,
+                    paypal: DDFPayPalButtons,
                 }}
                 FormTemplate={(props) => (
                     <FormTemplate {...props} showFormControls={true} />
