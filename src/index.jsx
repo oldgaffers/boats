@@ -98,7 +98,7 @@ const Pages = ({ app }) => {
     case 'rbc60':
       return (
         <PayPalScriptProvider options={paypalOptions}>
-          <Auth0Provider {...auth} scope="edit">
+          <Auth0Provider {...auth} scope="member">
             <OGAProvider>
               <RBC60 />
             </OGAProvider>
