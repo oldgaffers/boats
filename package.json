@@ -16,6 +16,7 @@
     "@mui/material": "^5.2.6",
     "@mui/styles": "^5.2.3",
     "@mui/x-data-grid": "^5.2.1",
+    "@paypal/react-paypal-js": "^7.6.0",
     "apollo-link-context": "^1.0.20",
     "awesome-phonenumber": "^2.69.0",
     "axios": "^0.24.0",

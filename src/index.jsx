@@ -2,6 +2,7 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Auth0Provider } from "@auth0/auth0-react";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { CookiesProvider } from "react-cookie";
@@ -28,6 +29,13 @@ const Pages = ({ app }) => {
     redirectUri: window.location.origin + window.location.pathname,
     audience: "https://oga.org.uk/boatregister",
   }
+  const paypalOptions = {
+    "client-id": 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT',
+    currency: "GBP",
+    intent: "capture",
+    // "data-client-token": "abc123xyz==",
+  };
+
   switch (app) {
     case 'boat':
       return (
@@ -89,11 +97,14 @@ const Pages = ({ app }) => {
         ;
     case 'rbc60':
       return (
-        <Auth0Provider {...auth} scope="edit">
-          <OGAProvider>
-            <RBC60 />
-          </OGAProvider>
-        </Auth0Provider>)
+        <PayPalScriptProvider options={paypalOptions}>
+          <Auth0Provider {...auth} scope="edit">
+            <OGAProvider>
+              <RBC60 />
+            </OGAProvider>
+          </Auth0Provider>
+        </PayPalScriptProvider>
+        )
         ;
     default:
       console.log('browse', app);

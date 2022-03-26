@@ -1,4 +1,7 @@
 import React from 'react';
+import { gql, useLazyQuery } from '@apollo/client';
+import { useAuth0 } from "@auth0/auth0-react";
+import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
@@ -7,7 +10,49 @@ import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template'
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import { PayPalButtons } from "@paypal/react-paypal-js";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
 
+const DDFPayPalButtons = ({ component, name, label }) => {
+    // const ref = useRef(null);
+    const { input } = useFieldApi({ component, name });
+  
+    const createOrder = (data, actions) => {
+        console.log('Paypal createOrder', data);
+        return actions.order.create({
+            purchase_units: [{
+                description: 'Register Interest and reserve your flag',
+                amount: { currency_code: 'GBP', value: 0.1 }
+            }]
+        });
+    };
+
+    const approve = (data, actions) => {
+        console.log('Paypal approve', data);
+        return actions.order.capture().then((details) => {
+            console.log('Paypal capture', details);
+            // alert(`Transaction completed by ${name}`);
+            input.onChange(details);
+        });
+    }
+    return (
+      <Box display="block">
+        <Typography variant="h4" sx={{ paddingTop: "1em" }}>{label}</Typography>
+        <PayPalButtons style={{
+            shape: 'rect',
+            color: 'blue',
+            layout: 'vertical',
+            label: 'paypal',
+            }}
+            createOrder={createOrder}
+            onApprove={approve}
+        />
+        <div></div>
+      </Box>
+    );
+  };
+  
 const ports = [
     { name: 'Ramsgate', start: '2023-04-27'},
     { name: 'Cowes', start: '2023-05-06', end: '2023-05-07'},
@@ -38,7 +83,7 @@ const legfield = (name, label) => {
     return { 
         component: componentTypes.TEXT_FIELD,
         name: name,
-        helperText: 'leave blank or enter a number',
+        helperText: 'leave blank or enter the maximum number of spaces you might have',
         label: `crew spaces for the ${label} leg`,
         type: 'number',
         dataType: dataTypes.INTEGER,
@@ -52,43 +97,119 @@ const legfield = (name, label) => {
     };
 };
 
-const schema = (ports) => {
-    const fields = [
-        { 
-            component: componentTypes.TEXT_FIELD,
-            name: 'boat',
-            helperText: 'this ought to be a dropdown of boats on the register',
-            label: 'Boat Name',
-        },     
-        { 
-            component: componentTypes.TEXT_FIELD,
-            name: 'skipper_email',
-            helperText: 'this ought to be auto-filled with the email of the logged-in user',
-            label: 'Email',
-        }        
-    ];
-    ports.forEach(({ name, start, end, via }, index, list) => {
-        if (index > 0) {
-            if (via) {
-                fields.push(...via.map((leg) => legfield(leg, leg)));
-            } else {
-                fields.push(legfield(`${list[index-1].name}_${name}`, `${list[index-1].name} - ${name}`));
-            }
-        }
-        fields.push({ 
-            component: componentTypes.CHECKBOX,
-            name: name,
-            label: port(name, start, end),
-            dataType: dataTypes.BOOLEAN,
-        });
-    });
-    return { fields };
-};
-
 export default function RBC60() {
-    const state = {};
-    const handleSubmit = () => {
-        console.log('submit');
+    const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no } }`);
+    const { user, isAuthenticated } = useAuth0();
+    
+    if (loading) return <CircularProgress />;
+    if (error) return <p>Error :(can't get picklists)</p>;
+    let roles = [];
+    if (isAuthenticated && user) {
+      if (user['https://oga.org.uk/roles']) {
+        roles = user['https://oga.org.uk/roles'];
+      }
+    }
+    let pickers = {};
+    if (data) {
+      pickers = data;
+    } else {
+      getBoats();
+      return <CircularProgress />;
+    }
+
+    const state = { 
+      skipper_email: user && user.email,
+    };
+
+    console.log('roles', roles);
+    console.log('user', user);
+    console.log(pickers.boat);
+    const boatOptions = [
+        {
+            label: "My boat isn't listed",
+            value: 'select-none',
+            selectNone: true,
+        },
+        ...pickers.boat.map((boat) => {
+            const text = `${boat.name} (${boat.oga_no})`;
+            return { label: text, value: text };
+        }).sort((a, b) => a.label > b.label )
+    ];
+  
+    const handleSubmit = (values) => {
+      const { skipper_email, boat, ...rest } = values;
+      console.log('submit', skipper_email, boat);
+      console.log('submit', rest);
+    };
+
+    const schema = (ports) => {
+        const fields = [];
+        ports.forEach(({ name, start, end, via }, index, list) => {
+            if (index > 0) {
+                if (via) {
+                    fields.push(...via.map((leg) => legfield(leg, leg)));
+                } else {
+                    fields.push(legfield(`${list[index-1].name}_${name}`, `${list[index-1].name} - ${name}`));
+                }
+            }
+            fields.push({ 
+                component: componentTypes.CHECKBOX,
+                name: name,
+                label: port(name, start, end),
+                dataType: dataTypes.BOOLEAN,
+            });
+        });
+        return {
+            fields: [
+                {
+                    component: 'paypal',
+                    name: 'payment',
+                    label: 'Register Interest and reserve your flag',
+                },
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.about',
+                    label: "Tell us about you and your boat",
+                    variant: 'h4',
+                },
+                { 
+                    component: componentTypes.SELECT,
+                    name: 'boat',
+                    helperText: "if you can't find your boat on the register, we will add it",
+                    label: 'Boat Name',
+                    options: boatOptions,
+                    isSearchable: true,
+                }, 
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.np',
+                    label: "The boat register editors will be in touch to get your boat added",
+                    condition: {
+                        when: 'boat',
+                        is: 'select-none',
+                    },
+                },
+                { 
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'skipper_email',
+                    helperText: 'this ought to be auto-filled with the email of the logged-in user',
+                    label: 'Email',
+                },
+                { 
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.ports1',
+                    label: "Please check all the 'party' ports you plan to bring your boat to.",
+                    variant: 'h4',
+                },
+                { 
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.ports2',
+                    label: 'If you can offer crewing opportunities for any of the legs please indicate how many spaces you might have',
+                    // variant: 'h4',
+                },
+                ...fields,       
+            ]
+        };
     };
 
     return (
@@ -99,7 +220,10 @@ export default function RBC60() {
             </Typography>
             <FormRenderer
                 schema={schema(ports)}
-                componentMapper={componentMapper}
+                componentMapper={{
+                  ...componentMapper,
+                  paypal: DDFPayPalButtons,
+                }}
                 FormTemplate={(props) => (
                     <FormTemplate {...props} showFormControls={true} />
                 )}
