@@ -1,5 +1,5 @@
-import React from 'react';
-import { gql, useLazyQuery } from '@apollo/client';
+import React, { useState } from 'react';
+import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
@@ -12,6 +12,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
@@ -100,8 +101,17 @@ const legfield = (name, label) => {
 };
 
 export default function RBC60() {
-    const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no ownerships } }`);
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no id ownerships } }`);
+    const mutation = gql`mutation insertItem($body: String!) {
+        insert_rbc60_notification(objects: {body: $body}) {
+          affected_rows
+        }
+    }`;
+    const [addRegistration, result] = useMutation(mutation);
     const { user, isAuthenticated } = useAuth0();
+
+    console.log('mutation result', result);
 
     if (loading) return <CircularProgress />;
     if (error) return <p>Error :(can't get picklists)</p>;
@@ -160,9 +170,17 @@ export default function RBC60() {
     boatOptions.push(...otherBoats.sort((a, b) => a.label > b.label));
 
     const handleSubmit = (values) => {
-        const { ddf, ...data } = values;
-        console.log('submit', data);
+        const { ddf, ...body } = values;
+        console.log('submit', body);
+        addRegistration({
+            variables: { body },
+          });
+          setSnackBarOpen(true);
     };
+
+    const handleSnackBarClose = () => {
+        setSnackBarOpen(false);
+    }
 
     const schema = (ports) => {
         const fields = [];
@@ -225,7 +243,6 @@ export default function RBC60() {
                 {
                     component: componentTypes.TEXT_FIELD,
                     name: 'skipper_email',
-                    helperText: 'this ought to be auto-filled with the email of the logged-in user',
                     label: 'Email',
                     type: 'email',
                     resolveProps: (props, { meta, input }, formOptions) => {
@@ -331,9 +348,9 @@ export default function RBC60() {
                                 case 0:
                                     return { initialValue: 'You have bought a flag but havent checked any ports' };
                                 case 1:
-                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to one port` };
+                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to one port, click submit to complete registration.` };
                                 default:
-                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to ${count} ports!` };
+                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to ${count} ports! Click submit to complete registration.` };
                             }    
                         } else {
                             switch (count) {
@@ -382,6 +399,14 @@ export default function RBC60() {
             />
             </Grid>
             </Grid>
+            <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                open={snackBarOpen}
+                autoHideDuration={2000}
+                onClose={handleSnackBarClose}
+                message="Thanks, we'll get back to you."
+                severity="success"
+            />
         </Paper>
     );
 }
