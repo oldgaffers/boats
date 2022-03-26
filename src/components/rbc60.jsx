@@ -13,6 +13,8 @@ import Typography from '@mui/material/Typography';
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LoginButton from './loginbutton';
 
 const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     // const ref = useRef(null);
@@ -304,13 +306,24 @@ export default function RBC60() {
                                 flag = true;
                             }
                         }
-                        switch (count) {
-                            case 0:
-                                return { initialValue: 'You havent checked any ports' };
-                            case 1:
-                                return { initialValue: `You are planning to bring ${boat} to one port` };
-                            default:
-                                return { initialValue: `You are planning to bring ${boat} to ${count} ports!` };
+                        if (flag) {
+                            switch (count) {
+                                case 0:
+                                    return { initialValue: 'You have bought a flag but havent checked any ports' };
+                                case 1:
+                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to one port` };
+                                default:
+                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to ${count} ports!` };
+                            }    
+                        } else {
+                            switch (count) {
+                                case 0:
+                                    return { initialValue: 'You havent checked any ports or bought a flag' };
+                                case 1:
+                                    return { initialValue: `You are planning to bring ${boat} to one port - please buy a flag` };
+                                default:
+                                    return { initialValue: `You are planning to bring ${boat} to ${count} ports! - Please buy a flag` };
+                            }
                         }
                     },
                 }
@@ -320,10 +333,19 @@ export default function RBC60() {
 
     return (
         <Paper>
+            <Grid container spacing={2}>
+            <Grid xs={8}>
             <Typography variant='h3'>OGA Round Britain Cruise 2023 - RBC60</Typography>
+            </Grid>
+            <Grid xs={2}>
+            <LoginButton />
+            </Grid>
+            <Grid xs={12}>
             <Typography variant='body2'>The RBC starts at Ramsgate on 27 April 2023 and OGA members are welcome to join at any stage for part of the cruise or the whole circumnavigation. Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.  The ports and dates listed are the confirmed Party Ports.
                 Please tick the boxes to indicate which ports you plan to visit. If you intend to complete the whole circumnavigation starting at Ramsgate then tick all.
             </Typography>
+            </Grid>
+            <Grid sx={12}>
             <FormRenderer
                 schema={schema(ports)}
                 subscription={{ values: true }}
@@ -337,6 +359,8 @@ export default function RBC60() {
                 onSubmit={handleSubmit}
                 initialValues={state}
             />
+            </Grid>
+            </Grid>
         </Paper>
     );
 }
