@@ -173,7 +173,7 @@ export default function RBC60() {
         const { ddf, ...body } = values;
         console.log('submit', body);
         addRegistration({
-            variables: { body },
+            variables: { body: JSON.stringify(body) },
           });
           setSnackBarOpen(true);
     };
