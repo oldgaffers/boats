@@ -25,7 +25,7 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
         return actions.order.create({
             purchase_units: [{
                 description: 'Register Interest and reserve your flag',
-                amount: { currency_code: 'GBP', value: 0.1 }
+                amount: { currency_code: 'GBP', value: 15 }
             }]
         });
     };
@@ -100,16 +100,18 @@ const legfield = (name, label) => {
 };
 
 export default function RBC60() {
-    const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no } }`);
+    const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no ownerships } }`);
     const { user, isAuthenticated } = useAuth0();
 
     if (loading) return <CircularProgress />;
     if (error) return <p>Error :(can't get picklists)</p>;
-    let roles = [];
+    // let roles = [];
+    let member = 'NOTMEMBER';
     if (isAuthenticated && user) {
-        if (user['https://oga.org.uk/roles']) {
-            roles = user['https://oga.org.uk/roles'];
-        }
+        member = user["https://oga.org.uk/member"];
+        // if (user['https://oga.org.uk/roles']) {
+        //    roles = user['https://oga.org.uk/roles'];
+        //}
     }
     let pickers = {};
     if (data) {
@@ -119,29 +121,47 @@ export default function RBC60() {
         return <CircularProgress />;
     }
 
-    const state = {
-        skipper_email: user && user.email,
-    };
+    const myBoats = [];
+    const otherBoats = [];
 
-    console.log('roles', roles);
-    console.log('user', user);
-    console.log(pickers.boat);
-    const boatOptions = [
-        {
+    pickers.boat.forEach((boat) => {
+        const text = `${boat.name} (${boat.oga_no})`;
+        if (boat.ownerships) {
+            if (boat.ownerships.current) {
+                const current = boat.ownerships.current.find((o) => o.member === member);
+                if (current) {
+                    myBoats.push({ label: text, value: text });
+                } else {
+                    otherBoats.push({ label: text, value: text });
+                }
+            } else {
+                const current = boat.ownerships.owners && boat.ownerships.owners.find((o) => o.current);
+                if (current && current.member === member) {
+                    myBoats.push({ label: text, value: text });
+                } else {
+                    otherBoats.push({ label: text, value: text });
+                }        
+            }
+        } else {
+            otherBoats.push({ label: text, value: text });
+        }
+    })    
+
+    const boatOptions = [];
+    if (myBoats.length === 0) {
+        boatOptions.push({
             label: "My boat isn't listed",
             value: "My boat isn't listed",
             selectNone: true,
-        },
-        ...pickers.boat.map((boat) => {
-            const text = `${boat.name} (${boat.oga_no})`;
-            return { label: text, value: text };
-        }).sort((a, b) => a.label > b.label)
-    ];
+        });
+    } else {
+        boatOptions.push(...myBoats.sort((a, b) => a.label > b.label));
+    }
+    boatOptions.push(...otherBoats.sort((a, b) => a.label > b.label));
 
     const handleSubmit = (values) => {
-        const { skipper_email, boat, ...rest } = values;
-        console.log('submit', skipper_email, boat);
-        console.log('submit', rest);
+        const { ddf, ...data } = values;
+        console.log('submit', data);
     };
 
     const schema = (ports) => {
@@ -214,7 +234,7 @@ export default function RBC60() {
                             console.log('email', paypal.value.payer);
                             return { initialValue: paypal.value.payer.email_address }
                         }
-                        return { initialValue: '' };
+                        return { initialValue: user && user.email };
                     },
                     validate: [
                         { type: validatorTypes.REQUIRED },
@@ -334,14 +354,16 @@ export default function RBC60() {
     return (
         <Paper>
             <Grid container spacing={2}>
-            <Grid xs={8}>
+            <Grid xs={10}>
             <Typography variant='h3'>OGA Round Britain Cruise 2023 - RBC60</Typography>
             </Grid>
             <Grid xs={2}>
             <LoginButton />
             </Grid>
             <Grid xs={12}>
-            <Typography variant='body2'>The RBC starts at Ramsgate on 27 April 2023 and OGA members are welcome to join at any stage for part of the cruise or the whole circumnavigation. Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.  The ports and dates listed are the confirmed Party Ports.
+            <Typography variant='body2'>
+                {user?`Hello ${user.given_name || user.name}`:''}
+            The RBC starts at Ramsgate on 27 April 2023 and OGA members are welcome to join at any stage for part of the cruise or the whole circumnavigation. Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.  The ports and dates listed are the confirmed Party Ports.
                 Please tick the boxes to indicate which ports you plan to visit. If you intend to complete the whole circumnavigation starting at Ramsgate then tick all.
             </Typography>
             </Grid>
@@ -357,7 +379,6 @@ export default function RBC60() {
                     <FormTemplate {...props} showFormControls={true} />
                 )}
                 onSubmit={handleSubmit}
-                initialValues={state}
             />
             </Grid>
             </Grid>
