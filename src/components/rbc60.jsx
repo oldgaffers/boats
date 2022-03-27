@@ -195,7 +195,7 @@ export default function RBC60() {
             }
         } else {
             const [name, ogaNo] = data.boat.split(/[()]/);
-            data.boat = { name: name.trim(), oga_no: ogaNo };
+            data.boat = { name: name.trim(), oga_no: parseInt(ogaNo) };
         }
         if (user) {
             data.user = user;
