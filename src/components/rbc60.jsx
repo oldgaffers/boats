@@ -192,6 +192,8 @@ export default function RBC60() {
             console.log('TODO - unlisted boat');
             if (ddf.create_boat) {
                 console.log('new boat', ddf.create_boat);
+                data.boat = { name: ddf.create_boat.boat.name };
+                data.create_boat = ddf.create_boat;
             }
         } else {
             const [name, ogaNo] = data.boat.split(/[()]/);
@@ -252,7 +254,7 @@ export default function RBC60() {
                     component: 'create_boat',
                     name: 'ddf.create_boat',
                     label: "Add your boat",
-                    helperText: "If you don't want to add it now, the boat register editors will be in touch to help",
+                    helperText: "If you don't want to add it now, the boat register editors will be in touch to help.",
                     condition: {
                         when: 'boat',
                         is: UNLISTED,
@@ -264,7 +266,8 @@ export default function RBC60() {
                     label: 'Reserve your flag',
                     helperText: 'We are asking all skippers to reserve a flag up front for £15.'
                         + ' This will help us know how many boats to plan for. '
-                        +' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password)',
+                        +' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password.'
+                        +' Or use this fake card: VISA 4137357753267626, expires 04/2027, CVC 123.)',
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 /*
