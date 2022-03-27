@@ -163,7 +163,7 @@ export default function RBC60() {
                     myBoats.push({ label: text, value: text });
                 } else {
                     otherBoats.push({ label: text, value: text });
-                }        
+                }
             }
         } else {
             otherBoats.push({ label: text, value: text });
@@ -195,7 +195,7 @@ export default function RBC60() {
                 data.create_boat = ddf.create_boat;
             } else {
                 console.log('TODO - unlisted boat');
-                data.boat = {  };
+                data.boat = {};
             }
         } else {
             const [name, ogaNo] = data.boat.split(/[()]/);
@@ -205,7 +205,7 @@ export default function RBC60() {
             data.user = user;
         }
         data.port = Object.keys(data.port);
-        data.leg = Object.keys(data.leg).map((leg) =>  {
+        data.leg = Object.keys(data.leg).map((leg) => {
             const [from, to] = leg.split('_');
             return { from, to, spaces: data.leg[leg] }
         });
@@ -275,8 +275,8 @@ export default function RBC60() {
                     label: 'Reserve your flag',
                     helperText: 'We are asking all skippers to reserve a flag up front for £15.'
                         + ' This will help us know how many boats to plan for. '
-                        +' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password.'
-                        +' Or use this fake card: VISA 4137357753267626, expires 04/2027, CVC 123.)',
+                        + ' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password.'
+                        + ' Or use this fake card: VISA 4137357753267626, expires 04/2027, CVC 123.)',
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 /*
@@ -302,6 +302,14 @@ export default function RBC60() {
                     ]
                 },
                 */
+                {
+                    component: componentTypes.TEXT_FIELD,
+                    initialValue: 1,
+                    type: 'number',
+                    dataType: dataTypes.INTEGER,
+                    label: 'Number of people likely to be aboard',
+                    name: 'people_on_board',
+                },
                 {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.rbc',
@@ -350,15 +358,17 @@ export default function RBC60() {
                     name: 'ddf.count',
                     resolveProps: (props, { meta, input }, formOptions) => {
                         const fields = formOptions.getRegisteredFields();
-                        return { initialValue: fields.reduce((acc, field) => {
-                            if (field.startsWith('port')) {
-                                const port = formOptions.getFieldState(field);
-                                if (port.value) {
-                                    return acc + 1;
+                        return {
+                            initialValue: fields.reduce((acc, field) => {
+                                if (field.startsWith('port')) {
+                                    const port = formOptions.getFieldState(field);
+                                    if (port.value) {
+                                        return acc + 1;
+                                    }
                                 }
-                            }
-                            return acc;
-                            }, 0) };
+                                return acc;
+                            }, 0)
+                        };
                     },
                     // validate: [{ type: validatorTypes.MIN_NUMBER_VALUE, threshold: 1 }]
                 },
@@ -392,7 +402,7 @@ export default function RBC60() {
                                     return { initialValue: `You have bought a flag and you are planning to bring ${boat} to one port, click submit to complete registration.` };
                                 default:
                                     return { initialValue: `You have bought a flag and you are planning to bring ${boat} to ${count} ports! Click submit to complete registration.` };
-                            }    
+                            }
                         } else {
                             switch (count) {
                                 case 0:
@@ -412,33 +422,33 @@ export default function RBC60() {
     return (
         <Paper>
             <Grid container spacing={2}>
-            <Grid xs={10}>
-            <Typography variant='h3'>OGA Round Britain Cruise 2023 - RBC60</Typography>
-            </Grid>
-            <Grid xs={2}>
-            <LoginButton />
-            </Grid>
-            <Grid xs={12}>
-            <Typography variant='body2'>
-                {user?`Hello ${user.given_name || user.name}. `:''}The RBC starts at Ramsgate on 27 April 2023 and OGA members are welcome to join at any stage for part of the cruise or the whole circumnavigation. Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.  The ports and dates listed are the confirmed Party Ports.
-                Please tick the boxes to indicate which ports you plan to visit. If you intend to complete the whole circumnavigation starting at Ramsgate then tick all.
-            </Typography>
-            </Grid>
-            <Grid sx={12}>
-            <FormRenderer
-                schema={schema(ports)}
-                subscription={{ values: true }}
-                componentMapper={{
-                    ...componentMapper,
-                    paypal: DDFPayPalButtons,
-                    create_boat: DDFCreateBoat,
-                }}
-                FormTemplate={(props) => (
-                    <FormTemplate {...props} showFormControls={true} />
-                )}
-                onSubmit={handleSubmit}
-            />
-            </Grid>
+                <Grid xs={10}>
+                    <Typography variant='h3'>OGA Round Britain Cruise 2023 - RBC60</Typography>
+                </Grid>
+                <Grid xs={2}>
+                    <LoginButton />
+                </Grid>
+                <Grid xs={12}>
+                    <Typography variant='body2'>
+                        {user ? `Hello ${user.given_name || user.name}. ` : ''}The RBC starts at Ramsgate on 27 April 2023 and OGA members are welcome to join at any stage for part of the cruise or the whole circumnavigation. Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.  The ports and dates listed are the confirmed Party Ports.
+                        Please tick the boxes to indicate which ports you plan to visit. If you intend to complete the whole circumnavigation starting at Ramsgate then tick all.
+                    </Typography>
+                </Grid>
+                <Grid sx={12}>
+                    <FormRenderer
+                        schema={schema(ports)}
+                        subscription={{ values: true }}
+                        componentMapper={{
+                            ...componentMapper,
+                            paypal: DDFPayPalButtons,
+                            create_boat: DDFCreateBoat,
+                        }}
+                        FormTemplate={(props) => (
+                            <FormTemplate {...props} showFormControls={true} />
+                        )}
+                        onSubmit={handleSubmit}
+                    />
+                </Grid>
             </Grid>
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
