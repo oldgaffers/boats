@@ -7,7 +7,13 @@ import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
 // const CreateBoatDialog = React.lazy(() => import("./createboatdialog"));
 
-function sendToPipedream(boatMetric, create, email, uuid, onSuccess, onError) {
+function sendToPipedream(boatMetric, create, email, fileList, copyright, uuid, onSuccess, onError) {
+  const formData = new FormData();
+  if (fileList && fileList.length > 0) {
+    for (let i = 0; i < fileList.length; i++) {
+      formData.set(`file[${i}]`, fileList[i]);
+    }
+  }
   formData.set("boat", JSON.stringify(boatMetric));
   formData.set("create", JSON.stringify(create));
   formData.set("copyright", copyright);
@@ -37,16 +43,11 @@ export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () =
   };
 
   const handleSend = (values) => {
+    setOpen(false);
     const { user, email, ddf, ...b } = values;
     const { new_design_class, new_designer, new_builder, ...boat } = b;
     const { fileList, copyright } = ddf;
-    setOpen(false);
-    const formData = new FormData();
-    if (fileList && fileList.length > 0) {
-      for (let i = 0; i < fileList.length; i++) {
-        formData.set(`file[${i}]`, fileList[i]);
-      }
-    }
+
     const create = {};
     if (new_design_class) {
       create.design_class = new_design_class;
@@ -62,7 +63,7 @@ export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () =
 
     onSubmit({ boat: boatMetric, create, email, uuid });
 
-    sendToPipedream(boatMetric, create, email, uuid, 
+    sendToPipedream(boatMetric, create, email, fileList, copyright, uuid,
       (response) => {
         console.log(response);
         setSnackBarOpen(true);
@@ -72,32 +73,33 @@ export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () =
         // TODO snackbar from response.data      
       },
     );
-
-    const snackBarClose = () => {
-      setSnackBarOpen(false);
-    };
-
-    return (
-      <>
-        <Button
-          size="small"
-          variant="contained"
-          color='primary'
-          onClick={() => setOpen(true)}
-        >Add a Boat</Button>
-        <CreateBoatDialog
-          open={open}
-          onCancel={handleCancel}
-          onSubmit={handleSend}
-        />
-        <Snackbar
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          open={snackBarOpen}
-          autoHideDuration={2000}
-          onClose={snackBarClose}
-          message="Thanks, we'll get back to you."
-          severity="success"
-        />
-      </>
-    );
   }
+
+  const snackBarClose = () => {
+    setSnackBarOpen(false);
+  };
+
+  return (
+    <>
+      <Button
+        size="small"
+        variant="contained"
+        color='primary'
+        onClick={() => setOpen(true)}
+      >Add a Boat</Button>
+      <CreateBoatDialog
+        open={open}
+        onCancel={handleCancel}
+        onSubmit={handleSend}
+      />
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackBarOpen}
+        autoHideDuration={2000}
+        onClose={snackBarClose}
+        message="Thanks, we'll get back to you."
+        severity="success"
+      />
+    </>
+  );
+}
