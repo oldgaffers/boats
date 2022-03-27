@@ -155,13 +155,15 @@ export default function RBC60() {
         } else {
             otherBoats.push({ label: text, value: text });
         }
-    })    
+    })
+
+    const UNLISTED = "My boat isn't listed";
 
     const boatOptions = [];
     if (myBoats.length === 0) {
         boatOptions.push({
-            label: "My boat isn't listed",
-            value: "My boat isn't listed",
+            label: UNLISTED,
+            value: UNLISTED,
             selectNone: true,
         });
     } else {
@@ -173,7 +175,7 @@ export default function RBC60() {
         const { ddf, ...body } = values;
         console.log('submit', body);
         addRegistration({
-            variables: { body: JSON.stringify(body) },
+            variables: { body: JSON.stringify({ ...body, ...user }) },
           });
           setSnackBarOpen(true);
     };
@@ -229,7 +231,7 @@ export default function RBC60() {
                     isReadOnly: true,
                     condition: {
                         when: 'boat',
-                        is: 'select-none',
+                        is: UNLISTED,
                     },
                 },
                 {
@@ -237,9 +239,11 @@ export default function RBC60() {
                     name: 'payment',
                     label: 'Reserve your flag',
                     helperText: 'We are asking all skippers to reserve a flag up front for £15.'
-                        + 'This will help us know how many boats to plan for. ',
+                        + ' This will help us know how many boats to plan for. '
+                        +' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password)',
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
+                /*
                 {
                     component: componentTypes.TEXT_FIELD,
                     name: 'skipper_email',
@@ -261,6 +265,7 @@ export default function RBC60() {
                         }
                     ]
                 },
+                */
                 {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.rbc',
