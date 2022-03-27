@@ -107,7 +107,7 @@ const Pages = ({ app }) => {
         </PayPalScriptProvider>
         )
         ;
-    case 'rbc60_entries': 
+    case 'rbc60_entries': // 60
       return (
         <PayPalScriptProvider options={paypalOptions}>
           <Auth0Provider {...auth} scope="edit">
