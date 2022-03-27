@@ -189,19 +189,26 @@ export default function RBC60() {
         console.log('submit', data);
         console.log('boat', data.boat);
         if (data.boat === UNLISTED) {
-            console.log('TODO - unlisted boat');
             if (ddf.create_boat) {
                 console.log('new boat', ddf.create_boat);
                 data.boat = { name: ddf.create_boat.boat.name };
                 data.create_boat = ddf.create_boat;
+            } else {
+                console.log('TODO - unlisted boat');
+                data.boat = {  };
             }
         } else {
             const [name, ogaNo] = data.boat.split(/[()]/);
-            data.boat = { name: name.trim(), oga_no: parseInt(ogaNo) };
+            data.boat = { name: name.trim(), oga_no: ogaNo && parseInt(ogaNo) };
         }
         if (user) {
             data.user = user;
         }
+        data.port = Object.keys(data.port);
+        data.leg = Object.keys(data.leg).map((leg) =>  {
+            const [from, to] = leg.split('_');
+            return { from, to, spaces: data.leg[leg] }
+        });
         addRegistration({ variables: { data } });
         setSnackBarOpen(true);
     };

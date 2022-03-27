@@ -15,6 +15,7 @@ import Yearbook from './components/yearbook';
 import MyFleets from './components/myfleets';
 import SharedFleets from './components/sharedfleets';
 import RBC60 from './components/rbc60';
+import RBC60Entryies from './components/rbc60entries';
 
 const theme = createTheme({
   palette: {
@@ -106,6 +107,17 @@ const Pages = ({ app }) => {
         </PayPalScriptProvider>
         )
         ;
+    case 'rbc60_entries':
+      return (
+        <PayPalScriptProvider options={paypalOptions}>
+          <Auth0Provider {...auth} scope="edit">
+            <OGAProvider>
+              <RBC60Entryies />
+            </OGAProvider>
+          </Auth0Provider>
+        </PayPalScriptProvider>
+        )
+        ;
     default:
       console.log('browse', app);
       return (
@@ -124,7 +136,9 @@ const Pages = ({ app }) => {
   }
 };
 
-const tags = ['app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets', 'rbc60'];
+const tags = [
+  'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets', 'rbc60', 'rbc60_entries'
+];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length > 0) {
   const app = div[0];
