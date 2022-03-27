@@ -7,12 +7,13 @@ import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
 // const CreateBoatDialog = React.lazy(() => import("./createboatdialog"));
 
-export default function CreateBoatButton() {
+export default function CreateBoatButton({ onSubmit=() => {}, onCancel=() => {} }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   const handleCancel = () => {
     setOpen(false);
+    onCancel();
   };
 
   const handleSend = (values) => {
@@ -53,7 +54,9 @@ export default function CreateBoatButton() {
         },
       },
     ).then(response => {
+      console.log(response);
       setSnackBarOpen(true);
+      onSubmit(boat);
     }).catch(error => {
       console.log('post', error);
       // TODO snackbar from response.data
