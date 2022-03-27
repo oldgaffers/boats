@@ -272,14 +272,14 @@ export default function RBC60Entryies() {
         { field: 'created_at', headerName: 'Submitted', width: 100, valueFormatter: (params) => new Date(params.value).toLocaleDateString() },
         { field: 'data.rbc', headerName: 'Circumnavigating', width: 100, valueGetter: (params) => params.row.data.rbc, valueFormatter: (params) => params.value ? 'Yes' : 'No' },
         {
-            field: 'ports',
+            field: 'port',
             headerName: 'Ports',
             width: 300,
             valueGetter: (params) => params.row.data.port,
             renderCell: renderCellExpandStrings,
         },
         {
-            field: 'legs2',
+            field: 'leg',
             headerName: 'Crewing',
             headerAlign: 'center',
             width: 500,
