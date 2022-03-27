@@ -266,8 +266,8 @@ export default function RBC60Entryies() {
     console.log('data', getEntriesResult.data.rbc60_notification);
 
     const columns = [
-        { field: 'boat', headerName: 'Boat Name', width: 150, valueGetter: (params) => params.row.data.boat.name },
-        { field: 'oga_no', headerName: 'OGA No.', width: 90, valueGetter: (params) => params.row.data.boat.oga_no },
+        { field: 'boat', headerName: 'Boat Name', width: 100, valueGetter: (params) => params.row.data.boat.name },
+        { field: 'oga_no', headerName: 'OGA No.', width: 80, valueGetter: (params) => params.row.data.boat.oga_no },
         { field: 'skipper', headerName: 'Skipper', width: 100, valueGetter: (params) => `${params.row.data.payment.payer.name.given_name} ${params.row.data.payment.payer.name.surname}` },
         { field: 'created_at', headerName: 'Submitted', width: 100, valueFormatter: (params) => new Date(params.value).toLocaleDateString() },
         { field: 'data.rbc', headerName: 'Circumnavigating', width: 100, valueGetter: (params) => params.row.data.rbc, valueFormatter: (params) => params.value ? 'Yes' : 'No' },
@@ -280,9 +280,8 @@ export default function RBC60Entryies() {
         },
         {
             field: 'leg',
-            headerName: 'Crewing',
-            headerAlign: 'center',
-            width: 500,
+            headerName: 'Crewing Spaces offered per leg',
+            width: 300,
             valueGetter: (params) => params.row.data.leg,
             renderCell: renderCellExpandObjects,
         },
