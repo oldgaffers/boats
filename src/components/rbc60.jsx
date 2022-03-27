@@ -16,9 +16,9 @@ import Snackbar from "@mui/material/Snackbar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
+import CreateBoatButton from './createboatbutton';
 
 const DDFPayPalButtons = ({ component, name, label, helperText }) => {
-    // const ref = useRef(null);
     const { input } = useFieldApi({ component, name });
 
     const createOrder = (data, actions) => {
@@ -41,7 +41,7 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     }
     return (
         <Box display="block">
-            <Typography variant="h4" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
+            <Typography variant="h6" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
             <PayPalButtons style={{
                 shape: 'rect',
                 color: 'blue',
@@ -51,6 +51,21 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
                 createOrder={createOrder}
                 onApprove={approve}
             />
+            <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
+        </Box>
+    );
+};
+
+const DDFCreateBoat = ({ component, name, label, helperText }) => {
+    const { input } = useFieldApi({ component, name });
+
+    const handleSubmit = (boat) => input.onChange(boat);
+    const handleCancel = () => console.log('create boat cancelled');
+
+    return (
+        <Box>
+            <Typography variant="h6" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
+            <CreateBoatButton onSubmit={handleSubmit} onCancel={handleCancel} />
             <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
         </Box>
     );
@@ -103,12 +118,10 @@ const legfield = (name, label) => {
 export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no id ownerships } }`);
-    const mutation = gql`mutation insertItem($body: String!) {
-        insert_rbc60_notification(objects: {body: $body}) {
-          affected_rows
-        }
-    }`;
-    const [addRegistration, result] = useMutation(mutation);
+    const [addRegistration, result] = useMutation(gql`
+        mutation AddRegistration($data: jsonb!) {
+        insert_rbc60_notification(objects: {data: $data}) { affected_rows } }
+    `);
     const { user, isAuthenticated } = useAuth0();
 
     console.log('mutation result', result);
@@ -172,12 +185,23 @@ export default function RBC60() {
     boatOptions.push(...otherBoats.sort((a, b) => a.label > b.label));
 
     const handleSubmit = (values) => {
-        const { ddf, ...body } = values;
-        console.log('submit', body);
-        addRegistration({
-            variables: { body: JSON.stringify({ ...body, ...user }) },
-          });
-          setSnackBarOpen(true);
+        const { ddf, ...data } = values;
+        console.log('submit', data);
+        console.log('boat', data.boat);
+        if (data.boat === UNLISTED) {
+            console.log('TODO - unlisted boat');
+            if (ddf.create_boat) {
+                console.log('new boat', ddf.create_boat);
+            }
+        } else {
+            const [name, ogaNo] = data.boat.split(/[()]/);
+            data.boat = { name: name.trim(), oga_no: ogaNo };
+        }
+        if (user) {
+            data.user = user;
+        }
+        addRegistration({ variables: { data } });
+        setSnackBarOpen(true);
     };
 
     const handleSnackBarClose = () => {
@@ -207,7 +231,7 @@ export default function RBC60() {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.about',
                     label: "Tell us about your boat",
-                    variant: 'h4',
+                    variant: 'h6',
                     sx: { marginTop: ".8em" }
                 },
                 {
@@ -225,10 +249,10 @@ export default function RBC60() {
                     ],
                 },
                 {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'ddf.np',
-                    label: "The boat register editors will be in touch to get your boat added",
-                    isReadOnly: true,
+                    component: 'create_boat',
+                    name: 'ddf.create_boat',
+                    label: "Add your boat",
+                    helperText: "If you don't want to add it now, the boat register editors will be in touch to help",
                     condition: {
                         when: 'boat',
                         is: UNLISTED,
@@ -270,7 +294,7 @@ export default function RBC60() {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.rbc',
                     label: "Are you planning to complete a circumnavigation?",
-                    variant: 'h4',
+                    variant: 'h6',
                     sx: { marginTop: ".5em" }
                 },
                 {
@@ -283,21 +307,21 @@ export default function RBC60() {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.ports1',
                     label: "Please check all the 'party' ports you plan to bring your boat to.",
-                    variant: 'h4',
+                    variant: 'h6',
                     sx: { marginTop: ".5em" }
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.ports2',
                     label: 'If you can offer crewing opportunities for any of the legs please indicate how many spaces you might have',
-                    // variant: 'h4',
+                    // variant: 'h6',
                 },
                 ...fields,
                 {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.ecc',
                     label: "The East Coast annual Summer Cruise follows OGA 60.",
-                    variant: 'h4',
+                    variant: 'h6',
                     sx: { marginTop: ".5em" }
                 },
                 {
@@ -395,6 +419,7 @@ export default function RBC60() {
                 componentMapper={{
                     ...componentMapper,
                     paypal: DDFPayPalButtons,
+                    create_boat: DDFCreateBoat,
                 }}
                 FormTemplate={(props) => (
                     <FormTemplate {...props} showFormControls={true} />
