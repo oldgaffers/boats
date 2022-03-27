@@ -1,8 +1,15 @@
 import React from 'react';
-import CircularProgress from "@mui/material/CircularProgress";
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery } from '@apollo/client';
+import CircularProgress from "@mui/material/CircularProgress";
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 import LoginButton from './loginbutton';
 
 const query = gql`query rbc60 { rbc60_notification { data id created_at } }`;
@@ -37,8 +44,49 @@ export default function RBC60Entryies() {
         { field: 'skipper', headerName: 'Skipper', width: 100, valueGetter: (params) => `${params.row.data.payment.payer.name.given_name} ${params.row.data.payment.payer.name.surname}` },
         { field: 'created_at', headerName: 'Submitted', width: 100, valueFormatter: (params) => new Date(params.value).toLocaleDateString() },
         { field: 'data.rbc', headerName: 'Circumnavigating', width: 100, valueGetter: (params) => params.row.data.rbc, valueFormatter: (params) => params.value?'Yes':'No' },
-        { field: 'ports', headerName: 'Ports', width: 300, valueGetter: (params) => params.row.data.port },
-        { field: 'legs', headerName: 'Crewing', width: 300, valueGetter: (params) => JSON.stringify(params.row.data.leg) },
+        {
+            field: 'ports', 
+            headerName: 'Ports', 
+            width: 300, 
+            valueGetter: (params) => params.row.data.port, 
+            renderCell: (params) => (<>
+                <Grid container>
+                {params.value.map((port, index) => (
+                    <Grid key={index} item xs={12}>
+                        <Typography variant='body2'>{port}</Typography>
+                    </Grid>)
+                )}
+                </Grid>
+            </>),
+        },
+        {
+            field: 'legs', 
+            headerName: 'Crewing',
+            headerAlign: 'center',
+            width: 510, 
+            valueGetter: (params) => params.row.data.leg,
+            renderCell: (params) => (<Table border={1}>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>From</TableCell>
+                        <TableCell>To</TableCell>
+                        <TableCell>Spaces</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {params.value.map((leg, index) => (
+                    <TableRow key={index}>
+                    <TableCell>{leg.from}</TableCell>
+                    <TableCell>{leg.to}</TableCell>
+                    <TableCell>{leg.spaces}</TableCell>
+                    </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+                
+                    
+                ),
+        },
         { field: 'data.ecc', headerName: 'EC Cruise', width: 100, valueGetter: (params) => params.row.data.ecc, valueFormatter: (params) => params.value?'Yes':'' },
     ];
 
@@ -50,14 +98,7 @@ export default function RBC60Entryies() {
                     columns={columns}
                     components={{ Toolbar: GridToolbar }}
                     autoHeight={true}
-                    initialState={{
-                        columns: {
-                            columnVisibilityModel: {
-                                current: false,
-                                originator: false,
-                            },
-                        },
-                    }}
+                    rowHeight={300}
                 />
             </div>
         </div>
