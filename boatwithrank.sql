@@ -2,6 +2,10 @@
 -- builderByBuilder boatwithrank . builder  → builder . id
 -- designerByDesigner boatwithrank . designer  → designer . id
 -- for_sale_state boatwithrank . selling_status  → for_sale_state . text
+-- designClassByDesignClass boatwithrank . design_class  → design_class . id
+-- genericTypeByGenericType boatwithrank . generic_type  → generic_type . name
+-- rigTypeByRigType boatwithrank . rig_type  → rig_type . name
+
 CREATE
 OR REPLACE VIEW "public"."boatwithrank" AS
 SELECT
