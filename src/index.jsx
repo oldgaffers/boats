@@ -31,20 +31,20 @@ const Pages = ({ app }) => {
     audience: "https://oga.org.uk/boatregister",
   }
   const paypalOptions = {
-    "client-id": 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT',
+    "client-id": 'Ab7dxlH_fK99yWWn7Z2V9WdaSiX1H26jJLtfIQ4sOcgFtqYklvaxTLZgXCSwOb2scdRGIRYJluxWH6cM',
+    // "client-id": 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT',
     currency: "GBP",
     intent: "capture",
-    // "data-client-token": "abc123xyz==",
   };
 
   switch (app) {
     case 'boat':
       return (
         <Auth0Provider
-          domain="dev-uf87e942.eu.auth0.com"
-          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          domain={auth.doman}
+          clientId={auth.clientId}
+          audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
-          audience="https://oga.org.uk/boatregister"
           scope="member"
         >
           <OGAProvider>
@@ -55,10 +55,10 @@ const Pages = ({ app }) => {
     case 'my_fleets':
       return (
         <Auth0Provider
-          domain="dev-uf87e942.eu.auth0.com"
-          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          domain={auth.doman}
+          clientId={auth.clientId}
+          audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
-          audience="https://oga.org.uk/boatregister"
           scope="member"
         >
           <OGAProvider>
@@ -69,10 +69,10 @@ const Pages = ({ app }) => {
     case 'shared_fleets':
       return (
         <Auth0Provider
-          domain="dev-uf87e942.eu.auth0.com"
-          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          domain={auth.doman}
+          clientId={auth.clientId}
+          audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
-          audience="https://oga.org.uk/boatregister"
           scope="member"
         >
           <OGAProvider>
@@ -122,10 +122,10 @@ const Pages = ({ app }) => {
       console.log('browse', app);
       return (
         <Auth0Provider
-          domain="dev-uf87e942.eu.auth0.com"
-          clientId="Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce"
+          domain={auth.doman}
+          clientId={auth.clientId}
+          audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
-          audience="https://oga.org.uk/boatregister"
           scope="member"
         >
           <OGAProvider>
