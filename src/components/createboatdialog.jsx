@@ -37,6 +37,21 @@ import { HtmlEditor } from "./ddf/RTE";
 import { Typography } from "@mui/material";
 
 /* 
+
+smallest unused oga number
+
+nos = a.data.boat.map((boat) => boat.oga_no);
+console.log(Math.min(...nos), Math.max(...nos));
+b = new Set(nos);
+n = Array.from({ length: Math.max(...nos) }, (v, i) => i);
+console.log(n);
+let difference = Array.from(new Set( [...n].filter(x => !b.has(x))));
+console.log(difference);
+difference.shift()
+console.log(difference.shift());
+
+
+
 ✅ name	text
 ✅ mainsail_type	text
 ✅ rig_type	text

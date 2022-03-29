@@ -26,7 +26,7 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
         return actions.order.create({
             purchase_units: [{
                 description: 'Register Interest and reserve your flag',
-                amount: { currency_code: 'GBP', value: 0.01 } // 15 }
+                amount: { currency_code: 'GBP', value: 15 }
             }]
         });
     };
