@@ -20,7 +20,7 @@ const DEFAULT_BROWSE_STATE = {
         page: 1, 
         sort: 'rank', 
         sortDirection: 'asc',
-        filters: { generic_type:  ['Dinghy', 'Dayboat'] },
+        filters: { generic_type:  ['Dinghy', 'Dayboat', 'Sailing Canoe'] },
         view: 'small',    
     }
 };
