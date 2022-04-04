@@ -30,6 +30,7 @@ const Pages = ({ app }) => {
     redirectUri: window.location.origin + window.location.pathname,
     audience: "https://oga.org.uk/boatregister",
   }
+  console.log('auth', auth);
   const paypalOptions = {
     // "client-id": 'Ab7dxlH_fK99yWWn7Z2V9WdaSiX1H26jJLtfIQ4sOcgFtqYklvaxTLZgXCSwOb2scdRGIRYJluxWH6cM',
     "client-id": 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT',
@@ -41,7 +42,7 @@ const Pages = ({ app }) => {
     case 'boat':
       return (
         <Auth0Provider
-          domain={auth.doman}
+          domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
@@ -55,7 +56,7 @@ const Pages = ({ app }) => {
     case 'my_fleets':
       return (
         <Auth0Provider
-          domain={auth.doman}
+          domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
@@ -69,7 +70,7 @@ const Pages = ({ app }) => {
     case 'shared_fleets':
       return (
         <Auth0Provider
-          domain={auth.doman}
+          domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
@@ -122,7 +123,7 @@ const Pages = ({ app }) => {
       console.log('browse', app);
       return (
         <Auth0Provider
-          domain={auth.doman}
+          domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
