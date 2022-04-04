@@ -11,7 +11,7 @@ import gql from 'graphql-tag';
 import { useLazyQuery } from '@apollo/client';
 
 function Owner({ owner }) {
-  const name = owner.name || owner.note
+  const name = owner.name || owner.text || owner.note
   const share = owner.share ? `${owner.share}/64` : '';
   return (
     <TableRow key={owner.id}>
@@ -26,6 +26,7 @@ function Owner({ owner }) {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 function OwnersTable({ owners }) {
+  console.log('owners', owners);
   const memberNumbers = owners.filter((o) => queryIf(o)).map((o) => o.member);
   const [getMembersResults, { loading, error, data }] = useLazyQuery(gql(`query members {
     members(members: ${JSON.stringify(memberNumbers)}) {
