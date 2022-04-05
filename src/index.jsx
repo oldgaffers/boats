@@ -44,7 +44,7 @@ const Pages = ({ app }) => {
           domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
-          redirectUri={window.location.origin + window.location.pathname}
+          redirectUri={auth.redirectUri}
           scope="member"
         >
           <OGAProvider>
@@ -58,7 +58,7 @@ const Pages = ({ app }) => {
           domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
-          redirectUri={window.location.origin + window.location.pathname}
+          redirectUri={auth.redirectUri}
           scope="member"
         >
           <OGAProvider>
@@ -72,7 +72,7 @@ const Pages = ({ app }) => {
           domain={auth.domain}
           clientId={auth.clientId}
           audience={auth.audience}
-          redirectUri={window.location.origin + window.location.pathname}
+          redirectUri={auth.redirectUri}
           scope="member"
         >
           <OGAProvider>
@@ -82,7 +82,12 @@ const Pages = ({ app }) => {
       );
     case 'pending':
       return (
-        <Auth0Provider {...auth} scope="edit">
+        <Auth0Provider 
+          domain={auth.domain}
+          clientId={auth.clientId}
+          redirectUri={auth.redirectUri}
+          audience={auth.audience}
+          scope="edit">
           <OGAProvider>
             <ProcessUpdates />
           </OGAProvider>
