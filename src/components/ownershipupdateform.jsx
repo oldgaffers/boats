@@ -90,9 +90,9 @@ function MemberEditInputCell(props) {
     };
 
     const handleSave = async (event) => {
-        console.log('handleSave', nameOrMember);
         const { id, api } = props;
         if (isMember) {
+            console.log('updating member fields', id, nameOrMember.id, nameOrMember.member, api.setEditCellValue);
             await api.setEditCellValue({ id, field: 'ID', value: nameOrMember.id }, event);
             await api.setEditCellValue({ id, field: 'member', value: nameOrMember.member }, event);
         } else {
@@ -126,12 +126,10 @@ function MemberEditInputCell(props) {
                                 return `${m.firstname} ${m.lastname} (${m.town}, ${m.area})`
                             }}
                             onChange={(event, newValue) => {
-                                console.log('OCV', newValue);
                                 setNameOrMember(newValue);
                             }}
                             inputValue={inputName}
                             onInputChange={(event, val) => {
-                                console.log('OICV', val);
                                 setInputName(val);
                             }}
                             renderInput={(params) => (
@@ -324,6 +322,8 @@ export default function OwnershipForm(props) {
                         valueSetter: ownerNameSetter,
                         renderEditCell: ownerNameEditor,
                     },
+                    { field: 'ID', headerName: 'ID', width: 0, editable: true, valueGetter: ({ row }) => row.ID || '?',  },
+                    { field: 'member', headerName: 'Member', width: 0, editable: true, valueGetter: ({ row }) => row.member || '?' },
                     { field: 'start', headerName: 'Start', width: 90, editable: true, valueGetter: ({ row }) => row.start || '?' },
                     { field: 'end', headerName: 'End', width: 90, editable: true, valueGetter: ({ row }) => row.end || '-' },
                     { field: 'share', headerName: 'Share', width: 90, editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
@@ -343,6 +343,14 @@ export default function OwnershipForm(props) {
                 autoPageSize={true}
                 onCellEditCommit={handleCellEditCommit}
                 isCellEditable={(params) => !params.row.ID || params.field !== 'name'}
+                initialState={{
+                    columns: {
+                      columnVisibilityModel: {
+                        ID: false,
+                        member: false,
+                      },
+                    },
+                  }}
             />
             <Stack
                 sx={{ width: '100%', mb: 1 }}
