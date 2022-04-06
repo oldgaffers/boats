@@ -40,6 +40,9 @@ import { Typography } from "@mui/material";
 
 smallest unused oga number
 
+  const [getOgaNos, { loading, error, data }] = useLazyQuery(gql(`query ogano { boat { oga_no } }`));
+
+
 nos = a.data.boat.map((boat) => boat.oga_no);
 console.log(Math.min(...nos), Math.max(...nos));
 b = new Set(nos);
