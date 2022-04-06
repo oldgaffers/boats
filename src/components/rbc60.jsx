@@ -18,6 +18,33 @@ import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
 import CreateBoatButton from './createboatbutton';
 
+/*
+const DDFOgaNo = ({ component, name, lable, helperText}) => {
+    const { input } = useFieldApi({ component, name });
+
+  
+  
+  nos = a.data.boat.map((boat) => boat.oga_no);
+  console.log(Math.min(...nos), Math.max(...nos));
+  b = new Set(nos);
+  n = Array.from({ length: Math.max(...nos) }, (v, i) => i);
+  console.log(n);
+  let difference = Array.from(new Set( [...n].filter(x => !b.has(x))));
+  console.log(difference);
+  difference.shift()
+  console.log(difference.shift());
+  
+  
+  return (
+    <Box display="block">
+        <Typography variant="h6" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
+        
+        <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
+    </Box>
+);
+}
+*/
+
 const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     const { input } = useFieldApi({ component, name });
 
@@ -138,6 +165,7 @@ const crewlegfield = (name, label) => {
 export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no id ownerships } }`);
+    // const [getOgaNos, ogaNosState] = useLazyQuery(gql(`query ogano { boat { oga_no } }`));
     const [addRegistration, result] = useMutation(gql`
         mutation AddRegistration($data: jsonb!) {
         insert_rbc60_notification(objects: {data: $data}) { affected_rows } }
@@ -343,7 +371,7 @@ export default function RBC60() {
                         },
                     ],
                 },
-                {
+                /*{
                     component: 'create_boat',
                     name: 'ddf.create_boat',
                     label: "Add your boat",
@@ -351,6 +379,44 @@ export default function RBC60() {
                     condition: {
                         when: 'boat',
                         is: UNLISTED,
+                    },
+                },*/
+                {
+                    component: componentTypes.CHECKBOX,
+                    name: 'ddf.nothere',
+                    label: "Boat is not on the register",
+                    helperText: "please confirm you've looked for your boat on the register and didn't find it.",
+                    dataType: dataTypes.BOOLEAN,
+                    condition: {
+                        when: 'boat',
+                        is: UNLISTED,
+                    },
+                },
+                {
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'ddf.boat_name',
+                    label: "Boat Name",
+                    helperText: "Enter your boat's name.",
+                    condition: {
+                        when: 'ddf.nothere',
+                        is: true,
+                    },
+                },
+                {
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'ddf.oga_no',
+                    label: "OGA Number",
+                    isReadOnly: true,
+                    helperText: "We have reserved this OGA Number for you.",
+                    condition: {
+                        when: 'ddf.nothere',
+                        is: true,
+                    },
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        
+                        return {
+                            initialValue: 'XXX', // oga_no,
+                        };
                     },
                 },
                 {
