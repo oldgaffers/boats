@@ -18,7 +18,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { JsonEditor as Editor } from 'jsoneditor-react';
 import { BasicHtmlEditor } from "./ddf/RTE";
-import 'jsoneditor/dist/jsoneditor.min.css';
+// import 'jsoneditor/dist/jsoneditor.min.css';
 import 'jsoneditor-react/es/editor.min.css';
 
 function TextEditDialog({ title, text, open, onSave, ...props }) {
