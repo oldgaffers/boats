@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
@@ -55,6 +55,9 @@ export default function OwnershipForm(props) {
         }
         return o;
     });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => { input.onChange({ owners });}, [owners]);
 
     const membership = () => {
         if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
@@ -172,21 +175,16 @@ export default function OwnershipForm(props) {
             const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64 / family.length) };
             no.push(o);
         })
-        // setOwnerships({ ...ownerships, owners });
         setOwners([...owners, ...no]);
-        input.onChange({ owners });
     }
 
     const handleAddRow = () => {
         setOwners([...owners, { name: '', start: lastEnd, share: 64 }]);
-        // setOwnerships({ ...ownerships, owners });
-        input.onChange({ owners });
     }
 
     const deleteRow = (row) => {
         const o = owners.filter((o, index) => index !== row.id);
-        // setOwnerships({ ...ownerships,  owners: o });
-        input.onChange({ owners: o });
+        setOwners(o);
     }
 
     const ownersWithId = owners.map((owner, index) => {
