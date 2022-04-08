@@ -222,8 +222,8 @@ export default function OwnershipForm(props) {
                     },
                     { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true,  },
                     { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
-                    { field: 'start', headerName: 'Start', type: 'number', width: 90, editable: true, valueFormatter: ({ value }) => `${value}` || '?' },
-                    { field: 'end', headerName: 'End', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => `${value}` || '-' },
+                    { field: 'start', headerName: 'Start', type: 'number', width: 90, editable: true, valueFormatter: ({ value }) => value || '?' },
+                    { field: 'end', headerName: 'End', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value || '-' },
                     { field: 'share', headerName: 'Share', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
                     {
                         width: 40,
