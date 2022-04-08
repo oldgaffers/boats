@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
-import { useQuery, useLazyQuery, gql } from '@apollo/client';
+import { useLazyQuery, gql } from '@apollo/client';
 import EditOwner from './editowner';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
@@ -44,6 +44,7 @@ export const ownershipUpdateForm = {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 export default function OwnershipForm(props) {
+
     const { user } = useAuth0();
     const { input } = useFieldApi(props);
 
@@ -56,23 +57,32 @@ export default function OwnershipForm(props) {
         return o;
     });
 
+    useEffect(() => { 
+        input.onChange({
+            owners: owners.map((o) => {
+                if(o.id) {
+                    const { name, ...rest } = 0;
+                    return rest;
+                }
+                return o;
+            }),
+        });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(() => { input.onChange({ owners });}, [owners]);
+    }, [owners]);
 
-    const membership = () => {
-        if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
-            return {
-               id: parseInt(user['https://oga.org.uk/id']),
-               member: parseInt(user['https://oga.org.uk/member']),
-           };
-       }
-       return undefined;
+    let membership;
+    if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
+        membership = {
+            id: parseInt(user['https://oga.org.uk/id']),
+            member: parseInt(user['https://oga.org.uk/member']),
+        };
     }
 
     let theirBoat = false;
 
     const memberNumbers = [...new Set(owners.filter((o) => queryIf(o)).map((o) => o.member))];
     if (membership) {
+        console.log('membership', membership);
         if(!memberNumbers.includes(membership.member)) {
             memberNumbers.push(membership.member);
         }
@@ -83,30 +93,27 @@ export default function OwnershipForm(props) {
 
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
 
-    console.log('owners', owners);
-
     if (getMembersResults.loading) return <CircularProgress />;
 
+    const members = [];
     if (getMembersResults.error) {
         console.log(`Error! ${getMembersResults.error}`);
-    }
-
-    const members = [];
-    if (getMembersResults.data) {
-        if (getMembersResults.data.members) {
-            members.push(...getMembersResults.data.members);
+    } else {
+        if (getMembersResults.data) {
+            if (getMembersResults.data.members) {
+                members.push(...getMembersResults.data.members);
+            } else {
+                getMembers({ variables: {members: memberNumbers } });
+            }
         } else {
-            getMembers({ variables: {members: memberNumbers } });
-        }
+            if(getMembersResults.called) {
+                console.log('called but not loading');
+            } else {
+                console.log('not called, calling now', memberNumbers);
+                getMembers({ variables: {members: memberNumbers } });
+            }
+        }    
     }
-
-    const ownerNameSetter = ({ value, row }) => {
-        console.log('ownerNameSetter', value, row);
-        if (row.goldId) {
-            return row;
-        }
-        return { ...row, name: value };
-    };
 
     const ownerNameGetter = (owner) => {
         console.log('ownerNameGetter', owner);
@@ -154,9 +161,12 @@ export default function OwnershipForm(props) {
         } else {
             const onSaveRow = async (ownership, event) => {
                 console.log('onSaveRow', ownership);
-                await api.setEditCellValue({ id, field: 'name', value: ownership.name }, event);
+                const { name, ...rest } = ownership;
+                await api.setEditCellValue({ id, field: 'name', value: name }, event);
                 const o = [...owners];
-                o[id] = { ...owners[id], ...ownership };
+                const { share, start, end, ...p } = o[id];
+                console.log('p', p);
+                o[id] = { ...o[id], ...rest };
                 console.log('setOwners', o);
                 setOwners(o);
             }
@@ -195,8 +205,6 @@ export default function OwnershipForm(props) {
         }
     }).sort((a, b) => a.start > b.start);
 
-    console.log('ownersWithId', ownersWithId);
-
     return (
         <div style={{ height: 300, width: '100%' }}>
             <DataGrid
@@ -210,14 +218,13 @@ export default function OwnershipForm(props) {
                         editable: true,
                         valueGetter: ({ row }) => ownerNameGetter(row),
                         valueFormatter: ({ value }) => ownerNameFormatter(value),
-                        valueSetter: ownerNameSetter,
                         renderEditCell: ownerNameEditor,
                     },
                     { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true,  },
                     { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
-                    { field: 'start', headerName: 'Start', width: 90, editable: true, valueGetter: ({ row }) => row.start || '?' },
-                    { field: 'end', headerName: 'End', width: 90, editable: true, valueGetter: ({ row }) => row.end || '-' },
-                    { field: 'share', headerName: 'Share', width: 90, editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
+                    { field: 'start', headerName: 'Start', type: 'number', width: 90, editable: true, valueFormatter: ({ value }) => `${value}` || '?' },
+                    { field: 'end', headerName: 'End', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => `${value}` || '-' },
+                    { field: 'share', headerName: 'Share', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
                     {
                         width: 40,
                         field: 'actions',
