@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
 import { useLazyQuery, gql } from '@apollo/client';
-import EditOwner from './editowner';
+import EditOwner, { memberFormatter } from './editowner';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
@@ -60,8 +60,9 @@ export default function OwnershipForm(props) {
     useEffect(() => { 
         input.onChange({
             owners: owners.map((o) => {
+                console.log('onChange', o);
                 if(o.id) {
-                    const { name, ...rest } = 0;
+                    const { name, ...rest } = o;
                     return rest;
                 }
                 return o;
@@ -132,18 +133,14 @@ export default function OwnershipForm(props) {
     }
 
     const ownerNameFormatter = (owner) => {
-        console.log('ownerNameFormatter', owner);
         if (typeof owner === 'string') {
             return owner;
         }
-        console.log('members', members);
-        console.log('goldId', owner.goldId);
         const m = members.filter((member) => member.id === owner.goldId);
         console.log('m', m);
         if (m.length > 0) {
-            const { firstname, lastname, GDPR } = m[0];
-            if (GDPR) {
-                return `${firstname} ${lastname}`;
+            if (m[0].GDPR) {
+                return memberFormatter(m[0]);
             } else {
                 return `name of member ${m[0].member}:${m[0].id} withheld`
             }
@@ -162,13 +159,14 @@ export default function OwnershipForm(props) {
             const onSaveRow = async (ownership, event) => {
                 console.log('onSaveRow', ownership);
                 const { name, ...rest } = ownership;
-                await api.setEditCellValue({ id, field: 'name', value: name }, event);
                 const o = [...owners];
                 const { share, start, end, ...p } = o[id];
                 console.log('p', p);
+                console.log('rest', rest);
                 o[id] = { ...o[id], ...rest };
                 console.log('setOwners', o);
                 setOwners(o);
+                await api.setEditCellValue({ id, field: 'name', value: name }, event);
             }
             return (<EditOwner value={row} onSave={onSaveRow} />);
         }

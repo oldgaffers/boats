@@ -11,6 +11,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Autocomplete } from '@mui/material';
 
+export function memberFormatter(n) {
+    return `${n.firstname} ${n.lastname} (mem${n.GDPR ? '✓' : ''})`;
+}
+
 const MEMBER_NAME_QUERY = gql(`query members($name: String!) {
     members(lastname: $name) {
       firstname
@@ -78,7 +82,7 @@ export default function EditOwner({value, onSave}) {
                             onChange={(event, n) => {
                                 console.log('onChange', n);
                                 const o = {
-                                    name: `${n.firstname} ${n.lastname} (mem${n.GDPR ? '✓' : ''})`,
+                                    name: memberFormatter(n),
                                     id: n.id,
                                     member: n.member,
                                 }
