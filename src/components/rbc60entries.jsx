@@ -169,6 +169,10 @@ const GridCellExpandObjects = memo(function GridCellExpand(props) {
         };
     }, [setShowFullCell, showFullCell]);
 
+    if(!value) {
+        return '';
+    }
+
     return (
         <Box
             ref={wrapper}
