@@ -193,6 +193,7 @@ export default function RBC60() {
         const { ddf, ...data } = values;
         if (data.boat === UNLISTED) {
             data.boat = { name: ddf.boatname, oga_no: firstFreeOgaNo };
+            data.new_boat = true;
         } else {
             const [name, ogaNo] = data.boat.split(/[()]/);
             data.boat = { name: name.trim(), oga_no: ogaNo && parseInt(ogaNo) };
