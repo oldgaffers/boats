@@ -280,7 +280,7 @@ export default function RBC60() {
                     sx: { marginTop: ".8em" },
                     resolveProps: (props, { meta, input }, formOptions) => {
                         return {
-                            helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you arn't a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                            helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you are not a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
                         }
                     },
                     condition: {
@@ -292,7 +292,7 @@ export default function RBC60() {
                     component: componentTypes.TEXT_FIELD,
                     name: 'ddf.member_no',
                     label: "Membership Number",
-                    helperText: "Enter your membership number.",
+                    helperText: "Enter your membership number. (if you LOGIN we will already have your Membership Number).",
                     type: 'number',
                     condition: {
                         when: 'ddf.member',
@@ -530,7 +530,7 @@ export default function RBC60() {
                         If you are interested in bringing a boat one of the OGA60 small boat events go to our <a href='https://oga.org.uk/oga60/small_boat_events.html'>Small Boat Events page</a>.
                     </Typography>
                     <Typography variant='body1'>
-                        If you want more information about OGA60 in genreral go to the main <a href='https://oga.org.uk/oga60/oga60.html'>OGA60 page</a>.
+                        If you want more information about OGA60 in general go to the main <a href='https://oga.org.uk/oga60/oga60.html'>OGA60 page</a>.
                     </Typography>
                     <Typography variant='body1'>
                         Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.
