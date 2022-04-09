@@ -77,20 +77,6 @@ const port = (name, start, end) => {
     return name;
 }
 
-const viafield = (name, label) => {
-    return {
-        component: componentTypes.CHECKBOX,
-        name: `via.${name}`,
-        label: `I plan to sail the ${label} leg`,
-        dataType: dataTypes.BOOLEAN,
-        condition: {
-            when: 'crew',
-            is: false,
-        },
-
-    };
-};
-
 const crewlegfield = (name, label) => {
     return {
         component: componentTypes.TEXT_FIELD,
@@ -234,7 +220,6 @@ export default function RBC60() {
         ports.forEach(({ name, start, end, via }, index, list) => {
             if (index > 0) {
                 if (via) {
-                    fields.push(...via.map((leg) => viafield(leg, leg)));
                     fields.push(...via.map((leg) => crewlegfield(leg, leg)));
                 } else {
                     fields.push(crewlegfield(`${list[index - 1].name}_${name}`, `${list[index - 1].name} - ${name}`));
@@ -398,11 +383,17 @@ export default function RBC60() {
                     label: "Which Route will you take?",
                     helperText: 'You can make a final decision later',
                     initialValue: 'cape',
-                    options: [
-                        { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
-                        { label: 'I will probably go via Cape Wrath', value: 'cape' },
-                        { label: "I probably won't do this part of the cruise", value: 'neither' },
-                    ],
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        const rbc = formOptions.getFieldState('rbc');
+                        const options = [
+                            { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
+                            { label: 'I will probably go via Cape Wrath', value: 'cape' },
+                        ];
+                        if (!rbc.value) {
+                            options.push({ label: "I probably won't do this part of the cruise", value: 'neither' });
+                        }
+                        return { options };
+                    },
                 },
                 {
                     component: componentTypes.TEXT_FIELD,
@@ -423,7 +414,7 @@ export default function RBC60() {
                     component: componentTypes.CHECKBOX,
                     name: 'crew',
                     label: 'If you want to offer crewing opportunities for any of the legs, check here',
-                    helperText: 'You don\t need to decide now, just leave the box unchecked if you haven\'t decided yet',
+                    helperText: "You don't need to decide now, just leave the box unchecked if you haven't decided yet",
                     dataType: dataTypes.BOOLEAN,
                 },
                 ...fields,
