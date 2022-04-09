@@ -16,34 +16,6 @@ import Snackbar from "@mui/material/Snackbar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
-import CreateBoatButton from './createboatbutton';
-
-/*
-const DDFOgaNo = ({ component, name, lable, helperText}) => {
-    const { input } = useFieldApi({ component, name });
-
-  
-  
-  nos = a.data.boat.map((boat) => boat.oga_no);
-  console.log(Math.min(...nos), Math.max(...nos));
-  b = new Set(nos);
-  n = Array.from({ length: Math.max(...nos) }, (v, i) => i);
-  console.log(n);
-  let difference = Array.from(new Set( [...n].filter(x => !b.has(x))));
-  console.log(difference);
-  difference.shift()
-  console.log(difference.shift());
-  
-  
-  return (
-    <Box display="block">
-        <Typography variant="h6" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
-        
-        <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
-    </Box>
-);
-}
-*/
 
 const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     const { input } = useFieldApi({ component, name });
@@ -78,21 +50,6 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
                 createOrder={createOrder}
                 onApprove={approve}
             />
-            <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
-        </Box>
-    );
-};
-
-const DDFCreateBoat = ({ component, name, label, helperText }) => {
-    const { input } = useFieldApi({ component, name });
-
-    const handleSubmit = (boat) => input.onChange(boat);
-    const handleCancel = () => console.log('create boat cancelled');
-
-    return (
-        <Box>
-            <Typography variant="h6" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
-            <CreateBoatButton onSubmit={handleSubmit} onCancel={handleCancel} />
             <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
         </Box>
     );
@@ -143,7 +100,7 @@ const crewlegfield = (name, label) => {
         component: componentTypes.TEXT_FIELD,
         name: `leg.${name}`,
         helperText: 'If you might have space for OGA members to help crew,'
-            +' you can indicate the maximum number of spaces here.',
+            + ' you can indicate the maximum number of spaces here.',
         label: `possible spaces for the ${label} leg`,
         type: 'number',
         dataType: dataTypes.INTEGER,
@@ -161,6 +118,35 @@ const crewlegfield = (name, label) => {
 
     };
 };
+
+const boatOptionArray = (pickers, member) => {
+    const owned = [];
+    const other = [];
+
+    pickers.boat.forEach((boat) => {
+        const text = `${boat.name} (${boat.oga_no})`;
+        if (member && boat.ownerships) {
+            if (boat.ownerships.current) {
+                const current = boat.ownerships.current.find((o) => o.member === member);
+                if (current) {
+                    owned.push({ label: text, value: text });
+                } else {
+                    other.push({ label: text, value: text });
+                }
+            } else {
+                const current = boat.ownerships.owners && boat.ownerships.owners.find((o) => o.current);
+                if (current && current.member === member) {
+                    owned.push({ label: text, value: text });
+                } else {
+                    other.push({ label: text, value: text });
+                }
+            }
+        } else {
+            other.push({ label: text, value: text });
+        }
+    })
+    return { owned: owned.sort((a, b) => a.label > b.label), other: other.sort((a, b) => a.label > b.label) };
+}
 
 export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -185,7 +171,7 @@ export default function RBC60() {
         // return <p>Error :(can't get picklists)</p>;
     }
     // let roles = [];
-    let member = 'NOTMEMBER';
+    let member;
     if (isAuthenticated && user) {
         member = user["https://oga.org.uk/member"];
         // if (user['https://oga.org.uk/roles']) {
@@ -208,45 +194,7 @@ export default function RBC60() {
         return <CircularProgress />;
     }
 
-    const myBoats = [];
-    const otherBoats = [];
-
-    pickers.boat.forEach((boat) => {
-        const text = `${boat.name} (${boat.oga_no})`;
-        if (boat.ownerships) {
-            if (boat.ownerships.current) {
-                const current = boat.ownerships.current.find((o) => o.member === member);
-                if (current) {
-                    myBoats.push({ label: text, value: text });
-                } else {
-                    otherBoats.push({ label: text, value: text });
-                }
-            } else {
-                const current = boat.ownerships.owners && boat.ownerships.owners.find((o) => o.current);
-                if (current && current.member === member) {
-                    myBoats.push({ label: text, value: text });
-                } else {
-                    otherBoats.push({ label: text, value: text });
-                }
-            }
-        } else {
-            otherBoats.push({ label: text, value: text });
-        }
-    })
-
     const UNLISTED = "My boat isn't listed";
-
-    const boatOptions = [];
-    if (myBoats.length === 0) {
-        boatOptions.push({
-            label: UNLISTED,
-            value: UNLISTED,
-            selectNone: true,
-        });
-    } else {
-        boatOptions.push(...myBoats.sort((a, b) => a.label > b.label));
-    }
-    boatOptions.push(...otherBoats.sort((a, b) => a.label > b.label));
 
     const handleSubmit = (values) => {
         const { ddf, ...data } = values;
@@ -304,11 +252,18 @@ export default function RBC60() {
         return {
             fields: [
                 {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.about',
+                    label: "About you",
+                    variant: 'h6',
+                    sx: { marginTop: ".8em" }
+                },
+                {
                     component: componentTypes.TEXT_FIELD,
                     label: 'Type of login',
                     name: 'userState',
                     isReadOnly: true,
-                    hideField: false,
+                    hideField: true,
                     initialValue: userState,
                 },
                 {
@@ -321,103 +276,71 @@ export default function RBC60() {
                 },
                 {
                     component: componentTypes.CHECKBOX,
-                    name: 'ddf.login',
-                    label: "I have a login",
-                    helperText: "If you are currently a member and have a boat register login, please log in. We can use your login details to help you fill the form in.",
+                    name: 'ddf.member',
+                    label: "I am a member of the OGA",
                     variant: 'h6',
                     sx: { marginTop: ".8em" },
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        console.log(input)
+                        return {
+                            helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                        }
+                    },
                     condition: {
                         when: 'userState',
                         is: 'not logged in',
                     },
                 },
                 {
-                    component: componentTypes.CHECKBOX,
-                    name: 'ddf.nonmember',
-                    label: "If you are not currently a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 https://oga.org.uk/about/membership.html",
-                    variant: 'h6',
-                    sx: { marginTop: ".8em" },
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'ddf.member_no',
+                    label: "Membership Number",
+                    helperText: "Enter your membership number.",
+                    type: 'number',
                     condition: {
-                        or: [
-                            {
-                                when: 'userState',
-                                is: 'not logged in',                                
-                            },
-                            {
-                                when: 'userState',
-                                is: 'user',                                
-                            },
-                        ]
+                        when: 'ddf.member',
+                        is: true,
                     },
+                    isRequired: true,
+                    validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.about',
-                    label: "Tell us about your boat",
+                    label: "About your boat",
                     variant: 'h6',
                     sx: { marginTop: ".8em" }
                 },
                 {
                     component: componentTypes.SELECT,
                     name: 'boat',
+                    initializeOnMount: true,
                     helperText: "if you can't find your boat on the register, we will add it",
                     label: 'Boat Name',
-                    options: boatOptions,
                     isSearchable: true,
+                    isClearable: true,
                     isRequired: true,
-                    validate: [
-                        {
-                            type: validatorTypes.REQUIRED,
-                        },
-                    ],
-                },
-                /*{
-                    component: 'create_boat',
-                    name: 'ddf.create_boat',
-                    label: "Add your boat",
-                    helperText: "If you don't want to add it now, the boat register editors will be in touch to help.",
-                    condition: {
-                        when: 'boat',
-                        is: UNLISTED,
-                    },
-                },*/
-                {
-                    component: componentTypes.CHECKBOX,
-                    name: 'ddf.nothere',
-                    label: "Boat is not on the register",
-                    helperText: "please confirm you've looked for your boat on the register and didn't find it.",
-                    dataType: dataTypes.BOOLEAN,
-                    condition: {
-                        when: 'boat',
-                        is: UNLISTED,
-                    },
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'ddf.boat_name',
-                    label: "Boat Name",
-                    helperText: "Enter your boat's name.",
-                    condition: {
-                        when: 'ddf.nothere',
-                        is: true,
-                    },
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'ddf.oga_no',
-                    label: "OGA Number",
-                    isReadOnly: true,
-                    helperText: "We have reserved this OGA Number for you.",
-                    condition: {
-                        when: 'ddf.nothere',
-                        is: true,
-                    },
+                    validate: [{ type: validatorTypes.REQUIRED }],
                     resolveProps: (props, { meta, input }, formOptions) => {
-                        
-                        return {
-                            initialValue: 'XXX', // oga_no,
-                        };
-                    },
+
+                        const m = formOptions.getFieldState('ddf.member_no');
+                        const memberNo = m && Number(m.value);
+                        console.log('memberNo', memberNo, member);
+
+                        const mno = member || memberNo;
+
+                        const boatOptions = [];
+                        const { owned, other } = boatOptionArray(pickers, mno);
+
+                        boatOptions.push({
+                            label: UNLISTED,
+                            value: UNLISTED,
+                            selectNone: true,
+                        });
+                        boatOptions.push(...owned);
+                        boatOptions.push(...other);
+                        return { options: boatOptions }
+                    }
                 },
                 {
                     component: 'paypal',
@@ -429,29 +352,6 @@ export default function RBC60() {
                         + ' Or use this fake card: VISA 4137357753267626, expires 04/2027, CVC 123.)',
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
-                /*
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'skipper_email',
-                    label: 'Email',
-                    type: 'email',
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        const paypal = formOptions.getFieldState('payment');
-                        if (paypal && paypal.value) {
-                            console.log('email', paypal.value.payer);
-                            return { initialValue: paypal.value.payer.email_address }
-                        }
-                        return { initialValue: user && user.email };
-                    },
-                    validate: [
-                        { type: validatorTypes.REQUIRED },
-                        {
-                          type: validatorTypes.PATTERN,
-                          pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-                        }
-                    ]
-                },
-                */
                 {
                     component: componentTypes.TEXT_FIELD,
                     initialValue: 1,
@@ -594,7 +494,7 @@ export default function RBC60() {
                         If you want more information about OGA60 in genreral go to the main <a href='https://oga.org.uk/oga60/oga60.html'>OGA60 page</a>.
                     </Typography>
                     <Typography variant='body1'>
-                        Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC. 
+                        Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.
                     </Typography>
                     <Typography variant='body1'>
                         These events are organised by the Areas and you will be able to register for them separately from the main <a href='https://oga.org.uk/events/events.html'>Events page</a>.
@@ -603,7 +503,7 @@ export default function RBC60() {
                         The ports and dates listed are the confirmed Party Ports.
                     </Typography>
                     <Typography variant='body1'>
-                        Please tick the boxes to indicate which ports you plan to visit. 
+                        Please tick the boxes to indicate which ports you plan to visit.
                     </Typography>
                 </Grid>
                 <Grid item sx={12}>
@@ -613,7 +513,6 @@ export default function RBC60() {
                         componentMapper={{
                             ...componentMapper,
                             paypal: DDFPayPalButtons,
-                            create_boat: DDFCreateBoat,
                         }}
                         FormTemplate={(props) => (
                             <FormTemplate {...props} showFormControls={true} />
