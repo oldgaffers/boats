@@ -21,7 +21,6 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     const { input } = useFieldApi({ component, name });
 
     const createOrder = (data, actions) => {
-        console.log('Paypal createOrder', data);
         return actions.order.create({
             purchase_units: [{
                 description: 'Register Interest and reserve your flag',
@@ -31,10 +30,7 @@ const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     };
 
     const approve = (data, actions) => {
-        console.log('Paypal approve', data);
         return actions.order.capture().then((details) => {
-            console.log('Paypal capture', details);
-            // alert(`Transaction completed by ${name}`);
             input.onChange(details);
         });
     }
@@ -159,8 +155,6 @@ export default function RBC60() {
 
     let userState;
 
-    console.log('user', user, 'isAuthenticated', isAuthenticated);
-
     if (result) {
         console.log('mutation', result);
     }
@@ -173,10 +167,6 @@ export default function RBC60() {
     let member;
     if (isAuthenticated && user) {
         member = user["https://oga.org.uk/member"];
-        // if (user['https://oga.org.uk/roles']) {
-        //    roles = user['https://oga.org.uk/roles'];
-        //}
-        console.log('member', member);
         if (member) {
             userState = 'member';
         } else {
@@ -189,9 +179,9 @@ export default function RBC60() {
     let firstFreeOgaNo;
     if (getBoatsState.data) {
         pickers = getBoatsState.data;
-        const ogaNos = pickers.boat.map((boat) => Number(boat.oga_no)).sort((a,b) => a - b);
-        const idx = ogaNos.findIndex((val, index, vals) => val+1 !== vals[index+1]);
-        firstFreeOgaNo = ogaNos[idx]+1;
+        const ogaNos = pickers.boat.map((boat) => Number(boat.oga_no)).sort((a, b) => a - b);
+        const idx = ogaNos.findIndex((val, index, vals) => val + 1 !== vals[index + 1]);
+        firstFreeOgaNo = ogaNos[idx] + 1;
     } else {
         getBoats();
         return <CircularProgress />;
@@ -201,29 +191,33 @@ export default function RBC60() {
 
     const handleSubmit = (values) => {
         const { ddf, ...data } = values;
-        console.log('submit', data);
-        console.log('boat', data.boat);
         if (data.boat === UNLISTED) {
-            if (ddf.create_boat) {
-                console.log('new boat', ddf.create_boat);
-                data.boat = { name: ddf.create_boat.boat.name };
-                data.create_boat = ddf.create_boat;
-            } else {
-                console.log('TODO - unlisted boat');
-                data.boat = {};
-            }
+            data.boat = { name: ddf.boatname, oga_no: firstFreeOgaNo };
         } else {
             const [name, ogaNo] = data.boat.split(/[()]/);
             data.boat = { name: name.trim(), oga_no: ogaNo && parseInt(ogaNo) };
         }
         if (user) {
-            data.user = user;
+            data.user = {
+                name: user.name,
+                email: user.email,
+                member: user["https://oga.org.uk/member"],
+                id: user["https://oga.org.uk/id"],
+            }
+        } else {
+            data.user = {
+                email: data.payment.payer.email_address,
+                name: `${data.payment.payer.name.given_name} ${data.payment.payer.name.surname}`,
+                member: ddf.member_no,
+            }
         }
         data.port = Object.keys(data.port);
-        data.leg = Object.keys(data.leg).map((leg) => {
-            const [from, to] = leg.split('_');
-            return { from, to, spaces: data.leg[leg] }
-        });
+        if (data.leg) {
+            data.leg = Object.keys(data.leg).map((leg) => {
+                const [from, to] = leg.split('_');
+                return { from, to, spaces: data.leg[leg] }
+            });
+        }
         addRegistration({ variables: { data } });
         setSnackBarOpen(true);
     };
@@ -264,7 +258,7 @@ export default function RBC60() {
                 {
                     component: componentTypes.TEXT_FIELD,
                     label: 'Type of login',
-                    name: 'userState',
+                    name: 'ddf.userState',
                     isReadOnly: true,
                     hideField: true,
                     initialValue: userState,
@@ -284,13 +278,12 @@ export default function RBC60() {
                     variant: 'h6',
                     sx: { marginTop: ".8em" },
                     resolveProps: (props, { meta, input }, formOptions) => {
-                        console.log(input)
                         return {
-                            helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                            helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you arn't a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
                         }
                     },
                     condition: {
-                        when: 'userState',
+                        when: 'ddf.userState',
                         is: 'not logged in',
                     },
                 },
@@ -308,8 +301,26 @@ export default function RBC60() {
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 {
+                    component: componentTypes.TEXT_FIELD,
+                    name: 'ddf.show_user',
+                    label: '',
+                    isReadOnly: true,
+                    condition: {
+                        when: 'ddf.userState',
+                        is: 'member',
+                    },
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        if (member) {
+                            return {
+                                value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
+                            }       
+                        }
+                    },
+                },
+                {
                     component: componentTypes.PLAIN_TEXT,
                     name: 'ddf.about.boat',
+                    initializeOnMount: true,
                     label: "About your boat",
                     variant: 'h6',
                     sx: { marginTop: ".8em" }
@@ -329,7 +340,6 @@ export default function RBC60() {
 
                         const m = formOptions.getFieldState('ddf.member_no');
                         const memberNo = m && Number(m.value);
-                        console.log('memberNo', memberNo, member);
 
                         const mno = member || memberNo;
 
@@ -355,7 +365,8 @@ export default function RBC60() {
                         is: UNLISTED,
                     },
                     isRequired: true,
-                    validate: [{ type: validatorTypes.REQUIRED }],                },
+                    validate: [{ type: validatorTypes.REQUIRED }],
+                },
                 {
                     component: 'paypal',
                     name: 'payment',
@@ -365,14 +376,6 @@ export default function RBC60() {
                         + ' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password.'
                         + ' Or use this fake card: VISA 4137357753267626, expires 04/2027, CVC 123.)',
                     validate: [{ type: validatorTypes.REQUIRED }],
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    initialValue: 1,
-                    type: 'number',
-                    dataType: dataTypes.INTEGER,
-                    label: 'Number of people likely to be aboard',
-                    name: 'people_on_board',
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
@@ -385,6 +388,7 @@ export default function RBC60() {
                     component: componentTypes.CHECKBOX,
                     name: 'rbc',
                     label: "I plan to take my boat all the way round",
+                    initialValue: false,
                     dataType: dataTypes.BOOLEAN,
                 },
                 {
@@ -398,6 +402,14 @@ export default function RBC60() {
                         { label: 'I will probably go via Cape Wrath', value: 'cape' },
                         { label: "I probably won't do this part of the cruise", value: 'neither' },
                     ],
+                },
+                {
+                    component: componentTypes.TEXT_FIELD,
+                    initialValue: 1,
+                    type: 'number',
+                    dataType: dataTypes.INTEGER,
+                    label: 'Number of people likely to be aboard',
+                    name: 'people_on_board',
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
@@ -447,26 +459,26 @@ export default function RBC60() {
                             }, 0)
                         };
                     },
-                    // validate: [{ type: validatorTypes.MIN_NUMBER_VALUE, threshold: 1 }]
                 },
                 {
                     component: componentTypes.TEXT_FIELD,
                     isReadOnly: true,
-                    name: 'ddf.val',
+                    name: 'ddf.valid',
                     resolveProps: (props, { meta, input }, formOptions) => {
                         const countField = formOptions.getFieldState('ddf.count');
-                        console.log('countField', countField);
                         const count = countField && countField.value;
-                        console.log('count', count);
+                        const boatNameField = formOptions.getFieldState('ddf.boatname');
                         const boatField = formOptions.getFieldState('boat');
                         let boat = 'your boat';
                         if (boatField && boatField.valid && boatField.value !== "My boat isn't listed") {
                             boat = boatField.value;
                         }
+                        if (boatNameField && boatNameField.value) {
+                            boat = boatNameField.value;
+                        }
                         let flag = false;
                         const paypal = formOptions.getFieldState('payment');
                         if (paypal && paypal.value) {
-                            console.log('flag', paypal.value.status);
                             if (paypal.value.status === 'COMPLETED') {
                                 flag = true;
                             }
@@ -524,12 +536,6 @@ export default function RBC60() {
                     </Typography>
                     <Typography variant='body1'>
                         These events are organised by the Areas and you will be able to register for them separately from the main <a href='https://oga.org.uk/events/events.html'>Events page</a>.
-                    </Typography>
-                    <Typography variant='body1'>
-                        The ports and dates listed are the confirmed Party Ports.
-                    </Typography>
-                    <Typography variant='body1'>
-                        Please tick the boxes to indicate which ports you plan to visit.
                     </Typography>
                 </Grid>
                 <Grid item sx={12}>
