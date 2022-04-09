@@ -150,8 +150,7 @@ const boatOptionArray = (pickers, member) => {
 
 export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [getBoats, { loading, error, data }] = useLazyQuery(gql`query boats { boat { name oga_no id ownerships } }`);
-    // const [getOgaNos, ogaNosState] = useLazyQuery(gql(`query ogano { boat { oga_no } }`));
+    const [getBoats, getBoatsState] = useLazyQuery(gql`query boats { boat { name oga_no id ownerships } }`);
     const [addRegistration, result] = useMutation(gql`
         mutation AddRegistration($data: jsonb!) {
         insert_rbc60_notification(objects: {data: $data}) { affected_rows } }
@@ -166,8 +165,8 @@ export default function RBC60() {
         console.log('mutation', result);
     }
 
-    if (loading) return <CircularProgress />;
-    if (error) {
+    if (getBoatsState.loading) return <CircularProgress />;
+    if (getBoatsState.error) {
         // return <p>Error :(can't get picklists)</p>;
     }
     // let roles = [];
@@ -187,8 +186,12 @@ export default function RBC60() {
         userState = 'not logged in'
     }
     let pickers = { boat: [] };
-    if (data) {
-        pickers = data;
+    let firstFreeOgaNo;
+    if (getBoatsState.data) {
+        pickers = getBoatsState.data;
+        const ogaNos = pickers.boat.map((boat) => Number(boat.oga_no)).sort((a,b) => a - b);
+        const idx = ogaNos.findIndex((val, index, vals) => val+1 !== vals[index+1]);
+        firstFreeOgaNo = ogaNos[idx]+1;
     } else {
         getBoats();
         return <CircularProgress />;
@@ -253,7 +256,7 @@ export default function RBC60() {
             fields: [
                 {
                     component: componentTypes.PLAIN_TEXT,
-                    name: 'ddf.about',
+                    name: 'ddf.about.skipper',
                     label: "About you",
                     variant: 'h6',
                     sx: { marginTop: ".8em" }
@@ -306,7 +309,7 @@ export default function RBC60() {
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
-                    name: 'ddf.about',
+                    name: 'ddf.about.boat',
                     label: "About your boat",
                     variant: 'h6',
                     sx: { marginTop: ".8em" }
@@ -315,6 +318,7 @@ export default function RBC60() {
                     component: componentTypes.SELECT,
                     name: 'boat',
                     initializeOnMount: true,
+                    noValueUpdates: true,
                     helperText: "if you can't find your boat on the register, we will add it",
                     label: 'Boat Name',
                     isSearchable: true,
@@ -343,6 +347,16 @@ export default function RBC60() {
                     }
                 },
                 {
+                    component: componentTypes.TEXT_FIELD,
+                    label: 'Add your boat name',
+                    name: 'ddf.boatname',
+                    condition: {
+                        when: 'boat',
+                        is: UNLISTED,
+                    },
+                    isRequired: true,
+                    validate: [{ type: validatorTypes.REQUIRED }],                },
+                {
                     component: 'paypal',
                     name: 'payment',
                     label: 'Sign Up and Reserve your flag',
@@ -362,8 +376,8 @@ export default function RBC60() {
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
-                    name: 'ddf.rbc',
-                    label: "Are you planning to complete a circumnavigation?",
+                    name: 'ddf.about.rbc',
+                    label: "About your cruise",
                     variant: 'h6',
                     sx: { marginTop: ".5em" }
                 },
@@ -372,6 +386,18 @@ export default function RBC60() {
                     name: 'rbc',
                     label: "I plan to take my boat all the way round",
                     dataType: dataTypes.BOOLEAN,
+                },
+                {
+                    component: componentTypes.RADIO,
+                    name: 'scotland',
+                    label: "Which Route will you take?",
+                    helperText: 'You can make a final decision later',
+                    initialValue: 'cape',
+                    options: [
+                        { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
+                        { label: 'I will probably go via Cape Wrath', value: 'cape' },
+                        { label: "I probably won't do this part of the cruise", value: 'neither' },
+                    ],
                 },
                 {
                     component: componentTypes.PLAIN_TEXT,
