@@ -383,16 +383,29 @@ export default function RBC60() {
                     label: "Which Route will you take?",
                     helperText: 'You can make a final decision later',
                     initialValue: 'cape',
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        const rbc = formOptions.getFieldState('rbc');
-                        const options = [
-                            { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
-                            { label: 'I will probably go via Cape Wrath', value: 'cape' },
-                        ];
-                        if (!rbc.value) {
-                            options.push({ label: "I probably won't do this part of the cruise", value: 'neither' });
-                        }
-                        return { options };
+                    options: [
+                        { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
+                        { label: 'I will probably go via Cape Wrath', value: 'cape' },
+                    ],
+                    condition: {
+                        when: 'rbc',
+                        is: true,
+                    },
+                },
+                {
+                    component: componentTypes.RADIO,
+                    name: 'scotland',
+                    label: "Which Route will you take?",
+                    helperText: 'You can make a final decision later',
+                    initialValue: 'cape',
+                    options: [
+                        { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
+                        { label: 'I will probably go via Cape Wrath', value: 'cape' },
+                        { label: "I probably won't do this part of the cruise", value: 'neither' },
+                    ],
+                    condition: {
+                        when: 'rbc',
+                        is: false,
                     },
                 },
                 {
@@ -518,7 +531,7 @@ export default function RBC60() {
                         If you are interested in joining all or part of the cruise on someone else's boat go to our <a href='https://oga.org.uk/oga60/rbc60_crewing_opportunities.html'>Crewing page</a>.
                     </Typography>
                     <Typography variant='body1'>
-                        If you are interested in bringing a boat one of the OGA60 small boat events go to our <a href='https://oga.org.uk/oga60/small_boat_events.html'>Small Boat Events page</a>.
+                        If you are interested in bringing a boat to one of the OGA60 small boat events go to our <a href='https://oga.org.uk/oga60/small_boat_events.html'>Small Boat Events page</a>.
                     </Typography>
                     <Typography variant='body1'>
                         If you want more information about OGA60 in general go to the main <a href='https://oga.org.uk/oga60/oga60.html'>OGA60 page</a>.
