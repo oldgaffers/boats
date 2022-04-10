@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import { useAuth0 } from "@auth0/auth0-react";
-import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
@@ -10,46 +9,11 @@ import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template'
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
-import { PayPalButtons } from "@paypal/react-paypal-js";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
-import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
-
-const DDFPayPalButtons = ({ component, name, label, helperText }) => {
-    const { input } = useFieldApi({ component, name });
-
-    const createOrder = (data, actions) => {
-        return actions.order.create({
-            purchase_units: [{
-                description: 'Register Interest and reserve your flag',
-                amount: { currency_code: 'GBP', value: 15 }
-            }]
-        });
-    };
-
-    const approve = (data, actions) => {
-        return actions.order.capture().then((details) => {
-            input.onChange(details);
-        });
-    }
-    return (
-        <Box display="block">
-            <Typography variant="h6" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{label}</Typography>
-            <PayPalButtons style={{
-                shape: 'rect',
-                color: 'blue',
-                layout: 'vertical',
-                label: 'paypal',
-            }}
-                createOrder={createOrder}
-                onApprove={approve}
-            />
-            <Typography variant="body2" sx={{ paddingTop: ".5em", paddingBottom: ".5em" }}>{helperText}</Typography>
-        </Box>
-    );
-};
+import { DDFPayPalButtons } from './ddf/paypal';
 
 const ports = [
     { name: 'Ramsgate', start: '2023-04-27' },
@@ -361,6 +325,8 @@ export default function RBC60() {
                 {
                     component: 'paypal',
                     name: 'payment',
+                    description: 'RBC 60 Sign-up with flag',
+                    amount: 15,
                     label: 'Sign Up and Reserve your flag',
                     helperText: 'We are asking all skippers to reserve a flag up front for £15. This will help us know how many boats to plan for.',
                     validate: [{ type: validatorTypes.REQUIRED }],
