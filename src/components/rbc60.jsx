@@ -16,6 +16,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
+import { conditionalExpression } from '@babel/types';
 
 const DDFPayPalButtons = ({ component, name, label, helperText }) => {
     const { input } = useFieldApi({ component, name });
@@ -58,7 +59,7 @@ const ports = [
     { name: 'Milford Haven', start: '2023-05-20', end: '2023-05-21' },
     { name: 'Dublin', start: '2023-05-27', end: '2023-05-28' },
     { name: 'Oban', start: '2023-06-17', end: '2023-06-18' },
-    { name: 'Arbroath', start: '2023-07-15', end: '2023-07-16', via: ['Caledonian Canal', 'Cape Wrath'] },
+    { name: 'Arbroath', start: '2023-07-15', end: '2023-07-16', via: { routeName: 'scotland', choices: ['Caledonian Canal', 'Cape Wrath'] } },
     { name: 'Blyth', start: '2023-07-21', end: '2023-07-24' },
     { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06' },
 ];
@@ -77,7 +78,12 @@ const port = (name, start, end) => {
     return name;
 }
 
-const crewlegfield = (name, label) => {
+const crewlegfield = (name, label, routeName) => {
+    console.log('crewlegfield', name, label, routeName);
+    const conditions = [{ when: 'crew', is: true }];
+    if (routeName) {
+        conditions.push({ when: routeName, is: name });
+    }
     return {
         component: componentTypes.TEXT_FIELD,
         name: `leg.${name}`,
@@ -93,12 +99,31 @@ const crewlegfield = (name, label) => {
                 value: 0,
             }
         ],
-        condition: {
-            when: 'crew',
-            is: true,
-        },
-
+        condition: { and: conditions },
     };
+};
+
+const portFields = (ports, route) => {
+    console.log('port fields route', route);
+    const fields = [];
+    ports.forEach(({ name, start, end, via }, index, list) => {
+        if (index > 0) {
+            if (via) {
+                fields.push(...via.choices.map((leg) => crewlegfield(leg, leg, via.routeName)));
+            } else {
+                const legName = `${list[index - 1].name}_${name}`;
+                const label = `${list[index - 1].name} - ${name}`;
+                fields.push(crewlegfield(legName, label));
+            }
+        }
+        fields.push({
+            component: componentTypes.CHECKBOX,
+            name: `port.${name}`,
+            label: port(name, start, end),
+            dataType: dataTypes.BOOLEAN,
+        });
+    });
+    return fields;
 };
 
 const boatOptionArray = (pickers, member) => {
@@ -142,7 +167,7 @@ export default function RBC60() {
     let userState;
 
     if (result) {
-        console.log('mutation', result);
+        // console.log('mutation', result);
     }
 
     if (getBoatsState.loading) return <CircularProgress />;
@@ -216,254 +241,222 @@ export default function RBC60() {
     }
 
     const schema = (ports) => {
-        const fields = [];
-        ports.forEach(({ name, start, end, via }, index, list) => {
-            if (index > 0) {
-                if (via) {
-                    fields.push(...via.map((leg) => crewlegfield(leg, leg)));
-                } else {
-                    fields.push(crewlegfield(`${list[index - 1].name}_${name}`, `${list[index - 1].name} - ${name}`));
-                }
-            }
-            fields.push({
-                component: componentTypes.CHECKBOX,
-                name: `port.${name}`,
-                label: port(name, start, end),
-                dataType: dataTypes.BOOLEAN,
-            });
-        });
         return {
             fields: [
                 {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: 'ddf.about.skipper',
-                    label: "About you",
-                    variant: 'h6',
-                    sx: { marginTop: ".8em" }
+                    "component": componentTypes.SUB_FORM,
+                    "title": "About you",
+                    "name": "ddf.about.skipper",
+                    "fields": [
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            label: 'Type of login',
+                            name: 'ddf.userState',
+                            isReadOnly: true,
+                            hideField: true,
+                            initialValue: userState,
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'user',
+                            isReadOnly: true,
+                            hideField: true,
+                            label: 'USER',
+                            initialValue: user || 'NONE',
+                        },
+                        {
+                            component: componentTypes.CHECKBOX,
+                            name: 'ddf.member',
+                            label: "I am a member of the OGA",
+                            resolveProps: (props, { meta, input }, formOptions) => {
+                                return {
+                                    helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you are not a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                                }
+                            },
+                            condition: {
+                                when: 'ddf.userState',
+                                is: 'not logged in',
+                            },
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'ddf.member_no',
+                            label: "Membership Number",
+                            helperText: "Enter your membership number. (if you LOGIN we will already have your Membership Number).",
+                            type: 'number',
+                            condition: {
+                                when: 'ddf.member',
+                                is: true,
+                            },
+                            isRequired: true,
+                            validate: [{ type: validatorTypes.REQUIRED }],
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'ddf.show_user',
+                            label: '',
+                            isReadOnly: true,
+                            condition: {
+                                when: 'ddf.userState',
+                                is: 'member',
+                            },
+                            resolveProps: (props, { meta, input }, formOptions) => {
+                                if (member) {
+                                    return {
+                                        value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
+                                    }
+                                }
+                            },
+                        },
+                    ]
                 },
                 {
-                    component: componentTypes.TEXT_FIELD,
-                    label: 'Type of login',
-                    name: 'ddf.userState',
-                    isReadOnly: true,
-                    hideField: true,
-                    initialValue: userState,
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'user',
-                    isReadOnly: true,
-                    hideField: true,
-                    label: 'USER',
-                    initialValue: user || 'NONE',
-                },
-                {
-                    component: componentTypes.CHECKBOX,
-                    name: 'ddf.member',
-                    label: "I am a member of the OGA",
-                    variant: 'h6',
-                    sx: { marginTop: ".8em" },
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        return {
-                            helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you are not a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
-                        }
-                    },
-                    condition: {
-                        when: 'ddf.userState',
-                        is: 'not logged in',
-                    },
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'ddf.member_no',
-                    label: "Membership Number",
-                    helperText: "Enter your membership number. (if you LOGIN we will already have your Membership Number).",
-                    type: 'number',
-                    condition: {
-                        when: 'ddf.member',
-                        is: true,
-                    },
-                    isRequired: true,
-                    validate: [{ type: validatorTypes.REQUIRED }],
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    name: 'ddf.show_user',
-                    label: '',
-                    isReadOnly: true,
-                    condition: {
-                        when: 'ddf.userState',
-                        is: 'member',
-                    },
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        if (member) {
-                            return {
-                                value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
-                            }       
-                        }
-                    },
-                },
-                {
-                    component: componentTypes.PLAIN_TEXT,
+                    component: componentTypes.SUB_FORM,
                     name: 'ddf.about.boat',
-                    initializeOnMount: true,
-                    label: "About your boat",
-                    variant: 'h6',
-                    sx: { marginTop: ".8em" }
-                },
-                {
-                    component: componentTypes.SELECT,
-                    name: 'boat',
-                    initializeOnMount: true,
-                    noValueUpdates: true,
-                    helperText: "if you can't find your boat on the register, we will add it",
-                    label: 'Boat Name',
-                    isSearchable: true,
-                    isClearable: true,
-                    isRequired: true,
-                    validate: [{ type: validatorTypes.REQUIRED }],
-                    resolveProps: (props, { meta, input }, formOptions) => {
+                    title: "About your boat",
+                    "fields": [
+                        {
+                            component: componentTypes.SELECT,
+                            name: 'boat',
+                            initializeOnMount: true,
+                            noValueUpdates: true,
+                            helperText: "if you can't find your boat on the register, we will add it",
+                            label: 'Boat Name',
+                            isSearchable: true,
+                            isClearable: true,
+                            isRequired: true,
+                            validate: [{ type: validatorTypes.REQUIRED }],
+                            resolveProps: (props, { meta, input }, formOptions) => {
 
-                        const m = formOptions.getFieldState('ddf.member_no');
-                        const memberNo = m && Number(m.value);
+                                const m = formOptions.getFieldState('ddf.member_no');
+                                const memberNo = m && Number(m.value);
 
-                        const mno = member || memberNo;
+                                const mno = member || memberNo;
 
-                        const boatOptions = [];
-                        const { owned, other } = boatOptionArray(pickers, mno);
+                                const boatOptions = [];
+                                const { owned, other } = boatOptionArray(pickers, mno);
 
-                        boatOptions.push({
-                            label: UNLISTED,
-                            value: UNLISTED,
-                            selectNone: true,
-                        });
-                        boatOptions.push(...owned);
-                        boatOptions.push(...other);
-                        return { options: boatOptions }
-                    }
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    label: 'Add your boat name',
-                    name: 'ddf.boatname',
-                    condition: {
-                        when: 'boat',
-                        is: UNLISTED,
-                    },
-                    isRequired: true,
-                    validate: [{ type: validatorTypes.REQUIRED }],
+                                boatOptions.push({
+                                    label: UNLISTED,
+                                    value: UNLISTED,
+                                    selectNone: true,
+                                });
+                                boatOptions.push(...owned);
+                                boatOptions.push(...other);
+                                return { options: boatOptions }
+                            }
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            label: 'Add your boat name',
+                            name: 'ddf.boatname',
+                            condition: {
+                                when: 'boat',
+                                is: UNLISTED,
+                            },
+                            isRequired: true,
+                            validate: [{ type: validatorTypes.REQUIRED }],
+                        },
+                    ],
                 },
                 {
                     component: 'paypal',
                     name: 'payment',
                     label: 'Sign Up and Reserve your flag',
-                    helperText: 'We are asking all skippers to reserve a flag up front for £15.'
-                        + ' This will help us know how many boats to plan for. '
-                        + ' (This is not the real Paypal, log in with gmc@oga.org.uk as the username and oldgaffers as the password.'
-                        + ' Or use this fake card: VISA 4137357753267626, expires 04/2027, CVC 123.)',
+                    helperText: 'We are asking all skippers to reserve a flag up front for £15. This will help us know how many boats to plan for.',
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 {
-                    component: componentTypes.PLAIN_TEXT,
+                    component: componentTypes.SUB_FORM,
                     name: 'ddf.about.rbc',
-                    label: "About your cruise",
-                    variant: 'h6',
-                    sx: { marginTop: ".5em" }
-                },
-                {
-                    component: componentTypes.CHECKBOX,
-                    name: 'rbc',
-                    label: "I plan to take my boat all the way round",
-                    initialValue: false,
-                    dataType: dataTypes.BOOLEAN,
-                },
-                {
-                    component: componentTypes.RADIO,
-                    name: 'scotland',
-                    label: "Which Route will you take?",
-                    helperText: 'You can make a final decision later',
-                    initialValue: 'cape',
-                    options: [
-                        { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
-                        { label: 'I will probably go via Cape Wrath', value: 'cape' },
-                    ],
-                    condition: {
-                        when: 'rbc',
-                        is: true,
-                    },
-                },
-                {
-                    component: componentTypes.RADIO,
-                    name: 'scotland',
-                    label: "Which Route will you take?",
-                    helperText: 'You can make a final decision later',
-                    initialValue: 'cape',
-                    options: [
-                        { label: 'I will probably go through the Caledonian Canal', value: 'canal' },
-                        { label: 'I will probably go via Cape Wrath', value: 'cape' },
-                        { label: "I probably won't do this part of the cruise", value: 'neither' },
-                    ],
-                    condition: {
-                        when: 'rbc',
-                        is: false,
-                    },
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    initialValue: 1,
-                    type: 'number',
-                    dataType: dataTypes.INTEGER,
-                    label: 'Number of people likely to be aboard',
-                    name: 'people_on_board',
-                },
-                {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: 'ddf.ports1',
-                    label: "Please check all the 'party' ports you plan to bring your boat to.",
-                    variant: 'h6',
-                    sx: { marginTop: ".5em" }
-                },
-                {
-                    component: componentTypes.CHECKBOX,
-                    name: 'crew',
-                    label: 'If you want to offer crewing opportunities for any of the legs, check here',
-                    helperText: "You don't need to decide now, just leave the box unchecked if you haven't decided yet",
-                    dataType: dataTypes.BOOLEAN,
-                },
-                ...fields,
-                {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: 'ddf.ecc',
-                    label: "The East Coast annual Summer Cruise follows OGA 60.",
-                    variant: 'h6',
-                    sx: { marginTop: ".5em" }
-                },
-                {
-                    component: componentTypes.CHECKBOX,
-                    name: 'ecc',
-                    label: "I'd like to bring my boat along to the East Coast Summer Cruise",
-                    dataType: dataTypes.BOOLEAN,
-                },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    isReadOnly: true,
-                    hideField: true,
-                    initialValue: 0,
-                    name: 'ddf.count',
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        const fields = formOptions.getRegisteredFields();
-                        return {
-                            initialValue: fields.reduce((acc, field) => {
-                                if (field.startsWith('port')) {
-                                    const port = formOptions.getFieldState(field);
-                                    if (port.value) {
-                                        return acc + 1;
+                    title: "About your cruise",
+                    fields: [
+                        {
+                            component: componentTypes.CHECKBOX,
+                            name: 'rbc',
+                            label: "I plan to take my boat all the way round",
+                            initialValue: false,
+                            dataType: dataTypes.BOOLEAN,
+                        },
+                        {
+                            component: componentTypes.RADIO,
+                            name: 'scotland',
+                            label: "Which Route will you take?",
+                            helperText: 'You can make a final decision later',
+                            initialValue: 'Cape Wrath',
+                            resolveProps: (props, { meta, input }, formOptions) => {
+                                const rbc = formOptions.getFieldState('rbc');
+                                const options = [
+                                    { label: 'I will probably go through the Caledonian Canal', value: 'Caledonian Canal' },
+                                    { label: 'I will probably go via Cape Wrath', value: 'Cape Wrath' },
+                                ];
+                                if (rbc && rbc.value) {
+                                    return { options };
+                                } else {
+                                    return {
+                                        options: [...options, { label: "I probably won't do this part of the cruise", value: 'neither' }],
                                     }
                                 }
-                                return acc;
-                            }, 0)
-                        };
-                    },
+                            },
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            initialValue: 1,
+                            type: 'number',
+                            dataType: dataTypes.INTEGER,
+                            label: 'Number of people likely to be aboard',
+                            name: 'people_on_board',
+                        },
+                        {
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.ports1',
+                            label: "Please check all the 'party' ports you plan to bring your boat to.",
+                            variant: 'h6',
+                            sx: { marginTop: ".5em" }
+                        },
+                        {
+                            component: componentTypes.CHECKBOX,
+                            name: 'crew',
+                            label: 'If you want to offer crewing opportunities for any of the legs, check here',
+                            helperText: "You don't need to decide now, just leave the box unchecked if you haven't decided yet",
+                            dataType: dataTypes.BOOLEAN,
+                        },
+                        ...portFields(ports, ''),
+                        {
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.ecc',
+                            label: "The East Coast annual Summer Cruise follows OGA 60.",
+                            variant: 'h6',
+                            sx: { marginTop: ".5em" }
+                        },
+                        {
+                            component: componentTypes.CHECKBOX,
+                            name: 'ecc',
+                            label: "I'd like to bring my boat along to the East Coast Summer Cruise",
+                            dataType: dataTypes.BOOLEAN,
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            isReadOnly: true,
+                            hideField: true,
+                            initialValue: 0,
+                            name: 'ddf.count',
+                            resolveProps: (props, { meta, input }, formOptions) => {
+                                const fields = formOptions.getRegisteredFields();
+                                return {
+                                    initialValue: fields.reduce((acc, field) => {
+                                        if (field.startsWith('port')) {
+                                            const port = formOptions.getFieldState(field);
+                                            if (port.value) {
+                                                return acc + 1;
+                                            }
+                                        }
+                                        return acc;
+                                    }, 0)
+                                };
+                            },
+                        },
+                    ],
                 },
                 {
                     component: componentTypes.TEXT_FIELD,
@@ -543,7 +536,7 @@ export default function RBC60() {
                         These events are organised by the Areas and you will be able to register for them separately from the main <a href='https://oga.org.uk/events/events.html'>Events page</a>.
                     </Typography>
                 </Grid>
-                <Grid item sx={12}>
+                <Grid item xs={12}>
                     <FormRenderer
                         schema={schema(ports)}
                         subscription={{ values: true }}
