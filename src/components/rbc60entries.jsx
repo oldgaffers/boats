@@ -272,7 +272,7 @@ export default function RBC60Entryies() {
     const columns = [
         { field: 'boat', headerName: 'Boat Name', width: 100, valueGetter: (params) => params.row.data.boat.name },
         { field: 'oga_no', headerName: 'OGA No.', width: 80, valueGetter: (params) => params.row.data.boat.oga_no },
-        { field: 'skipper', headerName: 'Skipper', width: 100, valueGetter: (params) => `${params.row.data.payment.payer.name.given_name} ${params.row.data.payment.payer.name.surname}` },
+        { field: 'skipper', headerName: 'Skipper', width: 100, valueGetter: (params) => params.row.data.user.name },
         { field: 'created_at', headerName: 'Submitted', width: 100, valueFormatter: (params) => new Date(params.value).toLocaleDateString() },
         { field: 'data.rbc', headerName: 'Circumnavigating', width: 100, valueGetter: (params) => params.row.data.rbc, valueFormatter: (params) => params.value ? 'Yes' : 'No' },
         {
