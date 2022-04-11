@@ -328,7 +328,8 @@ export default function RBC60() {
                     description: 'RBC 60 Sign-up with flag',
                     amount: 15,
                     label: 'Sign Up and Reserve your flag',
-                    helperText: 'We are asking all skippers to reserve a flag up front for £15. This will help us know how many boats to plan for.',
+                    helperText: 'To help us know how many boats to plan for, we are asking all skippers to register now for £15.'
+                        +' This also reserves you an OGA 60 flag.',
                     validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 {
