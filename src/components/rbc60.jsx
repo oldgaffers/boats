@@ -518,11 +518,12 @@ export default function RBC60() {
                 </Grid>
             </Grid>
             <Snackbar
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                sx={{backgroundColor: 'green'}}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 open={snackBarOpen}
-                autoHideDuration={2000}
+                autoHideDuration={5000}
                 onClose={handleSnackBarClose}
-                message="Thanks, we'll get back to you."
+                message="Thanks for registering. You should receive two emails, one acknowleging your payment and one to say we have your details."
                 severity="success"
             />
         </Paper>
