@@ -174,8 +174,8 @@ function HtmlDiffView({ title, open, html }) {
       <DialogContent>
         <DialogContentText>
         <GlobalStyles styles={{
-          ins: {  'text-decoration': 'none', 'background-color': '#d4fcbc' }, 
-          del: { 'text-decoration': 'line-through', 'background-color': '#fbb6c2', color: '#555' } 
+          ins: {  textDecoration: 'none', backgroundColor: '#d4fcbc' }, 
+          del: { textDecoration: 'line-through', backgroundColor: '#fbb6c2', color: '#555' } 
           }} />
         <Typography variant="body2"   dangerouslySetInnerHTML={{ __html: html }}  />
         </DialogContentText>
