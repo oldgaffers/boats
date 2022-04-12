@@ -24,6 +24,7 @@
     "diff": "^5.0.0",
     "draft-js-export-html": "^1.4.1",
     "graphql": "^15.8.0",
+    "htmldiff": "^0.0.4",
     "json-diff": "^0.7.1",
     "jsoneditor": "^9.7.2",
     "jsoneditor-react": "^3.1.2",
