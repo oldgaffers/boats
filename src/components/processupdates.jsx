@@ -9,7 +9,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery, useMutation } from '@apollo/client';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -17,11 +16,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import { JsonEditor as Editor } from 'jsoneditor-react';
 import { BasicHtmlEditor } from "./ddf/RTE";
-// import 'jsoneditor/dist/jsoneditor.min.css';
-import 'jsoneditor-react/es/editor.min.css';
-import GlobalStyles from '@mui/material/GlobalStyles';
+import {JsonEditor} from "react-jsondata-editor";
 const diff = require('htmldiff/src/htmldiff.js');
 
 function TextEditDialog({ title, text, open, onSave, ...props }) {
@@ -81,7 +77,7 @@ function JSONEditDialog({ title, value, open, onSave }) {
           <DialogContentText>
             Edits here can be saved back to the table and then accepted into the boat record.
           </DialogContentText>
-          <Editor value={edited} onChange={handleChange} />
+          <JsonEditor jsonObject={value} onChange={handleChange}/>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsOpen(false)}>Cancel</Button>
@@ -92,12 +88,11 @@ function JSONEditDialog({ title, value, open, onSave }) {
   );
 }
 
-function HtmlEditDialog({ title, text, open, onSave, ...props }) {
-  const [html, setHtml] = useState(text);
+function HtmlEditDialog({ title, current, proposed, open, onSave, ...props }) {
+  const [html, setHtml] = useState(diff(current, proposed));
   const [isOpen, setIsOpen] = useState(open);
-
   return (
-    <div>
+    <>
       <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
@@ -115,7 +110,7 @@ function HtmlEditDialog({ title, text, open, onSave, ...props }) {
           <Button onClick={() => {setIsOpen(false); onSave(html);}}>Update</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
 
@@ -138,13 +133,14 @@ function renderProposedEditInputCell(params) {
   };
 
   const title = params.row.field.replace(/_/g, ' ');
-
   switch (params.row.field) {
     case 'short_description':
       return (<HtmlEditDialog
         title={title}
         open={true}
-        text={value}
+         //text={value}
+         current={params.row.current}
+         proposed={params.row.proposed}
         onSave={handleSave}
         controls={["bold", "italic"]}
         />);
@@ -152,9 +148,11 @@ function renderProposedEditInputCell(params) {
       return (<HtmlEditDialog
         title={title}
         open={true}
-        text={value}
-        onSave={handleSave}
-        controls={["title", "bold", "italic", "numberList", "bulletList", "link"]}
+        // text={value}
+        current={params.row.current}
+        proposed={params.row.proposed}
+       onSave={handleSave}
+        controls={["title", "bold", "italic", "numberList", "bulletList", "link", "my-style"]}
         />);
       case 'handicap_data':
       case 'previous_names':
@@ -165,38 +163,12 @@ function renderProposedEditInputCell(params) {
       return (<TextEditDialog title={title} open={true} text={value} onSave={handleSave}/>)
   }
 }
-
-function HtmlDiffView({ title, open, html }) {
-  const [isOpen, setIsOpen] = useState(open);
-  return (<>
-    <Dialog open={isOpen} onClose={() => { setIsOpen(false); }}>
-      <DialogTitle>{title}</DialogTitle>
-      <DialogContent>
-        <DialogContentText>
-        <GlobalStyles styles={{
+/*
+<GlobalStyles styles={{
           ins: {  textDecoration: 'none', backgroundColor: '#d4fcbc' }, 
           del: { textDecoration: 'line-through', backgroundColor: '#fbb6c2', color: '#555' } 
           }} />
-        <Typography variant="body2"   dangerouslySetInnerHTML={{ __html: html }}  />
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={() => setIsOpen(false)}>Cancel</Button>
-      </DialogActions>
-    </Dialog>
-</>);
-}
-
-function renderExistingEditInputCell(params) {
-  const { row } = params;
-
-  const title = row.field.replace(/_/g, ' ');
-
-  const { current, proposed } = row;
-  const html = diff(current, proposed);
-  console.log('html', html);
-  return (<HtmlDiffView title={title} open={true} html={html} />);
-}
+*/
 
 const jsonbFields = [
   "previous_names", "handicap_data", "current_owners", "reference", "ownerships"
@@ -320,7 +292,6 @@ export default function ProcessUpdates() {
         if (params.value == null) return undefined;
         return params.value;
       },
-      editable: true, renderEditCell: renderExistingEditInputCell
     },
     { field: 'proposed', headerName: 'Proposed', flex: 1, editable: true, renderEditCell: renderProposedEditInputCell },
     { field: 'status', headerName: 'Done', width: 50 },
