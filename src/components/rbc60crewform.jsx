@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import Snackbar from "@mui/material/Snackbar";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
-import { DDFPayPalButtons } from './ddf/paypal';
 
 const ports = [
     { name: 'Ramsgate', start: '2023-04-27' },
@@ -145,71 +144,52 @@ export default function RBC60CrewForm() {
                             initialValue: user || 'NONE',
                         },
                         {
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.show_user',
+                            label: (<Typography>We've identified you as {user ? user.given_name : ''} {user ? user.family_name : '-'}. This form is for members. you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                            condition: {
+                                when: 'ddf.userState',
+                                is: 'user',
+                            },
+                            sx: { marginTop: ".5em" }
+                        },
+                        {
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.show_member',
+                            label: `We've identified you as ${user ? user.given_name : ''} ${user ? user.family_name : '-'}, member ${member}.`,
+                            condition: {
+                                when: 'ddf.userState',
+                                is: 'member',
+                            },
+                            sx: { marginTop: ".5em" }
+                        },
+                        {
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.show_login',
+                            label: `If you are a member please log-in.`,
+                            condition: {
+                                when: 'ddf.userState',
+                                is: 'not logged in',
+                            },
+                            sx: { marginTop: ".5em" }
+                        },
+                        {
                             component: componentTypes.CHECKBOX,
                             name: 'adult',
                             label: "I confirm I'm over 18",
                             initialValue: false,
                         },
                         {
-                            component: componentTypes.TEXT_FIELD,
-                            name: 'ddf.show_user',
-                            label: '',
-                            isReadOnly: true,
-                            condition: {
-                                when: 'ddf.userState',
-                                is: 'user',
-                            },
-                            resolveProps: (props, { meta, input }, formOptions) => {
-                                if (member) {
-                                    return {
-                                        value: (<Typography>We've identified you as {user.given_name} {user.family_name}. This form is for members. you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
-                                    }
-                                }
-                            },
-                        },
-                        {
-                            component: componentTypes.TEXT_FIELD,
-                            name: 'ddf.show_member',
-                            label: '',
-                            isReadOnly: true,
-                            condition: {
-                                when: 'ddf.userState',
-                                is: 'member',
-                            },
-                            resolveProps: (props, { meta, input }, formOptions) => {
-                                if (member) {
-                                    return {
-                                        value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
-                                    }
-                                }
-                            },
-                        },
-                        {
-                            component: componentTypes.TEXT_FIELD,
-                            name: 'ddf.show_member',
-                            label: '',
-                            isReadOnly: true,
-                            condition: {
-                                when: 'ddf.userState',
-                                is: 'not logged in',
-                            },
-                            resolveProps: (props, { meta, input }, formOptions) => {
-                                if (member) {
-                                    return {
-                                        value: `If you are a member please log-in.`,
-                                    }
-                                }
-                            },
-                        },
-                        {
                             component: componentTypes.TEXTAREA,
                             name: 'experience',
                             label: 'Tell us about your level of sailing skills',
+                            minRows: 3,
                         },
                         {
                             component: componentTypes.TEXTAREA,
                             name: 'pitch',
                             label: 'Tell us what you would bring to the cruise and what you hope to get out of it',
+                            minRows: 3,
                         },
                     ]
                 },
@@ -227,7 +207,7 @@ export default function RBC60CrewForm() {
         <Paper>
             <Grid container spacing={2}>
                 <Grid item xs={2}>
-                    <LoginButton />
+                    <LoginButton label='Member Login' />
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant='body1'>
@@ -254,10 +234,7 @@ export default function RBC60CrewForm() {
                     <FormRenderer
                         schema={schema(ports)}
                         subscription={{ values: true }}
-                        componentMapper={{
-                            ...componentMapper,
-                            paypal: DDFPayPalButtons,
-                        }}
+                        componentMapper={componentMapper}
                         FormTemplate={(props) => (
                             <FormTemplate {...props} showFormControls={true} />
                         )}

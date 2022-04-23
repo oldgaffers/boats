@@ -130,13 +130,11 @@ const Pages = ({ app }) => {
         ;
         case 'rbc60_crew':
         return (
-          <PayPalScriptProvider options={paypalOptions}>
-            <Auth0Provider {...auth} scope="member">
-              <OGAProvider>
-                <RBC60CrewForm />
-              </OGAProvider>
-            </Auth0Provider>
-          </PayPalScriptProvider>
+          <Auth0Provider {...auth} scope="member">
+            <OGAProvider>
+              <RBC60CrewForm />
+            </OGAProvider>
+          </Auth0Provider>
           )
           ;
       default:
