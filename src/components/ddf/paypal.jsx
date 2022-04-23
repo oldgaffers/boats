@@ -4,16 +4,12 @@ import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import Box from "@mui/material/Box";
 import Typography from '@mui/material/Typography';
 
-export const DDFPayPalButtons = ({ component, name, label, helperText, description, amount }) => {
-    const { input } = useFieldApi({ component, name });
+export const DDFPayPalButtons = (props) => {
+    const { purchaseUnits, label, helperText, input, ...rest } = useFieldApi(props);
+    console.log('DDFPayPalButtons', rest);
 
     const createOrder = (data, actions) => {
-        return actions.order.create({
-            purchase_units: [{
-                description,
-                amount: { currency_code: 'GBP', value: amount }
-            }]
-        });
+        return actions.order.create({ purchase_units: purchaseUnits });
     };
 
     const approve = (data, actions) => {

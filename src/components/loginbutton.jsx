@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function LoginButton({ classes }) {
+export default function LoginButton({ classes, label='Login/Sign-up' }) {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
     if(isAuthenticated) {
@@ -28,7 +28,7 @@ export default function LoginButton({ classes }) {
             color="primary"
             onClick={() => loginWithRedirect()}
         >
-            Login/Sign-up
+            {label}
         </Button>      
         </Tooltip>    
     );

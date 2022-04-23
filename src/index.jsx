@@ -120,7 +120,7 @@ const Pages = ({ app }) => {
     case 'rbc60_entries': // 60
       return (
         <PayPalScriptProvider options={paypalOptions}>
-          <Auth0Provider {...auth} scope="edit">
+          <Auth0Provider {...auth} scope="member">
             <OGAProvider>
               <RBC60Entryies />
             </OGAProvider>
@@ -131,7 +131,7 @@ const Pages = ({ app }) => {
         case 'rbc60_crew':
         return (
           <PayPalScriptProvider options={paypalOptions}>
-            <Auth0Provider {...auth} scope="edit">
+            <Auth0Provider {...auth} scope="member">
               <OGAProvider>
                 <RBC60CrewForm />
               </OGAProvider>

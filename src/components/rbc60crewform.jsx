@@ -145,6 +145,12 @@ export default function RBC60CrewForm() {
                             initialValue: user || 'NONE',
                         },
                         {
+                            component: componentTypes.CHECKBOX,
+                            name: 'adult',
+                            label: "I confirm I'm over 18",
+                            initialValue: false,
+                        },
+                        {
                             component: componentTypes.TEXT_FIELD,
                             name: 'ddf.show_user',
                             label: '',

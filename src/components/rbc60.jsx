@@ -208,6 +208,26 @@ export default function RBC60() {
             fields: [
                 {
                     "component": componentTypes.SUB_FORM,
+                    "title": "About Registering",
+                    "name": "ddf.flag",
+                    "fields": [
+                        {
+                            name: 'ddf.mandatory',
+                            component: componentTypes.PLAIN_TEXT,
+                            label: (<Typography>To help us know how many boats to plan for, we are asking all skippers to register now for £15.
+                                This entitles you an OGA 60 flag. Flags will be posted to skippers in January 2023.</Typography>),
+                            sx: { marginTop: "2em" }
+                        },
+                        {
+                            name: 'ddf.pp',
+                            component: componentTypes.PLAIN_TEXT,
+                            label: (<Typography>Complete Registration via Paypal or Credit/Debit card at the bottom of this form.</Typography>),
+                            sx: { marginTop: ".5em" }
+                        },
+                    ],
+                },
+                {
+                    "component": componentTypes.SUB_FORM,
                     "title": "About you",
                     "name": "ddf.about.skipper",
                     "fields": [
@@ -231,11 +251,7 @@ export default function RBC60() {
                             component: componentTypes.CHECKBOX,
                             name: 'ddf.member',
                             label: "I am a member of the OGA",
-                            resolveProps: (props, { meta, input }, formOptions) => {
-                                return {
-                                    helperText: input.value ? (<Typography>Great - what is your membership number?</Typography>) : (<Typography>If you are not a member and would like to join RBC60 you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
-                                }
-                            },
+                            initialValue: false,
                             condition: {
                                 when: 'ddf.userState',
                                 is: 'not logged in',
@@ -269,6 +285,22 @@ export default function RBC60() {
                                         value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
                                     }
                                 }
+                            },
+                        },
+                        {
+                            component: componentTypes.RADIO,
+                            name: 'ddf.joining',
+                            label: 'If you are not a member and would like to join RBC60, we will add a 12 month membership for 2023 to your registration fee.',
+                            helperText: 'Choose your class of membership. Juniors must be under 25 on 1st January 2023',
+                            initialValue: 'ind',
+                            options: [
+                                { label: 'Individual member - £33', value: 'ind' },
+                                { label: 'Family member - £38', value: 'fam' },
+                                { label: 'Junior - £5.50', value: 'jun' },
+                            ],   
+                            condition: {
+                                when: 'ddf.member',
+                                is: false,
                             },
                         },
                     ]
@@ -321,16 +353,6 @@ export default function RBC60() {
                             validate: [{ type: validatorTypes.REQUIRED }],
                         },
                     ],
-                },
-                {
-                    component: 'paypal',
-                    name: 'payment',
-                    description: 'RBC 60 Sign-up with flag',
-                    amount: 15,
-                    label: 'Sign Up and Reserve your flag',
-                    helperText: 'To help us know how many boats to plan for, we are asking all skippers to register now for £15.'
-                        +' This also reserves you an OGA 60 flag.',
-                    validate: [{ type: validatorTypes.REQUIRED }],
                 },
                 {
                     component: componentTypes.SUB_FORM,
@@ -391,7 +413,7 @@ export default function RBC60() {
                         {
                             component: componentTypes.PLAIN_TEXT,
                             name: 'ddf.ecc',
-                            label: "The East Coast annual Summer Cruise follows OGA 60.",
+                            label: "The East Coast annual Summer Cruise will head south after the main OGA 60 celebration.",
                             variant: 'h6',
                             sx: { marginTop: ".5em" }
                         },
@@ -425,6 +447,58 @@ export default function RBC60() {
                     ],
                 },
                 {
+                    component: 'paypal',
+                    name: 'payment',
+                    label: 'Sign Up and Reserve your flag',
+                    validate: [{ type: validatorTypes.REQUIRED }],
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        console.log(props);
+                        console.log(input);
+                        const m = formOptions.getFieldState('ddf.member');
+                        const purchaseUnits = [
+                            {
+                                description: 'RBC 60 Sign-up with flag',
+                                amount: { currency_code: 'GBP', value: 15 },
+                                reference_id: 'rbc60',
+                            }
+                        ];
+                        let helperText = '£15 to register'
+                        if (m && !m.value) {
+                            console.log('not member');
+                            const j = formOptions.getFieldState('ddf.joining');
+                            if (j) {
+                                console.log('joining', j.value);
+                                const pu = {
+                                    'ind': {
+                                        description: '12m individual membership',
+                                        amount: { currency_code: 'GBP', value: 33 },
+                                        reference_id: 'ind',
+                                    },
+                                    'fam': {
+                                        description: '12m family membership',
+                                        amount: { currency_code: 'GBP', value: 38 },
+                                        reference_id: 'fam',
+                                    },
+                                    'jun': {
+                                        description: '12m junior membership',
+                                        amount: { currency_code: 'GBP', value: 5.5 },
+                                        reference_id: 'jun',
+                                    },
+                                }[j.value];
+                                purchaseUnits.push(pu);
+                                helperText = `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(15+pu.amount.value)} to join for 12 months and register`    
+                            }
+                        }
+                        if (input.value) {
+                            helperText = `You have paid ${helperText}`
+                        } else {
+                            helperText = `You are paying ${helperText}`
+                        }
+                        console.log(purchaseUnits);
+                        return { purchaseUnits, helperText };
+                    },
+                },
+                {
                     component: componentTypes.TEXT_FIELD,
                     isReadOnly: true,
                     name: 'ddf.valid',
@@ -433,41 +507,32 @@ export default function RBC60() {
                         const count = countField && countField.value;
                         const boatNameField = formOptions.getFieldState('ddf.boatname');
                         const boatField = formOptions.getFieldState('boat');
-                        let boat = 'your boat';
-                        if (boatField && boatField.valid && boatField.value !== "My boat isn't listed") {
+                        let boat;
+                        if (boatField && boatField.valid && boatField.value !== UNLISTED) {
                             boat = boatField.value;
                         }
                         if (boatNameField && boatNameField.value) {
                             boat = boatNameField.value;
                         }
-                        let flag = false;
+                        let paid = false;
                         const paypal = formOptions.getFieldState('payment');
                         if (paypal && paypal.value) {
                             if (paypal.value.status === 'COMPLETED') {
-                                flag = true;
+                                paid = true;
                             }
                         }
-                        if (flag) {
-                            switch (count) {
-                                case 0:
-                                    return { initialValue: 'You have bought a flag but havent checked any ports' };
-                                case 1:
-                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to one port, click submit to complete registration.` };
-                                default:
-                                    return { initialValue: `You have bought a flag and you are planning to bring ${boat} to ${count} ports! Click submit to complete registration.` };
-                            }
-                        } else {
-                            switch (count) {
-                                case 0:
-                                    return { initialValue: 'You havent checked any ports or bought a flag' };
-                                case 1:
-                                    return { initialValue: `You are planning to bring ${boat} to one port - please buy a flag` };
-                                default:
-                                    return { initialValue: `You are planning to bring ${boat} to ${count} ports! - Please buy a flag` };
-                            }
+                        if (paid && count > 0 && boat) {
+                            return { initialValue: `You have paid and are bringing ${boat} to at least one port, click submit to complete registration.` };
                         }
+                        if (paid && boat) {
+                            return { initialValue: 'You have paid, please check one or more ports' };
+                        }
+                        if (paid) {
+                            return { initialValue: 'You have paid, please tell us about your boat and check one or more ports' };
+                        }
+                        return { initialValue: 'To register, please tell us about your boat, check one or more ports and pay' };
                     },
-                }
+                },
             ]
         };
     };
@@ -479,7 +544,7 @@ export default function RBC60() {
                     <Typography variant='h3'>OGA Round Britain Cruise 2023 - RBC60</Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <LoginButton />
+                    <LoginButton label='Member Login'/>
                 </Grid>
                 <Grid item xs={12}>
                     <Typography variant='body1'>
