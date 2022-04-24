@@ -203,6 +203,36 @@ export default function RBC60() {
         history.go(0);
     }
 
+    const validBoatName = {
+        or: [
+            {
+                and: [
+                    {
+                        when: 'boat',
+                        isNotEmpty: true,
+                    },
+                    {
+                        when: 'boat',
+                        is: UNLISTED,
+                        notMatch: true,
+                    },                
+                ],
+            },
+            {
+                and: [
+                    {
+                        when: 'boat',
+                        is: UNLISTED,
+                    },
+                    {
+                        when: 'ddf.boatname',
+                        isNotEmpty: true,
+                    },                
+                ],
+            }
+        ]
+    };
+
     const schema = (ports) => {
         return {
             fields: [
@@ -214,14 +244,14 @@ export default function RBC60() {
                         {
                             name: 'ddf.mandatory',
                             component: componentTypes.PLAIN_TEXT,
-                            label: (<Typography>To help us know how many boats to plan for, we are asking all skippers to register now for £15.
+                            label: (<Typography component={'span'}>To help us know how many boats to plan for, we are asking all skippers to register now for £15.
                                 This entitles you an OGA 60 flag. Flags will be posted to skippers in January 2023.</Typography>),
                             sx: { marginTop: "2em" }
                         },
                         {
                             name: 'ddf.pp',
                             component: componentTypes.PLAIN_TEXT,
-                            label: (<Typography>Complete Registration via Paypal or Credit/Debit card at the bottom of this form.</Typography>),
+                            label: (<Typography component={'span'}>Complete Registration via Paypal or Credit/Debit card at the bottom of this form.</Typography>),
                             sx: { marginTop: ".5em" }
                         },
                     ],
@@ -411,17 +441,19 @@ export default function RBC60() {
                         },
                         ...portFields(ports, ''),
                         {
-                            component: componentTypes.PLAIN_TEXT,
+                            component: componentTypes.SUB_FORM,
                             name: 'ddf.ecc',
-                            label: "The East Coast annual Summer Cruise will head south after the main OGA 60 celebration.",
-                            variant: 'h6',
-                            sx: { marginTop: ".5em" }
-                        },
-                        {
-                            component: componentTypes.CHECKBOX,
-                            name: 'ecc',
-                            label: "I'd like to bring my boat along to the East Coast Summer Cruise",
-                            dataType: dataTypes.BOOLEAN,
+                            title: "East Coast annual Summer Cruise",
+                            fields: [
+                                {
+                                    component: componentTypes.CHECKBOX,
+                                    name: 'ecc',
+                                    label: "I'd like to bring my boat along to the East Coast Summer Cruise",
+                                    dataType: dataTypes.BOOLEAN,
+                                    helperText: "The East Coast annual Summer Cruise will head south after the main OGA 60 celebration.",
+
+                                },        
+                            ],
                         },
                         {
                             component: componentTypes.TEXT_FIELD,
@@ -447,10 +479,70 @@ export default function RBC60() {
                     ],
                 },
                 {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.no_ports_no_boat',
+                    label: 'To register, please tell us about your boat and check one or more ports',
+                    variant: 'h6',
+                    sx: { marginTop: "1em" },
+                    condition: {
+                        and: [
+                            {
+                                when: 'ddf.count',
+                                is: 0,
+                            },
+                            {
+                                not: validBoatName,
+                            }
+                        ],
+                    }
+                },
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.no_ports',
+                    label: 'To register, please check one or more ports',
+                    variant: 'h6',
+                    sx: { marginTop: "1em" },
+                    condition: {
+                        and: [
+                            {
+                                when: 'ddf.count',
+                                is: 0,
+                            },
+                            validBoatName
+                        ],
+                    }
+                },
+                {
+                    component: componentTypes.PLAIN_TEXT,
+                    name: 'ddf.no_boat',
+                    label: 'To register, please tell us about your boat',
+                    variant: 'h6',
+                    sx: { marginTop: "1em" },
+                    condition: {
+                        and: [
+                            {
+                                when: 'ddf.count',
+                                greaterThan: 0,
+                            },
+                            {
+                                not: validBoatName,
+                            }
+                        ],
+                    }
+                },
+                {
                     component: 'paypal',
                     name: 'payment',
-                    label: 'Sign Up and Reserve your flag',
-                    validate: [{ type: validatorTypes.REQUIRED }],
+                    label: 'Register',
+                    condition: {
+                        and: [
+                            {
+                                when: 'ddf.count',
+                                greaterThan: 0,        
+                            },
+                            validBoatName,
+                        ],
+                    },
                     resolveProps: (props, { meta, input }, formOptions) => {
                         console.log(props);
                         console.log(input);
@@ -498,41 +590,6 @@ export default function RBC60() {
                         return { purchaseUnits, helperText };
                     },
                 },
-                {
-                    component: componentTypes.TEXT_FIELD,
-                    isReadOnly: true,
-                    name: 'ddf.valid',
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        const countField = formOptions.getFieldState('ddf.count');
-                        const count = countField && countField.value;
-                        const boatNameField = formOptions.getFieldState('ddf.boatname');
-                        const boatField = formOptions.getFieldState('boat');
-                        let boat;
-                        if (boatField && boatField.valid && boatField.value !== UNLISTED) {
-                            boat = boatField.value;
-                        }
-                        if (boatNameField && boatNameField.value) {
-                            boat = boatNameField.value;
-                        }
-                        let paid = false;
-                        const paypal = formOptions.getFieldState('payment');
-                        if (paypal && paypal.value) {
-                            if (paypal.value.status === 'COMPLETED') {
-                                paid = true;
-                            }
-                        }
-                        if (paid && count > 0 && boat) {
-                            return { initialValue: `You have paid and are bringing ${boat} to at least one port, click submit to complete registration.` };
-                        }
-                        if (paid && boat) {
-                            return { initialValue: 'You have paid, please check one or more ports' };
-                        }
-                        if (paid) {
-                            return { initialValue: 'You have paid, please tell us about your boat and check one or more ports' };
-                        }
-                        return { initialValue: 'To register, please tell us about your boat, check one or more ports and pay' };
-                    },
-                },
             ]
         };
     };
@@ -576,7 +633,7 @@ export default function RBC60() {
                             paypal: DDFPayPalButtons,
                         }}
                         FormTemplate={(props) => (
-                            <FormTemplate {...props} showFormControls={true} />
+                            <FormTemplate {...props} showFormControls={false} />
                         )}
                         onSubmit={handleSubmit}
                     />
