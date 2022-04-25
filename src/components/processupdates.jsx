@@ -66,7 +66,7 @@ function JSONEditDialog({ title, value, open, onSave }) {
   const handleSave = () => {
     console.log('handleSave', edited);
     setIsOpen(false); 
-    onSave(JSON.stringify(edited));
+    onSave(edited);
   };
 
   return (
