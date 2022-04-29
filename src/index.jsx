@@ -32,7 +32,7 @@ const Pages = ({ app }) => {
     redirectUri: window.location.origin + window.location.pathname,
     audience: "https://oga.org.uk/boatregister",
   }
-  console.log('paypal', window.location);
+  // console.log('paypal', window.location);
   const paypalOptions = {
     "client-id": 'Ab7dxlH_fK99yWWn7Z2V9WdaSiX1H26jJLtfIQ4sOcgFtqYklvaxTLZgXCSwOb2scdRGIRYJluxWH6cM',
     currency: "GBP",
@@ -41,7 +41,7 @@ const Pages = ({ app }) => {
   if (window.location.pathname.includes('beta') || window.location.hostname === 'localhost') {
     paypalOptions['client-id'] = 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT';
   }
-  console.log(paypalOptions);
+  // console.log(paypalOptions);
 
   switch (app) {
     case 'login':

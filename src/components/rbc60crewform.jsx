@@ -40,7 +40,6 @@ const startDate = (start, end) => {
 }
 
 const crewlegfield = (name, label, routeName) => {
-    console.log('crewlegfield', name, label, routeName);
     return {
         component: componentTypes.CHECKBOX,
         name: `leg.${name}`,
@@ -50,7 +49,6 @@ const crewlegfield = (name, label, routeName) => {
 };
 
 const portFields = (ports, route) => {
-    console.log('port fields route', route);
     const fields = [];
     ports.forEach(({ name, start, end, via }, index, list) => {
         if (index > 0) {
@@ -172,7 +170,7 @@ export default function RBC60CrewForm() {
                                 when: 'ddf.userState',
                                 is: 'not logged in',
                             },
-                            sx: { marginTop: ".5em" }
+                            sx: { marginTop: "1em" }
                         },
                         {
                             component: componentTypes.CHECKBOX,
@@ -185,7 +183,7 @@ export default function RBC60CrewForm() {
                                 (value) => !value,
                             ],
                             resolveProps: (props, { meta, input }, formOptions) => {
-                                console.log(input);
+                                // console.log(input);
                             },
                         },
                         {
