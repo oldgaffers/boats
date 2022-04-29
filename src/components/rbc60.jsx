@@ -600,7 +600,7 @@ export default function RBC60() {
                 <Grid item xs={10}>
                     <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
-                        This form is for OGA members to sign up to sail all or part of the OGA 60 Round Britain Cruise (RBC60).
+                        This form is for OGA members to sign up to sail their own boat for all or part of the OGA 60 Round Britain Cruise (RBC60).
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
                         If you are interested in joining all or part of the cruise on someone else's boat go to our <a href='/oga60/rbc60_crewing_opportunities.html'>Crewing page</a>.
