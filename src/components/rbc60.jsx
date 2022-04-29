@@ -603,14 +603,14 @@ export default function RBC60() {
                         This form is for OGA members to sign up to sail all or part of the OGA 60 Round Britain Cruise (RBC60).
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
-                        If you are interested in joining all or part of the cruise on someone else's boat go to our <a href='https://oga.org.uk/oga60/rbc60_crewing_opportunities.html'>Crewing page</a>.
+                        If you are interested in joining all or part of the cruise on someone else's boat go to our <a href='/oga60/rbc60_crewing_opportunities.html'>Crewing page</a>.
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
-                        If you are interested in bringing a boat to one of the OGA60 small boat events, or if you want more information about OGA60 in general go to the main <a href='https://oga.org.uk/oga60/oga60.html'>OGA60 page</a>.
+                        If you are interested in bringing a boat to one of the OGA60 small boat events, or if you want more information about OGA60 in general go to the main <a href='/oga60/oga60.html'>OGA60 page</a>.
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
                         Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.
-                        These events are organised by the Areas and you will be able to register for them separately from the main <a href='https://oga.org.uk/events/events.html'>Events page</a>.
+                        These events are organised by the Areas and you will be able to register for them separately from the main <a href='/events/events.html'>Events page</a>.
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>
