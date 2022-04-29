@@ -94,21 +94,6 @@ export default function RBC60CrewForm() {
     const handleSubmit = (values) => {
         console.log('submit', values);
         const { ddf, ...data } = values;
-        if (user) {
-            data.user = {
-                name: user.name,
-                email: user.email,
-                member: user["https://oga.org.uk/member"],
-                id: user["https://oga.org.uk/id"],
-            }
-        }
-        data.port = Object.keys(data.port);
-        if (data.leg) {
-            data.leg = Object.keys(data.leg).map((leg) => {
-                const [from, to] = leg.split('_');
-                return { from, to, spaces: data.leg[leg] }
-            });
-        }
         addCrew({ variables: { data } });
         setSnackBarOpen(true);
     };
