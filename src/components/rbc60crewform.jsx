@@ -206,7 +206,7 @@ export default function RBC60CrewForm() {
                     component: componentTypes.SUB_FORM,
                     name: 'ddf.tick',
                     title: 'Check all the legs you are interested in',
-                    fields: [ ...portFields(ports, '') ],
+                    fields: [...portFields(ports, '')],
                 },
             ]
         };
@@ -214,44 +214,23 @@ export default function RBC60CrewForm() {
 
     return (
         <Paper>
-            <Grid container spacing={2}>
-                <Grid item xs={10}>
-                    <Typography variant='body1'>
-                        {user ? `Hello ${user.given_name || user.name}. ` : ''}
-                        This form is for OGA members to register interest in joining all or part of the OGA 60 Round Britain Cruise (RBC60) as crew.
-                    </Typography>
-                    <Typography variant='body1'>
-                        If you are interested in joining all or part of the cruise with your own boat go to our <a href='/oga60/rbc60_registration.html'>RBC Registration page</a> page.
-                    </Typography>
-                    <Typography variant='body1'>
-                        If you are interested in bringing a boat to one of the OGA60 small boat events or if you want more information about OGA60 in general go to the main <a href='/oga60/oga60.html'>OGA60</a> page.
-                    </Typography>
-                    <Typography variant='body1'>
-                        Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC. These events are organised by the Areas and you will be able to register for them separately from the main <a href='/events/events.html'>Events</a> page.
-                    </Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <LoginButton label='Member Login' />
-                </Grid>
-                <Grid item xs={12}>
-                    <FormRenderer
-                        schema={schema(ports)}
-                        subscription={{ values: true }}
-                        componentMapper={componentMapper}
-                        FormTemplate={(props) => (
-                            <FormTemplate {...props} showFormControls={true} />
-                        )}
-                        onSubmit={handleSubmit}
-                    />
-                </Grid>
-            </Grid>
+
+            <FormRenderer
+                schema={schema(ports)}
+                subscription={{ values: true }}
+                componentMapper={componentMapper}
+                FormTemplate={(props) => (
+                    <FormTemplate {...props} showFormControls={true} />
+                )}
+                onSubmit={handleSubmit}
+            />
             <Snackbar
-                sx={{backgroundColor: 'green'}}
+                sx={{ backgroundColor: 'green' }}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 open={snackBarOpen}
                 autoHideDuration={5000}
                 onClose={handleSnackBarClose}
-                message="Thanks for registering. You should receive two emails, one acknowleging your payment and one to say we have your details."
+                message="Thanks for registering. You should receive an email, one acknowleging your interest."
                 severity="success"
             />
         </Paper>
