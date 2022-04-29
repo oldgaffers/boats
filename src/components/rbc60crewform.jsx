@@ -66,9 +66,9 @@ const portFields = (ports, route) => {
 
 export default function RBC60CrewForm() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [addRegistration, result] = useMutation(gql`
-        mutation AddRegistration($data: jsonb!) {
-        insert_rbc60_notification(objects: {data: $data}) { affected_rows } }
+    const [addCrew, result] = useMutation(gql`
+        mutation AddCrew($data: jsonb!) {
+        insert_crew(objects: {data: $data}) { affected_rows } }
     `);
     const { user, isAuthenticated } = useAuth0();
 
@@ -108,7 +108,7 @@ export default function RBC60CrewForm() {
                 return { from, to, spaces: data.leg[leg] }
             });
         }
-        addRegistration({ variables: { data } });
+        addCrew({ variables: { data } });
         setSnackBarOpen(true);
     };
 
