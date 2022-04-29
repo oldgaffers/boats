@@ -262,7 +262,7 @@ export default function RBC60CrewForm() {
                 open={snackBarOpen}
                 autoHideDuration={5000}
                 onClose={handleSnackBarClose}
-                message="Thanks for registering. You should receive an email, one acknowleging your interest."
+                message="Thanks for registering. You should receive an email, acknowleging your interest."
                 severity="success"
             />
         </Paper>
