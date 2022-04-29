@@ -250,13 +250,13 @@ export default function RBC60Entryies() {
     const { user, isAuthenticated } = useAuth0();
 
     if (!isAuthenticated) {
-        return (<LoginButton />);
+        return (<LoginButton label='Member Login'/>);
         // return (<div>Please log in to view this page</div>);
     }
 
     const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('editor')) {
-        return (<div>This page is only useful to editors of the boat register</div>);
+    if (!roles.includes('member')) {
+        return (<div>This page is for members only.</div>);
     }
 
     if (!getEntriesResult.called) {

@@ -598,31 +598,26 @@ export default function RBC60() {
         <Paper>
             <Grid container spacing={2}>
                 <Grid item xs={10}>
-                    <Typography variant='h3'>OGA Round Britain Cruise 2023 - RBC60</Typography>
-                </Grid>
-                <Grid item xs={2}>
-                    <LoginButton label='Member Login'/>
-                </Grid>
-                <Grid item xs={12}>
-                    <Typography variant='body1'>
+                    <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
                         This form is for OGA members to sign up to sail all or part of the OGA 60 Round Britain Cruise (RBC60).
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography paragraph={true} variant='body1'>
                         If you are interested in joining all or part of the cruise on someone else's boat go to our <a href='https://oga.org.uk/oga60/rbc60_crewing_opportunities.html'>Crewing page</a>.
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography paragraph={true} variant='body1'>
                         If you are interested in bringing a boat to one of the OGA60 small boat events go to our <a href='https://oga.org.uk/oga60/small_boat_events.html'>Small Boat Events page</a>.
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography paragraph={true} variant='body1'>
                         If you want more information about OGA60 in general go to the main <a href='https://oga.org.uk/oga60/oga60.html'>OGA60 page</a>.
                     </Typography>
-                    <Typography variant='body1'>
+                    <Typography paragraph={true} variant='body1'>
                         Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.
-                    </Typography>
-                    <Typography variant='body1'>
                         These events are organised by the Areas and you will be able to register for them separately from the main <a href='https://oga.org.uk/events/events.html'>Events page</a>.
                     </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                    <LoginButton label='Member Login'/>
                 </Grid>
                 <Grid item xs={12}>
                     <FormRenderer

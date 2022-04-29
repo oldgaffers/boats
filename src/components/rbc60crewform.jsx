@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
+import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template';
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import Paper from '@mui/material/Paper';
@@ -178,6 +179,14 @@ export default function RBC60CrewForm() {
                             name: 'adult',
                             label: "I confirm I'm over 18",
                             initialValue: false,
+                            isRequired: true,
+                            validate: [
+                                { type: validatorTypes.REQUIRED },
+                                (value) => !value,
+                            ],
+                            resolveProps: (props, { meta, input }, formOptions) => {
+                                console.log(input);
+                            },
                         },
                         {
                             component: componentTypes.TEXTAREA,
@@ -215,7 +224,7 @@ export default function RBC60CrewForm() {
                         This form is for OGA members to register interest in joining all or part of the OGA 60 Round Britain Cruise (RBC60) as crew.
                     </Typography>
                     <Typography variant='body1'>
-                        If you are interested in joining all or part of the cruise with your own boat go to our <a href='https://oga.org.uk/oga60/rbc60_registration.html'>Skippers</a> page.
+                        If you are interested in joining all or part of the cruise with your own boat go to our <a href='https://oga.org.uk/oga60/rbc60_registration.html'>RBC Registration page</a> page.
                     </Typography>
                     <Typography variant='body1'>
                         If you are interested in bringing a boat to one of the OGA60 small boat events go to our <a href='https://oga.org.uk/oga60/small_boat_events.html'>Small Boat Events</a> page.
