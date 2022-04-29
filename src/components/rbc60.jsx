@@ -42,7 +42,7 @@ const port = (name, start, end) => {
 }
 
 const crewlegfield = (name, label, routeName) => {
-    console.log('crewlegfield', name, label, routeName);
+    // console.log('crewlegfield', name, label, routeName);
     const conditions = [{ when: 'crew', is: true }];
     if (routeName) {
         conditions.push({ when: routeName, is: name });
@@ -67,7 +67,7 @@ const crewlegfield = (name, label, routeName) => {
 };
 
 const portFields = (ports, route) => {
-    console.log('port fields route', route);
+    // console.log('port fields route', route);
     const fields = [];
     ports.forEach(({ name, start, end, via }, index, list) => {
         if (index > 0) {
