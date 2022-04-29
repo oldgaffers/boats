@@ -17,6 +17,7 @@ import SharedFleets from './components/sharedfleets';
 import RBC60 from './components/rbc60';
 import RBC60Entryies from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
+import LoginButton from './loginbutton';
 
 const theme = createTheme({
   palette: {
@@ -43,6 +44,18 @@ const Pages = ({ app }) => {
   console.log(paypalOptions);
 
   switch (app) {
+    case 'login':
+      return (
+        <Auth0Provider
+          domain={auth.domain}
+          clientId={auth.clientId}
+          audience={auth.audience}
+          redirectUri={auth.redirectUri}
+          scope="member"
+        >
+          <LoginButton label='Member Login'/>
+        </Auth0Provider>
+      );
     case 'boat':
       return (
         <Auth0Provider
@@ -157,7 +170,7 @@ const Pages = ({ app }) => {
 
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
-  'rbc60', 'rbc60_entries', 'rbc60_crew',
+  'rbc60', 'rbc60_entries', 'rbc60_crew', 'login',
 ];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length > 0) {
