@@ -118,19 +118,27 @@ const boatOptionArray = (pickers, member) => {
     return { owned: owned.sort((a, b) => a.label > b.label), other: other.sort((a, b) => a.label > b.label) };
 }
 
+let operation = 'insert_rbc60_notification';
+if (window.location.pathname.includes('beta') || window.location.hostname === 'localhost') {
+    operation = 'insert_rbc60_test';
+}
+
 export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [getBoats, getBoatsState] = useLazyQuery(gql`query boats { boat { name oga_no id ownerships } }`);
     const [addRegistration, result] = useMutation(gql`
         mutation AddRegistration($data: jsonb!) {
-        insert_rbc60_notification(objects: {data: $data}) { affected_rows } }
+        ${operation}(objects: {data: $data}) { affected_rows } }
     `);
     const { user, isAuthenticated } = useAuth0();
 
     let userState;
 
     if (result) {
-        // console.log('mutation', result);
+        console.log('mutation', result);
+        if (result.error) {
+            alert('something went wrong - please email oga60@oga.org.uk and let us know how we can help.')
+        }
     }
 
     if (getBoatsState.loading) return <CircularProgress />;
