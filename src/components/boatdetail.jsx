@@ -39,7 +39,7 @@ export default function BoatDetail({ boat }) {
     }
   }
   const hd = boat.handicap_data || {};
-
+console.log(boat);
   const panes = [
     { title: 'Design & Build', children: (
       <Paper>
@@ -49,7 +49,7 @@ export default function BoatDetail({ boat }) {
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
         <ConditionalText value={boat.builderByBuilder} label="Builder"/>
         <ConditionalText value={boat.place_built} label="Place built"/>
-        <ConditionalText value={boat.year_is_approximate?'around ':''+boat.year} label="Year of Build"/>
+        <ConditionalText value={(boat.year_is_approximate?'around ':'')+boat.year} label="Year of Build"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
         <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
         <ConditionalText value={boat.spar_material} label="Spar material"/>
