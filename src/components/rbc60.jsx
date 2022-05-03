@@ -278,10 +278,15 @@ export default function RBC60() {
                             initialValue: user || 'NONE',
                         },
                         {
-                            component: componentTypes.CHECKBOX,
+                            component: componentTypes.RADIO,
                             name: 'ddf.member',
                             label: "I am a member of the OGA",
-                            initialValue: false,
+                            initialValue: 'non',
+                            options: [
+                                { label: 'I am a member of the OGA', value: 'oga' },
+                                { label: 'I am a member of the Dutch OGA', value: 'dutch' },
+                                { label: 'I am not currently a member', value: 'non' },
+                            ],
                             condition: {
                                 when: 'ddf.userState',
                                 is: 'not logged in',
@@ -295,7 +300,7 @@ export default function RBC60() {
                             type: 'number',
                             condition: {
                                 when: 'ddf.member',
-                                is: true,
+                                is: 'oga',
                             },
                             isRequired: true,
                             validate: [{ type: validatorTypes.REQUIRED }],
@@ -330,7 +335,7 @@ export default function RBC60() {
                             ],   
                             condition: {
                                 when: 'ddf.member',
-                                is: false,
+                                is: 'non',
                             },
                         },
                     ]

@@ -202,7 +202,7 @@ export default function RBC60CrewForm() {
                 <Grid item xs={10}>
                     <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
-                        This page is for OGA members to register interest in joining all or part of the OGA 60 Round Britain Cruise (RBC60) as crew.
+                        This page is for OGA members (including members of the Dutch OGA) to register interest in joining all or part of the OGA 60 Round Britain Cruise (RBC60) as crew.
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
                         If you are interested in joining all or part of the cruise with your own boat go to our <a href="/oga60/rbc60_registration.html" target="_self">RBC Registration</a> page.
