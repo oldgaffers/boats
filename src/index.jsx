@@ -31,6 +31,7 @@ const Pages = ({ app }) => {
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
     redirectUri: window.location.origin + window.location.pathname,
     audience: "https://oga.org.uk/boatregister",
+    useRefreshTokens: true,
   }
   // console.log('paypal', window.location);
   const paypalOptions = {
@@ -52,6 +53,7 @@ const Pages = ({ app }) => {
           audience={auth.audience}
           redirectUri={auth.redirectUri}
           scope="member"
+          useRefreshTokens={true}
         >
           <LoginButton label='Member Login'/>
         </Auth0Provider>
@@ -64,6 +66,7 @@ const Pages = ({ app }) => {
           audience={auth.audience}
           redirectUri={auth.redirectUri}
           scope="member"
+          useRefreshTokens={true}
         >
           <OGAProvider>
             <Boat location={window.location} />
@@ -78,6 +81,7 @@ const Pages = ({ app }) => {
           audience={auth.audience}
           redirectUri={auth.redirectUri}
           scope="member"
+          useRefreshTokens={true}
         >
           <OGAProvider>
             <MyFleets location={window.location} />
@@ -92,6 +96,7 @@ const Pages = ({ app }) => {
           audience={auth.audience}
           redirectUri={auth.redirectUri}
           scope="member"
+          useRefreshTokens={true}
         >
           <OGAProvider>
             <SharedFleets location={window.location} />
@@ -105,6 +110,7 @@ const Pages = ({ app }) => {
           clientId={auth.clientId}
           redirectUri={auth.redirectUri}
           audience={auth.audience}
+          useRefreshTokens={true}
           scope="edit">
           <OGAProvider>
             <ProcessUpdates />
@@ -159,6 +165,7 @@ const Pages = ({ app }) => {
           audience={auth.audience}
           redirectUri={window.location.origin + window.location.pathname}
           scope="member"
+          useRefreshTokens={true}
         >
           <OGAProvider>
             <BrowseApp view={app} />
