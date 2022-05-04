@@ -32,6 +32,7 @@ const Pages = ({ app }) => {
     redirectUri: window.location.origin + window.location.pathname,
     audience: "https://oga.org.uk/boatregister",
     useRefreshTokens: true,
+    cacheLocation: 'localstorage',
   }
   // console.log('paypal', window.location);
   const paypalOptions = {
@@ -47,27 +48,13 @@ const Pages = ({ app }) => {
   switch (app) {
     case 'login':
       return (
-        <Auth0Provider
-          domain={auth.domain}
-          clientId={auth.clientId}
-          audience={auth.audience}
-          redirectUri={auth.redirectUri}
-          scope="member"
-          useRefreshTokens={true}
-        >
+        <Auth0Provider {...auth} scope="member">
           <LoginButton label='Member Login'/>
         </Auth0Provider>
       );
     case 'boat':
       return (
-        <Auth0Provider
-          domain={auth.domain}
-          clientId={auth.clientId}
-          audience={auth.audience}
-          redirectUri={auth.redirectUri}
-          scope="member"
-          useRefreshTokens={true}
-        >
+        <Auth0Provider {...auth} scope="member">
           <OGAProvider>
             <Boat location={window.location} />
           </OGAProvider>
@@ -75,14 +62,7 @@ const Pages = ({ app }) => {
       );
     case 'my_fleets':
       return (
-        <Auth0Provider
-          domain={auth.domain}
-          clientId={auth.clientId}
-          audience={auth.audience}
-          redirectUri={auth.redirectUri}
-          scope="member"
-          useRefreshTokens={true}
-        >
+        <Auth0Provider {...auth} scope="member">
           <OGAProvider>
             <MyFleets location={window.location} />
           </OGAProvider>
@@ -90,14 +70,7 @@ const Pages = ({ app }) => {
       );
     case 'shared_fleets':
       return (
-        <Auth0Provider
-          domain={auth.domain}
-          clientId={auth.clientId}
-          audience={auth.audience}
-          redirectUri={auth.redirectUri}
-          scope="member"
-          useRefreshTokens={true}
-        >
+        <Auth0Provider {...auth} scope="member">
           <OGAProvider>
             <SharedFleets location={window.location} />
           </OGAProvider>
@@ -105,13 +78,7 @@ const Pages = ({ app }) => {
       );
     case 'pending':
       return (
-        <Auth0Provider 
-          domain={auth.domain}
-          clientId={auth.clientId}
-          redirectUri={auth.redirectUri}
-          audience={auth.audience}
-          useRefreshTokens={true}
-          scope="edit">
+        <Auth0Provider {...auth} scope="edit">
           <OGAProvider>
             <ProcessUpdates />
           </OGAProvider>
@@ -159,14 +126,7 @@ const Pages = ({ app }) => {
       default:
       console.log('browse', app);
       return (
-        <Auth0Provider
-          domain={auth.domain}
-          clientId={auth.clientId}
-          audience={auth.audience}
-          redirectUri={window.location.origin + window.location.pathname}
-          scope="member"
-          useRefreshTokens={true}
-        >
+        <Auth0Provider {...auth} scope="member">
           <OGAProvider>
             <BrowseApp view={app} />
           </OGAProvider>
