@@ -22,9 +22,10 @@ import BoatCards from './boatcards';
 import LoginButton from './loginbutton';
 
 function FleetView() {
+    const [page, setPage] = useState(1);
     const onBoatMarked = () => console.log('marked');
     const onBoatUnMarked = () => console.log('unmarked');
-    const onPageChange = () => console.log('pageChange');
+    const onPageChange = (n) => setPage(n.page);
     const [getFleets, getFleetsResult] = useLazyQuery(gql`query fleet {
     fleet(where: {name: {_eq: "RBC 60"}}) {
       name
@@ -54,7 +55,7 @@ function FleetView() {
     return (
         <div>
             {fleets.map((fleet) => {
-                const state = { filters: fleet.filters, bpp: 12, page: 1, sort: 'name', sortDirection: 'asc', view: 'app', };
+                const state = { filters: fleet.filters, bpp: 12, page, sort: 'name', sortDirection: 'asc', view: 'app', };
                 return (<Accordion>
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
