@@ -181,11 +181,11 @@ export default function OGA60() {
                                         label: "Boat",
                                         initialValue: 'none',
                                         options: [
-                                            { label: 'I won\'t be bringing a boat', value: 'none' },
                                             { label: 'I\'m attending as part of the Round Britain Cruise', value: 'rbc' },
                                             { label: 'I\'m attending as part of the Cross Britain fleet', value: 'cross' },
                                             { label: 'I\'ll be bringing my cruising yacht', value: 'yacht' },
                                             { label: 'I\'ll be bringing a boat on a trailer by road', value: 'trailer' },
+                                            { label: 'I won\'t be bringing a boat', value: 'none' },
                                         ],
                                     },
                                     {
@@ -228,7 +228,7 @@ Expected number of crew
                 <Grid item xs={10}>
                     <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
-                        This form is for OGA members to express interest in attending the main OGA60 celebration at Suffolk Yacht Harbour.
+                        This form is for OGA members to express interest in attending the main OGA60 celebration at Ipswich & Levington.
                         Please submit one form per group of people, either crewing on a boat or travelling together.
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
