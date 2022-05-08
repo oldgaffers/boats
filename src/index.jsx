@@ -17,6 +17,7 @@ import SharedFleets from './components/sharedfleets';
 import RBC60 from './components/rbc60';
 import RBC60Entryies from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
+import OGA60Interest from './components/oga60interest';
 import LoginButton from './components/loginbutton';
 
 const theme = createTheme({
@@ -114,11 +115,20 @@ const Pages = ({ app }) => {
         </PayPalScriptProvider>
         )
         ;
-        case 'rbc60_crew':
-        return (
+    case 'rbc60_crew':
+      return (
           <Auth0Provider {...auth} scope="member">
             <OGAProvider>
               <RBC60CrewForm />
+            </OGAProvider>
+          </Auth0Provider>
+          )
+          ;
+    case 'oga60_interest':
+      return (
+          <Auth0Provider {...auth} scope="member">
+            <OGAProvider>
+              <OGA60Interest />
             </OGAProvider>
           </Auth0Provider>
           )
@@ -137,7 +147,7 @@ const Pages = ({ app }) => {
 
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
-  'rbc60', 'rbc60_entries', 'rbc60_crew', 'login',
+  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_interest', 'login',
 ];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length > 0) {
