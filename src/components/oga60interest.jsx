@@ -190,22 +190,51 @@ export default function OGA60() {
                                     },
                                     {
                                         component: componentTypes.RADIO,
-                                        name: 'ddf.accomodation',
-                                        label: "Ashore",
-                                        initialValue: 'none',
+                                        name: 'ddf.AB',
+                                        label: "View choices option",
+                                        initialValue: 'A',
                                         options: [
-                                            { label: 'I won\'t be staying at the event site', value: 'none' },
-                                            { label: 'I\'d like to bring a tent.', value: 'tent' },
-                                            { label: 'I\'d like to bring a campervan', value: 'campervan' },
+                                            { label: 'Option A - four choices', value: 'A' },
+                                            { label: 'Option B - three choices only if not on a yacht', value: 'B' },
                                         ],
                                     },
                                     {
-                                    component: componentTypes.TEXT_FIELD,
-                                    name: 'ddf.group',
-                                    label: "Likely number of people in the group",
-                                    type: 'number',
-                                    isRequired: true,
-                                    validate: [{ type: validatorTypes.REQUIRED }],
+                                        component: componentTypes.RADIO,
+                                        name: 'ddf.accomodation',
+                                        label: "Where we'll sleep",
+                                        initialValue: 'none',
+                                        options: [
+                                            { label: 'aboard my boat', value: 'aboard' },
+                                            { label: 'in a tent I\'ll bring', value: 'tent' },
+                                            { label: 'in a campervan I\'ll bring', value: 'campervan' },
+                                            { label: 'I won\'t be staying at the event site', value: 'none' },
+                                        ],
+                                        condition: { when: 'ddf.AB', is: 'A' }
+                                    },
+                                    {
+                                        component: componentTypes.RADIO,
+                                        name: 'ddf.accomodation',
+                                        label: "Where we'll sleep",
+                                        initialValue: 'none',
+                                        options: [
+                                            { label: 'in a tent I\'ll bring', value: 'tent' },
+                                            { label: 'in a campervan I\'ll bring', value: 'campervan' },
+                                            { label: 'I won\'t be staying at the event site', value: 'none' },
+                                        ],
+                                        condition: {
+                                            and: [
+                                                { when: 'ddf.AB', is: 'B'},
+                                                { when: 'ddf.boat', is: ['cross', 'trailer', 'none']}
+                                            ]
+                                        }
+                                    },      
+                                    {
+                                        component: componentTypes.TEXT_FIELD,
+                                        name: 'ddf.group',
+                                        label: "Likely number of people in the group",
+                                        type: 'number',
+                                        isRequired: true,
+                                        validate: [{ type: validatorTypes.REQUIRED }],
                                     },
                                 ]
                             /*
