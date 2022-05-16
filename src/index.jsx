@@ -17,7 +17,7 @@ import SharedFleets from './components/sharedfleets';
 import RBC60 from './components/rbc60';
 import RBC60Entryies from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
-import OGA60Interest from './components/oga60interest';
+import OGA60Button from './components/oga60button';
 import LoginButton from './components/loginbutton';
 
 const theme = createTheme({
@@ -128,7 +128,7 @@ const Pages = ({ app }) => {
       return (
           <Auth0Provider {...auth} scope="member">
             <OGAProvider>
-              <OGA60Interest />
+              <OGA60Button />
             </OGAProvider>
           </Auth0Provider>
           )

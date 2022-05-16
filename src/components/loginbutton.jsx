@@ -5,13 +5,13 @@ import Avatar from '@mui/material/Avatar';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth0 } from "@auth0/auth0-react";
 
-export default function LoginButton({ classes, label='Login/Sign-up' }) {
+export default function LoginButton({ label='Login/Sign-up', avatar=true }) {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
     if(isAuthenticated) {
         return (
         <Button size="small"
-            startIcon={<Avatar alt={user.name} src={user.picture} />}
+            startIcon={avatar?<Avatar alt={user.name} src={user.picture} />:undefined}
             variant="contained"
             color="primary"
             onClick={() => logout({ returnTo: window.location.origin+window.location.pathname })}

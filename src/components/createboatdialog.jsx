@@ -34,7 +34,7 @@ import {
 import { gql, useLazyQuery } from '@apollo/client';
 import { boatm2f } from "../util/format";
 import { HtmlEditor } from "./ddf/RTE";
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 
 /* 
 
