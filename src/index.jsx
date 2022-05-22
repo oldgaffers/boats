@@ -19,6 +19,7 @@ import RBC60Entryies from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
 import OGA60Button from './components/oga60button';
 import LoginButton from './components/loginbutton';
+import ExpressionsOfInterest from './components/expressions_of_interest';
 
 const theme = createTheme({
   palette: {
@@ -133,7 +134,15 @@ const Pages = ({ app }) => {
           </Auth0Provider>
           )
           ;
-      default:
+    case 'expressions':
+      return (
+        <Auth0Provider {...auth} scope="edit">
+          <OGAProvider>
+            <ExpressionsOfInterest topic={'OGA60'} />
+          </OGAProvider>
+        </Auth0Provider>)
+        ;
+    default:
       console.log('browse', app);
       return (
         <Auth0Provider {...auth} scope="member">
@@ -147,7 +156,7 @@ const Pages = ({ app }) => {
 
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
-  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_interest', 'login',
+  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_interest', 'login', 'expressions',
 ];
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length > 0) {
