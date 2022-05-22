@@ -93,32 +93,29 @@ export default function ExpressionsOfInterest({ topic }) {
     rows.forEach((row) => {
         Object.keys(row.data).forEach((key) => {
             const label = humanize(key);
-            columns.push({field: key, headerName: label, description: label, width: 200 });
+            columns.push({ field: key, headerName: label, description: label, width: 200 });
         })
     });
 
     const rows2 = rows.map((row) => {
-        return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id)};
+        return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id) };
     });
     console.log(rows2);
     return (
-        <>
-            <Typography variant='h5'>Expressions of interest for {topic}.</Typography>
-            <div style={{ display: 'flex', height: '100%' }}>
-                <div style={{ flexGrow: 1 }}>
-                    <DataGrid
-                        rows={rows2}
-                        columns={columns}
-                        components={{ Toolbar: CustomToolbar }}
-                        autoHeight={true}
-                        initialState={{
-                            sorting: {
-                                sortModel: [{ field: 'lastname', sort: 'asc' }, { field: 'member', sort: 'asc' }, { field: 'id', sort: 'asc' }],
-                            },
-                        }}
-                    />
-                </div>
+        <div style={{ display: 'flex', height: '100%' }}>
+            <div style={{ flexGrow: 1 }}>
+                <DataGrid
+                    rows={rows2}
+                    columns={columns}
+                    components={{ Toolbar: CustomToolbar }}
+                    autoHeight={true}
+                    initialState={{
+                        sorting: {
+                            sortModel: [{ field: 'lastname', sort: 'asc' }, { field: 'member', sort: 'asc' }, { field: 'id', sort: 'asc' }],
+                        },
+                    }}
+                />
             </div>
-        </>
+        </div>
     );
 }

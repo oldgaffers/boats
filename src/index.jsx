@@ -28,6 +28,7 @@ const theme = createTheme({
 });
 
 const Pages = ({ app }) => {
+  console.log('Pages', app);
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
@@ -161,6 +162,7 @@ const tags = [
 const div = tags.filter((id) => document.getElementById(id));
 if (div.length > 0) {
   const app = div[0];
+  console.log('div', div);
   ReactDOM.render(
     <React.StrictMode>
       <CookiesProvider>
