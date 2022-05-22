@@ -58,15 +58,20 @@ export default function OGA60({ onClose, onCancel }) {
                             label: '',
                             isReadOnly: true,
                             resolveProps: (props, { meta, input }, formOptions) => {
-                                if (member) {
-                                    console.log('user', user, 'member', member);
+                                if (member && user) {
                                     return {
                                         value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
                                     }
                                 } else {
-                                    return {
-                                        value: `We've identified you as ${user.given_name} ${user.family_name}, but we haven't found your membership details.
-                                        You can still register interest and we will be in touch regarding your membership.`,
+                                    if (user) {
+                                        return {
+                                            value: `We've identified you as ${user.given_name} ${user.family_name}, but we haven't found your membership details.
+                                            You can still register interest and we will be in touch regarding your membership.`,
+                                        }    
+                                    } else {
+                                        return {
+                                            value: `Please log in.`,
+                                        } 
                                     }
                                 }
                             },
