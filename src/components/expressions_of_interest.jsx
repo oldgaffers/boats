@@ -99,8 +99,11 @@ export default function ExpressionsOfInterest({ topic }) {
 
     const rows2 = rows.map((row) => {
         console.log('row', row);
-        console.log(members);
-        return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id) };
+        if (members) {
+            return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id) };
+        }
+        return { ...row, ...row.data };
+
     });
     console.log(rows2);
     return (
