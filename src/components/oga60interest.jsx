@@ -59,6 +59,7 @@ export default function OGA60({ onClose, onCancel }) {
                             isReadOnly: true,
                             resolveProps: (props, { meta, input }, formOptions) => {
                                 if (member) {
+                                    console.log('user', user, 'member', member);
                                     return {
                                         value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
                                     }
