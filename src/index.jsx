@@ -159,28 +159,21 @@ const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
   'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_interest', 'login', 'expressions',
 ];
-const div = tags.filter((id) => document.getElementById(id));
-if (div.length > 0) {
-  const app = div[0];
-  console.log('div', div);
+const divs = tags.filter((id) => document.getElementById(id));
+divs.forEach((tag) => {
+  const div = document.getElementById(tag);
+  const topic = div.getAttribute('topic');
+  console.log('topic', topic);
   ReactDOM.render(
     <React.StrictMode>
       <CookiesProvider>
         <ThemeProvider theme={theme}>
-          <Pages app={app} />
+          <Pages app={tag} />
         </ThemeProvider>
       </CookiesProvider>
     </React.StrictMode>,
-    document.getElementById(app)
+    div
   );
-} else {
-  ReactDOM.render(
-    <React.StrictMode>
-      no element found with an ID to tell us what to render.
-      One of {tags.join(', ')} expected.
-    </React.StrictMode>,
-    document.getElementsByTagName('body')[0]
-  );
-}
+});
 
 // serviceWorker.unregister();
