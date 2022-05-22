@@ -98,6 +98,8 @@ export default function ExpressionsOfInterest({ topic }) {
     });
 
     const rows2 = rows.map((row) => {
+        console.log('row', row);
+        console.log(members);
         return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id) };
     });
     console.log(rows2);
