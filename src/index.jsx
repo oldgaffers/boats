@@ -20,6 +20,7 @@ import RBC60CrewForm from './components/rbc60crewform';
 import OGA60Button from './components/oga60button';
 import LoginButton from './components/loginbutton';
 import ExpressionsOfInterest from './components/expressions_of_interest';
+import OGA60Form from './components/oga60form';
 
 const theme = createTheme({
   palette: {
@@ -27,8 +28,8 @@ const theme = createTheme({
   },
 });
 
-const Pages = ({ app }) => {
-  console.log('Pages', app);
+const Pages = ({ app, topic }) => {
+  console.log('Pages', app, topic);
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
@@ -52,7 +53,7 @@ const Pages = ({ app }) => {
     case 'login':
       return (
         <Auth0Provider {...auth} scope="member">
-          <LoginButton label='Member Login'/>
+          <LoginButton label='Member Login' />
         </Auth0Provider>
       );
     case 'boat':
@@ -104,7 +105,7 @@ const Pages = ({ app }) => {
             </OGAProvider>
           </Auth0Provider>
         </PayPalScriptProvider>
-        )
+      )
         ;
     case 'rbc60_entries': // 60
       return (
@@ -115,31 +116,39 @@ const Pages = ({ app }) => {
             </OGAProvider>
           </Auth0Provider>
         </PayPalScriptProvider>
-        )
+      )
         ;
     case 'rbc60_crew':
       return (
-          <Auth0Provider {...auth} scope="member">
-            <OGAProvider>
-              <RBC60CrewForm />
-            </OGAProvider>
-          </Auth0Provider>
-          )
-          ;
+        <Auth0Provider {...auth} scope="member">
+          <OGAProvider>
+            <RBC60CrewForm />
+          </OGAProvider>
+        </Auth0Provider>
+      )
+        ;
+    case 'oga60_button':
+      return (
+        <Auth0Provider {...auth} scope="member">
+          <OGAProvider>
+            <OGA60Button />
+          </OGAProvider>
+        </Auth0Provider>
+      )
+        ;
     case 'oga60_interest':
       return (
-          <Auth0Provider {...auth} scope="member">
-            <OGAProvider>
-              <OGA60Button />
-            </OGAProvider>
-          </Auth0Provider>
-          )
-          ;
-    case 'expressions':
+        <Auth0Provider {...auth} scope="member">
+          <OGAProvider>
+            <OGA60Form />
+          </OGAProvider>
+        </Auth0Provider>
+      )
+        ; case 'expressions':
       return (
         <Auth0Provider {...auth} scope="edit">
           <OGAProvider>
-            <ExpressionsOfInterest topic={'OGA60'} />
+            <ExpressionsOfInterest topic={topic} />
           </OGAProvider>
         </Auth0Provider>)
         ;
@@ -157,18 +166,17 @@ const Pages = ({ app }) => {
 
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
-  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_interest', 'login', 'expressions',
+  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_button', 'oga60_interest', 'login', 'expressions',
 ];
 const divs = tags.filter((id) => document.getElementById(id));
 divs.forEach((tag) => {
   const div = document.getElementById(tag);
   const topic = div.getAttribute('topic');
-  console.log('topic', topic);
   ReactDOM.render(
     <React.StrictMode>
       <CookiesProvider>
         <ThemeProvider theme={theme}>
-          <Pages app={tag} />
+          <Pages app={tag} topic={topic} />
         </ThemeProvider>
       </CookiesProvider>
     </React.StrictMode>,
