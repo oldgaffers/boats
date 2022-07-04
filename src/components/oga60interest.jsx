@@ -123,6 +123,10 @@ export default function OGA60({ onClose, onCancel }) {
         };
     };
 
+    /*
+    Also I think it would be useful to add some explanatory text along the lines of ‘Our team on the East Coast are busy planning the OGA 60 celebrations, but it would be very helpful to have some early indication of interest, especially from those who might arrive without a boat (and might want to get afloat somehow or go for excursions in the area) and those who might bring a dinghy or small boat by trailer.  Please fill in the Expression of Interest form if you might come, to help us plan for you!  There will be a formal entry form later on once we have finalised plans etc.’  Perhaps this could go at the top of the Expression of Interest form, and also in the other OGA 60 page just before the link to the form?
+    */
+
     return (
         <Paper>
             <Grid container spacing={2}>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import {
   FormRenderer,
@@ -32,7 +32,6 @@ import {
   dinghyHullStep,
 } from "./ddf/SubForms";
 import { gql, useLazyQuery } from '@apollo/client';
-import { boatm2f } from "../util/format";
 import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
 
@@ -136,7 +135,7 @@ const query = gql`query dc($dc: uuid = "") {
   }
 }`;
 
-const schema = (pickers, onChooseDesignClass) => {
+const schema = (pickers, getBoat, bt) => {
   return {
     fields: [
       {
@@ -214,19 +213,13 @@ const schema = (pickers, onChooseDesignClass) => {
                     component: componentTypes.SELECT,
                     name: 'design_class',
                     label: 'Design Class',
-                    helperText: 'If your boat is in a design class we have data for, will pre-fill the form from another boat in the class.'
-                    +' You will be able to change the values as boats do vary within a class.',
+                    //helperText: 'If your boat is in a design class we have data for, will pre-fill the form from another boat in the class.'
+                    //+' You will be able to change the values as boats do vary within a class.',
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
                     noOptionsMessage: 'we dont\' have that class - you can add it as a new one below',
                     options: mapPicker(pickers['design_class']),
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                      const state = formOptions.getState();
-                      if (state.dirty) {
-                        onChooseDesignClass(input.value);
-                      }
-                    },
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
@@ -234,11 +227,9 @@ const schema = (pickers, onChooseDesignClass) => {
                     label: 'New design class',
                     helperText: 'if the design class is not listed and you know the name add it here',
                     isRequired: false,
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                      const designClass = formOptions.getFieldState('design_class');
-                      if (designClass && designClass.value) {
-                        return { isReadOnly: true };
-                      }
+                    condition: {
+                      when: 'design_class',
+                      isEmpty: true,
                     },
                   },
                   {
@@ -594,37 +585,20 @@ const PhotoUpload = ({ component, name, title }) => {
 };
 
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
-  const [dc, setDc] = useState('00000000-0000-0000-0000-000000000000');
   const [getPickLists, pl] = useLazyPicklists();
-  const [getBoat, bt] = useLazyQuery( query, { variables: { dc } } ); 
+  const [getBoat, bt] = useLazyQuery( query ); 
   const { user } = useAuth0();
 
   if (!open) return '';
   if (pl.loading || bt.loading) return <CircularProgress />;
   if (pl.error) return <p>Error :(can't get picklists)</p>;
+  if (bt.error) return <p>Error :(can't get archetype)</p>;
   if (!pl.data) {
     getPickLists();
     return <CircularProgress />;
   }
-  if (!bt.data) {
-    getBoat();
-    return <CircularProgress />;
-  }
   const pickers = pl.data;
-  let boat = { short_description: 'She\'s a real one-off.' };
-  if (bt.data.design_class.length>0) {
-    const archetype = bt.data.design_class[0].boatByArchetype
-    boat =  { ...archetype, short_description: "She is a fine example of her type." };
-  }
-
-  const onChooseDesignClass = (id) => {
-    if (id) {
-      setDc(id);
-    } else {
-      setDc('00000000-0000-0000-0000-000000000000');
-    }
-  };
-
+  
   return (
     <Dialog
       open={open}
@@ -642,10 +616,10 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
           FormTemplate={(props) => (
             <FormTemplate {...props} showFormControls={false} />
           )}
-          schema={schema(pickers, onChooseDesignClass)}
+          schema={schema(pickers, getBoat, bt)}
           onSubmit={onSubmit}
           onCancel={onCancel}
-          initialValues={{ ...boatm2f(boat), user }}
+          initialValues={{ user }}
           subscription={{ values: true }}
           />
           

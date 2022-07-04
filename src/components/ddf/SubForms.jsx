@@ -102,6 +102,7 @@ export const descriptionsItems = [
     title: "Short description",
     name: "short_description",
     controls: ["bold", "italic"],
+    initialValue: "She is a fine example of her type.",
     maxLength: 500,
   },
   {
