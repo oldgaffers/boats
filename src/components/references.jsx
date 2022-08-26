@@ -36,13 +36,16 @@ function csref([, month, year, pages]) {
 }
 
 function process(ref) {
-    let arr = ref.match(/Log (.*)\/(.*)/);
-    if (arr) return logref(arr);
-    arr = ref.match(/CB *([^ ]*) *([^ ]*) *(.*)/);
-    if (arr) return cbref(arr);
-    arr = ref.match(/Classic Sailor *([^ ]*) *([^ ]*) *(.*)/);
-    if (arr) return csref(arr);
-    return ref;
+    if(ref && ref !== 'null') {
+        let arr = ref.match(/Log (.*)\/(.*)/);
+        if (arr) return logref(arr);
+        arr = ref.match(/CB *([^ ]*) *([^ ]*) *(.*)/);
+        if (arr) return cbref(arr);
+        arr = ref.match(/Classic Sailor *([^ ]*) *([^ ]*) *(.*)/);
+        if (arr) return csref(arr);
+        return ref;
+    }
+    return '';
 }
 
 export default function References({boat}) {
