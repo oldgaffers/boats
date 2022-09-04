@@ -5,9 +5,9 @@ name: Build static content using NodeJS and deploy to Pages
 
 on:
   push:
-    branches: [ "main", "test" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "test" ]
+    branches: [ "main" ]
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
