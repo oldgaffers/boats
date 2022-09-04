@@ -1,9 +1,17 @@
 # oga-boat-register-frontend
 React/MaterialUI/Apollo/GraphQL viewer for the OGA Boat Register
-![Node.js CI](https://github.com/jcable/oga-boat-register-frontend/workflows/Node.js%20CI/badge.svg)
+![Deploy to Pages](https://github.com/github/docs/actions/workflows/build.pages.yml/badge.svg)
 
-This website = should normally be accessed at https://www.oga.org.uk/boat_register/boat_register.html
+This micro-site = should normally be accessed at https://www.oga.org.uk/boat_register/boat_register.html
 
+# Build and Deployment
+
+Pages are hosted on www.oga.org.uk and load the main javascript.
+
+The javascript is hosted at https://oldgaffers.github.io/boats/main.js
+
+Deploying to https://oldgaffers.github.io/boats/ is a Github Actions workflow triggered
+by a push or pull-request to the main branch.
 
 keeping this here so we don't lose it again:
 
