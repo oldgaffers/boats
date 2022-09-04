@@ -14,8 +14,12 @@ export default function BoatsForSaleIntro() {
         Interested in a boat? Use the contact button on the boat's detail page and our editors
         will contact the owner for you.</Typography>
         <Typography variant="body1">
-        Members can use the register to advertise their boat for sale. The
-        first step is to make sure the boat is on the register.</Typography>
+            Want to advertise your boat here? You need to be a member or a member of an
+            affiliated organisation like the Dutch OGA.
+            In the first instance send us an email at boatregister@oga.org.uk.
+            If you want to join just to sell a boat, that's fine.
+            We hope you will like us enough to stay.
+        </Typography>
         <Typography variant="body1">
         Try our latest feature. Click the check box on the bottom right of some boats and then turn on the new 'Only My Marked Boats' switch to see your short-list.
         </Typography>
