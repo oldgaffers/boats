@@ -35,11 +35,13 @@ jobs:
       with:
         node-version: ${{ env.node_version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm test
-    - run: npm run build --if-present
-    - run: cp build/static/js/main.*.js.map build
-    - run: cp build/static/js/main.*.js build/${GITHUB_REF##*/}.js
+    - name: build
+      run: |
+        npm ci
+        npm test
+        npm run build --if-present
+        cp build/static/js/main.*.js.map build
+        cp build/static/js/main.*.js build/main.js
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
