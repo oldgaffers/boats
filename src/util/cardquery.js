@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
-import { conditionBuilder } from './gqlutils';
+import { conditionBuilder } from './gqlutils.js';
 
 export function getTotal(data) {
   return data?data.boatwithrank_aggregate.aggregate.totalCount:0;
