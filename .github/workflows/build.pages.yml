@@ -39,7 +39,7 @@ jobs:
     - run: npm test
     - run: npm run build --if-present
     - run: cp build/static/js/main.*.js.map build
-    - run: cp build/static/js/main.*.js build/${GITHUB_REF}.js
+    - run: cp build/static/js/main.*.js build/`echo ${GITHUB_REF}|awk -F/ '{ print $3 }'`.js
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
