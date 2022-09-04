@@ -8,17 +8,20 @@ export const rig_allowance = (r) => {
     };
 };
 
+// The measured sail area for gaff sails is:
+// 0.5(b x h) + 0.5(g x d) for mainsail and mizzen  where d = √(b^2+h^2 ), 
 export function fGaffSA(sail) {
     if(sail) {
         const b = Number(sail.foot);
         const h = Number(sail.luff);
         const g = Number(sail.head);
         const d = Math.sqrt(b*b+h*h);
-        return 0.5*b*h+0.5*g*d;    
+        return 0.5*b*h + 0.5*g*d;    
     }
     return 0;
 }
 
+// The measured sail area for topsails is 0.5(i x h)
 export function fTopSA(sail) {
     if(sail) {
         const i = Number(sail.perpendicular);
@@ -28,18 +31,19 @@ export function fTopSA(sail) {
     return 0;
 }
 
+// the foretriangle is O.425(i x j).
 export function fForeTriangle(data) {
     if(data) {
         const i = Number(data.fore_triangle_height);
         const j = Number(data.fore_triangle_base);
-        return 0.5*i*j;    
+        return 0.425*i*j;    
     }
     return 0;
 }
 
 // The measured sail area is the sum of:-
-// 0.5(b x h) + 0.5(g x d) for mainsail and mizzen, 
-// where d = √(b^2+h^2 ), plus 0.5(i x h) for topsails, 
+// 0.5(b x h) + 0.5(g x d) for mainsail and mizzen  where d = √(b^2+h^2 ), 
+// plus 0.5(i x h) for topsails, 
 // plus O.425(i x j) for the foretriangle.
 export function fMSA(data) {
     if(data) {
