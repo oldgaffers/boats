@@ -1,6 +1,7 @@
 # oga-boat-register-frontend
 React/MaterialUI/Apollo/GraphQL viewer for the OGA Boat Register
-![Deploy to Pages](https://github.com/github/docs/actions/workflows/build.pages.yml/badge.svg)
+
+![Build static content using NodeJS and deploy to Pages](https://github.com/github/docs/actions/workflows/build.pages.yml/badge.svg)
 
 This micro-site = should normally be accessed at https://www.oga.org.uk/boat_register/boat_register.html
 
