@@ -76,7 +76,7 @@ test('thcf fore triangle empty', () => {
 });
 
 test('thcf fore triangle valid', () => {
-  expect(fForeTriangle(aft).toFixed(2)).toEqual("50.00");
+  expect(fForeTriangle(aft).toFixed(2)).toEqual("42.50");
 });
 
 test('thcf measured sail area empty', () => {
@@ -84,7 +84,7 @@ test('thcf measured sail area empty', () => {
 });
 
 test('thcf measured sail area valid', () => {
-expect(fMSA(aboat.handicap_data).toFixed(2)).toEqual(324.327766252543.toFixed(2));
+expect(fMSA(aboat.handicap_data).toFixed(2)).toEqual('312.77');
 });
 
 test('thcf thcf empty', () => {
@@ -93,13 +93,13 @@ test('thcf thcf empty', () => {
 
 test('thcf thcf aboat', () => {
   expect(fL(aboat.handicap_data)).toBe((21+17)/2);
-  expect(fSqrtS(aboat)).toBeGreaterThan(17);
+  expect(fSqrtS(aboat).toFixed()).toEqual('17');
   expect(fSqrtS(aboat)).toBeLessThan(18.1);
-  expect(thcf(aboat).toFixed(3)).toEqual("0.865");
+  expect(thcf(aboat).toFixed(3)).toEqual('0.862');
 });
 
 test('thcf thcf aboat2', () => {
   expect(fL(aboat2.handicap_data)).toBe((27.87+27.23)/2);
   expect(fSqrtS(aboat2)).toBeGreaterThan(20);
-  expect(thcf(aboat2).toFixed(3)).toEqual("0.972");
+  expect(thcf(aboat2).toFixed(3)).toEqual("0.966");
 });
