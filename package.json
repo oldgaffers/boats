@@ -3,6 +3,7 @@
   "homepage": "/boat_register/",
   "version": "2.7.2",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
     "@auth0/auth0-react": "^1.8.0",
@@ -46,6 +47,11 @@
     "deploy": "./deploy.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!mui-rte)"
+    ]
   },
   "eslintConfig": {
     "extends": [
