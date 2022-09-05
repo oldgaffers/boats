@@ -24,13 +24,27 @@ for (let i = 1; i <= 8; i++) {
 }
 
 function makePicklist(view, pickers, field) {
-  //if (view[field]) {
-  //     return view[field].map((v) => { return {name: v};});
-  // }
+
+  let p;
+
   if (pickers[field]) {
-    return pickers[field];
+    p = pickers[field];
   }
-  return [];
+  if (field === 'boatNames') {
+    p = pickers.boat;
+  }
+  if (p === undefined) {
+    console.log('bad', field, pickers);
+    return [];
+  }
+  if (p.length === 0) {
+    return [];
+  }
+  if (p[0].name) {
+    const u = [...new Set(p.map((item) => item.name))];
+    return u.map((n) => p.find((item) => item.name === n));
+  }
+  return [...new Set(p)].map((item) => ({ name: item }));
 }
 
 export default function SearchAndFilterBoats({

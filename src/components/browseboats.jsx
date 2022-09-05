@@ -9,19 +9,6 @@ import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 // import TabularView from './tabularview';
 
-export function makeBoatNameList(boat) {
-  if (!boat) {
-    return [];
-  }
-  const currentBoatNames = boat.map((b) => (b.name));
-  const previousBoatNames = boat.map((b) => b.previous_names).flat();
-  const setOfBoats = new Set([...currentBoatNames, ...previousBoatNames]);
-  const allBoatNames = [...setOfBoats].filter((name) => name);
-  allBoatNames.sort((a, b) => (a.toLowerCase().localeCompare(b.toLowerCase())));
-  if (allBoatNames[0] === '') allBoatNames.shift();
-  return allBoatNames.map((n) => ({ name: n, __typename: 'boat' }));
-}
-
 export default function BrowseBoats({
   pickers,
   state,
@@ -53,7 +40,7 @@ export default function BrowseBoats({
           boatsPerPage={bpp}
           filters={filters}
           view={state.view}
-          pickers={{ boatNames: makeBoatNameList(pickers.boat), ...pickers }}
+          pickers={pickers}
           onPageSizeChange={onPageSizeChange}
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import GqlBoatBrowser from "./components/GqlBoatBrowser";
+import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
 import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
@@ -55,7 +55,7 @@ export default function BrowseApp({ view='app' }) {
 
   const BB = ({title, state}) => {
     return (
-      <GqlBoatBrowser
+      <StaticPickerBoatBrowser
         title={title}
         state={state}
         markList={[...markSet.current]}
