@@ -3,7 +3,7 @@ import BrowseBoats from './browseboats';
 import useAxios from 'axios-hooks';
 
 export default function StaticPickerBoatBrowser({ title, state, ...props }) {
-
+  console.log('StaticPickerBoatBrowser state', state);
   const [b] = useAxios('https://ogauk.github.io/boatregister/pickers.json')
   console.log('picker', b);
   if (b.loading) return <p>Loading...</p>

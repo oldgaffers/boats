@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import { useCardQuery, getTotal, getBoats } from '../util/cardquery';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
+import { useCardQuery as a } from '../util/ogsnosforfilter';
 
 export default function BoatCards({
   state, markList,
@@ -18,6 +19,8 @@ export default function BoatCards({
   const totalCount = getTotal(data); 
   const boats = getBoats(data);
   
+  const as = a(state);
+  console.log(as);
 
   if (error) return <p>Error: (BoatCards)</p>;
 
