@@ -12,17 +12,22 @@ export const useCardQuery = (state) => {
     if (b.error) {
           return b;
     }
-    let boats = b.data;
+    const boats = b.data;
     const k = Object.keys(state.filters);
+    let filteredBoats = [...boats];
     k.forEach(filter => {
-        console.log('next', boats);
-        console.log(filter);
-        const r = boats.filter((boat) => boat[filter] === state.filters[k]);
-        console.log('found', r);
-        boats = r;
+        filteredBoats = filteredBoats.filter((boat) => boat[filter] === state.filters[filter]);
     });
-    console.log('filtered', boats);
-    console.log('sort', state.sort, state.sortDirection);
-    console.log('page', state.bpp, state.page);
-    return { ...b, data: boats };
+    filteredBoats.sort((a,b) => {
+        const { sort, sortDirection } = state;
+        const rs = sortDirection === 'asc' ? [1, -1] : [-1, 1];
+        const as = a[sort];
+        const bs = b[sort];
+        if(as > bs) return rs[0];
+        if(as < bs) return rs[1];
+        return 0;
+    });
+    const { page, bpp } = state;
+    const start = bpp * ( page - 1);
+    return { ...b, data: filteredBoats.slice(start, start + bpp) };
 }
