@@ -49,7 +49,7 @@ export default function BoatRegisterIntro() {
           <Typography variant="body1">
             Members can use the register to advertise their boat for sale. The
             first step is to make sure the boat is on the register.
-            Boats for sale are all here, but you can see only the boats for sale on the
+            Boats for sale are all here, but you can see only the boats for sale on the&nbsp;
             <a href='/boat_register/boats_for_sale/index.html'>Boats For Sale</a> page.
           </Typography>
         </Grid>
