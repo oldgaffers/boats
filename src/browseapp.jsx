@@ -19,7 +19,7 @@ export default function BrowseApp({ view='app' }) {
   };
 
   const handleSortChange = (field, dir) => {
-    setState({...state, sort: field, asc: dir === 'asc'});
+    setState({...state, sort: field, sortDirection: dir });
   };
 
   const handlePageChange = ({page}) => {
