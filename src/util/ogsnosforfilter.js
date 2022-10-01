@@ -29,5 +29,8 @@ export const useCardQuery = (state) => {
     });
     const { page, bpp } = state;
     const start = bpp * ( page - 1);
-    return { ...b, data: filteredBoats.slice(start, start + bpp) };
+    return { ...b, data: {
+        boats: filteredBoats.slice(start, start + bpp),
+        totalCount: boats.length,
+    }};
 }

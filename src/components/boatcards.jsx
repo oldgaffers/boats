@@ -3,10 +3,9 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { useCardQuery, getTotal, getBoats } from '../util/cardquery';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
-import { useCardQuery as a } from '../util/ogsnosforfilter';
+import { useCardQuery } from '../util/ogsnosforfilter';
 
 export default function BoatCards({
   state, markList,
@@ -14,23 +13,15 @@ export default function BoatCards({
   onBoatMarked,
   onBoatUnMarked,
 }) {
-  const { loading, error, data } = useCardQuery(state);
-  if (error) console.log(JSON.stringify(error));
-  const totalCount = getTotal(data); 
-  const boats = getBoats(data);
-  
-  const as = a(state);
-  console.log(as);
 
-  if (error) return <p>Error: (BoatCards)</p>;
+  const as = useCardQuery(state);
 
-  if (loading) {
-    if (data) {
-      console.log('Loading set but data here');
-    } else {
+  if (as.error) return <p>Error: (BoatCards)</p>;
+
+  if (as.loading) {
       return <p>Loading...</p>;
-    }
   }
+  const { totalCount, boats } = as.data;
 
   const handleMarkChange = (value, ogaNo) => {
     if (value) {
@@ -52,7 +43,7 @@ export default function BoatCards({
             const marked = markList.includes(boat.oga_no);
             return (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} marked={marked} boat={boat} onMarkChange={handleMarkChange} />
+              <BoatCard state={state} marked={marked} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
             </Grid>
             );
           }

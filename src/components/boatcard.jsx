@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,6 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
+import useAxios from 'axios-hooks';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -68,11 +70,27 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, marked, onMarkChange, boat }) {
+export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   const [markChecked, setMarkChecked] = useState(marked);
+
+  const [b] = useAxios(
+    `https://ogauk.github.io/boatregister/page-data/boat/${ogaNo}/page-data.json`
+  )
+  if (b.loading) return (<Skeleton variant="rectangular" width={210} height={118} />);
+  if (b.error) {
+      return (<div>
+        Sorry, we had a problem getting the data for
+        the boat with OGA number {ogaNo}
+        <p>Please try searching on the <a href='/boat_register/browse_the_register/index.html'>Main Page</a></p>
+        </div>);
+  }
+
+  const { boat } = b.data.result.pageContext;
+  console.log('boatcard', boat);
+
   const handleMarked = (checked) => {
     setMarkChecked(checked);
-    onMarkChange(checked, boat.oga_no);
+    onMarkChange(checked, ogaNo);
   }
   return (
     <Card sx={boat.thumb ? {
