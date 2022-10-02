@@ -60,7 +60,6 @@ function EnquiryDialog({
   onTextChange,
 }) {
 
-  const ua = useUserAgent();
   const onClickSend = () => {
     onSend(boat.id, boat.name, boat.oga_no, 'general');
   }
