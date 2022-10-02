@@ -106,7 +106,6 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
             <TextField
               value={email}
               required={true}
-              type="email"
               label="Your Email"
               onChange={onEmail}
             />
