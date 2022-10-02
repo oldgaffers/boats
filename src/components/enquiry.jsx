@@ -60,6 +60,7 @@ function EnquiryDialog({
   onTextChange,
 }) {
 
+  const ua = useUserAgent();
   const onClickSend = () => {
     onSend(boat.id, boat.name, boat.oga_no, 'general');
   }
@@ -86,7 +87,6 @@ function EnquiryDialog({
           autoFocus
           margin="dense"
           label="Email Address"
-          type="email"
           fullWidth
         />
         <TextField
@@ -172,7 +172,6 @@ function ContactDialog({
           autoFocus
           margin="dense"
           label="Email Address"
-          type="email"
           fullWidth
         />
         <TextField
