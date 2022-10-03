@@ -107,6 +107,7 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
               value={email}
               required={true}
               label="Your Email"
+              type="email"
               onChange={onEmail}
             />
           </Grid>

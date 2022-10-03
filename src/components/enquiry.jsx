@@ -50,105 +50,29 @@ const DELETE_ENQUIRY = gql`
 `;
 */
 
-function EnquiryDialog({
-  open,
-  boat,
-  email,
-  onEmailChange,
-  onSend,
-  onCancel,
-  onTextChange,
-}) {
-
-  const onClickSend = () => {
-    onSend(boat.id, boat.name, boat.oga_no, 'general');
-  }
-
-  return (
-    <Dialog
-      top
-      open={open}
-      onClose={onCancel}
-      aria-labelledby="form-dialog-title"
-    >
-      <DialogTitle id="form-dialog-title">Contact Us</DialogTitle>
-      <DialogContent>
-        <DialogContentText variant="subtitle2">
-          Own <i>{boat.name}</i> ({boat.oga_no}) or have some information or a
-          question about her?<p></p>
-          We'd love to hear from you.<p></p>Please enter your email address here
-          and tell us how we can help.
-        </DialogContentText>
-        <TextField
-          value={email}
-          error={email === ""}
-          onChange={onEmailChange}
-          autoFocus
-          margin="dense"
-          label="Email Address"
-          fullWidth
-        />
-        <TextField
-          onChange={onTextChange}
-          margin="dense"
-          label="About your enquiry"
-          type="text"
-          fullWidth
-        />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onCancel} color="primary">
-          Cancel
-        </Button>
-        <Button
-          endIcon={<SendIcon />}
-          onClick={onClickSend}
-          color="primary"
-          disabled={email === ""}
-        >
-          Send
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-}
-
-const atext = (userRoles, members) => {
-  const plural = members && members.length > 1;
-  if (userRoles.includes('member')) {
-    return plural?'fellow members':'a fellow member';
-  } else {
-    return plural?'members':'a member';
-  }
-};
-
-const btext = (userRoles, members) => {
-  if (userRoles.includes('member')) {
-    if (members && members.find((member) => member.GDPR)) {
-      return 'copy you so you can chat.';
-    } else {
-      return 'give them your email so they can respond.';
-    }
-  } else {
-    return 'give them your email so they can respond.';
-  }
-};
-
 function ContactDialog({
   open,
   boat,
   email,
-  userRoles,
-  members,
-  onEmailChange,
   onSend,
   onCancel,
-  onTextChange,
+  title,
+  subtitle,
+  topic
 }) {
+  const [mail, setMail] = useState(email);
+  const [text, setText] = useState("");
+  const [valid, setValid] = useState(false);
 
   const onClickSend = () => {
-    onSend(boat.id, boat.name, boat.oga_no, 'contact');
+    const { id, oga_no, name } = boat;
+    onSend({ id, boat_name: name, oga_no, topic, text, email: mail });
   }
+
+  const handleEmailChange = (e) => {
+    setMail(e.target.value);
+    setValid(e.target.reportValidity());
+  };
 
   return (
     <Dialog
@@ -157,24 +81,23 @@ function ContactDialog({
       onClose={onCancel}
       aria-labelledby="form-dialog-title"
     >
-      <DialogTitle id="form-dialog-title">Contact The Owner{(members?.length > 1) ? "s" : ""}</DialogTitle>
+      <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          <i>{boat.name}</i> ({boat.oga_no})
-          is owned by {atext(userRoles, members)} of the OGA.
-          We'll contact them for you from the boat register and {btext(userRoles, members)}
+          {subtitle}
         </DialogContentText>
         <TextField
-          value={email}
+          value={mail}
           error={email === ""}
-          onChange={onEmailChange}
+          onChange={handleEmailChange}
           autoFocus
           margin="dense"
           label="Email Address"
+          type="email"
           fullWidth
         />
         <TextField
-          onChange={onTextChange}
+          onChange={(e) => setText(e.target.value)}
           margin="dense"
           label="About your enquiry"
           type="text"
@@ -189,7 +112,7 @@ function ContactDialog({
           endIcon={<SendIcon />}
           onClick={onClickSend}
           color="primary"
-          disabled={email === ""}
+          disabled={!valid}
         >
           Send
         </Button>
@@ -203,8 +126,6 @@ export default function Enquiry({ classes, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
   const userRoles = (user && user['https://oga.org.uk/roles']) || [];
-  const [email, setEmail] = useState(user && user.email);
-  const [text, setText] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
   const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]) {
@@ -212,11 +133,11 @@ export default function Enquiry({ classes, boat }) {
   }`));
   if (loading) return <p>Loading ...</p>;
   if (error) return `Error! ${error}`;
- 
+
   const handleClickOpen = () => {
     setOpen(true);
     if (userRoles.includes('member')) {
-      const memberNumbers = [...new Set(boat.ownerships.current.map((owner) => owner.member))];
+      const memberNumbers = [...new Set(boat.ownerships.filter((m) => m.current).map((owner) => owner.member))];
       getOwners({ variables: { members: memberNumbers } })
     }
   };
@@ -225,23 +146,11 @@ export default function Enquiry({ classes, boat }) {
     setOpen(false);
   };
 
-  const handleEmailChange = (e) => {
-    if (e.target.reportValidity()) {
-      setEmail(e.target.value);
-    } else {
-      console.log("invalid email");
-    }
-  };
-
-  const handleTextChange = (e) => {
-    setText(e.target.value);
-  };
-
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
 
-  const handleSend = (id, boat_name, oga_no, type) => {
+  const handleSend = ({ id, boat_name, oga_no, type, email, text }) => {
     const name = (user && user.name) || '';
     addEnquiry({
       variables: { type, id, boat_name, oga_no, email, name, text },
@@ -253,15 +162,47 @@ export default function Enquiry({ classes, boat }) {
   const { current } = (boat.ownerships || {});
 
   let enquireText = "Ask about this boat";
-  let ChosenDialog = EnquiryDialog;
-
+  let title;
+  let subtitle;
   if (current) {
     enquireText = "Contact the Owner";
     if (current.length > 1) {
       enquireText = enquireText + "s";
     }
-    ChosenDialog = ContactDialog;
+    title = enquireText;
+
+    const atext = (userRoles, data) => {
+      const plural = data?.members && data.members.length > 1;
+      if (userRoles.includes('member')) {
+        return plural ? 'fellow members' : 'a fellow member';
+      } else {
+        return plural ? 'members' : 'a member';
+      }
+    };
+
+    const btext = (userRoles, data) => {
+      if (userRoles.includes('member')) {
+        if (data?.members && data.members.find((member) => member.GDPR)) {
+          return 'copy you so you can chat.';
+        } else {
+          return 'give them your email so they can respond.';
+        }
+      } else {
+        return 'give them your email so they can respond.';
+      }
+    };
+
+    subtitle = (<><i>{boat.name}</i> ({boat.oga_no})
+    is owned by {atext(userRoles, data)} of the OGA. We'll contact them for you from the boat register and {btext(userRoles, data)}</>);
+  } else {
+    title = 'Contact Us';
+    subtitle = (<>Own <i>{boat.name}</i> ({boat.oga_no}) or have some information or a
+    question about her? We'd love to hear from you. Please enter your email address here
+    and tell us how we can help.</>);
   }
+
+  console.log('X', user);
+  console.log('Y', data);
   return (
     <>
       <Button
@@ -274,16 +215,17 @@ export default function Enquiry({ classes, boat }) {
       >
         {enquireText}
       </Button>
-      <ChosenDialog
+      <ContactDialog
         open={open}
         boat={boat}
-        email={email}
         userRoles={userRoles}
+        email={user && user.email}
         members={data && data.members}
         onCancel={handleCancel}
         onSend={handleSend}
-        onEmailChange={handleEmailChange}
-        onTextChange={handleTextChange}
+        title={title}
+        subtitle={subtitle}
+        topic={current ? 'contact' : 'general'}
       />
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}

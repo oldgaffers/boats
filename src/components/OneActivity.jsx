@@ -41,6 +41,7 @@ export default function OneActivity({ classes, onCancel, onStart, onEmailChange 
                 autoFocus
                 margin="dense"
                 label="Email Address"
+                type="email"
                 fullWidth
             />
           </Grid>
