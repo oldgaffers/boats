@@ -53,7 +53,7 @@ export default function References({boat}) {
         return (
             <>
             <Typography><Box fontWeight="bold" component="span">References:</Box></Typography>
-            {boat.reference.map((ref) => (<div>{process(ref)}</div>))}
+            {boat.reference.map((ref, i) => (<div key={i}>{process(ref)}</div>))}
             </>
         );    
     }
