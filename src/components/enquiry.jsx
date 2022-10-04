@@ -53,24 +53,24 @@ const DELETE_ENQUIRY = gql`
 function ContactDialog({
   open,
   boat,
-  email,
+  user,
   onSend,
   onCancel,
   title,
   subtitle,
   topic
 }) {
-  const [mail, setMail] = useState(email);
+  const [email, setEmail] = useState(user?.email || '');
   const [text, setText] = useState("");
-  const [valid, setValid] = useState(false);
+  const [valid, setValid] = useState(!!email);
 
   const onClickSend = () => {
     const { id, oga_no, name } = boat;
-    onSend({ id, boat_name: name, oga_no, topic, text, email: mail });
+    onSend({ type: topic, id, boat_name: name, oga_no, text, email });
   }
 
   const handleEmailChange = (e) => {
-    setMail(e.target.value);
+    setEmail(e.target.value);
     setValid(e.target.reportValidity());
   };
 
@@ -87,7 +87,7 @@ function ContactDialog({
           {subtitle}
         </DialogContentText>
         <TextField
-          value={mail}
+          value={email}
           error={email === ""}
           onChange={handleEmailChange}
           autoFocus
@@ -201,8 +201,6 @@ export default function Enquiry({ classes, boat }) {
     and tell us how we can help.</>);
   }
 
-  console.log('X', user);
-  console.log('Y', data);
   return (
     <>
       <Button
@@ -219,7 +217,7 @@ export default function Enquiry({ classes, boat }) {
         open={open}
         boat={boat}
         userRoles={userRoles}
-        email={user && user.email}
+        user={user}
         members={data && data.members}
         onCancel={handleCancel}
         onSend={handleSend}
