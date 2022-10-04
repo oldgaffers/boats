@@ -39,7 +39,6 @@ export default function BoatDetail({ boat }) {
     }
   }
   const hd = boat.handicap_data || {};
-console.log(boat);
   const panes = [
     { title: 'Design & Build', children: (
       <Paper>
