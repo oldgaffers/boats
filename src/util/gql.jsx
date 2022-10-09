@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { setContext } from 'apollo-link-context'
 
 const httpLink = new HttpLink({
-  uri: "https://api-oga.herokuapp.com/v1/graphql",
+  uri: 'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/graphql' // "https://api-oga.herokuapp.com/v1/graphql",
 })
 
 const anonymousClient = new ApolloClient({

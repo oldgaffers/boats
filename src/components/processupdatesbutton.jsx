@@ -31,7 +31,7 @@ export default function ProcessUpdatesButton() {
   if (pd.loading) {
     return <CircularProgress />;
   }
-  const count = pd.data.boat_pending_updates_aggregate.aggregate.count;
+  const count = pd.data?.boat_pending_updates_aggregate.aggregate.count || 0;
   return (
     <Badge badgeContent={count>0 ? count : undefined} color="secondary">
       <Button
