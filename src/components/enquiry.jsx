@@ -9,46 +9,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
-import { gql, useMutation, useLazyQuery } from "@apollo/client";
 import { useAuth0 } from "@auth0/auth0-react";
-
-const ADD_ENQUIRY = gql`
-  mutation AddEnquiry(
-    $id: uuid!
-    $boat_name: String!
-    $oga_no: Int!
-    $email: String!
-    $name: String!
-    $text: String!
-    $type: enquiry_type_enum!
-  ) {
-    insert_enquiry(
-      objects: {
-        boat: $id
-        boat_name: $boat_name
-        oga_no: $oga_no
-        email: $email
-        name: $name
-        text: $text
-        type: $type
-      }
-    ) {
-      returning {
-        id
-      }
-    }
-  }
-`;
-
-/*
-const DELETE_ENQUIRY = gql`
-  mutation DeleteEnquiry($id: uuid!) {
-    delete_enquiry(where: { id: { _eq: $id } }) {
-      affected_rows
-    }
-  }
-`;
-*/
+import axios from 'axios';
+import { gql, useLazyQuery } from "@apollo/client";
 
 function ContactDialog({
   open,
@@ -76,7 +39,6 @@ function ContactDialog({
 
   return (
     <Dialog
-      top
       open={open}
       onClose={onCancel}
       aria-labelledby="form-dialog-title"
@@ -126,8 +88,7 @@ export default function Enquiry({ classes, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
   const userRoles = (user && user['https://oga.org.uk/roles']) || [];
-  // eslint-disable-next-line no-unused-vars
-  const [addEnquiry, result] = useMutation(ADD_ENQUIRY);
+  
   const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]) {
     members(members: $members) { GDPR }
   }`));
@@ -135,11 +96,15 @@ export default function Enquiry({ classes, boat }) {
   if (error) return `Error! ${error}`;
 
   const handleClickOpen = () => {
-    setOpen(true);
     if (userRoles.includes('member')) {
-      const memberNumbers = [...new Set(boat.ownerships?.filter((m) => m.current).map((owner) => owner.member))];
+      console.log(boat.ownerships);
+      const current = boat.ownerships.current || boat.ownerships.owners.filter((o) => o.current);
+      const memberNumbers = [...new Set(current.map((owner) => owner.member))];
       getOwners({ variables: { members: memberNumbers } })
+    } else {
+      console.log('not member - userRoles', userRoles);
     }
+    setOpen(true);
   };
 
   const handleCancel = () => {
@@ -150,13 +115,19 @@ export default function Enquiry({ classes, boat }) {
     setSnackBarOpen(false);
   }
 
-  const handleSend = ({ id, boat_name, oga_no, type, email, text }) => {
-    const name = (user && user.name) || '';
-    addEnquiry({
-      variables: { type, id, boat_name, oga_no, email, name, text },
-    });
+  const handleSend = ({ id, boat_name, oga_no, type, email, text, owners: current }) => {
     setOpen(false);
-    setSnackBarOpen(true);
+    const name = (user && user.name) || '';
+    axios.post(
+      'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/enquiry',
+      { type, id, boat_name, oga_no, email, name, text, current },
+      ).then((response) => {
+        setSnackBarOpen(true);
+      })
+      .catch((error) => {
+        console.log("post", error);
+        // TODO snackbar from response.data
+      });
   };
 
   const { current } = (boat.ownerships || {});
@@ -200,6 +171,9 @@ export default function Enquiry({ classes, boat }) {
     question about her? We'd love to hear from you. Please enter your email address here
     and tell us how we can help.</>);
   }
+
+  console.log('owners', data);
+  console.log('current', current);
 
   return (
     <>
