@@ -15,12 +15,14 @@ import { gql, useLazyQuery } from "@apollo/client";
 
 function ContactDialog({
   open,
-  boat,
+  boat_name,
+  oga_no,
   user,
+  isMember,
+  owners,
   onSend,
   onCancel,
   title,
-  subtitle,
   topic
 }) {
   const [email, setEmail] = useState(user?.email || '');
@@ -28,13 +30,35 @@ function ContactDialog({
   const [valid, setValid] = useState(!!email);
 
   const onClickSend = () => {
-    const { id, oga_no, name } = boat;
-    onSend({ type: topic, id, boat_name: name, oga_no, text, email });
+    onSend({ type: topic, boat_name, oga_no, text, email, owners });
   }
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
     setValid(e.target.reportValidity());
+  };
+
+  const subtitle = () => {
+    if (owners) {
+      if (owners.length > 1) {
+        return (<><i>{boat_name}</i> ({oga_no})
+        is owned by {isMember ? 'fellow members' : 'members'} of the OGA.
+        We'll contact them for you from the boat register and give them your email so they can respond.</>);  
+      } else {
+        return (<><i>{boat_name}</i> ({oga_no})
+        is owned by a{isMember ? ' fellow ' : ' '}member of the OGA.
+        We'll contact them for you from the boat register and give them your email so they can respond.</>);
+      }
+    } else {
+      if (isMember) {
+        return (<>Own <i>{boat_name}</i> ({oga_no}) or have some information or a
+        question about her? We'd love to hear from you. Please tell us how we can help.</>);
+      } else {
+        return (<>Own <i>{boat_name}</i> ({oga_no}) or have some information or a
+        question about her? We'd love to hear from you. Please enter your email address here
+        and tell us how we can help.</>);  
+      }
+    }
   };
 
   return (
@@ -46,7 +70,7 @@ function ContactDialog({
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          {subtitle}
+          {subtitle()}
         </DialogContentText>
         <TextField
           value={email}
@@ -115,12 +139,12 @@ export default function Enquiry({ classes, boat }) {
     setSnackBarOpen(false);
   }
 
-  const handleSend = ({ id, boat_name, oga_no, type, email, text, owners: current }) => {
+  const handleSend = ({ id, boat_name, oga_no, type, email, text, owners }) => {
     setOpen(false);
     const name = (user && user.name) || '';
     axios.post(
       'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/enquiry',
-      { type, id, boat_name, oga_no, email, name, text, current },
+      { type, id, boat_name, oga_no, email, name, text, owners },
       ).then((response) => {
         setSnackBarOpen(true);
       })
@@ -132,48 +156,17 @@ export default function Enquiry({ classes, boat }) {
 
   const { current } = (boat.ownerships || {});
 
-  let enquireText = "Ask about this boat";
-  let title;
-  let subtitle;
+  const isMember = userRoles.includes('member');
+  let enquireText;
   if (current) {
-    enquireText = "Contact the Owner";
     if (current.length > 1) {
-      enquireText = enquireText + "s";
+      enquireText = "Contact the Owners";  
+    } else {
+      enquireText = "Contact the Owner";  
     }
-    title = enquireText;
-
-    const atext = (userRoles, data) => {
-      const plural = data?.members && data.members.length > 1;
-      if (userRoles.includes('member')) {
-        return plural ? 'fellow members' : 'a fellow member';
-      } else {
-        return plural ? 'members' : 'a member';
-      }
-    };
-
-    const btext = (userRoles, data) => {
-      if (userRoles.includes('member')) {
-        if (data?.members && data.members.find((member) => member.GDPR)) {
-          return 'copy you so you can chat.';
-        } else {
-          return 'give them your email so they can respond.';
-        }
-      } else {
-        return 'give them your email so they can respond.';
-      }
-    };
-
-    subtitle = (<><i>{boat.name}</i> ({boat.oga_no})
-    is owned by {atext(userRoles, data)} of the OGA. We'll contact them for you from the boat register and {btext(userRoles, data)}</>);
   } else {
-    title = 'Contact Us';
-    subtitle = (<>Own <i>{boat.name}</i> ({boat.oga_no}) or have some information or a
-    question about her? We'd love to hear from you. Please enter your email address here
-    and tell us how we can help.</>);
+    enquireText = "Ask about this boat";
   }
-
-  console.log('owners', data);
-  console.log('current', current);
 
   return (
     <>
@@ -189,14 +182,15 @@ export default function Enquiry({ classes, boat }) {
       </Button>
       <ContactDialog
         open={open}
-        boat={boat}
-        userRoles={userRoles}
+        boat_name={boat.name}
+        oga_no={boat.oga_no}      
         user={user}
+        owners={current}
+        isMember={isMember}
         members={data && data.members}
         onCancel={handleCancel}
         onSend={handleSend}
-        title={title}
-        subtitle={subtitle}
+        title={enquireText}
         topic={current ? 'contact' : 'general'}
       />
       <Snackbar
