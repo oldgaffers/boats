@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery } from '@apollo/client';
 import useAxios from 'axios-hooks';
+import { TokenContext } from './TokenProvider';
 
 const humanize = (str) => {
     var i, frags = str.split('_');
@@ -30,17 +31,19 @@ export default function ExpressionsOfInterest({ topic }) {
     console.log('ExpressionsOfInterest', topic);
     const { user, isAuthenticated } = useAuth0();
     const [members, setMembers] = useState();
-    const eoi = useAxios(
+    const [data, setData] = useState();
+    const accessToken = useContext(TokenContext);
+    const [eoi, eoi_execute] = useAxios(
         {
             url: 'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/private/expression_of_interest',
             params: { topic },
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            }
         },
         { manual: true }
       )
-
-
-    console.log('user', user);
-    console.log('isA', isAuthenticated);
+    console.log('isAuthenticated', isAuthenticated);
     const [getMembers, m] = useLazyQuery(gql(`query members($members: [Int]!) {
         members(members: $members) {
           member id
@@ -48,6 +51,15 @@ export default function ExpressionsOfInterest({ topic }) {
         }
     }`));
 
+    useEffect(() => {
+        const getData = async () => {
+            if (accessToken) {
+                setData(await eoi_execute({ useCache: true }));
+            }
+        }
+        getData();
+    }, [accessToken, eoi_execute])
+  
     if (!isAuthenticated) {
         return (<div>Please log in to view this page</div>);
     }
@@ -60,28 +72,23 @@ export default function ExpressionsOfInterest({ topic }) {
         </div>);
     }
 
-    if (eoi.loading) return <CircularProgress />
+    const roles = user['https://oga.org.uk/roles'] || [];
+    if (!roles.includes('editor')) {
+        return (<div>This page is only useful to editors of the boat register</div>);
+    }
+
+    if (eoi.loading) return <CircularProgress />;
     if (eoi.error) {
         console.log(eoi.error)
         return (<div>
             Sorry, we had a problem getting the expressions of interest
             </div>);
     }
-    // [{ data, loading, error, response }, execute, manualCancel]
-    let rows;
-    if (eoi.data) {
-        rows = eoi.data;
-    } else {
-        eoi.execute({ useCache: true });
-        return <CircularProgress />
-    }
 
-    const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('editor')) {
-        return (<div>This pag is only useful to editors of the boat register</div>);
+    if (!data) {
+        return <CircularProgress/>;
     }
-
-    console.log('row', rows[0]);
+    const rows = data.data.Items;
     if (m.data) {
         if (members) {
             console.log('members', members);
@@ -107,14 +114,12 @@ export default function ExpressionsOfInterest({ topic }) {
     });
 
     const rows2 = rows.map((row) => {
-        console.log('row', row);
         if (members) {
             return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id) };
         }
         return { ...row, ...row.data };
-
     });
-    console.log(rows2);
+
     return (
         <div style={{ display: 'flex', height: '100%' }}>
             <div style={{ flexGrow: 1 }}>
