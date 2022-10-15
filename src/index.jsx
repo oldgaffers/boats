@@ -144,7 +144,9 @@ const Pages = ({ app, topic }) => {
           </OGAProvider>
         </Auth0Provider>
       )
-        ; case 'expressions':
+        ;
+    case 'expressions':
+      {
       return (
         <Auth0Provider {...auth} scope="edit">
           <OGAProvider>
@@ -152,6 +154,7 @@ const Pages = ({ app, topic }) => {
           </OGAProvider>
         </Auth0Provider>)
         ;
+      }
     default:
       console.log('browse', app);
       return (

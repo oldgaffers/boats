@@ -86,7 +86,6 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   }
 
   const { boat } = b.data.result.pageContext;
-  console.log('boatcard', boat);
 
   const handleMarked = (checked) => {
     setMarkChecked(checked);

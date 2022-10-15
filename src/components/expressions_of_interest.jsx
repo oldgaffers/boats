@@ -27,9 +27,20 @@ function CustomToolbar() {
 }
 
 export default function ExpressionsOfInterest({ topic }) {
-    const [members, setMembers] = useState();
-    const [b] = useAxios('https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/private/expression_of_interest')
+    console.log('ExpressionsOfInterest', topic);
     const { user, isAuthenticated } = useAuth0();
+    const [members, setMembers] = useState();
+    const eoi = useAxios(
+        {
+            url: 'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/private/expression_of_interest',
+            params: { topic },
+        },
+        { manual: true }
+      )
+
+
+    console.log('user', user);
+    console.log('isA', isAuthenticated);
     const [getMembers, m] = useLazyQuery(gql(`query members($members: [Int]!) {
         members(members: $members) {
           member id
@@ -37,12 +48,8 @@ export default function ExpressionsOfInterest({ topic }) {
         }
     }`));
 
-    if (b.loading) return <CircularProgress />
-    if (b.error) {
-        console.log(b.error)
-        return (<div>
-            Sorry, we had a problem getting the expressions of interest
-            </div>);
+    if (!isAuthenticated) {
+        return (<div>Please log in to view this page</div>);
     }
 
     if (m.loading) return <CircularProgress />;
@@ -53,8 +60,20 @@ export default function ExpressionsOfInterest({ topic }) {
         </div>);
     }
 
-    if (!isAuthenticated) {
-        return (<div>Please log in to view this page</div>);
+    if (eoi.loading) return <CircularProgress />
+    if (eoi.error) {
+        console.log(eoi.error)
+        return (<div>
+            Sorry, we had a problem getting the expressions of interest
+            </div>);
+    }
+    // [{ data, loading, error, response }, execute, manualCancel]
+    let rows;
+    if (eoi.data) {
+        rows = eoi.data;
+    } else {
+        eoi.execute({ useCache: true });
+        return <CircularProgress />
     }
 
     const roles = user['https://oga.org.uk/roles'] || [];
@@ -62,7 +81,6 @@ export default function ExpressionsOfInterest({ topic }) {
         return (<div>This pag is only useful to editors of the boat register</div>);
     }
 
-    const rows = b.data;
     console.log('row', rows[0]);
     if (m.data) {
         if (members) {
