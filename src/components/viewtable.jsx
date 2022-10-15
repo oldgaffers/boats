@@ -27,7 +27,7 @@ function CustomToolbar() {
     );
 }
 
-export default function ExpressionsOfInterest({ topic }) {
+export default function ViewTable({ scope, table, topic }) {
     console.log('ExpressionsOfInterest', topic);
     const { user, isAuthenticated } = useAuth0();
     const [members, setMembers] = useState();
@@ -35,7 +35,7 @@ export default function ExpressionsOfInterest({ topic }) {
     const accessToken = useContext(TokenContext);
     const [eoi, eoi_execute] = useAxios(
         {
-            url: 'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/private/expression_of_interest',
+            url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
             params: { topic },
             headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -73,7 +73,7 @@ export default function ExpressionsOfInterest({ topic }) {
     }
 
     const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('editor')) {
+    if (!roles.includes(scope)) {
         return (<div>This page is only useful to editors of the boat register</div>);
     }
 

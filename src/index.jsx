@@ -19,9 +19,9 @@ import RBC60Entryies from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
 import OGA60Button from './components/oga60button';
 import LoginButton from './components/loginbutton';
-import ExpressionsOfInterest from './components/expressions_of_interest';
 import OGA60Form from './components/oga60form';
 import TokenProvider from './components/TokenProvider';
+import ViewTable from './components/viewtable';
 
 const theme = createTheme({
   palette: {
@@ -174,7 +174,7 @@ const Pages = ({ app, topic }) => {
           <Auth0Provider {...auth} scope="member">
             <TokenProvider>
               <OGAProvider>
-                <ExpressionsOfInterest topic={topic} />
+                <ViewTable scope='editor' table='expression_of_interest' topic={topic} />
               </OGAProvider>
             </TokenProvider>
           </Auth0Provider>
