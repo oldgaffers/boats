@@ -1,11 +1,11 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
 
 export const mapPicker = (m) => {
-  return m.map((val) => {
-    if (val.id) {
-      return { label: val.name, value: val.id }
+  return m.map((i) => {
+    if (i.name) {
+      return { label: i.name, value: i.id }
     }
-    return { label: val.name, value: val.name }
+    return { label: i.replace('_', ' '), value: i }
   });
 }
 

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
+import useAxios from 'axios-hooks';
 
 const humanize = (str) => {
     var i, frags = str.split('_');
@@ -25,34 +26,32 @@ function CustomToolbar() {
     );
 }
 
-
-
 export default function ExpressionsOfInterest({ topic }) {
     const [members, setMembers] = useState();
-    const result = useQuery(gql`query eoi($topic: String!) {
-        expression_of_interest(where: {topic: {_eq: $topic}}) {
-          created_at
-          data
-          email
-          gold_id
-          id
-          member
-        }
-      }`,
-        {
-            variables: { topic }
-        });
-
+    const [b] = useAxios('https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/private/expression_of_interest')
     const { user, isAuthenticated } = useAuth0();
-
-    const [getMembers, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]!) {
+    const [getMembers, m] = useLazyQuery(gql(`query members($members: [Int]!) {
         members(members: $members) {
           member id
           firstname lastname
         }
-      }`));
-    if (loading) return <p>Loading ...</p>;
-    if (error) return `Error! ${error}`;
+    }`));
+
+    if (b.loading) return <CircularProgress />
+    if (b.error) {
+        console.log(b.error)
+        return (<div>
+            Sorry, we had a problem getting the expressions of interest
+            </div>);
+    }
+
+    if (m.loading) return <CircularProgress />;
+    if (m.error) {
+        console.log(m.error)
+        return (<div>
+        Sorry, we had a problem getting membership data
+        </div>);
+    }
 
     if (!isAuthenticated) {
         return (<div>Please log in to view this page</div>);
@@ -63,21 +62,14 @@ export default function ExpressionsOfInterest({ topic }) {
         return (<div>This pag is only useful to editors of the boat register</div>);
     }
 
-    if (result.loading) {
-        return <CircularProgress />;
-    }
-
-    if (result.error) {
-        return (<div>{JSON.stringify(result.error)}</div>);
-    }
-    const rows = result.data.expression_of_interest;
+    const rows = b.data;
     console.log('row', rows[0]);
-    if (data) {
+    if (m.data) {
         if (members) {
             console.log('members', members);
         } else {
-            console.log('data', data);
-            setMembers(data.members);
+            console.log('data', m.data);
+            setMembers(m.data.members);
         }
     } else {
         const memberNumbers = [...new Set(rows.map((row) => row.member))];

@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import useAxios from 'axios-hooks';
 import {
   FormRenderer,
   componentTypes,
@@ -11,10 +12,8 @@ import {
   componentMapper,
   FormTemplate,
 } from "@data-driven-forms/mui-component-mapper";
-import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
-import { useLazyPicklists } from "../util/picklists";
 import {
   mapPicker,
   designerItems,
@@ -31,111 +30,10 @@ import {
   yachtHullStep,
   dinghyHullStep,
 } from "./ddf/SubForms";
-import { gql, useLazyQuery } from '@apollo/client';
 import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
 
-/* 
-
-smallest unused oga number
-
-  const [getOgaNos, { loading, error, data }] = useLazyQuery(gql(`query ogano { boat { oga_no } }`));
-
-
-nos = a.data.boat.map((boat) => boat.oga_no);
-console.log(Math.min(...nos), Math.max(...nos));
-b = new Set(nos);
-n = Array.from({ length: Math.max(...nos) }, (v, i) => i);
-console.log(n);
-let difference = Array.from(new Set( [...n].filter(x => !b.has(x))));
-console.log(difference);
-difference.shift()
-console.log(difference.shift());
-
-
-
-✅ name	text
-✅ mainsail_type	text
-✅ rig_type	text
-✅ short_description	text
-✅ full_description	text
-✅ website	text
-✅ hull_form	text
-✅ year	integer
-✅ year_is_approximate	boolean
-✅ draft	numeric
-✅ beam	numeric
-✅ length_on_deck	numeric
-✅ construction_method	text
-✅ construction_material	text
-✅ construction_details	text
-✅ spar_material	text
-✅ air_draft	numeric
-✅ mssi	text
-✅ uk_part1	text
-✅ ssr	text
-✅ nsbr	text
-✅ nhsr	text
-✅ callsign	text
-✅ sail_number	text
-✅ fishing_number	text
-✅ place_built	text
-✅ hin	text
-✅ builder	uuid
-✅ designer	uuid
-✅ generic_type	text
-✅ design_class	uuid
-✅ image_key	text
-✅ previous_names	jsonb
-✅ handicap_data	jsonb
-✅ thumb	text
-✅ reference	jsonb
-✅ home_port	text
-✅ home_country	text
-price	numeric
-selling_status	text
-ownerships	jsonb
-oga_no	integer
-keel_laid	date
-launched	date
-current_location	point
-id	uuid
-created_at	timestamp with time zone
-updated_at	timestamp with time zone
-*/
-
-/*
- other fields we might get:
-      builderByBuilder { name }
-      construction_details
-      designClassByDesignClass { name }
-      designerByDesigner { name }
- */
-const query = gql`query dc($dc: uuid = "") {
-  design_class(where: {id: {_eq: $dc}}) {
-    boatByArchetype {
-      air_draft
-      beam
-      builder
-      construction_material
-      construction_method
-      design_class
-      designer
-      draft
-      generic_type
-      handicap_data
-      hull_form
-      length_on_deck
-      mainsail_type
-      place_built
-      rig_type
-      sail_type { name }
-      spar_material
-    }
-  }
-}`;
-
-const schema = (pickers, getBoat, bt) => {
+const schema = (pickers) => {
   return {
     fields: [
       {
@@ -585,20 +483,17 @@ const PhotoUpload = ({ component, name, title }) => {
 };
 
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
-  const [getPickLists, pl] = useLazyPicklists();
-  const [getBoat, bt] = useLazyQuery( query ); 
   const { user } = useAuth0();
-
-  if (!open) return '';
-  if (pl.loading || bt.loading) return <CircularProgress />;
-  if (pl.error) return <p>Error :(can't get picklists)</p>;
-  if (bt.error) return <p>Error :(can't get archetype)</p>;
-  if (!pl.data) {
-    getPickLists();
-    return <CircularProgress />;
+  const [b] = useAxios('https://ogauk.github.io/boatregister/pickers.json')
+  if (b.loading) return <p>Loading...</p>
+  if (b.error) {
+        return (<div>
+          Sorry, we had a problem getting the data to browse the register
+          </div>);
   }
-  const pickers = pl.data;
   
+  if (!open) return '';
+
   return (
     <Dialog
       open={open}
@@ -616,7 +511,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
           FormTemplate={(props) => (
             <FormTemplate {...props} showFormControls={false} />
           )}
-          schema={schema(pickers, getBoat, bt)}
+          schema={schema(b.data)}
           onSubmit={onSubmit}
           onCancel={onCancel}
           initialValues={{ user }}

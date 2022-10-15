@@ -7,7 +7,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-// import TabularView from './tabularview';
 
 export default function BrowseBoats({
   pickers,
@@ -28,8 +27,6 @@ export default function BrowseBoats({
   const handleMarkedOnly = (value) => {
     onMarkedOnlyChange(value);
   }
-
-  // {markedOnly?<TabularView state={state} marked={markedBoats} />:''}
 
   return (
     <div>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import Dialog from '@mui/material/Dialog';
-import EditBoat from './EditBoat';
+import EditBoat from './editboat';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

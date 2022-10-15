@@ -5,7 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import { v4 as uuidv4 } from 'uuid';
 import { gql, useMutation } from "@apollo/client";
 import UpdateBoatDialog from './UpdateBoatDialog';
-import { CLEARED_VALUE } from './EditBoat';
+import { CLEARED_VALUE } from './editboat';
 
 const changedKeys = (change) => {
   const oldKeys = Object.keys(change.old);
