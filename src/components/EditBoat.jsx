@@ -199,7 +199,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;
     const updates = boatf2m(result);
-    console.log('BOAT', updates, result);
+    // console.log('BOAT', updates, result);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;

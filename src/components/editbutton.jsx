@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
-import { v4 as uuidv4 } from 'uuid';
-import { gql, useMutation } from "@apollo/client";
 import UpdateBoatDialog from './UpdateBoatDialog';
 import { CLEARED_VALUE } from './editboat';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 const changedKeys = (change) => {
   const oldKeys = Object.keys(change.old);
@@ -18,9 +18,12 @@ const changedKeys = (change) => {
             if (change.old[key].length === 0) {
                 return false;
             }
-            return change.old[key] === change.new[key];
+            if (change.old[key].every((val, index) => val === change.new[key][index])) {
+              return false;
+            }
+            return true;
         } else if (typeof change.old[key] === 'object') {
-            return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
+          return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
         } else if (change.old[key] === change.new[key]) {
             return false;
         }
@@ -33,78 +36,43 @@ const differences = (change) => {
   const fields = changedKeys(change);
   return fields.map((field) => {
     const proposed = (change.new[field] === CLEARED_VALUE) ? undefined : change.new[field];
-    return { field, current: change.old[field], proposed};
+    return {field, current: change.old[field], proposed};
   });
-}
-
-const PROPOSE_UPDATES = gql`mutation propose_updates(
-  $objects: [boat_pending_updates_insert_input!]!) {
-  insert_boat_pending_updates(objects: $objects) {
-    affected_rows
-  }
-}`;
-
-function asString(c) {
-  switch (typeof c) {
-    case 'string':
-      return c;
-    case 'object':
-    case 'number':
-      return JSON.stringify(c);
-    case 'undefined':
-      return '';
-    default:
-      return c;
-  }  
 }
 
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
-  const [complete, setComplete] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [addChangeRequests, addChangeRequestsResult] = useMutation(PROPOSE_UPDATES);
+  const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
+
+  let errorText = '';
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  useEffect(() => {
-    const { data, loading, error, called } = addChangeRequestsResult;
-    if (called) {
-      if (loading) {
-        // console.log('still loading');
-      } else {
-        if (error) {
-          console.log('error submitting a change', error);
-        } else {
-          if (complete) {
-            // console.log('complete');
-          } else {
-            console.log(`successfully submitted ${data.insert_boat_pending_updates.affected_rows} changes`);
-            setSnackBarOpen(true);
-            setComplete(true);
-          }
-        }  
-      }
-    } else {      
-      // console.log('idle');
-    }
-  }, [addChangeRequestsResult, complete]);
-
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
+      console.log(changes);
       const d = differences(changes);
       // console.log('differences', d);
-      setComplete(false);
-      addChangeRequests({ variables: { objects: d.map((c) => ({
-        boat: boat.id,
-        originator: changes.email, 
-        uuid: uuidv4(),
-        field: c.field,
-        current: asString(c.current),
-        proposed: asString(c.proposed),
-      }))}});
+      axios.put(
+        'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/edit_boat',
+        {
+          name: boat.name,
+          oga_no: boat.oga_no,
+          differences: d,
+          originator: changes.email,
+          id: uuidv4(),
+        }).then((response) => {
+          setSnackBarOpen(true);
+        })
+        .catch((error) => {
+          console.log("post", error);
+          errorText = error;
+          setErrorSnackBarOpen(true);
+        });
     }
   };
 
@@ -129,6 +97,14 @@ export default function EditButton({ classes, boat }) {
         message="Thanks, we'll get back to you."
         severity="success"
       />
-    </div>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={errorSnackBarOpen}
+        autoHideDuration={2000}
+        onClose={handleSnackBarClose}
+        message={errorText}
+        severity="error"
+      />
+      </div>
   );
 }
