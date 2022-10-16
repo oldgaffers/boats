@@ -1,9 +1,7 @@
 import React from 'react';
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useQuery } from '@apollo/client';
 import { memberPredicate } from '../util/membership';
 
 function CustomToolbar() {
@@ -38,9 +36,7 @@ function joinList(strings, sep, lastSep) {
     return strings.slice(0, -1).join(sep) + lastSep + strings.slice(-1);
 }
 
-export default function YearbookBoats() {
-    const boatsResult = useQuery(gql`query boats { boat { id name oga_no ownerships } }`);
-    const membersResult = useQuery(gql`query members { members { firstname lastname member id GDPR status } }`);
+export default function YearbookBoats({ boats, members }) {
 
     const { user, isAuthenticated } = useAuth0();
 
@@ -52,21 +48,6 @@ export default function YearbookBoats() {
     if (!roles.includes('editor')) {
         return (<div>This pag is only useful to editors of the boat register</div>);
     }
-
-    if (boatsResult.loading || membersResult.loading) {
-        return <CircularProgress />;
-    }
-
-    if (boatsResult.error) {
-        return (<div>{JSON.stringify(boatsResult.error)}</div>);
-    }
-
-    if (membersResult.error) {
-        return (<div>{JSON.stringify(membersResult.error)}</div>);
-    }
-
-    const { members } = membersResult.data;
-    const { boat } = boatsResult.data;
 
     function ownerValueGetter({ value }) {
         let co = currentOwners(value);
@@ -99,7 +80,7 @@ export default function YearbookBoats() {
         { field: 'ownerships', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
     ];
 
-    const ybboats = boat.filter((b) => {
+    const ybboats = boats.filter((b) => {
         let allowed = false;
         if (b.ownerships) {
             const co = currentOwners(b.ownerships);
