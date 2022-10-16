@@ -16,7 +16,14 @@ export const useCardQuery = (state) => {
     const k = Object.keys(state.filters);
     let filteredBoats = [...boats];
     k.forEach(filter => {
-        filteredBoats = filteredBoats.filter((boat) => boat[filter] === state.filters[filter]);
+        filteredBoats = filteredBoats.filter((boat) => {
+            const val = boat[(filter==='oga_nos'?'oga_no':filter)];
+            const wanted = state.filters[filter];
+            if (Array.isArray(wanted)) {
+                return wanted.includes(val);
+            }
+            return wanted === val;
+        });
     });
     filteredBoats.sort((a,b) => {
         const { sort, sortDirection } = state;
@@ -29,8 +36,9 @@ export const useCardQuery = (state) => {
     });
     const { page, bpp } = state;
     const start = bpp * ( page - 1);
+    const bp = filteredBoats.slice(start, start + bpp);
     return { ...b, data: {
-        boats: filteredBoats.slice(start, start + bpp),
-        totalCount: boats.length,
+        boats: bp,
+        totalCount: filteredBoats.length,
     }};
 }
