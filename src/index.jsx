@@ -174,7 +174,7 @@ const Pages = ({ app, topic }) => {
           <Auth0Provider {...auth} scope="member">
             <TokenProvider>
               <OGAProvider>
-                <ViewTable scope='editor' table='expression_of_interest' topic={topic} />
+                <ViewTable scope='editor' table='expression_of_interest' params={{topic}} />
               </OGAProvider>
             </TokenProvider>
           </Auth0Provider>

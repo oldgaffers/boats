@@ -27,8 +27,8 @@ function CustomToolbar() {
     );
 }
 
-export default function ViewTable({ scope, table, topic }) {
-    console.log('ExpressionsOfInterest', topic);
+export default function ViewTable({ scope, table, params }) {
+    console.log('ExpressionsOfInterest', params);
     const { user, isAuthenticated } = useAuth0();
     const [members, setMembers] = useState();
     const [data, setData] = useState();
@@ -36,7 +36,7 @@ export default function ViewTable({ scope, table, topic }) {
     const [eoi, eoi_execute] = useAxios(
         {
             url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
-            params: { topic },
+            params,
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             }
