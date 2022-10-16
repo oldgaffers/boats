@@ -91,7 +91,7 @@ const Pages = ({ app, topic }) => {
       );
     case 'pending':
       return (
-        <Auth0Provider {...auth} scope="edit">
+        <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
               <ProcessUpdates />
@@ -101,7 +101,7 @@ const Pages = ({ app, topic }) => {
         ;
     case 'yearbook':
       return (
-        <Auth0Provider {...auth} scope="edit">
+        <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
               <Yearbook />
