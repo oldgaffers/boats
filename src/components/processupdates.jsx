@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import CircularProgress from "@mui/material/CircularProgress";
 import EmailIcon from '@mui/icons-material/Email';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DoneIcon from '@mui/icons-material/Done';
 // import ChangeViewer from './changeviewer';
 // import Alert from "@mui/material/Alert";
-import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar, GridActionsCellItem } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useLazyQuery, useMutation } from '@apollo/client';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,6 +17,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { BasicHtmlEditor } from "./ddf/RTE";
 import {JsonEditor} from "react-jsondata-editor";
+import axios from 'axios';
+import { TokenContext } from './TokenProvider';
+import { Typography } from '@mui/material';
+
 const diff = require('htmldiff/src/htmldiff.js');
 
 function TextEditDialog({ title, text, open, onSave, ...props }) {
@@ -174,88 +177,30 @@ const jsonbFields = [
   "previous_names", "handicap_data", "current_owners", "reference", "ownerships"
 ];
 
-const query = gql`query MyQuery {
-  boat_pending_updates {
-    boat
-    data
-    field current proposed
-    id
-    originator
-    uuid
-    status
-    boat_by_id {
-      name
-      oga_no
-    }
-  }
-}`;
-
-const UPDATE_BOAT = gql`mutation updateBoat($id: uuid!, $change: boat_set_input) {
-  update_boat_by_pk(pk_columns: {id: $id}, _set: $change) {
-      id update_id
-  }
-}`;
-
-const UPDATE_STATUS = gql`mutation updateStatus($row: Int!, $status: pending_status_enum!) {
-  update_boat_pending_updates_by_pk(pk_columns: {id: $row}, _set: {status: $status})
-  {
-    status id
-  }
-}`;
-
-const UPDATE_STATUS_BY_UUID = gql`mutation updateStatusByUuid($uuid: uuid!, $status: pending_status_enum!) {
-  update_boat_pending_updates(where: {uuid: {_eq: $uuid}}, _set: {status: $status}) {
-    returning {
-      id
-      status
-    }
-  }
-}`;
-
-const DELETE_PENDING = gql`mutation deleteStatus($row: Int!) {
-  delete_boat_pending_updates_by_pk(id: $row) { id }
-}`;
-
 export default function ProcessUpdates() {
-  const [updateInProgress, setUpdateInProgress] = useState(false);
-  const [updateBoat, updateBoatResult] = useMutation(UPDATE_BOAT);
-  const [updatePendingItemByUuid, updatePendingItemByUuidResult] = useMutation(UPDATE_STATUS_BY_UUID);
-  const [updatePendingItem, updatePendingItemResult] = useMutation(UPDATE_STATUS);
-  const [deletePendingItem, deletePendingItemResult] = useMutation(DELETE_PENDING);
-  const [getPending, getPendingResult] = useLazyQuery(query);
+  const [data, setData] = useState();
   const { user, isAuthenticated } = useAuth0();
+  const accessToken = useContext(TokenContext);
+  const scope = 'public';
+  const table = 'edit_boat';
+  const deletePendingItem = () => console.log('deletePendingItem not done');
+  const updatePendingItem = () => console.log('updatePendingItem not done');
+  const updateBoat = () => console.log('updateBoat not done');
 
   useEffect(() => {
-    const { data, loading, error, called } = updatePendingItemByUuidResult;
-    if ((!error) && (!loading) && called) {
-      console.log('successfully updated the status of a row', data.update_boat_pending_updates);
-      setUpdateInProgress(false);
+    const getData = async () => {
+        const p = await axios({
+          url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
+          headers: {
+              Authorization: `Bearer ${accessToken}`,
+          }
+        });
+        setData(p.data);
     }
-  }, [updatePendingItemByUuidResult]);
-
-  useEffect(() => {
-    const { data, loading, error, called } = updatePendingItemResult;
-    if ((!error) && (!loading) && called) {
-      console.log('successfully updated the status of a row', data.update_boat_pending_updates_by_pk);
+    if (accessToken && isAuthenticated) {
+      getData();
     }
-  }, [updatePendingItemResult]);
-
-  useEffect(() => {
-    const { data, loading, error, called } = updateBoatResult;
-    if ((!error) && (!loading) && called && updateInProgress) {
-      const u = data.update_boat_by_pk;
-      console.log('successfully updated a boat', u);
-      updatePendingItemByUuid({ variables: { uuid: u.update_id, status: 'done' } })
-    }
-  }, [updateBoatResult, updatePendingItemByUuid, updateInProgress]);
-
-  useEffect(() => {
-    const { data, loading, error, called } = deletePendingItemResult;
-    if ((!error) && (!loading) && called) {
-      console.log('successfully deleted a row', data.delete_boat_pending_updates_by_pk.id);
-      getPendingResult.refetch();
-    }
-  }, [deletePendingItemResult, getPendingResult]);
+  }, [accessToken, isAuthenticated])
 
   if (!isAuthenticated) {
     return (<div>Please log in to view this page</div>);
@@ -266,25 +211,9 @@ export default function ProcessUpdates() {
     return (<div>This page is only useful to editors of the boat register</div>);
   }
 
-  if (!getPendingResult.called) {
-    getPending();
-    return <CircularProgress />;
-  }
-  if (getPendingResult.loading) {
-    return <CircularProgress />;
-  }
-
-  if (updateBoatResult.error) {
-    console.log('updateBoatResult error');
-  }
-
-  if (updatePendingItemResult.error) {
-    console.log('updatePendingItemResult error');
-  }
-
   const columns = [
-    { field: 'name', headerName: 'Boat Name', width: 150, valueGetter: (params) => params.row.boat_by_id.name },
-    { field: 'oga_no', headerName: 'OGA No.', width: 90, valueGetter: (params) => params.row.boat_by_id.oga_no },
+    { field: 'name', headerName: 'Boat Name', width: 150, valueGetter: (params) => params.row.name },
+    { field: 'oga_no', headerName: 'OGA No.', width: 90, valueGetter: (params) => params.row.oga_no },
     { field: 'field', headerName: 'Change of', width: 150, valueFormatter: (params) => params.value.replace(/_/g, ' ') },
     {
       field: 'current', headerName: 'Existing', width: 200, valueFormatter: (params) => {
@@ -321,7 +250,6 @@ export default function ProcessUpdates() {
             if (jsonbFields.includes(field)) {
               newData = JSON.parse(proposed);
             }
-            setUpdateInProgress(true);
             updateBoat({ variables: { id: boat, change: { [field]: newData, update_id: params.row.uuid } } });
           }}
         />,
@@ -336,11 +264,24 @@ export default function ProcessUpdates() {
     }
   ];
 
+  if (!data) {
+      return <CircularProgress/>;
+  }
+  const rows = [];
+  
+  data.Items.forEach(({ differences, id, ...rest }) => {
+    differences.forEach((d, i) => {
+      rows.push({ ...rest, ...d, id: `${id}-${i}`});
+    });
+  }); 
+
   return (
+    <>
+    <Typography>Sorry, updates aren't working at the moment.</Typography>
     <div style={{ display: 'flex', height: '100%' }}>
       <div style={{ flexGrow: 1 }}>
         <DataGrid
-          rows={getPendingResult.data.boat_pending_updates}
+          rows={rows}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
           autoHeight={true}
@@ -355,5 +296,6 @@ export default function ProcessUpdates() {
         />
       </div>
     </div>
+    </>
   );
 }
