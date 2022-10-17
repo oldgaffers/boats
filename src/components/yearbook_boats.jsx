@@ -17,18 +17,6 @@ function CustomToolbar() {
     );
 }
 
-function currentOwners(ownerships) {
-    let currentOwners = [];
-    const { owners, current } = ownerships;
-    if (current) {
-        currentOwners.push(...current);
-    }
-    if (owners) {
-        currentOwners.push(...owners.filter((o) => o.current));
-    }
-    return currentOwners;
-}
-
 function joinList(strings, sep, lastSep) {
     if (strings.length === 1) {
         return strings[0];
@@ -50,13 +38,14 @@ export default function YearbookBoats({ boats, members }) {
     }
 
     function ownerValueGetter({ value }) {
-        let co = currentOwners(value);
-        const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => memberPredicate(owner.id, m)) }));
-        // const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => owner.id === m.id) }));
-        const lastNames = [...new Set(owningMembers.map((owner) => owner.lastname))].filter((n) => n);
+        const owningMembers = value.map((owner) => {
+            return members.find((m) => memberPredicate(owner, m));
+        });
+        console.log(owningMembers);
+        const lastNames = [...new Set(owningMembers.map((owner) => owner?.lastname))]?.filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
-                const fn = owningMembers.filter((o) => o.lastname === ln).map((o) => `${o.firstname}${o.GDPR ? '' : '*'}`);
+                const fn = owningMembers.filter((o) => o?.lastname === ln)?.map((o) => `${o?.firstname}${o?.GDPR ? '' : '*'}`);
                 const r = `${joinList(fn, ', ', ' & ')} ${ln}`;
                 return r;
             }),
@@ -77,23 +66,26 @@ export default function YearbookBoats({ boats, members }) {
     const columns = [
         { field: 'name', headerName: 'BOAT', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'oga_no', headerName: 'No.', width: 90 },
-        { field: 'ownerships', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
+        { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
     ];
 
     const ybboats = boats.filter((b) => {
         let allowed = false;
-        if (b.ownerships) {
-            const co = currentOwners(b.ownerships);
-            members.forEach((member) => {
-                co.forEach((owner) => {
-                    if (memberPredicate(owner.id, member)) {
-                        allowed = true;
-                    }
-                });
+        if (b.owners) {
+            b.owners.forEach((owner) => {
+                let member;
+                if (isNaN(owner)) {
+                    member = members.find((m) => `M${m.member}` === owner);
+                } else {
+                    member = members.find((m) => m.id === owner);  
+                }
+                if (memberPredicate(owner, member)) {
+                    allowed = true;
+                }
             });
         }
         return allowed;
-    });
+    }).map((b) => ({...b, id: b.oga_no }));
 
     return (
         <div style={{ display: 'flex', height: '100%' }}>
