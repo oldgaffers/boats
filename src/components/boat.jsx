@@ -4,12 +4,15 @@ import BoatWrapper from './boatwrapper';
 import { useAxios } from 'use-axios-client';
 
 function upgradeBoat(b) {
-  const handicap_data = b.handicap_data || {};
-  if (b.beam) {
+  if (!b) {
+    return undefined;
+  }
+  const handicap_data = b?.handicap_data || {};
+  if (b?.beam) {
     handicap_data.beam = b.beam;
     delete b.beam;
   }
-  if (b.length_on_deck) {
+  if (b?.length_on_deck) {
     handicap_data.length_on_deck = b.length_on_deck;
     delete b.length_on_deck;
   }
@@ -22,7 +25,7 @@ function getBoat(data) {
   if (data?.boat) {
     return upgradeBoat(data.boat[0]);
   }
-  return upgradeBoat(data.result.pageContext.boat);
+  return upgradeBoat(data?.result?.pageContext?.boat);
 }
 
 export default function Boat({location={search:'?oga_no='}}) {
