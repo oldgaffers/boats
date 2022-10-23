@@ -1,37 +1,47 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
 import CircularProgress from "@mui/material/CircularProgress";
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useLazyQuery } from '@apollo/client';
-
-const query = gql`query MyQuery {
-  boat_pending_updates_aggregate {
-    aggregate {
-      count
-    }
-  }
-}`;
+import { useLazyAxios } from 'use-axios-client';
+import { TokenContext } from './TokenProvider';
 
 export default function ProcessUpdatesButton() {
   const { user, isAuthenticated } = useAuth0();
+  const accessToken = useContext(TokenContext);
+  const scope = 'public';
+  const table = 'edit_boat';
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    }
+  });
+
+  useEffect(() => {
+    if (accessToken) {
+      getData();
+    }
+  }, [accessToken, getData])
+
+  if (loading) return <CircularProgress />
+
+  if (error) {
+      console.log(error);
+      return (<div>
+          Sorry, we had a problem getting the data
+      </div>);
+  }
+
   let roles = [];
   if (isAuthenticated) {
       roles = user['https://oga.org.uk/roles'] || [];
   }
-  // if(document.referrer.includes('localhost')) { roles.push('editor')}
-  const [getPending, pd] = useLazyQuery( query ); 
   if(!roles.includes('editor')) {
     return 'this page is just for editors';
   }
-  if (!pd.called) {
-    getPending();
-    return <CircularProgress />;
-  }
-  if (pd.loading) {
-    return <CircularProgress />;
-  }
-  const count = pd.data?.boat_pending_updates_aggregate.aggregate.count || 0;
+ 
+  const count = data?.Count || 0;
   return (
     <Badge badgeContent={count>0 ? count : undefined} color="secondary">
       <Button
