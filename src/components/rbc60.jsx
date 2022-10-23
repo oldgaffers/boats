@@ -10,10 +10,11 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Snackbar from "@mui/material/Snackbar";
 import Grid from "@mui/material/Grid";
+import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
 import { useCardQuery } from '../util/ogsnosforfilter';
-import { CircularProgress } from '@mui/material';
+import axios from 'axios';
 
 const UNLISTED = "My boat isn't listed";
 
@@ -44,7 +45,6 @@ const port = (name, start, end) => {
 }
 
 const crewlegfield = (name, label, routeName) => {
-    // console.log('crewlegfield', name, label, routeName);
     const conditions = [{ when: 'crew', is: true }];
     if (routeName) {
         conditions.push({ when: routeName, is: name });
@@ -69,7 +69,6 @@ const crewlegfield = (name, label, routeName) => {
 };
 
 const portFields = (ports, route) => {
-    // console.log('port fields route', route);
     const fields = [];
     ports.forEach(({ name, start, end, via }, index, list) => {
         if (index > 0) {
@@ -470,8 +469,6 @@ const schema = (ports, user, boats) => {
                     ],
                 },
                 resolveProps: (props, { meta, input }, formOptions) => {
-                    console.log(props);
-                    console.log(input);
                     const m = formOptions.getFieldState('ddf.member');
                     const purchaseUnits = [
                         {
@@ -482,10 +479,8 @@ const schema = (ports, user, boats) => {
                     ];
                     let helperText = '£15 to register'
                     if (m && !m.value) {
-                        console.log('not member');
                         const j = formOptions.getFieldState('ddf.joining');
                         if (j) {
-                            console.log('joining', j.value);
                             const pu = {
                                 'ind': {
                                     description: '12m individual membership',
@@ -512,7 +507,6 @@ const schema = (ports, user, boats) => {
                     } else {
                         helperText = `You are paying ${helperText}`
                     }
-                    console.log(purchaseUnits);
                     return { purchaseUnits, helperText };
                 },
             },
@@ -537,10 +531,6 @@ export default function RBC60() {
 
     if (!data) {
         return <CircularProgress/>;
-    }
-
-    const addRegistration = (data) => {
-        console.log('addRegistration', data);
     }
 
     const handleSubmit = (values) => {
@@ -574,8 +564,19 @@ export default function RBC60() {
                 return { from, to, spaces: data.leg[leg] }
             });
         }
-        addRegistration({ variables: { data } });
-        setSnackBarOpen(true);
+        console.log('submit', data);
+        axios.post(
+            'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/register',
+            data,
+            ).then((response) => {
+                console.log(response.statusText);
+                console.log(response.data);
+              setSnackBarOpen(true);
+            })
+            .catch((error) => {
+              console.log("post", error.statusText);
+              // TODO snackbar from response.data
+            });
     };
 
     const handleSnackBarClose = () => {
