@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { DropzoneArea } from "material-ui-dropzone";
+import { DropzoneArea } from "react-mui-dropzone";
 import { useAuth0 } from "@auth0/auth0-react";
 import { makeStyles } from "@mui/styles";
 import { useTheme } from "@mui/material/styles";

@@ -1,5 +1,5 @@
 import React from "react";
-import useAxios from 'axios-hooks';
+import { useAxios } from 'use-axios-client';
 import { FormRenderer, componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import {
   componentMapper,
@@ -176,9 +176,9 @@ export const schema = (pickers, roles) => {
 
 export default function EditBoat({ onCancel, onSave, boat }) {
   const { user, isAuthenticated } = useAuth0();
-  const [b] = useAxios('https://ogauk.github.io/boatregister/pickers.json')
-  if (b.loading) return <p>Loading...</p>
-  if (b.error) {
+  const { data, error, loading } = useAxios('https://ogauk.github.io/boatregister/pickers.json')
+  if (loading) return <p>Loading...</p>
+  if (error) {
         return (<div>
           Sorry, we had a problem getting the data to browse the register
           </div>);
@@ -212,7 +212,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
   return (
       <FormRenderer
         sx={{ paddingTop: '1em' }}
-        schema={schema(b.data, roles)}
+        schema={schema(data, roles)}
         componentMapper={{
           ...componentMapper,
           "hull-form": HullForm,

@@ -12,7 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
-import useAxios from 'axios-hooks';
+import { useAxios } from 'use-axios-client';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -73,11 +73,11 @@ function AltForThumb() {
 export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   const [markChecked, setMarkChecked] = useState(marked);
 
-  const [b] = useAxios(
+  const { data, error, loading } = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${ogaNo}/page-data.json`
   )
-  if (b.loading) return (<Skeleton variant="rectangular" width={210} height={118} />);
-  if (b.error) {
+  if (loading || !data) return (<Skeleton variant="rectangular" width={210} height={118} />);
+  if (error) {
       return (<div>
         Sorry, we had a problem getting the data for
         the boat with OGA number {ogaNo}
@@ -85,7 +85,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
         </div>);
   }
 
-  const { boat } = b.data.result.pageContext;
+  const { boat } = data.result.pageContext;
 
   const handleMarked = (checked) => {
     setMarkChecked(checked);

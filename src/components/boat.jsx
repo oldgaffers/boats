@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
+import CircularProgress from "@mui/material/CircularProgress";
 import BoatWrapper from './boatwrapper';
-import useAxios from 'axios-hooks';
+import { useAxios } from 'use-axios-client';
 
 function upgradeBoat(b) {
   const handicap_data = b.handicap_data || {};
@@ -17,30 +18,30 @@ function upgradeBoat(b) {
 }
 
 // gql or axios
-function getBoat(b) {
-  if (b.data.boat) {
-    return upgradeBoat(b.data.boat[0]);
+function getBoat(data) {
+  if (data?.boat) {
+    return upgradeBoat(data.boat[0]);
   }
-  return upgradeBoat(b.data.result.pageContext.boat);
+  return upgradeBoat(data.result.pageContext.boat);
 }
 
 export default function Boat({location={search:'?oga_no='}}) {
   const params = new URLSearchParams(location.search);
   const oga_no = params.get('oga_no') || '';  
 
-  const [b] = useAxios(
+  const { data, error, loading } = useAxios(
     `https://ogauk.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
   )
 
   useEffect(() => {
-    if (b.data) {
-      const boat = getBoat(b);
+    if (data) {
+      const boat = getBoat(data);
       document.title = `${boat.name} (${boat.oga_no})`;
     }
   });
 
-  if (b.loading) return <p>Loading...</p>
-  if (b.error) {
+  if (loading) return <CircularProgress/>
+  if (error) {
       if (oga_no === '') {
         return (<div>
           <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
@@ -58,7 +59,7 @@ export default function Boat({location={search:'?oga_no='}}) {
       }
   }
 
-  const boat = getBoat(b);
+  const boat = getBoat(data);
   return <BoatWrapper location={location} boat={boat} />;
 };
 

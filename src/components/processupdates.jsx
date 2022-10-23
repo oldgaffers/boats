@@ -16,8 +16,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { BasicHtmlEditor } from "./ddf/RTE";
-import {JsonEditor} from "react-jsondata-editor";
-import axios from 'axios';
+// import { JsonEditor } from "react-jsondata-editor";
+import { useLazyAxios } from 'use-axios-client';
 import { TokenContext } from './TokenProvider';
 import { Typography } from '@mui/material';
 
@@ -29,7 +29,7 @@ function TextEditDialog({ title, text, open, onSave, ...props }) {
 
   const handleSave = () => {
     console.log('handleSave', value);
-    setIsOpen(false); 
+    setIsOpen(false);
     onSave(value);
   };
 
@@ -42,10 +42,10 @@ function TextEditDialog({ title, text, open, onSave, ...props }) {
             Edits here can be saved back to the table and then accepted into the boat record.
           </DialogContentText>
           <TextField
-           variant='standard'
-           fullWidth
-           value={value}
-           onChange={(e) => setValue(e.target.value)}
+            variant='standard'
+            fullWidth
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             {...props}
           />
         </DialogContent>
@@ -58,6 +58,10 @@ function TextEditDialog({ title, text, open, onSave, ...props }) {
   );
 }
 
+function JsonEditor() {
+  return <div>Sorry, not done yet.</div>
+}
+
 function JSONEditDialog({ title, value, open, onSave }) {
   const [edited, setEdited] = useState(JSON.parse(value));
   const [isOpen, setIsOpen] = useState(open);
@@ -68,7 +72,7 @@ function JSONEditDialog({ title, value, open, onSave }) {
 
   const handleSave = () => {
     console.log('handleSave', edited);
-    setIsOpen(false); 
+    setIsOpen(false);
     onSave(edited);
   };
 
@@ -80,7 +84,7 @@ function JSONEditDialog({ title, value, open, onSave }) {
           <DialogContentText>
             Edits here can be saved back to the table and then accepted into the boat record.
           </DialogContentText>
-          <JsonEditor jsonObject={value} onChange={handleChange}/>
+          <JsonEditor jsonObject={value} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsOpen(false)}>Cancel</Button>
@@ -110,7 +114,7 @@ function HtmlEditDialog({ title, current, proposed, open, onSave, ...props }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => { setIsOpen(false); }}>Cancel</Button>
-          <Button onClick={() => {setIsOpen(false); onSave(html);}}>Update</Button>
+          <Button onClick={() => { setIsOpen(false); onSave(html); }}>Update</Button>
         </DialogActions>
       </Dialog>
     </>
@@ -119,14 +123,14 @@ function HtmlEditDialog({ title, current, proposed, open, onSave, ...props }) {
 
 function renderProposedEditInputCell(params) {
   const { id, api, field, value } = params;
-/*
-  const handleSave = async (data) => {
-    const change = { id, field, value: data };
-    console.log('save', change);
-    console.log('Q', await api.commitCellChange(change));
-    await api.setCellMode(id, field, 'view');
-  };
-  */
+  /*
+    const handleSave = async (data) => {
+      const change = { id, field, value: data };
+      console.log('save', change);
+      console.log('Q', await api.commitCellChange(change));
+      await api.setCellMode(id, field, 'view');
+    };
+    */
   const handleSave = async (data) => {
     api.setEditCellValue({ id, field, value: data });
     const isValid = await api.commitCellChange({ id, field });
@@ -141,12 +145,12 @@ function renderProposedEditInputCell(params) {
       return (<HtmlEditDialog
         title={title}
         open={true}
-         //text={value}
-         current={params.row.current}
-         proposed={params.row.proposed}
+        //text={value}
+        current={params.row.current}
+        proposed={params.row.proposed}
         onSave={handleSave}
         controls={["bold", "italic"]}
-        />);
+      />);
     case 'full_description':
       return (<HtmlEditDialog
         title={title}
@@ -154,16 +158,16 @@ function renderProposedEditInputCell(params) {
         // text={value}
         current={params.row.current}
         proposed={params.row.proposed}
-       onSave={handleSave}
+        onSave={handleSave}
         controls={["title", "bold", "italic", "numberList", "bulletList", "link", "my-style"]}
-        />);
-      case 'handicap_data':
-      case 'previous_names':
-      case 'reference':
-      case 'ownerships':
-        return (<JSONEditDialog title={title} open={true} value={value} onSave={handleSave}/>);
+      />);
+    case 'handicap_data':
+    case 'previous_names':
+    case 'reference':
+    case 'ownerships':
+      return (<JSONEditDialog title={title} open={true} value={value} onSave={handleSave} />);
     default:
-      return (<TextEditDialog title={title} open={true} text={value} onSave={handleSave}/>)
+      return (<TextEditDialog title={title} open={true} text={value} onSave={handleSave} />)
   }
 }
 /*
@@ -177,39 +181,11 @@ const jsonbFields = [
   "previous_names", "handicap_data", "current_owners", "reference", "ownerships"
 ];
 
-export default function ProcessUpdates() {
-  const [data, setData] = useState();
-  const { user, isAuthenticated } = useAuth0();
-  const accessToken = useContext(TokenContext);
-  const scope = 'public';
-  const table = 'edit_boat';
+function UpdatesTable({ rows }) {
+
   const deletePendingItem = () => console.log('deletePendingItem not done');
   const updatePendingItem = () => console.log('updatePendingItem not done');
   const updateBoat = () => console.log('updateBoat not done');
-
-  useEffect(() => {
-    const getData = async () => {
-        const p = await axios({
-          url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
-          headers: {
-              Authorization: `Bearer ${accessToken}`,
-          }
-        });
-        setData(p.data);
-    }
-    if (accessToken && isAuthenticated) {
-      getData();
-    }
-  }, [accessToken, isAuthenticated])
-
-  if (!isAuthenticated) {
-    return (<div>Please log in to view this page</div>);
-  }
-
-  const roles = user['https://oga.org.uk/roles'] || [];
-  if (!roles.includes('editor')) {
-    return (<div>This page is only useful to editors of the boat register</div>);
-  }
 
   const columns = [
     { field: 'name', headerName: 'Boat Name', width: 150, valueGetter: (params) => params.row.name },
@@ -264,38 +240,77 @@ export default function ProcessUpdates() {
     }
   ];
 
+  return (<div style={{ display: 'flex', height: '100%' }}>
+  <div style={{ flexGrow: 1 }}>
+    <DataGrid
+      rows={rows}
+      columns={columns}
+      components={{ Toolbar: GridToolbar }}
+      autoHeight={true}
+      initialState={{
+        columns: {
+          columnVisibilityModel: {
+            current: false,
+            originator: false,
+          },
+        },
+      }}
+    />
+  </div>
+</div>);
+}
+
+export default function ProcessUpdates() {
+  const { user, isAuthenticated } = useAuth0();
+  const accessToken = useContext(TokenContext);
+  const scope = 'public';
+  const table = 'edit_boat';
+  const [getData, { data, error, loading }] = useLazyAxios({
+    url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    }
+  });
+
+  useEffect(() => {
+    if (accessToken) {
+      getData();
+    }
+  }, [accessToken, getData])
+
+  if (loading) return <CircularProgress />
+
+  if (error) {
+      console.log(error);
+      return (<div>
+          Sorry, we had a problem getting the data
+      </div>);
+  }
+
+  if (!isAuthenticated) {
+    return (<div>Please log in to view this page</div>);
+  }
+
+  const roles = user['https://oga.org.uk/roles'] || [];
+  if (!roles.includes('editor')) {
+    return (<div>This page is only useful to editors of the boat register</div>);
+  }
+
   if (!data) {
-      return <CircularProgress/>;
+    return <CircularProgress />;
   }
   const rows = [];
-  
+
   data.Items.forEach(({ differences, id, ...rest }) => {
     differences.forEach((d, i) => {
-      rows.push({ ...rest, ...d, id: `${id}-${i}`});
+      rows.push({ ...rest, ...d, id: `${id}-${i}` });
     });
-  }); 
+  });
 
   return (
     <>
-    <Typography>Sorry, updates aren't working at the moment.</Typography>
-    <div style={{ display: 'flex', height: '100%' }}>
-      <div style={{ flexGrow: 1 }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-          autoHeight={true}
-          initialState={{
-            columns: {
-              columnVisibilityModel: {
-                current: false,
-                originator: false,
-              },
-            },
-          }}
-        />
-      </div>
-    </div>
+      <Typography>Sorry, updates aren't working at the moment.</Typography>
+      <UpdatesTable rows={rows} />
     </>
   );
 }

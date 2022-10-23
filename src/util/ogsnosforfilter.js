@@ -1,4 +1,4 @@
-import useAxios from 'axios-hooks';
+import { useAxios } from 'use-axios-client';
 
 export function getTotal(data) {
 }
@@ -7,12 +7,13 @@ export function getBoats(data) {
 }
 
 export const useCardQuery = (state) => {
-    const [b] = useAxios('https://ogauk.github.io/boatregister/filterable.json')
-    if (b.loading) return b;
-    if (b.error) {
-          return b;
-    }
-    const boats = b.data;
+    const { data, error, loading } = useAxios('https://ogauk.github.io/boatregister/filterable.json')
+
+    if (loading) return { loading };
+    if (!data) return { loading: true };
+    if (error)  return { error };
+
+    const boats = data;
     const k = Object.keys(state.filters);
     let filteredBoats = [...boats];
     k.forEach(filter => {
@@ -37,7 +38,7 @@ export const useCardQuery = (state) => {
     const { page, bpp } = state;
     const start = bpp * ( page - 1);
     const bp = filteredBoats.slice(start, start + bpp);
-    return { ...b, data: {
+    return { data: {
         boats: bp,
         totalCount: filteredBoats.length,
     }};

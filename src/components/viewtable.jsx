@@ -3,7 +3,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery } from '@apollo/client';
-import useAxios from 'axios-hooks';
+import { useLazyAxios } from 'use-axios-client';
 import { TokenContext } from './TokenProvider';
 
 const humanize = (str) => {
@@ -31,18 +31,15 @@ export default function ViewTable({ scope, table, params }) {
     console.log('ExpressionsOfInterest', params);
     const { user, isAuthenticated } = useAuth0();
     const [members, setMembers] = useState();
-    const [data, setData] = useState();
     const accessToken = useContext(TokenContext);
-    const [eoi, eoi_execute] = useAxios(
-        {
-            url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
-            params,
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            }
-        },
-        { manual: true }
-      )
+
+    const [getData, eoi] = useLazyAxios({
+        url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
+        params,
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        }
+    });
     console.log('isAuthenticated', isAuthenticated);
     const [getMembers, m] = useLazyQuery(gql(`query members($members: [Int]!) {
         members(members: $members) {
@@ -52,14 +49,11 @@ export default function ViewTable({ scope, table, params }) {
     }`));
 
     useEffect(() => {
-        const getData = async () => {
-            if (accessToken) {
-                setData(await eoi_execute({ useCache: true }));
-            }
+        if (accessToken) {
+            getData();
         }
-        getData();
-    }, [accessToken, eoi_execute])
-  
+    }, [accessToken, getData])
+
     if (!isAuthenticated) {
         return (<div>Please log in to view this page</div>);
     }
@@ -68,7 +62,7 @@ export default function ViewTable({ scope, table, params }) {
     if (m.error) {
         console.log(m.error)
         return (<div>
-        Sorry, we had a problem getting membership data
+            Sorry, we had a problem getting membership data
         </div>);
     }
 
@@ -82,13 +76,13 @@ export default function ViewTable({ scope, table, params }) {
         console.log(eoi.error)
         return (<div>
             Sorry, we had a problem getting the expressions of interest
-            </div>);
+        </div>);
     }
 
-    if (!data) {
-        return <CircularProgress/>;
+    if (!eoi.data) {
+        return <CircularProgress />;
     }
-    const rows = data.data.Items;
+    const rows = eoi.data.data.Items;
     if (m.data) {
         if (members) {
             console.log('members', members);
