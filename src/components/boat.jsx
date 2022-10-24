@@ -29,7 +29,7 @@ export default function Boat({location={search:'?oga_no='}}) {
   const oga_no = params.get('oga_no') || '';  
 
   const [b] = useAxios(
-    `https://ogauk.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
+    `https://oldgaffers.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
   )
   
   // const b = useQuery(query(oga_no));
