@@ -39,25 +39,19 @@ export default function BoatDetail({ boat }) {
     }
   }
   const hd = boat.handicap_data || {};
+  console.log(boat);
   const panes = [
     { title: 'Design & Build', children: (
       <Paper>
-        <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
-        <ConditionalText value={
-          boat.designClassByDesignClass || boat.design_class?.name
-        } label="Design class"/>
-        <ConditionalText label="Designer"
-         value={
-          boat.designerByDesigner || boat.designer?.name
-        } />
+        <ConditionalText value={ boat.generic_type } label="Generic type"/>
+        <ConditionalText value={ boat.design_class?.name } label="Design class"/>
+        <ConditionalText label="Designer" value={ boat.designer?.name } />
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
-        <ConditionalText label="Builder"
-          value={boat.builderByBuilder || boat.builder?.name
-        } />
+        <ConditionalText label="Builder" value = { boat.builder?.name } />
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={(boat.year_is_approximate?'around ':'')+boat.year} label="Year of Build"/>
-        <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
-        <ConditionalText value={boat.constructionMethodByConstructionMethod} label="Construction method"/>
+        <ConditionalText value={boat.construction_material} label="Construction material"/>
+        <ConditionalText value={boat.construction_method} label="Construction method"/>
         <ConditionalText value={boat.spar_material} label="Spar material"/>
         <ConditionalText value={boat.construction_details} label="Construction details"/>
       </Paper>

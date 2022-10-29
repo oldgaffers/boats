@@ -34,10 +34,10 @@ const wanted = {
     year: { label: 'Year Built', access: (n)=>n},
     place_built: { label: 'Place Built', access: (n)=>n},
     home_port: { label: 'Home Port', access: (n)=>n},
-    rigType: { label: 'Rig Type', access: (n)=>n},
-    designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:n},
-    designClassByDesignClass: { label: 'Design Class', access: (n)=>n?n.name:n},
-    builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:n},
+    rig_type: { label: 'Rig Type', access: (n)=>n},
+    designer: { label: 'Designer', access: (n)=>n?n.name:n},
+    design_class: { label: 'Design Class', access: (n)=>n?n.name:n},
+    builder: { label: 'Builder', access: (n)=>n?n.name:n},
     previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)},
     price: { label: 'Price', access: (n) => showPrice(n)},
 };
@@ -92,6 +92,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
     setMarkChecked(checked);
     onMarkChange(checked, ogaNo);
   }
+
   return (
     <Card sx={boat.thumb ? {
       height: '100%',
