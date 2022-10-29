@@ -75,7 +75,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   const [markChecked, setMarkChecked] = useState(marked);
 
   const { data, error, loading } = useAxios(
-    `https://ogauk.github.io/boatregister/page-data/boat/${ogaNo}/page-data.json`
+    `https://oldgaffers.github.io/boatregister/page-data/boat/${ogaNo}/page-data.json`
   )
   if (loading || !data) return (<Skeleton variant="rectangular" width={210} height={118} />);
   if (error) {

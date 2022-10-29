@@ -5,7 +5,7 @@ import { CircularProgress } from "@mui/material";
 
 export default function StaticPickerBoatBrowser({ title, state, ...props }) {
   const { data, error, loading } = useAxios({
-    url: 'https://ogauk.github.io/boatregister/pickers.json'
+    url: 'https://oldgaffers.github.io/boatregister/pickers.json'
   });
   if (error) {
         return (<div>

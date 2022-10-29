@@ -7,7 +7,7 @@ export function getBoats(data) {
 }
 
 export const useCardQuery = (state) => {
-    const { data, error, loading } = useAxios('https://ogauk.github.io/boatregister/filterable.json')
+    const { data, error, loading } = useAxios('https://oldgaffers.github.io/boatregister/filterable.json')
 
     if (loading) return { loading };
     if (!data) return { loading: true };
