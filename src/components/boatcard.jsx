@@ -36,6 +36,7 @@ const wanted = {
     home_port: { label: 'Home Port', access: (n)=>n},
     rigType: { label: 'Rig Type', access: (n)=>n},
     designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:n},
+    designClassByDesignClass: { label: 'Design Class', access: (n)=>n?n.name:n},
     builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:n},
     previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)},
     price: { label: 'Price', access: (n) => showPrice(n)},

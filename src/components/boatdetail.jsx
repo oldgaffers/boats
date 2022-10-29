@@ -43,10 +43,17 @@ export default function BoatDetail({ boat }) {
     { title: 'Design & Build', children: (
       <Paper>
         <ConditionalText value={boat.genericTypeByGenericType} label="Generic type"/>
-        <ConditionalText value={boat.designClassByDesignClass} label="Design class"/>
-        <ConditionalText value={boat.designerByBuilder} label="Designer"/>
+        <ConditionalText value={
+          boat.designClassByDesignClass || boat.design_class?.name
+        } label="Design class"/>
+        <ConditionalText label="Designer"
+         value={
+          boat.designerByDesigner || boat.designer?.name
+        } />
         <ConditionalText value={hullForm(boat)} label="Hull form"/>
-        <ConditionalText value={boat.builderByBuilder} label="Builder"/>
+        <ConditionalText label="Builder"
+          value={boat.builderByBuilder || boat.builder?.name
+        } />
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={(boat.year_is_approximate?'around ':'')+boat.year} label="Year of Build"/>
         <ConditionalText value={boat.constructionMaterialByConstructionMaterial} label="Construction material"/>
