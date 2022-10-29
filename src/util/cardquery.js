@@ -26,6 +26,7 @@ export const query = gql`query boats(
       name oga_no place_built previous_names home_port short_description year
       builderByBuilder { name __typename }
       designerByDesigner { name __typename }
+      designClassByDesignClass { name __typename }
       design_class thumb image_key price
       for_sale_state { text __typename } 
       __typename
