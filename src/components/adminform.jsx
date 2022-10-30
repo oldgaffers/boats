@@ -158,7 +158,7 @@ export const schema = () => {
                 fields: [
                   {
                     component: componentTypes.FIELD_ARRAY,
-                    name: "boat.ownerships.owners",
+                    name: "boat.ownerships",
                     label: "Owners",
                     fields: [
                       { 
@@ -264,11 +264,8 @@ const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === ''
 export default function AdminForm({ onCancel, onSave, boat }) {
   const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
   if (boat.ownerships) {
-    const { current } = boat.ownerships;
-    if ((!boat.ownerships.owners) && current) {
-      boat.ownerships.owners = current;
-    }
-    const memberNumbers = [...new Set(boat.ownerships.owners.filter((o) => queryIf(o)).map((o) => o.member))];
+    const current = boat.ownerships?.filter((o) => o.current) || [];
+    const memberNumbers = [...new Set(boat.ownerships.filter((o) => queryIf(o)).map((o) => o.member))];
     if (memberNumbers.length > 0 && !getMembersResults.called) {
       getMembers({ variables: { members: memberNumbers }});
     }
@@ -279,7 +276,7 @@ export default function AdminForm({ onCancel, onSave, boat }) {
         if (getMembersResults.error) {
           console.log(getMembersResults.error);
         } else {
-          boat.ownerships.owners = boat.ownerships.owners.map((owner) => {
+          boat.ownerships = boat.ownerships.map((owner) => {
             if (owner.name) {
               return owner;
             }
@@ -293,7 +290,7 @@ export default function AdminForm({ onCancel, onSave, boat }) {
       }
     }
 
-    boat.ownerships.owners = boat.ownerships.owners.map((owner) => {
+    boat.ownerships = boat.ownerships.map((owner) => {
       if (owner.member && current) {
         const c = current.find((r) => owner.member === r.member && owner.id === r.id);
         if (c) {
@@ -311,7 +308,7 @@ export default function AdminForm({ onCancel, onSave, boat }) {
 
   const handleSubmit = (values) => {
     if (values.boat.ownerships) {
-      values.boat.ownerships.owners.forEach((owner) => {
+      values.boat.ownerships.forEach((owner) => {
         if (owner.member) {
           delete owner.name;
         }

@@ -154,7 +154,7 @@ export default function Enquiry({ classes, boat }) {
       });
   };
 
-  const { current } = (boat.ownerships || {});
+  const current = boat.ownerships?.filter((o) => o.current) || [];
 
   const isMember = userRoles.includes('member');
   let enquireText;

@@ -90,22 +90,12 @@ function OwnersTable({ owners }) {
 }
 
 export default function Owners({ boat }) {
-  const { current, owners } = boat.ownerships || { current: [], owners: [] };
-  if (owners && owners.length > 0) {
+  if (boat.ownerships?.length > 0) {
     return (
       <TableContainer component={Paper}>
-        <OwnersTable owners={owners}/>
+        <OwnersTable owners={boat.ownerships}/>
       </TableContainer>
     );  
   }
-  console.log('no owners, using current')
-  if (current && current.length > 0) {
-    return (
-      <TableContainer component={Paper}>
-        <OwnersTable owners={current}/>
-      </TableContainer>
-    );  
-  }
-  console.log('no current, returning empty div');
   return (<div/>);
 }

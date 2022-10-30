@@ -23,6 +23,7 @@ function hullForm(boat) {
 }
 
 export default function BoatDetail({ boat }) {
+  console.log(boat);
   const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(0);
 

@@ -83,10 +83,10 @@ export default function EditButton({ classes, boat }) {
   return (
     <div>
       <Button className={classes.button} size="small"
-            endIcon={<EditIcon/>}
-            variant="contained"
-            color="primary" onClick={handleClickOpen}>
-            I have edits for this boat
+        endIcon={<EditIcon />}
+        variant="contained"
+        color="primary" onClick={handleClickOpen}>
+        I have edits for this boat
       </Button>
       <UpdateBoatDialog boat={boat} onClose={handleClose} open={open} />
       <Snackbar

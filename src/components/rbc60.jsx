@@ -141,7 +141,7 @@ const schema = (ports, user, boats) => {
                         when: 'boat',
                         is: UNLISTED,
                         notMatch: true,
-                    },                
+                    },
                 ],
             },
             {
@@ -153,7 +153,7 @@ const schema = (ports, user, boats) => {
                     {
                         when: 'ddf.boatname',
                         isNotEmpty: true,
-                    },                
+                    },
                 ],
             }
         ]
@@ -605,7 +605,7 @@ export default function RBC60() {
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <LoginButton label='Member Login'/>
+                    <LoginButton label='Member Login' />
                 </Grid>
                 <Grid item xs={12}>
                     <FormRenderer
@@ -623,7 +623,7 @@ export default function RBC60() {
                 </Grid>
             </Grid>
             <Snackbar
-                sx={{backgroundColor: 'green'}}
+                sx={{ backgroundColor: 'green' }}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 open={snackBarOpen}
                 autoHideDuration={5000}
