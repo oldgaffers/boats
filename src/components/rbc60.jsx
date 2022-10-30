@@ -96,20 +96,11 @@ const boatOptionArray = (pickers, member) => {
     pickers.boat.forEach((boat) => {
         const text = `${boat.name} (${boat.oga_no})`;
         if (member && boat.ownerships) {
-            if (boat.ownerships.current) {
-                const current = boat.ownerships.current.find((o) => o.member === member);
-                if (current) {
-                    owned.push({ label: text, value: text });
-                } else {
-                    other.push({ label: text, value: text });
-                }
+            const current = boat.ownerships?.find((o) => (o.current && o.member === member));
+            if (current) {
+                owned.push({ label: text, value: text });
             } else {
-                const current = boat.ownerships.owners && boat.ownerships.owners.find((o) => o.current);
-                if (current && current.member === member) {
-                    owned.push({ label: text, value: text });
-                } else {
-                    other.push({ label: text, value: text });
-                }
+                other.push({ label: text, value: text });
             }
         } else {
             other.push({ label: text, value: text });
@@ -223,7 +214,7 @@ export default function RBC60() {
                         when: 'boat',
                         is: UNLISTED,
                         notMatch: true,
-                    },                
+                    },
                 ],
             },
             {
@@ -235,7 +226,7 @@ export default function RBC60() {
                     {
                         when: 'ddf.boatname',
                         isNotEmpty: true,
-                    },                
+                    },
                 ],
             }
         ]
@@ -340,7 +331,7 @@ export default function RBC60() {
                                 { label: 'Individual member - £33', value: 'ind' },
                                 { label: 'Family member - £38', value: 'fam' },
                                 { label: 'Junior - £5.50', value: 'jun' },
-                            ],   
+                            ],
                             condition: {
                                 when: 'ddf.member',
                                 is: 'non',
@@ -465,7 +456,7 @@ export default function RBC60() {
                                     dataType: dataTypes.BOOLEAN,
                                     helperText: "The East Coast annual Summer Cruise will head south after the main OGA 60 celebration.",
 
-                                },        
+                                },
                             ],
                         },
                         {
@@ -551,7 +542,7 @@ export default function RBC60() {
                         and: [
                             {
                                 when: 'ddf.count',
-                                greaterThan: 0,        
+                                greaterThan: 0,
                             },
                             validBoatName,
                         ],
@@ -591,7 +582,7 @@ export default function RBC60() {
                                     },
                                 }[j.value];
                                 purchaseUnits.push(pu);
-                                helperText = `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(15+pu.amount.value)} to join for 12 months and register`    
+                                helperText = `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(15 + pu.amount.value)} to join for 12 months and register`
                             }
                         }
                         if (input.value) {
@@ -627,7 +618,7 @@ export default function RBC60() {
                     </Typography>
                 </Grid>
                 <Grid item xs={2}>
-                    <LoginButton label='Member Login'/>
+                    <LoginButton label='Member Login' />
                 </Grid>
                 <Grid item xs={12}>
                     <FormRenderer
@@ -645,7 +636,7 @@ export default function RBC60() {
                 </Grid>
             </Grid>
             <Snackbar
-                sx={{backgroundColor: 'green'}}
+                sx={{ backgroundColor: 'green' }}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 open={snackBarOpen}
                 autoHideDuration={5000}

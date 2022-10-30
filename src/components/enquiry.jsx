@@ -159,7 +159,7 @@ export default function Enquiry({ classes, boat }) {
     setSnackBarOpen(true);
   };
 
-  const { current } = (boat.ownerships || {});
+  const current = boat.ownerships?.filter((o) => o.current) || [];
 
   let enquireText = "Ask about this boat";
   let title;

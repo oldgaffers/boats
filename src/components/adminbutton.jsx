@@ -32,7 +32,6 @@ export default function AdminButton({ classes, boat }) {
   };
 
   const handleClose = (changes) => {
-    console.log('handleClose', changes);
     setOpen(false);
     if (changes) {
      console.log('admin post'); 

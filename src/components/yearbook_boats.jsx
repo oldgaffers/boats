@@ -20,15 +20,7 @@ function CustomToolbar() {
 }
 
 function currentOwners(ownerships) {
-    let currentOwners = [];
-    const { owners, current } = ownerships;
-    if (current) {
-        currentOwners.push(...current);
-    }
-    if (owners) {
-        currentOwners.push(...owners.filter((o) => o.current));
-    }
-    return currentOwners;
+    return ownerships?.filter((o) => o.current);
 }
 
 function joinList(strings, sep, lastSep) {
