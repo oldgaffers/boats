@@ -7,6 +7,7 @@ import DrawerController from './drawercontroller';
 import { makeStyles } from '@mui/styles';
 import Iframe from 'react-iframe'
 import Container from '@mui/material/Container';
+import { boatRegisterHome } from '../util/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +51,7 @@ function Builders({ window }) {
         <Iframe 
           className={classes.frame}
           frameBorder={0}
-          url="https://oldgaffers.github.io/tasters/builders.html"
+          url={`${boatRegisterHome}/tasters/builders.html`}
         />
         </Container>
      </Paper>

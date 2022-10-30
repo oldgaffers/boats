@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useQuery, useLazyQuery } from '@apollo/client';
+import { gql, useLazyQuery } from '@apollo/client';
+import { useLazyAxios } from 'use-axios-client';
+import { TokenContext } from './TokenProvider';
 
 const humanize = (str) => {
     var i, frags = str.split('_');
@@ -25,59 +27,68 @@ function CustomToolbar() {
     );
 }
 
-
-
-export default function ExpressionsOfInterest({ topic }) {
-    const [members, setMembers] = useState();
-    const result = useQuery(gql`query eoi($topic: String!) {
-        expression_of_interest(where: {topic: {_eq: $topic}}) {
-          created_at
-          data
-          email
-          gold_id
-          id
-          member
-        }
-      }`,
-        {
-            variables: { topic }
-        });
-
+export default function ViewTable({ scope, table, params }) {
+    console.log('ExpressionsOfInterest', params);
     const { user, isAuthenticated } = useAuth0();
+    const [members, setMembers] = useState();
+    const accessToken = useContext(TokenContext);
 
-    const [getMembers, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]!) {
+    const [getData, eoi] = useLazyAxios({
+        url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
+        params,
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        }
+    });
+    console.log('isAuthenticated', isAuthenticated);
+    const [getMembers, m] = useLazyQuery(gql(`query members($members: [Int]!) {
         members(members: $members) {
           member id
           firstname lastname
         }
-      }`));
-    if (loading) return <p>Loading ...</p>;
-    if (error) return `Error! ${error}`;
+    }`));
+
+    useEffect(() => {
+        if (accessToken) {
+            getData();
+        }
+    }, [accessToken, getData])
 
     if (!isAuthenticated) {
         return (<div>Please log in to view this page</div>);
     }
 
-    const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('editor')) {
-        return (<div>This pag is only useful to editors of the boat register</div>);
+    if (m.loading) return <CircularProgress />;
+    if (m.error) {
+        console.log(m.error)
+        return (<div>
+            Sorry, we had a problem getting membership data
+        </div>);
     }
 
-    if (result.loading) {
+    const roles = user['https://oga.org.uk/roles'] || [];
+    if (!roles.includes(scope)) {
+        return (<div>This page is only useful to editors of the boat register</div>);
+    }
+
+    if (eoi.loading) return <CircularProgress />;
+    if (eoi.error) {
+        console.log(eoi.error)
+        return (<div>
+            Sorry, we had a problem getting the expressions of interest
+        </div>);
+    }
+
+    if (!eoi.data) {
         return <CircularProgress />;
     }
-
-    if (result.error) {
-        return (<div>{JSON.stringify(result.error)}</div>);
-    }
-    const rows = result.data.expression_of_interest;
-    console.log('row', rows[0]);
-    if (data) {
+    const rows = eoi.data.data.Items;
+    if (m.data) {
         if (members) {
             console.log('members', members);
         } else {
-            console.log('data', data);
-            setMembers(data.members);
+            console.log('data', m.data);
+            setMembers(m.data.members);
         }
     } else {
         const memberNumbers = [...new Set(rows.map((row) => row.member))];
@@ -97,14 +108,12 @@ export default function ExpressionsOfInterest({ topic }) {
     });
 
     const rows2 = rows.map((row) => {
-        console.log('row', row);
         if (members) {
             return { ...row, ...row.data, ...members.find((member) => row.gold_id === member.id) };
         }
         return { ...row, ...row.data };
-
     });
-    console.log(rows2);
+
     return (
         <div style={{ display: 'flex', height: '100%' }}>
             <div style={{ flexGrow: 1 }}>

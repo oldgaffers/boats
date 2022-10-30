@@ -1,6 +1,5 @@
-import React, { useState, memo, useRef, useEffect } from 'react';
+import React, { useContext, useState, memo, useRef, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useLazyQuery } from '@apollo/client';
 import CircularProgress from "@mui/material/CircularProgress";
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Grid from "@mui/material/Grid";
@@ -13,71 +12,9 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import FleetIcon from "./fleeticon";
-import BoatCards from './boatcards';
-import LoginButton from './loginbutton';
-
-function FleetView() {
-    const [page, setPage] = useState(1);
-    const onBoatMarked = () => console.log('marked');
-    const onBoatUnMarked = () => console.log('unmarked');
-    const onPageChange = (n) => setPage(n.page);
-    const [getFleets, getFleetsResult] = useLazyQuery(gql`query fleet {
-    fleet(where: {name: {_eq: "RBC 60"}}) {
-      name
-      filters
-    }
-  }
-  `);
-
-    if (!getFleetsResult.called) {
-        getFleets();
-        return <CircularProgress />;
-    }
-
-    if (getFleetsResult.loading) {
-        return <CircularProgress />;
-    }
-
-    if (getFleetsResult.error) {
-        console.log(getFleetsResult.error);
-        return (<div>Sorry, something went wrong</div>);
-    }
-
-    console.log(getFleetsResult.data);
-
-    const fleets = getFleetsResult.data.fleet;
-
-    return (
-        <div>
-            {fleets.map((fleet) => {
-                const state = { filters: fleet.filters, bpp: 12, page, sort: 'name', sortDirection: 'asc', view: 'app', };
-                return (<Accordion>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                    >
-                        <FleetIcon /><Typography>&nbsp;&nbsp;{fleet.name}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <BoatCards
-                            state={state} markList={state.filters.oga_nos} onChangePage={onPageChange}
-                            onBoatMarked={onBoatMarked} onBoatUnMarked={onBoatUnMarked}
-                        />
-                    </AccordionDetails>
-                </Accordion>);
-            }
-            )}
-        </div>
-    );
-}
-
-const query = gql`query rbc60 { rbc60_notification { data id created_at } }`;
+import FleetView from './fleetview';
+import { useLazyAxios } from 'use-axios-client';
+import { TokenContext } from './TokenProvider';
 
 function isOverflown(element) {
     return (
@@ -307,29 +244,7 @@ function renderCellExpandObjects(params) {
     );
 }
 
-export default function RBC60Entryies() {
-    const [getEntries, getEntriesResult] = useLazyQuery(query);
-    const { user, isAuthenticated } = useAuth0();
-
-    if (!isAuthenticated) {
-        return (<LoginButton label='Member Login' />);
-        // return (<div>Please log in to view this page</div>);
-    }
-
-    const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('member')) {
-        return (<div>This page is for members only.</div>);
-    }
-
-    if (!getEntriesResult.called) {
-        getEntries();
-        return <CircularProgress />;
-    }
-    if (getEntriesResult.loading) {
-        return <CircularProgress />;
-    }
-
-    console.log('data', getEntriesResult.data.rbc60_notification);
+function EntryTable({ rows }) {
 
     const columns = [
         { field: 'boat', headerName: 'Boat Name', width: 120, valueGetter: (params) => params.row.data.boat.name },
@@ -354,22 +269,63 @@ export default function RBC60Entryies() {
         { field: 'data.ecc', headerName: 'EC Cruise', width: 100, valueGetter: (params) => params.row.data.ecc, valueFormatter: (params) => params.value ? 'Yes' : '' },
     ];
 
+    return (<div style={{ display: 'flex', height: '100%' }}>
+        <div style={{ flexGrow: 1 }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                components={{ Toolbar: GridToolbar }}
+                autoHeight={true}
+            />
+        </div>
+    </div>);
+}
+
+export default function RBC60Entryies() {
+    const name = 'RBC 60';
+    const accessToken = useContext(TokenContext);
+    const { user, isAuthenticated } = useAuth0();
+    const scope = 'member';
+    const table = 'entries';
+    const [getData, { data, error, loading }] = useLazyAxios({
+        url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
+        params: { topic: name },
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        }
+    });
+
+    useEffect(() => {
+        if (accessToken) {
+          getData();
+        }
+      }, [accessToken, getData])
+
+    if (loading || !data) return <CircularProgress />
+
+    if (error) {
+        console.log(error);
+        return (<div>
+            Sorry, we had a problem getting the data
+        </div>);
+    }
+
+    if (!isAuthenticated) {
+        return (<Typography>This page is for members only. Please log in to view it.</Typography>);
+    }
+
+    const roles = user['https://oga.org.uk/roles'] || [];
+    if (!roles.includes('member')) {
+        return (<Typography>This page is for members only.</Typography>);
+    }
+
     return (
         <Grid container>
             <Grid item xs={12}>
-                <div style={{ display: 'flex', height: '100%' }}>
-                    <div style={{ flexGrow: 1 }}>
-                        <DataGrid
-                            rows={getEntriesResult.data.rbc60_notification}
-                            columns={columns}
-                            components={{ Toolbar: GridToolbar }}
-                            autoHeight={true}
-                        />
-                    </div>
-                </div>
+                <EntryTable rows={data.Items} />
             </Grid>
             <Grid item xs={12}>
-                <FleetView />
+                <FleetView filters={{ name }} />
             </Grid>
         </Grid>
     );

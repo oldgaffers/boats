@@ -1,9 +1,7 @@
 import React from 'react';
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useQuery } from '@apollo/client';
 import PhoneNumber from 'awesome-phonenumber';
 import { memberPredicate } from '../util/membership';
 
@@ -109,9 +107,7 @@ function areaFormatter(params) {
     return abbrev;
 }
 
-export default function YearbookBoats() {
-    const boatsResult = useQuery(gql`query boats { boat { id name oga_no ownerships } }`);
-    const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
+export default function YearbookBoats({ members, boats }) {
 
     const { user, isAuthenticated } = useAuth0();
 
@@ -121,35 +117,12 @@ export default function YearbookBoats() {
 
     const roles = user['https://oga.org.uk/roles'] || [];
     if (!roles.includes('editor')) {
-        return (<div>This pag is only useful to editors of the boat register</div>);
+        return (<div>This page is only useful to editors of the boat register</div>);
     }
-
-    if (boatsResult.loading || membersResult.loading) {
-        return <CircularProgress />;
-    }
-
-    if (boatsResult.error) {
-        return (<div>{JSON.stringify(boatsResult.error)}</div>);
-    }
-
-    if (membersResult.error) {
-        return (<div>{JSON.stringify(membersResult.error)}</div>);
-    }
-
-    const { members } = membersResult.data;
-    const { boat } = boatsResult.data;
-
-    const ownedBoats = boat.filter((b) => {
-        const o = currentOwners(b.ownerships);
-        if (o.length > 0) {
-            return true
-        }
-        return false;
-    });
 
     function boatGetter({ row }) {
         const { id, member } = row;
-        const boats = ownedBoats.filter((b) => {
+        const theirBoats = boats.filter((b) => {
             const o = currentOwners(b.ownerships);
             if (o.length > 0) {
                 const owned = o.find((os) => os.id === id);
@@ -166,7 +139,7 @@ export default function YearbookBoats() {
             }
             return false;
         });
-        return boats.map((b) => b.name).sort().join(', ');
+        return theirBoats.map((b) => b.name).sort().join(', ');
     }
 
     function renderBoat(params) {

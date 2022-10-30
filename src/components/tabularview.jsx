@@ -32,7 +32,7 @@ const columns = [
     { field: 'thumb', headerName: 'Image', width: 130, ...imagelink },
   ];
   
-export default function TablularView({ state, marked }) {
+export default function TabularView({ state }) {
   const { loading, error, data } = useCardQuery(state);
   if (error) console.log(JSON.stringify(error));
 

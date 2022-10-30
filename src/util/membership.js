@@ -1,5 +1,8 @@
 
 export function memberPredicate(id, member) {
+    if (!member) {
+        return false;
+    }
     if (id !== member.id) {
         return false;
     }

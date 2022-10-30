@@ -1,4 +1,4 @@
-const DEFAULT_BROWSE_STATE = {
+export const DEFAULT_BROWSE_STATE = {
     app: {
         bpp: 12, 
         page: 1, 

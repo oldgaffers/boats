@@ -1,48 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
-import useAxios from 'axios-hooks';
 import UpdateBoatDialog from './UpdateBoatDialog';
+import { CLEARED_VALUE } from './editboat';
+import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
+
+const changedKeys = (change) => {
+  const oldKeys = Object.keys(change.old);
+  return Object.keys(change.new).filter((key) => {
+    if (oldKeys.includes(key)) {
+        if (Array.isArray(change.old[key])) {
+            if (change.old[key].length !== change.new[key].length) {
+                return true;
+            }
+            if (change.old[key].length === 0) {
+                return false;
+            }
+            if (change.old[key].every((val, index) => val === change.new[key][index])) {
+              return false;
+            }
+            return true;
+        } else if (typeof change.old[key] === 'object') {
+          return JSON.stringify(change.old[key]) !== JSON.stringify(change.new[key]); // TODO nested
+        } else if (change.old[key] === change.new[key]) {
+            return false;
+        }
+    }
+    return true;
+  });
+}
+
+const differences = (change) => {
+  const fields = changedKeys(change);
+  return fields.map((field) => {
+    const proposed = (change.new[field] === CLEARED_VALUE) ? undefined : change.new[field];
+    return {field, current: change.old[field], proposed};
+  });
+}
 
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [{data, loading, error}, execute] = useAxios(
-    {
-      url: 'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
-      method: 'POST'
-    },
-    { manual: true }
-  )
+  const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
+
+  let errorText = '';
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
-  useEffect(() => {
-    if (loading) {
-      console.log('loading');
-    }
-    if (error) {
-      console.log(error.message);
-    }
-    if (data) {
-      console.log(`successfully submitted changes`, data);
-      setSnackBarOpen(true);
-    }
-  }, [data, loading, error]);
-
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
-      const postData = {
-        event: {
-          op: 'UPDATE', 
-          data: { old: changes.old, new: changes.new }
-        },
-        email: changes.email,
-      };
-      execute({ data: postData });
+      console.log(changes);
+      const d = differences(changes);
+      // console.log('differences', d);
+      axios.put(
+        'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/edit_boat',
+        {
+          name: boat.name,
+          oga_no: boat.oga_no,
+          differences: d,
+          originator: changes.email,
+          id: uuidv4(),
+        }).then((response) => {
+          setSnackBarOpen(true);
+        })
+        .catch((error) => {
+          console.log("post", error);
+          errorText = error;
+          setErrorSnackBarOpen(true);
+        });
     }
   };
 
@@ -67,6 +97,14 @@ export default function EditButton({ classes, boat }) {
         message="Thanks, we'll get back to you."
         severity="success"
       />
-    </div>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        open={errorSnackBarOpen}
+        autoHideDuration={2000}
+        onClose={handleSnackBarClose}
+        message={errorText}
+        severity="error"
+      />
+      </div>
   );
 }

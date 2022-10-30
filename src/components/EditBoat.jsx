@@ -1,5 +1,5 @@
 import React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
+import { useAxios } from 'use-axios-client';
 import { FormRenderer, componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import {
   componentMapper,
@@ -12,7 +12,6 @@ import { rigForm } from "./Rig";
 import { steps as handicap_steps } from "./Handicap";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { dimensionsForm } from "./Dimensions";
-import { useLazyPicklists } from "../util/picklists";
 import { 
   cardForm, summaryForm, descriptionsForm, 
   registrationForm, constructionForm, sellForm,
@@ -20,9 +19,7 @@ import {
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { HtmlEditor } from "./ddf/RTE";
-// const { HtmlEditor } = React.lazy(() => import("./ddf/RTE"));
-// const BoatIcon = React.lazy(() => import("./boaticon"));
-// const BoatAnchoredIcon = React.lazy(() => import("./boatanchoredicon"));
+import { boatRegisterHome } from '../util/constants';
 
 export const CLEARED_VALUE = '[remove]';
 
@@ -179,24 +176,21 @@ export const schema = (pickers, roles) => {
 };
 
 export default function EditBoat({ onCancel, onSave, boat }) {
-  const [getPickLists, { loading, error, data }] = useLazyPicklists();
   const { user, isAuthenticated } = useAuth0();
-
-  if (loading) return <CircularProgress />;
-  if (error) return <p>Error :(can't get picklists)</p>;
+  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
+  if (loading) return <p>Loading...</p>
+  if (error) {
+        return (<div>
+          Sorry, we had a problem getting the data to browse the register
+          </div>);
+  }
   let roles = [];
   if (isAuthenticated && user) {
     if (user['https://oga.org.uk/roles']) {
       roles = user['https://oga.org.uk/roles'];
     }
   }
-  let pickers = {};
-  if (data) {
-    pickers = data;
-  } else {
-    getPickLists();
-    return <CircularProgress />;
-  }
+  
   const state = { 
     ...boatm2f(boat), 
     ddf: { activity: "descriptions" },
@@ -206,7 +200,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;
     const updates = boatf2m(result);
-    console.log('BOAT', updates, result);
+    // console.log('BOAT', updates, result);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
@@ -219,7 +213,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
   return (
       <FormRenderer
         sx={{ paddingTop: '1em' }}
-        schema={schema(pickers, roles)}
+        schema={schema(data, roles)}
         componentMapper={{
           ...componentMapper,
           "hull-form": HullForm,

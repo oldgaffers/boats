@@ -1,9 +1,7 @@
 import React from 'react';
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useQuery } from '@apollo/client';
 import { memberPredicate } from '../util/membership';
 
 function CustomToolbar() {
@@ -19,10 +17,6 @@ function CustomToolbar() {
     );
 }
 
-function currentOwners(ownerships) {
-    return ownerships?.filter((o) => o.current);
-}
-
 function joinList(strings, sep, lastSep) {
     if (strings.length === 1) {
         return strings[0];
@@ -30,9 +24,7 @@ function joinList(strings, sep, lastSep) {
     return strings.slice(0, -1).join(sep) + lastSep + strings.slice(-1);
 }
 
-export default function YearbookBoats() {
-    const boatsResult = useQuery(gql`query boats { boat { id name oga_no ownerships } }`);
-    const membersResult = useQuery(gql`query members { members { firstname lastname member id GDPR status } }`);
+export default function YearbookBoats({ boats, members }) {
 
     const { user, isAuthenticated } = useAuth0();
 
@@ -45,29 +37,15 @@ export default function YearbookBoats() {
         return (<div>This pag is only useful to editors of the boat register</div>);
     }
 
-    if (boatsResult.loading || membersResult.loading) {
-        return <CircularProgress />;
-    }
-
-    if (boatsResult.error) {
-        return (<div>{JSON.stringify(boatsResult.error)}</div>);
-    }
-
-    if (membersResult.error) {
-        return (<div>{JSON.stringify(membersResult.error)}</div>);
-    }
-
-    const { members } = membersResult.data;
-    const { boat } = boatsResult.data;
-
     function ownerValueGetter({ value }) {
-        let co = currentOwners(value);
-        const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => memberPredicate(owner.id, m)) }));
-        // const owningMembers = co.map((owner) => ({ ...owner, ...members.find((m) => owner.id === m.id) }));
-        const lastNames = [...new Set(owningMembers.map((owner) => owner.lastname))].filter((n) => n);
+        const owningMembers = value.map((owner) => {
+            return members.find((m) => memberPredicate(owner, m));
+        });
+        console.log(owningMembers);
+        const lastNames = [...new Set(owningMembers.map((owner) => owner?.lastname))]?.filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
-                const fn = owningMembers.filter((o) => o.lastname === ln).map((o) => `${o.firstname}${o.GDPR ? '' : '*'}`);
+                const fn = owningMembers.filter((o) => o?.lastname === ln)?.map((o) => `${o?.firstname}${o?.GDPR ? '' : '*'}`);
                 const r = `${joinList(fn, ', ', ' & ')} ${ln}`;
                 return r;
             }),
@@ -88,23 +66,26 @@ export default function YearbookBoats() {
     const columns = [
         { field: 'name', headerName: 'BOAT', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'oga_no', headerName: 'No.', width: 90 },
-        { field: 'ownerships', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
+        { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
     ];
 
-    const ybboats = boat.filter((b) => {
+    const ybboats = boats.filter((b) => {
         let allowed = false;
-        if (b.ownerships) {
-            const co = currentOwners(b.ownerships);
-            members.forEach((member) => {
-                co.forEach((owner) => {
-                    if (memberPredicate(owner.id, member)) {
-                        allowed = true;
-                    }
-                });
+        if (b.owners) {
+            b.owners.forEach((owner) => {
+                let member;
+                if (isNaN(owner)) {
+                    member = members.find((m) => `M${m.member}` === owner);
+                } else {
+                    member = members.find((m) => m.id === owner);  
+                }
+                if (memberPredicate(owner, member)) {
+                    allowed = true;
+                }
             });
         }
         return allowed;
-    });
+    }).map((b) => ({...b, id: b.oga_no }));
 
     return (
         <div style={{ display: 'flex', height: '100%' }}>

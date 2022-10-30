@@ -19,8 +19,9 @@ import RBC60Entryies from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
 import OGA60Button from './components/oga60button';
 import LoginButton from './components/loginbutton';
-import ExpressionsOfInterest from './components/expressions_of_interest';
 import OGA60Form from './components/oga60form';
+import TokenProvider from './components/TokenProvider';
+import ViewTable from './components/viewtable';
 
 const theme = createTheme({
   palette: {
@@ -30,10 +31,12 @@ const theme = createTheme({
 
 const Pages = ({ app, topic }) => {
   console.log('Pages', app, topic);
+  const red = window.location.origin + window.location.pathname;
+  console.log(red);
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
-    redirectUri: window.location.origin + window.location.pathname,
+    redirectUri: red,
     audience: "https://oga.org.uk/boatregister",
     useRefreshTokens: true,
     cacheLocation: 'localstorage',
@@ -59,50 +62,62 @@ const Pages = ({ app, topic }) => {
     case 'boat':
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <Boat location={window.location} />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <Boat location={window.location} />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       );
     case 'my_fleets':
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <MyFleets location={window.location} />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <MyFleets location={window.location} />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       );
     case 'shared_fleets':
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <SharedFleets location={window.location} />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <SharedFleets location={window.location} />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       );
     case 'pending':
       return (
-        <Auth0Provider {...auth} scope="edit">
-          <OGAProvider>
-            <ProcessUpdates />
-          </OGAProvider>
+        <Auth0Provider {...auth} scope="member">
+          <TokenProvider>
+            <OGAProvider>
+              <ProcessUpdates />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>)
         ;
     case 'yearbook':
       return (
-        <Auth0Provider {...auth} scope="edit">
-          <OGAProvider>
-            <Yearbook />
-          </OGAProvider>
+        <Auth0Provider {...auth} scope="member">
+          <TokenProvider>
+            <OGAProvider>
+              <Yearbook />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>)
         ;
     case 'rbc60':
       return (
         <PayPalScriptProvider options={paypalOptions}>
           <Auth0Provider {...auth} scope="member">
-            <OGAProvider>
-              <RBC60 />
-            </OGAProvider>
+            <TokenProvider>
+              <OGAProvider>
+                <RBC60 />
+              </OGAProvider>
+            </TokenProvider>
           </Auth0Provider>
         </PayPalScriptProvider>
       )
@@ -111,9 +126,11 @@ const Pages = ({ app, topic }) => {
       return (
         <PayPalScriptProvider options={paypalOptions}>
           <Auth0Provider {...auth} scope="member">
-            <OGAProvider>
-              <RBC60Entryies />
-            </OGAProvider>
+            <TokenProvider>
+              <OGAProvider>
+                <RBC60Entryies />
+              </OGAProvider>
+            </TokenProvider>
           </Auth0Provider>
         </PayPalScriptProvider>
       )
@@ -121,44 +138,57 @@ const Pages = ({ app, topic }) => {
     case 'rbc60_crew':
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <RBC60CrewForm />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <RBC60CrewForm />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       )
         ;
     case 'oga60_button':
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <OGA60Button />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <OGA60Button />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       )
         ;
     case 'oga60_interest':
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <OGA60Form />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <OGA60Form />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       )
-        ; case 'expressions':
-      return (
-        <Auth0Provider {...auth} scope="edit">
-          <OGAProvider>
-            <ExpressionsOfInterest topic={topic} />
-          </OGAProvider>
-        </Auth0Provider>)
         ;
+    case 'expressions':
+      {
+        return (
+          <Auth0Provider {...auth} scope="member">
+            <TokenProvider>
+              <OGAProvider>
+                <ViewTable scope='editor' table='expression_of_interest' params={{topic}} />
+              </OGAProvider>
+            </TokenProvider>
+          </Auth0Provider>
+        );
+      }
     default:
       console.log('browse', app);
       return (
         <Auth0Provider {...auth} scope="member">
-          <OGAProvider>
-            <BrowseApp view={app} />
-          </OGAProvider>
+          <TokenProvider>
+            <OGAProvider>
+              <BrowseApp view={app} />
+            </OGAProvider>
+          </TokenProvider>
         </Auth0Provider>
       );
   }

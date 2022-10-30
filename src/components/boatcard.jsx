@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -11,6 +12,8 @@ import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
+import { useAxios } from 'use-axios-client';
+import { boatRegisterHome } from '../util/constants';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -32,10 +35,10 @@ const wanted = {
     year: { label: 'Year Built', access: (n)=>n},
     place_built: { label: 'Place Built', access: (n)=>n},
     home_port: { label: 'Home Port', access: (n)=>n},
-    rigType: { label: 'Rig Type', access: (n)=>n},
-    designerByDesigner: { label: 'Designer', access: (n)=>n?n.name:n},
-    designClassByDesignClass: { label: 'Design Class', access: (n)=>n?n.name:n},
-    builderByBuilder: { label: 'Builder', access: (n)=>n?n.name:n},
+    rig_type: { label: 'Rig Type', access: (n)=>n},
+    designer: { label: 'Designer', access: (n)=>n?n.name:n},
+    design_class: { label: 'Design Class', access: (n)=>n?n.name:n},
+    builder: { label: 'Builder', access: (n)=>n?n.name:n},
     previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)},
     price: { label: 'Price', access: (n) => showPrice(n)},
 };
@@ -69,12 +72,28 @@ function AltForThumb() {
   return '';
 }
 
-export default function BoatCard({ state, marked, onMarkChange, boat }) {
+export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   const [markChecked, setMarkChecked] = useState(marked);
+
+  const { data, error, loading } = useAxios(
+    `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`
+  )
+  if (loading || !data) return (<Skeleton variant="rectangular" width={210} height={118} />);
+  if (error) {
+      return (<div>
+        Sorry, we had a problem getting the data for
+        the boat with OGA number {ogaNo}
+        <p>Please try searching on the <a href='/boat_register/browse_the_register/index.html'>Main Page</a></p>
+        </div>);
+  }
+
+  const { boat } = data.result.pageContext;
+
   const handleMarked = (checked) => {
     setMarkChecked(checked);
-    onMarkChange(checked, boat.oga_no);
+    onMarkChange(checked, ogaNo);
   }
+
   return (
     <Card sx={boat.thumb ? {
       height: '100%',

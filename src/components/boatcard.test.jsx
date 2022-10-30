@@ -1,43 +1,21 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { MockedProvider } from "@apollo/react-testing";
-import gql from 'graphql-tag';
 import BoatCard from './boatcard';
 import { BrowserRouter as Router } from "react-router-dom";
+import { useAxios } from 'use-axios-client';
+jest.mock('use-axios-client')
 
-const mocks = [
-  {
-    request: {
-      query: gql`query{thumb(id:$id)}`,
-      variables: { id: 1 }
-    },
-    result: {
-      data: {
-        thumb: "https://thumbs.com/1.jpg"
-      }
-    }
-  },
-  {
-    request: {
-      query: gql`query{thumb(id:$id)}`,
-      variables: { id: 1}
-    },
-    error: new Error("Something went wrong")
-  }
-];
- 
 test('renders learn react link', () => {
-  const { getByText } = render(
-      <MockedProvider mocks={mocks}>
-        <Router>
-          <BoatCard 
-          path='/'
-          state={{filters:{}, view:{}}} 
-          boat={{oga_no: 1, previous_names: []}}
-          />
-        </Router>
-      </MockedProvider>
+  useAxios.mockReturnValue({ data: {result:{pageContext:{ boat: {}}}} });
+  const view = render(
+      <Router>
+        <BoatCard 
+        path='/'
+        state={{filters:{}, view:{}}} 
+        boat={{oga_no: 1, previous_names: []}}
+        />
+      </Router>
   );
-  const wanted = getByText(/More/);
+  const wanted = view.getByText(/More/);
   expect(wanted).toBeInTheDocument();
 });

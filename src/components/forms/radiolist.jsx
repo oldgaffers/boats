@@ -4,8 +4,6 @@ import Radio from '@mui/material/Radio';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
-import { useQuery } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 
 export function RadioList({ options, name, state, onChange }) {
 
@@ -40,59 +38,4 @@ export function RadioList({ options, name, state, onChange }) {
         </RadioGroup>
       </FormControl>
     );
-  }
-
-export function GqlRadioList({ list, name, state, onChange }) {
-
-  const { loading, error, data } = useQuery(gql(`{
-    ${list}(order_by: {name: asc}){name}
-  }`));
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(GqlRadioList)</p>;
-
-  function handleChange(event) {
-    if (onChange) {
-      const s = state;
-      s[list] = event.target.value;
-      onChange(s);
-    }
-  }
-
-  let value;
-  if(state && state[name]){
-    value = state[name];
-    if(value.name) { value = value.name; }
-  }
-  if(value) { 
-    value = value.toLowerCase();
-  } else {
-    value = '';
-  }
-
-  const options = data[list];
-
-  return (
-      <FormControl component="fieldset">
-      <RadioGroup row name={name} value={value} onChange={handleChange}>
-        <Grid container>
-        {
-          options.map((item) => {
-            let option = item;
-            if (option.name) { option = option.name; }
-            const v = option.replace(/ /g, '_').toLowerCase();
-            return (<Grid key={`${name}.${v}`} item>
-                <FormControlLabel 
-                value={v}
-                control={<Radio />} 
-                label={option} 
-                />
-              </Grid>
-            )
-          })
-        }
-        </Grid>
-      </RadioGroup>
-    </FormControl>
-  );
 }
