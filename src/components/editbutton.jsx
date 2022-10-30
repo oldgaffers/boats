@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
-import UpdateBoatDialog from './UpdateBoatDialog';
+import UpdateBoatDialog from './updateboatdialog';
 import { CLEARED_VALUE } from './editboat';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
