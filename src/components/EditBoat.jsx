@@ -177,7 +177,7 @@ export const schema = (pickers, roles) => {
 
 export default function EditBoat({ onCancel, onSave, boat }) {
   const { user, isAuthenticated } = useAuth0();
-  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
+  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`);
   if (loading || !data) return <p>Loading...</p>
   if (error) {
         return (<div>
