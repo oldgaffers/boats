@@ -119,7 +119,7 @@ const engine = {
     );
   }
 
-  if (boat.for_sale_state && boat.for_sale_state.text === 'for_sale') {
+  if (boat.boat.selling_status === 'for_sale') {
     const fs = boat.for_sales[0];
     if(fs) {
       panes.unshift(
