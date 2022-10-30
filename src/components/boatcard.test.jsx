@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import BoatCard from './boatcard';
 import { BrowserRouter as Router } from "react-router-dom";
 import { useAxios } from 'use-axios-client';
@@ -7,7 +7,7 @@ jest.mock('use-axios-client')
 
 test('renders learn react link', () => {
   useAxios.mockReturnValue({ data: {result:{pageContext:{ boat: {}}}} });
-  const view = render(
+  render(
       <Router>
         <BoatCard 
         path='/'
@@ -16,6 +16,6 @@ test('renders learn react link', () => {
         />
       </Router>
   );
-  const wanted = view.getByText(/More/);
+  const wanted = screen.getByText(/More/);
   expect(wanted).toBeInTheDocument();
 });
