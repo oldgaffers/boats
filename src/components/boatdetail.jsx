@@ -23,7 +23,6 @@ function hullForm(boat) {
 }
 
 export default function BoatDetail({ boat }) {
-  console.log(boat);
   const { user, isAuthenticated } = useAuth0();
   const [value, setValue] = useState(0);
 
@@ -40,7 +39,6 @@ export default function BoatDetail({ boat }) {
     }
   }
   const hd = boat.handicap_data || {};
-  console.log(boat);
   const panes = [
     { title: 'Design & Build', children: (
       <Paper>
@@ -120,7 +118,7 @@ const engine = {
     );
   }
 
-  if (boat.boat.selling_status === 'for_sale') {
+  if (boat.selling_status === 'for_sale') {
     const fs = boat.for_sales[0];
     if(fs) {
       panes.unshift(
