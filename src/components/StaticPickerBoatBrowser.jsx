@@ -2,10 +2,11 @@ import React from "react"
 import BrowseBoats from './browseboats';
 import { useAxios } from 'use-axios-client';
 import { CircularProgress } from "@mui/material";
+import { boatRegisterHome } from '../util/constants';
 
 export default function StaticPickerBoatBrowser({ title, state, ...props }) {
   const { data, error, loading } = useAxios({
-    url: 'https://oldgaffers.github.io/boatregister/pickers.json'
+    url: `${boatRegisterHome}/boatregister/pickers.json`
   });
   if (error) {
         return (<div>

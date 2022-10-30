@@ -8,6 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
 import Iframe from 'react-iframe'
 import Container from '@mui/material/Container';
+import { boatRegisterHome } from '../util/constants';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,7 +52,7 @@ function About({ window }) {
         <Iframe 
           className={classes.frame}
           frameBorder={0}
-          url="https://oldgaffers.github.io/about.html"
+          url={`${boatRegisterHome}/about.html`}
         />
         </Container>
      </Paper>

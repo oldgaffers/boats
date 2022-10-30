@@ -32,6 +32,7 @@ import {
 } from "./ddf/SubForms";
 import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
+import { boatRegisterHome } from '../util/constants';
 
 const schema = (pickers) => {
   return {
@@ -484,7 +485,7 @@ const PhotoUpload = ({ component, name, title }) => {
 
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
-  const { data, error, loading } = useAxios('https://oldgaffers.github.io/boatregister/pickers.json')
+  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
   if (loading) return <p>Loading...</p>
   if (error) {
         return (<div>

@@ -19,6 +19,7 @@ import {
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { HtmlEditor } from "./ddf/RTE";
+import { boatRegisterHome } from '../util/constants';
 
 export const CLEARED_VALUE = '[remove]';
 
@@ -176,7 +177,7 @@ export const schema = (pickers, roles) => {
 
 export default function EditBoat({ onCancel, onSave, boat }) {
   const { user, isAuthenticated } = useAuth0();
-  const { data, error, loading } = useAxios('https://oldgaffers.github.io/boatregister/pickers.json')
+  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
   if (loading) return <p>Loading...</p>
   if (error) {
         return (<div>

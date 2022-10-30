@@ -13,6 +13,7 @@ import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
 import { useAxios } from 'use-axios-client';
+import { boatRegisterHome } from '../util/constants';
 
 function makePreviousNamesField(n) {
   if (n && n.length>0) {
@@ -75,7 +76,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   const [markChecked, setMarkChecked] = useState(marked);
 
   const { data, error, loading } = useAxios(
-    `https://oldgaffers.github.io/boatregister/page-data/boat/${ogaNo}/page-data.json`
+    `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`
   )
   if (loading || !data) return (<Skeleton variant="rectangular" width={210} height={118} />);
   if (error) {

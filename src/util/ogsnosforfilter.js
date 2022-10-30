@@ -1,4 +1,5 @@
 import { useAxios } from 'use-axios-client';
+import { boatRegisterHome } from '../util/constants';
 
 export function getTotal(data) {
 }
@@ -7,7 +8,7 @@ export function getBoats(data) {
 }
 
 export const useCardQuery = (state) => {
-    const { data, error, loading } = useAxios('https://oldgaffers.github.io/boatregister/filterable.json')
+    const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/filterable.json`);
 
     if (loading) return { loading };
     if (!data) return { loading: true };

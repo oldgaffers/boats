@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import BoatWrapper from './boatwrapper';
 import { useAxios } from 'use-axios-client';
+import { boatRegisterHome } from '../util/constants';
 
 function upgradeBoat(b) {
   if (!b) {
@@ -33,7 +34,7 @@ export default function Boat({location={search:'?oga_no='}}) {
   const oga_no = params.get('oga_no') || '';  
 
   const { data, error, loading } = useAxios(
-    `https://oldgaffers.github.io/boatregister/page-data/boat/${oga_no}/page-data.json`
+    `${boatRegisterHome}/boatregister/page-data/boat/${oga_no}/page-data.json`
   )
 
   useEffect(() => {
