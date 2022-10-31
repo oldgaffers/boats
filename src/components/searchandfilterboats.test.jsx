@@ -1,15 +1,14 @@
 import {jest} from '@jest/globals';
 import React from 'react';
-import { render } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import SearchAndFilterBoats from './searchandfilterboats';
 import { mockPicks } from '../mock/sampledata';
 
 jest.useFakeTimers();
 
-
 test('renders learn react link', () => {
-  const { getAllByText } = render(
+  render(
     <MockedProvider>
       <SearchAndFilterBoats 
       sortDirection="asc"
@@ -22,6 +21,6 @@ test('renders learn react link', () => {
       />
     </MockedProvider>
   );
-  const wanted = getAllByText(/sort the list/);
+  const wanted = screen.getAllByText(/sort the list/);
   expect(wanted[0]).toBeInTheDocument();
 });
