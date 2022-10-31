@@ -24,27 +24,15 @@ for (let i = 1; i <= 8; i++) {
 }
 
 function makePicklist(view, pickers, field) {
-
-  let p;
-
-  if (pickers[field]) {
-    p = pickers[field];
+  if (pickers[field] && pickers[field].length > 0) {
+    const p = pickers[field]
+    if (p[0].name) {
+      const u = [...new Set(p.map((item) => item.name))];
+      return u.map((n) => p.find((item) => item.name === n));
+    }
+    return [...new Set(p)].map((item) => ({ name: item }));
   }
-  if (field === 'boatNames') {
-    p = pickers.boat;
-  }
-  if (p === undefined) {
-    console.log('bad', field, pickers);
-    return [];
-  }
-  if (p.length === 0) {
-    return [];
-  }
-  if (p[0].name) {
-    const u = [...new Set(p.map((item) => item.name))];
-    return u.map((n) => p.find((item) => item.name === n));
-  }
-  return [...new Set(p)].map((item) => ({ name: item }));
+  return [{ 'undefined': 1 }]; // helps testing - TODO make more helpful
 }
 
 export default function SearchAndFilterBoats({

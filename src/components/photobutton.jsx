@@ -3,7 +3,7 @@ import axios from "axios";
 import Button from "@mui/material/Button";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import Snackbar from "@mui/material/Snackbar";
-import UpdatePhotoDialog from '../components/updatephotodialog';
+import UpdatePhotoDialog from './updatephotodialog';
 
 export default function PhotoButton({ classes, boat, onDone, onCancel }) {
   const [open, setOpen] = useState(false);

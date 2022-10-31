@@ -88,6 +88,7 @@
     "@testing-library/user-event": "^14.4.3",
     "css-loader": "^6.7.1",
     "file-loader": "^6.2.0",
+    "jest-watch-typeahead": "^0.6.5",
     "react-scripts": "^5.0.1",
     "source-map-explorer": "^2.5.3"
   }
