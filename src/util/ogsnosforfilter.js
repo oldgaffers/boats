@@ -18,9 +18,12 @@ export const useCardQuery = (state) => {
     const k = Object.keys(state.filters);
     let filteredBoats = [...boats];
     k.forEach(filter => {
+        let wanted = state.filters[filter];
+        if (filter === 'oga_no') {
+            wanted = parseInt(wanted);
+        }
         filteredBoats = filteredBoats.filter((boat) => {
             const val = boat[(filter==='oga_nos'?'oga_no':filter)];
-            const wanted = state.filters[filter];
             if (Array.isArray(wanted)) {
                 return wanted.includes(val);
             }
