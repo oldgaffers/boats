@@ -222,7 +222,7 @@ export default function SearchAndFilterBoats({
           <Picker
             onChange={pl}
             id="name"
-            options={makePicklist(view, pickers, "boatNames")}
+            options={makePicklist(view, pickers, "boat")}
             label="Boat Name"
             value={currentFilters["name"]}
           />
