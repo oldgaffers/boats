@@ -118,8 +118,15 @@ const engine = {
     );
   }
 
+  // newest for sale record
   if (boat.selling_status === 'for_sale') {
-    const fs = boat.for_sales[0];
+    const fs = boat.for_sales.reduce((prev, curr) =>
+      (new Date(prev.created_at)
+      >
+      new Date(curr.created_at)
+       ) ? prev : curr
+   );
+
     if(fs) {
       panes.unshift(
         { title: 'For Sale', children: (
