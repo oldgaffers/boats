@@ -44,9 +44,7 @@ const wanted = {
 };
 
 function SalesBadge({ boat, view, children }) {
-  if (!boat.thumb) return children;
-  if (!boat.for_sale_state) return children;
-  switch (boat.for_sale_state.text) {
+  switch (boat.selling_status) {
     case 'for_sale':
       return (<Badge invisible={view === 'sell'} badgeContent="For sale" color="secondary">{children}</Badge>);
     case 'sold':
@@ -93,7 +91,14 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
     setMarkChecked(checked);
     onMarkChange(checked, ogaNo);
   }
-
+    // newest for sale record
+  const price = (boat.selling_status === 'for_sale')
+  && boat.for_sales.reduce((prev, curr) =>
+        (new Date(prev.created_at)
+        >
+        new Date(curr.created_at)
+         ) ? prev : curr
+     ).asking_price;
   return (
     <Card sx={boat.thumb ? {
       height: '100%',
@@ -107,7 +112,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
         <Typography variant="body2" 
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
         />
-        <TextList fields={wanted} data={boat} />
+        <TextList fields={wanted} data={{ ...boat, price }} />
       </CardContent>
       <CardActions>
         <Grid container justifyContent="space-between">
