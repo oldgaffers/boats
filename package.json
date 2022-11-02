@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "/boat_register/",
-  "version": "3.0.3",
+  "version": "3.0.4-0",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.1",
