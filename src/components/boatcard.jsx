@@ -71,7 +71,6 @@ function normaliseDescription(boat) {
 }
 
 function BoatCardWords({boat}) {
-  console.log(boat);
   if (boat.loading) {
     return <>
     <Skeleton variant='rounded' animation='wave' height={40}/>

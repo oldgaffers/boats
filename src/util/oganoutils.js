@@ -1,10 +1,18 @@
 import { useAxios } from 'use-axios-client';
 import { boatRegisterHome } from './constants';
+import axios from 'axios';
 
 export function findFirstAbsent(boat) {
+    if (!boat) {
+        return -1;
+    }
     const ogaNos = boat.map((boat) => Number(boat.oga_no)).sort((a, b) => a - b);
     const idx = ogaNos.findIndex((val, index, vals) => val + 1 !== vals[index + 1]);
     return ogaNos[idx] + 1;
+}
+
+export function getFilterable() {
+    return axios(`${boatRegisterHome}/boatregister/filterable.json`);
 }
 
 export function getTotal(data) {
