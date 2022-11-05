@@ -302,7 +302,10 @@ export default function RBC60Entryies() {
         }
       }, [accessToken, getData, isAuthenticated, user])
 
-    if (loading || !data) return <CircularProgress />
+    if (loading) {
+        console.log('loading');
+        return <CircularProgress />
+    }
 
     if (error) {
         console.log(error);
