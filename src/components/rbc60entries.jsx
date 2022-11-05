@@ -318,7 +318,7 @@ export default function RBC60Entryies() {
         return (<Typography>This page is for members only. Please log in to view it.</Typography>);
     }
 
-    const roles = user['https://oga.org.uk/roles'] || [];
+    const roles = (user && user['https://oga.org.uk/roles']) || [];
     if (!roles.includes('member')) {
         return (<Typography>This page is for members only.</Typography>);
     }
