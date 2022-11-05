@@ -70,9 +70,22 @@ function normaliseDescription(boat) {
   return '';
 }
 
-function AltForThumb() {
-  // return 'know anyone who can add a photo?';
-  return '';
+function BoatCardWords({boat}) {
+  console.log(boat);
+  if (boat.loading) {
+    return <>
+    <Skeleton variant='rounded' animation='wave' height={40}/>
+    <Skeleton variant='rounded' animation='wave' height={80}/>
+    </>
+  }
+  return (
+    <>
+  <Typography variant="body2" 
+     dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
+  />
+  <TextList fields={wanted} data={boat} />
+  </>
+  );
 }
 
 export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
