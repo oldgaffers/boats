@@ -296,12 +296,16 @@ export default function RBC60Entryies() {
     });
 
     useEffect(() => {
-        if (accessToken) {
-          getData();
+        if (isAuthenticated && accessToken && user['https://oga.org.uk/roles'].includes('member')) {
+            console.log('have access token');
+            getData();
         }
-      }, [accessToken, getData])
+      }, [accessToken, getData, isAuthenticated, user])
 
-    if (loading || !data) return <CircularProgress />
+    if (loading) {
+        console.log('loading');
+        return <CircularProgress />
+    }
 
     if (error) {
         console.log(error);
@@ -314,7 +318,7 @@ export default function RBC60Entryies() {
         return (<Typography>This page is for members only. Please log in to view it.</Typography>);
     }
 
-    const roles = user['https://oga.org.uk/roles'] || [];
+    const roles = (user && user['https://oga.org.uk/roles']) || [];
     if (!roles.includes('member')) {
         return (<Typography>This page is for members only.</Typography>);
     }
@@ -322,7 +326,7 @@ export default function RBC60Entryies() {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <EntryTable rows={data.Items} />
+                <EntryTable rows={(data && data.Items) || []} />
             </Grid>
             <Grid item xs={12}>
                 <FleetView filters={{ name }} />

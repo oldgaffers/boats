@@ -5,7 +5,7 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
-import { useCardQuery } from '../util/ogsnosforfilter';
+import { useCardQuery } from '../util/oganoutils';
 
 export default function BoatCards({
   state, markList,

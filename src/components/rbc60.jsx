@@ -13,8 +13,8 @@ import Grid from "@mui/material/Grid";
 import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
-import { useCardQuery } from '../util/ogsnosforfilter';
 import axios from 'axios';
+import { useCardQuery, findFirstAbsent } from '../util/oganoutils';
 
 const UNLISTED = "My boat isn't listed";
 
@@ -90,11 +90,6 @@ const portFields = (ports, route) => {
     return fields;
 };
 
-const findFirstAbsent = (boat) => {
-    const ogaNos = boat.map((boat) => Number(boat.oga_no)).sort((a, b) => a - b);
-    const idx = ogaNos.findIndex((val, index, vals) => val + 1 !== vals[index + 1]);
-    return ogaNos[idx] + 1;
-}
 
 const boatOptionArray = (boats, memberId) => {
     const owned = [];

@@ -7,7 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
 import { gql, useQuery } from '@apollo/client';
-import { useCardQuery } from '../util/ogsnosforfilter';
+import { useCardQuery } from '../util/oganoutils';
 import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
 import { useAuth0 } from "@auth0/auth0-react";
 
