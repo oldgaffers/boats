@@ -15,7 +15,7 @@ import Yearbook from './components/yearbook';
 import MyFleets from './components/myfleets';
 import SharedFleets from './components/sharedfleets';
 import RBC60 from './components/rbc60';
-import RBC60Entryies from './components/rbc60entries';
+import RBC60Entries from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
 import OGA60Button from './components/oga60button';
 import LoginButton from './components/loginbutton';
@@ -128,7 +128,7 @@ const Pages = ({ app, topic }) => {
           <Auth0Provider {...auth} scope="member">
             <TokenProvider>
               <OGAProvider>
-                <RBC60Entryies />
+                <RBC60Entries />
               </OGAProvider>
             </TokenProvider>
           </Auth0Provider>
