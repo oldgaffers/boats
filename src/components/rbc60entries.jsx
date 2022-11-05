@@ -296,10 +296,11 @@ export default function RBC60Entryies() {
     });
 
     useEffect(() => {
-        if (accessToken) {
-          getData();
+        if (isAuthenticated && accessToken && user['https://oga.org.uk/roles'].includes('member')) {
+            console.log('have access token');
+            getData();
         }
-      }, [accessToken, getData])
+      }, [accessToken, getData, isAuthenticated, user])
 
     if (loading || !data) return <CircularProgress />
 
