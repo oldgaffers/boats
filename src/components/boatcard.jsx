@@ -70,21 +70,9 @@ function normaliseDescription(boat) {
   return '';
 }
 
-function BoatCardWords({boat}) {
-  if (boat.loading) {
-    return <>
-    <Skeleton variant='rounded' animation='wave' height={40}/>
-    <Skeleton variant='rounded' animation='wave' height={80}/>
-    </>
-  }
-  return (
-    <>
-  <Typography variant="body2" 
-     dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
-  />
-  <TextList fields={wanted} data={boat} />
-  </>
-  );
+function AltForThumb() {
+  // return 'know anyone who can add a photo?';
+  return '';
 }
 
 export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
