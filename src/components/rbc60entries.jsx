@@ -326,7 +326,7 @@ export default function RBC60Entryies() {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <EntryTable rows={data.Items} />
+                <EntryTable rows={(data && data.Items) || []} />
             </Grid>
             <Grid item xs={12}>
                 <FleetView filters={{ name }} />
