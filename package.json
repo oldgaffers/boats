@@ -2,10 +2,14 @@
   "name": "boats",
   "homepage": "/boat_register/",
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version": "3.0.3",
 =======
   "version": "3.0.5",
 >>>>>>> 27d486a0 (3.0.5)
+=======
+  "version": "3.0.6",
+>>>>>>> c79296a0 (3.0.6)
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.1",
