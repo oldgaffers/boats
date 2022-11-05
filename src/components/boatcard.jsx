@@ -54,6 +54,11 @@ function SalesBadge({ boat, view, children }) {
   }
 }
 
+function AltForThumb() {
+  // return 'know anyone who can add a photo?';
+  return '';
+}
+
 function normaliseDescription(boat) {
   if (boat && boat.short_description) {
     const desc = boat.short_description.trim();
@@ -65,18 +70,40 @@ function normaliseDescription(boat) {
   return '';
 }
 
-function AltForThumb() {
-  // return 'know anyone who can add a photo?';
-  return '';
+function BoatCardWords({boat}) {
+  console.log(boat);
+  if (boat.loading) {
+    return <>
+    <Skeleton variant='rounded' animation='wave' height={40}/>
+    <Skeleton variant='rounded' animation='wave' height={80}/>
+    </>
+  }
+  return (
+    <>
+  <Typography variant="body2" 
+     dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
+  />
+  <TextList fields={wanted} data={boat} />
+  </>
+  );
 }
 
 export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   const [markChecked, setMarkChecked] = useState(marked);
 
-  const { data, error, loading } = useAxios(
-    `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`
-  )
-  if (loading || !data) return (<Skeleton variant="rectangular" width={210} height={118} />);
+  const { data, error, loading } = useAxios({
+    url: `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`,
+    onDownloadProgress: (axiosProgressEvent) => {
+      const {
+        loaded,
+        total,
+      } = axiosProgressEvent;
+      console.log('PROG', ogaNo, loaded, total);
+    }
+});
+    if (loading || !data) {
+      console.log('loading');
+    }
   if (error) {
       return (<div>
         Sorry, we had a problem getting the data for
@@ -85,13 +112,13 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
         </div>);
   }
 
-  const { boat } = data.result.pageContext;
+  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
   const handleMarked = (checked) => {
     setMarkChecked(checked);
     onMarkChange(checked, ogaNo);
   }
-    // newest for sale record
+  // newest for sale record
   const price = (boat.selling_status === 'for_sale')
   && boat.for_sales.reduce((prev, curr) =>
         (new Date(prev.created_at)
@@ -100,7 +127,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
          ) ? prev : curr
      ).asking_price;
   return (
-    <Card sx={boat.thumb ? {
+    <Card sx={boat?.thumb ? {
       height: '100%',
       display: 'flex',
       flexDirection: 'column'} : {}}>
@@ -109,10 +136,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
         <Typography gutterBottom variant="h5" component="h2">
           <SalesBadge view={state.view} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
         </Typography>
-        <Typography variant="body2" 
-        dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
-        />
-        <TextList fields={wanted} data={{ ...boat, price }} />
+        <BoatCardWords boat={{ ...boat, price }} />
       </CardContent>
       <CardActions>
         <Grid container justifyContent="space-between">
