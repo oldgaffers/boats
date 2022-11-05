@@ -13,17 +13,10 @@ function sendToAws(boat, create, email, fileList, copyright, uuid, onSuccess, on
     boat.oga_no = ogaNo;
     console.log('sendToAws', boat, create, email, fileList, copyright, uuid);
     console.log('TODO pictures', fileList, copyright);
-    const { name, oga_no, ...rest } = boat;
-    const data = {
-      name,
-      oga_no,
-      create,
-      differences: Object.keys(rest).map((field) => ({ field, proposed: boat[field] })),
-      originator: email,
-      id: uuid,
-    };
+    console.log('TODO new builder, designer, design class', create);
+    const data = { data: { oga_no: boat.oga_no, email, new: boat }};
     axios.put(
-      'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/edit_boat',
+      'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
       data).then((response) => {
         onSuccess(response);
       })
