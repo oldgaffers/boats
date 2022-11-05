@@ -5,7 +5,35 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
-// const CreateBoatDialog = React.lazy(() => import("./createboatdialog"));
+import { getFilterable, findFirstAbsent } from '../util/oganoutils';
+
+function sendToAws(boat, create, email, fileList, copyright, uuid, onSuccess, onError) {
+  getFilterable().then((response) => {
+    const ogaNo = findFirstAbsent(response.data);
+    boat.oga_no = ogaNo;
+    console.log('sendToAws', boat, create, email, fileList, copyright, uuid);
+    console.log('TODO pictures', fileList, copyright);
+    const { name, oga_no, ...rest } = boat;
+    const data = {
+      name,
+      oga_no,
+      create,
+      differences: Object.keys(rest).map((field) => ({ field, proposed: boat[field] })),
+      originator: email,
+      id: uuid,
+    };
+    axios.put(
+      'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/edit_boat',
+      data).then((response) => {
+        onSuccess(response);
+      })
+      .catch((error) => {
+        onError(error);
+      });
+  }).catch((e) => {
+    console.log();
+  });
+}
 
 function sendToPipedream(boatMetric, create, email, fileList, copyright, uuid, onSuccess, onError) {
   const formData = new FormData();
@@ -63,7 +91,7 @@ export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () =
 
     onSubmit({ boat: boatMetric, create, email, uuid });
 
-    sendToPipedream(boatMetric, create, email, fileList, copyright, uuid,
+    sendToAws(boatMetric, create, email, fileList, copyright, uuid,
       (response) => {
         console.log(response);
         setSnackBarOpen(true);
