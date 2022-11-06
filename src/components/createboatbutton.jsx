@@ -5,32 +5,27 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
-// const CreateBoatDialog = React.lazy(() => import("./createboatdialog"));
+import { getFilterable, findFirstAbsent } from '../util/oganoutils';
 
-function sendToPipedream(boatMetric, create, email, fileList, copyright, uuid, onSuccess, onError) {
-  const formData = new FormData();
-  if (fileList && fileList.length > 0) {
-    for (let i = 0; i < fileList.length; i++) {
-      formData.set(`file[${i}]`, fileList[i]);
-    }
-  }
-  formData.set("boat", JSON.stringify(boatMetric));
-  formData.set("create", JSON.stringify(create));
-  formData.set("copyright", copyright);
-  formData.set("email", email);
-  formData.set("uuid", uuid);
-  axios.post(
-    'https://ac861c76e041d1b288fba6a2f1d52bdb.m.pipedream.net',
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      params: {
-        pipedream_upload_body: 1,
-      },
-    },
-  ).then(response => onSuccess(response)).catch(error => onError(error));
+function sendToAws(boat, create, email, fileList, copyright, uuid, onSuccess, onError) {
+  getFilterable().then((response) => {
+    const ogaNo = findFirstAbsent(response.data);
+    boat.oga_no = ogaNo;
+    console.log('sendToAws', boat, create, email, fileList, copyright, uuid);
+    console.log('TODO pictures', fileList, copyright);
+    console.log('TODO new builder, designer, design class', create);
+    const data = { email, new: boat };
+    axios.post(
+      'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
+      data).then((response) => {
+        onSuccess(response);
+      })
+      .catch((error) => {
+        onError(error);
+      });
+  }).catch((e) => {
+    console.log(e);
+  });
 }
 
 export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () => { } }) {
@@ -63,7 +58,7 @@ export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () =
 
     onSubmit({ boat: boatMetric, create, email, uuid });
 
-    sendToPipedream(boatMetric, create, email, fileList, copyright, uuid,
+    sendToAws(boatMetric, create, email, fileList, copyright, uuid,
       (response) => {
         console.log(response);
         setSnackBarOpen(true);

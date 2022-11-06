@@ -13,7 +13,7 @@ import Grid from "@mui/material/Grid";
 import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
-import { useCardQuery } from '../util/ogsnosforfilter';
+import { useCardQuery } from '../util/oganoutils';
 import axios from 'axios';
 
 const UNLISTED = "My boat isn't listed";

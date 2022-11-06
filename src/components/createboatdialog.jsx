@@ -117,7 +117,7 @@ const schema = (pickers) => {
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
-                    noOptionsMessage: 'we dont\' have that class - you can add it as a new one below',
+                    noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
                     options: mapPicker(pickers['design_class']),
                   },
                   {
@@ -495,6 +495,13 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   
   if (!open) return '';
 
+  const handleSubmit = (boat) => {
+    console.log('handleSubmit', boat);
+    boat.design_class = data.design_class.find((item) => item.id === boat.design_class);
+    boat.designer = data.designer.find((item) => item.id === boat.designer);
+    boat.builder = data.builder.find((item) => item.id === boat.builder);
+    onSubmit(boat);
+  }
   return (
     <Dialog
       open={open}
@@ -513,7 +520,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
             <FormTemplate {...props} showFormControls={false} />
           )}
           schema={schema(data)}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           onCancel={onCancel}
           initialValues={{ user }}
           subscription={{ values: true }}
