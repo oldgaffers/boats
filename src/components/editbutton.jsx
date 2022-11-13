@@ -4,8 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import UpdateBoatDialog from './updateboatdialog';
 import { CLEARED_VALUE } from './editboat';
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
+import { postBoatData } from './postboatdata';
 
 const changedKeys = (change) => {
   const oldKeys = Object.keys(change.old);
@@ -56,16 +55,8 @@ export default function EditButton({ classes, boat }) {
     if (changes) {
       console.log(changes);
       const d = differences(changes);
-      // console.log('differences', d);
-      axios.put(
-        'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/edit_boat',
-        {
-          name: boat.name,
-          oga_no: boat.oga_no,
-          differences: d,
-          originator: changes.email,
-          id: uuidv4(),
-        }).then((response) => {
+      postBoatData(boat.name, boat.oga_no, d, changes.email)
+      .then(() => {
           setSnackBarOpen(true);
         })
         .catch((error) => {
