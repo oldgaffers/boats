@@ -7,6 +7,10 @@ import { getFilterable, findFirstAbsent } from '../util/oganoutils';
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
+import { postPhotos } from "./postphotos";
+import { createPhotoAlbum } from "./createphotoalbum";
+import { createBoatRecord } from "./createboatrecord";
+import { v4 as uuidv4 } from 'uuid';
 
 async function sendToAws(boat, email, fileList, copyright) {
   const { data } = await getFilterable();
