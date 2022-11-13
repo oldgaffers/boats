@@ -1,10 +1,3 @@
-import axios from "axios";
-import AWS from 'aws-sdk';
-// import { fromCognitoIdentity } from "@aws-sdk/credential-providers";
-// import { S3Client, S3 } from "@aws-sdk/client-s3";
-// import { Upload } from "@aws-sdk/lib-storage";
-
-const url = 'https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/';
 
 export async function postPhotos(values, fileList) {
     if (fileList?.length > 0) {
