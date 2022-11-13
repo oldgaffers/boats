@@ -90,7 +90,7 @@ export default function BoatButtons({ boat, /* location */ }) {
   }
 
   const photoDone = () => {
-    console.log('done');
+    // console.log('done');
   }
 
   /*

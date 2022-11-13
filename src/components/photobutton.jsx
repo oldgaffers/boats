@@ -28,7 +28,6 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
     getAlbumKey(oga_no, image_key)
       .then(albumKey => postPhotos({ copyright, email, name, oga_no, albumKey }, pictures))
       .then((r) => {
-        console.log(r);
         if (!boat.image_key || !boat.thumb) {
           return postBoatData(boat.name, { image_key: '', thumb: '' }, email)
         }
