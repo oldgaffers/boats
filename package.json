@@ -6,6 +6,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   "version": "3.0.3",
 =======
   "version": "3.0.5",
@@ -22,6 +23,9 @@
 =======
   "version": "3.0.9",
 >>>>>>> 5a6d8080 (3.0.9)
+=======
+  "version": "3.0.9",
+>>>>>>> acf0163d (rebase)
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.1",
