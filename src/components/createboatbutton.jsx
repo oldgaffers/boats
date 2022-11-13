@@ -1,40 +1,31 @@
 import React, { useState } from 'react';
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
-import axios from 'axios';
-import { v4 as uuidv4 } from 'uuid';
 import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
 import { getFilterable, findFirstAbsent } from '../util/oganoutils';
+import { postPhotos } from "./postphotos";
+import { createPhotoAlbum } from "./createphotoalbum";
+import { createBoatRecord } from "./createboatrecord";
+import { v4 as uuidv4 } from 'uuid';
 
-function sendToAws(boat, create, email, fileList, copyright, uuid, onSuccess, onError) {
-  getFilterable().then((response) => {
-    const ogaNo = findFirstAbsent(response.data);
-    boat.oga_no = ogaNo;
-    console.log('sendToAws', boat, create, email, fileList, copyright, uuid);
-    console.log('TODO pictures', fileList, copyright);
-    console.log('TODO new builder, designer, design class', create);
-    const data = { email, new: boat };
-    axios.post(
-      'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
-      data).then((response) => {
-        onSuccess(response);
-      })
-      .catch((error) => {
-        onError(error);
-      });
-  }).catch((e) => {
-    console.log(e);
-  });
+async function sendToAws(boat, email, fileList, copyright) {
+  const data = getFilterable();
+  const ogaNo = findFirstAbsent(data);
+  boat.oga_no = ogaNo;
+  const albumKey = await createPhotoAlbum(ogaNo);
+  if (fileList?.length > 0) {
+    await postPhotos({ copyright, email, albumKey }, fileList)
+  }
+  await createBoatRecord(email, { ...boat, albumKey });
 }
 
-export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () => { } }) {
+export default function CreateBoatButton() {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   const handleCancel = () => {
     setOpen(false);
-    onCancel();
   };
 
   const handleSend = (values) => {
@@ -43,23 +34,19 @@ export default function CreateBoatButton({ onSubmit = () => { }, onCancel = () =
     const { new_design_class, new_designer, new_builder, ...boat } = b;
     const { fileList, copyright } = ddf;
 
-    const create = {};
     if (new_design_class) {
-      create.design_class = new_design_class;
+      boat.design_class = { name: new_design_class, id: uuidv4() };
     }
     if (new_designer) {
-      create.designer = new_designer;
+      boat.designer = { name: new_designer, id: uuidv4() } ;
     }
     if (new_builder) {
-      create.builder = new_builder;
+      boat.builder = { name: new_builder, id: uuidv4() };
     }
     const boatMetric = boatf2m(boat);
-    const uuid = uuidv4();
 
-    onSubmit({ boat: boatMetric, create, email, uuid });
-
-    sendToAws(boatMetric, create, email, fileList, copyright, uuid,
-      (response) => {
+    sendToAws(boatMetric, email, fileList, copyright)
+    .then((response) => {
         console.log(response);
         setSnackBarOpen(true);
       },
