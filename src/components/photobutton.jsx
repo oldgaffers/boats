@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Button from "@mui/material/Button";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import Snackbar from "@mui/material/Snackbar";
 import UpdatePhotoDialog from './updatephotodialog';
+import { postPhotos } from "./postphotos";
+import { createPhotoAlbum } from "./createphotoalbum";
+import { postBoatData } from "./postboatdata";
+
+async function getAlbumKey(oga_no, image_key) {
+  if (image_key) {
+    return image_key;
+  }
+  return createPhotoAlbum(oga_no);
+}
 
 export default function PhotoButton({ classes, boat, onDone, onCancel }) {
   const [open, setOpen] = useState(false);
@@ -13,47 +22,24 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
     setOpen(true);
   };
 
-  const handleClose = (values, fileList) => {
+  const handleClose = (copyright, email, pictures) => {
     setOpen(false);
-    if (fileList && fileList.length>0) {
-      const formData = new FormData();
-      if(fileList.length === 1) {
-        formData.set("file", fileList[0]);
-      } else {
-        for(let i=0; i<fileList.length; i++) {
-          formData.set(`file${i}`, fileList[i]);
+    const { image_key, name, oga_no } = boat;
+    getAlbumKey(oga_no, image_key)
+      .then(albumKey => postPhotos({ copyright, email, name, oga_no, albumKey }, pictures))
+      .then((r) => {
+        console.log(r);
+        if (!boat.image_key || !boat.thumb) {
+          return postBoatData(boat.name, { image_key: '', thumb: '' }, email)
         }
-      }
-      formData.set("oga_no", values.oga_no);
-      formData.set("name", values.name);
-      formData.set("albumKey", values.albumKey);
-      formData.set("copyright", values.copyright);
-      formData.set("email", values.email);
-      axios
-        .post(
-          "https://7919d72bf588df2749fb8c6ed8289d51.m.pipedream.net",
-          //"https://shielded-caverns-41302.herokuapp.com/api",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            params: {
-              pipedream_upload_body: 1,
-            },
-          }
-        )
-        .then((response) => {
-          setSnackBarOpen(true);
-        })
-        .catch((error) => {
-          console.log("post", error);
-          // TODO snackbar from response.data
-        });
-    } else {
-      onCancel();
-    }
-  };
+      })
+      .then(() => {
+        setSnackBarOpen(true);
+      }).catch((error) => {
+        console.log("post", error);
+        // TODO snackbar from response.data
+      });
+  }
 
   const handleSnackBarClose = () => {
     setSnackBarOpen(false);

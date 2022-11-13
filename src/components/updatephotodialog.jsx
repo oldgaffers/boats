@@ -51,13 +51,8 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
 
   const onUpload = () => {
     onClose(
-      {
-        name: boat.name,
-        albumKey: boat.image_key,
-        oga_no: boat.oga_no,
-        copyright,
-        email,
-      },
+      copyright,
+      email,
       pictures
     );
   };
