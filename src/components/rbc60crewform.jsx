@@ -14,7 +14,7 @@ import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
 
 const ports = [
-    { name: 'Ramsgate', start: '2023-04-27' },
+    { name: 'Ramsgate', start: '2023-04-27', end: '2023-05-01' },
     { name: 'Cowes', start: '2023-05-06', end: '2023-05-07' },
     { name: 'Plymouth', start: '2023-05-10', end: '2023-05-11' },
     { name: 'Milford Haven', start: '2023-05-20', end: '2023-05-21' },
@@ -25,7 +25,7 @@ const ports = [
     { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06' },
 ];
 
-const startDate = (start, end) => {
+const startDate = ({start, end}) => {
     if (start) {
         const st = new Date(start);
         const s = new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(st);
@@ -56,7 +56,7 @@ const portFields = (ports, route) => {
                 fields.push(...via.choices.map((leg) => crewlegfield(leg, leg, via.routeName)));
             } else {
                 const legName = `${list[index - 1].name}_${name}`;
-                const label = `The ${list[index - 1].name} - ${name} leg starting ${startDate(start, end)}`;
+                const label = `The ${list[index - 1].name} - ${name} leg starting ${startDate(list[index-1])}`;
                 fields.push(crewlegfield(legName, label));
             }
         }
