@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
 import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template';
@@ -12,6 +12,21 @@ import Typography from '@mui/material/Typography';
 import Snackbar from "@mui/material/Snackbar";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
+import { postCrewEnquiry } from "./boatregisterposts";
+
+const TwoColumns = ({ fields }) => {
+    const { renderForm } = useFormApi();
+  
+    return (
+      <Grid container spacing={2} justifyContent="space-around">
+        {fields.map((field) => (
+          <Grid key={field.name} item xs={6}>
+            {renderForm([field])}
+          </Grid>
+        ))}
+      </Grid>
+    );
+};
 
 const ports = [
     { name: 'Ramsgate', start: '2023-04-27', end: '2023-05-01' },
@@ -66,17 +81,9 @@ const portFields = (ports, route) => {
 
 export default function RBC60CrewForm() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [addCrew, result] = useMutation(gql`
-        mutation AddCrew($data: jsonb!) {
-        insert_crew(objects: {data: $data}) { affected_rows } }
-    `);
     const { user, isAuthenticated } = useAuth0();
 
     let userState;
-
-    if (result) {
-        // console.log('mutation', result);
-    }
 
     // let roles = [];
     let member;
@@ -94,8 +101,9 @@ export default function RBC60CrewForm() {
     const handleSubmit = (values) => {
         console.log('submit', values);
         const { ddf, ...data } = values;
-        addCrew({ variables: { data } });
-        setSnackBarOpen(true);
+        postCrewEnquiry(data).then(
+            () => setSnackBarOpen(true)
+        ).catch((error => console.log(error)));
     };
 
     const handleSnackBarClose = () => {
@@ -108,18 +116,10 @@ export default function RBC60CrewForm() {
         return {
             fields: [
                 {
-                    "component": componentTypes.SUB_FORM,
-                    "title": "About you",
-                    "name": "ddf.about.crew",
-                    "fields": [
-                        {
-                            component: componentTypes.TEXT_FIELD,
-                            label: 'Type of login',
-                            name: 'ddf.userState',
-                            isReadOnly: true,
-                            hideField: true,
-                            initialValue: userState,
-                        },
+                    component: componentTypes.SUB_FORM,
+                    title: "About you",
+                    name: "ddf.about.crew",
+                    fields: [
                         {
                             component: componentTypes.TEXT_FIELD,
                             name: 'user',
@@ -129,33 +129,55 @@ export default function RBC60CrewForm() {
                             initialValue: user || 'NONE',
                         },
                         {
-                            component: componentTypes.PLAIN_TEXT,
-                            name: 'ddf.show_user',
-                            label: (<Typography>We've identified you as {user ? user.given_name : ''} {user ? user.family_name : '-'}. This form is for members. you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
-                            condition: {
-                                when: 'ddf.userState',
-                                is: 'user',
-                            },
-                            sx: { marginTop: ".5em" }
+                            component: componentTypes.TEXT_FIELD,
+                            label: 'Type of login',
+                            name: 'ddf.userState',
+                            isReadOnly: true,
+                            hideField: true,
+                            initialValue: userState,
                         },
                         {
-                            component: componentTypes.PLAIN_TEXT,
-                            name: 'ddf.show_member',
-                            label: `We've identified you as ${user ? user.given_name : ''} ${user ? user.family_name : '-'}, member ${member}.`,
-                            condition: {
-                                when: 'ddf.userState',
-                                is: 'member',
+                        name: 'layout',
+                        component: 'two-columns',
+                        fields: [
+                            {
+                                component: componentTypes.PLAIN_TEXT,
+                                name: 'ddf.show_user',
+                                label: (<Typography>We've identified you as {user ? user.given_name : ''} {user ? user.family_name : '-'}. This form is for members. you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                                condition: {
+                                    when: 'ddf.userState',
+                                    is: 'user',
+                                },
                             },
-                            sx: { marginTop: ".5em" }
-                        },
-                        {
-                            component: componentTypes.PLAIN_TEXT,
-                            name: 'ddf.show_login',
-                            label: `If you are a member please log-in.`,
-                            condition: {
-                                when: 'ddf.userState',
-                                is: 'not logged in',
+                            {
+                                component: componentTypes.PLAIN_TEXT,
+                                name: 'ddf.show_member',
+                                label: `We've identified you as ${user ? user.given_name : ''} ${user ? user.family_name : '-'}, member ${member}.`,
+                                condition: {
+                                    when: 'ddf.userState',
+                                    is: 'member',
+                                },
                             },
+                            {
+                                component: componentTypes.PLAIN_TEXT,
+                                name: 'ddf.show_login',
+                                label: <>If you are a member please <LoginButton label='login' /></>,
+                                condition: {
+                                    when: 'ddf.userState',
+                                    is: 'not logged in',
+                                },
+                                sx: { marginTop: ".8em" }
+                            },
+                            {
+                                component: componentTypes.TEXT_FIELD,
+                                name: 'email',
+                                label: 'Otherwise enter your email address here',
+                                condition: {
+                                    when: 'ddf.userState',
+                                    is: 'not logged in',
+                                },
+                            },
+                            ],
                             sx: { marginTop: "1em" }
                         },
                         {
@@ -234,7 +256,9 @@ export default function RBC60CrewForm() {
                     <FormRenderer
                         schema={schema(ports)}
                         subscription={{ values: true }}
-                        componentMapper={componentMapper}
+                        componentMapper={
+                            { ...componentMapper, 'two-columns': TwoColumns }
+                        }
                         FormTemplate={(props) => (
                             <FormTemplate {...props} showFormControls={true} />
                         )}

@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import UpdateBoatDialog from './updateboatdialog';
 import { CLEARED_VALUE } from './editboat';
-import { postBoatData } from './postboatdata';
+import { postBoatData } from './boatregisterposts';
 
 const changedKeys = (change) => {
   const oldKeys = Object.keys(change.old);

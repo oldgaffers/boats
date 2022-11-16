@@ -10,3 +10,10 @@ export async function postBoatData(name, oga_no, differences, email) {
       originator: email,
     });
 }
+
+export async function postCrewEnquiry(data) {
+  return axios.post(
+  'https://bne25yrc5scp5qgffis2yfqaj40txzef.lambda-url.eu-west-1.on.aws/',
+  data);
+}
+
