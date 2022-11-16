@@ -11,7 +11,7 @@ export function findFirstAbsent(boat) {
     return ogaNos[idx] + 1;
 }
 
-export function getFilterable() {
+export async function getFilterable() {
     return axios(`${boatRegisterHome}/boatregister/filterable.json`);
 }
 

@@ -10,7 +10,7 @@ import { createBoatRecord } from "./createboatrecord";
 import { v4 as uuidv4 } from 'uuid';
 
 async function sendToAws(boat, email, fileList, copyright) {
-  const data = getFilterable();
+  const { data } = await getFilterable();
   const ogaNo = findFirstAbsent(data);
   boat.oga_no = ogaNo;
   const albumKey = await createPhotoAlbum(ogaNo);
