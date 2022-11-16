@@ -13,11 +13,15 @@ async function sendToAws(boat, email, fileList, copyright) {
   const { data } = await getFilterable();
   const ogaNo = findFirstAbsent(data);
   boat.oga_no = ogaNo;
-  const albumKey = await createPhotoAlbum(ogaNo);
+  // console.log('oga_no', ogaNo);
+  const albumKey = await createPhotoAlbum(boat.name, ogaNo);
+  // console.log('albumKey', albumKey);
   if (fileList?.length > 0) {
     await postPhotos({ copyright, email, albumKey }, fileList)
   }
+  console.log('files', fileList?.length || 0);
   await createBoatRecord(email, { ...boat, albumKey });
+  console.log('created boat record');
 }
 
 export default function CreateBoatButton() {

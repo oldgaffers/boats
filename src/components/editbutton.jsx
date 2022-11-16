@@ -53,7 +53,7 @@ export default function EditButton({ classes, boat }) {
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
-      console.log(changes);
+      // console.log(changes);
       const d = differences(changes);
       postBoatData(boat.name, boat.oga_no, d, changes.email)
       .then(() => {

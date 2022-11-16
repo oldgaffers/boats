@@ -121,7 +121,7 @@ export default function Enquiry({ classes, boat }) {
 
   const handleClickOpen = () => {
     if (userRoles.includes('member')) {
-      console.log(boat.ownerships);
+      // console.log(boat.ownerships);
       const current = boat.ownerships.current || boat.ownerships.owners.filter((o) => o.current);
       const memberNumbers = [...new Set(current.map((owner) => owner.member))];
       getOwners({ variables: { members: memberNumbers } })

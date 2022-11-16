@@ -496,7 +496,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   if (!open) return '';
 
   const handleSubmit = (boat) => {
-    console.log('handleSubmit', boat);
+    // console.log('handleSubmit', boat);
     boat.design_class = data.design_class.find((item) => item.id === boat.design_class);
     boat.designer = data.designer.find((item) => item.id === boat.designer);
     boat.builder = data.builder.find((item) => item.id === boat.builder);
