@@ -13,3 +13,11 @@ export async function postCrewEnquiry(data) {
   data);
 }
 
+export async function createPhotoAlbum(name, ogaNo) {
+  const data = { name, oga_no: ogaNo };
+  console.log('createPhotoAlbum', data);
+    const r = await axios.post('https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/',
+        data,
+      );
+    return r.data.albumKey;
+}

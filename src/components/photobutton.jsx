@@ -14,6 +14,18 @@ async function getAlbumKey(oga_no, image_key) {
   return createPhotoAlbum(oga_no);
 }
 
+async function upload(boat, copyright, email, pictures) {
+  const { image_key, name, oga_no } = boat;
+  const albumKey = await getAlbumKey(oga_no, image_key);
+  const r = await postPhotos({ copyright, email, name, oga_no, albumKey }, pictures);
+  if (!boat.image_key || !boat.thumb) {
+    boat.image_key = albumKey;
+    console.log(r);
+    // TODO set thumb
+    await postBoatData({ new: boat, email })
+  }
+}
+
 export default function PhotoButton({ classes, boat, onDone, onCancel }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -24,18 +36,7 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
 
   const handleClose = (copyright, email, pictures) => {
     setOpen(false);
-    const { image_key, name, oga_no } = boat;
-    getAlbumKey(oga_no, image_key)
-      .then(albumKey => postPhotos({ copyright, email, name, oga_no, albumKey }, pictures))
-      .then((r) => {
-        console.log(r);
-        if (!boat.image_key || !boat.thumb) {
-          boat.image_key = image_key;
-          // boat.thumb = '';
-          // TODO set thumb
-          // return postBoatData({ new: boat, email })
-        }
-      })
+    upload(boat, copyright, email, pictures)
       .then(() => {
         setSnackBarOpen(true);
       }).catch((error) => {
