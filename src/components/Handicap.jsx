@@ -290,7 +290,7 @@ export const steps = [
       if(values.handicap_data && values.handicap_data.sailarea) {
         return 'hull-step'
       }
-      if(['cat_boat','single_sail'].includes(values.rig_type)) {
+      if(['Cat Boat','Single Sail'].includes(values.rig_type)) {
         return 'mainsail-step';
       }
       if(['None'].includes(values.rig_type)) {
@@ -330,8 +330,8 @@ export const steps = [
       stepMapper: {
         Cutter: "mainsail-step",
         Sloop: "mainsail-step",
-        cat_boat: "mainsail-step",
-        single_sail: "mainsail-step",
+        'Cat Boat': "mainsail-step",
+        'Single Sail': "mainsail-step",
         Ketch: "mainsail-step",
         Yawl: "mainsail-step",
         Schooner: "foremast-step",
@@ -448,8 +448,8 @@ export const steps = [
       stepMapper: {
         Cutter: "topsail-step",
         Sloop: "topsail-step",
-        cat_boat: "calculated-sailarea-step",
-        single_sail: "calculated-sailarea-step",
+        'Cat Boat': "calculated-sailarea-step",
+        'Single Sail': "calculated-sailarea-step",
         Ketch: "topsail-step",
         Yawl: "topsail-step",
         Schooner: "topsail-step",
@@ -466,8 +466,8 @@ export const steps = [
       stepMapper: {
         Cutter: "calculated-sailarea-step",
         Sloop: "calculated-sailarea-step",
-        cat_boat: "calculated-sailarea-step",
-        single_sail: "calculated-sailarea-step",
+        'Cat Boat': "calculated-sailarea-step",
+        'Single Sail': "calculated-sailarea-step",
         Ketch: "mizzen-step",
         Yawl: "mizzen-step",
         Schooner: "calculated-sailarea-step",

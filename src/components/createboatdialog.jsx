@@ -50,19 +50,19 @@ const schema = (pickers) => {
                 component: componentTypes.PLAIN_TEXT,
                 name: "ddf.dc.check1",
                 label: "If the boat you want to add has an OGA Number it is already on the register."
-                  +" Over 3,000 boats already are."
+                  + " Over 3,000 boats already are."
               },
               {
                 component: componentTypes.PLAIN_TEXT,
                 name: "ddf.dc.check2",
                 label: "You can search the register by the current or a previous name or by OGA Number."
-                  +" Or you can filter by age, length, type, etc.",
+                  + " Or you can filter by age, length, type, etc.",
               },
               {
                 component: componentTypes.PLAIN_TEXT,
                 name: "ddf.dc.check3",
                 label: "If you can find the boat on the register, please click on the MORE button on the boat's card."
-                  +" Then use the ADD PICTURES or the I HAVE EDITS buttons instead of using this form."
+                  + " Then use the ADD PICTURES or the I HAVE EDITS buttons instead of using this form."
               },
               {
                 component: componentTypes.PLAIN_TEXT,
@@ -74,8 +74,8 @@ const schema = (pickers) => {
                 name: "ddf.dc.isnew",
                 label: "I've checked and the boat isn't already on the register.",
                 isRequired: true,
-                validate: [{type: validatorTypes.REQUIRED}],
-          }
+                validate: [{ type: validatorTypes.REQUIRED }],
+              }
             ]
           },
           {
@@ -90,9 +90,9 @@ const schema = (pickers) => {
                     component: componentTypes.PLAIN_TEXT,
                     name: "ddf.dc.desc",
                     label: " Fields marked with a * are mandatory, everything else is optional."
-                      +" Once your boat has an entry you can add more pictures and information."
-                      +" As a minimum, we'd like a name, picture, rig type, mainsail type, length, beam and short description."
-                      ,
+                      + " Once your boat has an entry you can add more pictures and information."
+                      + " As a minimum, we'd like a name, picture, rig type, mainsail type, length, beam and short description."
+                    ,
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
@@ -137,8 +137,8 @@ const schema = (pickers) => {
                     label: 'I have pictures to upload',
                     initialValue: true,
                     helperText: 'pictures are really important',
-                  },                 
-                ]  
+                  },
+                ]
               }
             ]
           },
@@ -154,8 +154,8 @@ const schema = (pickers) => {
                     component: componentTypes.PLAIN_TEXT,
                     name: "ddf.picture.desc",
                     label: "Please add some pictures, ideally of her sailing."
-                      +" If you have more than one picture upload the best one(s) here."
-                      +" You will be able to add more pictures later from the boat's detail page.",
+                      + " If you have more than one picture upload the best one(s) here."
+                      + " You will be able to add more pictures later from the boat's detail page.",
                   },
                   {
                     component: "pic",
@@ -195,6 +195,7 @@ const schema = (pickers) => {
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
+                    initialValue: 'Yacht',
                     options: mapPicker(pickers.generic_type),
                   },
                   {
@@ -202,6 +203,7 @@ const schema = (pickers) => {
                     name: "rig_type",
                     label: "Rig",
                     isRequired: true,
+                    initialValue: 'Cutter',
                     validate: [
                       {
                         type: validatorTypes.REQUIRED,
@@ -214,6 +216,7 @@ const schema = (pickers) => {
                     name: "mainsail_type",
                     label: "Mainsail",
                     isRequired: true,
+                    initialValue: 'gaff',
                     validate: [
                       {
                         type: validatorTypes.REQUIRED,
@@ -271,6 +274,10 @@ const schema = (pickers) => {
                       {
                         type: validatorTypes.REQUIRED,
                       },
+                      {
+                        type: validatorTypes.MIN_NUMBER_VALUE,
+                        threshold: 5
+                      }
                     ],
                   },
                   {
@@ -284,6 +291,10 @@ const schema = (pickers) => {
                       {
                         type: validatorTypes.REQUIRED,
                       },
+                      {
+                        type: validatorTypes.MIN_NUMBER_VALUE,
+                        threshold: 1
+                      }
                     ],
                   },
                   {
@@ -332,7 +343,7 @@ const schema = (pickers) => {
                     validate: [
                       {
                         type: validatorTypes.PATTERN,
-                        pattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/i                
+                        pattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/i
                       }
                     ]
                   },
@@ -423,7 +434,7 @@ const schema = (pickers) => {
                         value: "2",
                       },
                     ],
-                  },    
+                  },
                 ],
               },
             ],
@@ -468,17 +479,17 @@ const schema = (pickers) => {
 };
 
 const PhotoUpload = ({ component, name, title }) => {
-  const { input } = useFieldApi({component, name});
+  const { input } = useFieldApi({ component, name });
 
   const onDrop = (p) => {
-    input.onChange(p);  
+    input.onChange(p);
   };
 
   return (
     <DropzoneArea
-    maxFileSize={5242880}
-    acceptedFiles={["image/*"]}
-    onChange={onDrop}
+      maxFileSize={5242880}
+      acceptedFiles={["image/*"]}
+      onChange={onDrop}
     />
   );
 };
@@ -488,11 +499,11 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
   if (loading) return <p>Loading...</p>
   if (error) {
-        return (<div>
-          Sorry, we had a problem getting the data to browse the register
-          </div>);
+    return (<div>
+      Sorry, we had a problem getting the data to browse the register
+    </div>);
   }
-  
+
   if (!open) return '';
 
   const handleSubmit = (boat) => {
@@ -507,25 +518,25 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
       open={open}
       aria-labelledby="form-dialog-title"
     >
-      <Box sx={{marginLeft: '1.5rem', marginTop: '1rem'}}>
-      <Typography variant="h5" >Add a boat to the Register</Typography>
+      <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
+        <Typography variant="h5" >Add a boat to the Register</Typography>
       </Box>
-        <FormRenderer
-          componentMapper={{
-            ...componentMapper,
-            html: HtmlEditor,
-            pic: PhotoUpload,
-          }}
-          FormTemplate={(props) => (
-            <FormTemplate {...props} showFormControls={false} />
-          )}
-          schema={schema(data)}
-          onSubmit={handleSubmit}
-          onCancel={onCancel}
-          initialValues={{ user }}
-          subscription={{ values: true }}
-          />
-          
+      <FormRenderer
+        componentMapper={{
+          ...componentMapper,
+          html: HtmlEditor,
+          pic: PhotoUpload,
+        }}
+        FormTemplate={(props) => (
+          <FormTemplate {...props} showFormControls={false} />
+        )}
+        schema={schema(data)}
+        onSubmit={handleSubmit}
+        onCancel={onCancel}
+        initialValues={{ user }}
+        subscription={{ values: true }}
+      />
+
     </Dialog>
   );
 }

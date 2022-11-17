@@ -1,6 +1,7 @@
 import { componentTypes } from "@data-driven-forms/react-form-renderer";
 
 export const mapPicker = (m) => {
+  console.log('mapPicker', m);
   return m.map((i) => {
     if (i.name) {
       return { label: i.name, value: i.id }
