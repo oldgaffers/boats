@@ -20,7 +20,7 @@ async function upload(boat, copyright, email, pictures) {
   const r = await postPhotos({ copyright, email, name, oga_no, albumKey }, pictures);
   if (!boat.image_key || !boat.thumb) {
     boat.image_key = albumKey;
-    console.log(r);
+    console.log('postPhotos result', r);
     // TODO set thumb
     await postBoatData({ new: boat, email })
   }
