@@ -26,12 +26,11 @@ for (let i = 1; i <= 8; i++) {
 function makePicklist(view, pickers, field) {
   if (pickers[field] && pickers[field].length > 0) {
     const p = pickers[field]
-    if (p[0].name) {
-      const u = [...new Set(p.map((item) => item.name))];
-      return u.map((n) => p.find((item) => item.name === n));
-    }
-    return [...new Set(p)].map((item) => ({ name: item }));
+    const pl = [...new Set(p)].map((item) => ({ name: item }));
+    console.log('makePicklist', field, pl);
+    return pl;
   }
+  console.log('makePicklist - empty', field);
   return [{ 'undefined': 1 }]; // helps testing - TODO make more helpful
 }
 
@@ -222,7 +221,7 @@ export default function SearchAndFilterBoats({
           <Picker
             onChange={pl}
             id="name"
-            options={makePicklist(view, pickers, "boat")}
+            options={makePicklist(view, pickers, "name")}
             label="Boat Name"
             value={currentFilters["name"]}
           />
@@ -272,7 +271,7 @@ export default function SearchAndFilterBoats({
           <Picker
             onChange={pl}
             id="mainsail_type"
-            options={makePicklist(view, pickers, "sail_type")}
+            options={makePicklist(view, pickers, "mainsail_type")}
             label="Mainsail Type"
             value={currentFilters["mainsail_type"]}
           />

@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-
+import { useFilterable, applyFilters } from '../util/oganoutils';
 export default function BrowseBoats({
-  pickers,
   state,
   markList,
   onPageChange,
@@ -21,7 +21,40 @@ export default function BrowseBoats({
   onBoatMarked,
   onBoatUnMarked,
 }) {
+  const { data, error, loading } = useFilterable();
+  const pickers = {
+    name: [],
+    designer: [],
+    builder: [],
+    rig_type: [],
+    mainsail_type: [],
+    generic_type: [],
+    design_class: [],
+    construction_material: [],
+  };
+
   const { bpp, sort, sortDirection, filters } = state;
+
+  useEffect(() => {
+    if (data) {
+      // console.log('filterable', data);
+      // console.log('filters', filters);
+      const filtered = applyFilters(data, filters);
+      console.log('filtered', filtered);
+      Object.keys(pickers).forEach((key) => {
+        pickers[key] = [...new Set(filtered.map((boat) => {
+          // console.log(boat);
+          return boat[key];
+        }).filter((v) => v))];
+      });
+      console.log('pickers', pickers);
+    }
+  });
+
+  if (loading) return <CircularProgress/>
+  if (error) {
+    console.log(error);
+  }
   const blank = "_blank";
 
   const handleMarkedOnly = (value) => {

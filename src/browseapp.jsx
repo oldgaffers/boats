@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
+// import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
+import BrowseBoats from "./components/browseboats";
 import BoatRegisterIntro from "./components/boatregisterintro";
 import BoatsForSaleIntro from "./components/boatsforsaleintro";
 import SmallBoatsIntro from "./components/smallboatsintro";
@@ -55,7 +56,7 @@ export default function BrowseApp({ view='app' }) {
 
   const BB = ({title, state}) => {
     return (
-      <StaticPickerBoatBrowser
+      <BrowseBoats
         title={title}
         state={state}
         markList={[...markSet.current]}
