@@ -31,14 +31,6 @@ const changedKeys = (change) => {
   });
 }
 
-const differences = (change) => {
-  const fields = changedKeys(change);
-  return fields.map((field) => {
-    const proposed = (change.new[field] === CLEARED_VALUE) ? undefined : change.new[field];
-    return {field, current: change.old[field], proposed};
-  });
-}
-
 export default function EditButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -53,9 +45,7 @@ export default function EditButton({ classes, boat }) {
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
-      // console.log(changes);
-      const d = differences(changes);
-      postBoatData(boat.name, boat.oga_no, d, changes.email)
+      postBoatData({ email: changes.email, new: changes.new })
       .then(() => {
           setSnackBarOpen(true);
         })

@@ -6,7 +6,7 @@ import CreateBoatDialog from "./createboatdialog";
 import { getFilterable, findFirstAbsent } from '../util/oganoutils';
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum } from "./createphotoalbum";
-import { createBoatRecord } from "./createboatrecord";
+import { postBoatData } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 
 async function sendToAws(boat, email, fileList, copyright) {
@@ -17,10 +17,12 @@ async function sendToAws(boat, email, fileList, copyright) {
   const albumKey = await createPhotoAlbum(boat.name, ogaNo);
   // console.log('albumKey', albumKey);
   if (fileList?.length > 0) {
-    await postPhotos({ copyright, email, albumKey }, fileList)
+    const r = await postPhotos({ copyright, email, albumKey }, fileList);
+    console.log(r);
+    // TODO set thumb
   }
   console.log('files', fileList?.length || 0);
-  await createBoatRecord(email, { ...boat, albumKey });
+  await postBoatData(email, { ...boat, albumKey });
   console.log('created boat record');
 }
 

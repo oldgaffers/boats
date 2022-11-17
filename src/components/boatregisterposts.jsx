@@ -1,14 +1,10 @@
 import axios from "axios";
 
-export async function postBoatData(name, oga_no, differences, email) {
+export async function postBoatData(data) {
     return axios.put(
-    'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/edit_boat',
-    {
-      name,
-      oga_no,
-      differences,
-      originator: email,
-    });
+      'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
+      data,
+    );
 }
 
 export async function postCrewEnquiry(data) {
