@@ -4,8 +4,7 @@ import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import Snackbar from "@mui/material/Snackbar";
 import UpdatePhotoDialog from './updatephotodialog';
 import { postPhotos } from "./postphotos";
-import { createPhotoAlbum } from "./createphotoalbum";
-import { postBoatData } from "./boatregisterposts";
+import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
 
 async function getAlbumKey(oga_no, image_key) {
   if (image_key) {
