@@ -6,26 +6,22 @@ import UpdatePhotoDialog from './updatephotodialog';
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
 
-async function getAlbumKey(oga_no, image_key) {
-  if (image_key) {
-    return image_key;
-  }
-  return createPhotoAlbum(oga_no);
-}
-
 async function upload(boat, copyright, email, pictures) {
   const { image_key, name, oga_no } = boat;
-  const albumKey = await getAlbumKey(oga_no, image_key);
-  const r = await postPhotos({ copyright, email, name, oga_no, albumKey }, pictures);
-  if (!boat.image_key || !boat.thumb) {
+  let albumKey;
+  if (image_key) {
+    albumKey = image_key;
+  } else {
+    albumKey = await createPhotoAlbum(oga_no);
+  }
+  await postPhotos({ copyright, email, name, oga_no, albumKey }, pictures);
+  if (!boat.image_key) {
     boat.image_key = albumKey;
-    console.log('postPhotos result', r);
-    // TODO set thumb
     await postBoatData({ new: boat, email })
   }
 }
 
-export default function PhotoButton({ classes, boat, onDone, onCancel }) {
+export default function PhotoButton({ classes, boat, onDone }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
@@ -48,7 +44,6 @@ export default function PhotoButton({ classes, boat, onDone, onCancel }) {
     setSnackBarOpen(false);
     onDone();
   };
-
   return (
     <div>
       <Button
