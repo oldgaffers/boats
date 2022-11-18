@@ -56,7 +56,9 @@ export default function PhotoButton({ classes, boat, onDone }) {
       >
         Add pictures of this boat
       </Button>
-      <UpdatePhotoDialog classes={classes} boat={boat} onClose={handleClose} open={open} />
+      <UpdatePhotoDialog classes={classes} boat={boat}
+        onClose={handleClose} onCancel={() => setOpen(false)} open={open} 
+      />
       <Snackbar
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         open={snackBarOpen}
