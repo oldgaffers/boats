@@ -30,9 +30,7 @@ const theme = createTheme({
 });
 
 const Pages = ({ app, topic }) => {
-  console.log('Pages', app, topic);
   const red = window.location.origin + window.location.pathname;
-  console.log(red);
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
