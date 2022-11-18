@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UpdatePhotoDialog({ boat, onClose, open }) {
+export default function UpdatePhotoDialog({ boat, onClose, onCancel, open }) {
   const { user } = useAuth0();
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -109,7 +109,7 @@ export default function UpdatePhotoDialog({ boat, onClose, open }) {
           <Grid item xs={12}>
             <Grid container justifyContent="space-between">
               <Grid item>
-                <Button size="small" variant="contained" onClick={onClose}>
+                <Button size="small" variant="contained" onClick={onCancel}>
                   Cancel
                 </Button>
               </Grid>
