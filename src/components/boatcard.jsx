@@ -16,10 +16,10 @@ import { useAxios } from 'use-axios-client';
 import { boatRegisterHome } from '../util/constants';
 
 function makePreviousNamesField(n) {
-  if (n && n.length>0) {
+  if (n && n.length > 0) {
     try {
       return n.join(', ');
-    } catch(e) {
+    } catch (e) {
       console.log('makePreviousNamesField', e);
     }
   }
@@ -32,19 +32,19 @@ function showPrice(n) {
 }
 
 const wanted = {
-    year: { label: 'Year Built', access: (n)=>n},
-    place_built: { label: 'Place Built', access: (n)=>n},
-    home_port: { label: 'Home Port', access: (n)=>n},
-    rig_type: { label: 'Rig Type', access: (n)=>n},
-    designer: { label: 'Designer', access: (n)=>n?n.name:n},
-    design_class: { label: 'Design Class', access: (n)=>n?n.name:n},
-    builder: { label: 'Builder', access: (n)=>n?n.name:n},
-    previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n)},
-    price: { label: 'Price', access: (n) => showPrice(n)},
+  year: { label: 'Year Built', access: (n) => n },
+  place_built: { label: 'Place Built', access: (n) => n },
+  home_port: { label: 'Home Port', access: (n) => n },
+  rig_type: { label: 'Rig Type', access: (n) => n },
+  designer: { label: 'Designer', access: (n) => n ? n.name : n },
+  design_class: { label: 'Design Class', access: (n) => n ? n.name : n },
+  builder: { label: 'Builder', access: (n) => n ? n.name : n },
+  previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n) },
+  price: { label: 'Price', access: (n) => showPrice(n) },
 };
 
 function SalesBadge({ boat, view, children }) {
-  switch (boat.selling_status) {
+  switch (boat?.selling_status || '') {
     case 'for_sale':
       return (<Badge invisible={view === 'sell'} badgeContent="For sale" color="secondary">{children}</Badge>);
     case 'sold':
@@ -70,92 +70,104 @@ function normaliseDescription(boat) {
   return '';
 }
 
-function BoatCardWords({boat}) {
-  // console.log(boat);
+function BoatCardWords({ boat }) {
+
   if (boat.loading) {
     return <>
-    <Skeleton variant='rounded' animation='wave' height={40}/>
-    <Skeleton variant='rounded' animation='wave' height={80}/>
-    </>
+      <Skeleton variant='rounded' animation='wave' height={40} />
+      <Skeleton variant='rounded' animation='wave' height={80} />
+    </>;
   }
   return (
     <>
-  <Typography variant="body2" 
-     dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
-  />
-  <TextList fields={wanted} data={boat} />
-  </>
+      <Typography variant="body2"
+        dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
+      />
+      <TextList fields={wanted} data={boat} />
+    </>
   );
 }
 
-export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
-  const [markChecked, setMarkChecked] = useState(marked);
-
-  const { data, error, loading } = useAxios({
-    url: `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`,
-    onDownloadProgress: (axiosProgressEvent) => {
-      const {
-        loaded,
-        total,
-      } = axiosProgressEvent;
-      console.log('PROG', ogaNo, loaded, total);
-    }
-});
-    if (loading || !data) {
-      console.log('loading');
-    }
+function BoatCardImage({ albumKey, name }) {
+  const { loading, error, data } = useAxios(`https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/${albumKey}`);
+  if (loading || !data) {
+    return <>
+      <Skeleton variant='rounded' animation='wave' height={40} />
+    </>
+  }
   if (error) {
-      return (<div>
-        Sorry, we had a problem getting the data for
-        the boat with OGA number {ogaNo}
-        <p>Please try searching on the <a href='/boat_register/browse_the_register/index.html'>Main Page</a></p>
-        </div>);
+    console.log(error);
   }
 
-  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
+  if (data.ThumbnailUrl) {
+    return (<CardMedia sx={{ paddingTop: '100%' }} image={data.ThumbnailUrl} title={name} />);
+  }
+  return (<AltForThumb />);
+}
+
+export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
+  const { loading, error, data } = useAxios({
+    url: `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`,
+  });
+  const [markChecked, setMarkChecked] = useState(marked);
 
   const handleMarked = (checked) => {
     setMarkChecked(checked);
     onMarkChange(checked, ogaNo);
   }
+
+  if (loading || !data) {
+    console.log('loading')
+  }
+
+  if (error) {
+    console.log(error);
+  }
+
+  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
+
   // newest for sale record
-  const price = (boat.selling_status === 'for_sale')
-  && boat.for_sales.reduce((prev, curr) =>
-        (new Date(prev.created_at)
+  const price = ((boat?.selling_status || '') === 'for_sale')
+    && boat?.for_sales?.reduce((prev, curr) =>
+      (new Date(prev.created_at)
         >
         new Date(curr.created_at)
-         ) ? prev : curr
-     ).asking_price;
+      ) ? prev : curr
+    )?.asking_price;
+
+  const albumKey = boat?.image_key;
+
   return (
-    <Card sx={boat?.thumb ? {
+    <Card sx={albumKey ? {
       height: '100%',
       display: 'flex',
-      flexDirection: 'column'} : {}}>
-      {boat.thumb?(<CardMedia sx={{paddingTop: '100%'}} image={boat.thumb} title={boat.name} />):(<AltForThumb/>)}
-      <CardContent sx={{flexGrow: 1}} >
+      flexDirection: 'column'
+    } : {}}>
+      {albumKey ? <BoatCardImage albumKey={albumKey} name= {boat?.name} /> : ''}
+      <CardContent sx={{ flexGrow: 1 }} >
         <Typography gutterBottom variant="h5" component="h2">
-          <SalesBadge view={state.view} boat={boat}>{boat.name} ({boat.oga_no})</SalesBadge>
+          <SalesBadge view={state.view} boat={boat}>{boat?.name || ''} ({ogaNo})</SalesBadge>
         </Typography>
         <BoatCardWords boat={{ ...boat, price }} />
       </CardContent>
       <CardActions>
         <Grid container justifyContent="space-between">
-        <Grid item>
-        <Button
-          size="small" 
-          component={'a'}
-          href={boatUrl(boat.oga_no, {})}
-          variant="contained" 
-          color="secondary"
-        >More..</Button>
-        </Grid>
-        <Grid item>
-        <Checkbox sx={{textAlign: 'right'}}
-        checked={markChecked}
-        color="primary" onChange={(event, checked) => handleMarked(checked)}
-        inputProps={{ 'aria-label': 'add to list' }}
-      />
-        </Grid>
+          <Grid item>
+            <Button
+              size="small"
+              component={'a'}
+              href={boatUrl(ogaNo, {})}
+              variant="contained"
+              color="secondary"
+            >More..</Button>
+          </Grid>
+          <Grid item>
+            <Checkbox sx={{ textAlign: 'right' }}
+              checked={markChecked}
+              color="primary" onChange={(event, checked) => handleMarked(checked)}
+              inputProps={{ 'aria-label': 'add to list' }}
+            />
+          </Grid>
         </Grid>
       </CardActions>
     </Card>
