@@ -92,7 +92,7 @@ function BoatCardImage({ albumKey, name }) {
   const { loading, error, data } = useAxios(`https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/${albumKey}`);
   if (loading || !data) {
     return <>
-      <Skeleton variant='rounded' animation='wave' height={40} />
+      <Skeleton variant='rounded' animation='wave' height={260} />
     </>
   }
   if (error) {
