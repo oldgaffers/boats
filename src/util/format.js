@@ -64,9 +64,6 @@ const metreKeys = [
   const squareMetreKeys = ['sailarea'];
   const booleanKeys = ['year_is_approximate'];
   const keysToOmit = [
-    'builderByBuilder','constructionMaterialByConstructionMaterial',
-    'constructionMethodByConstructionMethod','designClassByDesignClass',
-    'designerByDesigner','genericTypeByGenericType','rigTypeByRigType',
   ];
   /*
   biggest staysail (luff, leech, foot)
