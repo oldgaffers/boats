@@ -18,7 +18,6 @@ async function sendToAws(boat, email, fileList, copyright) {
   if (fileList?.length > 0) {
     const r = await postPhotos({ copyright, email, albumKey }, fileList);
     console.log(r);
-    // TODO set thumb
   }
   console.log('files', fileList?.length || 0);
   await postBoatData(email, { ...boat, albumKey });

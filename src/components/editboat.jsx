@@ -190,7 +190,6 @@ export default function EditBoat({ onCancel, onSave, boat }) {
       roles = user['https://oga.org.uk/roles'];
     }
   }
-  
   const state = { 
     ...boatm2f(boat), 
     ddf: { activity: "descriptions" },

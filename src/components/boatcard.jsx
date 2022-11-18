@@ -117,7 +117,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   }
 
   if (loading || !data) {
-    console.log('loading')
+    // console.log('loading')
   }
 
   if (error) {

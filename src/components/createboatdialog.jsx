@@ -271,16 +271,16 @@ const schema = (pickers) => {
                     dataType: dataTypes.FLOAT,
                     isRequired: true,
                     validate: [
-                      {
-                        type: validatorTypes.REQUIRED,
-                      },
-                      {
-                        type: validatorTypes.MIN_NUMBER_VALUE,
-                        threshold: 5
-                      }
+                      // {
+                        // type: validatorTypes.REQUIRED,
+                      // },
+                      //{
+                     //   type: validatorTypes.MIN_NUMBER_VALUE,
+                     //   threshold: 5
+                      //}
                     ],
-                  },
-                  {
+                },
+                {
                     component: componentTypes.TEXT_FIELD,
                     name: "handicap_data.beam",
                     label: "Beam (decimal feet)",
@@ -288,13 +288,13 @@ const schema = (pickers) => {
                     dataType: dataTypes.FLOAT,
                     isRequired: true,
                     validate: [
-                      {
-                        type: validatorTypes.REQUIRED,
-                      },
-                      {
-                        type: validatorTypes.MIN_NUMBER_VALUE,
-                        threshold: 1
-                      }
+                      // {
+                        // type: validatorTypes.REQUIRED,
+                      // },
+                      //{
+                     //   type: validatorTypes.MIN_NUMBER_VALUE,
+                     //   threshold: 1
+                     // }
                     ],
                   },
                   {
@@ -303,6 +303,12 @@ const schema = (pickers) => {
                     label: "Draft (decimal feet)",
                     type: "number",
                     dataType: dataTypes.FLOAT,
+                    validate: [
+                     // {
+                     //   type: validatorTypes.MIN_NUMBER_VALUE,
+                     //   threshold: 1
+                    //  }
+                    ],
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
@@ -310,6 +316,13 @@ const schema = (pickers) => {
                     label: "Air Draft (decimal feet)",
                     type: "number",
                     dataType: dataTypes.FLOAT,
+                    initialValue: 10,
+                    validate: [
+                      //{
+                      //  type: validatorTypes.MIN_NUMBER_VALUE,
+                      //  threshold: 1
+                      //}
+                    ],   
                   },
                 ],
               },
