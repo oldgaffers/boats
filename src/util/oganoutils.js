@@ -25,18 +25,11 @@ export function useFilterable() {
     return useAxios(`${boatRegisterHome}/boatregister/filterable.json`);
 }
 
-export const useCardQuery = (state) => {
-    const { data, error, loading } = useFilterable();
-
-    if (loading) return { loading };
-    if (!data) return { loading: true };
-    if (error)  return { error };
-
-    const boats = data;
-    const k = Object.keys(state.filters);
+export function applyFilters(boats, filters) {
+    const k = Object.keys(filters);
     let filteredBoats = [...boats];
     k.forEach(filter => {
-        let wanted = state.filters[filter];
+        let wanted = filters[filter];
         if (filter === 'oga_no') {
             wanted = parseInt(wanted);
         }
@@ -48,6 +41,17 @@ export const useCardQuery = (state) => {
             return wanted === val;
         });
     });
+    return filteredBoats;
+}
+
+export const useCardQuery = (state) => {
+    const { data, error, loading } = useFilterable();
+
+    if (loading) return { loading };
+    if (!data) return { loading: true };
+    if (error)  return { error };
+
+    const filteredBoats = applyFilters(data, state.filters);
     filteredBoats.sort((a,b) => {
         const { sort, sortDirection } = state;
         const rs = sortDirection === 'asc' ? [1, -1] : [-1, 1];
