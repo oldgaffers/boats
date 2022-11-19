@@ -49,7 +49,6 @@ export default function BrowseBoats({
   useEffect(() => {
     if (data) {
       const filtered = applyFilters(data, filters);
-      console.log('filtered', filtered);
       const newPickers = makePickers(filtered);
       if (pickers) {
         let changes = false;
@@ -71,8 +70,6 @@ export default function BrowseBoats({
   const handleMarkedOnly = (value) => {
     onMarkedOnlyChange(value);
   }
-
-  console.log('pickers', pickers);
 
   return (
     <div>

@@ -46,7 +46,6 @@ export default function SearchAndFilterBoats({
   onMarkedOnly,
   isMarkedOnly,
 }) {
-  console.log('SearchAndFilterBoats', pickers);
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
   const debouncedOgaNo = useDebounce(ogaNo, 1000);

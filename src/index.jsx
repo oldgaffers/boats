@@ -179,7 +179,7 @@ const Pages = ({ app, topic }) => {
         );
       }
     default:
-      console.log('browse', app);
+      // console.log('browse', app);
       return (
         <Auth0Provider {...auth} scope="member">
           <TokenProvider>

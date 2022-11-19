@@ -28,7 +28,7 @@ export const DEFAULT_BROWSE_STATE = {
 const key = (view) => `${view.toUpperCase()}_BROWSE_STATE`;
 
 export function setView(view) {
-    console.log('storing current view', view);
+    // console.log('storing current view', view);
     sessionStorage.setItem('BOAT_CURRENT_VIEW', view);
 }
 
