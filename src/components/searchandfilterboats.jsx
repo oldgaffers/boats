@@ -29,7 +29,6 @@ function makePicklist(view, pickers, field) {
     const pl = [...new Set(p)].map((item) => ({ name: item }));
     return pl;
   }
-  console.log('makePicklist - empty', field);
   return [{ 'undefined': 1 }]; // helps testing - TODO make more helpful
 }
 
