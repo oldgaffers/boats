@@ -11,7 +11,8 @@ import BoatCards from './boatcards';
 import { useFilterable, applyFilters } from '../util/oganoutils';
 
 function makePickers(filtered) {
-  return [
+  const pickers = {};
+  [
     "name",
     "designer",
     "builder",
@@ -20,10 +21,12 @@ function makePickers(filtered) {
     "generic_type",
     "design_class",
     "construction_material",
-  ].map((key) => ({ [key]: [...new Set(filtered.map((boat) => {
+  ].forEach((key) => { 
+    pickers[key] = [...new Set(filtered.map((boat) => {
       return boat[key];
     }).filter((v) => v))] 
-  })).reduce((obj, item) => (obj[item.key] = item.value, obj) , {});
+  });
+  return pickers;
 }
 
 export default function BrowseBoats({
@@ -68,6 +71,8 @@ export default function BrowseBoats({
   const handleMarkedOnly = (value) => {
     onMarkedOnlyChange(value);
   }
+
+  console.log('pickers', pickers);
 
   return (
     <div>

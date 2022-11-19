@@ -88,7 +88,6 @@ function BoatCardWords({ boat }) {
 }
 
 function BoatCardImage({ albumKey, name }) {
-  console.log('BoatCardImage', name, albumKey);
   const { loading, error, data } = useGetThumb(albumKey);
 
   if (loading || !data) {
