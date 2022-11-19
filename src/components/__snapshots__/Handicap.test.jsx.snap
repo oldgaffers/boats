@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Robinetta T(H)CF 1`] = `"0.850"`;
+
+exports[`Robinetta foretriangle_area 1`] = `2.9612844000000003`;
+
+exports[`Transcur C 1`] = `"NaN"`;
+
+exports[`Transcur T(H)CF 1`] = `"1.025"`;
+
+exports[`Transcur fForeTriangle 1`] = `"31.09"`;
+
+exports[`Transcur fGaffSA 1`] = `"41.44"`;
+
+exports[`Transcur fMR 1`] = `"27.49"`;
+
+exports[`Transcur fMSA 1`] = `"76.0"`;
+
+exports[`Transcur fR 1`] = `"27.08"`;
+
+exports[`Transcur fSqrtS 1`] = `"28.35"`;
+
+exports[`Transcur fTopSA 1`] = `"8"`;
+
+exports[`Transcur foretriangle_area 1`] = `"31.1"`;
+
+exports[`boatm2f Robinetta feet 1`] = `
+Object {
+  "beam": 10.761,
+  "draft": 4.58,
+  "fore_triangle_base": 23.999,
+  "fore_triangle_height": 32.808,
+  "length_on_deck": 35.42,
+  "length_on_waterline": 28.5,
+  "length_over_all": 35.4,
+  "main": Object {
+    "foot": 22.966,
+    "head": 16.404,
+    "luff": 17.998,
+  },
+  "propellor": Object {
+    "type": "folding",
+  },
+  "sailarea": 871.856,
+  "thcf": 1.025,
+  "topsail": Object {
+    "luff": 22.001,
+    "perpendicular": 7.999,
+  },
+}
+`;
+
+exports[`boatm2f Transcur feet 1`] = `
+Object {
+  "beam": 10.761,
+  "draft": 4.58,
+  "fore_triangle_base": 23.999,
+  "fore_triangle_height": 32.808,
+  "length_on_deck": 35.42,
+  "length_on_waterline": 28.5,
+  "length_over_all": 35.4,
+  "main": Object {
+    "foot": 22.966,
+    "head": 16.404,
+    "luff": 17.998,
+  },
+  "propellor": Object {
+    "type": "folding",
+  },
+  "sailarea": 871.856,
+  "thcf": 1.025,
+  "topsail": Object {
+    "luff": 22.001,
+    "perpendicular": 7.999,
+  },
+}
+`;
+
+exports[`t1 1`] = `1.025`;
