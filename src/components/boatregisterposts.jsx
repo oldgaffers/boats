@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useAxios } from 'use-axios-client';
+import { boatRegisterHome } from '../util/constants';
 
 export async function postBoatData(data) {
   console.log(postBoatData, data);
@@ -21,6 +23,10 @@ export async function postCrewEnquiry(data) {
   );
 }
 
+export function useGetThumb(albumKey) {
+  return useAxios(`https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/${albumKey}`);
+}
+
 export async function createPhotoAlbum(name, ogaNo) {
   const data = { name, oga_no: ogaNo };
   console.log('createPhotoAlbum', data);
@@ -31,4 +37,8 @@ export async function createPhotoAlbum(name, ogaNo) {
     }
   );
   return r.data.albumKey;
+}
+
+export function useGetBoatData(ogaNo) {
+  return useAxios(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
 }

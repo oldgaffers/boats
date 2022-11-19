@@ -12,8 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
-import { useAxios } from 'use-axios-client';
-import { boatRegisterHome } from '../util/constants';
+import { useGetThumb, useGetBoatData } from './boatregisterposts';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -89,7 +88,9 @@ function BoatCardWords({ boat }) {
 }
 
 function BoatCardImage({ albumKey, name }) {
-  const { loading, error, data } = useAxios(`https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/${albumKey}`);
+  console.log('BoatCardImage', name, albumKey);
+  const { loading, error, data } = useGetThumb(albumKey);
+
   if (loading || !data) {
     return <>
       <Skeleton variant='rounded' animation='wave' height={260} />
@@ -106,9 +107,7 @@ function BoatCardImage({ albumKey, name }) {
 }
 
 export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
-  const { loading, error, data } = useAxios({
-    url: `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`,
-  });
+  const { loading, error, data } = useGetBoatData(ogaNo);
   const [markChecked, setMarkChecked] = useState(marked);
 
   const handleMarked = (checked) => {
