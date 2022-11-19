@@ -27,7 +27,6 @@ function makePicklist(view, pickers, field) {
   if (pickers[field] && pickers[field].length > 0) {
     const p = pickers[field]
     const pl = [...new Set(p)].map((item) => ({ name: item }));
-    console.log('makePicklist', field, pl);
     return pl;
   }
   console.log('makePicklist - empty', field);
@@ -47,6 +46,7 @@ export default function SearchAndFilterBoats({
   onMarkedOnly,
   isMarkedOnly,
 }) {
+  console.log('SearchAndFilterBoats', pickers);
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
   const debouncedOgaNo = useDebounce(ogaNo, 1000);

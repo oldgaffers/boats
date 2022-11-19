@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -9,6 +9,23 @@ import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { useFilterable, applyFilters } from '../util/oganoutils';
+
+function makePickers(filtered) {
+  return [
+    "name",
+    "designer",
+    "builder",
+    "rig_type",
+    "mainsail_type",
+    "generic_type",
+    "design_class",
+    "construction_material",
+  ].map((key) => ({ [key]: [...new Set(filtered.map((boat) => {
+      return boat[key];
+    }).filter((v) => v))] 
+  })).reduce((obj, item) => (obj[item.key] = item.value, obj) , {});
+}
+
 export default function BrowseBoats({
   state,
   markList,
@@ -22,36 +39,27 @@ export default function BrowseBoats({
   onBoatUnMarked,
 }) {
   const { data, error, loading } = useFilterable();
-  const pickers = {
-    name: [],
-    designer: [],
-    builder: [],
-    rig_type: [],
-    mainsail_type: [],
-    generic_type: [],
-    design_class: [],
-    construction_material: [],
-  };
+  const [pickers, setPickers] = useState();
 
   const { bpp, sort, sortDirection, filters } = state;
 
   useEffect(() => {
     if (data) {
-      // console.log('filterable', data);
-      // console.log('filters', filters);
       const filtered = applyFilters(data, filters);
       console.log('filtered', filtered);
-      Object.keys(pickers).forEach((key) => {
-        pickers[key] = [...new Set(filtered.map((boat) => {
-          // console.log(boat);
-          return boat[key];
-        }).filter((v) => v))];
-      });
-      console.log('pickers', pickers);
+      const newPickers = makePickers(filtered);
+      if (pickers) {
+        let changes = false;
+        if (changes) {
+          setPickers(newPickers);
+        }
+      } else {
+        setPickers(newPickers);
+      }
     }
-  });
+  }, [pickers, data, filters]);
 
-  if (loading) return <CircularProgress/>
+  if (loading || !pickers) return <CircularProgress/>
   if (error) {
     console.log(error);
   }
