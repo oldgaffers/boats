@@ -29,7 +29,7 @@ function makePicklist(view, pickers, field) {
     const pl = [...new Set(p)].map((item) => ({ name: item }));
     return pl;
   }
-  return [{ 'undefined': 1 }]; // helps testing - TODO make more helpful
+  return [];
 }
 
 export default function SearchAndFilterBoats({

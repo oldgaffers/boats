@@ -10,7 +10,8 @@ export default function Picker({ options, id, label, onChange, value, clearable=
   opt.push(''); // not set is an allowed value
 
   return (<Autocomplete  
-    sx={{boxSizing: 'content-box'}}    
+    sx={{boxSizing: 'content-box'}}
+    disabled={options.length === 0} 
     disableClearable={!clearable}
     options={opt}
     id={id}
