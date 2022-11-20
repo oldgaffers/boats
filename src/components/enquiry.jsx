@@ -119,11 +119,11 @@ export default function Enquiry({ classes, boat }) {
   if (loading) return <p>Loading ...</p>;
   if (error) return `Error! ${error}`;
 
+  const member = userRoles?.includes('member') || false;
+
   const handleClickOpen = () => {
-    if (userRoles.includes('member')) {
-      console.log(boat.ownerships);
+    if (member) {
       const current = boat.ownerships.filter((o) => o.current);
-      console.log(current);
       const memberNumbers = [...new Set(current.map((owner) => owner.member))];
       getOwners({ variables: { members: memberNumbers } })
     } else {
@@ -142,10 +142,13 @@ export default function Enquiry({ classes, boat }) {
 
   const handleSend = ({ id, boat_name, oga_no, type, email, text, owners }) => {
     setOpen(false);
-    const name = (user && user.name) || '';
+    const data = { type, id, boat_name, oga_no, email, text, owners, member };
+    if (user?.name) {
+      data.name = user.name;
+    }
     axios.post(
       'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/enquiry',
-      { type, id, boat_name, oga_no, email, name, text, owners },
+      data,
       ).then((response) => {
         setSnackBarOpen(true);
       })
