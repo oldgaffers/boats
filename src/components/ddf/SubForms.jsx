@@ -1,5 +1,4 @@
 import {
-  componentTypes,
   validatorTypes,
   dataTypes,
 } from "@data-driven-forms/react-form-renderer";
@@ -11,86 +10,37 @@ import {
   constructionItems,
 } from "./util";
 
-export const cardForm = (pickers) => {
-  return {
-    title: "Card",
-    name: "card",
-    component: componentTypes.SUB_FORM,
-    fields: [
-      {
-        component: "html",
-        title: "Short description",
-        name: "short_description",
-        controls: ["bold", "italic"],
-        maxLength: 500,
-      },
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "year",
-        label: "Year Built",
-        type: "number",
-        dataType: dataTypes.INTEGER,
-      },
-      {
-        component: componentTypes.CHECKBOX,
-        name: "year_is_approximate",
-        label: "Approximate",
-        dataType: "boolean",
-      },
-      ...homeItems,
-      ...designerItems(pickers),
-      ...builderItems(pickers),
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "place_built",
-        label: "Place built",
-      },
-    ],
-  };
-};
-
 export const summaryForm = (pickers) => {
   return {
     title: "Summary",
     name: "summary",
-    component: componentTypes.SUB_FORM,
+    component: 'sub-form',
     fields: [
       {
-        component: componentTypes.SELECT,
+        component: 'select',
         name: "mainsail_type",
         label: "Mainsail",
         isRequired: true,
         options: mapPicker(pickers.sail_type),
       },
       {
-        component: componentTypes.SELECT,
+        component: 'select',
         name: "rig_type",
         label: "Rig",
         isRequired: true,
         options: mapPicker(pickers.rig_type),
       },
+      ...homeItems,
       {
-        component: componentTypes.TEXT_FIELD,
-        name: "home_port",
-        label: "Home Port",
-      },
-      {
-        component: componentTypes.FIELD_ARRAY,
+        component: 'field-array',
         name: "previous_names",
         label: "Previous name/s",
         fields: [{ component: "text-field" }],
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "website",
         label: "website url",
-      },
-      {
-        component: "html",
-        title: "Short description",
-        name: "short_description",
-        controls: ["bold", "italic"],
-        maxLength: 500,
       },
     ],
   };
@@ -115,14 +65,14 @@ export const descriptionsItems = [
 
 export const yearItems = [
   {
-    component: componentTypes.TEXT_FIELD,
+    component: 'text-field',
     name: "year",
     label: "Year Built",
     type: "number",
     dataType: dataTypes.INTEGER,
   },
   {
-    component: componentTypes.CHECKBOX,
+    component: 'checkbox',
     name: "year_is_approximate",
     label: "Approximate",
     dataType: "boolean",
@@ -131,12 +81,12 @@ export const yearItems = [
 
 export const homeItems = [
   {
-    component: componentTypes.TEXT_FIELD,
+    component: 'text-field',
     name: "home_country",
     label: "Home Country",
   },
   {
-    component: componentTypes.TEXT_FIELD,
+    component: 'checkbox',
     name: "home_port",
     label: "Home Port",
   },
@@ -145,47 +95,47 @@ export const homeItems = [
 export const descriptionsForm = {
   title: "Edit Descriptions",
   name: "descriptions",
-  component: componentTypes.SUB_FORM,
+  component: 'sub-form',
   fields: descriptionsItems,
 };
 
 export const registrationForm = {
   title: "Registrations",
   name: "registrations",
-  component: componentTypes.SUB_FORM,
+  component: 'sub-form',
   fields: [
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "sail_number",
       label: "Sail No.",
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "ssr",
       label: "Small Ships Registry no. (SSR)",
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "nhsr",
       label: "National Register of Historic Vessels no. (NRHV)",
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "fishing_number",
       label: "Fishing No.",
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "callsign",
       label: "Call Sign",
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "nsbr",
       label: "National Small Boat Register",
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "uk_part1",
       label: "Official Registration",
     },
@@ -196,10 +146,10 @@ export const constructionForm = (pickers) => {
   return {
     title: "Design & Build",
     name: "construction",
-    component: componentTypes.SUB_FORM,
+    component: 'sub-form',
     fields: [
       {
-        component: componentTypes.SELECT,
+        component: 'select',
         name: "generic_type",
         label: "Generic Type",
         isReadOnly: false,
@@ -211,7 +161,7 @@ export const constructionForm = (pickers) => {
       ...designClassItems(pickers),
       ...yearItems,
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "place_built",
         label: "Place built",
       },
@@ -221,55 +171,19 @@ export const constructionForm = (pickers) => {
   };
 };
 
-
-export const sellForm = (pickers) => {
-  return {
-    title: "Put Boat For Sale",
-    name: "sell",
-    component: componentTypes.SUB_FORM,
-    fields: [
-      {
-        component: componentTypes.TEXT_FIELD,
-        name: "price",
-        label: "Price (pounds)",
-        type: "number",
-        dataType: dataTypes.FLOAT,
-        isRequired: true,
-        validate: [
-          {
-            type: validatorTypes.REQUIRED,
-          },
-        ],
-      },
-      {
-        component: "html",
-        title: "Sales Text",
-        name: "sales_text",
-        controls: ["bold", "italic"],
-        maxLength: 500,
-        isRequired: true,
-        validate: [
-          {
-            type: validatorTypes.REQUIRED,
-          },
-        ],
-      },
-    ],
-  };
-};
-
 export const yachtHullStep = (nextStep) => {
   return {
     name: "yacht-hull-step",
+    component: 'sub-form',
     nextStep,
     fields: [
       {
         name: "hullform",
         title: "Hull Form",
-        component: componentTypes.SUB_FORM,
+        component: 'sub-form',
         fields: [
           {
-            component: componentTypes.RADIO,
+            component: 'radio',
             name: "hull_form",
             options: [
               { label: "cut-away stern", value: "cut away stern" },
@@ -297,15 +211,16 @@ export const yachtHullStep = (nextStep) => {
 export const dinghyHullStep = (nextStep) => {
   return {
     name: "dinghy-hull-step",
+    component: 'sub-form',
     nextStep,
     fields: [
       {
         title: "Hull Form",
         name: "hullform",
-        component: componentTypes.SUB_FORM,
+        component: 'sub-form',
         fields: [
           {
-            component: componentTypes.RADIO,
+            component: 'radio',
             name: "hull_form",
             options: [
               { label: "dinghy", value: "dinghy" },

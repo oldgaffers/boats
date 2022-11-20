@@ -4,6 +4,7 @@ import componentTypes from "@data-driven-forms/react-form-renderer/component-typ
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import CircularProgress from "@mui/material/CircularProgress";
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem, GridEditInputCell } from '@mui/x-data-grid';
@@ -57,18 +58,18 @@ export default function OwnershipForm(props) {
         return o;
     });
 
-    useEffect(() => { 
+    useEffect(() => {
         input.onChange({
             owners: owners.map((o) => {
                 console.log('onChange', o);
-                if(o.id) {
+                if (o.id) {
                     const { name, ...rest } = o;
                     return rest;
                 }
                 return o;
             }),
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [owners]);
 
     let membership;
@@ -84,7 +85,7 @@ export default function OwnershipForm(props) {
     const memberNumbers = [...new Set(owners.filter((o) => queryIf(o)).map((o) => o.member))];
     if (membership) {
         console.log('membership', membership);
-        if(!memberNumbers.includes(membership.member)) {
+        if (!memberNumbers.includes(membership.member)) {
             memberNumbers.push(membership.member);
         }
         const currentRecords = input.value.current || owners.filter((o) => o.current);
@@ -104,16 +105,16 @@ export default function OwnershipForm(props) {
             if (getMembersResults.data.members) {
                 members.push(...getMembersResults.data.members);
             } else {
-                getMembers({ variables: {members: memberNumbers } });
+                getMembers({ variables: { members: memberNumbers } });
             }
         } else {
-            if(getMembersResults.called) {
+            if (getMembersResults.called) {
                 console.log('called but not loading');
             } else {
                 console.log('not called, calling now', memberNumbers);
-                getMembers({ variables: {members: memberNumbers } });
+                getMembers({ variables: { members: memberNumbers } });
             }
-        }    
+        }
     }
 
     const ownerNameGetter = (owner) => {
@@ -204,64 +205,70 @@ export default function OwnershipForm(props) {
     }).sort((a, b) => a.start > b.start);
 
     return (
-        <div style={{ height: 300, width: '100%' }}>
-            <DataGrid
-                experimentalFeatures={{ newEditingApi: true }}
-                rows={ownersWithId}
-                columns={[
-                    {
-                        field: 'name',
-                        headerName: 'Name',
-                        flex: 1,
-                        editable: true,
-                        valueGetter: ({ row }) => ownerNameGetter(row),
-                        valueFormatter: ({ value }) => ownerNameFormatter(value),
-                        renderEditCell: ownerNameEditor,
-                    },
-                    { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true,  },
-                    { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
-                    { field: 'start', headerName: 'Start', type: 'number', width: 90, editable: true, valueFormatter: ({ value }) => value || '?' },
-                    { field: 'end', headerName: 'End', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value || '-' },
-                    { field: 'share', headerName: 'Share', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
-                    {
-                        width: 40,
-                        field: 'actions',
-                        type: 'actions',
-                        getActions: ({ row }) => [
-                            <GridActionsCellItem
-                                icon={<DeleteIcon />}
-                                label="Delete"
-                                onClick={() => deleteRow(row)}
-                            />,
-                        ]
-                    }
-                ]}
-                autoPageSize={true}
-                isCellEditable={(params) => true}
-                initialState={{
-                    columns: {
-                      columnVisibilityModel: {
-                        goldId: false,
-                        member: false,
-                      },
-                    },
-                  }}
-            />
-            <Stack
-                sx={{ width: '100%', mb: 1 }}
-                direction="row"
-                alignItems="flex-start"
-                columnGap={1}
-            >
-                {theirBoat ? '' : (
-                    <Button size="small" onClick={handleClaim}>
-                        This is my boat
-                    </Button>)
-                }
-                <Button size="small" onClick={handleAddRow}>
-                    Add a record
-                </Button>
-            </Stack>
-        </div>
+        <Box sx={{ width: '100%', 
+        marginRight: "1em",
+        border: "0.5em", display: 'grid', gridTemplateRows: '1fr 1fr' }}>
+            <Box>
+                <DataGrid
+                    experimentalFeatures={{ newEditingApi: true }}
+                    rows={ownersWithId}
+                    columns={[
+                        {
+                            field: 'name',
+                            headerName: 'Name',
+                            flex: 1,
+                            editable: true,
+                            valueGetter: ({ row }) => ownerNameGetter(row),
+                            valueFormatter: ({ value }) => ownerNameFormatter(value),
+                            renderEditCell: ownerNameEditor,
+                        },
+                        { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true, },
+                        { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
+                        { field: 'start', headerName: 'Start', type: 'number', width: 90, editable: true, valueFormatter: ({ value }) => value || '?' },
+                        { field: 'end', headerName: 'End', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value || '-' },
+                        { field: 'share', headerName: 'Share', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
+                        {
+                            width: 40,
+                            field: 'actions',
+                            type: 'actions',
+                            getActions: ({ row }) => [
+                                <GridActionsCellItem
+                                    icon={<DeleteIcon />}
+                                    label="Delete"
+                                    onClick={() => deleteRow(row)}
+                                />,
+                            ]
+                        }
+                    ]}
+                    autoPageSize={true}
+                    isCellEditable={(params) => true}
+                    initialState={{
+                        columns: {
+                            columnVisibilityModel: {
+                                goldId: false,
+                                member: false,
+                            },
+                        },
+                    }}
+                />
+            </Box>
+            <Box>
+
+                <Box sx={{ border: "0.5em", display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+                    <Box>
+                        {theirBoat ? '' : (
+                            <Button size="small" onClick={handleClaim}>
+                                This is my boat
+                            </Button>)
+                        }
+                    </Box>
+                    <Box>
+                        <Button size="small" onClick={handleAddRow}>
+                            Add a record
+                        </Button>
+                    </Box>
+                </Box>
+            </Box>
+        </Box>
     );
 }

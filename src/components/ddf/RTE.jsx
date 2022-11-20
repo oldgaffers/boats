@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { useTheme, ThemeProvider } from '@mui/material/styles'
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import MUIRichTextEditor from "mui-rte";
 // import { stateToHTML } from "draft-js-export-html";
@@ -63,7 +64,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
 })
 
   return (
-    <div
+    <Box sx={{ margin: '0.5em' }}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           e.stopPropagation();
@@ -81,7 +82,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
           ref={ref}
         />
       </ThemeProvider>
-    </div>
+    </Box>
   );
 };
 

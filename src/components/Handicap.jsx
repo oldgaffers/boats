@@ -1,5 +1,4 @@
 import {
-  componentTypes,
   dataTypes,
   validatorTypes,
 } from "@data-driven-forms/react-form-renderer";
@@ -59,7 +58,7 @@ export function sail_area({ values }) {
 
 const sailFields = (sides) => {
   return sides.map(({ name, label }) => ({
-    component: componentTypes.TEXT_FIELD,
+    component: 'text-field',
     name,
     label: `${label} (decimal feet)`,
     type: "number",
@@ -70,17 +69,17 @@ const sailFields = (sides) => {
 const propellorForm = {
   title: "Propellor",
   name: "handicap_data.propellor",
-  component: componentTypes.SUB_FORM,
+  component: 'sub-form',
   fields: [
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "handicap_data.propellor.blades",
       label: "Blades",
       type: "number",
       dataType: dataTypes.INTEGER,
     },
     {
-      component: componentTypes.RADIO,
+      component: 'radio',
       name: "handicap_data.propellor.type",
       label: "propellor type",
       options: [
@@ -102,12 +101,13 @@ const propellorForm = {
 const headsail = (name, nextStep) => {
   return {
     name: `${name}-step`,
-    nextStep,
+    component: 'sub-form',
+    nextStep, 
     fields: [
       {
         title: name.replace(/_/g, " "),
         name: `handicap_data.${name}`,
-        component: componentTypes.SUB_FORM,
+        component: 'sub-form',
         fields: [
           sailFields([
             { name: `handicap_data.${name}.luff`, label: "Luff" },
@@ -146,12 +146,12 @@ const main_required_props = (sail, rig_type) => {
 const mainsail_fields = (sail) => {
   return [
     {
-      component: componentTypes.PLAIN_TEXT,
+      component: 'plain-text',
       name: `ddf.${sail}.intro`,
       label: `${sail} sail`,
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: `handicap_data.${sail}.luff`,
       label: `Luff (decimal feet)`,
       type: "number",
@@ -166,7 +166,7 @@ const mainsail_fields = (sail) => {
       },
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: `handicap_data.${sail}.foot`,
       label: `Foot (decimal feet)`,
       type: "number",
@@ -181,7 +181,7 @@ const mainsail_fields = (sail) => {
       },
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: `handicap_data.${sail}.head`,
       label: `Head (decimal feet)`,
       type: "number",
@@ -203,7 +203,7 @@ const mainsail_fields = (sail) => {
       },
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: `ddf.sail_area.${sail}`,
       label: "Calculated Area (decimal square feet)",
       type: "number",
@@ -227,12 +227,12 @@ const mainsail_fields = (sail) => {
 
 const topsail_fields = (sail) => [
   {
-    component: componentTypes.PLAIN_TEXT,
+    component: 'plain-text',
     name: `ddf.${sail}`,
     label: sail,
   },
   {
-    component: componentTypes.TEXT_FIELD,
+    component: 'text-field',
     name: `handicap_data.${sail}.luff`,
     label: `Luff (decimal feet)`,
     type: "number",
@@ -246,7 +246,7 @@ const topsail_fields = (sail) => [
     },
   },
   {
-    component: componentTypes.TEXT_FIELD,
+    component: 'text-field',
     name: `handicap_data.${sail}.perpendicular`,
     label: `Perpendicular (decimal feet)`,
     type: "number",
@@ -260,7 +260,7 @@ const topsail_fields = (sail) => [
     },
   },
   {
-    component: componentTypes.TEXT_FIELD,
+    component: 'text-field',
     name: `ddf.sail_area.${sail}`,
     label: "Calculated Area (decimal square feet)",
     description: "½l×p",
@@ -283,9 +283,10 @@ const topsail_fields = (sail) => [
   },
 ];
 
-export const steps = [
+export const steps = (nextStep) => [
   {
     name: "handicap-step",
+    component: 'sub-form',
     nextStep: ({ values }) => {
       if(values.handicap_data && values.handicap_data.sailarea) {
         return 'hull-step'
@@ -302,17 +303,17 @@ export const steps = [
       {
         title: "Handicap Details",
         name: 'ddf.hcd',
-        component: componentTypes.SUB_FORM,
+        component: 'sub-form',
         description: `The following steps collect the information needed to calculate a traditional T(H)CF
         handicap and the extra data for experimental and area handicaps.`,        fields: [
           {
-            component: componentTypes.TEXT_FIELD,
+            component: 'text-field',
             name: "handicap_data.thcf",
             readOnly: true,
             label: "stored T(H)CF",
           },
           {
-            component: componentTypes.TEXT_FIELD,
+            component: 'text-field',
             name: "handicap_data.sailarea",
             label: "Sail Area (decimal square feet)",
             description: "If you know the sail area you can enter it here",
@@ -325,6 +326,7 @@ export const steps = [
   },
   {
     name: "sails-step",
+    component: 'sub-form',
     nextStep: {
       when: "rig_type",
       stepMapper: {
@@ -341,12 +343,12 @@ export const steps = [
     },
     fields: [
       {
-        component: componentTypes.PLAIN_TEXT,
+        component: 'plain-text',
         name: "ddf.handicap_sails",
         label: "Foretriangle",
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "handicap_data.fore_triangle_height",
         label: "Height (decimal feet)",
         description:
@@ -381,7 +383,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "handicap_data.fore_triangle_base",
         label: "Base (decimal feet)",
         description:
@@ -417,7 +419,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.sail_area.foretriangle",
         label: "Calculated Area (decimal square feet)",
         description: "85% of the nominal triangle (½b×h)",
@@ -431,18 +433,21 @@ export const steps = [
   {
     title: "Fore main sail",
     name: "foremast-step",
+    component: 'sub-form',
     nextStep: "foremast-topsail-step",
     fields: mainsail_fields("fore"),
   },
   {
     title: "foremast topsail",
     name: "foremast-topsail-step",
+    component: 'sub-form',
     nextStep: "mainsail-step",
     fields: topsail_fields("fore_topsail"),
   },
   {
     title: "Main sail",
     name: "mainsail-step",
+    component: 'sub-form',
     nextStep: {
       when: "rig_type",
       stepMapper: {
@@ -461,6 +466,7 @@ export const steps = [
   },
   {
     name: "topsail-step",
+    component: 'sub-form',
     nextStep: {
       when: "rig_type",
       stepMapper: {
@@ -480,21 +486,24 @@ export const steps = [
   {
     title: "Mizzen main sail",
     name: "mizzen-step",
+    component: 'sub-form',
     nextStep: "mizzen-topsail-step",
     fields: mainsail_fields("mizzen"),
   },
   {
     title: "Mizzen topsail",
     name: "mizzen-topsail-step",
+    component: 'sub-form',
     nextStep: "calculated-sailarea-step",
     fields: topsail_fields("mizzen_topsail"),
   },
   {
     name: "calculated-sailarea-step",
+    component: 'sub-form',
     nextStep: "hull-step",
     fields: [
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.calculated-sailarea",
         label: "Calculated Sail Area",
         type: "number",
@@ -516,10 +525,11 @@ export const steps = [
   },
   {
     name: "hull-step",
+    component: 'sub-form',
     nextStep: "prop-step",
     fields: [
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "handicap_data.length_on_deck",
         label: "length on deck (LOD) (decimal feet)",
         type: "number",
@@ -532,7 +542,7 @@ export const steps = [
         ],
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "handicap_data.length_on_waterline",
         label: "waterline length (LWL) (decimal feet)",
         type: "number",
@@ -545,7 +555,7 @@ export const steps = [
         ],
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "handicap_data.beam",
         label: "Beam (decimal feet)",
         type: "number",
@@ -561,16 +571,18 @@ export const steps = [
   },
   {
     name: "prop-step",
+    component: 'sub-form',
     nextStep: "calc-step",
     fields: [propellorForm],
   },
   {
     name: "calc-step",
+    component: 'sub-form',
     nextStep: ({ values }) =>
       values.ddf.east_coast ? "biggest_staysail-step" : "done-step",
     fields: [
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.rig_allowance",
         isReadOnly: true,
         type: "number",
@@ -587,7 +599,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.root_s",
         isReadOnly: true,
         type: "number",
@@ -605,7 +617,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.c",
         isReadOnly: true,
         type: "number",
@@ -626,7 +638,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.mr",
         label: "Measured Rating",
         description: "0.15L(√S/√C)+0.2(L+√S)",
@@ -650,7 +662,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.prop_allowance",
         label: "Prop allowance, none: 0%, folding: 1.5%, fixed: 3%",
         isReadOnly: true,
@@ -670,7 +682,7 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "ddf.r",
         label: "Final Rating ",
         type: "number",
@@ -686,13 +698,13 @@ export const steps = [
         },
       },
       {
-        component: componentTypes.TEXT_FIELD,
+        component: 'text-field',
         name: "handicap_data.thcf",
         label: "T(H)CF",
         isReadOnly: true,
       },
       {
-        component: componentTypes.CHECKBOX,
+        component: 'checkbox',
         name: "ddf.east_coast",
         label: "Add racing headsails (e.g. for the East Coast Race)",
         dataType: "boolean",
@@ -704,10 +716,11 @@ export const steps = [
   headsail("biggest_downwind_sail", "done-step"),
   {
     name: "no-handicap-step",
-    nextStep: "done-step",
+    component: 'sub-form',
+    nextStep,
     fields: [
       {
-        component: componentTypes.PLAIN_TEXT,
+        component: 'plain-text',
         name: "ddf.no-handicap",
         label: "we can't calculate a handicap for this rig type",
       },

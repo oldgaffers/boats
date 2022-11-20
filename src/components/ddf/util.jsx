@@ -1,18 +1,16 @@
-import { componentTypes } from "@data-driven-forms/react-form-renderer";
-
 export const mapPicker = (m) => {
-  return m.map((i) => {
+  return m?.map((i) => {
     if (i.name) {
       return { label: i.name, value: i.id }
     }
     return { label: i.replace('_', ' '), value: i }
-  });
+  }) || [];
 }
 
 export const constructionItems = (pickers) => {
   return [
     {
-      component: componentTypes.SELECT,
+      component: 'select',
       name: "construction_material",
       label: "Construction material",
       isReadOnly: false,
@@ -21,7 +19,7 @@ export const constructionItems = (pickers) => {
       options: mapPicker(pickers.construction_material),
     },
     {
-      component: componentTypes.SELECT,
+      component: 'select',
       name: "construction_method",
       label: "Construction method",
       isReadOnly: false,
@@ -30,7 +28,7 @@ export const constructionItems = (pickers) => {
       options: mapPicker(pickers.construction_method),
     },
     {
-      component: componentTypes.SELECT,
+      component: 'select',
       name: "spar_material",
       label: "Spar material",
       isReadOnly: false,
@@ -39,7 +37,7 @@ export const constructionItems = (pickers) => {
       options: mapPicker(pickers.spar_material),
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       name: "construction_details",
       label: "Construction details",
     },
@@ -49,7 +47,7 @@ export const constructionItems = (pickers) => {
 export const extendableItems = ({ pickers, name, label }) => {
   return [
     {
-      component: componentTypes.SELECT,
+      component: 'select',
       name,
       label,
       isReadOnly: false,
@@ -66,7 +64,7 @@ export const extendableItems = ({ pickers, name, label }) => {
       }
     },
     {
-      component: componentTypes.TEXT_FIELD,
+      component: 'text-field',
       condition: {
         when: name,
         isEmpty: true,
