@@ -26,7 +26,6 @@ function Owner({ owner }) {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 function OwnersTable({ owners }) {
-  console.log('owners', owners);
   const memberNumbers = owners.filter((o) => queryIf(o)).map((o) => o.member);
   const [getMembersResults, { loading, error, data }] = useLazyQuery(gql(`query members {
     members(members: ${JSON.stringify(memberNumbers)}) {
