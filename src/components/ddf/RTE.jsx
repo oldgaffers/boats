@@ -3,7 +3,8 @@ import { useTheme, ThemeProvider } from '@mui/material/styles'
 import Typography from "@mui/material/Typography";
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import MUIRichTextEditor from "mui-rte";
-import { stateToHTML } from "draft-js-export-html";
+// import { stateToHTML } from "draft-js-export-html";
+import { stateToMarkdown } from "draft-js-export-markdown";
 import {
   convertFromHTML,
   ContentState,
@@ -29,9 +30,12 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
   };
 
   const handleSave = (data) => {
-    const html = stateToHTML(convertFromRaw(JSON.parse(data)));
-    // console.log("RTE save", input.name, html);
-    input.onChange(html);
+    const s = convertFromRaw(JSON.parse(data));
+    // const html = stateToHTML(s);
+    const markdown = stateToMarkdown(s);
+    // console.log("RTE save html", input.name, html);
+    // console.log("RTE save markdown", input.name, markdown);
+    input.onChange(markdown);
   };
 
   const theme = useTheme();
@@ -89,7 +93,7 @@ export const BasicHtmlEditor = ({ onSave, data, name, title, ...rest }) => {
   };
 
   const handleSave = (data) => {
-    onSave(stateToHTML(convertFromRaw(JSON.parse(data))));
+    onSave(stateToMarkdown(convertFromRaw(JSON.parse(data))));
   };
 
   const theme = useTheme();
