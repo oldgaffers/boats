@@ -179,7 +179,7 @@ const schema = (pickers) => ({
           name: "references-step",
           component: 'sub-form',
           nextStep: (values) => {
-            if (values.ddf.canBuySell) {
+            if (values?.ddf?.canBuySell) {
               switch (values.selling_status){
                 case 'for_sale':
                   return 'price-step';

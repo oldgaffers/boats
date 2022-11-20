@@ -3,7 +3,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import CircularProgress from "@mui/material/CircularProgress";
-import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -49,14 +48,7 @@ export default function OwnershipForm(props) {
     const { user } = useAuth0();
     const { input } = useFieldApi(props);
 
-    const [owners, setOwners] = useState(() => {
-        const o = input.value.owners || [];
-        if (o.length === 0 && input.value.current) {
-            const current = input.value.current.map((c) => ({ ...c, current: true }));
-            return [...o, ...current];
-        }
-        return o;
-    });
+    const [owners, setOwners] = useState(input.value || []);
 
     useEffect(() => {
         input.onChange({
@@ -69,8 +61,7 @@ export default function OwnershipForm(props) {
                 return o;
             }),
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [owners]);
+    }, [input, owners]);
 
     let membership;
     if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
@@ -92,6 +83,7 @@ export default function OwnershipForm(props) {
         const currentIds = currentRecords.map((o) => o.id);
         theirBoat = currentIds.includes(membership.id);
     }
+    console.log('memberNumbers', memberNumbers);
 
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
 
@@ -204,8 +196,9 @@ export default function OwnershipForm(props) {
         }
     }).sort((a, b) => a.start > b.start);
 
+    console.log('PP', ownersWithId);
     return (
-        <Box sx={{ width: '100%', 
+        <Box sx={{ width: '100%', height: '80%',
         marginRight: "1em",
         border: "0.5em", display: 'grid', gridTemplateRows: '1fr 1fr' }}>
             <Box>
