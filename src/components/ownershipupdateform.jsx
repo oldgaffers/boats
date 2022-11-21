@@ -49,7 +49,7 @@ export default function OwnershipForm(props) {
     const { input } = useFieldApi(props);
 
     const [owners, setOwners] = useState(input.value || []);
-
+/*
     useEffect(() => {
         input.onChange({
             owners: owners.map((o) => {
@@ -61,8 +61,8 @@ export default function OwnershipForm(props) {
                 return o;
             }),
         });
-    }, [input, owners]);
-
+    });
+*/
     let membership;
     if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
         membership = {
@@ -75,7 +75,6 @@ export default function OwnershipForm(props) {
 
     const memberNumbers = [...new Set(owners.filter((o) => queryIf(o)).map((o) => o.member))];
     if (membership) {
-        console.log('membership', membership);
         if (!memberNumbers.includes(membership.member)) {
             memberNumbers.push(membership.member);
         }
@@ -83,7 +82,6 @@ export default function OwnershipForm(props) {
         const currentIds = currentRecords.map((o) => o.id);
         theirBoat = currentIds.includes(membership.id);
     }
-    console.log('memberNumbers', memberNumbers);
 
     const [getMembers, getMembersResults] = useLazyQuery(MEMBER_QUERY);
 
@@ -110,7 +108,6 @@ export default function OwnershipForm(props) {
     }
 
     const ownerNameGetter = (owner) => {
-        console.log('ownerNameGetter', owner);
         if (owner.name) {
             return owner.name;
         }
@@ -130,7 +127,6 @@ export default function OwnershipForm(props) {
             return owner;
         }
         const m = members.filter((member) => member.id === owner.goldId);
-        console.log('m', m);
         if (m.length > 0) {
             if (m[0].GDPR) {
                 return memberFormatter(m[0]);
