@@ -1,7 +1,4 @@
-import {
-  validatorTypes,
-  dataTypes,
-} from "@data-driven-forms/react-form-renderer";
+import { dataTypes } from "@data-driven-forms/react-form-renderer";
 import { mapPicker } from "./util";
 import {
   designerItems,
