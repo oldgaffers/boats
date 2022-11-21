@@ -295,7 +295,7 @@ const WizardInternal = (props) => {
     .filter((a) => !visited.includes(a));
   const nextActivityStep = (toVisit.length>0) ? `${toVisit[0]}-step` : 'done-step';
   return (
-    <div onKeyDown={onKeyDown} style={{ width: '100%' }}>
+    <Box onKeyDown={onKeyDown} sx={{ width: '100%', position: 'bottom', flexGrow: 1 }}>
       {currentStep.title}
       {formOptions.renderForm(currentStep.fields)}
       <FormSpy>
@@ -342,7 +342,7 @@ const WizardInternal = (props) => {
           </Box>
         )}
       </FormSpy>
-    </div>
+    </Box>
   );
 };
 
