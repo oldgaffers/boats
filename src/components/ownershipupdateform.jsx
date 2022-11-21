@@ -196,12 +196,14 @@ export default function OwnershipForm(props) {
         }
     }).sort((a, b) => a.start > b.start);
 
-    console.log('PP', ownersWithId);
     return (
-        <Box sx={{ width: '100%', height: '80%',
-        marginRight: "1em",
-        border: "0.5em", display: 'grid', gridTemplateRows: '1fr 1fr' }}>
-            <Box>
+        <Box sx={{
+            width: '100%',
+            marginRight: "1em",
+            border: "0.5em", display: 'grid', gridTemplateRows: 'auto',
+            }}
+        >
+            <Box sx={{height: '300px'}}>
                 <DataGrid
                     experimentalFeatures={{ newEditingApi: true }}
                     rows={ownersWithId}
@@ -245,8 +247,6 @@ export default function OwnershipForm(props) {
                     }}
                 />
             </Box>
-            <Box>
-
                 <Box sx={{ border: "0.5em", display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
                     <Box>
                         {theirBoat ? '' : (
@@ -261,7 +261,6 @@ export default function OwnershipForm(props) {
                         </Button>
                     </Box>
                 </Box>
-            </Box>
         </Box>
     );
 }
