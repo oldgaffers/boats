@@ -23,7 +23,6 @@ export default function OGA60({ onClose, onCancel }) {
     const { user, isAuthenticated } = useAuth0();
 
     if (result) {
-        console.log('mutation', result);
         if (result.error) {
             alert('something went wrong - please email oga60@oga.org.uk and let us know how we can help.')
         }
@@ -36,11 +35,13 @@ export default function OGA60({ onClose, onCancel }) {
 
     const handleSubmit = (values) => {
         const { ddf, ...data } = values;
-        addInterest({ variables: { 
-            topic: 'OGA60',
-            email: user.email, gold_id: user["https://oga.org.uk/id"], member: user["https://oga.org.uk/member"],
-            data,
-        } });
+        addInterest({
+            variables: {
+                topic: 'OGA60',
+                email: user.email, gold_id: user["https://oga.org.uk/id"], member: user["https://oga.org.uk/member"],
+                data,
+            }
+        });
         onClose();
     };
 
@@ -48,74 +49,134 @@ export default function OGA60({ onClose, onCancel }) {
         return {
             fields: [
                 {
+                    name: 'ddf.user_name',
+                    component: componentTypes.TEXT_FIELD,
+                    hideField: true,
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        return { value: (user && (user.name || `${user.given_name} ${user.family_name})`)) || '' }
+                    },
+                },
+                {
+                    name: 'ddf.member',
+                    component: componentTypes.TEXT_FIELD,
+                    hideField: true,
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                        return { value: member }
+                    },
+                },
+                {
                     "component": componentTypes.SUB_FORM,
                     "title": "About you",
                     "name": "ddf.about.skipper",
                     "fields": [
                         {
-                            component: componentTypes.TEXT_FIELD,
-                            name: 'ddf.show_user',
-                            label: '',
-                            isReadOnly: true,
-                            resolveProps: (props, { meta, input }, formOptions) => {
-                                if (member && user) {
-                                    return {
-                                        value: `We've identified you as ${user.given_name} ${user.family_name}, member ${member}.`,
-                                    }
-                                } else {
-                                    if (user) {
-                                        return {
-                                            value: `We've identified you as ${user.given_name} ${user.family_name}, but we haven't found your membership details.
-                                            You can still register interest and we will be in touch regarding your membership.`,
-                                        }    
-                                    } else {
-                                        return {
-                                            value: `Please log in.`,
-                                        } 
-                                    }
-                                }
-                            },
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.show_member',
+                            label: `We've identified you as {user.given_name} {user.family_name}, member ${member}`,
+                            sx: { marginTop: "1em" },
+                            condition: {
+                                when: 'ddf.member',
+                                isNotEmpty: true,
+                            }
                         },
                         {
-                            component: componentTypes.SUB_FORM,
-                            title: 'Your plans.',
-                            name: 'boat',
-                            fields: [
-                                {
-                                    component: componentTypes.RADIO,
-                                    name: 'ddf.boat',
-                                    label: "Bringing a boat",
-                                    initialValue: 'none',
-                                    options: [
-                                        { label: 'I\'m attending as part of the Round Britain Cruise', value: 'rbc' },
-                                        { label: 'I\'m attending as part of the Cross Britain fleet', value: 'cross' },
-                                        { label: 'I\'ll be bringing my cruising yacht', value: 'yacht' },
-                                        { label: 'I\'ll be bringing a boat on a trailer by road', value: 'trailer' },
-                                        { label: 'I won\'t be bringing a boat', value: 'none' },
-                                    ],
-                                },
-                                {
-                                    component: componentTypes.RADIO,
-                                    name: 'accomodation',
-                                    label: "Where we'll sleep",
-                                    initialValue: 'none',
-                                    options: [
-                                        { label: 'aboard my boat', value: 'aboard' },
-                                        { label: 'in a tent I\'ll bring', value: 'tent' },
-                                        { label: 'in a campervan I\'ll bring', value: 'campervan' },
-                                        { label: 'I won\'t be staying at the event site', value: 'none' },
-                                    ],
-                                },     
-                                {
-                                    component: componentTypes.TEXT_FIELD,
-                                    name: 'party_size',
-                                    label: "Likely number of people in the group",
-                                    initialValue: 1,
-                                    type: 'number',
-                                    isRequired: true,
-                                    validate: [{ type: validatorTypes.REQUIRED }],
-                                },
-                            ]
+                            component: componentTypes.PLAIN_TEXT,
+                            name: 'ddf.show_user',
+                            label: `We've identified you as {user.given_name} {user.family_name}, but we haven't found your membership details.
+                            You can still register interest and we will be in touch regarding your membership`,
+                            sx: { marginTop: "1em" },
+                            condition: {
+                                and: [
+                                    {
+                                      when: 'ddf.member',
+                                      isEmpty: true,
+                                    },
+                                    {
+                                      when: 'ddf.user_name',
+                                      isEmpty: false,
+                                    }
+                                  ]
+                            }
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'name',
+                            label: 'Your name',
+                            condition: {
+                                when: 'ddf.user_name',
+                                isEmpty: true,
+                            }
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'member',
+                            label: 'Membership Number',
+                            helperText: "If you can't remember your number we'll sort that out.",
+                            condition: {
+                                when: 'ddf.user_name',
+                                isEmpty: true,
+                            }
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'email',
+                            label: 'email',
+                            helperText: "If you can't log in we will need an email address to contact you.",
+                            condition: {
+                                when: 'ddf.user_name',
+                                isEmpty: true,
+                            }
+                        }
+                    ]
+                },
+                {
+                    component: componentTypes.SUB_FORM,
+                    title: 'Your plans.',
+                    name: 'boat',
+                    fields: [
+                        {
+                            component: componentTypes.RADIO,
+                            name: 'ddf.boat',
+                            label: "Bringing a boat",
+                            initialValue: 'none',
+                            options: [
+                                { label: 'I\'m attending as part of the Round Britain Cruise', value: 'rbc' },
+                                { label: 'I\'m attending as part of the Cross Britain fleet', value: 'cross' },
+                                { label: 'I\'ll be bringing my cruising yacht', value: 'yacht' },
+                                { label: 'I\'ll be bringing a boat on a trailer by road', value: 'trailer' },
+                                { label: 'I won\'t be bringing a boat', value: 'none' },
+                            ],
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'boat_name',
+                            label: 'Add your boat name if you would like to',
+                            condition: {
+                                when: 'ddf.boat',
+                                is: 'none',
+                                notMatch: true,
+                            }
+                        },
+                        {
+                            component: componentTypes.RADIO,
+                            name: 'accomodation',
+                            label: "Where we'll sleep",
+                            initialValue: 'none',
+                            options: [
+                                { label: 'aboard my boat', value: 'aboard' },
+                                { label: 'in a tent I\'ll bring', value: 'tent' },
+                                { label: 'in a campervan I\'ll bring', value: 'campervan' },
+                                { label: 'I won\'t be staying at the event site', value: 'none' },
+                            ],
+                        },
+                        {
+                            component: componentTypes.TEXT_FIELD,
+                            name: 'party_size',
+                            label: "Likely number of people in the group",
+                            initialValue: 1,
+                            type: 'number',
+                            isRequired: true,
+                            validate: [{ type: validatorTypes.REQUIRED }],
                         },
                     ]
                 },
@@ -157,7 +218,7 @@ export default function OGA60({ onClose, onCancel }) {
                             <FormTemplate {...props} buttonOrder={['cancel', 'submit']} />
                         )}
                         onSubmit={handleSubmit}
-                        onCancel={()=>onCancel()}
+                        onCancel={() => onCancel()}
                     />
                 </Grid>
             </Grid>
