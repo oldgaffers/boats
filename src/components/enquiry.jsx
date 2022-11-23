@@ -10,8 +10,8 @@ import DialogContentText from "@mui/material/DialogContentText";
 import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from 'axios';
 import { gql, useLazyQuery } from "@apollo/client";
+import { postGeneralEnquiry } from "./boatregisterposts";
 
 function ContactDialog({
   open,
@@ -42,21 +42,21 @@ function ContactDialog({
     if (owners) {
       if (owners.length > 1) {
         return (<><i>{boat_name}</i> ({oga_no})
-        is owned by {isMember ? 'fellow members' : 'members'} of the OGA.
-        We'll contact them for you from the boat register and give them your email so they can respond.</>);  
+          is owned by {isMember ? 'fellow members' : 'members'} of the OGA.
+          We'll contact them for you from the boat register and give them your email so they can respond.</>);
       } else {
         return (<><i>{boat_name}</i> ({oga_no})
-        is owned by a{isMember ? ' fellow ' : ' '}member of the OGA.
-        We'll contact them for you from the boat register and give them your email so they can respond.</>);
+          is owned by a{isMember ? ' fellow ' : ' '}member of the OGA.
+          We'll contact them for you from the boat register and give them your email so they can respond.</>);
       }
     } else {
       if (isMember) {
         return (<>Own <i>{boat_name}</i> ({oga_no}) or have some information or a
-        question about her? We'd love to hear from you. Please tell us how we can help.</>);
+          question about her? We'd love to hear from you. Please tell us how we can help.</>);
       } else {
         return (<>Own <i>{boat_name}</i> ({oga_no}) or have some information or a
-        question about her? We'd love to hear from you. Please enter your email address here
-        and tell us how we can help.</>);  
+          question about her? We'd love to hear from you. Please enter your email address here
+          and tell us how we can help.</>);
       }
     }
   };
@@ -112,7 +112,7 @@ export default function Enquiry({ classes, boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
   const userRoles = (user && user['https://oga.org.uk/roles']) || [];
-  
+
   const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]) {
     members(members: $members) { GDPR }
   }`));
@@ -146,10 +146,8 @@ export default function Enquiry({ classes, boat }) {
     if (user?.name) {
       data.name = user.name;
     }
-    axios.post(
-      'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/enquiry',
-      data,
-      ).then((response) => {
+    postGeneralEnquiry('public', 'enquiry', data)
+      .then((response) => {
         setSnackBarOpen(true);
       })
       .catch((error) => {
@@ -164,9 +162,9 @@ export default function Enquiry({ classes, boat }) {
   let enquireText;
   if (current) {
     if (current.length > 1) {
-      enquireText = "Contact the Owners";  
+      enquireText = "Contact the Owners";
     } else {
-      enquireText = "Contact the Owner";  
+      enquireText = "Contact the Owner";
     }
   } else {
     enquireText = "Ask about this boat";
@@ -187,7 +185,7 @@ export default function Enquiry({ classes, boat }) {
       <ContactDialog
         open={open}
         boat_name={boat.name}
-        oga_no={boat.oga_no}      
+        oga_no={boat.oga_no}
         user={user}
         owners={current}
         isMember={isMember}

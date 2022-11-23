@@ -1,5 +1,4 @@
 import React from "react";
-import { gql, useMutation } from '@apollo/client';
 import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -9,24 +8,11 @@ import componentMapper from "@data-driven-forms/mui-component-mapper/component-m
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from "@mui/material/Grid";
+import { postGeneralEnquiry } from "./boatregisterposts";
 
 export default function OGA60({ onClose, onCancel }) {
-    const [addInterest, result] = useMutation(gql`
-    mutation addInterest($topic: String!, $member: Int!, $gold_id: Int!, $email: String!, $data: jsonb!) {
-        insert_expression_of_interest(objects: {
-            data: $data, email: $email, gold_id: $gold_id, member: $member, topic: $topic
-        }){
-          affected_rows
-        }
-      }      
-    `);
-    const { user, isAuthenticated } = useAuth0();
 
-    if (result) {
-        if (result.error) {
-            alert('something went wrong - please email oga60@oga.org.uk and let us know how we can help.')
-        }
-    }
+    const { user, isAuthenticated } = useAuth0();
 
     let member;
     if (isAuthenticated && user) {
@@ -34,22 +20,28 @@ export default function OGA60({ onClose, onCancel }) {
     }
 
     const handleSubmit = (values) => {
-        const { ddf, ...data } = values;
-        addInterest({
-            variables: {
-                topic: 'OGA60',
-                email: user.email, gold_id: user["https://oga.org.uk/id"], member: user["https://oga.org.uk/member"],
-                data,
-            }
-        });
-        onClose();
+        const { ddf, ...rest } = values;
+        const data = {
+            topic: 'OGA60',
+            ...rest,
+            member: ddf.member || rest.member,
+        }
+        console.log(data);
+        postGeneralEnquiry('public', 'enquiry', data)
+        .then((response) => {
+            onClose();
+          })
+          .catch((error) => {
+            console.log("post", error);
+            // TODO snackbar from response.data
+          });
     };
 
     const schema = () => {
         return {
             fields: [
                 {
-                    name: 'ddf.user_name',
+                    name: 'user_name',
                     component: componentTypes.TEXT_FIELD,
                     hideField: true,
                     resolveProps: (props, { meta, input }, formOptions) => {
