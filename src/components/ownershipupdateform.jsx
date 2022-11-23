@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
@@ -175,6 +175,10 @@ export default function OwnershipForm(props) {
         setOwners([...owners, ...no]);
     }
 
+    const handleRowUpdate = (row) => {
+        console.log('handleRowUpdate', row);
+    };
+
     const handleAddRow = () => {
         setOwners([...owners, { name: '', start: lastEnd, share: 64 }]);
     }
@@ -203,6 +207,7 @@ export default function OwnershipForm(props) {
                 <DataGrid
                     experimentalFeatures={{ newEditingApi: true }}
                     rows={ownersWithId}
+                    onProcessRowUpdate={handleRowUpdate}
                     columns={[
                         {
                             field: 'name',
