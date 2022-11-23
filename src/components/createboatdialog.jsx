@@ -452,7 +452,7 @@ const schema = (pickers) => {
               },
             ],
           },
-          ...handicap_steps,
+          ...handicap_steps('done-step'),
           {
             name: "done-step",
             component: componentTypes.SUB_FORM,
