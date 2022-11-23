@@ -1,0 +1,14 @@
+const axios = require("axios");
+
+/**
+ * @param {Event} event - Details about registration event.
+ * @param {PreUserRegistrationAPI} api
+ */
+exports.onExecutePreUserRegistration = async (event, api) => {
+  const remoteUser = await axios.get("https://en998igdfqv1x4r.m.pipedream.net", { params: event });
+
+  if (remoteUser) {
+    console.log(remoteUser.data.gold);
+    // api.user.setAppMetadata("gold", remoteUser.data.gold); 
+  }
+};
