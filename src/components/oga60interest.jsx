@@ -44,17 +44,13 @@ export default function OGA60({ onClose, onCancel }) {
                     name: 'user_name',
                     component: componentTypes.TEXT_FIELD,
                     hideField: true,
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        return { value: (user && (user.name || `${user.given_name} ${user.family_name})`)) || '' }
-                    },
+                    initialValue: (user && (user.name || `${user.given_name} ${user.family_name})`)) || '',
                 },
                 {
                     name: 'ddf.member',
                     component: componentTypes.TEXT_FIELD,
                     hideField: true,
-                    resolveProps: (props, { meta, input }, formOptions) => {
-                        return { value: member }
-                    },
+                    initialValue: member,
                 },
                 {
                     "component": componentTypes.SUB_FORM,
@@ -64,38 +60,24 @@ export default function OGA60({ onClose, onCancel }) {
                         {
                             component: componentTypes.PLAIN_TEXT,
                             name: 'ddf.show_member',
-                            label: `We've identified you as {user.given_name} {user.family_name}, member ${member}`,
+                            hideField: !member,
+                            label: `We've identified you as ${user?.given_name} ${user?.family_name}, member ${member}`,
                             sx: { marginTop: "1em" },
-                            condition: {
-                                when: 'ddf.member',
-                                isNotEmpty: true,
-                            }
                         },
                         {
                             component: componentTypes.PLAIN_TEXT,
                             name: 'ddf.show_user',
-                            label: `We've identified you as {user.given_name} {user.family_name}, but we haven't found your membership details.
+                            hideField: (!user) || member,
+                            label: `We've identified you as ${user?.given_name} ${user?.family_name}, but we haven't found your membership details.
                             You can still register interest and we will be in touch regarding your membership`,
                             sx: { marginTop: "1em" },
-                            condition: {
-                                and: [
-                                    {
-                                      when: 'ddf.member',
-                                      isEmpty: true,
-                                    },
-                                    {
-                                      when: 'ddf.user_name',
-                                      isEmpty: false,
-                                    }
-                                  ]
-                            }
                         },
                         {
                             component: componentTypes.TEXT_FIELD,
                             name: 'name',
                             label: 'Your name',
                             condition: {
-                                when: 'ddf.user_name',
+                                when: 'user_name',
                                 isEmpty: true,
                             }
                         },
@@ -105,7 +87,7 @@ export default function OGA60({ onClose, onCancel }) {
                             label: 'Membership Number',
                             helperText: "If you can't remember your number we'll sort that out.",
                             condition: {
-                                when: 'ddf.user_name',
+                                when: 'user_name',
                                 isEmpty: true,
                             }
                         },
@@ -115,7 +97,7 @@ export default function OGA60({ onClose, onCancel }) {
                             label: 'email',
                             helperText: "If you can't log in we will need an email address to contact you.",
                             condition: {
-                                when: 'ddf.user_name',
+                                when: 'user_name',
                                 isEmpty: true,
                             }
                         }
