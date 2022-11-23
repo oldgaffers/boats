@@ -22,7 +22,7 @@ export default function OGA60({ onClose, onCancel }) {
     const handleSubmit = (values) => {
         const { ddf, ...rest } = values;
         const data = {
-            topic: 'OGA60',
+            topic: 'Jubilee',
             ...rest,
             member: ddf.member || rest.member,
         }
