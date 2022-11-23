@@ -13,6 +13,16 @@ export async function postBoatData(data) {
   );
 }
 
+export async function putGeneralEnquiry(scope, subject, data) {
+  return axios.put(
+    `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
+    data,
+    {
+      headers: { 'content-type': 'application/json' }
+    }
+  );
+}
+
 export async function postGeneralEnquiry(scope, subject, data) {
   return axios.post(
     `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
