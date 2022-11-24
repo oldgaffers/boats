@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
@@ -49,20 +49,11 @@ export default function OwnershipForm(props) {
     const { input } = useFieldApi(props);
 
     const [owners, setOwners] = useState(input.value || []);
-/*
+
     useEffect(() => {
-        input.onChange({
-            owners: owners.map((o) => {
-                console.log('onChange', o);
-                if (o.id) {
-                    const { name, ...rest } = o;
-                    return rest;
-                }
-                return o;
-            }),
-        });
-    });
-*/
+        console.log(owners);
+    }, [owners]);
+
     let membership;
     if (user && user['https://oga.org.uk/id'] && user['https://oga.org.uk/member']) {
         membership = {
@@ -179,6 +170,14 @@ export default function OwnershipForm(props) {
         console.log('handleRowUpdate', row);
     };
 
+    const handleCellEditStop = (r) => {
+        console.log('handleRowUpdate', r);
+    };
+    
+    const handleRowEditStop = (r) => {
+        console.log('handleRowEditStop', r);
+    }
+
     const handleAddRow = () => {
         setOwners([...owners, { name: '', start: lastEnd, share: 64 }]);
     }
@@ -207,6 +206,8 @@ export default function OwnershipForm(props) {
                 <DataGrid
                     experimentalFeatures={{ newEditingApi: true }}
                     rows={ownersWithId}
+                    onCellEditStop={handleCellEditStop}
+                    onRowEditStop={handleRowEditStop}
                     onProcessRowUpdate={handleRowUpdate}
                     columns={[
                         {
