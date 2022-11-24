@@ -51,7 +51,8 @@ export default function OwnershipForm(props) {
     const [owners, setOwners] = useState(input.value || []);
 
     useEffect(() => {
-        console.log(owners);
+        console.log('useEffect', owners);
+        //input.onChange(owners);
     }, [owners]);
 
     let membership;
@@ -221,8 +222,8 @@ export default function OwnershipForm(props) {
                         },
                         { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true, },
                         { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
-                        { field: 'start', headerName: 'Start', type: 'number', width: 90, editable: true, valueFormatter: ({ value }) => value || '?' },
-                        { field: 'end', headerName: 'End', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value || '-' },
+                        { field: 'start', headerName: 'Start', type: 'text', width: 90, editable: true } ,
+                        { field:   'end', headerName: 'End', width: 90, type: 'text', editable: true },
                         { field: 'share', headerName: 'Share', width: 90, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
                         {
                             width: 40,
