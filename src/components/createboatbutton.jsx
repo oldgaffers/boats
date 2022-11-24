@@ -3,17 +3,12 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
-import { getFilterable, findFirstAbsent } from '../util/oganoutils';
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 
 async function sendToAws(boat, email, fileList, copyright) {
-  const { data } = await getFilterable();
-  const ogaNo = findFirstAbsent(data);
-  boat.oga_no = ogaNo;
-  // console.log('oga_no', ogaNo);
-  const albumKey = await createPhotoAlbum(boat.name, ogaNo);
+  const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);
   // console.log('albumKey', albumKey);
   if (fileList?.length > 0) {
     await postPhotos({ copyright, email, albumKey }, fileList);

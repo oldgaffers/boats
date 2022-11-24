@@ -10,7 +10,6 @@ import ListItem from '@mui/material/ListItem';
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from './loginbutton';
 import CreateBoatButton from './createboatbutton';
-import ProcessUpdatesButton from './processupdatesbutton';
 
 export default function BoatRegisterIntro() {
   const { user } = useAuth0();
@@ -60,7 +59,6 @@ export default function BoatRegisterIntro() {
           <LoginButton />
           {editor ? (<Box sx={{ marginTop: '1rem' }}>
             <Stack spacing={1}>
-            <ProcessUpdatesButton />
             <Button
               size="small"
               variant="contained"

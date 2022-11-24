@@ -59,6 +59,12 @@ export async function createPhotoAlbum(name, ogaNo) {
   return r.data.albumKey;
 }
 
+export async function getBoatData(ogaNo) {
+  return axios.get(
+    `${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`
+  );
+}
+
 export function useGetBoatData(ogaNo) {
   return useAxios(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
 }

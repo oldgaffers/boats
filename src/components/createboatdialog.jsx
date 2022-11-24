@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useAxios } from 'use-axios-client';
+import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
+import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import {
   FormRenderer,
   componentTypes,
@@ -33,10 +35,23 @@ import {
 import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
 import { boatRegisterHome } from '../util/constants';
+import { useFilterable, findFirstAbsent } from '../util/oganoutils';
+import { getBoatData } from './boatregisterposts';
 
 const schema = (pickers) => {
   return {
     fields: [
+      {
+        component: 'field-listener',
+        name: 'listener',
+        hideField: true,
+      },
+      {
+        component: 'sub-form',
+        name: 'filterable',
+        hideField: true,
+        fields: [],
+      },
       {
         title: "New Boat Record",
         component: componentTypes.WIZARD,
@@ -118,7 +133,7 @@ const schema = (pickers) => {
                     isSearchable: true,
                     isClearable: true,
                     noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
-                    options: mapPicker(pickers['design_class']),
+                    options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
                   },
                   {
                     component: componentTypes.TEXT_FIELD,
@@ -272,15 +287,15 @@ const schema = (pickers) => {
                     isRequired: true,
                     validate: [
                       // {
-                        // type: validatorTypes.REQUIRED,
+                      // type: validatorTypes.REQUIRED,
                       // },
                       //{
-                     //   type: validatorTypes.MIN_NUMBER_VALUE,
-                     //   threshold: 5
+                      //   type: validatorTypes.MIN_NUMBER_VALUE,
+                      //   threshold: 5
                       //}
                     ],
-                },
-                {
+                  },
+                  {
                     component: componentTypes.TEXT_FIELD,
                     name: "handicap_data.beam",
                     label: "Beam (decimal feet)",
@@ -289,12 +304,12 @@ const schema = (pickers) => {
                     isRequired: true,
                     validate: [
                       // {
-                        // type: validatorTypes.REQUIRED,
+                      // type: validatorTypes.REQUIRED,
                       // },
                       //{
-                     //   type: validatorTypes.MIN_NUMBER_VALUE,
-                     //   threshold: 1
-                     // }
+                      //   type: validatorTypes.MIN_NUMBER_VALUE,
+                      //   threshold: 1
+                      // }
                     ],
                   },
                   {
@@ -304,10 +319,10 @@ const schema = (pickers) => {
                     type: "number",
                     dataType: dataTypes.FLOAT,
                     validate: [
-                     // {
-                     //   type: validatorTypes.MIN_NUMBER_VALUE,
-                     //   threshold: 1
-                    //  }
+                      // {
+                      //   type: validatorTypes.MIN_NUMBER_VALUE,
+                      //   threshold: 1
+                      //  }
                     ],
                   },
                   {
@@ -322,7 +337,7 @@ const schema = (pickers) => {
                       //  type: validatorTypes.MIN_NUMBER_VALUE,
                       //  threshold: 1
                       //}
-                    ],   
+                    ],
                   },
                 ],
               },
@@ -507,23 +522,110 @@ const PhotoUpload = ({ component, name, title }) => {
   );
 };
 
+const FieldListener = () => {
+  const { getState, change } = useFormApi();
+
+  const { design_class, filterable } = getState().values;
+
+  useEffect(() => {
+    if (design_class) {
+      const instances = filterable.filter((boat) => boat.design_class === design_class);
+      const firstThree = instances.slice(0, 3).map((boat) => boat.oga_no);
+      Promise.allSettled(firstThree.map((ogaNo) => getBoatData(ogaNo)))
+        .then((results) => {
+          let archetype = {};
+          results.forEach((result) => {
+            const { boat } = result.value.data.result.pageContext;
+            archetype = { ...archetype, ...boat };
+          });
+          [
+            'builder', 'designer',
+          ].forEach((key) => {
+            if (archetype[key]) {
+              change(key, archetype[key].id);
+            }
+          });
+          [
+            "construction_material",
+            "construction_method",
+            "generic_type",
+            "hull_form",
+            "mainsail_type",
+            "place_built",
+            "rig_type",
+            "construction_details",
+          ].forEach((key) => {
+            if (archetype[key]) {
+              change(key, archetype[key]);
+            }
+          });
+          [
+            "beam",
+            'draft',
+            "draft_keel_down",
+            "fore_triangle_base",
+            "fore_triangle_height",
+            "length_on_deck",
+            "length_on_waterline",
+            "length_overall",
+            "moving_keel",
+            "moving_keel_type",
+            "sailarea",
+            "calculated_thcf",
+            "propellor.blades",
+            "propellor.type",
+          ].forEach((key) => {
+            if (archetype.handicap_data[key]) {
+              change(`handicap_data.${key}`, archetype.handicap_data[key]);
+            }
+          });
+          [
+            'fore',
+            'main',
+            'mizzen',
+            'topsail',
+            'fore_topsail',
+            'mizzen_topsail',
+          ].forEach((sail) => {
+            if (archetype.handicap_data[sail]) {
+              Object.keys(archetype.handicap_data[sail]).forEach((dimension) => {
+                change(`handicap_data.${sail}.${dimension}`, archetype.handicap_data[sail][dimension]);
+              });
+            }
+          });
+        });
+    }
+  }, [change, design_class, filterable]);
+
+  return null;
+};
+
+const FieldListenerWrapper = () => <FormSpy subcription={{ values: true }}>{() => <FieldListener />}</FormSpy>;
+
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
-  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
-  if (loading) return <p>Loading...</p>
-  if (error) {
+  const pickerLoad = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
+  const filterableLoad = useFilterable();
+
+  if (pickerLoad.loading || filterableLoad.loading) return <p>Loading...</p>
+  if (pickerLoad.error || filterableLoad.error) {
     return (<div>
-      Sorry, we had a problem getting the data to browse the register
+      Sorry, we had a problem getting the data to populate the form dropdowns
     </div>);
   }
 
   if (!open) return '';
 
+  const filterable = filterableLoad.data;
+  const pickers = pickerLoad.data;
+
   const handleSubmit = (boat) => {
     // console.log('handleSubmit', boat);
-    boat.design_class = data.design_class.find((item) => item.id === boat.design_class);
-    boat.designer = data.designer.find((item) => item.id === boat.designer);
-    boat.builder = data.builder.find((item) => item.id === boat.builder);
+    const ogaNo = findFirstAbsent(filterable);
+    boat.oga_no = ogaNo;
+    // boat.design_class = pickers.design_class.find((item) => item.id === boat.design_class);
+    boat.designer = pickers.designer.find((item) => item.id === boat.designer);
+    boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat);
   }
   return (
@@ -539,14 +641,15 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
           ...componentMapper,
           html: HtmlEditor,
           pic: PhotoUpload,
+          'field-listener': FieldListenerWrapper,
         }}
         FormTemplate={(props) => (
           <FormTemplate {...props} showFormControls={false} />
         )}
-        schema={schema(data)}
+        schema={schema(pickers)}
         onSubmit={handleSubmit}
         onCancel={onCancel}
-        initialValues={{ user }}
+        initialValues={{ user, filterable }}
         subscription={{ values: true }}
       />
 
