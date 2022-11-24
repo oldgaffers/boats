@@ -408,7 +408,7 @@ export default function EditBoat({ onCancel, onSave, boat }) {
   const pickers = data;
 
   return (
-    <Box sx={{ height: '500px', margin: '1em', marginTop: '2em' }}>
+    <Box sx={{ height: '600px', margin: '1em', marginTop: '2em' }}>
       <FormRenderer
         schema={schema(pickers)}
         componentMapper={{

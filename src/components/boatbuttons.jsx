@@ -113,7 +113,8 @@ export default function BoatButtons({ boat, /* location */ }) {
         <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
         <Grid item xs={'auto'}>
           <Button size="small"
-            variant="contained"
+              color='primary'
+              variant="contained"
             className={classes.button}
             // eslint-disable-next-line no-restricted-globals
             onClick={() => history.back()}
@@ -127,13 +128,14 @@ export default function BoatButtons({ boat, /* location */ }) {
               classes={classes} boat={boat} 
               onCancel={photoCancelled}
               onDone={photoDone}
+              color='secondary'
             />
         </Grid>
         <Grid item xs={'auto'} >
-            <EditButton classes={classes} boat={boat} />
+            <EditButton classes={classes} boat={boat} color='secondary'/>
         </Grid>
         {roles.includes('editor')
-          ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} /></Grid>)
+          ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} color='secondary'/></Grid>)
           : ''
         }
         </Grid>
