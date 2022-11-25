@@ -522,6 +522,163 @@ const PhotoUpload = ({ component, name, title }) => {
   );
 };
 
+const ignoredKeys = [
+  'design_class',
+  'oga_no',
+  'short_description',
+  'full_description',
+  'home_port',
+  'home_country',
+  'created_at',
+  'updated_at',
+  'for_sales',
+  'ownerships',
+  'name',
+  'year',
+  'year_is_approximate',
+  'id',
+  'selling_status',
+  'previous_names',
+  'image_key',
+  'thumb',
+  'uk_part1',
+  'mssi',
+  'sail_number',
+  'ssr',
+  'nhsr',
+  'callsign',
+  'nsbr',
+  'website',
+  'reference',
+];
+
+function flattenToForm(example, prefix) {
+  let flat = {};
+  Object.keys(example).forEach((key) => {
+    if (ignoredKeys.includes(key)) {
+      // console.log('omit', key);
+    } else {
+      const value = example[key];
+      const flatfield = `${prefix || ''}${(prefix && '.') || ''}${key}`;
+      switch (typeof value) {
+        case 'string':
+          // console.log('string', flatfield);
+          flat[flatfield] = value;
+          break;
+        case 'number':
+          // console.log('number', flatfield);
+          flat[flatfield] = value;
+          break;
+        case 'boolean':
+          // console.log('boolean', flatfield, value);
+          flat[flatfield] = value;
+          break;
+        case 'object':
+          if (['designer', 'builder'].includes(key)) {
+            flat[flatfield] = value.id;
+            // console.log('id/name', flatfield, value);
+          } else if (Array.isArray(value)) {
+            console.log('array', flatfield, value);
+            value.forEach((row, index) => {
+              const v = flattenToForm(value, flatfield);
+              // console.log('array', index, v);
+              flat[flatfield] = v;
+            });
+          } else {
+            if (value) {
+              const v = flattenToForm(value, flatfield);
+              // console.log('object', flatfield, v);
+              flat = { ...flat, ...v };
+            }
+          }
+          break;
+        default:
+          console.log('type', key, typeof value);
+          break;
+      }
+    }
+  });
+  // console.log(flat);
+  return flat;
+}
+
+function initialiseFromExamplesFlat(change, examples) {
+  let archetype = {};
+  examples.forEach((result) => {
+    const { boat } = result.value.data.result.pageContext;
+    const flat = flattenToForm(boat);
+    archetype = { ...archetype, ...flat };
+  });
+  Object.keys(archetype).forEach((field) => {
+    change(field, archetype[field]);
+  });
+}
+
+/*
+function initialiseFromExamples(change, examples) {
+  let archetype = {};
+  examples.forEach((result) => {
+    const { boat } = result.value.data.result.pageContext;
+    archetype = { ...archetype, ...boat };
+  });
+  [
+    'builder', 'designer',
+  ].forEach((key) => {
+    if (archetype[key]) {
+      change(key, archetype[key].id);
+    }
+  });
+  [
+    "construction_material",
+    "construction_method",
+    "generic_type",
+    "hull_form",
+    "mainsail_type",
+    "place_built",
+    "rig_type",
+    "construction_details",
+  ].forEach((key) => {
+    if (archetype[key]) {
+      change(key, archetype[key]);
+    }
+  });
+  [
+    "beam",
+    'draft',
+    "draft_keel_down",
+    "fore_triangle_base",
+    "fore_triangle_height",
+    "length_on_deck",
+    "length_on_waterline",
+    "length_overall",
+    "moving_keel",
+    "moving_keel_type",
+    "sailarea",
+    "calculated_thcf",
+    "propellor.blades",
+    "propellor.type",
+  ].forEach((key) => {
+    if (archetype.handicap_data[key]) {
+      change(`handicap_data.${key}`, archetype.handicap_data[key]);
+    }
+  });
+  [
+    'fore',
+    'main',
+    'mizzen',
+    'topsail',
+    'fore_topsail',
+    'mizzen_topsail',
+  ].forEach((sail) => {
+    if (archetype.handicap_data[sail]) {
+      Object.keys(archetype.handicap_data[sail]).forEach((dimension) => {
+        change(`handicap_data.${sail}.${dimension}`, archetype.handicap_data[sail][dimension]);
+      });
+    }
+  });
+}
+*/
+
 const FieldListener = () => {
   const { getState, change } = useFormApi();
 
@@ -533,66 +690,7 @@ const FieldListener = () => {
       const firstThree = instances.slice(0, 3).map((boat) => boat.oga_no);
       Promise.allSettled(firstThree.map((ogaNo) => getBoatData(ogaNo)))
         .then((results) => {
-          let archetype = {};
-          results.forEach((result) => {
-            const { boat } = result.value.data.result.pageContext;
-            archetype = { ...archetype, ...boat };
-          });
-          [
-            'builder', 'designer',
-          ].forEach((key) => {
-            if (archetype[key]) {
-              change(key, archetype[key].id);
-            }
-          });
-          [
-            "construction_material",
-            "construction_method",
-            "generic_type",
-            "hull_form",
-            "mainsail_type",
-            "place_built",
-            "rig_type",
-            "construction_details",
-          ].forEach((key) => {
-            if (archetype[key]) {
-              change(key, archetype[key]);
-            }
-          });
-          [
-            "beam",
-            'draft',
-            "draft_keel_down",
-            "fore_triangle_base",
-            "fore_triangle_height",
-            "length_on_deck",
-            "length_on_waterline",
-            "length_overall",
-            "moving_keel",
-            "moving_keel_type",
-            "sailarea",
-            "calculated_thcf",
-            "propellor.blades",
-            "propellor.type",
-          ].forEach((key) => {
-            if (archetype.handicap_data[key]) {
-              change(`handicap_data.${key}`, archetype.handicap_data[key]);
-            }
-          });
-          [
-            'fore',
-            'main',
-            'mizzen',
-            'topsail',
-            'fore_topsail',
-            'mizzen_topsail',
-          ].forEach((sail) => {
-            if (archetype.handicap_data[sail]) {
-              Object.keys(archetype.handicap_data[sail]).forEach((dimension) => {
-                change(`handicap_data.${sail}.${dimension}`, archetype.handicap_data[sail][dimension]);
-              });
-            }
-          });
+          initialiseFromExamplesFlat(change, results);
         });
     }
   }, [change, design_class, filterable]);
