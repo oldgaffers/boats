@@ -53,9 +53,13 @@ export async function createPhotoAlbum(name, ogaNo) {
   const r = await axios.post('https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/',
     data,
     {
-      headers: { 'content-type': 'application/json' }
+      headers: { 'content-type': 'application/json' },
+      validateStatus: (status) => (status >= 200 && status < 300) || (status === 409),
     }
   );
+  if (r.status === 409) {
+    console.log('conflict', r.data);
+  }
   return r.data.albumKey;
 }
 
