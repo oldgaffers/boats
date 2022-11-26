@@ -83,7 +83,7 @@ export const homeItems = [
     label: "Home Country",
   },
   {
-    component: 'checkbox',
+    component: 'text-field',
     name: "home_port",
     label: "Home Port",
   },
