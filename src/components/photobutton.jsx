@@ -7,12 +7,13 @@ import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
 
 async function upload(boat, copyright, email, pictures) {
+  console.log('upload pictures', boat);
   const { image_key, name, oga_no } = boat;
   let albumKey;
   if (image_key) {
     albumKey = image_key;
   } else {
-    albumKey = await createPhotoAlbum(oga_no);
+    albumKey = await createPhotoAlbum(name, oga_no);
   }
   await postPhotos({ copyright, email, name, oga_no, albumKey }, pictures);
   if (!boat.image_key) {
