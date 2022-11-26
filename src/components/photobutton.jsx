@@ -15,7 +15,7 @@ async function upload(boat, copyright, email, pictures) {
   } else {
     albumKey = await createPhotoAlbum(name, oga_no);
   }
-  await postPhotos({ copyright, email, name, oga_no, albumKey }, pictures);
+  await postPhotos({ copyright, email, albumKey }, pictures);
   if (!boat.image_key) {
     boat.image_key = albumKey;
     await postBoatData({ new: boat, email })
