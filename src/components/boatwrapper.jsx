@@ -1,18 +1,71 @@
 import React from 'react';
+import { useAsync } from 'react-async-hook';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { useAuth0 } from "@auth0/auth0-react";
+import { gql } from '@apollo/client';
 import BoatDetail from './boatdetail';
 import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
 
-export default function BoatWrapper({ boat, location }) {
+const MEMBER_QUERY = gql(`query members($members: [Int]!) {
+  members(members: $members) {
+    firstname
+    lastname
+    member
+    id
+    GDPR
+  }
+}`);
+
+const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
+
+const addNames = async (client, owners) => {
+  const memberNumbers = owners.filter((o) => queryIf(o)).map((o) => o.member);
+  if (memberNumbers.length === 0) {
+    return owners;
+  }
+  const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
+  const members = r.data.members;
+  return owners.map((owner) => {
+    if (owner.name) {
+      return owner;
+    }
+    let name = '';
+    const m = members.filter((member) => member.id === owner.id);
+    if (m.length > 0) {
+      const { GDPR, firstname, lastname } = m[0];
+      if (GDPR) {
+        name = `${firstname} ${lastname}`;
+      } else {
+        name = 'owner on record but withheld'
+      }
+    }
+    return {
+      ...owner,
+      name,
+    }
+  });
+};
+
+export default function BoatWrapper({ client, boat, location }) {
   const { isLoading } = useAuth0();
+  const { error, result } = useAsync(addNames, [client, boat.ownerships]);
+
+  // we don't bother with loading and let the owners fill in if they come
+
+  if (error) {
+    console.log(`Error! ${error}`);
+  }
+  const ownerships = result || boat.ownerships;
+  ownerships.sort((a, b) => a.start > b.start);
+
   if (isLoading) {
-       return <div>Loading ...</div>;
+       return <CircularProgress />;
   }
 
   return (
@@ -34,10 +87,10 @@ export default function BoatWrapper({ boat, location }) {
         <BoatSummary boat={boat} location={location} />
       </Grid>
       <Grid item xs={12}>
-        <BoatDetail boat={boat} />
+          <BoatDetail boat={{...boat, ownerships }} />
       </Grid>
     </Grid>
-    <BoatButtons  boat={boat} location={location} />
+    <BoatButtons  boat={{ ...boat, ownerships }} location={location} />
     </Container>
     </Paper>
   );

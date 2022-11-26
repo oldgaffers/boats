@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, /* location */ }) {
+export default function BoatButtons({ boat, ownerships, /* location */ }) {
   const { user, isAuthenticated } = useAuth0();
   let roles = [];
   if (isAuthenticated) {
@@ -132,7 +132,7 @@ export default function BoatButtons({ boat, /* location */ }) {
             />
         </Grid>
         <Grid item xs={'auto'} >
-            <EditButton classes={classes} boat={boat} color='secondary'/>
+            <EditButton classes={classes} boat={boat} ownerships={ownerships} color='secondary'/>
         </Grid>
         {roles.includes('editor')
           ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} color='secondary'/></Grid>)

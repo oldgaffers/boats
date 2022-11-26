@@ -36,8 +36,10 @@ export default function BoatDetail({ boat }) {
         id: user['https://oga.org.uk/id'],
         member: user['https://oga.org.uk/member'],
       };
+      console.log('membership', membership);
     }
   }
+
   const hd = boat.handicap_data || {};
   const panes = [
     { title: 'Design & Build', children: (
@@ -93,10 +95,8 @@ export default function BoatDetail({ boat }) {
 
   if(roles.includes('member')) {
     panes.push({ title: 'Owners', children: (
-      <Paper>
-        <Owners boat={boat} membership={membership} email={user.email} />
-      </Paper>
-    )});    
+        <Owners owners={boat.ownerships} email={user.email} />
+    )});
   }
 
 /*

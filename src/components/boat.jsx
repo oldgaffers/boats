@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { ApolloConsumer } from '@apollo/client';
 import CircularProgress from "@mui/material/CircularProgress";
 import BoatWrapper from './boatwrapper';
 import { useGetBoatData } from './boatregisterposts';
@@ -20,7 +21,6 @@ function upgradeBoat(b) {
   return b;
 }
 
-// gql or axios
 function getBoat(data) {
   if (data?.boat) {
     return upgradeBoat(data.boat[0]);
@@ -28,39 +28,36 @@ function getBoat(data) {
   return upgradeBoat(data?.result?.pageContext?.boat);
 }
 
-export default function Boat({location={search:'?oga_no='}}) {
+export default function Boat({ location = { search: '?oga_no=' } }) {
   const params = new URLSearchParams(location.search);
-  const oga_no = params.get('oga_no') || '';  
-
+  const oga_no = params.get('oga_no') || '';
   const { data, error, loading } = useGetBoatData(oga_no);
 
-  useEffect(() => {
-    if (data) {
-      const boat = getBoat(data);
-      document.title = `${boat.name} (${boat.oga_no})`;
-    }
-  });
-
-  if (loading) return <CircularProgress/>
+  if (loading || !data) return <CircularProgress />
   if (error) {
-      if (oga_no === '') {
-        return (<div>
-          <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
-          <div>If you are looking for boats for sale please visit <a href={location.origin+'/boat_register/boats_for_sale/'}>Boats for Sale</a></div>
-          <div>If you are looking interested in trailerable boats please visit <a href={location.origin+'/boat_register/small_boats/'}>Small Boats</a></div>
-          <div>To browse our full register please visit <a href={location.origin+'/boat_register/browse_the_register/'}>All Boats</a></div>
-            Otherwise please visit our <a href={location.origin}>Home Page</a>
-          </div>);
+    if (oga_no === '') {
+      return (<div>
+        <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
+        <div>If you are looking for boats for sale please visit <a href={location.origin + '/boat_register/boats_for_sale/'}>Boats for Sale</a></div>
+        <div>If you are looking interested in trailerable boats please visit <a href={location.origin + '/boat_register/small_boats/'}>Small Boats</a></div>
+        <div>To browse our full register please visit <a href={location.origin + '/boat_register/browse_the_register/'}>All Boats</a></div>
+        Otherwise please visit our <a href={location.origin}>Home Page</a>
+      </div>);
     } else {
-        return (<div>
-          Sorry, we had a problem getting the data for
-          the boat with OGA number {oga_no}
-          <p>Please try searching on the <a href={location.origin}>Main Page</a></p>
-          </div>);
-      }
+      return (<div>
+        Sorry, we had a problem getting the data for
+        the boat with OGA number {oga_no}
+        <p>Please try searching on the <a href={location.origin}>Main Page</a></p>
+      </div>);
+    }
   }
 
   const boat = getBoat(data);
-  return <BoatWrapper location={location} boat={boat} />;
+  document.title = `${boat.name} (${boat.oga_no})`;
+  return (
+    <ApolloConsumer>
+      {client => <BoatWrapper client={client} location={location} boat={boat} />}
+    </ApolloConsumer>
+  );
 };
 

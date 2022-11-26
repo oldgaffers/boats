@@ -5,7 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import UpdateBoatDialog from './updateboatdialog';
 import { postBoatData } from './boatregisterposts';
 
-export default function EditButton({ classes, boat }) {
+export default function EditButton({ classes, boat, ownerships }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);

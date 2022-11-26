@@ -21,7 +21,6 @@ import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";
 import { dimensionsForm } from "./Dimensions";
 import { rigForm } from "./Rig";
-import OwnershipForm, { ownershipUpdateForm } from "./ownershipupdateform";
 import {
   summaryForm, descriptionsForm,
   registrationForm, constructionForm,
@@ -167,7 +166,39 @@ const schema = (pickers) => ({
           name: "own-step",
           component: 'sub-form',
           nextStep: "summary-step",
-          fields: [ownershipUpdateForm],
+          // fields: [ownershipUpdateForm],
+          fields: [
+            {
+              component: 'plain-text',
+              name: 'ddf.ownerships_label',
+              label: 'You can add, remove and edit ownership records on this page.'
+                  + ' If you are listed as a current owner and this is no-longer true add an end year and uncheck the box.'
+                  + ' Your changes will be send to the editors who will update the boat\'s record'
+            },
+            {
+              component: 'field-array',
+              name: "ownerships",
+              label: "Known Owners",
+              fields: [
+                {
+                  name: 'name', label: 'Name', component: "text-field",
+                  resolveProps: (props, { meta, input }, formOptions) => {
+                    const name = input.name;
+                    const nameComponents = name.split(/.*\[(\d+).*/)
+                    const index = parseInt(nameComponents[1]);
+                    const s = formOptions.getState();
+                    const row = s.values.ownerships[index];
+                    console.log(row);
+                    return {  };
+                  },
+                },
+                { name: 'start', label: 'Start', component: "text-field" },
+                { name: 'end', label: 'End', component: "text-field" },
+                { name: 'share', label: 'Share (64ths)', component: "text-field" },
+                { name: 'current', label: 'Current', component: 'checkbox' },
+              ],
+            },
+          ]
         },
         {
           name: "summary-step",
@@ -416,7 +447,6 @@ export default function EditBoat({ onCancel, onSave, boat }) {
           'field-array': FieldArray,
           html: HtmlEditor,
           "hull-form": HullForm,
-          "ownership-form": OwnershipForm,
           'plain-text': PlainText,
           radio: Radio,
           select: Select,
