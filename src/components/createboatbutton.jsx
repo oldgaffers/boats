@@ -14,7 +14,7 @@ async function sendToAws(boat, email, fileList, copyright) {
     await postPhotos({ copyright, email, albumKey }, fileList);
   }
   // console.log('files', fileList?.length || 0);
-  await postBoatData({ email, new: { ...boat, albumKey } });
+  await postBoatData({ email, new: { ...boat, image_key: albumKey } });
   // console.log('created boat record');
 }
 
