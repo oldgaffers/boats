@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
 import Paper from '@mui/material/Paper';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
@@ -22,23 +21,12 @@ function hullForm(boat) {
   return boat.hull_form.replace(/_/g, ' ');
 }
 
-export default function BoatDetail({ boat }) {
-  const { user, isAuthenticated } = useAuth0();
+export default function BoatDetail({ boat, user }) {
   const [value, setValue] = useState(0);
 
   // TODO const { ref } = useInView({ threshold: 0 });
-  let roles = [];
-  let membership;
-  if (isAuthenticated && user) {
-    if (user['https://oga.org.uk/roles']) {
-      roles = user['https://oga.org.uk/roles'];
-      membership = {
-        id: user['https://oga.org.uk/id'],
-        member: user['https://oga.org.uk/member'],
-      };
-      console.log('membership', membership);
-    }
-  }
+
+  const roles = user?.['https://oga.org.uk/roles'] || [];
 
   const hd = boat.handicap_data || {};
   const panes = [

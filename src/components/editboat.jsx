@@ -1,12 +1,11 @@
 import React, { useContext } from 'react';
-
+import { useAxios } from 'use-axios-client';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import validatorTypes from "@data-driven-forms/react-form-renderer/validator-types";
 import WizardContext from '@data-driven-forms/react-form-renderer/wizard-context';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import Wizard from '@data-driven-forms/common/wizard';
 import selectNext from '@data-driven-forms/common/wizard/select-next';
-
 import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template';
 import CheckBox from '@data-driven-forms/mui-component-mapper/checkbox';
 import Radio from '@data-driven-forms/mui-component-mapper/radio';
@@ -29,9 +28,6 @@ import {
 import { steps as handicap_steps } from "./Handicap";
 import HullForm from "./HullForm";
 import { HtmlEditor } from "./ddf/RTE";
-
-import { useAxios } from 'use-axios-client';
-import { useAuth0 } from "@auth0/auth0-react";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { boatRegisterHome } from '../util/constants';
 
@@ -381,9 +377,15 @@ const WrappedWizard = (props) => <Wizard Wizard={WizardInternal} {...props} />;
 
 const FormTemplateCb = (props) => <FormTemplate {...props} showFormControls={false} />;
 
-export default function EditBoat({ onCancel, onSave, boat }) {
-  // const [values, setValues] = useState();
-  const { user, isAuthenticated } = useAuth0();
+function owns(boat, user) {
+  const id = user?.['https://oga.org.uk/id'];
+  if (id) {
+    return boat.ownerships.filter((o) => o?.id === id).length > 0;
+  }
+  return false;
+}
+
+export default function EditBoat({ onCancel, onSave, boat, user }) {
   const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`);
   if (loading || !data) return <p>Loading...</p>
   if (error) {
@@ -391,14 +393,10 @@ export default function EditBoat({ onCancel, onSave, boat }) {
       Sorry, we had a problem getting the data to browse the register
     </div>);
   }
-  let roles = [];
-  if (isAuthenticated && user) {
-    if (user['https://oga.org.uk/roles']) {
-      roles = user['https://oga.org.uk/roles'];
-    }
-  }
 
-  const isOwner = false; // TODO
+  const roles = user?.['https://oga.org.uk/roles'] || [];
+
+  const isOwner = owns(boat, user);
   const forSale = boat.selling_status === 'for_sale';
 
   const canBuySell = (roles.includes('member') && isOwner) || roles.includes('editor');
@@ -407,8 +405,6 @@ export default function EditBoat({ onCancel, onSave, boat }) {
     ...boatm2f(boat),
     ddf: { activity: "descriptions", email: user && user.email, canBuySell },
   };
-
-  // onSubmit={(values) => setValues(values)}
 
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;

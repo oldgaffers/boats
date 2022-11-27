@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAsync } from 'react-async-hook';
+import { useAuth0 } from "@auth0/auth0-react";
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -52,6 +53,7 @@ const addNames = async (client, owners) => {
 
 export default function BoatWrapper({ client, boat, location }) {
   const { error, result } = useAsync(addNames, [client, boat.ownerships]);
+  const { user } = useAuth0();
 
   // we don't bother with loading and let the owners fill in if they come
 
@@ -80,10 +82,10 @@ export default function BoatWrapper({ client, boat, location }) {
         <BoatSummary boat={boat} location={location} />
       </Grid>
       <Grid item xs={12}>
-          <BoatDetail boat={{...boat, ownerships }} />
+          <BoatDetail boat={{...boat, ownerships }} user={user}/>
       </Grid>
     </Grid>
-    <BoatButtons  boat={{ ...boat, ownerships }} location={location} />
+    <BoatButtons  boat={{ ...boat, ownerships }} location={location} user={user} />
     </Container>
     </Paper>
   );

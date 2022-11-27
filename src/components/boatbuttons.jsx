@@ -1,19 +1,13 @@
 import React from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import { makeStyles } from '@mui/styles';
-// import { getState } from "../util/statemanagement";
 import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
-// const PhotoButton = React.lazy(() => import('./photobutton'));
-// const EditButton = React.lazy(() => import('./editbutton'));
-// const AdminButton = React.lazy(() => import('./adminbutton'));
-// const Enquiry = React.lazy(() => import('./enquiry'));
 
 const drawerWidth = 240;
 
@@ -74,13 +68,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function BoatButtons({ boat, ownerships, /* location */ }) {
-  const { user, isAuthenticated } = useAuth0();
-  let roles = [];
-  if (isAuthenticated) {
-      roles = user['https://oga.org.uk/roles'] || [];
-  }
-  // if(document.referrer.includes('localhost')) { roles.push('editor')}
+export default function BoatButtons({ boat, ownerships, user /* location */ }) {
+
+  const roles = user?.['https://oga.org.uk/roles'] || [];
 
   const theme = useTheme();
   const classes = useStyles(theme);
@@ -121,21 +111,21 @@ export default function BoatButtons({ boat, ownerships, /* location */ }) {
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
-            <Enquiry classes={classes} boat={boat} />
+            <Enquiry classes={classes} boat={boat} user={user} />
         </Grid>
         <Grid item xs={'auto'} >
             <PhotoButton
-              classes={classes} boat={boat} 
+              classes={classes} boat={boat} user={user}
               onCancel={photoCancelled}
               onDone={photoDone}
               color='secondary'
             />
         </Grid>
         <Grid item xs={'auto'} >
-            <EditButton classes={classes} boat={boat} ownerships={ownerships} color='secondary'/>
+            <EditButton classes={classes} boat={boat} user={user} color='secondary'/>
         </Grid>
         {roles.includes('editor')
-          ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} color='secondary'/></Grid>)
+          ? (<Grid item xs={'auto'} ><AdminButton classes={classes} boat={boat} user={user} color='secondary'/></Grid>)
           : ''
         }
         </Grid>

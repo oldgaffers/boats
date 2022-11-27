@@ -5,7 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import UpdateBoatDialog from './updateboatdialog';
 import { postBoatData } from './boatregisterposts';
 
-export default function EditButton({ classes, boat, ownerships }) {
+export default function EditButton({ classes, boat, user }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
@@ -43,7 +43,7 @@ export default function EditButton({ classes, boat, ownerships }) {
         color="primary" onClick={handleClickOpen}>
         I have edits for this boat
       </Button>
-      <UpdateBoatDialog boat={boat} onClose={handleClose} open={open} />
+      <UpdateBoatDialog boat={boat} user={user} onClose={handleClose} open={open} />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={snackBarOpen}
