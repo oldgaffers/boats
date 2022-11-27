@@ -5,7 +5,6 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
-import { useAuth0 } from "@auth0/auth0-react";
 import { gql } from '@apollo/client';
 import BoatDetail from './boatdetail';
 import BoatSummary from './boatsummary';
@@ -53,7 +52,6 @@ const addNames = async (client, owners) => {
 };
 
 export default function BoatWrapper({ client, boat, location }) {
-  const { isLoading } = useAuth0();
   const { error, result } = useAsync(addNames, [client, boat.ownerships]);
 
   // we don't bother with loading and let the owners fill in if they come
@@ -61,12 +59,8 @@ export default function BoatWrapper({ client, boat, location }) {
   if (error) {
     console.log(`Error! ${error}`);
   }
-  const ownerships = result || boat.ownerships;
+  const ownerships = result || boat.ownerships || [];
   ownerships.sort((a, b) => a.start > b.start);
-
-  if (isLoading) {
-       return <CircularProgress />;
-  }
 
   return (
     <Paper sx={{paddingTop: '20px', paddingBottom: '20px'}}>
