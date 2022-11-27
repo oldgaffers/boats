@@ -13,6 +13,7 @@ import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
 import { useGetThumb, useGetBoatData } from './boatregisterposts';
+import { CircularProgress } from '@mui/material';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -115,7 +116,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
   }
 
   if (loading || !data) {
-    // console.log('loading')
+    return <CircularProgress/>;
   }
 
   if (error) {
