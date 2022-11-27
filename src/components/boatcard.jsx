@@ -7,13 +7,13 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
 import { useGetThumb, useGetBoatData } from './boatregisterposts';
-import { CircularProgress } from '@mui/material';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {

@@ -3,7 +3,6 @@ import { useAsync } from 'react-async-hook';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { gql } from '@apollo/client';
 import BoatDetail from './boatdetail';
