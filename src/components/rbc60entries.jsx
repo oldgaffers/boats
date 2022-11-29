@@ -245,7 +245,7 @@ function renderCellExpandObjects(params) {
 }
 
 function EntryTable({ rows }) {
-
+    console.log('EntryTable', rows);
     const columns = [
         { field: 'boat', headerName: 'Boat Name', width: 120, valueGetter: (params) => params.row.data.boat.name },
         { field: 'oga_no', headerName: 'OGA No.', width: 80, valueGetter: (params) => params.row.data.boat.oga_no },
@@ -272,7 +272,7 @@ function EntryTable({ rows }) {
     return (<div style={{ display: 'flex', height: '100%' }}>
         <div style={{ flexGrow: 1 }}>
             <DataGrid
-                rows={rows}
+                rows={rows.map((row, index) => ({ ...row, id: index }))}
                 columns={columns}
                 components={{ Toolbar: GridToolbar }}
                 autoHeight={true}
@@ -326,7 +326,7 @@ export default function RBC60Entryies() {
     return (
         <Grid container>
             <Grid item xs={12}>
-                <EntryTable rows={(data && data.Items) || []} />
+                <EntryTable rows={(data?.Items) || []} />
             </Grid>
             <Grid item xs={12}>
                 <FleetView filters={{ name }} />
