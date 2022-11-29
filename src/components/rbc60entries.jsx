@@ -245,7 +245,6 @@ function renderCellExpandObjects(params) {
 }
 
 function EntryTable({ rows }) {
-    console.log('EntryTable', rows);
     const columns = [
         { field: 'boat', headerName: 'Boat Name', width: 120, valueGetter: (params) => params.row.data.boat.name },
         { field: 'oga_no', headerName: 'OGA No.', width: 80, valueGetter: (params) => params.row.data.boat.oga_no },
@@ -297,13 +296,11 @@ export default function RBC60Entryies() {
 
     useEffect(() => {
         if (isAuthenticated && accessToken && user['https://oga.org.uk/roles'].includes('member')) {
-            console.log('have access token');
             getData();
         }
       }, [accessToken, getData, isAuthenticated, user])
 
     if (loading) {
-        console.log('loading');
         return <CircularProgress />
     }
 
