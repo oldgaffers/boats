@@ -14,13 +14,6 @@ function m2f(val) {
   }
 };
 
-function hullForm(boat) {
-  if (boat.hull_form === null) {
-    return null;
-  }
-  return boat.hull_form.replace(/_/g, ' ');
-}
-
 export default function BoatDetail({ boat, user }) {
   const [value, setValue] = useState(0);
 
@@ -35,7 +28,7 @@ export default function BoatDetail({ boat, user }) {
         <ConditionalText value={ boat.generic_type } label="Generic type"/>
         <ConditionalText value={ boat.design_class?.name } label="Design class"/>
         <ConditionalText label="Designer" value={ boat.designer?.name } />
-        <ConditionalText value={hullForm(boat)} label="Hull form"/>
+        <ConditionalText value={boat.hull_form} label="Hull form"/>
         <ConditionalText label="Builder" value = { boat.builder?.name } />
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={(boat.year_is_approximate?'around ':'')+boat.year} label="Year of Build"/>
