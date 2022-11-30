@@ -24,7 +24,7 @@ const MEMBER_QUERY = gql(`query members($members: [Int]!) {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 const addNames = async (client, owners) => {
-  const memberNumbers = owners.filter((o) => queryIf(o)).map((o) => o.member);
+  const memberNumbers = owners?.filter((o) => queryIf(o)).map((o) => o.member) || [];
   if (memberNumbers.length === 0) {
     return owners;
   }
