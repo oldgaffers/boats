@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function UpdateBoatDialog({ boat, onClose, open }) {
+export default function UpdateBoatDialog({ boat, user, onClose, open }) {
   const classes = useStyles();
 
   const handleCancel = () => {
@@ -62,7 +62,10 @@ export default function UpdateBoatDialog({ boat, onClose, open }) {
 
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
-      <EditBoat classes={classes} onCancel={handleCancel} onSave={handleSave} boat={boat}/>
+      <EditBoat
+      classes={classes} onCancel={handleCancel} onSave={handleSave}
+      boat={boat} user={user}
+      />
     </Dialog>
   );
 }
