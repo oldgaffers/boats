@@ -10,6 +10,9 @@ export default function ConditionalText({ label, value }) {
         text = value.join(', ');
     } else {
         switch (typeof value) {
+            case 'number':
+                text = `${value}`;
+                break;
             case 'string':
                 if (text === 'null') {
                     text = '';
