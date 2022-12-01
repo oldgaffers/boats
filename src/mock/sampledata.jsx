@@ -47,5 +47,6 @@ export const mockPicks = {
     construction_method: [],
     hull_form: [],
     spar_material: [],
+    year: { step: 10, min: 2021, max: 2022 }
   };
   
