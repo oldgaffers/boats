@@ -123,7 +123,7 @@ export default function YearbookBoats({ members, boats }) {
     function boatGetter({ row }) {
         const { id, member } = row;
         const theirBoats = boats.filter((b) => {
-            const o = currentOwners(b.ownerships);
+            const o = currentOwners(b?.ownerships || []);
             if (o.length > 0) {
                 const owned = o.find((os) => os.id === id);
                 if (owned) {
@@ -180,7 +180,8 @@ export default function YearbookBoats({ members, boats }) {
                     autoHeight={true}
                     initialState={{
                         sorting: {
-                            sortModel: [{ field: 'lastname', sort: 'asc' }, { field: 'member', sort: 'asc' }, { field: 'id', sort: 'asc' }],
+                            // sortModel: [{ field: 'lastname', sort: 'asc' }, { field: 'member', sort: 'asc' }, { field: 'id', sort: 'asc' }],
+                            sortModel: [{ field: 'lastname', sort: 'asc' }],
                         },
                     }}
                 />
