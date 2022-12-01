@@ -11,7 +11,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { TokenContext } from './TokenProvider';
 import { getScopedData } from './boatregisterposts';
 
-export default function FleetView({ filters }) {
+export default function FleetView({ filter }) {
   const [data, setData] = useState();
   const accessToken = useContext(TokenContext);
 
@@ -19,13 +19,13 @@ export default function FleetView({ filters }) {
 
   useEffect(() => {
     const getData = async () => {
-      const p = await getScopedData('member', 'fleets', filters, accessToken);
+      const p = await getScopedData('member', 'fleets', filter, accessToken);
       setData(p.data);
     }
     if (accessToken && isAuthenticated) {
       getData();
     }
-  }, [accessToken, user, isAuthenticated, filters])
+  }, [accessToken, user, isAuthenticated, filter])
 
   if (!isAuthenticated) {
     return (<div>Please log in to view this page</div>);
@@ -34,7 +34,7 @@ export default function FleetView({ filters }) {
   if (!data) {
     return <CircularProgress />;
   }
-  
+
   const { filters, name } = data.Items[0];
 
   return <FleetDisplay name={name} filters={filters} />;
