@@ -76,8 +76,8 @@ export default function SimpleFleetView({filters}) {
 
   return (
     <div>
-      {fleets.map((fleet) => {
-        return (<FleetView fleet={fleet} />);
+      {fleets.map(({name}) => {
+        return (<FleetView filter={name} />);
       }
     )}
     </div>
