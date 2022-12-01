@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { useAxios } from 'use-axios-client';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import validatorTypes from "@data-driven-forms/react-form-renderer/validator-types";
 import WizardContext from '@data-driven-forms/react-form-renderer/wizard-context';
@@ -29,7 +28,7 @@ import { steps as handicap_steps } from "./Handicap";
 import HullForm from "./HullForm";
 import { HtmlEditor } from "./ddf/RTE";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { boatRegisterHome } from '../util/constants';
+import { useGetPicklists } from './boatregisterposts';
 
 const activities = [
   { label: "Edit the short and full descriptions", value: "descriptions" },
@@ -386,7 +385,7 @@ function owns(boat, user) {
 }
 
 export default function EditBoat({ onCancel, onSave, boat, user }) {
-  const { data, error, loading } = useAxios(`${boatRegisterHome}/boatregister/pickers.json`);
+  const { data, error, loading } = useGetPicklists();
   if (loading || !data) return <p>Loading...</p>
   if (error) {
     return (<div>

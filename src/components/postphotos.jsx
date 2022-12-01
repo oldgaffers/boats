@@ -1,10 +1,10 @@
-import axios from 'axios';
 import AWS from 'aws-sdk';
+import { getUploadCredentials } from './boatregisterposts';
 
 export async function postPhotos(values, fileList) {
     if (fileList?.length > 0) {
         try {
-            const r = await axios.get('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/');
+            const r = await getUploadCredentials();
             const uploadConfig = r.data;
             AWS.config.update({
                 region: uploadConfig.region,

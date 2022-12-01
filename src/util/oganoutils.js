@@ -1,6 +1,4 @@
-import { useAxios } from 'use-axios-client';
-import { boatRegisterHome } from './constants';
-import axios from 'axios';
+import { useGetFilterable } from '../components/boatregisterposts';
 
 export function findFirstAbsent(boat) {
     if (!boat) {
@@ -9,20 +7,6 @@ export function findFirstAbsent(boat) {
     const ogaNos = boat.map((boat) => Number(boat.oga_no)).sort((a, b) => a - b);
     const idx = ogaNos.findIndex((val, index, vals) => val + 1 !== vals[index + 1]);
     return ogaNos[idx] + 1;
-}
-
-export async function getFilterable() {
-    return axios(`${boatRegisterHome}/boatregister/filterable.json`);
-}
-
-export function getTotal(data) {
-}
-
-export function getBoats(data) {
-}
-
-export function useFilterable() {
-    return useAxios(`${boatRegisterHome}/boatregister/filterable.json`);
 }
 
 export function applyFilters(boats, filters) {
@@ -45,7 +29,7 @@ export function applyFilters(boats, filters) {
 }
 
 export const useCardQuery = (state) => {
-    const { data, error, loading } = useFilterable();
+    const { data, error, loading } = useGetFilterable();
 
     if (loading) return { loading };
     if (!data) return { loading: true };

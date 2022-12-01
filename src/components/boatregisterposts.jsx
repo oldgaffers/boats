@@ -13,6 +13,18 @@ export async function postBoatData(data) {
   );
 }
 
+export async function getScopedData(scope, subject, filters, accessToken) {
+  return axios({
+    url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
+    params: {
+      ...filters,
+    },
+    headers: {
+        Authorization: `Bearer ${accessToken}`,
+    }
+  });
+}
+
 export async function putGeneralEnquiry(scope, subject, data) {
   return axios.put(
     `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
@@ -71,4 +83,20 @@ export async function getBoatData(ogaNo) {
 
 export function useGetBoatData(ogaNo) {
   return useAxios(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
+}
+
+export async function getUploadCredentials() {
+  return axios.get('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/');
+}
+
+export function useGetPicklists() {
+  return useAxios(`${boatRegisterHome}/boatregister/pickers.json`);
+}
+
+export function useGetFilterable() {
+  return useAxios(`${boatRegisterHome}/boatregister/filterable.json`);
+}
+
+export async function getFilterable() {
+  return axios(`${boatRegisterHome}/boatregister/filterable.json`);
 }

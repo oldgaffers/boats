@@ -14,7 +14,7 @@ import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
 import { useCardQuery } from '../util/oganoutils';
-import axios from 'axios';
+import { postGeneralEnquiry } from './boatregisterposts';
 
 const UNLISTED = "My boat isn't listed";
 
@@ -565,10 +565,8 @@ export default function RBC60() {
             });
         }
         console.log('submit', data);
-        axios.post(
-            'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/public/register',
-            data,
-            ).then((response) => {
+        postGeneralEnquiry('public', 'register', data)
+        .then((response) => {
                 console.log(response.statusText);
                 console.log(response.data);
               setSnackBarOpen(true);

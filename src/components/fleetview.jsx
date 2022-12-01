@@ -9,14 +9,12 @@ import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import { useAuth0 } from "@auth0/auth0-react";
 import { TokenContext } from './TokenProvider';
-import axios from 'axios';
+import { getScopedData } from './boatregisterposts';
 
 export default function FleetView({ filters }) {
     const [page, setPage] = useState(1);
     const [data, setData] = useState();
     const accessToken = useContext(TokenContext);
-    const scope = 'member';
-    const table = 'fleets';
   
     const onBoatMarked = () => console.log('marked');
     const onBoatUnMarked = () => console.log('unmarked');
@@ -26,17 +24,8 @@ export default function FleetView({ filters }) {
 
     useEffect(() => {
       const getData = async () => {
-          const p = await axios({
-            url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
-            params: {
-              ...filters,
-            },
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-            }
-          });
-          console.log('axios', p.data);
-          setData(p.data);
+        const p = getScopedData('member', 'fleets', filters, accessToken);
+        setData(p.data);
       }
       if (accessToken && isAuthenticated) {
         getData();

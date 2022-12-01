@@ -8,7 +8,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import { useFilterable, applyFilters } from '../util/oganoutils';
+import { applyFilters } from '../util/oganoutils';
+import { useGetFilterable } from './boatregisterposts';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -41,7 +42,7 @@ export default function BrowseBoats({
   onBoatMarked,
   onBoatUnMarked,
 }) {
-  const { data, error, loading } = useFilterable();
+  const { data, error, loading } = useGetFilterable();
   const [pickers, setPickers] = useState();
 
   const { bpp, sort, sortDirection, filters } = state;

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useAxios } from 'use-axios-client';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import {
@@ -34,9 +33,8 @@ import {
 } from "./ddf/SubForms";
 import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
-import { boatRegisterHome } from '../util/constants';
-import { useFilterable, findFirstAbsent } from '../util/oganoutils';
-import { getBoatData } from './boatregisterposts';
+import { findFirstAbsent } from '../util/oganoutils';
+import { getBoatData, useGetFilterable, useGetPicklists } from './boatregisterposts';
 
 const schema = (pickers) => {
   return {
@@ -637,8 +635,8 @@ const FieldListenerWrapper = () => <FormSpy subcription={{ values: true }}>{() =
 
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
-  const pickerLoad = useAxios(`${boatRegisterHome}/boatregister/pickers.json`)
-  const filterableLoad = useFilterable();
+  const pickerLoad = useGetPicklists();
+  const filterableLoad = useGetFilterable();
 
   if (pickerLoad.loading || filterableLoad.loading) return <p>Loading...</p>
   if (pickerLoad.error || filterableLoad.error) {
