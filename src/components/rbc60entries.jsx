@@ -313,9 +313,7 @@ export default function RBC60Entryies() {
 
     const rbc = entries.filter((e) => e.data.rbc);
 
-    const fleet = { filters: { oga_nos: rbc.map((e) => e.data.boat.oga_no) }, name };
-
-    console.log(fleet);
+    const filters = { oga_nos: rbc.map((e) => e.data.boat.oga_no) };
 
     return (
         <Grid container>
@@ -324,7 +322,7 @@ export default function RBC60Entryies() {
             </Grid>
             <Grid item xs={12}>
                 <Typography>Click to see the boats signed up to go all the way round</Typography>
-                <FleetDisplay fleet={fleet} />
+                <FleetDisplay name={name} filters={filters} />
             </Grid>
         </Grid>
     );

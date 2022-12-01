@@ -34,17 +34,18 @@ export default function FleetView({ filters }) {
   if (!data) {
     return <CircularProgress />;
   }
+  
+  const { filters, name } = data.Items[0];
 
-  return <FleetDisplay fleet={data.Items[0]} />;
+  return <FleetDisplay name={name} filters={filters} />;
 }
 
-export function FleetDisplay({ fleet }) {
-  console.log('FleetDisplay', fleet);
+export function FleetDisplay({ name, filters }) {
   const [page, setPage] = useState(1);
 
   const onPageChange = (n) => setPage(n.page);
 
-  const state = { filters: fleet.filters, bpp: 12, page, sort: 'name', sortDirection: 'asc', view: 'app', };
+  const state = { filters, bpp: 12, page, sort: 'name', sortDirection: 'asc', view: 'app', };
 
   return (<Accordion>
     <AccordionSummary
@@ -52,7 +53,7 @@ export function FleetDisplay({ fleet }) {
       aria-controls="panel1a-content"
       id="panel1a-header"
     >
-      <FleetIcon /><Typography>&nbsp;&nbsp;{fleet.name}</Typography>
+      <FleetIcon /><Typography>&nbsp;&nbsp;{name}</Typography>
     </AccordionSummary>
     <AccordionDetails>
       <BoatCards
