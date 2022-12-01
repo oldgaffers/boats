@@ -10,7 +10,6 @@ import red from '@mui/material/colors/red';
 import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
-import ProcessUpdates from './components/processupdates';
 import Yearbook from './components/yearbook';
 import MyFleets from './components/myfleets';
 import SharedFleets from './components/sharedfleets';
@@ -87,16 +86,6 @@ const Pages = ({ app, topic }) => {
           </TokenProvider>
         </Auth0Provider>
       );
-    case 'pending':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <ProcessUpdates />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>)
-        ;
     case 'yearbook':
       return (
         <Auth0Provider {...auth} scope="member">
