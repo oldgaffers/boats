@@ -12,9 +12,9 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import FleetView from './fleetview';
-import { useLazyAxios } from 'use-axios-client';
 import { TokenContext } from './TokenProvider';
+import { FleetDisplay } from './fleetview';
+import { getScopedData } from './boatregisterposts';
 
 function isOverflown(element) {
     return (
@@ -284,49 +284,47 @@ export default function RBC60Entryies() {
     const name = 'RBC 60';
     const accessToken = useContext(TokenContext);
     const { user, isAuthenticated } = useAuth0();
-    const scope = 'member';
-    const table = 'entries';
-    const [getData, { data, error, loading }] = useLazyAxios({
-        url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${table}`,
-        params: { topic: name },
-        headers: {
-            Authorization: `Bearer ${accessToken}`,
-        }
-    });
+    const [data, setData] = useState();
 
     useEffect(() => {
-        if (isAuthenticated && accessToken && user['https://oga.org.uk/roles'].includes('member')) {
-            getData();
+        const getData = async () => {
+          const p = await getScopedData('member', 'entries', { topic: name }, accessToken);
+          setData(p.data);
         }
-      }, [accessToken, getData, isAuthenticated, user])
-
-    if (loading) {
-        return <CircularProgress />
-    }
-
-    if (error) {
-        console.log(error);
-        return (<div>
-            Sorry, we had a problem getting the data
-        </div>);
-    }
+        if (accessToken) {
+          getData();
+        }
+    }, [accessToken, user]);
 
     if (!isAuthenticated) {
         return (<Typography>This page is for members only. Please log in to view it.</Typography>);
     }
 
-    const roles = (user && user['https://oga.org.uk/roles']) || [];
+    const roles = (user?.['https://oga.org.uk/roles']) || [];
     if (!roles.includes('member')) {
         return (<Typography>This page is for members only.</Typography>);
     }
 
+    if (!data) {
+        return <CircularProgress/>;
+    }
+
+    const entries =  (data?.Items) || [];
+
+    const rbc = entries.filter((e) => e.data.rbc);
+
+    const fleet = { filters: { oga_nos: rbc.map((e) => e.data.boat.oga_no) }, name };
+
+    console.log(fleet);
+
     return (
         <Grid container>
             <Grid item xs={12}>
-                <EntryTable rows={(data?.Items) || []} />
+                <EntryTable rows={entries} />
             </Grid>
             <Grid item xs={12}>
-                <FleetView filters={{ name }} />
+                <Typography>Click to see the boats signed up to go all the way round</Typography>
+                <FleetDisplay fleet={fleet} />
             </Grid>
         </Grid>
     );
