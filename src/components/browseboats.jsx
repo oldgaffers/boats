@@ -27,6 +27,14 @@ function makePickers(filtered) {
       return boat[key];
     }).filter((v) => v))] 
   });
+  const years = filtered.map((boat) => boat.year).filter((y) => y);
+  years.sort();
+  pickers.year = {
+    step: 10,
+    min: years[0] || 1800,
+    max: years[years.length-1] ||  new Date().getFullYear(),
+  };
+  console.log(pickers.year, years);
   return pickers;
 }
 

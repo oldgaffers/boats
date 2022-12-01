@@ -15,8 +15,6 @@ import DateRangePicker from "./daterangepicker";
 import useDebounce from "../util/debounce";
 
 const opposite = { asc: "desc", desc: "asc" };
-const yearProps = { max: new Date().getFullYear() + 1, step: 10 };
-yearProps.min = yearProps.max - 20 * yearProps.step;
 
 const pageSize = [];
 for (let i = 1; i <= 8; i++) {
@@ -67,8 +65,8 @@ export default function SearchAndFilterBoats({
   }, [debouncedOgaNo, filters, onFilterChange]);
 
   const dateRange = [
-    currentFilters.firstYear || yearProps.min,
-    currentFilters.lastYear || yearProps.max,
+    currentFilters.firstYear || pickers.year.min,
+    currentFilters.lastYear || pickers.year.max,
   ];
   const [dr, setDr] = useState(dateRange);
 
@@ -92,12 +90,12 @@ export default function SearchAndFilterBoats({
 
   function handleDateRangeCommitted(event, [min, max]) {
     const f = { ...currentFilters };
-    if (min === yearProps.min) {
+    if (min === pickers.year.min) {
       delete f.firstYear;
     } else {
       f.firstYear = min;
     }
-    if (max === yearProps.max) {
+    if (max === pickers.year.max) {
       delete f.lastYear;
     } else {
       f.lastYear = max;
@@ -310,13 +308,13 @@ export default function SearchAndFilterBoats({
         <Grid>
           <DateRangePicker
             value={dr}
-            yearProps={yearProps}
+            yearProps={pickers.year}
             label={`Built Between: ${dateRange[0]} and ${dateRange[1]}`}
             onChange={handleDateRange}
             onChangeCommitted={handleDateRangeCommitted}
-            min={yearProps.min}
-            max={yearProps.max}
-            step={yearProps.step}
+            min={pickers.year.min}
+            max={pickers.year.max}
+            step={pickers.year.step}
           />
         </Grid>
         <Grid>

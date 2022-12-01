@@ -14,13 +14,21 @@ export function applyFilters(boats, filters) {
     let filteredBoats = [...boats];
     k.forEach(filter => {
         let wanted = filters[filter];
-        if (filter === 'oga_no') {
+        if (['oga_no', 'firstYear, lastYear'].includes(filter)) {
             wanted = parseInt(wanted);
         }
         filteredBoats = filteredBoats.filter((boat) => {
             const val = boat[(filter==='oga_nos'?'oga_no':filter)];
             if (Array.isArray(wanted)) {
                 return wanted.includes(val);
+            }
+            if (filter === 'firstYear') {
+                console.log('after', wanted, val, wanted <= val);
+                return wanted <= boat.year;
+            }
+            if (filter === 'lastYear') {
+                console.log('before', wanted, val, wanted >= val);
+                return wanted >= boat.year;
             }
             return wanted === val;
         });
