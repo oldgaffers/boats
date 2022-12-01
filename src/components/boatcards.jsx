@@ -8,7 +8,7 @@ import BoatCard from './boatcard';
 import { useCardQuery } from '../util/oganoutils';
 
 export default function BoatCards({
-  state, markList,
+  state, markList=[],
   onChangePage=(arg)=>console.log('onChangePage', arg), 
   onBoatMarked,
   onBoatUnMarked,
@@ -25,9 +25,9 @@ export default function BoatCards({
 
   const handleMarkChange = (value, ogaNo) => {
     if (value) {
-      onBoatMarked(ogaNo);
+      onBoatMarked && onBoatMarked(ogaNo);
     } else {
-      onBoatUnMarked(ogaNo);
+      onBoatUnMarked && onBoatUnMarked(ogaNo);
     }
   }
 
