@@ -9,18 +9,8 @@ import DialogActions from "@mui/material/DialogActions";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useMutation } from "@apollo/client";
 import Snackbar from '@mui/material/Snackbar';
-
-const ADD_FLEET = gql`mutation addfleet($owner_gold_id: Int = 10, $filters: jsonb = "", $name: String = "", $public: Boolean = false) {
-  insert_fleet(objects: {name: $name, owner_gold_id: $owner_gold_id, public: $public, filters: $filters}) {
-    returning {
-      name
-      id
-    }
-  }
-}`;
+import RoleRestricted from './rolerestrictedcomponent';
 
 function CreateFleetDialog({
     onCancel, onClose, open
@@ -65,62 +55,32 @@ function CreateFleetDialog({
 }
 
 export default function NewFleet({ markList }) {
-    const { user, isAuthenticated } = useAuth0();
     const [open, setOpen] = useState(false);
-    const [complete, setComplete] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const [addFleet, addFleetResult] = useMutation(ADD_FLEET);
 
     useEffect(() => {
-        const { data, loading, error, called } = addFleetResult;
-        if (called) {
-            if (loading) {
-                // console.log('still loading');
-            } else {
-                if (error) {
-                    console.log('error submitting a change', error);
-                } else {
-                    if (complete) {
-                        // console.log('complete');
-                    } else {
-                        console.log(`successfully submitted ${data.insert_boat_pending_updates.affected_rows} changes`);
-                        setSnackBarOpen(true);
-                        setComplete(true);
-                    }
-                }
-            }
-        } else {
-            // console.log('idle');
-        }
-    }, [addFleetResult, complete]);
+        console.log('TODO');
+    });
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const addFleet = (name, isPublic) => {
+        console.log('addFleet', name, isPublic);
+    } 
+
     const handleClose = (value) => {
         setOpen(false);
-        addFleet({
-            variables: {
-                owner_gold_id: user["https://oga.org.uk/id"],
-                filters: { oga_nos: markList },
-                name: value.name,
-                public: value.public
-            }
-        });
+        addFleet(value.name, value.public);
     };
 
     const handleCancel = () => {
         setOpen(false);
     };
 
-
     const handleSnackBarClose = () => {
         setSnackBarOpen(false);
-    }
-
-    if (!isAuthenticated) {
-        return '';
     }
 
     if (markList?.length === 0) {
@@ -128,7 +88,7 @@ export default function NewFleet({ markList }) {
     }
 
     return (
-        <>
+        <RoleRestricted role='member'>
             <Button
                 size="small"
                 variant="contained"
@@ -149,6 +109,6 @@ export default function NewFleet({ markList }) {
                 message="Fleet created."
                 severity="success"
             />
-        </>
+        </RoleRestricted>
     );
 }
