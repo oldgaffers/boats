@@ -9,8 +9,6 @@ export default function AdminButton({ classes, boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
-
-
   const handleClickOpen = () => {
     setOpen(true);
   };

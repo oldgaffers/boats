@@ -10,6 +10,7 @@ import ListItem from '@mui/material/ListItem';
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginButton from './loginbutton';
 import CreateBoatButton from './createboatbutton';
+import ShuffleBoatsButton from './shuffleboats';
 
 export default function BoatRegisterIntro() {
   const { user } = useAuth0();
@@ -65,6 +66,7 @@ export default function BoatRegisterIntro() {
               color='primary'
               href="/boat_register/yearbook/"
             >Yearbook</Button>
+            <ShuffleBoatsButton/>
             </Stack>
           </Box>) : ''}
         </Grid>

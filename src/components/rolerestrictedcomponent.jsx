@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 
 export default function RoleRestricted({ role, children, hide=true }) {
     const { user, isAuthenticated } = useAuth0();
-
+    console.log('RoleRestricted', children);
     if (!isAuthenticated) {
         if (hide) {
             return '';

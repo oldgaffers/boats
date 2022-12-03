@@ -2,6 +2,16 @@ import axios from "axios";
 import { useAxios } from 'use-axios-client';
 import { boatRegisterHome } from '../util/constants';
 
+export async function shuffleBoats() {
+  return axios.post(
+    'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/shuffle',
+    {},
+    {
+      headers: { 'content-type': 'application/json' }
+    }
+  );
+}
+
 export async function postBoatData(data) {
   console.log(postBoatData, data);
   return axios.post(

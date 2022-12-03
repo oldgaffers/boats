@@ -22,19 +22,18 @@ function makePickers(filtered) {
     "generic_type",
     "design_class",
     "construction_material",
-  ].forEach((key) => { 
+  ].forEach((key) => {
     pickers[key] = [...new Set(filtered.map((boat) => {
       return boat[key];
-    }).filter((v) => v))] 
+    }).filter((v) => v))]
   });
   const years = filtered.map((boat) => boat.year).filter((y) => y);
   years.sort();
   pickers.year = {
     step: 10,
     min: years[0] || 1800,
-    max: years[years.length-1] ||  new Date().getFullYear(),
+    max: years[years.length - 1] || new Date().getFullYear(),
   };
-  console.log(pickers.year, years);
   return pickers;
 }
 
@@ -52,7 +51,7 @@ export default function BrowseBoats({
 }) {
   const { data, error, loading } = useGetFilterable();
   const [pickers, setPickers] = useState();
-
+  console.log('BrowseBoats', markList);
   const { bpp, sort, sortDirection, filters } = state;
 
   useEffect(() => {
@@ -70,7 +69,7 @@ export default function BrowseBoats({
     }
   }, [pickers, data, filters]);
 
-  if (loading || !pickers) return <CircularProgress/>
+  if (loading || !pickers) return <CircularProgress />
   if (error) {
     console.log(error);
   }
@@ -82,7 +81,7 @@ export default function BrowseBoats({
 
   return (
     <div>
-      <Paper> 
+      <Paper>
         <SearchAndFilterBoats
           sortField={sort}
           sortDirection={sortDirection}
@@ -94,7 +93,7 @@ export default function BrowseBoats({
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
           onMarkedOnly={(value) => handleMarkedOnly(value)}
-          isMarkedOnly={isMarkedOnly}
+          isMarkedOnly={isMarkedOnly} markList={markList}
         />
         <Divider />
         <BoatCards

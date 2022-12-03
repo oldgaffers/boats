@@ -13,6 +13,8 @@ import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
 import useDebounce from "../util/debounce";
+import AddToFleet from './addtofleet';
+import NewFleet from './newfleet';
 
 const opposite = { asc: "desc", desc: "asc" };
 
@@ -42,6 +44,7 @@ export default function SearchAndFilterBoats({
   onSortChange,
   onMarkedOnly,
   isMarkedOnly,
+  markList,
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
@@ -338,6 +341,8 @@ export default function SearchAndFilterBoats({
               control={<Switch checked={isMarkedOnly} />}
               label="Only Marked Boats"
             />
+            <NewFleet markList={markList}/>
+            <AddToFleet markList={markList}/>
           </Box>
         </Grid>
       </Grid>

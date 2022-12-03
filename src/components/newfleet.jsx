@@ -57,9 +57,9 @@ function CreateFleetDialog({
 export default function NewFleet({ markList }) {
     const [open, setOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-
+ 
     useEffect(() => {
-        console.log('TODO');
+        console.log('NewFleet TODO');
     });
 
     const handleClickOpen = () => {
@@ -82,6 +82,8 @@ export default function NewFleet({ markList }) {
     const handleSnackBarClose = () => {
         setSnackBarOpen(false);
     }
+
+    console.log('NewFleet', markList);
 
     if (markList?.length === 0) {
         return '';

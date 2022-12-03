@@ -83,6 +83,7 @@ export default function FleetView({ filter }) {
 
   return (
     <RoleRestricted role='member'>
-      <FleetDisplay name={name} filters={filters} />);
+      <FleetDisplay name={name} filters={filters} />
     </RoleRestricted>
+  );
 }

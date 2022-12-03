@@ -5,8 +5,10 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import FormControl from "@mui/material/FormControl";
+import RoleRestricted from './rolerestrictedcomponent';
 
 export default function AddToFleet({ markList }) {
+    console.log('AddToFleet TODO');
 
     function handleChangeFleet(event) {
         console.log('handleChangeFleet', event);
@@ -17,6 +19,10 @@ export default function AddToFleet({ markList }) {
     }
 
     const fleets = [];
+
+    if (fleets.length === 0) {
+        return '';
+    }
 
     return (
         <RoleRestricted role='member'>
