@@ -15,7 +15,6 @@ import { boatUrl } from '../util/rr';
 import { useGetThumb, useGetBoatData } from './boatregisterposts';
 import { m2f, price } from '../util/format';
 import Enquiry from './enquiry';
-import { Stack } from '@mui/system';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
 import Switch from "@mui/material/Switch";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
@@ -13,8 +12,6 @@ import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
 import useDebounce from "../util/debounce";
-import AddToFleet from './addtofleet';
-import NewFleet from './newfleet';
 
 const opposite = { asc: "desc", desc: "asc" };
 
@@ -44,7 +41,7 @@ export default function SearchAndFilterBoats({
   onSortChange,
   onMarkedOnly,
   isMarkedOnly,
-  markList,
+  markList=[],
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
@@ -158,7 +155,7 @@ export default function SearchAndFilterBoats({
         justify="space-evenly"
         alignItems="flex-end"
       >
-        <Grid>
+        <Grid item>
           <Picker
             clearable={false}
             value={`${boatsPerPage}`}
@@ -168,7 +165,7 @@ export default function SearchAndFilterBoats({
             label="Boats Per Page"
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <FormControl sx={{ marginLeft: "1.5em" }}>
             <FormLabel>Sort By</FormLabel>
             <RadioGroup
@@ -190,7 +187,7 @@ export default function SearchAndFilterBoats({
             </RadioGroup>
           </FormControl>
         </Grid>
-        <Grid>
+        <Grid item>
           <FormControl sx={{ marginLeft: "1.5em" }}>
             <FormLabel>Sort Direction</FormLabel>
             <FormControlLabel
@@ -216,7 +213,7 @@ export default function SearchAndFilterBoats({
         justify="space-evenly"
         alignItems="baseline"
       >
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="name"
@@ -225,7 +222,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["name"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <NumberEntry
             id="oga_no"
             label="OGA Boat No."
@@ -239,7 +236,7 @@ export default function SearchAndFilterBoats({
             }}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="designer"
@@ -248,7 +245,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["designer"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="builder"
@@ -257,7 +254,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["builder"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="rig_type"
@@ -266,7 +263,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["rig_type"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="mainsail_type"
@@ -275,7 +272,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["mainsail_type"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="generic_type"
@@ -290,7 +287,7 @@ export default function SearchAndFilterBoats({
             }}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="design_class"
@@ -299,7 +296,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["design_class"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <Picker
             onChange={pl}
             id="construction_material"
@@ -308,7 +305,7 @@ export default function SearchAndFilterBoats({
             value={currentFilters["construction_material"]}
           />
         </Grid>
-        <Grid>
+        <Grid item>
           <DateRangePicker
             value={dr}
             yearProps={pickers.year}
@@ -320,30 +317,14 @@ export default function SearchAndFilterBoats({
             step={pickers.year.step}
           />
         </Grid>
-        <Grid>
-          <Box
-            sx={{
-              position: "relative",
-              top: "18px",
-              border: "1px solid lightgray",
-              borderRadius: "4px",
-              marginLeft: "0",
-              marginRight: "1px",
-              paddingTop: 0.5,
-              paddingLeft: 2,
-              paddingRight: 0,
-              paddingBottom: 0.5,
-            }}
-          >
+        <Grid item>
             <FormControlLabel
+              disabled={markList.length === 0}
               id="marked"
               onChange={handleOnlyMarkedChange}
               control={<Switch checked={isMarkedOnly} />}
-              label="Only Marked Boats"
+              label="Only Marked Boats"              
             />
-            <NewFleet markList={markList}/>
-            <AddToFleet markList={markList}/>
-          </Box>
         </Grid>
       </Grid>
     </form>

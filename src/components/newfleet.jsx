@@ -54,7 +54,7 @@ function CreateFleetDialog({
     );
 }
 
-export default function NewFleet({ markList }) {
+export default function NewFleet({ markList=[] }) {
     const [open, setOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
  
