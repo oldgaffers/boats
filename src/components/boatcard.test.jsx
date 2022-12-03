@@ -3,18 +3,21 @@ import { screen, render } from '@testing-library/react';
 import BoatCard from './boatcard';
 import { BrowserRouter as Router } from "react-router-dom";
 import { useAxios } from 'use-axios-client';
+import { MockedProvider } from '@apollo/react-testing';
 jest.mock('use-axios-client')
 
 test('renders learn react link', () => {
-  useAxios.mockReturnValue({ data: {result:{pageContext:{ boat: {}}}} });
+  useAxios.mockReturnValue({ data: { result: { pageContext: { boat: {} } } } });
   render(
-      <Router>
-        <BoatCard 
-        path='/'
-        state={{filters:{}, view:{}}} 
-        boat={{oga_no: 1, previous_names: []}}
+    <Router>
+      <MockedProvider>
+        <BoatCard
+          path='/'
+          state={{ filters: {}, view: {} }}
+          boat={{ oga_no: 1, previous_names: [] }}
         />
-      </Router>
+      </MockedProvider>
+    </Router>
   );
   const wanted = screen.getByText(/More/);
   expect(wanted).toBeInTheDocument();
