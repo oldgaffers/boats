@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import FormControl from "@mui/material/FormControl";
 import RoleRestricted from './rolerestrictedcomponent';
 
-export default function AddToFleet({ markList }) {
+export default function AddToFleet({ markList=[] }) {
     console.log('AddToFleet TODO');
 
     function handleChangeFleet(event) {

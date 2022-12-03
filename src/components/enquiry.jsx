@@ -123,9 +123,11 @@ export default function Enquiry({ classes, boat, text }) {
 
   const handleClickOpen = () => {
     if (member) {
-      const current = boat.ownerships.filter((o) => o.current);
-      const memberNumbers = [...new Set(current.map((owner) => owner.member))];
-      getOwners({ variables: { members: memberNumbers } })
+      const current = boat?.ownerships?.filter((o) => o.current) || [];
+      if (current.length > 0) {
+        const memberNumbers = [...new Set(current.map((owner) => owner.member))];
+        getOwners({ variables: { members: memberNumbers } })  
+      }
     } else {
       console.log('not member - userRoles', userRoles);
     }

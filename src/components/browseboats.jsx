@@ -53,6 +53,8 @@ export default function BrowseBoats({
   const [pickers, setPickers] = useState();
   const { bpp, sort, sortDirection, filters } = state;
 
+  console.log('BrowseBoats', markList);
+
   useEffect(() => {
     if (data) {
       const filtered = applyFilters(data, filters);

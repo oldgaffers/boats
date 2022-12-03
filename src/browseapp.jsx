@@ -44,15 +44,19 @@ export default function BrowseApp({ view='app' }) {
   }, [state, handleFilterChange]);
 
   const handleBoatMarked = (ogaNo) => {
+    console.log('handleBoatMarked', ogaNo);
     markSet.current.add(ogaNo);
   };
 
   const handleBoatUnMarked = (ogaNo) => {
+    console.log('handleBoatUnMarked', ogaNo);
     markSet.current.delete(ogaNo);
     if (markedOnly) {
       handleFilterChange({ ...state.filters, oga_nos: [...markSet.current] });
     }
   };
+
+  console.log('markSet', markSet);
 
   const BB = ({title, state}) => {
     return (

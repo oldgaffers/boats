@@ -10,7 +10,7 @@ export function findFirstAbsent(boat) {
 }
 
 export function applyFilters(boats, filters) {
-    const k = Object.keys(filters);
+    const k = Object.keys(filters || {});
     let filteredBoats = [...boats];
     k.forEach(filter => {
         let wanted = filters[filter];

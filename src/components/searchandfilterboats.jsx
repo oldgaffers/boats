@@ -12,6 +12,8 @@ import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
 import useDebounce from "../util/debounce";
+import FleetButtons from "./fleetbuttons";
+import { Box } from "@mui/system";
 
 const opposite = { asc: "desc", desc: "asc" };
 
@@ -143,6 +145,15 @@ export default function SearchAndFilterBoats({
     onMarkedOnly(event.target.checked);
   }
 
+  function filterByFleet(name, filters) {
+    console.log('fb', name, filters);
+    if (filters) {
+      onFilterChange(filters);
+    } else {
+      onFilterChange({});
+    }
+  }
+
   return (
     <form>
       <FormHelperText sx={{ marginLeft: "1em", marginBottom: "3px" }}>
@@ -211,7 +222,7 @@ export default function SearchAndFilterBoats({
         container
         direction="row"
         justify="space-evenly"
-        alignItems="baseline"
+        alignItems="center"
       >
         <Grid item>
           <Picker
@@ -318,6 +329,7 @@ export default function SearchAndFilterBoats({
           />
         </Grid>
         <Grid item>
+          <Box>
             <FormControlLabel
               disabled={markList.length === 0}
               id="marked"
@@ -325,6 +337,10 @@ export default function SearchAndFilterBoats({
               control={<Switch checked={isMarkedOnly} />}
               label="Only Marked Boats"              
             />
+          </Box>
+        </Grid>
+        <Grid item>
+          <FleetButtons onChange={filterByFleet}/>
         </Grid>
       </Grid>
     </form>
