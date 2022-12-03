@@ -15,6 +15,12 @@ export function m2df(val) {
     }
 }
 
+export function m2f(val) {
+  if(val) {
+    return `${m2df(val)} ft`
+  }
+};
+
 export function feet(n) {
   return `${n.toFixed(2)} ft`;
 }

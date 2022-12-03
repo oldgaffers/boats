@@ -111,7 +111,7 @@ export default function BoatButtons({ boat, ownerships, user /* location */ }) {
           >See more boats</Button>
         </Grid>
         <Grid item xs={'auto'} >
-            <Enquiry classes={classes} boat={boat} user={user} />
+            <Enquiry classes={classes} boat={boat} />
         </Grid>
         <Grid item xs={'auto'} >
             <PhotoButton

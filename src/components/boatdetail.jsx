@@ -4,15 +4,9 @@ import Paper from '@mui/material/Paper';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
-import { m2df, price } from '../util/format';
+import { m2f, price } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
-
-function m2f(val) {
-  if(val) {
-    return `${m2df(val)} ft`
-  }
-};
 
 export default function BoatDetail({ boat, user }) {
   const [value, setValue] = useState(0);

@@ -107,7 +107,7 @@ function ContactDialog({
   );
 }
 
-export default function Enquiry({ classes, boat }) {
+export default function Enquiry({ classes, boat, text }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
@@ -159,21 +159,23 @@ export default function Enquiry({ classes, boat }) {
   const current = boat.ownerships?.filter((o) => o.current) || [];
 
   const isMember = userRoles.includes('member');
-  let enquireText;
-  if (current) {
-    if (current.length > 1) {
-      enquireText = "Contact the Owners";
+  let enquireText = text;
+  if (!text) {
+    if (current) {
+      if (current.length > 1) {
+        enquireText = "Contact the Owners";
+      } else {
+        enquireText = "Contact the Owner";
+      }
     } else {
-      enquireText = "Contact the Owner";
+      enquireText = "Ask about this boat";
     }
-  } else {
-    enquireText = "Ask about this boat";
   }
 
   return (
     <>
       <Button
-        className={classes.button}
+        className={classes?.button}
         size="small"
         endIcon={<MailIcon />}
         variant="contained"

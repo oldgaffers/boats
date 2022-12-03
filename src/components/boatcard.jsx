@@ -11,9 +11,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
-import { price } from '../util/format';
 import { boatUrl } from '../util/rr';
 import { useGetThumb, useGetBoatData } from './boatregisterposts';
+import { m2f, price } from '../util/format';
+import Enquiry from './enquiry';
+import { Stack } from '@mui/system';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -32,15 +34,16 @@ function showPrice(n) {
 }
 
 const wanted = {
-  year: { label: 'Year Built', access: (n) => n },
-  place_built: { label: 'Place Built', access: (n) => n },
-  home_port: { label: 'Home Port', access: (n) => n },
-  rig_type: { label: 'Rig Type', access: (n) => n },
-  designer: { label: 'Designer', access: (n) => n ? n.name : n },
-  design_class: { label: 'Design Class', access: (n) => n ? n.name : n },
-  builder: { label: 'Builder', access: (n) => n ? n.name : n },
-  previous_names: { label: 'Was', access: (n) => makePreviousNamesField(n) },
-  price: { label: 'Price', access: (n) => showPrice(n) },
+  year: { label: 'Year Built', access: (b, k) => b[k] },
+  place_built: { label: 'Place Built', access: (b, k) => b[k] },
+  home_port: { label: 'Home Port', access: (b, k) => b[k] },
+  rig_type: { label: 'Rig Type', access: (b, k) => b[k] },
+  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data[k]) }, 
+  designer: { label: 'Designer', access: (b, k) => b[k]?.name || b[k] },
+  design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
+  builder: { label: 'Builder', access: (b, k) => b[k]?.name || b[k] },
+  previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
+  price: { label: 'Price', access: (b, k) => showPrice(b[k]) },
 };
 
 function SalesBadge({ boat, view, children }) {
@@ -135,7 +138,6 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
     )?.asking_price;
 
   const albumKey = boat?.image_key;
-
   return (
     <Card sx={albumKey ? {
       height: '100%',
@@ -152,13 +154,16 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
       <CardActions>
         <Grid container justifyContent="space-between">
           <Grid item>
-            <Button
-              size="small"
-              component={'a'}
-              href={boatUrl(ogaNo, {})}
-              variant="contained"
-              color="secondary"
-            >More..</Button>
+              <Button
+                size="small"
+                component={'a'}
+                href={boatUrl(ogaNo, {})}
+                variant="contained"
+                color="secondary"
+              >More..</Button>
+          </Grid>
+          <Grid item>
+              <Enquiry boat={boat} text='Contact' />
           </Grid>
           <Grid item>
             <Checkbox sx={{ textAlign: 'right' }}
