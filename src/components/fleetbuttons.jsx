@@ -64,7 +64,7 @@ export default function FleetButtons({
         setItems(undefined);
     }
 
-    const fleet = items.find((f) => f.name === selected);
+    const fleet = items?.find((f) => f.name === selected);
 
     return (
         <Stack direction='row' spacing={3}>
@@ -78,7 +78,7 @@ export default function FleetButtons({
                 />
             </Box>
             {
-                (markList.length > 0 && ! selected) ? <NewFleet markList={markList} updated={fleetsUpdated} /> : ''
+                (markList?.length > 0 && ! selected) ? <NewFleet markList={markList} updated={fleetsUpdated} /> : ''
             }            
             <UpdateFleet
                 markList={markList}
