@@ -55,7 +55,6 @@ export default function BoatSummary({ location, boat }) {
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
-  console.log('B', Object.keys(boat));
   return (
     <Paper sx={{height: "100%", paddingLeft: '0.5em', paddingRight: '0.5em'}}>
     <Typography variant="h4" component="h4">Summary</Typography>
