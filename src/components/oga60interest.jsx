@@ -20,9 +20,11 @@ export default function OGA60({ onClose, onCancel }) {
     }
 
     const handleSubmit = (values) => {
+        const topic = 'Jubilee';
+        const { name, email } = user || {};
         const { ddf, ...rest } = values;
         const data = {
-            topic: 'Jubilee',
+            name, email, topic,
             ...rest,
             member: ddf.member || rest.member,
         }
