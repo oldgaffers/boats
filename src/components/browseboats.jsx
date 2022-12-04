@@ -60,29 +60,16 @@ export default function BrowseBoats({
   onBoatUnMarked,
 }) {
   const { data, error, loading } = useGetFilterable();
-  const [pickers, setPickers] = useState();
   const { bpp, sort, sortDirection, filters } = state;
 
-  useEffect(() => {
-    if (data) {
-      const filtered = applyFilters(data, filters);
-      const newPickers = makePickers(filtered);
-      if (pickers) {
-        let changes = false;
-        if (changes) {
-          setPickers(newPickers);
-        }
-      } else {
-        setPickers(newPickers);
-      }
-    }
-  }, [pickers, data, filters]);
-
-  if (loading || !pickers) return <CircularProgress />
+  if (loading || !data) return <CircularProgress />
   if (error) {
     console.log(error);
   }
   const blank = "_blank";
+
+  const filtered = applyFilters(data, filters);
+  const pickers = makePickers(filtered);
 
   return (
       <Paper>
