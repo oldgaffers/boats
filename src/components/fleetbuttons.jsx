@@ -64,6 +64,8 @@ export default function FleetButtons({
         setItems(undefined);
     }
 
+    const fleet = items.find((f) => f.name === selected);
+
     return (
         <Stack direction='row' spacing={3}>
             <Box width={'10em'}>
@@ -80,7 +82,7 @@ export default function FleetButtons({
             }            
             <UpdateFleet
                 markList={markList}
-                fleet={items.find((f) => f.name === selected)}
+                fleet={fleet}
                 updated={fleetsUpdated}
             />
         </Stack>

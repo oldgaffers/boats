@@ -1,11 +1,14 @@
 import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
+import { useAuth0 } from "@auth0/auth0-react";
 import { postPrivateScopedData } from "./boatregisterposts";
 import { Popover, Typography } from "@mui/material";
 import { TokenContext } from './TokenProvider';
 
 export default function UpdateFleet({ markList=[], fleet, updated=()=>console.log('updated') }) {
     const accessToken = useContext(TokenContext);
+    const { user } = useAuth0();
+    const id = user?.["https://oga.org.uk/id"];
     const [popoverOpen, setPopoverOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState();
 
@@ -29,6 +32,7 @@ export default function UpdateFleet({ markList=[], fleet, updated=()=>console.lo
         }
         const data = {
             ...fleet,
+            owner_gold_id: id,
             filters: { oga_nos: wanted },
             updated_at: (new Date()).toISOString(),
          };
@@ -49,10 +53,16 @@ export default function UpdateFleet({ markList=[], fleet, updated=()=>console.lo
     if (merged.length === inFleet.length) {
         message = `Remove ${markList.length} ${b} from ${fleet.name}`;
     }
+    if (fleet.owner_gold_id !== id) {
+        message = 'You can only edit your own fleets';
+    }
 
     return (
         <>
-        <Button color='primary' size='small' variant='contained' onClick={handleClick}
+        <Button
+            disabled={fleet.owner_gold_id !== id}
+            color='primary' size='small' variant='contained'
+            onClick={handleClick}
         >{message}</Button>
         <Popover
             open={popoverOpen}
