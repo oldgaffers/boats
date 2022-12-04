@@ -108,12 +108,12 @@ function BoatCardImage({ albumKey, name }) {
   return (<AltForThumb />);
 }
 
-export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
+export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const { loading, error, data } = useGetBoatData(ogaNo);
-  const [markChecked, setMarkChecked] = useState(marked);
+  const [marked, setMarked] = useState(false);
 
   const handleMarked = (checked) => {
-    setMarkChecked(checked);
+    setMarked(checked);
     onMarkChange(checked, ogaNo);
   }
 
@@ -166,7 +166,7 @@ export default function BoatCard({ state, marked, onMarkChange, ogaNo }) {
           </Grid>
           <Grid item>
             <Checkbox sx={{ textAlign: 'right' }}
-              checked={markChecked}
+              checked={marked}
               color="primary" onChange={(event, checked) => handleMarked(checked)}
               inputProps={{ 'aria-label': 'add to list' }}
             />

@@ -1,69 +1,82 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { createContext, useState, useEffect, useCallback } from "react";
 // import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
 import BrowseBoats from "./components/browseboats";
-import BoatRegisterIntro from "./components/boatregisterintro";
-import BoatsForSaleIntro from "./components/boatsforsaleintro";
-import SmallBoatsIntro from "./components/smallboatsintro";
 import { getState, saveState, setView } from "./util/statemanagement";
 
-export default function BrowseApp({ view='app' }) {
+export const MarkContext = createContext([]);
+
+export default function BrowseApp({ view = 'app' }) {
   setView(view);
   const [state, setState] = useState(getState(view));
-
-  const markedOnly = !!(state.filters && state.filters.oga_nos);
-  const markSet = useRef(new Set());
+  const [markList, setMarkList] = useState([]);
+  const [markedOnly, setMarkedOnly] = useState(false);
 
   useEffect(() => { saveState(state, view); }, [state, view]);
 
   const handlePageSizeChange = (bpp) => {
-    setState({...state, page: 1, bpp });
+    setState({ ...state, page: 1, bpp });
   };
 
   const handleSortChange = (field, dir) => {
-    setState({...state, sort: field, sortDirection: dir });
+    setState({ ...state, sort: field, sortDirection: dir });
   };
 
-  const handlePageChange = ({page}) => {
-    setState({...state, page });
+  const handlePageChange = ({ page }) => {
+    setState({ ...state, page });
   };
 
   const handleFilterChange = useCallback((filters) => {
-    setState({...state, page: 1, filters});
+    console.log('Browseapp handleFilterChange', filters)
+    setState({ ...state, page: 1, filters });
   }, [state]);
 
-  const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
-    const markList = [...markSet.current];
-    if (isMarkedOnly) {
-      handleFilterChange({ ...state.filters, oga_nos: markList });
-    } else {
+  const updateOgaNosFilter = useCallback((l, mo) => {
+    console.log('BrowseApp updateOgaNosFilter', l, mo);
+    if (l.length === 0) {
       const { oga_nos, ...f } = state.filters;
       if (oga_nos) {
         handleFilterChange(f);
       }
+      setMarkedOnly(false); // need to turn off the switch if nothing marked
+    } else if (mo) {
+      handleFilterChange({ ...state.filters, oga_nos: l });
+    } else {
+      // should be nothing to do
     }
-  }, [state, handleFilterChange]);
+  }, [handleFilterChange, state.filters]);
+
+  const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
+    console.log('BrowseApp handleMarkedOnlyChange', isMarkedOnly, markList);
+    if (isMarkedOnly) {
+      updateOgaNosFilter(markList, true);
+    } else {
+      updateOgaNosFilter([], false);
+    }
+    setMarkedOnly(isMarkedOnly);
+  }, [updateOgaNosFilter, markList]);
 
   const handleBoatMarked = (ogaNo) => {
-    console.log('handleBoatMarked', ogaNo);
-    markSet.current.add(ogaNo);
+    console.log('handleBoatMarked', ogaNo)
+    if (!markList.includes(ogaNo)) {
+      const newMarkList = [...markList, ogaNo];
+      setMarkList(newMarkList);
+      updateOgaNosFilter(newMarkList, markedOnly);
+    }
   };
 
   const handleBoatUnMarked = (ogaNo) => {
-    console.log('handleBoatUnMarked', ogaNo);
-    markSet.current.delete(ogaNo);
+    console.log('handleBoatUnMarked', ogaNo)
+    const newMarkList = markList.filter((n) => n !== ogaNo);
     if (markedOnly) {
-      handleFilterChange({ ...state.filters, oga_nos: [...markSet.current] });
+      updateOgaNosFilter(newMarkList, true);
     }
+    setMarkList(newMarkList);
   };
 
-  console.log('markSet', markSet);
-
-  const BB = ({title, state}) => {
-    return (
+  return (
+    <MarkContext.Provider value={markList}>
       <BrowseBoats
-        title={title}
         state={state}
-        markList={[...markSet.current]}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
@@ -73,26 +86,6 @@ export default function BrowseApp({ view='app' }) {
         onBoatMarked={handleBoatMarked}
         onBoatUnMarked={handleBoatUnMarked}
       />
-    );
-  }
-
-  switch (state.view) {
-    case 'sell':
-    return (<>
-      <BoatsForSaleIntro />
-      <BB title="Boats for Sale" state={state} />
-    </>);
-    case 'small':
-    return (
-      <>
-        <SmallBoatsIntro />
-        <BB title="Browse our small boats" state={state} />
-      </>
-    );
-  default:
-    return (<>
-      <BoatRegisterIntro />
-      <BB title="Browse the Register" state={state}/>
-      </>);
-    }
+    </MarkContext.Provider>
+  );
 }

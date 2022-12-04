@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Divider from "@mui/material/Divider";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
@@ -8,12 +8,14 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormHelperText from "@mui/material/FormHelperText";
+import Box from "@mui/material/Box";
 import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
 import useDebounce from "../util/debounce";
 import FleetButtons from "./fleetbuttons";
-import { Box } from "@mui/system";
+import { MarkContext } from "../browseapp";
+import RoleRestricted from './rolerestrictedcomponent';
 
 const opposite = { asc: "desc", desc: "asc" };
 
@@ -38,16 +40,16 @@ export default function SearchAndFilterBoats({
   filters,
   view,
   pickers,
-  onFilterChange,
-  onPageSizeChange,
-  onSortChange,
-  onMarkedOnly,
+  onFilterChange=()=>console.log('onFilterChange'),
+  onPageSizeChange=()=>console.log('onPageSizeChange'),
+  onSortChange=()=>console.log('onSortChange'),
+  onMarkedOnlyChange=()=>console.log('onMarkedOnly'),
   isMarkedOnly,
-  markList=[],
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
   const debouncedOgaNo = useDebounce(ogaNo, 1000);
+  const markList = useContext(MarkContext);
   useEffect(() => {
     if (debouncedOgaNo) {
       console.log("debounced oga no", debouncedOgaNo);
@@ -142,17 +144,23 @@ export default function SearchAndFilterBoats({
   }
 
   function handleOnlyMarkedChange(event) {
-    onMarkedOnly(event.target.checked);
+    console.log('handleOnlyMarkedChange', event.target.checked);
+    onMarkedOnlyChange(event.target.checked);
   }
 
   function filterByFleet(name, filters) {
+    // filters always contains the filters in case we need to do
+    // clever stuff if other filters are set as well as fleet
+    // but name is cleared if we need to clear the fleet filter
     console.log('fb', name, filters);
-    if (filters) {
+    if (name) {
       onFilterChange(filters);
     } else {
       onFilterChange({});
     }
   }
+
+  console.log('SearchAndFilterBoats', markList);
 
   return (
     <form>
@@ -335,12 +343,14 @@ export default function SearchAndFilterBoats({
               id="marked"
               onChange={handleOnlyMarkedChange}
               control={<Switch checked={isMarkedOnly} />}
-              label="Only Marked Boats"              
+              label="Only Marked Boats"
             />
           </Box>
         </Grid>
         <Grid item>
-          <FleetButtons onChange={filterByFleet}/>
+          <RoleRestricted role='member'>
+            <FleetButtons onChange={filterByFleet} />
+          </RoleRestricted>
         </Grid>
       </Grid>
     </form>

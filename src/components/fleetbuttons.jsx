@@ -3,17 +3,17 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useAuth0 } from '@auth0/auth0-react';
 import { TokenContext } from './TokenProvider';
 import { getScopedData } from './boatregisterposts';
-import RoleRestricted from './rolerestrictedcomponent';
 import Picker from './picker';
 import NewFleet from './newfleet';
 import AddToFleet from './addtofleet';
+import { MarkContext } from "../browseapp";
 
 export default function FleetButtons({
-    markList=[],
     onChange=()=>{console.log('fleet change');},
 }) {
     const [items, setItems] = useState();
     const [selected, setSelected] = useState();
+    const markList = useContext(MarkContext);
     const accessToken = useContext(TokenContext);
     const { user } = useAuth0()
     const id = user?.["https://oga.org.uk/id"];
@@ -31,12 +31,12 @@ export default function FleetButtons({
             fleets.sort((a,b) => ((a.owner_gold_id === id)?1:2)*(a.name.localeCompare(b.name)||1));
             setItems(fleets);
         }
-        if (!items) {
+        if (accessToken && !items) {
             getData();
         }
     }, [accessToken, items, id])
 
-    if (!items) {
+    if (accessToken && !items) {
         return <CircularProgress />;
     }
     function onFleetChange(id, value) {
@@ -47,9 +47,8 @@ export default function FleetButtons({
         }
         setSelected(value);
     };
-
     return (
-        <RoleRestricted role='member'>
+        <>
             <Picker
                 onChange={onFleetChange}
                 id="fleet"
@@ -58,7 +57,7 @@ export default function FleetButtons({
                 value={selected}
             />
             <NewFleet markList={markList} />
-            <AddToFleet markList={markList} />
-        </RoleRestricted >
+            <AddToFleet markList={markList} fleet={selected} />
+        </>
     );
 }

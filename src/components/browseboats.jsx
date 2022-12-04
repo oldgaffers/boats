@@ -10,6 +10,9 @@ import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { applyFilters } from '../util/oganoutils';
 import { useGetFilterable } from './boatregisterposts';
+import BoatRegisterIntro from "./boatregisterintro";
+import BoatsForSaleIntro from "./boatsforsaleintro";
+import SmallBoatsIntro from "./smallboatsintro";
 
 function makePickers(filtered) {
   const pickers = {};
@@ -37,9 +40,16 @@ function makePickers(filtered) {
   return pickers;
 }
 
+function Intro({view}) {
+  switch (view) {
+    case 'sell': return <BoatsForSaleIntro />;
+    case 'small': return <SmallBoatsIntro />;
+    default: return <BoatRegisterIntro />;
+  }
+}
+
 export default function BrowseBoats({
   state,
-  markList,
   onPageChange,
   onPageSizeChange,
   onSortChange,
@@ -52,8 +62,6 @@ export default function BrowseBoats({
   const { data, error, loading } = useGetFilterable();
   const [pickers, setPickers] = useState();
   const { bpp, sort, sortDirection, filters } = state;
-
-  console.log('BrowseBoats', markList);
 
   useEffect(() => {
     if (data) {
@@ -76,13 +84,9 @@ export default function BrowseBoats({
   }
   const blank = "_blank";
 
-  const handleMarkedOnly = (value) => {
-    onMarkedOnlyChange(value);
-  }
-
   return (
-    <div>
       <Paper>
+        <Intro view={state.view}/>
         <SearchAndFilterBoats
           sortField={sort}
           sortDirection={sortDirection}
@@ -93,13 +97,15 @@ export default function BrowseBoats({
           onPageSizeChange={onPageSizeChange}
           onSortChange={onSortChange}
           onFilterChange={onFilterChange}
-          onMarkedOnly={(value) => handleMarkedOnly(value)}
-          isMarkedOnly={isMarkedOnly} markList={markList}
+          onMarkedOnlyChange={onMarkedOnlyChange}
+          isMarkedOnly={isMarkedOnly}
         />
         <Divider />
         <BoatCards
-          state={state} markList={markList} onChangePage={onPageChange}
-          onBoatMarked={onBoatMarked} onBoatUnMarked={onBoatUnMarked}
+          state={state}
+          onChangePage={onPageChange}
+          onBoatMarked={onBoatMarked}
+          onBoatUnMarked={onBoatUnMarked}
         />
         <Divider />
         <Typography>
@@ -123,7 +129,6 @@ export default function BrowseBoats({
         </List>
         <Typography variant='body2'>OGA Boat Register %%VERSION%%</Typography>
       </Paper>
-    </div>
   );
 }
 

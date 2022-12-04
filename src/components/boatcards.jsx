@@ -8,7 +8,7 @@ import BoatCard from './boatcard';
 import { useCardQuery } from '../util/oganoutils';
 
 export default function BoatCards({
-  state, markList=[],
+  state,
   onChangePage=(arg)=>console.log('onChangePage', arg), 
   onBoatMarked,
   onBoatUnMarked,
@@ -40,10 +40,9 @@ export default function BoatCards({
           <Box py={1} />
           <Grid container spacing={4}>
           {boats.map((boat) => {
-            const marked = markList.includes(boat.oga_no);
             return (
             <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} marked={marked} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
+              <BoatCard state={state} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
             </Grid>
             );
           }
