@@ -2,7 +2,6 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 
 export default function ConditionalText({ label, value, children }) {
-    console.log('CT', label, value);
     let text;
     if (value) {
         if (Array.isArray(value)) {
