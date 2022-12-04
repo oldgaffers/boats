@@ -144,7 +144,6 @@ export default function SearchAndFilterBoats({
   }
 
   function handleOnlyMarkedChange(event) {
-    console.log('handleOnlyMarkedChange', event.target.checked);
     onMarkedOnlyChange(event.target.checked);
   }
 
@@ -152,15 +151,12 @@ export default function SearchAndFilterBoats({
     // filters always contains the filters in case we need to do
     // clever stuff if other filters are set as well as fleet
     // but name is cleared if we need to clear the fleet filter
-    console.log('fb', name, filters);
     if (name) {
       onFilterChange(filters);
     } else {
       onFilterChange({});
     }
   }
-
-  console.log('SearchAndFilterBoats', markList);
 
   return (
     <form>

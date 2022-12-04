@@ -26,12 +26,10 @@ export default function BrowseApp({ view = 'app' }) {
   };
 
   const handleFilterChange = useCallback((filters) => {
-    console.log('Browseapp handleFilterChange', filters)
     setState({ ...state, page: 1, filters });
   }, [state]);
 
   const updateOgaNosFilter = useCallback((l, mo) => {
-    console.log('BrowseApp updateOgaNosFilter', l, mo);
     if (l.length === 0) {
       const { oga_nos, ...f } = state.filters;
       if (oga_nos) {
@@ -46,7 +44,6 @@ export default function BrowseApp({ view = 'app' }) {
   }, [handleFilterChange, state.filters]);
 
   const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
-    console.log('BrowseApp handleMarkedOnlyChange', isMarkedOnly, markList);
     if (isMarkedOnly) {
       updateOgaNosFilter(markList, true);
     } else {
@@ -56,7 +53,6 @@ export default function BrowseApp({ view = 'app' }) {
   }, [updateOgaNosFilter, markList]);
 
   const handleBoatMarked = (ogaNo) => {
-    console.log('handleBoatMarked', ogaNo)
     if (!markList.includes(ogaNo)) {
       const newMarkList = [...markList, ogaNo];
       setMarkList(newMarkList);
@@ -65,7 +61,6 @@ export default function BrowseApp({ view = 'app' }) {
   };
 
   const handleBoatUnMarked = (ogaNo) => {
-    console.log('handleBoatUnMarked', ogaNo)
     const newMarkList = markList.filter((n) => n !== ogaNo);
     if (markedOnly) {
       updateOgaNosFilter(newMarkList, true);

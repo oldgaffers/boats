@@ -1,19 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
+import Stack from "@mui/material/Stack";
 import { useAuth0 } from '@auth0/auth0-react';
 import { TokenContext } from './TokenProvider';
 import { getScopedData } from './boatregisterposts';
 import Picker from './picker';
-import NewFleet from './newfleet';
-import AddToFleet from './addtofleet';
-import { MarkContext } from "../browseapp";
+// import NewFleet from './newfleet';
+// import AddToFleet from './addtofleet';
+// import { MarkContext } from "../browseapp";
 
 export default function FleetButtons({
     onChange=()=>{console.log('fleet change');},
 }) {
     const [items, setItems] = useState();
     const [selected, setSelected] = useState();
-    const markList = useContext(MarkContext);
+    // const markList = useContext(MarkContext);
     const accessToken = useContext(TokenContext);
     const { user } = useAuth0()
     const id = user?.["https://oga.org.uk/id"];
@@ -47,8 +48,9 @@ export default function FleetButtons({
         }
         setSelected(value);
     };
+
     return (
-        <>
+        <Stack direction='row'>
             <Picker
                 onChange={onFleetChange}
                 id="fleet"
@@ -56,8 +58,14 @@ export default function FleetButtons({
                 label="Fleet"
                 value={selected}
             />
-            <NewFleet markList={markList} />
-            <AddToFleet markList={markList} fleet={selected} />
-        </>
+        </Stack>
     );
 }
+
+/*
+    TODO 
+            {
+                (markList.length > 0 && ! selected) ? <NewFleet markList={markList} /> : ''
+            }            
+            <AddToFleet markList={markList} fleet={selected} />
+*/
