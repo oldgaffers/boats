@@ -58,13 +58,14 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
           marginBottom: theme.spacing(2),
           paddingLeft: theme.spacing(1),
           paddingRight: theme.spacing(1),
+          minHeight: '2em',
         }
       }
     }
 })
 
   return (
-    <Box sx={{ margin: '0.5em' }}
+    <Box width='100%' marginTop='0.5em' marginBottom='1em'
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           e.stopPropagation();
@@ -132,6 +133,7 @@ export const BasicHtmlEditor = ({ onSave, data, name, title, ...rest }) => {
       <Typography sx={{ paddingTop: "1em" }}>{title}</Typography>
       <ThemeProvider theme={theme}>
         <MUIRichTextEditor
+          width='100%'
           label="type some text"
           {...rest}
           defaultValue={JSON.stringify(convertToRaw(htmlToRTE(data)))}
