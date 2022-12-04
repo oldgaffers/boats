@@ -8,7 +8,7 @@ import componentMapper from "@data-driven-forms/mui-component-mapper/component-m
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from "@mui/material/Grid";
-import { putGeneralEnquiry } from "./boatregisterposts";
+import { postGeneralEnquiry } from "./boatregisterposts";
 
 export default function OGA60({ onClose, onCancel }) {
 
@@ -26,8 +26,7 @@ export default function OGA60({ onClose, onCancel }) {
             ...rest,
             member: ddf.member || rest.member,
         }
-        console.log(data);
-        putGeneralEnquiry('public', 'enquiry', data)
+        postGeneralEnquiry('public', 'enquiry', data)
         .then((response) => {
             onClose();
           })
