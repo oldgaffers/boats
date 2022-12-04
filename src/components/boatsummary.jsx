@@ -55,24 +55,23 @@ export default function BoatSummary({ location, boat }) {
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
-
+  console.log('B', Object.keys(boat));
   return (
     <Paper sx={{height: "100%", paddingLeft: '0.5em', paddingRight: '0.5em'}}>
     <Typography variant="h4" component="h4">Summary</Typography>
     <ConditionalText value={boat.oga_no} label="OGA no"/>
     <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
-    <ConditionalText value={boat.rigTypeByRigType && boat.rigTypeByRigType.name} label="Rig"/>
+    <ConditionalText value={boat.rig_type} label="Rig"/>
     <ConditionalText value={boat.home_port} label="Home port or other location"/>
-    <ConditionalText 
-      value={(boat.website)?(<a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>):undefined}
-      label="Website"
-    />
+    <ConditionalText label="Website">
+      <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>
+    </ConditionalText>
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
     </Box>
     <ConditionalText
       label="T(H)CF"
-      value={boat.handicap_data && boat.handicap_data.thcf && boat.handicap_data.thcf.toFixed(3)}
+      value={boat.handicap_data?.thcf?.toFixed(3)}
     />
     <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
