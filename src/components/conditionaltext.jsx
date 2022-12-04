@@ -21,7 +21,7 @@ export default function ConditionalText({ label, value }) {
                 }
                 break;
             case 'object':
-                text = text.name || '';
+                text = value.name || '';
                 break;
             default:
                 text = '';
