@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -15,6 +15,7 @@ import { boatUrl } from '../util/rr';
 import { useGetThumb, useGetBoatData } from './boatregisterposts';
 import { m2f, price } from '../util/format';
 import Enquiry from './enquiry';
+import { MarkContext } from "../browseapp";
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -109,8 +110,9 @@ function BoatCardImage({ albumKey, name }) {
 }
 
 export default function BoatCard({ state, onMarkChange, ogaNo }) {
+  const markList = useContext(MarkContext);
   const { loading, error, data } = useGetBoatData(ogaNo);
-  const [marked, setMarked] = useState(false);
+  const [marked, setMarked] = useState(markList.includes(ogaNo));
 
   const handleMarked = (checked) => {
     setMarked(checked);

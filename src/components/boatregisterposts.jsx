@@ -23,6 +23,21 @@ export async function postBoatData(data) {
   );
 }
 
+export async function postPrivateScopedData(scope, subject, data, accessToken) {
+  console.log('postPrivateScopedData', scope, subject, data);
+  return axios.post(
+    `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
+    data,
+    {
+      'content-type': 'application/json',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }
+  );
+}
+
 export async function getScopedData(scope, subject, filters, accessToken) {
   return axios({
     url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
@@ -30,7 +45,8 @@ export async function getScopedData(scope, subject, filters, accessToken) {
       ...filters,
     },
     headers: {
-        Authorization: `Bearer ${accessToken}`,
+      'content-type': 'application/json',
+      Authorization: `Bearer ${accessToken}`,
     }
   });
 }
