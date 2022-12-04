@@ -23,11 +23,9 @@ export function applyFilters(boats, filters) {
                 return wanted.includes(val);
             }
             if (filter === 'firstYear') {
-                console.log('after', wanted, val, wanted <= val);
                 return wanted <= boat.year;
             }
             if (filter === 'lastYear') {
-                console.log('before', wanted, val, wanted >= val);
                 return wanted >= boat.year;
             }
             return wanted === val;
