@@ -551,11 +551,17 @@ export default function RBC60() {
                 id: user["https://oga.org.uk/id"],
             }
         } else {
+            const { payer } = data.payment || {
+                payer: {
+                    email_address: 'boatregister@oga.org.uk', 
+                    name: { given_name: 'old', surname: 'gaffer' },
+                },
+            };
             data.user = {
-                email: data.payment.payer.email_address,
-                name: `${data.payment.payer.name.given_name} ${data.payment.payer.name.surname}`,
+                email: payer.email_address,
+                name: `${payer.name.given_name} ${payer.name.surname}`,
                 member: ddf.member_no,
-            }
+            };
         }
         data.port = Object.keys(data.port);
         if (data.leg) {
@@ -564,8 +570,10 @@ export default function RBC60() {
                 return { from, to, spaces: data.leg[leg] }
             });
         }
+        data.topic = 'RBC 60';
+        data.email = data.user.email;
         console.log('submit', data);
-        postGeneralEnquiry('public', 'register', data)
+        postGeneralEnquiry('member', 'entries', data)
         .then((response) => {
                 console.log(response.statusText);
                 console.log(response.data);
