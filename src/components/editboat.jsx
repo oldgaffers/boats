@@ -430,7 +430,6 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
         sales_text: ddf.sales_text,
       };
       const current = boat.ownerships.filter((o) => o.current);
-      console.log('CC', current);
       if (current.length > 0) {
         fs.seller_gold_id = current[0].id;
         fs.seller_member = current[0].member;
@@ -441,7 +440,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
     }
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates };
-    onSave({ old: before, new: updatedBoat, email });
+    onSave({ old: before, new: updatedBoat, email: email || ddf.email });
   };
 
   const pickers = data;
