@@ -570,10 +570,13 @@ export default function RBC60() {
                 return { from, to, spaces: data.leg[leg] }
             });
         }
-        data.topic = 'RBC 60';
-        data.email = data.user.email;
         console.log('submit', data);
-        postGeneralEnquiry('member', 'entries', data)
+        postGeneralEnquiry('member', 'entries', {
+            data,
+            topic: 'RBC 60',
+            email: data.user.email,
+            created_at: new Date().toISOString(),
+        })
         .then((response) => {
                 console.log(response.statusText);
                 console.log(response.data);
