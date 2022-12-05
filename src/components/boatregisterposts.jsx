@@ -13,7 +13,6 @@ export async function shuffleBoats() {
 }
 
 export async function postBoatData(data) {
-  console.log(postBoatData, data);
   return axios.post(
     'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
     data,
@@ -24,7 +23,6 @@ export async function postBoatData(data) {
 }
 
 export async function postPrivateScopedData(scope, subject, data, accessToken) {
-  console.log('postPrivateScopedData', scope, subject, data);
   return axios.post(
     `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
     data,
@@ -87,7 +85,6 @@ export function useGetThumb(albumKey) {
 
 export async function createPhotoAlbum(name, ogaNo) {
   const data = { name, oga_no: ogaNo };
-  console.log('createPhotoAlbum', data);
   const r = await axios.post('https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/',
     data,
     {
