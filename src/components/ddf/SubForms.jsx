@@ -181,6 +181,7 @@ export const yachtHullStep = (nextStep) => {
         fields: [
           {
             component: 'radio',
+            label: '',
             name: "hull_form",
             options: [
               { label: "cut-away stern", value: "cut away stern" },
