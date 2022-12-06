@@ -246,23 +246,23 @@ function renderCellExpandObjects(params) {
 
 function EntryTable({ rows }) {
     const columns = [
-        { field: 'boat', headerName: 'Boat Name', width: 120, valueGetter: (params) => params.row.data.boat.name },
-        { field: 'oga_no', headerName: 'OGA No.', width: 80, valueGetter: (params) => params.row.data.boat.oga_no },
+        { field: 'boat', headerName: 'Boat Name', width: 120, valueGetter: (params) => params.row.data.boat?.name||'' },
+        { field: 'oga_no', headerName: 'OGA No.', width: 80, valueGetter: (params) => params.row.data.boat?.oga_no||'' },
         // { field: 'skipper', headerName: 'Skipper', width: 100, valueGetter: (params) => params.row.data.user.name },
         // { field: 'created_at', headerName: 'Submitted', width: 100, valueFormatter: (params) => new Date(params.value).toLocaleDateString() },
-        { field: 'data.rbc', headerName: 'Circumnavigating', width: 100, valueGetter: (params) => params.row.data.rbc, valueFormatter: (params) => params.value ? 'Yes' : 'No' },
+        { field: 'data.rbc', headerName: 'Circumnavigating', width: 100, valueGetter: (params) => params.row.data.rbc || false, valueFormatter: (params) => params.value ? 'Yes' : 'No' },
         {
             field: 'port',
             headerName: 'Ports',
             width: 400,
-            valueGetter: (params) => params.row.data.port,
+            valueGetter: (params) => params.row.data.port || [],
             renderCell: renderCellExpandStrings,
         },
         {
             field: 'leg',
             headerName: 'Crewing Spaces offered per leg',
             width: 300,
-            valueGetter: (params) => params.row.data.leg,
+            valueGetter: (params) => params.row.data.leg || [],
             renderCell: renderCellExpandObjects,
         },
         { field: 'data.ecc', headerName: 'EC Cruise', width: 100, valueGetter: (params) => params.row.data.ecc, valueFormatter: (params) => params.value ? 'Yes' : '' },
@@ -313,7 +313,7 @@ export default function RBC60Entryies() {
 
     const rbc = entries.filter((e) => e.data.rbc);
 
-    const filters = { oga_nos: rbc.map((e) => e.data.boat.oga_no) };
+    const filters = { oga_nos: rbc.map((e) => e.data.boat?.oga_no||'') };
 
     return (
         <Grid container>
