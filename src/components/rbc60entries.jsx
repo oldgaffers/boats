@@ -90,7 +90,7 @@ const GridCellExpandStrings = memo(function GridCellExpand(props) {
                 ref={cellValue}
                 sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
             >
-                {value.join(', ')}
+                {value?.join(', ')||''}
             </Box>
             {showPopper && (
                 <Popper
