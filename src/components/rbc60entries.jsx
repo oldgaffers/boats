@@ -310,8 +310,9 @@ export default function RBC60Entryies() {
             setOpen(false);
             setAnchorEl(buttonRef.current);
             const data = {
-                topic: 'RBC 60', to: [email], message: text,
-                cc: [user.email], subject: `enquiry from ${user.name}`,
+                topic: 'RBC 60',
+                subject: `enquiry from ${user.name}`, message: text,
+                cc: [user.email], bcc: [email],
             };
             setPopoverOpen(true);
             postGeneralEnquiry('member', 'entries', data)
