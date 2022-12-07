@@ -311,7 +311,7 @@ export default function RBC60Entryies() {
             setAnchorEl(buttonRef.current);
             const data = {
                 topic: 'RBC 60',
-                subject: `enquiry from ${user.name}`, message: text,
+                subject: `RBC 60 enquiry from ${user.name}`, message: text,
                 cc: [user.email], bcc: [email],
             };
             setPopoverOpen(true);
