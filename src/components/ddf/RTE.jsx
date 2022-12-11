@@ -21,7 +21,7 @@ function htmlToRTE(html) {
   );
 }
 
-export const HtmlEditor = ({ component, name, title, ...rest }) => {
+export const HtmlEditor = ({ component, name, title, helperText, ...rest }) => {
   const ref = useRef(null);
   const { input } = useFieldApi({ component, name });
 
@@ -58,7 +58,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
           marginBottom: theme.spacing(2),
           paddingLeft: theme.spacing(1),
           paddingRight: theme.spacing(1),
-          minHeight: '2em',
+          minHeight: '4em',
         }
       }
     }
@@ -75,7 +75,7 @@ export const HtmlEditor = ({ component, name, title, ...rest }) => {
       <Typography sx={{ paddingTop: "1em" }}>{title}</Typography>
       <ThemeProvider theme={theme}>
         <MUIRichTextEditor
-          label="type some text"
+          label={helperText || "type some text"}
           {...rest}
           defaultValue={JSON.stringify(convertToRaw(htmlToRTE(input.value)))}
           onSave={handleSave}
