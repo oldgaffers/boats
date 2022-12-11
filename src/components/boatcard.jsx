@@ -16,6 +16,7 @@ import { useGetThumb, useGetBoatData } from './boatregisterposts';
 import { m2f, price } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "../browseapp";
+import { currentSaleRecord } from '../util/sale_record';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -129,14 +130,8 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
 
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
-  // newest for sale record
-  const price = ((boat?.selling_status || '') === 'for_sale')
-    && boat?.for_sales?.reduce((prev, curr) =>
-      (new Date(prev.created_at)
-        >
-        new Date(curr.created_at)
-      ) ? prev : curr
-    )?.asking_price;
+  const currentSR = currentSaleRecord(boat);
+  const price = currentSR?.asking_price;
 
   const albumKey = boat?.image_key;
   return (
