@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
-import SnackBar from '@mui/material/SnackBar';
+import SnackBar from '@mui/material/Snackbar';
 import { postBoatData } from './boatregisterposts';
 
 function AdminDialog({ boat, user, onClose, open }) {
