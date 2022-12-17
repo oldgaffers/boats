@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 import Snackbar from "@mui/material/Snackbar";
-import UpdatePhotoDialog from './updatephotodialog';
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
+import AddPhotosDialog from './addphotosdialog';
 
 async function upload(boat, copyright, email, pictures) {
   console.log('upload pictures', boat);
@@ -56,7 +56,7 @@ export default function PhotoButton({ boat, onDone }) {
       >
         Add pictures of this boat
       </Button>
-      <UpdatePhotoDialog boat={boat}
+      <AddPhotosDialog boat={boat}
         onClose={handleClose} onCancel={() => setOpen(false)} open={open} 
       />
       <Snackbar

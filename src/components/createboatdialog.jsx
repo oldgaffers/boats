@@ -22,7 +22,6 @@ import {
   builderItems,
   constructionItems,
 } from "./ddf/util";
-import { Dropzone, FileItem } from "@dropzone-ui/react";
 import { steps as handicap_steps } from "./Handicap";
 import {
   yearItems,
@@ -36,6 +35,7 @@ import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
 import { findFirstAbsent } from '../util/oganoutils';
 import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
+import Photodrop from "./photodrop";
 
 const schema = (pickers) => {
   return {
@@ -512,16 +512,8 @@ const PhotoUpload = ({ component, name, title }) => {
     input.onChange(p);
   };
 
-  const files = [];
-
   return (
-    <Dropzone onChange={onDrop} value={files}>
-    {files.map((file) => (
-      <FileItem {...file} preview />
-    ))}
-  </Dropzone>
-     //</Dropzone> maxFileSize={5242880}
-     // acceptedFiles={["image/*"]}
+    <Photodrop onDrop={onDrop} />
   );
 };
 
