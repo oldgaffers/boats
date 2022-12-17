@@ -47,8 +47,6 @@ export default function SearchAndFilterBoats({
   isMarkedOnly,
 }) {
   const currentFilters = filters || {};
-  console.log('filters', filters);
-  console.log('currentFilters', currentFilters);
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
   const debouncedOgaNo = useDebounce(ogaNo, 1000);
   const markList = useContext(MarkContext);
