@@ -56,7 +56,7 @@ export const descriptionsItems = [
     component: "html",
     title: "Full description",
     name: "full_description",
-    controls: ["title", "bold", "italic", "numberList", "bulletList", "link"],
+    controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
   },
 ];
 
