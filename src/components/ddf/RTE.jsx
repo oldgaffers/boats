@@ -3,7 +3,7 @@ import { useTheme, ThemeProvider } from '@mui/material/styles'
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
-import MUIRichTextEditor from "mui-rte";
+// import MUIRichTextEditor from "mui-rte";
 import { stateToHTML } from "draft-js-export-html";
 // import { stateToMarkdown } from "draft-js-export-markdown";
 import {
@@ -12,6 +12,8 @@ import {
   convertFromRaw,
   convertToRaw,
 } from "draft-js";
+
+const MUIRichTextEditor = {};
 
 function htmlToRTE(html) {
   const contentHTML = convertFromHTML(html || "<p><br/></p>");

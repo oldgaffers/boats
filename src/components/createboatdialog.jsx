@@ -21,7 +21,7 @@ import {
   builderItems,
   constructionItems,
 } from "./ddf/util";
-import { DropzoneArea } from "react-mui-dropzone";
+import { Dropzone, FileItem } from "@dropzone-ui/react";
 import { steps as handicap_steps } from "./Handicap";
 import {
   yearItems,
@@ -511,12 +511,16 @@ const PhotoUpload = ({ component, name, title }) => {
     input.onChange(p);
   };
 
+  const files = [];
+
   return (
-    <DropzoneArea
-      maxFileSize={5242880}
-      acceptedFiles={["image/*"]}
-      onChange={onDrop}
-    />
+    <Dropzone onChange={onDrop} value={files}>
+    {files.map((file) => (
+      <FileItem {...file} preview />
+    ))}
+  </Dropzone>
+     //</Dropzone> maxFileSize={5242880}
+     // acceptedFiles={["image/*"]}
   );
 };
 

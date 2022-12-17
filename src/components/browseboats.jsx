@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -9,7 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { applyFilters } from '../util/oganoutils';
-import { useGetFilterable } from './boatregisterposts';
+import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
@@ -59,18 +59,31 @@ export default function BrowseBoats({
   onBoatMarked,
   onBoatUnMarked,
 }) {
-  const { data, error, loading } = useGetFilterable();
+  // const { data, error, loading } = useGetFilterable();
   const { bpp, sort, sortDirection, filters } = state;
+  console.log('xxx');
 
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    if (!data) {
+      getFilterable().then((r) => setData(r.data) ).catch((e) => console.log(e));
+    }
+  }, [data]);
+  /*
   if (loading || !data) return <CircularProgress />
   if (error) {
     console.log(error);
   }
+  */
+  if (!data) return <CircularProgress />;
+
   const blank = "_blank";
 
   const filtered = applyFilters(data, filters);
   const pickers = makePickers(filtered);
 
+  console.log('xyy', filtered);
   return (
       <Paper>
         <Intro view={state.view}/>

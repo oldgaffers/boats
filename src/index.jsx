@@ -1,12 +1,10 @@
 import 'react-app-polyfill/ie11';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from "@auth0/auth0-react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
-import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { CookiesProvider } from "react-cookie";
-import red from '@mui/material/colors/red';
 import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
@@ -21,12 +19,6 @@ import LoginButton from './components/loginbutton';
 import OGA60Form from './components/oga60form';
 import TokenProvider from './components/TokenProvider';
 import ViewTable from './components/viewtable';
-
-const theme = createTheme({
-  palette: {
-    secondary: red,
-  },
-});
 
 const Pages = ({ app, topic }) => {
   const red = window.location.origin + window.location.pathname;
@@ -185,19 +177,17 @@ const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
   'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_button', 'oga60_interest', 'login', 'expressions',
 ];
-const divs = tags.filter((id) => document.getElementById(id));
-divs.forEach((tag) => {
-  const div = document.getElementById(tag);
+const divs = tags.map((id) => document.getElementById(id)).filter((div) => div);
+divs.forEach((div) => {
+  const tag = div.getAttribute('id');
   const topic = div.getAttribute('topic');
-  ReactDOM.render(
+  const root = createRoot(div);
+  root.render(
     <React.StrictMode>
       <CookiesProvider>
-        <ThemeProvider theme={theme}>
-          <Pages app={tag} topic={topic} />
-        </ThemeProvider>
+        <Pages app={tag} topic={topic} />
       </CookiesProvider>
-    </React.StrictMode>,
-    div
+    </React.StrictMode> 
   );
 });
 

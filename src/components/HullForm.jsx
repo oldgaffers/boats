@@ -1,11 +1,9 @@
 import React from 'react';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
-import { makeStyles } from '@mui/styles';
-import { useTheme } from '@mui/material/styles';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';
 
-const useStyles = makeStyles((theme) => ({
+const classes = {
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -15,10 +13,6 @@ const useStyles = makeStyles((theme) => ({
   image: {
     position: 'relative',
     height: 200,
-    [theme.breakpoints.down('xs')]: {
-      width: '100% !important', // Overrides inline-style
-      height: 100,
-    },
     '&:hover, &$focusVisible': {
       zIndex: 1,
       '& $imageBackdrop': {
@@ -42,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: theme.palette.common.white,
+    color: 'white',
   },
   imageSrc: {
     position: 'absolute',
@@ -59,31 +53,27 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     top: 0,
     bottom: 0,
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: 'black',
     opacity: 0.4,
-    transition: theme.transitions.create('opacity'),
+    // transition: theme.transitions.create('opacity'),
   },
   imageTitle: {
     position: 'relative',
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px ${theme.spacing(1) + 6}px`,
+    padding: '2px 4px 7px',
   },
   imageMarked: {
     height: 3,
     width: 18,
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: 'white',
     position: 'absolute',
     bottom: -2,
     left: 'calc(50% - 9px)',
-    transition: theme.transitions.create('opacity'),
-  },
-}));
-
-
-// const { input, isDisabled, label, helperText, description, meta } = useFieldApi(props);
+    // transition: theme.transitions.create('opacity'),
+  }
+};
 
 const HullForm = (props) => {
     const { input, meta } = useFieldApi(props);
-    const classes = useStyles(useTheme());
 
     return (
     <div className={classes.root}>

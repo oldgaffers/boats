@@ -117,6 +117,7 @@ export function useGetPicklists() {
 }
 
 export function useGetFilterable() {
+  console.log('useGetFilterable');
   return useAxios(`${boatRegisterHome}/boatregister/filterable.json`);
 }
 

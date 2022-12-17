@@ -6,41 +6,11 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { DropzoneArea } from "react-mui-dropzone";
+import { Dropzone, FileItem } from "@dropzone-ui/react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { makeStyles } from "@mui/styles";
-import { useTheme } from "@mui/material/styles";
-
-const useStyles = makeStyles((theme) => ({
-  layout: {
-    width: "auto",
-    marginLeft: theme.spacing(2),
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
-  },
-  paper: {
-    padding: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-      padding: theme.spacing(3),
-    },
-  },
-  stepper: {
-    padding: theme.spacing(3, 0, 5),
-  },
-  button: {
-    marginTop: theme.spacing(3),
-    marginLeft: theme.spacing(1),
-  },
-}));
 
 export default function UpdatePhotoDialog({ boat, onClose, onCancel, open }) {
   const { user } = useAuth0();
-  const theme = useTheme();
-  const classes = useStyles(theme);
   const [pictures, setPictures] = useState([]);
   const [email, setEmail] = useState(user && user.email);
   const [copyright, setCopyright] = useState(''); // user && user.name);
@@ -72,9 +42,11 @@ export default function UpdatePhotoDialog({ boat, onClose, onCancel, open }) {
     setCopyright(e.target.value);
   };
 
+  const files = [];
+
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
-      <Paper className={classes.paper}>
+      <Paper>
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography variant="h5">
@@ -82,11 +54,14 @@ export default function UpdatePhotoDialog({ boat, onClose, onCancel, open }) {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <DropzoneArea
-              maxFileSize={5242880}
-              acceptedFiles={["image/*"]}
-              onChange={onDrop}
-            />
+          <Dropzone onChange={onDrop} value={files}>
+    {files.map((file) => (
+      <FileItem {...file} preview />
+    ))}
+  </Dropzone>
+     { //</Dropzone> maxFileSize={5242880}
+     // acceptedFiles={["image/*"]}
+}
           </Grid>
           <Grid item xs={12}>
             <TextField
