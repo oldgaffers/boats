@@ -5,23 +5,15 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import BoatPagination from './boatpagination';
 import BoatCard from './boatcard';
-import { useCardQuery } from '../util/oganoutils';
 
 export default function BoatCards({
   state,
+  totalCount,
+  boats,
   onChangePage=(arg)=>console.log('onChangePage', arg), 
   onBoatMarked,
   onBoatUnMarked,
 }) {
-
-  const as = useCardQuery(state);
-
-  if (as.error) return <p>Error: (BoatCards)</p>;
-
-  if (as.loading) {
-      return <p>Loading...</p>;
-  }
-  const { totalCount, boats } = as.data;
 
   const handleMarkChange = (value, ogaNo) => {
     if (value) {

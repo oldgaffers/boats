@@ -5,7 +5,7 @@ import Snackbar from '@mui/material/Snackbar';
 import UpdateBoatDialog from './updateboatdialog';
 import { postBoatData } from './boatregisterposts';
 
-export default function EditButton({ classes, boat, user }) {
+export default function EditButton({ boat, user }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
@@ -37,7 +37,7 @@ export default function EditButton({ classes, boat, user }) {
 
   return (
     <div>
-      <Button className={classes.button} size="small"
+      <Button size="small"
         endIcon={<EditIcon />}
         variant="contained"
         color="primary" onClick={handleClickOpen}>

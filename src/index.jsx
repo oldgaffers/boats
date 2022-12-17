@@ -5,6 +5,8 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from "react-cookie";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
@@ -19,6 +21,12 @@ import LoginButton from './components/loginbutton';
 import OGA60Form from './components/oga60form';
 import TokenProvider from './components/TokenProvider';
 import ViewTable from './components/viewtable';
+
+const lightTheme = createTheme({
+  palette: {
+    mode: 'light',
+  },
+});
 
 const Pages = ({ app, topic }) => {
   const red = window.location.origin + window.location.pathname;
@@ -153,7 +161,7 @@ const Pages = ({ app, topic }) => {
           <Auth0Provider {...auth} scope="member">
             <TokenProvider>
               <OGAProvider>
-                <ViewTable scope='editor' table='expression_of_interest' params={{topic}} />
+                <ViewTable scope='editor' table='expression_of_interest' params={{ topic }} />
               </OGAProvider>
             </TokenProvider>
           </Auth0Provider>
@@ -185,9 +193,12 @@ divs.forEach((div) => {
   root.render(
     <React.StrictMode>
       <CookiesProvider>
-        <Pages app={tag} topic={topic} />
+        <ThemeProvider theme={lightTheme}>
+          <CssBaseline />
+          <Pages app={tag} topic={topic} />
+        </ThemeProvider>
       </CookiesProvider>
-    </React.StrictMode> 
+    </React.StrictMode>
   );
 });
 

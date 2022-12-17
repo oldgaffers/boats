@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -13,9 +13,10 @@ import Grid from "@mui/material/Grid";
 import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
-import { useCardQuery } from '../util/oganoutils';
 import { postGeneralEnquiry } from './boatregisterposts';
-
+import { applyFilters, sortAndPaginate } from '../util/oganoutils';
+import { getFilterable } from './boatregisterposts';
+import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
 const UNLISTED = "My boat isn't listed";
 
 const ports = [
@@ -517,26 +518,23 @@ const schema = (ports, user, boats) => {
 export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const { user } = useAuth0();
-    const state = { filters: {}, bpp: 10000, page: 1, sort: 'name', sortDirection: 'asc', view: 'app', };
-    const { loading, error, data } = useCardQuery(state);
-    if (error) console.log(JSON.stringify(error));
+    const [data, setData] = useState();
   
-    if (loading) {
-      if (data) {
-        console.log('Loading set but data here');
-      } else {
-        return  <CircularProgress/>;
+  useEffect(() => {
+      if (!data) {
+        getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
       }
-    }
-
-    if (!data) {
-        return <CircularProgress/>;
-    }
-
+    }, [data]);
+  
+  if (!data) return <CircularProgress />;
+  
+  const filtered = applyFilters(data.boats, {});
+  const boats = sortAndPaginate(filtered, DEFAULT_BROWSE_STATE.app);
+  
     const handleSubmit = (values) => {
         const { ddf, ...data } = values;
         if (data.boat === UNLISTED) {
-            const firstFreeOgaNo = findFirstAbsent(data.boats);
+            const firstFreeOgaNo = findFirstAbsent(boats);
             data.boat = { name: ddf.boatname, oga_no: firstFreeOgaNo };
             data.new_boat = true;
         } else {

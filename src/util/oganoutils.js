@@ -1,4 +1,3 @@
-import { useGetFilterable } from '../components/boatregisterposts';
 
 export function findFirstAbsent(boat) {
     if (!boat) {
@@ -34,15 +33,8 @@ export function applyFilters(boats, filters) {
     return filteredBoats;
 }
 
-export const useCardQuery = (state) => {
-    const { data, error, loading } = useGetFilterable();
-
-    if (loading) return { loading };
-    if (!data) return { loading: true };
-    if (error)  return { error };
-
-    const filteredBoats = applyFilters(data, state.filters);
-    filteredBoats.sort((a,b) => {
+export function sortAndPaginate(boats, state) {
+    const b = [...boats].sort((a,b) => {
         const { sort, sortDirection } = state;
         const rs = sortDirection === 'asc' ? [1, -1] : [-1, 1];
         const as = a[sort];
@@ -53,9 +45,5 @@ export const useCardQuery = (state) => {
     });
     const { page, bpp } = state;
     const start = bpp * ( page - 1);
-    const bp = filteredBoats.slice(start, start + bpp);
-    return { data: {
-        boats: bp,
-        totalCount: filteredBoats.length,
-    }};
+    return b.slice(start, start + bpp);
 }

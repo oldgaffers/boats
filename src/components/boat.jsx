@@ -1,58 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ApolloConsumer } from '@apollo/client';
 import CircularProgress from "@mui/material/CircularProgress";
 import BoatWrapper from './boatwrapper';
-import { useGetBoatData } from './boatregisterposts';
-
-function upgradeBoat(b) {
-  if (!b) {
-    return undefined;
-  }
-  const handicap_data = b?.handicap_data || {};
-  if (b?.beam) {
-    handicap_data.beam = b.beam;
-    delete b.beam;
-  }
-  if (b?.length_on_deck) {
-    handicap_data.length_on_deck = b.length_on_deck;
-    delete b.length_on_deck;
-  }
-  b.handicap_data = handicap_data;
-  return b;
-}
-
-function getBoat(data) {
-  if (data?.boat) {
-    return upgradeBoat(data.boat[0]);
-  }
-  return upgradeBoat(data?.result?.pageContext?.boat);
-}
+import { getBoatData } from './boatregisterposts';
 
 export default function Boat({ location = { search: '?oga_no=' } }) {
   const params = new URLSearchParams(location.search);
-  const oga_no = params.get('oga_no') || '';
-  const { data, error, loading } = useGetBoatData(oga_no);
+  const ogaNo = params.get('oga_no') || '';
+  const [data, setData] = useState();
 
-  if (loading || !data) return <CircularProgress />
-  if (error) {
-    if (oga_no === '') {
-      return (<div>
-        <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
-        <div>If you are looking for boats for sale please visit <a href={location.origin + '/boat_register/boats_for_sale/'}>Boats for Sale</a></div>
-        <div>If you are looking interested in trailerable boats please visit <a href={location.origin + '/boat_register/small_boats/'}>Small Boats</a></div>
-        <div>To browse our full register please visit <a href={location.origin + '/boat_register/browse_the_register/'}>All Boats</a></div>
-        Otherwise please visit our <a href={location.origin}>Home Page</a>
-      </div>);
-    } else {
-      return (<div>
-        Sorry, we had a problem getting the data for
-        the boat with OGA number {oga_no}
-        <p>Please try searching on the <a href={location.origin}>Main Page</a></p>
-      </div>);
+  useEffect(() => {
+    if (!data) {
+      getBoatData(ogaNo).then((r) => {
+        setData(r.data);
+      }).catch((e) => console.log(e));
     }
+  }, [data, ogaNo]);
+
+  if (!data) return <CircularProgress />;
+
+  if (ogaNo === '') {
+    return (<div>
+      <div>You've come to the boat detail viewer but we don't know what boat you wanted.</div>
+      <div>If you are looking for boats for sale please visit <a href={location.origin + '/boat_register/boats_for_sale/'}>Boats for Sale</a></div>
+      <div>If you are looking interested in trailerable boats please visit <a href={location.origin + '/boat_register/small_boats/'}>Small Boats</a></div>
+      <div>To browse our full register please visit <a href={location.origin + '/boat_register/browse_the_register/'}>All Boats</a></div>
+      Otherwise please visit our <a href={location.origin}>Home Page</a>
+    </div>);
   }
 
-  const boat = getBoat(data);
+  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
+
   document.title = `${boat.name} (${boat.oga_no})`;
   return (
     <ApolloConsumer>

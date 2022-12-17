@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -12,7 +12,7 @@ import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { boatUrl } from '../util/rr';
-import { useGetThumb, useGetBoatData } from './boatregisterposts';
+import { getThumb, getBoatData } from './boatregisterposts';
 import { m2f, price } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "../browseapp";
@@ -93,16 +93,22 @@ function BoatCardWords({ boat }) {
 }
 
 function BoatCardImage({ albumKey, name }) {
-  const { loading, error, data } = useGetThumb(albumKey);
+  const [data, setData] = useState();
 
-  if (loading || !data) {
+  useEffect(() => {
+    if (!data) {
+      getThumb(albumKey).then((r) => {
+        setData(r.data);
+      }).catch((e) => console.log(e));
+    }
+  }, [data, albumKey]);
+
+  if (!data) {
     return <>
       <Skeleton variant='rounded' animation='wave' height={260} />
     </>
   }
-  if (error) {
-    console.log(error);
-  }
+
 
   if (data.ThumbnailUrl) {
     return (<CardMedia sx={{ paddingTop: '100%' }} image={data.ThumbnailUrl} title={name} />);
@@ -112,20 +118,24 @@ function BoatCardImage({ albumKey, name }) {
 
 export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const markList = useContext(MarkContext);
-  const { loading, error, data } = useGetBoatData(ogaNo);
   const [marked, setMarked] = useState(markList.includes(ogaNo));
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    if (!data) {
+      getBoatData(ogaNo).then((r) => {
+        setData(r.data);
+      }).catch((e) => console.log(e));
+    }
+  }, [data, ogaNo]);
 
   const handleMarked = (checked) => {
     setMarked(checked);
     onMarkChange(checked, ogaNo);
   }
 
-  if (loading || !data) {
+  if (!data) {
     return <CircularProgress/>;
-  }
-
-  if (error) {
-    console.log(error);
   }
 
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
@@ -155,7 +165,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
                 component={'a'}
                 href={boatUrl(ogaNo, {})}
                 variant="contained"
-                color="secondary"
+                color="primary"
               >More..</Button>
           </Grid>
           <Grid item>
@@ -164,7 +174,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
           <Grid item>
             <Checkbox sx={{ textAlign: 'right' }}
               checked={marked}
-              color="primary" onChange={(event, checked) => handleMarked(checked)}
+              color="success" onChange={(event, checked) => handleMarked(checked)}
               inputProps={{ 'aria-label': 'add to list' }}
             />
           </Grid>

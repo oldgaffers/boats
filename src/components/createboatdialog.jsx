@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
@@ -15,6 +15,7 @@ import {
 } from "@data-driven-forms/mui-component-mapper";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
+import CircularProgress from '@mui/material/CircularProgress';
 import {
   mapPicker,
   designerItems,
@@ -34,7 +35,7 @@ import {
 import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
 import { findFirstAbsent } from '../util/oganoutils';
-import { getBoatData, useGetFilterable, useGetPicklists } from './boatregisterposts';
+import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
 
 const schema = (pickers) => {
   return {
@@ -639,20 +640,25 @@ const FieldListenerWrapper = () => <FormSpy subcription={{ values: true }}>{() =
 
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
-  const pickerLoad = useGetPicklists();
-  const filterableLoad = useGetFilterable();
+  const [filterable, setFilterable] = useState();
+  const [pickers, setPickers] = useState();
 
-  if (pickerLoad.loading || filterableLoad.loading) return <p>Loading...</p>
-  if (pickerLoad.error || filterableLoad.error) {
-    return (<div>
-      Sorry, we had a problem getting the data to populate the form dropdowns
-    </div>);
-  }
+  useEffect(() => {
+    if (!filterable) {
+      getFilterable().then((r) => setFilterable(r.data)).catch((e) => console.log(e));
+    }
+  }, [filterable]);
+
+  useEffect(() => {
+    if (!pickers) {
+      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
+    }
+  }, [pickers]);
+
+  if (!filterable) return <CircularProgress />;
+  if (!pickers) return <CircularProgress />;
 
   if (!open) return '';
-
-  const filterable = filterableLoad.data;
-  const pickers = pickerLoad.data;
 
   const handleSubmit = (boat) => {
     // console.log('handleSubmit', boat);

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import WizardContext from '@data-driven-forms/react-form-renderer/wizard-context';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
@@ -11,10 +11,11 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import HullForm from "./HullForm";
 import { HtmlEditor } from "./ddf/RTE";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { useGetPicklists } from './boatregisterposts';
+import { getPicklists } from './boatregisterposts';
 import { schema, CLEARED_VALUE } from './editboat_schema';
 import { currentSaleRecord, SaleRecord } from '../util/sale_record';
 
@@ -97,13 +98,15 @@ function owns(boat, user) {
 }
 
 export default function EditBoat({ onCancel, onSave, boat, user }) {
-  const { data, error, loading } = useGetPicklists();
-  if (loading || !data) return <p>Loading...</p>
-  if (error) {
-    return (<div>
-      Sorry, we had a problem getting the data to browse the register
-    </div>);
-  }
+  const [pickers, setPickers] = useState();
+
+  useEffect(() => {
+    if (!pickers) {
+      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
+    }
+  }, [pickers]);
+
+  if (!pickers) return <CircularProgress />;
 
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
@@ -152,8 +155,6 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
     const updatedBoat = { ...before, ...updates };
     onSave({ old: before, new: updatedBoat, email: email || ddf.email });
   };
-
-  const pickers = data;
 
   return (
     <Box sx={{ height: '600px', margin: '1em', marginTop: '2em' }}>

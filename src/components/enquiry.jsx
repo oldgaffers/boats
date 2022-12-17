@@ -107,7 +107,7 @@ function ContactDialog({
   );
 }
 
-export default function Enquiry({ classes, boat, text }) {
+export default function Enquiry({ boat, text }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const { user } = useAuth0();
@@ -177,11 +177,10 @@ export default function Enquiry({ classes, boat, text }) {
   return (
     <>
       <Button
-        className={classes?.button}
         size="small"
         endIcon={<MailIcon />}
         variant="contained"
-        color="primary"
+        color="success"
         onClick={handleClickOpen}
       >
         {enquireText}
@@ -193,7 +192,7 @@ export default function Enquiry({ classes, boat, text }) {
         user={user}
         owners={current}
         isMember={isMember}
-        members={data && data.members}
+        members={data?.members}
         onCancel={handleCancel}
         onSend={handleSend}
         title={enquireText}

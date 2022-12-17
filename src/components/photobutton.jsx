@@ -22,7 +22,7 @@ async function upload(boat, copyright, email, pictures) {
   }
 }
 
-export default function PhotoButton({ classes, boat, onDone }) {
+export default function PhotoButton({ boat, onDone }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
 
@@ -50,14 +50,13 @@ export default function PhotoButton({ classes, boat, onDone }) {
       <Button
         size="small"
         endIcon={<PhotoLibraryIcon />}
-        className={classes.button}
         variant="contained"
         color="primary"
         onClick={handleClickOpen}
       >
         Add pictures of this boat
       </Button>
-      <UpdatePhotoDialog classes={classes} boat={boat}
+      <UpdatePhotoDialog boat={boat}
         onClose={handleClose} onCancel={() => setOpen(false)} open={open} 
       />
       <Snackbar
