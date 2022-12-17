@@ -26,6 +26,11 @@ const WizardInternal = (props) => {
   ).fields.map((f) => f.name);
   const toVisit = steps.filter((step) => !prevSteps.includes(step));
   const nextActivityStep = (toVisit.length > 0) ? toVisit[0] : 'done-step';
+
+  const state = formOptions.getState();
+  console.log(state);
+  const submitDisabled = !state.valid || !state.dirty;
+
   return (
     <Box onKeyDown={onKeyDown} sx={{ width: '100%', position: 'bottom', flexGrow: 1 }}>
       {currentStep.title}
@@ -45,7 +50,8 @@ const WizardInternal = (props) => {
               {(currentStep.shortcut || !currentStep.nextStep) && (
                 <Button
                   variant="contained"
-                  disabled={!formOptions.getState().valid} onClick={() => formOptions.handleSubmit()}
+                  disabled={submitDisabled}
+                  onClick={() => formOptions.handleSubmit()}
                 >
                   Submit
                 </Button>

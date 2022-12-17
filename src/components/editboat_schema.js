@@ -152,6 +152,7 @@ export const schema = (pickers, canBuySell, forSale) => {
             name: "own-step",
             component: 'sub-form',
             nextStep: "summary-step",
+            shortcut: true,
             // fields: [ownershipUpdateForm],
             fields: [
               {
