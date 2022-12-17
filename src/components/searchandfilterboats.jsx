@@ -40,24 +40,28 @@ export default function SearchAndFilterBoats({
   filters,
   view,
   pickers,
-  onFilterChange=()=>console.log('onFilterChange'),
+  onFilterChange,
   onPageSizeChange=()=>console.log('onPageSizeChange'),
   onSortChange=()=>console.log('onSortChange'),
   onMarkedOnlyChange=()=>console.log('onMarkedOnly'),
   isMarkedOnly,
 }) {
   const currentFilters = filters || {};
-  const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || "");
+  console.log('filters', filters);
+  console.log('currentFilters', currentFilters);
+  const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
   const debouncedOgaNo = useDebounce(ogaNo, 1000);
   const markList = useContext(MarkContext);
+  // let ogaNoCleared = false;
+
   useEffect(() => {
-    if (debouncedOgaNo) {
-      console.log("debounced oga no", debouncedOgaNo);
-      if (debouncedOgaNo === "") {
+    if (debouncedOgaNo !== '') {
+      // console.log("use effect ogaNo, debounced oga no", ogaNo, debouncedOgaNo);
+      if (ogaNo === "") {
         const { oga_no, ...f } = filters;
         onFilterChange(f);
-      } else if (filters && filters.oga_no) {
-        console.log("new", debouncedOgaNo, "old", filters.oga_no);
+      } else if (filters?.oga_no) {
+        // console.log("new", debouncedOgaNo, "old", filters.oga_no);
         const newNo = debouncedOgaNo;
         if (newNo !== filters.oga_no) {
           onFilterChange({ ...filters, oga_no: newNo });
@@ -66,7 +70,7 @@ export default function SearchAndFilterBoats({
         onFilterChange({ ...filters, oga_no: debouncedOgaNo });
       }
     }
-  }, [debouncedOgaNo, filters, onFilterChange]);
+  }, [debouncedOgaNo, filters, onFilterChange, ogaNo]);
 
   const dateRange = [
     currentFilters.firstYear || pickers.year.min,
@@ -243,12 +247,7 @@ export default function SearchAndFilterBoats({
             label="OGA Boat No."
             value={ogaNo}
             onSet={setOgaNo}
-            onClear={() => {
-              const { oga_no, ...f } = currentFilters;
-              if (oga_no) {
-                onFilterChange(f);
-              }
-            }}
+            onClear={() => {setOgaNo('');}}
           />
         </Grid>
         <Grid item>
