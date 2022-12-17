@@ -19,6 +19,5 @@ test('renders learn react link', () => {
       </MockedProvider>
     </Router>
   );
-  const wanted = screen.getByText(/More/);
-  expect(wanted).toBeInTheDocument();
+  expect(screen.getByRole('progressbar')).toBeInTheDocument();
 });
