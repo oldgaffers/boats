@@ -41,7 +41,7 @@ export const descriptionsItems = [
     name: "short_description",
     controls: ["bold", "italic"],
     initialValue: "She is a fine example of her type.",
-    maxLength: 500,
+    maxLength: 100,
   },
   {
     component: "html",
@@ -81,13 +81,6 @@ export const homeItems = [
     sx: { marginBottom: 2 },
   },
 ];
-
-export const descriptionsForm = {
-  title: "Edit Descriptions",
-  name: "descriptions",
-  component: 'sub-form',
-  fields: descriptionsItems,
-};
 
 export const registrationForm = {
   title: "Registrations",

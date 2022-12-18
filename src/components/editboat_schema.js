@@ -5,7 +5,7 @@ import BoatAnchoredIcon from "./boatanchoredicon";
 import { dimensionsForm } from "./Dimensions";
 import { rigForm } from "./Rig";
 import {
-  homeItems, descriptionsForm,
+  homeItems, descriptionsItems,
   registrationForm, constructionForm,
   yachtHullStep, dinghyHullStep, referencesItems
 } from "./ddf/SubForms";
@@ -17,7 +17,6 @@ function intField(name, label) {
     component: "text-field", type: "number", dataType: 'integer',
   };
 }
-export const CLEARED_VALUE = '[remove]';
 
 export const schema = (pickers, canBuySell, forSale) => {
   const activities = [
@@ -119,7 +118,8 @@ export const schema = (pickers, canBuySell, forSale) => {
             component: 'sub-form',
             shortcut: true,
             nextStep: "registrations-step",
-            fields: [descriptionsForm],
+            title: "Edit Descriptions",
+            fields: descriptionsItems,
           },
           {
             name: "registrations-step",

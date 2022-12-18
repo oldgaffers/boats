@@ -2,16 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
-import {
-  FormRenderer,
-  componentTypes,
-  validatorTypes,
-  useFieldApi
-} from "@data-driven-forms/react-form-renderer";
-import {
-  componentMapper,
-  FormTemplate,
-} from "@data-driven-forms/mui-component-mapper";
+import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
+import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
+import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
+import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
@@ -53,7 +47,7 @@ const schema = (pickers) => {
       },
       {
         title: "New Boat Record",
-        component: componentTypes.WIZARD,
+        component: 'wizard',
         name: "boat",
         fields: [
           {
@@ -61,34 +55,34 @@ const schema = (pickers) => {
             nextStep: "prefill-step",
             fields: [
               {
-                component: componentTypes.PLAIN_TEXT,
+                component: 'plain-text',
                 name: "ddf.dc.check1",
                 label: "If the boat you want to add has an OGA Number it is already on the register."
                   + " Over 3,000 boats already are."
               },
               {
-                component: componentTypes.PLAIN_TEXT,
+                component: 'plain-text',
                 name: "ddf.dc.check2",
                 label: "You can search the register by the current or a previous name or by OGA Number."
                   + " Or you can filter by age, length, type, etc.",
               },
               {
-                component: componentTypes.PLAIN_TEXT,
+                component: 'plain-text',
                 name: "ddf.dc.check3",
                 label: "If you can find the boat on the register, please click on the MORE button on the boat's card."
                   + " Then use the ADD PICTURES or the I HAVE EDITS buttons instead of using this form."
               },
               {
-                component: componentTypes.PLAIN_TEXT,
+                component: 'plain-text',
                 name: "ddf.dc.check4",
                 label: " If you aren't sure, please contact the boat register editors."
               },
               {
-                component: componentTypes.CHECKBOX,
+                component: 'checkbox',
                 name: "ddf.dc.isnew",
                 label: "I've checked and the boat isn't already on the register.",
                 isRequired: true,
-                validate: [{ type: validatorTypes.REQUIRED }],
+                validate: [{ type: 'required' }],
               }
             ]
           },
@@ -97,11 +91,11 @@ const schema = (pickers) => {
             nextStep: ({ values }) => (values.ddf && values.ddf.have_pictures) ? "picture-step" : "basic-step",
             fields: [
               {
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 name: 'ddf.dc',
                 fields: [
                   {
-                    component: componentTypes.PLAIN_TEXT,
+                    component: 'plain-text',
                     name: "ddf.dc.desc",
                     label: " Fields marked with a * are mandatory, everything else is optional."
                       + " Once your boat has an entry you can add more pictures and information."
@@ -109,7 +103,7 @@ const schema = (pickers) => {
                     ,
                   },
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "name",
                     label: "the name of the boat",
                     helperText: 'if the boat has had other names in the past they can be added later in this form',
@@ -118,12 +112,12 @@ const schema = (pickers) => {
                     isRequired: true,
                     validate: [
                       {
-                        type: validatorTypes.REQUIRED,
+                        type: 'required',
                       },
                     ],
                   },
                   {
-                    component: componentTypes.SELECT,
+                    component: 'select',
                     name: 'design_class',
                     label: 'Design Class',
                     //helperText: 'If your boat is in a design class we have data for, will pre-fill the form from another boat in the class.'
@@ -135,7 +129,7 @@ const schema = (pickers) => {
                     options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
                   },
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: 'new_design_class',
                     label: 'New design class',
                     helperText: 'if the design class is not listed and you know the name add it here',
@@ -146,7 +140,7 @@ const schema = (pickers) => {
                     },
                   },
                   {
-                    component: componentTypes.CHECKBOX,
+                    component: 'checkbox',
                     name: 'ddf.have_pictures',
                     label: 'I have pictures to upload',
                     initialValue: true,
@@ -162,10 +156,10 @@ const schema = (pickers) => {
             fields: [
               {
                 name: "ddf.picture",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: [
                   {
-                    component: componentTypes.PLAIN_TEXT,
+                    component: 'plain-text',
                     name: "ddf.picture.desc",
                     label: "Please add some pictures, ideally of her sailing."
                       + " If you have more than one picture upload the best one(s) here."
@@ -176,12 +170,12 @@ const schema = (pickers) => {
                     name: "ddf.fileList",
                   },
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "ddf.copyright",
                     label: "copyright owner",
                     helperText: "All the pictures you add now must have the same copyright owner",
                     isRequired: true,
-                    validate: [{ type: validatorTypes.REQUIRED }],
+                    validate: [{ type: 'required' }],
                     resolveProps: (props, { meta, input }, formOptions) => {
                       const { values } = formOptions.getState();
                       const user = values.user;
@@ -198,12 +192,12 @@ const schema = (pickers) => {
             nextStep: "build-step",
             fields: [
               {
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 name: "basic.form",
                 title: "Basic Details",
                 fields: [
                   {
-                    component: componentTypes.SELECT,
+                    component: 'select',
                     name: "generic_type",
                     label: "Generic Type",
                     isReadOnly: false,
@@ -213,27 +207,27 @@ const schema = (pickers) => {
                     options: mapPicker(pickers.generic_type),
                   },
                   {
-                    component: componentTypes.SELECT,
+                    component: 'select',
                     name: "rig_type",
                     label: "Rig",
                     isRequired: true,
                     initialValue: 'Cutter',
                     validate: [
                       {
-                        type: validatorTypes.REQUIRED,
+                        type: 'required',
                       },
                     ],
                     options: mapPicker(pickers.rig_type),
                   },
                   {
-                    component: componentTypes.SELECT,
+                    component: 'select',
                     name: "mainsail_type",
                     label: "Mainsail",
                     isRequired: true,
                     initialValue: 'gaff',
                     validate: [
                       {
-                        type: validatorTypes.REQUIRED,
+                        type: 'required',
                       },
                     ],
                     options: mapPicker(pickers.sail_type),
@@ -249,17 +243,17 @@ const schema = (pickers) => {
               {
                 title: "Build",
                 name: "build",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: [
                   ...yearItems,
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "place_built",
                     label: "Place Built",
                   },
                   ...builderItems(pickers),
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "hin",
                     label: "Hull Identification Number (HIN)",
                   },
@@ -274,11 +268,11 @@ const schema = (pickers) => {
               {
                 title: "Design",
                 name: "design",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: [
                   ...designerItems(pickers),
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "length_on_deck",
                     label: "Length on deck  (decimal feet)",
                     type: "number",
@@ -286,7 +280,7 @@ const schema = (pickers) => {
                     isRequired: true,
                     validate: [
                       // {
-                      // type: validatorTypes.REQUIRED,
+                      // type: 'required',
                       // },
                       //{
                       //   type: validatorTypes.MIN_NUMBER_VALUE,
@@ -295,7 +289,7 @@ const schema = (pickers) => {
                     ],
                   },
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "handicap_data.beam",
                     label: "Beam (decimal feet)",
                     type: "number",
@@ -303,7 +297,7 @@ const schema = (pickers) => {
                     isRequired: true,
                     validate: [
                       // {
-                      // type: validatorTypes.REQUIRED,
+                      // type: 'required',
                       // },
                       //{
                       //   type: validatorTypes.MIN_NUMBER_VALUE,
@@ -312,7 +306,7 @@ const schema = (pickers) => {
                     ],
                   },
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "draft",
                     label: "Draft (decimal feet)",
                     type: "number",
@@ -325,7 +319,7 @@ const schema = (pickers) => {
                     ],
                   },
                   {
-                    component: componentTypes.TEXT_FIELD,
+                    component: 'text-field',
                     name: "air_draft",
                     label: "Air Draft (decimal feet)",
                     type: "number",
@@ -349,7 +343,7 @@ const schema = (pickers) => {
               {
                 name: "references",
                 title: "References",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: referencesItems,
               },
             ],
@@ -360,7 +354,7 @@ const schema = (pickers) => {
             fields: [
               {
                 label: "Previous names",
-                component: componentTypes.FIELD_ARRAY,
+                component: 'field-array',
                 name: "previous_names",
                 fields: [{ component: "text-field" }],
               },
@@ -373,7 +367,7 @@ const schema = (pickers) => {
               {
                 title: "Locations",
                 name: "locations",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: homeItems,
               },
             ],
@@ -393,7 +387,7 @@ const schema = (pickers) => {
               {
                 name: "construction",
                 title: "Construction",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: constructionItems(pickers),
               },
             ],
@@ -414,15 +408,15 @@ const schema = (pickers) => {
                 name: "skip-handicap",
                 title: "Do you want a handicap",
                 description: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
-                component: componentTypes.SUB_FORM,
+                component: 'sub-form',
                 fields: [
                   {
-                    component: componentTypes.RADIO,
+                    component: 'radio',
                     name: "ddf.skip-handicap",
                     initialValue: "1",
                     validate: [
                       {
-                        type: validatorTypes.REQUIRED,
+                        type: 'required',
                       },
                     ],
                     options: [
@@ -443,24 +437,24 @@ const schema = (pickers) => {
           ...handicap_steps('done-step'),
           {
             name: "done-step",
-            component: componentTypes.SUB_FORM,
+            component: 'sub-form',
             fields: [
               ...descriptionsItems,
               {
-                component: componentTypes.PLAIN_TEXT,
+                component: 'plain-text',
                 name: "ddf.we_are_done",
                 label:
                   "Thanks for helping make the register better. The editor's will review your suggestions. An email address will let us discuss with you any queries we might have.",
               },
               {
-                component: componentTypes.TEXT_FIELD,
+                component: 'text-field',
                 name: "email",
                 label: "email",
                 isRequired: true,
                 validate: [
-                  { type: validatorTypes.REQUIRED },
+                  { type: 'required' },
                   {
-                    type: validatorTypes.PATTERN,
+                    type: 'pattern',
                     pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
                   }
                 ],

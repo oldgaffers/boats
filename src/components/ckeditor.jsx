@@ -4,7 +4,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import Typography from '@mui/material/Typography';
 
-export default function HtmlEditor({ component, name, title, helperText, controls, ...rest }) {
+export default function HtmlEditor({
+    component, name, title, helperText, controls, maxLength, initialValue, ...rest }) {
     const { input } = useFieldApi({ component, name });
     return (
         <div
@@ -17,8 +18,8 @@ export default function HtmlEditor({ component, name, title, helperText, control
             <Typography sx={{ paddingTop: "1em" }}>{title}</Typography>
             <CKEditor
                 editor={ClassicEditor}
-                config={{ toolbar: controls }}
-                data={input.value}
+                config={{ toolbar: controls, maxCharCount: maxLength }}
+                data={input.value || initialValue}
                 onReady={editor => {
                     // You can store the "editor" and use when it is needed.
                     // console.log('Editor is ready to use!', editor);

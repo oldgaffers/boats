@@ -16,7 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import HullForm from "./HullForm";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { getPicklists } from './boatregisterposts';
-import { schema, CLEARED_VALUE } from './editboat_schema';
+import { schema } from './editboat_schema';
 import { currentSaleRecord, SaleRecord } from '../util/sale_record';
 import HtmlEditor from './ckeditor';
 
@@ -175,7 +175,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
           onCancel={onCancel}
           onSubmit={handleSubmit}
           initialValues={state}
-          clearedValue={CLEARED_VALUE}
+          clearedValue=' '
         />
       </LocalizationProvider>
     </Box>
