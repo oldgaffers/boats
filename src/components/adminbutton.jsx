@@ -89,7 +89,7 @@ export default function AdminButton({ classes, boat, user }) {
 
   return (
     <>
-      <Button className={classes.button} size="small"
+      <Button size="small"
         endIcon={<EditIcon />}
         variant="contained"
         color="primary" onClick={() => setOpen(true)}>
