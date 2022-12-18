@@ -14,7 +14,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import HullForm from "./HullForm";
-// import { HtmlEditor } from "./ddf/RTE";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { getPicklists } from './boatregisterposts';
 import { schema, CLEARED_VALUE } from './editboat_schema';

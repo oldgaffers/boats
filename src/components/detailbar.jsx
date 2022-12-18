@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 
 export default function DetailBar({ onChange, value, panes }) {
   return (
-    <AppBar position="static" color="inherit" >
+    <AppBar position="static" color="inherit" sx={{ paddingLeft: '3px', height: '3.2rem' }}>
         <Tabs
         onChange={onChange}
             value={value}
