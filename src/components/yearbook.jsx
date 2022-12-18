@@ -75,7 +75,12 @@ export default function BasicTabs() {
   }
 
   const { members } = membersResult.data;
-  const ybmembers = members.filter((m) => memberPredicate(m.id, m));
+  const ybmembers = members; // .filter((m) => memberPredicate(m.id, m));
+
+  const ybboats = boats.filter((b) => b.owners?.length > 0).map((b) => {
+    const owners = b.owners.map((o) => ybmembers.find((m) =>  m.id === o && o));
+    return { ...b, owners, id: b.oga_no };
+  });
 
   const handleChange = (event, newValue  ) => {
     setValue(newValue);
@@ -90,10 +95,10 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <YearbookMembers members={ybmembers} boats={boats} />
+        <YearbookMembers members={ybmembers} boats={ybboats} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <YearbookBoats members={members} boats={boats} />
+        <YearbookBoats members={ybmembers} boats={ybboats} />
       </TabPanel>
     </Box>
   );

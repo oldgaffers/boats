@@ -1,7 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
-import { useAuth0 } from "@auth0/auth0-react";
 import { parsePhoneNumber } from 'awesome-phonenumber'
 
 function CustomToolbar() {
@@ -15,10 +14,6 @@ function CustomToolbar() {
             }} />
         </GridToolbarContainer>
     );
-}
-
-function currentOwners(ownerships) {
-    return ownerships?.filter((o) => o.current);
 }
 
 function nameGetter({ row }) {
@@ -109,36 +104,9 @@ function areaFormatter(params) {
 export default function YearbookMembers({ members, boats }) {
     // console.log('YearbookBoats', members, boats);
 
-    const { user, isAuthenticated } = useAuth0();
-
-    if (!isAuthenticated) {
-        return (<div>Please log in to view this page</div>);
-    }
-
-    const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('editor')) {
-        return (<div>This page is only useful to editors of the boat register</div>);
-    }
-
     function boatGetter({ row }) {
-        const { id, member } = row;
-        const theirBoats = boats.filter((b) => {
-            const o = currentOwners(b?.ownerships || []);
-            if (o.length > 0) {
-                const owned = o.find((os) => os.id === id);
-                if (owned) {
-                    return true
-                }
-                // a few ownership records are missing a GOLD ID
-                const p = o.find((os) => os.id === undefined && os.member === member && os.share === 64);
-                if (p) {
-                    console.log('Boat with owner with no GOLD ID', b.oga_no);
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        });
+        const { id } = row;
+        const theirBoats = boats.filter((b) => b.owners?.find((o) => o?.id === id));
         return theirBoats.map((b) => b.name).sort().join(', ');
     }
 

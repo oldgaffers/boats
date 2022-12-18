@@ -1,8 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
-import { useAuth0 } from "@auth0/auth0-react";
-import { memberPredicate } from '../util/membership';
 
 function CustomToolbar() {
     return (
@@ -24,28 +22,14 @@ function joinList(strings, sep, lastSep) {
     return strings.slice(0, -1).join(sep) + lastSep + strings.slice(-1);
 }
 
-export default function YearbookBoats({ boats, members }) {
-    // console.log('YearbookBoats', members, boats);
+export default function YearbookBoats({ boats }) {
 
-    const { user, isAuthenticated } = useAuth0();
-
-    if (!isAuthenticated) {
-        return (<div>Please log in to view this page</div>);
-    }
-
-    const roles = user['https://oga.org.uk/roles'] || [];
-    if (!roles.includes('editor')) {
-        return (<div>This pag is only useful to editors of the boat register</div>);
-    }
-
+    console.log(boats);
     function ownerValueGetter({ value }) {
-        const owningMembers = value.map((owner) => {
-            return members.find((m) => memberPredicate(owner, m));
-        });
-        const lastNames = [...new Set(owningMembers.map((owner) => owner?.lastname))]?.filter((n) => n);
+        const lastNames = [...new Set(value.map((owner) => owner?.lastname))]?.filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
-                const fn = owningMembers.filter((o) => o?.lastname === ln)?.map((o) => `${o?.firstname}${o?.GDPR ? '' : '*'}`);
+                const fn = value.filter((o) => o?.lastname === ln)?.map((o) => `${o?.firstname}${o?.GDPR ? '' : '*'}`);
                 const r = `${joinList(fn, ', ', ' & ')} ${ln}`;
                 return r;
             }),
@@ -69,27 +53,11 @@ export default function YearbookBoats({ boats, members }) {
         { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
     ];
 
-    const ybboats = boats.filter((b) => {
-        let allowed = false;
-        b.owners?.forEach((owner) => {
-            let member;
-            if (isNaN(owner)) {
-                member = members.find((m) => `M${m.member}` === owner);
-            } else {
-                member = members.find((m) => m.id === owner);  
-            }
-            if (memberPredicate(owner, member)) {
-                allowed = true;
-            }
-        });
-        return allowed;
-    }).map((b) => ({...b, id: b.oga_no }));
-
     return (
         <div style={{ display: 'flex', height: '100%' }}>
             <div style={{ flexGrow: 1 }}>
                 <DataGrid
-                    rows={ybboats}
+                    rows={boats}
                     columns={columns}
                     components={{ Toolbar: CustomToolbar }}
                     autoHeight={true}
