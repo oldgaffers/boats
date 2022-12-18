@@ -31,11 +31,11 @@ import {
   yachtHullStep,
   dinghyHullStep,
 } from "./ddf/SubForms";
-import { HtmlEditor } from "./ddf/RTE";
 import Typography from "@mui/material/Typography";
 import { findFirstAbsent } from '../util/oganoutils';
 import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
 import Photodrop from "./photodrop";
+import HtmlEditor from './ckeditor';
 
 const schema = (pickers) => {
   return {
