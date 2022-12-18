@@ -527,7 +527,7 @@ export default function RBC60() {
   
   if (!data) return <CircularProgress />;
   
-  const filtered = applyFilters(data.boats, {});
+  const filtered = applyFilters(data, {});
   const boats = sortAndPaginate(filtered, DEFAULT_BROWSE_STATE.app);
   
     const handleSubmit = (values) => {
@@ -615,7 +615,7 @@ export default function RBC60() {
                 </Grid>
                 <Grid item xs={12}>
                     <FormRenderer
-                        schema={schema(ports, user, data.boats)}
+                        schema={schema(ports, user, data)}
                         subscription={{ values: true }}
                         componentMapper={{
                             ...componentMapper,

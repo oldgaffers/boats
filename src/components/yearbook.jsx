@@ -60,7 +60,7 @@ export default function BasicTabs() {
 
   if (!data) return <CircularProgress />;
   
-  const filtered = applyFilters(data.boats, {});
+  const filtered = applyFilters(data, {});
   const boats = sortAndPaginate(filtered, DEFAULT_BROWSE_STATE.app);
 
   if (!isAuthenticated) {
