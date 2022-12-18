@@ -4,13 +4,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import { gql, useQuery } from '@apollo/client';
+import { useAuth0 } from "@auth0/auth0-react";
+import { applyFilters } from '../util/oganoutils';
+import { getFilterable } from './boatregisterposts';
+import { memberPredicate } from '../util/membership';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
-import { gql, useQuery } from '@apollo/client';
-import { applyFilters, sortAndPaginate } from '../util/oganoutils';
-import { getFilterable } from './boatregisterposts';
-import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
-import { useAuth0 } from "@auth0/auth0-react";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,8 +60,7 @@ export default function BasicTabs() {
 
   if (!data) return <CircularProgress />;
   
-  const filtered = applyFilters(data, {});
-  const boats = sortAndPaginate(filtered, DEFAULT_BROWSE_STATE.app);
+  const boats = applyFilters(data, {});
 
   if (!isAuthenticated) {
     return (<div>Please log in to view this page</div>);
@@ -76,6 +75,7 @@ export default function BasicTabs() {
   }
 
   const { members } = membersResult.data;
+  const ybmembers = members.filter((m) => memberPredicate(m.id, m));
 
   const handleChange = (event, newValue  ) => {
     setValue(newValue);
@@ -90,7 +90,7 @@ export default function BasicTabs() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <YearbookMembers members={members} boats={boats} />
+        <YearbookMembers members={ybmembers} boats={boats} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <YearbookBoats members={members} boats={boats} />

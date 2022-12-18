@@ -2,8 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import { useAuth0 } from "@auth0/auth0-react";
-import PhoneNumber from 'awesome-phonenumber';
-import { memberPredicate } from '../util/membership';
+import { parsePhoneNumber } from 'awesome-phonenumber'
 
 function CustomToolbar() {
     return (
@@ -34,28 +33,28 @@ function fettlePhone(n, area) {
         return undefined;
     }
     if (n.startsWith('+')) {
-        return PhoneNumber(n);
+        return parsePhoneNumber(n);
     } else if (n.startsWith('00')) {
-        return PhoneNumber(n.replace('00', '+'));
+        return parsePhoneNumber(n.replace('00', '+'));
     } else if (area === 'Dublin Bay') {
-        const pn = PhoneNumber(n, 'IE');
-        if (pn.isValid()) {
+        const pn = parsePhoneNumber(n, { regionCode: 'IE' });
+        if (pn.valid) {
             return pn;            
         }
-        return PhoneNumber(n, 'GB');
+        return parsePhoneNumber(n, { regionCode: 'GB' });
     } else if (area === 'Overseas') {
-        return PhoneNumber(`+${n}`);
+        return parsePhoneNumber(`+${n}`);
     }
-    return PhoneNumber(n, 'GB');
+    return parsePhoneNumber(n, { regionCode: 'GB' });
 }
 
 function formatPhone(pn) {
     if (pn) {
-        if (pn.isValid()) {
-            if (pn.getCountryCode() === 44) {
-                return pn.getNumber('national');
+        if (pn.valid) {
+            if (pn.countryCode === 44) {
+                return pn.number.national;
             }
-            return pn.getNumber('international');
+            return pn.number.international;
         }
     }
     return undefined;
@@ -107,7 +106,8 @@ function areaFormatter(params) {
     return abbrev;
 }
 
-export default function YearbookBoats({ members, boats }) {
+export default function YearbookMembers({ members, boats }) {
+    // console.log('YearbookBoats', members, boats);
 
     const { user, isAuthenticated } = useAuth0();
 
@@ -168,13 +168,11 @@ export default function YearbookBoats({ members, boats }) {
         { field: 'area', headerName: 'Area', width: 90, valueFormatter: areaFormatter },
     ];
 
-    const ybmembers = members.filter((m) => memberPredicate(m.id, m));
-
     return (
         <div style={{ display: 'flex', height: '100%' }}>
             <div style={{ flexGrow: 1 }}>
                 <DataGrid
-                    rows={ybmembers}
+                    rows={members}
                     columns={columns}
                     components={{ Toolbar: CustomToolbar }}
                     autoHeight={true}

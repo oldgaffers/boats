@@ -25,6 +25,7 @@ function joinList(strings, sep, lastSep) {
 }
 
 export default function YearbookBoats({ boats, members }) {
+    // console.log('YearbookBoats', members, boats);
 
     const { user, isAuthenticated } = useAuth0();
 
@@ -41,7 +42,6 @@ export default function YearbookBoats({ boats, members }) {
         const owningMembers = value.map((owner) => {
             return members.find((m) => memberPredicate(owner, m));
         });
-        console.log(owningMembers);
         const lastNames = [...new Set(owningMembers.map((owner) => owner?.lastname))]?.filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
@@ -71,19 +71,17 @@ export default function YearbookBoats({ boats, members }) {
 
     const ybboats = boats.filter((b) => {
         let allowed = false;
-        if (b.owners) {
-            b.owners.forEach((owner) => {
-                let member;
-                if (isNaN(owner)) {
-                    member = members.find((m) => `M${m.member}` === owner);
-                } else {
-                    member = members.find((m) => m.id === owner);  
-                }
-                if (memberPredicate(owner, member)) {
-                    allowed = true;
-                }
-            });
-        }
+        b.owners?.forEach((owner) => {
+            let member;
+            if (isNaN(owner)) {
+                member = members.find((m) => `M${m.member}` === owner);
+            } else {
+                member = members.find((m) => m.id === owner);  
+            }
+            if (memberPredicate(owner, member)) {
+                allowed = true;
+            }
+        });
         return allowed;
     }).map((b) => ({...b, id: b.oga_no }));
 
@@ -97,7 +95,8 @@ export default function YearbookBoats({ boats, members }) {
                     autoHeight={true}
                     initialState={{
                         sorting: {
-                            sortModel: [{ field: 'name', sort: 'asc' }, { field: 'oga_no', sort: 'asc' }],
+                            // sortModel: [{ field: 'name', sort: 'asc' }, { field: 'oga_no', sort: 'asc' }],
+                            sortModel: [{ field: 'name', sort: 'asc' }],
                         },
                     }}
                 />
