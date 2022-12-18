@@ -24,7 +24,6 @@ function joinList(strings, sep, lastSep) {
 
 export default function YearbookBoats({ boats }) {
 
-    console.log(boats);
     function ownerValueGetter({ value }) {
         const lastNames = [...new Set(value.map((owner) => owner?.lastname))]?.filter((n) => n);
         const r = joinList(
