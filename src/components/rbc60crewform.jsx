@@ -3,7 +3,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
-import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template';
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
@@ -59,7 +58,7 @@ const crewlegfield = (name, label, routeName) => {
         component: componentTypes.CHECKBOX,
         name: `leg.${name}`,
         label: label,
-        dataType: dataTypes.BOOLEAN,
+        dataType: 'boolean',
     };
 };
 

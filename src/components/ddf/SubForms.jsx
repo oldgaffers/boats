@@ -1,4 +1,3 @@
-import { dataTypes } from "@data-driven-forms/react-form-renderer";
 import { mapPicker } from "./util";
 import {
   designerItems,
@@ -7,41 +6,33 @@ import {
   constructionItems,
 } from "./util";
 
-export const summaryForm = (pickers) => {
-  return {
-    title: "Summary",
-    name: "summary",
-    component: 'sub-form',
-    fields: [
+export const referencesItems = [
+  {
+    component: 'field-array',
+    name: "reference",
+    label: "References in Gaffers Log, etc.",
+    fields: [{ component: "text-field" }],
+    sx: { paddingTop: 2 },
+  },
+  {
+    component: 'plain-text',
+    name: "website.label",
+    label: "Website Link",
+    variant: "h6",
+  },
+  {
+    component: 'text-field',
+    name: "website",
+    label: "a valid website url",
+    sx: { paddingBottom: 2 },
+    validate: [
       {
-        component: 'select',
-        name: "mainsail_type",
-        label: "Mainsail",
-        isRequired: true,
-        options: mapPicker(pickers.sail_type),
-      },
-      {
-        component: 'select',
-        name: "rig_type",
-        label: "Rig",
-        isRequired: true,
-        options: mapPicker(pickers.rig_type),
-      },
-      ...homeItems,
-      {
-        component: 'field-array',
-        name: "previous_names",
-        label: "Previous name/s",
-        fields: [{ component: "text-field" }],
-      },
-      {
-        component: 'text-field',
-        name: "website",
-        label: "website url",
-      },
-    ],
-  };
-};
+        type: 'pattern',
+        pattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/i
+      }
+    ]
+  },
+]
 
 export const descriptionsItems = [
   {
@@ -66,7 +57,7 @@ export const yearItems = [
     name: "year",
     label: "Year Built",
     type: "number",
-    dataType: dataTypes.INTEGER,
+    dataType: 'integer',
   },
   {
     component: 'checkbox',
@@ -78,6 +69,7 @@ export const yearItems = [
 
 export const homeItems = [
   {
+    sx: { marginTop: 2, marginBottom: 2 },
     component: 'text-field',
     name: "home_country",
     label: "Home Country",
@@ -86,6 +78,7 @@ export const homeItems = [
     component: 'text-field',
     name: "home_port",
     label: "Home Port",
+    sx: { marginBottom: 2 },
   },
 ];
 

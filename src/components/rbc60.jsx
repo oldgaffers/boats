@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
-import dataTypes from '@data-driven-forms/react-form-renderer/data-types';
 import validatorTypes from '@data-driven-forms/react-form-renderer/validator-types';
 import FormTemplate from '@data-driven-forms/mui-component-mapper/form-template';
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
@@ -57,7 +56,7 @@ const crewlegfield = (name, label, routeName) => {
             + ' you can indicate the maximum number of spaces here.',
         label: `possible spaces for the ${label} leg`,
         type: 'number',
-        dataType: dataTypes.INTEGER,
+        dataType: 'integer',
         validate: [
             {
                 type: validatorTypes.MIN_NUMBER_VALUE,
@@ -85,7 +84,7 @@ const portFields = (ports, route) => {
             component: componentTypes.CHECKBOX,
             name: `port.${name}`,
             label: port(name, start, end),
-            dataType: dataTypes.BOOLEAN,
+            dataType: 'boolean',
         });
     });
     return fields;
@@ -320,7 +319,7 @@ const schema = (ports, user, boats) => {
                         name: 'rbc',
                         label: "I plan to take my boat all the way round",
                         initialValue: false,
-                        dataType: dataTypes.BOOLEAN,
+                        dataType: 'boolean',
                     },
                     {
                         component: componentTypes.RADIO,
@@ -347,7 +346,7 @@ const schema = (ports, user, boats) => {
                         component: componentTypes.TEXT_FIELD,
                         initialValue: 1,
                         type: 'number',
-                        dataType: dataTypes.INTEGER,
+                        dataType: 'integer',
                         label: 'Number of people likely to be aboard',
                         name: 'people_on_board',
                     },
@@ -363,7 +362,7 @@ const schema = (ports, user, boats) => {
                         name: 'crew',
                         label: 'If you want to offer crewing opportunities for any of the legs, check here',
                         helperText: "You don't need to decide now, just leave the box unchecked if you haven't decided yet",
-                        dataType: dataTypes.BOOLEAN,
+                        dataType: 'boolean',
                     },
                     ...portFields(ports, ''),
                     {
@@ -375,7 +374,7 @@ const schema = (ports, user, boats) => {
                                 component: componentTypes.CHECKBOX,
                                 name: 'ecc',
                                 label: "I'd like to bring my boat along to the East Coast Summer Cruise",
-                                dataType: dataTypes.BOOLEAN,
+                                dataType: 'boolean',
                                 helperText: "The East Coast annual Summer Cruise will head south after the main OGA 60 celebration.",
 
                             },        

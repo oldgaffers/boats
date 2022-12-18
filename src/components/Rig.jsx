@@ -1,4 +1,4 @@
-import { componentTypes, dataTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
+import { componentTypes, validatorTypes } from "@data-driven-forms/react-form-renderer";
 import { mapPicker } from "./ddf/util";
 
 export const rigForm = (pickers) => {
@@ -36,7 +36,7 @@ export const rigForm = (pickers) => {
     name: "air_draft",
     label: "Air Draft (decimal feet)",
     type: 'number',
-    dataType: dataTypes.FLOAT,
+    dataType: 'float',
   }
 ]}
 };

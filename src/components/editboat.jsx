@@ -9,6 +9,7 @@ import componentMapper from '@data-driven-forms/mui-component-mapper/component-m
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
+import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -30,11 +31,14 @@ const WizardInternal = (props) => {
   const nextActivityStep = (toVisit.length > 0) ? toVisit[0] : 'done-step';
 
   const state = formOptions.getState();
-  console.log(state);
+  // console.log(state);
   const submitDisabled = !state.valid || !state.dirty;
 
   return (
-    <Box onKeyDown={onKeyDown} sx={{ width: '100%', position: 'bottom', flexGrow: 1 }}>
+    <Stack
+      onKeyDown={onKeyDown}
+      sx={{ width: '100%', position: 'bottom', flexGrow: 1 }}
+    >
       {currentStep.title}
       {formOptions.renderForm(currentStep.fields)}
       <FormSpy>
@@ -82,7 +86,7 @@ const WizardInternal = (props) => {
           </Box>
         )}
       </FormSpy>
-    </Box>
+    </Stack>
   );
 };
 
@@ -129,7 +133,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
     updates.handicap_data = { ...ohd, ...nhd };
-    if (ddf.confirm_not_for_sale) {
+    if (ddf.update_sale === 'unsell') {
       updates.selling_status = 'not_for_sale';
     }
     if (ddf.sale_price) { // sold!

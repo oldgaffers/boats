@@ -5,7 +5,6 @@ import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';
 import {
   FormRenderer,
   componentTypes,
-  dataTypes,
   validatorTypes,
   useFieldApi
 } from "@data-driven-forms/react-form-renderer";
@@ -28,6 +27,7 @@ import {
   homeItems,
   registrationForm,
   descriptionsItems,
+  referencesItems,
   yachtHullStep,
   dinghyHullStep,
 } from "./ddf/SubForms";
@@ -114,7 +114,7 @@ const schema = (pickers) => {
                     label: "the name of the boat",
                     helperText: 'if the boat has had other names in the past they can be added later in this form',
                     type: "string",
-                    dataType: dataTypes.STRING,
+                    dataType: 'string',
                     isRequired: true,
                     validate: [
                       {
@@ -282,7 +282,7 @@ const schema = (pickers) => {
                     name: "length_on_deck",
                     label: "Length on deck  (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.FLOAT,
+                    dataType: 'float',
                     isRequired: true,
                     validate: [
                       // {
@@ -299,7 +299,7 @@ const schema = (pickers) => {
                     name: "handicap_data.beam",
                     label: "Beam (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.FLOAT,
+                    dataType: 'float',
                     isRequired: true,
                     validate: [
                       // {
@@ -316,7 +316,7 @@ const schema = (pickers) => {
                     name: "draft",
                     label: "Draft (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.FLOAT,
+                    dataType: 'float',
                     validate: [
                       // {
                       //   type: validatorTypes.MIN_NUMBER_VALUE,
@@ -329,7 +329,7 @@ const schema = (pickers) => {
                     name: "air_draft",
                     label: "Air Draft (decimal feet)",
                     type: "number",
-                    dataType: dataTypes.FLOAT,
+                    dataType: 'float',
                     initialValue: 10,
                     validate: [
                       //{
@@ -350,31 +350,7 @@ const schema = (pickers) => {
                 name: "references",
                 title: "References",
                 component: componentTypes.SUB_FORM,
-                fields: [
-                  {
-                    component: componentTypes.FIELD_ARRAY,
-                    name: "reference",
-                    label: "References in Gaffers Log, etc.",
-                    fields: [{ component: "text-field" }],
-                  },
-                  {
-                    component: componentTypes.PLAIN_TEXT,
-                    name: "website.label",
-                    label: "Website Link",
-                    variant: "h6",
-                  },
-                  {
-                    component: componentTypes.TEXT_FIELD,
-                    name: "website",
-                    label: "a valid website url",
-                    validate: [
-                      {
-                        type: validatorTypes.PATTERN,
-                        pattern: /^https?:\/\/[^\s/$.?#].[^\s]*$/i
-                      }
-                    ]
-                  },
-                ],
+                fields: referencesItems,
               },
             ],
           },
@@ -398,9 +374,7 @@ const schema = (pickers) => {
                 title: "Locations",
                 name: "locations",
                 component: componentTypes.SUB_FORM,
-                fields: [
-                  ...homeItems,
-                ],
+                fields: homeItems,
               },
             ],
           },

@@ -1,7 +1,3 @@
-import {
-  dataTypes,
-  validatorTypes,
-} from "@data-driven-forms/react-form-renderer";
 import { rig_allowance } from "../util/THCF";
 
 export function foretriangle_area({
@@ -62,7 +58,7 @@ const sailFields = (sides) => {
     name,
     label: `${label} (decimal feet)`,
     type: "number",
-    dataType: dataTypes.FLOAT,
+    dataType: 'float',
   }));
 };
 
@@ -76,7 +72,7 @@ const propellorForm = {
       name: "handicap_data.propellor.blades",
       label: "Blades",
       type: "number",
-      dataType: dataTypes.INTEGER,
+      dataType: 'integer',
     },
     {
       component: 'radio',
@@ -89,11 +85,7 @@ const propellorForm = {
         { label: "Feathering", value: "feathering" },
       ],
       isRequired: true,
-      validate: [
-        {
-          type: validatorTypes.REQUIRED,
-        },
-      ],
+      validate: [{ type: 'required' }],
     },
   ],
 };
@@ -123,11 +115,7 @@ const headsail = (name, nextStep) => {
 const main_required_props = (sail, rig_type) => {
   const required_fields = {
     isRequired: true,
-    validate: [
-      {
-        type: validatorTypes.REQUIRED,
-      },
-    ],
+    validate: [{ type: 'required' }],
   };
   if (sail === "main") return required_fields;
   switch (rig_type) {
@@ -155,7 +143,7 @@ const mainsail_fields = (sail) => {
       name: `handicap_data.${sail}.luff`,
       label: `Luff (decimal feet)`,
       type: "number",
-      dataType: dataTypes.FLOAT,
+      dataType: 'float',
       resolveProps: (props, { meta, input }, formOptions) => {
         const s = formOptions.getState();
         const hd = s.values.handicap_data;
@@ -170,7 +158,7 @@ const mainsail_fields = (sail) => {
       name: `handicap_data.${sail}.foot`,
       label: `Foot (decimal feet)`,
       type: "number",
-      dataType: dataTypes.FLOAT,
+      dataType: 'float',
       resolveProps: (props, { meta, input }, formOptions) => {
         const s = formOptions.getState();
         const hd = s.values.handicap_data;
@@ -185,7 +173,7 @@ const mainsail_fields = (sail) => {
       name: `handicap_data.${sail}.head`,
       label: `Head (decimal feet)`,
       type: "number",
-      dataType: dataTypes.FLOAT,
+      dataType: 'float',
       condition: {
         and: [
           { not: { when: () => `${sail}sail_type`, is: "bermudan" } },
@@ -207,7 +195,7 @@ const mainsail_fields = (sail) => {
       name: `ddf.sail_area.${sail}`,
       label: "Calculated Area (decimal square feet)",
       type: "number",
-      dataType: dataTypes.FLOAT,
+      dataType: 'float',
       isReadOnly: true,
       resolveProps: (props, { meta, input }, formOptions) => {
         const r = { description: "½l×f" };
@@ -236,7 +224,7 @@ const topsail_fields = (sail) => [
     name: `handicap_data.${sail}.luff`,
     label: `Luff (decimal feet)`,
     type: "number",
-    dataType: dataTypes.FLOAT,
+    dataType: 'float',
     resolveProps: (props, { meta, input }, formOptions) => {
       const s = formOptions.getState();
       const hd = s.values.handicap_data;
@@ -250,7 +238,7 @@ const topsail_fields = (sail) => [
     name: `handicap_data.${sail}.perpendicular`,
     label: `Perpendicular (decimal feet)`,
     type: "number",
-    dataType: dataTypes.FLOAT,
+    dataType: 'float',
     resolveProps: (props, { meta, input }, formOptions) => {
       const s = formOptions.getState();
       const hd = s.values.handicap_data;
@@ -265,7 +253,7 @@ const topsail_fields = (sail) => [
     label: "Calculated Area (decimal square feet)",
     description: "½l×p",
     type: "number",
-    dataType: dataTypes.FLOAT,
+    dataType: 'float',
     isReadOnly: true,
     initialValue: 0,
     resolveProps: (props, { meta, input }, formOptions) => {
@@ -318,7 +306,7 @@ export const steps = (nextStep) => [
             label: "Sail Area (decimal square feet)",
             description: "If you know the sail area you can enter it here",
             type: "number",
-            dataType: dataTypes.FLOAT,
+            dataType: 'float',
           },
         ],
       },
@@ -369,11 +357,7 @@ export const steps = (nextStep) => [
             case "Schooner":
               return {
                 isRequired: true,
-                validate: [
-                  {
-                    type: validatorTypes.REQUIRED,
-                  },
-                ],
+                validate: [{ type: 'required' }],
               };
             default:
               return {
@@ -389,7 +373,7 @@ export const steps = (nextStep) => [
         description:
           "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         resolveProps: (props, { meta, input }, formOptions) => {
           const s = formOptions.getState();
           const handicap_data = s.values.handicap_data;
@@ -405,11 +389,7 @@ export const steps = (nextStep) => [
             case "Schooner":
               return {
                 isRequired: true,
-                validate: [
-                  {
-                    type: validatorTypes.REQUIRED,
-                  },
-                ],
+                validate: [{ type: 'required' }],
               };
             default:
               return {
@@ -424,7 +404,7 @@ export const steps = (nextStep) => [
         label: "Calculated Area (decimal square feet)",
         description: "85% of the nominal triangle (½b×h)",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isReadOnly: true,
         initialValue: 0,
       },
@@ -507,7 +487,7 @@ export const steps = (nextStep) => [
         name: "ddf.calculated-sailarea",
         label: "Calculated Sail Area",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
@@ -533,39 +513,27 @@ export const steps = (nextStep) => [
         name: "handicap_data.length_on_deck",
         label: "length on deck (LOD) (decimal feet)",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isRequired: true,
-        validate: [
-          {
-            type: validatorTypes.REQUIRED,
-          },
-        ],
+        validate: [{ type: 'required' }],
       },
       {
         component: 'text-field',
         name: "handicap_data.length_on_waterline",
         label: "waterline length (LWL) (decimal feet)",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isRequired: true,
-        validate: [
-          {
-            type: validatorTypes.REQUIRED,
-          },
-        ],
+        validate: [{ type: 'required' }],
       },
       {
         component: 'text-field',
         name: "handicap_data.beam",
         label: "Beam (decimal feet)",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isRequired: true,
-        validate: [
-          {
-            type: validatorTypes.REQUIRED,
-          },
-        ],
+        validate: [{ type: 'required' }],
       },
     ],
   },
@@ -586,7 +554,7 @@ export const steps = (nextStep) => [
         name: "ddf.rig_allowance",
         isReadOnly: true,
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         label: "Rig allowance",
         description: "cutter: .96, yawl: .94, schooner: .92, ketch: .90",
         resolveProps: (props, { meta, input }, formOptions) => {
@@ -603,7 +571,7 @@ export const steps = (nextStep) => [
         name: "ddf.root_s",
         isReadOnly: true,
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
@@ -621,7 +589,7 @@ export const steps = (nextStep) => [
         name: "ddf.c",
         isReadOnly: true,
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         label: "Cross section (decimal square feet)",
         description: "0.67B²",
         resolveProps: (props, { meta, input }, formOptions) => {
@@ -643,7 +611,7 @@ export const steps = (nextStep) => [
         label: "Measured Rating",
         description: "0.15L(√S/√C)+0.2(L+√S)",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
@@ -667,7 +635,7 @@ export const steps = (nextStep) => [
         label: "Prop allowance, none: 0%, folding: 1.5%, fixed: 3%",
         isReadOnly: true,
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
           let pa = 0.015;
@@ -686,7 +654,7 @@ export const steps = (nextStep) => [
         name: "ddf.r",
         label: "Final Rating ",
         type: "number",
-        dataType: dataTypes.FLOAT,
+        dataType: 'float',
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();

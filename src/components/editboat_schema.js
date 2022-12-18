@@ -5,13 +5,18 @@ import BoatAnchoredIcon from "./boatanchoredicon";
 import { dimensionsForm } from "./Dimensions";
 import { rigForm } from "./Rig";
 import {
-  summaryForm, descriptionsForm,
+  homeItems, descriptionsForm,
   registrationForm, constructionForm,
-  yachtHullStep, dinghyHullStep
+  yachtHullStep, dinghyHullStep, referencesItems
 } from "./ddf/SubForms";
 import { steps as handicap_steps } from "./Handicap";
 import { Typography } from '@mui/material';
 
+function intField(name, label) {
+  return { name, label, 
+    component: "text-field", type: "number", dataType: 'integer',
+  };
+}
 export const CLEARED_VALUE = '[remove]';
 
 export const schema = (pickers, canBuySell, forSale) => {
@@ -21,14 +26,12 @@ export const schema = (pickers, canBuySell, forSale) => {
     { label: "Edit Design & Build", value: "construction" },
     { label: "Edit Dimensions", value: "dimensions" },
     { label: "Edit Rig & Sails (or get a handicap)", value: "rig" },
-    { label: "Edit other fields", value: "summary" },
+    { label: "Edit Home Port and Previous Names", value: "misc" },
     { label: "Add or update current or previous owners", value: "own" },
   ];
   if (canBuySell) {
     if (forSale) {
-      activities.push({ label: 'Change Price', value: 'price' });
-      activities.push({ label: 'Set sold', value: 'sold' });
-      activities.push({ label: 'Set not for sale', value: 'unsell' });
+      activities.push({ label: 'Change Sales Status', value: 'update-sell' });
     } else {
       activities.push({ label: 'Put up for sale', value: 'sell' });
     }
@@ -151,7 +154,7 @@ export const schema = (pickers, canBuySell, forSale) => {
           {
             name: "own-step",
             component: 'sub-form',
-            nextStep: "summary-step",
+            nextStep: "misc-step",
             shortcut: true,
             // fields: [ownershipUpdateForm],
             fields: [
@@ -167,26 +170,44 @@ export const schema = (pickers, canBuySell, forSale) => {
                 name: "ownerships",
                 label: "Known Owners",
                 fields: [
-                  { name: 'name', label: 'Name', component: "text-field" },
-                  { name: 'start', label: 'Start', component: "text-field" },
-                  { name: 'end', label: 'End', component: "text-field" },
-                  { name: 'share', label: 'Share (64ths)', component: "text-field" },
+                  { name: 'name', label: 'Name', component: 'text-field', isRequired: true, validate: [{ type: 'required' }], },
+                  {
+                    ...intField('start', 'Start Year'),
+                    isRequired: true,
+                    validate: [{ type: 'required' }],
+                  },
+                  intField('end', 'End Year'),
+                  {
+                    ...intField('share', 'Share (64ths)'),
+                    initialValue: 64,
+                    isRequired: true,
+                    validate: [{ type: 'required' }],
+                  },
                   { name: 'current', label: 'Current', component: 'checkbox' },
                 ],
               },
             ]
           },
           {
-            name: "summary-step",
+            name: "misc-step",
+            title: <Typography variant='h5'>Home Port and Previous Names</Typography>,
             component: 'sub-form',
             nextStep: "references-step",
-            fields: [summaryForm(pickers)],
+            fields: [
+              ...homeItems,
+              {
+                component: 'field-array',
+                name: "previous_names",
+                label: "Previous names",
+                fields: [{ component: "text-field" }],
+              },
+            ],
           },
           {
             name: "references-step",
+            title: <Typography paddingBottom={2} variant='h5'>References</Typography>,
             component: 'sub-form',
             nextStep: ({ values }) => {
-              console.log('PROPS', values.ddf);
               if (values?.ddf?.canBuySell) {
                 switch (values.selling_status) {
                   case 'for_sale':
@@ -200,14 +221,7 @@ export const schema = (pickers, canBuySell, forSale) => {
                 return 'done-step';
               }
             },
-            fields: [
-              {
-                component: 'field-array',
-                name: "reference",
-                label: "References in Gaffers Log, etc.",
-                fields: [{ component: "text-field" }],
-              },
-            ],
+            fields: referencesItems,
           },
           {
             name: "sell-step",
@@ -244,10 +258,38 @@ export const schema = (pickers, canBuySell, forSale) => {
             ],
           },
           {
-            title: <Typography variant='h5'>Update the Price</Typography>,
-            name: "price-step",
+            title: <Typography variant='h5'>Change Sales Status</Typography>,
+            name: "update-sell-step",
+            component: 'sub-form',
+            nextStep: {
+              when: "ddf.update_sale",
+              stepMapper: {
+                'update': "update-sales-data-step",
+                'sold': "sold-step",
+                'unsell': "done-step",
+              },
+            },
+            fields: [
+              {
+                component: 'radio',
+                options: [
+                  { label: 'I want to take boat off the market for the present', value: 'unsell', },
+                  { label: "I've sold the boat", value: 'sold', },
+                  { label: "I want to update the price or sales text", value: 'update', },
+                ],
+                initialValue: 'update',
+                name: 'ddf.update_sale',
+                isRequired: true,
+                validate: [{ type: 'required' }],
+              },
+            ],
+          },
+          {
+            title: <Typography variant='h5'>Update Sales Data</Typography>,
+            name: "update-sales-data-step",
             component: 'sub-form',
             nextStep: "done-step",
+            shortcut: true,
             fields: [
               {
                 component: 'text-field',
@@ -255,23 +297,13 @@ export const schema = (pickers, canBuySell, forSale) => {
                 label: "New Price (pounds)",
                 type: "number",
                 dataType: 'float',
-                isRequired: true,
-                validate: [{ type: 'required' }],
               },
-            ],
-          },
-          {
-            title: <Typography variant='h5'>Remove from Sale</Typography>,
-            name: "unsell-step",
-            component: 'sub-form',
-            nextStep: "done-step",
-            fields: [
               {
-                component: 'checkbox',
-                label: 'I want to take boat off the market for the present',
-                name: 'ddf.confirm_not_for_sale',
-                isRequired: true,
-                validate: [{ type: 'required' }],
+                component: 'html',
+                name: "ddf.sales_text",
+                controls: ["bold", "italic"],
+                maxLength: 500,
+                title: "Updated Sales Text",
               },
             ],
           },
@@ -280,7 +312,16 @@ export const schema = (pickers, canBuySell, forSale) => {
             title: <Typography variant='h5'>Congratulations on Selling your boat</Typography>,
             component: 'sub-form',
             nextStep: "done-step",
+            shortcut: true,
             fields: [
+              {
+                component: "date-picker",
+                label: 'Date Sold',
+                name: 'ddf.date_sold',
+                isRequired: true,
+                initialValue: new Date(),
+                validate: [{ type: 'required' }],
+              },
               {
                 component: 'text-field',
                 name: "ddf.sale_price",
@@ -292,21 +333,15 @@ export const schema = (pickers, canBuySell, forSale) => {
               },
               {
                 component: "html",
-                title: "Notes",
-                helperText: `please add some details, including the new owner's name, 
-                if they are happy to share`,
+                title: <Typography>Please add some details,
+                <br/>including the new owner's name, 
+                <br/>if they are happy to share, and whether
+                <br/>the Boat Register or
+                Gaffer's Log helped with the sale.</Typography>,
                 name: "ddf.summary",
                 controls: ["bold", "italic"],
                 maxLength: 500,
                 isRequired: true,
-                validate: [{ type: 'required' }],
-              },
-              {
-                component: "date-picker",
-                label: 'Date Sold',
-                name: 'ddf.date_sold',
-                isRequired: true,
-                initialValue: new Date(),
                 validate: [{ type: 'required' }],
               },
             ],
