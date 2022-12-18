@@ -78,9 +78,9 @@ export default function BasicTabs() {
   const ybmembers = members.filter((m) => memberPredicate(m.id, m));
 
   const ybboats = boats.filter((b) => b.owners?.length > 0).map((b) => {
-    const owners = b.owners.map((o) => ybmembers.find((m) =>  m.id === o && o));
+    const owners = b.owners.map((o) => ybmembers.find((m) =>  m.id === o && o)).filter((o) => o);
     return { ...b, owners, id: b.oga_no };
-  });
+  }).filter((b) => b.owners.length > 0);
 
   const handleChange = (event, newValue  ) => {
     setValue(newValue);
