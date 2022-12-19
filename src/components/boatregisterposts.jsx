@@ -114,3 +114,7 @@ export async function getPicklists() {
 export async function getFilterable() {
   return axios(`${boatRegisterHome}/boatregister/filterable.json`);
 }
+
+export async function getAlbumKey(oga_no) {
+  return await axios.get(`https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/albumKey/${oga_no}`);
+}

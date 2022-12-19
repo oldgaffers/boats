@@ -10,7 +10,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogActions from '@mui/material/DialogActions';
 import SnackBar from '@mui/material/Snackbar';
-import { postBoatData } from './boatregisterposts';
+import { getAlbumKey, postBoatData } from './boatregisterposts';
 
 function AdminDialog({ boat, user, onClose, open }) {
   const [popoverText, setPopoverText] = useState('');
@@ -27,7 +27,10 @@ function AdminDialog({ boat, user, onClose, open }) {
   }
 
   function setGallery() {
-    postBoatData({ email: user.email, new: {} })
+    getAlbumKey(boat.oga_no).then((r) => postBoatData({ email: user.email, new: {
+      ...boat,
+      image_key: r.data.albumKey,
+    } }))
       .then(() => {
         setPopoverText("OK, lookout for a PR");
       })
