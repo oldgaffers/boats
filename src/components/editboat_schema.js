@@ -227,6 +227,7 @@ export const schema = (pickers, canBuySell, forSale) => {
             name: "sell-step",
             title: <Typography variant='h5'>Put Boat For Sale</Typography>,
             component: 'sub-form',
+            shortcut: true,
             nextStep: "done-step",
             fields: [
               {
