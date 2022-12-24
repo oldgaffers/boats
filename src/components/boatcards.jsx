@@ -10,7 +10,7 @@ export default function BoatCards({
   state,
   totalCount,
   boats,
-  onChangePage=(arg)=>console.log('onChangePage', arg), 
+  onChangePage = (arg) => console.log('onChangePage', arg),
   onBoatMarked,
   onBoatUnMarked,
 }) {
@@ -25,30 +25,30 @@ export default function BoatCards({
 
   if (totalCount > 0) {
     const pageCount = Math.ceil(totalCount / state.bpp);
-    const handlePageChange = (_, page) => { onChangePage({ selectedBoats: totalCount, pages: pageCount, page })};
+    const handlePageChange = (_, page) => { onChangePage({ selectedBoats: totalCount, pages: pageCount, page }) };
     return (
       <Container maxWidth="md">
-        <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}/>
-          <Box py={1} />
+        <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page} />
+        <Box sx={{ overflow: 'auto', height: '80vh' }}>
           <Grid container spacing={4}>
-          {boats.map((boat) => {
-            return (
-            <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
-              <BoatCard state={state} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
-            </Grid>
-            );
-          }
-          )
-          }
+            {boats.map((boat) => {
+              return (
+                <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
+                  <BoatCard state={state} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
+                </Grid>
+              );
+            }
+            )
+            }
           </Grid>
-          <Box py={1}/>
-          <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}/>
-        </Container>
+        </Box>
+        <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page} />
+      </Container>
     );
   }
 
-  const { 
-    rig_type, construction_material, generic_type, 
+  const {
+    rig_type, construction_material, generic_type,
     design_class, firstYear, lastYear, mainsail_type,
     designer, builder, oga_no, oga_nos, name
   } = state.filters;
@@ -59,13 +59,13 @@ export default function BoatCards({
   } else if (oga_nos) {
     switch (oga_nos.length) {
       case 0:
-      message = `You need to mark one or more boats. Click on the box at the bottom right-hand corner of the boat's card`;  
-      break;
+        message = `You need to mark one or more boats. Click on the box at the bottom right-hand corner of the boat's card`;
+        break;
       case 1:
-        message = `The boat numbered ${oga_nos[0]} doesn't match the filters you have set`;  
+        message = `The boat numbered ${oga_nos[0]} doesn't match the filters you have set`;
         break;
       default:
-      message = `The boats numbered ${oga_nos.join(', ')} don't match the filters you have set`;
+        message = `The boats numbered ${oga_nos.join(', ')} don't match the filters you have set`;
     }
   } else {
     message = 'There are no';
@@ -109,11 +109,11 @@ export default function BoatCards({
 
   return (
     <Grid container alignItems='stretch'>
-    <Grid item xs={2}></Grid>
+      <Grid item xs={2}></Grid>
       <Grid item>
-      <Typography variant='h6'>{message}.</Typography>
-      <Typography variant='h6'>Try removing some filters.</Typography>
-    </Grid>
-    <Grid item xs={2}></Grid>
-  </Grid>);
+        <Typography variant='h6'>{message}.</Typography>
+        <Typography variant='h6'>Try removing some filters.</Typography>
+      </Grid>
+      <Grid item xs={2}></Grid>
+    </Grid>);
 }

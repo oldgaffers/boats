@@ -46,7 +46,7 @@ export default function BoatPagination({ count, page, onChange }) {
   }
   return (
     <nav>
-      <List>
+      <List sx={{ padding: '5px' }}>
         {items.map(({ page, type, selected, ...item }, index) => {
           let children = null;
           if (type.includes('ellipsis')) {

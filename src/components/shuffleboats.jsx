@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Snackbar from '@mui/material/Snackbar';
 import { shuffleBoats } from "./boatregisterposts";
+import RoleRestricted from './rolerestrictedcomponent';
 
 export default function ShuffleBoatsButton() {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -13,7 +14,7 @@ export default function ShuffleBoatsButton() {
   };
 
   return (
-    <div>
+    <RoleRestricted role='editor'>
       <Button
         size="small"
         variant="contained"
@@ -29,6 +30,6 @@ export default function ShuffleBoatsButton() {
         message="Shuffle requested, please be patient."
         severity="success"
       />
-    </div>
+    </RoleRestricted>
   );
 }

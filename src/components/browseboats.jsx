@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import SearchAndFilterBoats from './searchandfilterboats';
@@ -13,6 +12,13 @@ import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
+import LoginButton from './loginbutton';
+import CreateBoatButton from './createboatbutton';
+import ShuffleBoatsButton from './shuffleboats';
+import YearbookButton from './yearbookbutton';
+import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
+import { ExpandMoreOutlined } from '@mui/icons-material';
+import { Box } from '@mui/system';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -60,7 +66,6 @@ export default function BrowseBoats({
   onBoatUnMarked,
 }) {
   const { bpp, sort, sortDirection, filters } = state;
-
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -77,8 +82,30 @@ export default function BrowseBoats({
   const pickers = makePickers(filtered);
 
   return (
-    <Paper>
-      <Intro view={state.view} />
+    <Box sx={{ overflowX: 'hidden'}}>
+      <Stack 
+      direction='row' spacing={2}
+      alignItems='center' justifyContent='space-evenly' 
+      sx={{ height: '76px', backgroundColor: 'rgb(219, 235, 255)' }}
+      >
+        <CreateBoatButton />
+        <YearbookButton />
+        <ShuffleBoatsButton />
+        <LoginButton/>
+      </Stack>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandMoreOutlined/>}>
+          <Typography>About the boat Register</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+        <Intro view={state.view} />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandMoreOutlined/>}>
+          <Typography>Sort and Filter</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
       <SearchAndFilterBoats
         sortField={sort}
         sortDirection={sortDirection}
@@ -92,7 +119,8 @@ export default function BrowseBoats({
         onMarkedOnlyChange={onMarkedOnlyChange}
         isMarkedOnly={isMarkedOnly}
       />
-      <Divider />
+      </AccordionDetails>
+      </Accordion>
       <BoatCards
         state={state}
         boats={sortAndPaginate(filtered, state)}
@@ -101,7 +129,6 @@ export default function BrowseBoats({
         onBoatMarked={onBoatMarked}
         onBoatUnMarked={onBoatUnMarked}
       />
-      <Divider />
       <Typography>
         Other great places to look for boats are:
       </Typography>
@@ -122,7 +149,7 @@ export default function BrowseBoats({
         </ListItem>
       </List>
       <Typography variant='body2'>OGA Boat Register %%VERSION%%</Typography>
-    </Paper>
+    </Box>
   );
 }
 
