@@ -38,7 +38,7 @@ export default function BoatCards({
             sm={6}
             md={3}
             lg={3}
-            xl={2}
+            xl={3}
             >
               <BoatCard state={state} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
             </Grid>
