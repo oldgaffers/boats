@@ -8,8 +8,9 @@ import { createPhotoAlbum, postBoatData } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 
 async function sendToAws(boat, email, fileList, copyright) {
+  console.log('sendToAws', boat);
   const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);
-  // console.log('albumKey', albumKey);
+  console.log('albumKey', albumKey);
   if (fileList?.length > 0) {
     await postPhotos({ copyright, email, albumKey }, fileList);
   }

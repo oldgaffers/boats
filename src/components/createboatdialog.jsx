@@ -279,13 +279,13 @@ const schema = (pickers) => {
                     dataType: 'float',
                     isRequired: true,
                     validate: [
-                      // {
-                      // type: 'required',
-                      // },
-                      //{
-                      //   type: validatorTypes.MIN_NUMBER_VALUE,
-                      //   threshold: 5
-                      //}
+                      {
+                       type: 'required',
+                       },
+                      /*{
+                         type: 'min-number-value',
+                         threshold: 5
+                      }*/
                     ],
                   },
                   {
@@ -296,13 +296,13 @@ const schema = (pickers) => {
                     dataType: 'float',
                     isRequired: true,
                     validate: [
-                      // {
-                      // type: 'required',
-                      // },
-                      //{
-                      //   type: validatorTypes.MIN_NUMBER_VALUE,
-                      //   threshold: 1
-                      // }
+                      {
+                       type: 'required',
+                      },
+                      /*{
+                        type: 'min-number-value',
+                        threshold: 1,
+                      }*/
                     ],
                   },
                   {
@@ -311,11 +311,15 @@ const schema = (pickers) => {
                     label: "Draft (decimal feet)",
                     type: "number",
                     dataType: 'float',
+                    isRequired: true,
                     validate: [
-                      // {
-                      //   type: validatorTypes.MIN_NUMBER_VALUE,
-                      //   threshold: 1
-                      //  }
+                      {
+                        type: 'required',
+                      },
+                      /*{
+                       type: 'min-number-value',
+                       threshold: 1
+                      }*/
                     ],
                   },
                   {
@@ -324,12 +328,11 @@ const schema = (pickers) => {
                     label: "Air Draft (decimal feet)",
                     type: "number",
                     dataType: 'float',
-                    initialValue: 10,
                     validate: [
-                      //{
-                      //  type: validatorTypes.MIN_NUMBER_VALUE,
-                      //  threshold: 1
-                      //}
+                      /*{
+                        type: 'min-number-value',
+                        threshold: 1
+                      }*/
                     ],
                   },
                 ],
@@ -400,7 +403,7 @@ const schema = (pickers) => {
               when: "ddf.skip-handicap",
               stepMapper: {
                 1: "handicap-step",
-                2: "done-step",
+                2: "descriptions-step",
               },
             },
             fields: [
@@ -434,17 +437,31 @@ const schema = (pickers) => {
               },
             ],
           },
-          ...handicap_steps('done-step'),
+          ...handicap_steps('descriptions-step'),
+          {
+            name: "descriptions-step",
+            nextStep: 'done-step',
+            component: 'sub-form',
+            fields: [
+              ...descriptionsItems,
+            ],
+          },
           {
             name: "done-step",
             component: 'sub-form',
             fields: [
-              ...descriptionsItems,
               {
                 component: 'plain-text',
                 name: "ddf.we_are_done",
                 label:
                   "Thanks for helping make the register better. The editor's will review your suggestions. An email address will let us discuss with you any queries we might have.",
+              },
+              {
+                component: 'text-field',
+                name: 'oga_no',
+                label: 'Make a note of the OGA No for the boat',
+                isReadOnly: true,
+                type: 'number',
               },
               {
                 component: 'text-field',
@@ -622,8 +639,6 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
 
   const handleSubmit = (boat) => {
     // console.log('handleSubmit', boat);
-    const ogaNo = findFirstAbsent(filterable);
-    boat.oga_no = ogaNo;
     // boat.design_class = pickers.design_class.find((item) => item.id === boat.design_class);
     boat.designer = pickers.designer.find((item) => item.id === boat.designer);
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
@@ -650,8 +665,8 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
         schema={schema(pickers)}
         onSubmit={handleSubmit}
         onCancel={onCancel}
-        initialValues={{ user, filterable }}
-        subscription={{ values: true }}
+        initialValues={{ user, filterable, oga_no: findFirstAbsent(filterable) }}
+          subscription={{ values: true }}
       />
 
     </Dialog>

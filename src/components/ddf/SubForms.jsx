@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { mapPicker } from "./util";
 import {
   designerItems,
@@ -36,12 +37,36 @@ export const referencesItems = [
 
 export const descriptionsItems = [
   {
+    component: 'plain-text',
+    name: 'ddf.descriptions',
+    label: <Typography>The short and full descriptions should be about what makes this boat distinct.
+      If you want to sell this boat, there is a separate place for the sales, text, so don't put things
+      like inventory in the descriptions.
+      </Typography>,
+  },
+  {
+    component: 'plain-text',
+    name: 'ddf.short_description_helper',
+    label: <Typography>The short description appears on 
+      the boat's card and should be one or two lines long.
+      It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.
+      </Typography>,
+  },
+  {
     component: "html",
     title: "Short description",
     name: "short_description",
     controls: ["bold", "italic"],
-    initialValue: "She is a fine example of her type.",
     maxLength: 100,
+  },
+  {
+    component: 'plain-text',
+    name: 'ddf.full_description_helper',
+    label: <Typography>The full description appears on 
+      the boat's detail page and can be as long as you like.
+      It shouldn't replicate the short description. Include historical details, significant voyages,
+      rebuilds and links to external videos, etc.
+      </Typography>,
   },
   {
     component: "html",
