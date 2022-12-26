@@ -27,13 +27,19 @@ export default function BoatCards({
     const pageCount = Math.ceil(totalCount / state.bpp);
     const handlePageChange = (_, page) => { onChangePage({ selectedBoats: totalCount, pages: pageCount, page })};
     return (
-      <Container maxWidth="md">
+      <Container sx={{ marginX: "4px"}}>
         <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}/>
           <Box py={1} />
           <Grid container spacing={4}>
           {boats.map((boat) => {
             return (
-            <Grid item key={boat.oga_no} xs={12} sm={6} md={4}>
+            <Grid item key={boat.oga_no}
+            xs={12}
+            sm={6}
+            md={3}
+            lg={3}
+            xl={1}
+            >
               <BoatCard state={state} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
             </Grid>
             );
