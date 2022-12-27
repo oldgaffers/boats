@@ -4,6 +4,7 @@ import BrowseBoats from "./components/browseboats";
 import { getState, saveState, setView } from "./util/statemanagement";
 
 export const MarkContext = createContext([]);
+export const OwnedContext = createContext([]);
 
 export default function BrowseApp({ view = 'app' }) {
   setView(view);

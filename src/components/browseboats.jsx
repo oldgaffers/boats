@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import PropTypes from 'prop-types';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
@@ -62,6 +63,8 @@ export default function BrowseBoats({
   const { bpp, sort, sortDirection, filters } = state;
 
   const [data, setData] = useState();
+  const [ownedOnly, setOwnedOnly] = useState();
+  const { user } = useAuth0();
 
   useEffect(() => {
     if (!data) {
@@ -73,9 +76,16 @@ export default function BrowseBoats({
 
   const blank = "_blank";
 
-  const filtered = applyFilters(data, filters);
+  let boats = data;
+  const id = user?.["https://oga.org.uk/id"];
+  if (ownedOnly && id) {
+    boats = boats.filter((b) => b.owners?.includes(id));
+  }
+  const filtered = applyFilters(boats, filters);
   const pickers = makePickers(filtered);
 
+  console.log('filtered', filtered.map((b)=> ({oga_no:b.oga_no, owners:b.owners})));
+  console.log();
   return (
     <Paper>
       <Intro view={state.view} />
@@ -91,6 +101,9 @@ export default function BrowseBoats({
         onFilterChange={onFilterChange}
         onMarkedOnlyChange={onMarkedOnlyChange}
         isMarkedOnly={isMarkedOnly}
+        onOwnedOnlyChange={(v) => setOwnedOnly(v)}
+        isOwnedOnly={ownedOnly}
+        enableOwnersOnly={!!id}
       />
       <Divider />
       <BoatCards

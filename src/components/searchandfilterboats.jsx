@@ -8,7 +8,6 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormHelperText from "@mui/material/FormHelperText";
-import Box from "@mui/material/Box";
 import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
@@ -43,14 +42,16 @@ export default function SearchAndFilterBoats({
   onFilterChange,
   onPageSizeChange=()=>console.log('onPageSizeChange'),
   onSortChange=()=>console.log('onSortChange'),
-  onMarkedOnlyChange=()=>console.log('onMarkedOnly'),
+  onMarkedOnlyChange=(v)=>console.log('onMarkedOnly', v),
   isMarkedOnly,
+  onOwnedOnlyChange=(v)=>console.log('onOwnedOnly', v),
+  isOwnedOnly,
+  enableOwnersOnly=false,
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
   const debouncedOgaNo = useDebounce(ogaNo, 1000);
   const markList = useContext(MarkContext);
-  // let ogaNoCleared = false;
 
   useEffect(() => {
     if (debouncedOgaNo !== '') {
@@ -143,10 +144,6 @@ export default function SearchAndFilterBoats({
     if (dir !== sortDirection) {
       onSortChange(sortField, dir);
     }
-  }
-
-  function handleOnlyMarkedChange(event) {
-    onMarkedOnlyChange(event.target.checked);
   }
 
   function filterByFleet(name, filters) {
@@ -330,21 +327,30 @@ export default function SearchAndFilterBoats({
           />
         </Grid>
         <Grid item>
-          <Box>
             <FormControlLabel
               disabled={markList.length === 0}
               id="marked"
-              onChange={handleOnlyMarkedChange}
+              onChange={(event) => onMarkedOnlyChange(event.target.checked)}
               control={<Switch checked={isMarkedOnly} />}
               label="Only Marked Boats"
             />
-          </Box>
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>
             <FleetButtons onChange={filterByFleet} />
           </RoleRestricted>
         </Grid>
+          <RoleRestricted role='member'>
+        <Grid item>
+        <FormControlLabel
+              disabled={!enableOwnersOnly}
+              id="owned"
+              onChange={(event) => onOwnedOnlyChange(event.target.checked)}
+              control={<Switch sx={{marginLeft: '30px'}} checked={isOwnedOnly} />}
+              label="Only My Boats"
+            />
+        </Grid>
+          </RoleRestricted>
       </Grid>
     </form>
   );
