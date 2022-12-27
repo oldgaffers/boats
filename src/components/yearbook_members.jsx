@@ -127,13 +127,13 @@ export default function YearbookMembers({ members, boats }) {
     }
 
     const columns = [
-        { field: 'lastname', headerName: 'Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
-        { field: 'name', headerName: 'Name', width: 150, valueGetter: nameGetter },
+        { field: 'lastname', headerName: 'Last Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
+        { field: 'name', headerName: 'Given Name', width: 150, valueGetter: nameGetter },
         { field: 'member', headerName: 'No', width: 90 },
         { field: 'telephone', headerName: 'Telephone', width: 250, valueGetter: phoneGetter },
         { field: 'town', headerName: 'Town', width: 150 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
-        { field: 'area', headerName: 'Area', width: 90, valueFormatter: areaFormatter },
+        { field: 'area', headerName: 'Area', width: 90, valueGetter: areaFormatter },
     ];
 
     return (
