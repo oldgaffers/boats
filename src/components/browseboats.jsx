@@ -76,14 +76,15 @@ export default function BrowseBoats({
 
   const blank = "_blank";
 
-  let boats = data;
   const id = user?.["https://oga.org.uk/id"];
-  if (ownedOnly && id) {
-    boats = boats.filter((b) => b.owners?.includes(id));
+  const ownedBoats = data.filter((b) => b.owners?.includes(id));
+  let boats = data;
+  if (ownedOnly && ownedBoats.length > 0) {
+    boats = ownedBoats;
   }
   const filtered = applyFilters(boats, filters);
   const pickers = makePickers(filtered);
-
+  const enableOwnersOnly = ownedBoats.length > 0;
   return (
     <Paper>
       <Intro view={state.view} />
@@ -101,7 +102,7 @@ export default function BrowseBoats({
         isMarkedOnly={isMarkedOnly}
         onOwnedOnlyChange={(v) => setOwnedOnly(v)}
         isOwnedOnly={ownedOnly}
-        enableOwnersOnly={!!id}
+        enableOwnersOnly={enableOwnersOnly}
       />
       <Divider />
       <BoatCards

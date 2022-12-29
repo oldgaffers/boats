@@ -8,6 +8,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormHelperText from "@mui/material/FormHelperText";
+import { Typography } from "@mui/material";
 import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
@@ -40,13 +41,13 @@ export default function SearchAndFilterBoats({
   view,
   pickers,
   onFilterChange,
-  onPageSizeChange=()=>console.log('onPageSizeChange'),
-  onSortChange=()=>console.log('onSortChange'),
-  onMarkedOnlyChange=(v)=>console.log('onMarkedOnly', v),
+  onPageSizeChange = () => console.log('onPageSizeChange'),
+  onSortChange = () => console.log('onSortChange'),
+  onMarkedOnlyChange = (v) => console.log('onMarkedOnly', v),
   isMarkedOnly,
-  onOwnedOnlyChange=(v)=>console.log('onOwnedOnly', v),
+  onOwnedOnlyChange = (v) => console.log('onOwnedOnly', v),
   isOwnedOnly,
-  enableOwnersOnly=false,
+  enableOwnersOnly = false,
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
@@ -242,7 +243,7 @@ export default function SearchAndFilterBoats({
             label="OGA Boat No."
             value={ogaNo}
             onSet={setOgaNo}
-            onClear={() => {setOgaNo('');}}
+            onClear={() => { setOgaNo(''); }}
           />
         </Grid>
         <Grid item>
@@ -327,30 +328,45 @@ export default function SearchAndFilterBoats({
           />
         </Grid>
         <Grid item>
-            <FormControlLabel
-              disabled={markList.length === 0}
-              id="marked"
-              onChange={(event) => onMarkedOnlyChange(event.target.checked)}
-              control={<Switch checked={isMarkedOnly} />}
-              label="Only Marked Boats"
-            />
+          <FormControlLabel
+            disabled={markList.length === 0}
+            id="marked"
+            onChange={(event) => onMarkedOnlyChange(event.target.checked)}
+            control={<Switch checked={isMarkedOnly} />}
+            label="Only Marked Boats"
+          />
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>
             <FleetButtons onChange={filterByFleet} />
           </RoleRestricted>
         </Grid>
-          <RoleRestricted role='member'>
-        <Grid item>
-        <FormControlLabel
+        <RoleRestricted role='member'>
+          <Grid item>
+            <FormControlLabel
               disabled={!enableOwnersOnly}
               id="owned"
               onChange={(event) => onOwnedOnlyChange(event.target.checked)}
-              control={<Switch sx={{marginLeft: '30px'}} checked={!!isOwnedOnly} />}
+              control={<Switch sx={{ marginLeft: '30px' }} checked={!!isOwnedOnly} />}
               label="Only My Boats"
             />
-        </Grid>
-          </RoleRestricted>
+            </Grid>
+            {
+              (enableOwnersOnly) ?
+                ''
+                :
+                <Grid item padding={'1px'} margin='1px'>
+                <Typography>
+                  We don't have a record of you owning any boats.
+                  </Typography><Typography>
+                  Tell us about a boat you own by clicking
+                  on the boat's More button.
+                  </Typography><Typography>
+                  If your boat isn't on the register, click the add boat button.
+                </Typography>
+                </Grid>
+            }
+        </RoleRestricted>
       </Grid>
     </form>
   );
