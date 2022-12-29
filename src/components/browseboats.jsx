@@ -7,6 +7,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import { Accordion, AccordionDetails, AccordionSummary, Stack, Tooltip } from '@mui/material';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import FiberNewTwoToneIcon from '@mui/icons-material/FiberNewTwoTone';
+import CreateBoatButton from './createboatbutton';
+import ShuffleBoatsButton from './shuffleboats';
+import LoginButton from './loginbutton';
+import YearbookButton from './yearbookbutton';
+import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
@@ -14,14 +22,6 @@ import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
-import { Accordion, AccordionDetails, AccordionSummary, Stack } from '@mui/material';
-import { ExpandMoreOutlined } from '@mui/icons-material';
-import CreateBoatButton from './createboatbutton';
-import ShuffleBoatsButton from './shuffleboats';
-import LoginButton from './loginbutton';
-import YearbookButton from './yearbookbutton';
-import RoleRestricted from './rolerestrictedcomponent';
-import FiberNewTwoToneIcon from '@mui/icons-material/FiberNewTwoTone';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -59,22 +59,29 @@ function Intro({ view }) {
   }
   return (
     <Accordion defaultExpanded={true}>
-      <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+      <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
         <Typography>About the boat Register</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <IntroText />
       </AccordionDetails>
     </Accordion>
-  );  
+  );
 }
 
-function AboutYearbook() {
+function AboutYearbook({ view }) {
+  if (view === 'sell') {
+    return '';
+  }
   return (
-    <Accordion defaultExpanded={true}>
-      <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+    <Accordion defaultExpanded={false}>
+      <AccordionSummary expandIcon={
+        <Tooltip placement='left' title='click to show or hide the text'>
+          <ExpandCircleDownIcon />
+        </Tooltip>
+      }>
         <Typography>About the Yearbook</Typography>
-        <FiberNewTwoToneIcon color='error' fontSize='large'/>
+        <FiberNewTwoToneIcon color='error' fontSize='large' />
       </AccordionSummary>
       <AccordionDetails>
         <Typography>
@@ -94,7 +101,7 @@ function AboutYearbook() {
         </Typography>
       </AccordionDetails>
     </Accordion>
-  );  
+  );
 }
 
 export default function BrowseBoats({
@@ -140,17 +147,17 @@ export default function BrowseBoats({
         direction='row' spacing={2}
         alignItems='center' justifyContent='space-evenly'
       >
-        <CreateBoatButton />  
+        <CreateBoatButton />
         <RoleRestricted role='editor'>
           <YearbookButton />
           <ShuffleBoatsButton />
         </RoleRestricted>
         <LoginButton />
       </Stack>
-      <AboutYearbook/>
+      <AboutYearbook view={state.view} />
       <Intro view={state.view} />
       <Accordion defaultExpanded={true}>
-        <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+        <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
           <Typography>Sort and Filter</Typography>
         </AccordionSummary>
         <AccordionDetails>
