@@ -84,8 +84,6 @@ export default function BrowseBoats({
   const filtered = applyFilters(boats, filters);
   const pickers = makePickers(filtered);
 
-  console.log('filtered', filtered.map((b)=> ({oga_no:b.oga_no, owners:b.owners})));
-  console.log();
   return (
     <Paper>
       <Intro view={state.view} />

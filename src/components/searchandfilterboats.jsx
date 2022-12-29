@@ -346,7 +346,7 @@ export default function SearchAndFilterBoats({
               disabled={!enableOwnersOnly}
               id="owned"
               onChange={(event) => onOwnedOnlyChange(event.target.checked)}
-              control={<Switch sx={{marginLeft: '30px'}} checked={isOwnedOnly} />}
+              control={<Switch sx={{marginLeft: '30px'}} checked={!!isOwnedOnly} />}
               label="Only My Boats"
             />
         </Grid>

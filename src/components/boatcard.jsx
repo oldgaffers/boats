@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -17,6 +18,7 @@ import { m2f, price } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "../browseapp";
 import { currentSaleRecord } from '../util/sale_record';
+import EndOwnership from './endownership';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -74,7 +76,7 @@ function normaliseDescription(boat) {
   return '';
 }
 
-function BoatCardWords({ boat }) {
+function BoatCardWords({ boat, owned }) {
 
   if (boat.loading) {
     return <>
@@ -82,6 +84,12 @@ function BoatCardWords({ boat }) {
       <Skeleton variant='rounded' animation='wave' height={80} />
     </>;
   }
+
+
+  if (owned) {
+
+  }
+
   return (
     <>
       <Typography variant="body2"
@@ -120,6 +128,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const markList = useContext(MarkContext);
   const [marked, setMarked] = useState(markList.includes(ogaNo));
   const [data, setData] = useState();
+  const { user } = useAuth0();
 
   useEffect(() => {
     if (!data) {
@@ -143,6 +152,13 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const currentSR = currentSaleRecord(boat);
   const price = currentSR?.asking_price;
 
+  const id = user?.["https://oga.org.uk/id"];
+  console.log('id', id);
+
+  const current = boat?.ownerships?.filter((o) => o.current);
+  const owned = current?.find((o) =>  o.id === id);
+  console.log('owned', owned);
+
   const albumKey = boat?.image_key;
   return (
     <Card sx={albumKey ? {
@@ -155,12 +171,15 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
         <Typography gutterBottom variant="h5" component="h2">
           <SalesBadge view={state.view} boat={boat}>{boat?.name || ''} ({ogaNo})</SalesBadge>
         </Typography>
-        <BoatCardWords boat={{ ...boat, price }} />
+        <BoatCardWords boat={{ ...boat, price }} owned={owned} />
       </CardContent>
       <CardActions>
-        <Grid container justifyContent="space-between">
+        <Grid container
+        justifyContent="space-between"
+        >
           <Grid item>
               <Button
+                padding='5px'
                 size="small"
                 component={'a'}
                 href={boatUrl(ogaNo, {})}
@@ -169,7 +188,11 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
               >More..</Button>
           </Grid>
           <Grid item>
+            {owned ?
+              <EndOwnership boat={{ ...boat }} owned={owned} user={user} />
+            :
               <Enquiry boat={boat} text='Contact' />
+            }
           </Grid>
           <Grid item>
             <Checkbox sx={{ textAlign: 'right' }}
