@@ -19,6 +19,9 @@ import { ExpandMoreOutlined } from '@mui/icons-material';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
 import LoginButton from './loginbutton';
+import YearbookButton from './yearbookbutton';
+import RoleRestricted from './rolerestrictedcomponent';
+import FiberNewTwoToneIcon from '@mui/icons-material/FiberNewTwoTone';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -47,11 +50,51 @@ function makePickers(filtered) {
 }
 
 function Intro({ view }) {
-  switch (view) {
-    case 'sell': return <BoatsForSaleIntro />;
-    case 'small': return <SmallBoatsIntro />;
-    default: return <BoatRegisterIntro />;
+  let IntroText = BoatRegisterIntro;
+  if (view === 'sell') {
+    IntroText = BoatsForSaleIntro;
   }
+  if (view === 'small') {
+    IntroText = SmallBoatsIntro;
+  }
+  return (
+    <Accordion defaultExpanded={true}>
+      <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+        <Typography>About the boat Register</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <IntroText />
+      </AccordionDetails>
+    </Accordion>
+  );  
+}
+
+function AboutYearbook() {
+  return (
+    <Accordion defaultExpanded={true}>
+      <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
+        <Typography>About the Yearbook</Typography>
+        <FiberNewTwoToneIcon color='error' fontSize='large'/>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography>
+          The 2023 yearbook will be publised soon.
+          If you want to be in the yearbook you need to have given consent.
+          You should also check last year's yearbook and if your details have
+          changed, check with the membership secretary that we have your current details.
+          If you want your boat listed in the yearbook you can check we know you own it here.
+        </Typography>
+        <Typography variant='h6'>
+          Logged in members can see the boats they own.
+        </Typography>
+        <Typography>
+          If your boat isn't shown, you can update the ownership using the 'I have edits' button
+          on the boat's detail page.
+          If your boat isn't on the register, add it here.
+        </Typography>
+      </AccordionDetails>
+    </Accordion>
+  );  
 }
 
 export default function BrowseBoats({
@@ -90,63 +133,45 @@ export default function BrowseBoats({
   const filtered = applyFilters(boats, filters);
   const pickers = makePickers(filtered);
   const enableOwnersOnly = ownedBoats.length > 0;
+  // sx={{ height: '76px', backgroundColor: 'rgb(219, 235, 255)' }}
   return (
     <Paper>
-    <Stack
-      direction='row' spacing={2}
-      alignItems='center' justifyContent='space-evenly' 
-      sx={{ height: '76px', backgroundColor: 'rgb(219, 235, 255)' }}
+      <Stack
+        direction='row' spacing={2}
+        alignItems='center' justifyContent='space-evenly'
       >
-        <CreateBoatButton />
-        <YearbookButton />
-        <ShuffleBoatsButton />
-        <LoginButton/>
+        <CreateBoatButton />  
+        <RoleRestricted role='editor'>
+          <YearbookButton />
+          <ShuffleBoatsButton />
+        </RoleRestricted>
+        <LoginButton />
       </Stack>
+      <AboutYearbook/>
+      <Intro view={state.view} />
       <Accordion defaultExpanded={true}>
-        <AccordionSummary expandIcon={<ExpandMoreOutlined/>}>
-          <Typography>About the boat Register</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-        <Intro view={state.view} />
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded={true}>
-        <AccordionSummary expandIcon={<ExpandMoreOutlined/>}>
+        <AccordionSummary expandIcon={<ExpandMoreOutlined />}>
           <Typography>Sort and Filter</Typography>
         </AccordionSummary>
         <AccordionDetails>
-      <SearchAndFilterBoats
-        sortField={sort}
-        sortDirection={sortDirection}
-        boatsPerPage={bpp}
-        filters={filters}
-        view={state.view}
-        pickers={pickers}
-        onPageSizeChange={onPageSizeChange}
-        onSortChange={onSortChange}
-        onFilterChange={onFilterChange}
-        onMarkedOnlyChange={onMarkedOnlyChange}
-        isMarkedOnly={isMarkedOnly}
-      />
-      </AccordionDetails>
+          <SearchAndFilterBoats
+            sortField={sort}
+            sortDirection={sortDirection}
+            boatsPerPage={bpp}
+            filters={filters}
+            view={state.view}
+            pickers={pickers}
+            onPageSizeChange={onPageSizeChange}
+            onSortChange={onSortChange}
+            onFilterChange={onFilterChange}
+            onMarkedOnlyChange={onMarkedOnlyChange}
+            isMarkedOnly={isMarkedOnly}
+            onOwnedOnlyChange={(v) => setOwnedOnly(v)}
+            isOwnedOnly={ownedOnly}
+            enableOwnersOnly={enableOwnersOnly}
+          />
+        </AccordionDetails>
       </Accordion>
-      <Intro view={state.view} />
-      <SearchAndFilterBoats
-        sortField={sort}
-        sortDirection={sortDirection}
-        boatsPerPage={bpp}
-        filters={filters}
-        view={state.view}
-        pickers={pickers}
-        onPageSizeChange={onPageSizeChange}
-        onSortChange={onSortChange}
-        onFilterChange={onFilterChange}
-        onMarkedOnlyChange={onMarkedOnlyChange}
-        isMarkedOnly={isMarkedOnly}
-        onOwnedOnlyChange={(v) => setOwnedOnly(v)}
-        isOwnedOnly={ownedOnly}
-        enableOwnersOnly={enableOwnersOnly}
-      />
       <Divider />
       <BoatCards
         state={state}
