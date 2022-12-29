@@ -14,6 +14,11 @@ import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
+import { Accordion, AccordionDetails, AccordionSummary, Stack } from '@mui/material';
+import { ExpandMoreOutlined } from '@mui/icons-material';
+import CreateBoatButton from './createboatbutton';
+import ShuffleBoatsButton from './shuffleboats';
+import LoginButton from './loginbutton';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -87,6 +92,44 @@ export default function BrowseBoats({
   const enableOwnersOnly = ownedBoats.length > 0;
   return (
     <Paper>
+    <Stack
+      direction='row' spacing={2}
+      alignItems='center' justifyContent='space-evenly' 
+      sx={{ height: '76px', backgroundColor: 'rgb(219, 235, 255)' }}
+      >
+        <CreateBoatButton />
+        <YearbookButton />
+        <ShuffleBoatsButton />
+        <LoginButton/>
+      </Stack>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandMoreOutlined/>}>
+          <Typography>About the boat Register</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+        <Intro view={state.view} />
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandMoreOutlined/>}>
+          <Typography>Sort and Filter</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+      <SearchAndFilterBoats
+        sortField={sort}
+        sortDirection={sortDirection}
+        boatsPerPage={bpp}
+        filters={filters}
+        view={state.view}
+        pickers={pickers}
+        onPageSizeChange={onPageSizeChange}
+        onSortChange={onSortChange}
+        onFilterChange={onFilterChange}
+        onMarkedOnlyChange={onMarkedOnlyChange}
+        isMarkedOnly={isMarkedOnly}
+      />
+      </AccordionDetails>
+      </Accordion>
       <Intro view={state.view} />
       <SearchAndFilterBoats
         sortField={sort}
