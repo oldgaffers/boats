@@ -4,20 +4,25 @@ import Typography from "@mui/material/Typography";
 
 export default function RoleRestricted({ role, children, hide=true }) {
     const { user, isAuthenticated } = useAuth0();
-    if (!isAuthenticated) {
-        if (hide) {
-            return '';
+    if (role) {
+        if (!isAuthenticated) {
+            if (hide) {
+                return '';
+            }
+            return (<Typography>This page is for {role} only. Please Login</Typography>);
         }
-        return (<Typography>This page is for {role} only. Please Login</Typography>);
-    }
-
-    const roles = (user?.['https://oga.org.uk/roles']) || [];
-    if (!roles.includes(role)) {
-        if (hide) {
-            return '';
+        const roles = (user?.['https://oga.org.uk/roles']) || [];
+        if (!roles.includes(role)) {
+            if (hide) {
+                return '';
+            }
+            return (<Typography>This page is for {role} only.</Typography>);
         }
-        return (<Typography>This page is for {role} only.</Typography>);
+    
+        return (<>{children}</>);    
     }
-
-    return (<>{children}</>);
+    if (isAuthenticated) {
+        return '';
+    }
+    return (<>{children}</>);    
 }

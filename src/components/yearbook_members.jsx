@@ -101,7 +101,7 @@ function areaFormatter(params) {
     return abbrev;
 }
 
-export default function YearbookMembers({ members, boats }) {
+export default function YearbookMembers({ members=[], boats=[], components={ Toolbar: CustomToolbar } }) {
     // console.log('YearbookBoats', members, boats);
 
     function boatGetter({ row }) {
@@ -142,7 +142,7 @@ export default function YearbookMembers({ members, boats }) {
                 <DataGrid
                     rows={members}
                     columns={columns}
-                    components={{ Toolbar: CustomToolbar }}
+                    components={components}
                     autoHeight={true}
                     initialState={{
                         sorting: {

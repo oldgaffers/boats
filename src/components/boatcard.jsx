@@ -92,8 +92,16 @@ function BoatCardWords({ boat, owned }) {
 
   return (
     <>
-      <Typography variant="body2"
+      <Typography variant="body2" component='div'
         dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
+        sx={{
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          display: '-webkit-box',
+          '-webkit-line-clamp': '3',
+          lineClamp: '3',
+          '-webkit-box-orient': 'vertical',
+        }}
       />
       <TextList fields={wanted} data={boat} />
     </>
@@ -153,11 +161,9 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const price = currentSR?.asking_price;
 
   const id = user?.["https://oga.org.uk/id"];
-  console.log('id', id);
 
   const current = boat?.ownerships?.filter((o) => o.current);
   const owned = current?.find((o) =>  o.id === id);
-  console.log('owned', owned);
 
   const albumKey = boat?.image_key;
   return (

@@ -7,9 +7,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import { Accordion, AccordionDetails, AccordionSummary, Stack, Tooltip } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Stack } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
-import FiberNewTwoToneIcon from '@mui/icons-material/FiberNewTwoTone';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
 import LoginButton from './loginbutton';
@@ -22,6 +21,7 @@ import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
+import AboutYearbook from './yearbookabout';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -64,41 +64,6 @@ function Intro({ view }) {
       </AccordionSummary>
       <AccordionDetails>
         <IntroText />
-      </AccordionDetails>
-    </Accordion>
-  );
-}
-
-function AboutYearbook({ view }) {
-  if (view === 'sell') {
-    return '';
-  }
-  return (
-    <Accordion defaultExpanded={false}>
-      <AccordionSummary expandIcon={
-        <Tooltip placement='left' title='click to show or hide the text'>
-          <ExpandCircleDownIcon />
-        </Tooltip>
-      }>
-        <Typography>About the Yearbook</Typography>
-        <FiberNewTwoToneIcon color='error' fontSize='large' />
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>
-          The 2023 yearbook will be publised soon.
-          If you want to be in the yearbook you need to have given consent.
-          You should also check last year's yearbook and if your details have
-          changed, check with the membership secretary that we have your current details.
-          If you want your boat listed in the yearbook you can check we know you own it here.
-        </Typography>
-        <Typography variant='h6'>
-          Logged in members can see the boats they own.
-        </Typography>
-        <Typography>
-          If your boat isn't shown, you can update the ownership using the 'I have edits' button
-          on the boat's detail page.
-          If your boat isn't on the register, add it here.
-        </Typography>
       </AccordionDetails>
     </Accordion>
   );
@@ -154,7 +119,7 @@ export default function BrowseBoats({
         </RoleRestricted>
         <LoginButton />
       </Stack>
-      <AboutYearbook view={state.view} />
+      <AboutYearbook view={state.view} boats={boats} />
       <Intro view={state.view} />
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>

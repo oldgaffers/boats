@@ -22,9 +22,12 @@ function joinList(strings, sep, lastSep) {
     return strings.slice(0, -1).join(sep) + lastSep + strings.slice(-1);
 }
 
-export default function YearbookBoats({ boats }) {
+export default function YearbookBoats({ boats=[], components={ Toolbar: CustomToolbar } }) {
 
     function ownerValueGetter({ value }) {
+        if (!value) {
+            return '';
+        }
         const lastNames = [...new Set(value.map((owner) => owner?.lastname))]?.filter((n) => n);
         const r = joinList(
             lastNames.map((ln) => {
@@ -56,9 +59,10 @@ export default function YearbookBoats({ boats }) {
         <div style={{ display: 'flex', height: '100%' }}>
             <div style={{ flexGrow: 1 }}>
                 <DataGrid
+                    getRowId={(row) => row.oga_no}
                     rows={boats}
                     columns={columns}
-                    components={{ Toolbar: CustomToolbar }}
+                    components={components}
                     autoHeight={true}
                     initialState={{
                         sorting: {

@@ -45,21 +45,28 @@ function a11yProps(index) {
   };
 }
 
+export function membersBoats(boats, members) {
+  return boats.filter((b) => b.owners?.length > 0).map((b) => {
+    const owners = b.owners.map((o) => members.find((m) => m.id === o && o)).filter((o) => o);
+    return { ...b, owners, id: b.oga_no };
+  }).filter((b) => b.owners.length > 0);
+}
+
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
   const { isAuthenticated } = useAuth0();
   const [data, setData] = useState();
-  
+
   useEffect(() => {
-      if (!data) {
-        getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
-      }
-    }, [data]);
-  
+    if (!data) {
+      getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
+    }
+  }, [data]);
+
 
   if (!data) return <CircularProgress />;
-  
+
   const boats = applyFilters(data, {});
 
   if (!isAuthenticated) {
@@ -67,22 +74,19 @@ export default function BasicTabs() {
   }
 
   if (membersResult.loading) {
-      return <CircularProgress />;
+    return <CircularProgress />;
   }
 
   if (membersResult.error) {
-      return (<div>{JSON.stringify(membersResult.error)}</div>);
+    return (<div>{JSON.stringify(membersResult.error)}</div>);
   }
 
   const { members } = membersResult.data;
   const ybmembers = members.filter((m) => memberPredicate(m.id, m));
 
-  const ybboats = boats.filter((b) => b.owners?.length > 0).map((b) => {
-    const owners = b.owners.map((o) => ybmembers.find((m) =>  m.id === o && o)).filter((o) => o);
-    return { ...b, owners, id: b.oga_no };
-  }).filter((b) => b.owners.length > 0);
+  const ybboats = membersBoats(boats, ybmembers);
 
-  const handleChange = (event, newValue  ) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
