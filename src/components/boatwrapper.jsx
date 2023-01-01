@@ -34,20 +34,15 @@ const addNames = async (client, owners) => {
     if (owner.name) {
       return owner;
     }
-    let name = '';
+    const r = { ...owner };
     const m = members.filter((member) => member.id === owner.id);
     if (m.length > 0) {
       const { GDPR, firstname, lastname } = m[0];
       if (GDPR) {
-        name = `${firstname} ${lastname}`;
-      } else {
-        name = 'owner on record but withheld'
+        r.name = `${firstname} ${lastname}`;
       }
     }
-    return {
-      ...owner,
-      name,
-    }
+    return r;
   });
 };
 

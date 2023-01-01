@@ -169,8 +169,29 @@ export const schema = (pickers, canBuySell, forSale) => {
                 component: 'field-array',
                 name: "ownerships",
                 label: "Known Owners",
+                defaultItem: {
+                  name: ' ',
+                },
                 fields: [
-                  { name: 'name', label: 'Name', component: 'text-field', isRequired: true, validate: [{ type: 'required' }], },
+                  {
+                    name: 'name',
+                    label: 'Name',
+                    component: 'text-field',
+                    resolveProps: (props, { input }) => {
+                      // if no GDPR undefined -> not required
+                      // if empty string -> new row - required
+                      if (typeof input.value === 'string') {
+                        return {
+                          isRequired: true,
+                          validate: [{ type: 'required' }],      
+                        };
+                      }
+                      return {
+                        isRequired: false,
+                        helperText: 'name on record but withheld',
+                      }
+                    },
+                  },
                   {
                     ...intField('start', 'Start Year'),
                     isRequired: true,
