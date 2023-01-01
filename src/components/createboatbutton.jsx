@@ -7,7 +7,7 @@ import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 
-async function sendToAws(boat, email, fileList, copyright) {
+async function sendToAws(boat, email, fileList, copyright, newItems) {
   console.log('sendToAws', boat);
   const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);
   console.log('albumKey', albumKey);
@@ -15,8 +15,26 @@ async function sendToAws(boat, email, fileList, copyright) {
     await postPhotos({ copyright, email, albumKey }, fileList);
   }
   // console.log('files', fileList?.length || 0);
-  await postBoatData({ email, new: { ...boat, image_key: albumKey } });
+  await postBoatData({ email, new: { ...boat, image_key: albumKey, newItems } });
   // console.log('created boat record');
+}
+
+export function newPicklistItems(b) {
+  const { new_design_class, new_designer, new_builder, ...boat } = b;
+  const n = {};
+  if (new_design_class) {
+    boat.design_class = { name: new_design_class, id: uuidv4() };
+    n.design_class = boat.design_class;
+  }
+  if (new_designer) {
+    boat.designer = { name: new_designer, id: uuidv4() } ;
+    n.designer = boat.designer;
+  }
+  if (new_builder) {
+    boat.builder = { name: new_builder, id: uuidv4() };
+    n.builder = boat.builder;
+  }
+  return { boat, ...n };
 }
 
 export default function CreateBoatButton() {
@@ -30,21 +48,13 @@ export default function CreateBoatButton() {
   const handleSend = (values) => {
     setOpen(false);
     const { user, email, ddf, ...b } = values;
-    const { new_design_class, new_designer, new_builder, ...boat } = b;
     const { fileList, copyright } = ddf;
 
-    if (new_design_class) {
-      boat.design_class = { name: new_design_class, id: uuidv4() };
-    }
-    if (new_designer) {
-      boat.designer = { name: new_designer, id: uuidv4() } ;
-    }
-    if (new_builder) {
-      boat.builder = { name: new_builder, id: uuidv4() };
-    }
+    const { boat, ...newItems } = newPicklistItems(b);
+
     const boatMetric = boatf2m(boat);
 
-    sendToAws(boatMetric, email, fileList, copyright)
+    sendToAws(boatMetric, email, fileList, copyright, newItems)
     .then((response) => {
         console.log(response);
         setSnackBarOpen(true);

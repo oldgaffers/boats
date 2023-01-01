@@ -15,11 +15,10 @@ export default function EditButton({ boat, user }) {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = (changes) => {
     setOpen(false);
     if (changes) {
-      postBoatData({ email: changes.email, new: changes.new })
+      postBoatData({ email: changes.email, new: changes.new, newItems: changes.newItems })
       .then(() => {
           setSnackBarOpen(true);
         })

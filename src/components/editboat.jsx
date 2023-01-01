@@ -19,6 +19,7 @@ import { getPicklists } from './boatregisterposts';
 import { schema } from './editboat_schema';
 import { currentSaleRecord, SaleRecord } from '../util/sale_record';
 import HtmlEditor from './ckeditor';
+import { newPicklistItems } from './createboatbutton';
 
 const WizardInternal = (props) => {
   const {
@@ -126,7 +127,9 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
 
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;
-    const updates = boatf2m(result);
+    const np = newPicklistItems(result);
+    const { newItems } = np;
+    const updates = boatf2m(np.boat);
     // console.log('BOAT', updates, result);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
@@ -143,7 +146,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
         fs.sold = ddf.date_sold;
         fs.asking_price = ddf.sale_price;
         fs.summary = ddf.summary;
-        updates.for_sales = [{...fs}, ...pfs];
+        updates.for_sales = [{ ...fs }, ...pfs];
       } else {
         console.log("no current sales record - this shouldn't happen");
       }
@@ -152,12 +155,23 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
       const current = boat.ownerships.find((o) => o.current);
       const fs = new SaleRecord(ddf.price, ddf.sales_text, current);
       const pfs = boat.for_sales || [];
-      updates.for_sales = [{...fs}, ...pfs];
+      const for_sales = [{ ...fs }, ...pfs];
+      if (for_sales.length > 0) {
+        updates.for_sales = for_sales;
+      } else {
+        delete updates.for_sales;
+      }
       updates.selling_status = 'for_sale';
+    }
+    if (updates.construction_method.trim() === '') {
+      delete updates.construction_method;
+    }
+    if (!updates.year_is_approximate) {
+      delete updates.year_is_approximate;
     }
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates };
-    onSave({ old: before, new: updatedBoat, email: email || ddf.email });
+    onSave({ old: before, new: updatedBoat, email: email || ddf.email, newItems });
   };
 
   return (
