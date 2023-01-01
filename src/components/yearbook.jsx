@@ -11,6 +11,7 @@ import { getFilterable } from './boatregisterposts';
 import { memberPredicate } from '../util/membership';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
+import { FormControlLabel, FormGroup, Switch } from '@mui/material';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,9 +55,10 @@ export function membersBoats(boats, members) {
 
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
+  const [excludeNotPaid, setExcludeNotPaid] = useState(true);
+  const [data, setData] = useState();
   const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
   const { isAuthenticated } = useAuth0();
-  const [data, setData] = useState();
 
   useEffect(() => {
     if (!data) {
@@ -82,7 +84,7 @@ export default function BasicTabs() {
   }
 
   const { members } = membersResult.data;
-  const ybmembers = members.filter((m) => memberPredicate(m.id, m));
+  const ybmembers = members.filter((m) => memberPredicate(m.id, m, excludeNotPaid));
 
   const ybboats = membersBoats(boats, ybmembers);
 
@@ -90,10 +92,17 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
+  const handleSwitchChange = (event, newValue) => {
+    setExcludeNotPaid(newValue);
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+        <FormGroup>
+          <FormControlLabel control={<Switch onChange={handleSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />
+        </FormGroup>
+        <Tabs value={value} onChange={handleChange} aria-label="yearbook members and boats">
           <Tab label="Members" {...a11yProps(0)} />
           <Tab label="Members' Boats" {...a11yProps(1)} />
         </Tabs>
