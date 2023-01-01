@@ -128,9 +128,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
   const handleSubmit = (values) => {
     const { email, ddf, ...result } = values;
     const np = newPicklistItems(result);
-    const { newItems } = np;
     const updates = boatf2m(np.boat);
-    // console.log('BOAT', updates, result);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
@@ -171,6 +169,8 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
     }
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates };
+    const { newItems } = np;
+    console.log('BOAT', updates, newItems);
     onSave({ old: before, new: updatedBoat, email: email || ddf.email, newItems });
   };
 

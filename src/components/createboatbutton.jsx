@@ -21,20 +21,20 @@ async function sendToAws(boat, email, fileList, copyright, newItems) {
 
 export function newPicklistItems(b) {
   const { new_design_class, new_designer, new_builder, ...boat } = b;
-  const n = {};
+  const newItems = {};
   if (new_design_class) {
-    boat.design_class = { name: new_design_class, id: uuidv4() };
-    n.design_class = boat.design_class;
+    newItems.design_class = { name: new_design_class, id: uuidv4() };
+    boat.design_class = newItems.design_class.id;
   }
   if (new_designer) {
-    boat.designer = { name: new_designer, id: uuidv4() } ;
-    n.designer = boat.designer;
+    newItems.designer = { name: new_designer, id: uuidv4() } ;
+    boat.designer = newItems.designer.id;
   }
   if (new_builder) {
-    boat.builder = { name: new_builder, id: uuidv4() };
-    n.builder = boat.builder;
+    newItems.builder = { name: new_builder, id: uuidv4() };
+    boat.builder = newItems.builder.id;
   }
-  return { boat, ...n };
+  return { boat, newItems };
 }
 
 export default function CreateBoatButton() {
@@ -50,7 +50,7 @@ export default function CreateBoatButton() {
     const { user, email, ddf, ...b } = values;
     const { fileList, copyright } = ddf;
 
-    const { boat, ...newItems } = newPicklistItems(b);
+    const { boat, newItems } = newPicklistItems(b);
 
     const boatMetric = boatf2m(boat);
 
