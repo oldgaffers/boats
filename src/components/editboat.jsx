@@ -161,10 +161,10 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
       }
       updates.selling_status = 'for_sale';
     }
-    if (updates?.construction_method.trim() === '') {
+    if (updates.construction_method?.trim() === '') {
       delete updates.construction_method;
     }
-    if (!updates?.year_is_approximate) {
+    if (!updates.year_is_approximate) {
       delete updates.year_is_approximate;
     }
     const before = boatDefined(boat);
