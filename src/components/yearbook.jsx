@@ -56,6 +56,7 @@ export function membersBoats(boats, members) {
 export default function BasicTabs() {
   const [value, setValue] = useState(0);
   const [excludeNotPaid, setExcludeNotPaid] = useState(true);
+  const [excludeNoConsent, setExcludeNoConsent] = useState(true);
   const [data, setData] = useState();
   const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
   const { isAuthenticated } = useAuth0();
@@ -84,7 +85,7 @@ export default function BasicTabs() {
   }
 
   const { members } = membersResult.data;
-  const ybmembers = members.filter((m) => memberPredicate(m.id, m, excludeNotPaid));
+  const ybmembers = members.filter((m) => memberPredicate(m.id, m, excludeNotPaid, excludeNoConsent));
 
   const ybboats = membersBoats(boats, ybmembers);
 
@@ -92,15 +93,20 @@ export default function BasicTabs() {
     setValue(newValue);
   };
 
-  const handleSwitchChange = (event, newValue) => {
+  const handleNotPaidSwitchChange = (event, newValue) => {
     setExcludeNotPaid(newValue);
+  }
+
+  const handleNoConsentSwitchChange = (event, newValue) => {
+    setExcludeNoConsent(newValue);
   }
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <FormGroup>
-          <FormControlLabel control={<Switch onChange={handleSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />
+          <FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />
+          <FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />
         </FormGroup>
         <Tabs value={value} onChange={handleChange} aria-label="yearbook members and boats">
           <Tab label="Members" {...a11yProps(0)} />

@@ -1,5 +1,5 @@
 
-export function memberPredicate(id, member, excludeNotPaid=true) {
+export function memberPredicate(id, member, excludeNotPaid=true, excludeNoConsent=true) {
     if (!member) {
         return false;
     }
@@ -12,5 +12,8 @@ export function memberPredicate(id, member, excludeNotPaid=true) {
     if (excludeNotPaid && member.status === 'Not Paid') {
         return false;
     }
-    return member.GDPR;
+    if (excludeNoConsent) {
+        return member.GDPR;
+    }    
+    return true;
 }
