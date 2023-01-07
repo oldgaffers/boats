@@ -8,6 +8,8 @@ import { m2f, price } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
 
+const registration_fields = ['sail_number','ssr','nhsr','fishing_number','mmsi','callsign','nsbr','uk_part1'];
+
 export default function BoatDetail({ boat, user }) {
   const [value, setValue] = useState(0);
 
@@ -42,7 +44,9 @@ export default function BoatDetail({ boat, user }) {
         <ConditionalText value={m2f(boat.draft)} label="Draft"/>        
       </Paper>)},
   ];
-  if (boat.sail_number || boat.ssr || boat.nhsr || boat.fishing_number || boat.callsign || boat.nsbr || boat.uk_part1) {
+  const registration_fields_for_boat = Object.keys(boat).filter(value => registration_fields.includes(value));
+  console.log(registration_fields_for_boat);
+  if (registration_fields_for_boat.length > 0) {
     panes.unshift(
       { title: 'Registrations', children: (
         <Paper>
@@ -50,6 +54,7 @@ export default function BoatDetail({ boat, user }) {
           <ConditionalText value={boat.ssr} label="Small Ships Registry no. (SSR)"/>
           <ConditionalText value={boat.nhsr} label="National Register of Historic Vessels no. (NRHV)"/>
           <ConditionalText value={boat.fishing_number} label="Fishing No."/>
+          <ConditionalText value={boat.mmsi} label="MMSI"/>
           <ConditionalText value={boat.callsign} label="Call Sign"/>
           <ConditionalText value={boat.nsbr} label="National Small Boat Register"/>
           <ConditionalText value={boat.uk_part1} label="Official Registration" />     

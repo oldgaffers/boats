@@ -26,7 +26,7 @@ SELECT
   b.air_draft,
   b.home_port,
   b.oga_no,
-  b.mssi,
+  b.mmsi,
   b.uk_part1,
   b.ssr,
   b.nsbr,

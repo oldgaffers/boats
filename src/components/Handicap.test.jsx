@@ -120,7 +120,7 @@ const Robinetta = {
   "id": "85315666-4359-47f7-8d8d-4dd2905b7aa2",
   "image_key": "9NV8KW",
   "mainsail_type": "gaff",
-  "mssi": "235109366",
+  "mmsi": "235109366",
   "name": "Robinetta",
   "nsbr": "1717",
   "oga_no": 315,

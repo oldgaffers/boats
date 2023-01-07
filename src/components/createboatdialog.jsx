@@ -522,7 +522,7 @@ const ignoredKeys = [
   'image_key',
   'thumb',
   'uk_part1',
-  'mssi',
+  'mmsi',
   'sail_number',
   'ssr',
   'nhsr',
