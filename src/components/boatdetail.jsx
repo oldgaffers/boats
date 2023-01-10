@@ -45,7 +45,6 @@ export default function BoatDetail({ boat, user }) {
       </Paper>)},
   ];
   const registration_fields_for_boat = Object.keys(boat).filter(value => registration_fields.includes(value));
-  console.log(registration_fields_for_boat);
   if (registration_fields_for_boat.length > 0) {
     panes.unshift(
       { title: 'Registrations', children: (
