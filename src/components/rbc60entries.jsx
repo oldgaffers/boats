@@ -7,10 +7,6 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-import { MapContainer } from 'react-leaflet/MapContainer'
-import { Popup } from 'react-leaflet/Popup'
-import { TileLayer } from 'react-leaflet/TileLayer'
-import { Marker } from 'react-leaflet/Marker'
 import { TokenContext } from './TokenProvider';
 import FleetView from './fleetview';
 import { getScopedData } from './boatregisterposts';
@@ -66,25 +62,6 @@ function RCBEntryTable() {
         </RoleRestricted>);
 }
 
-function Map() {
-    return <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
-        <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={[51.505, -0.09]}>
-            <Popup>
-                A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-        </Marker>
-    </MapContainer>;
-}
-
-/*
-                <Map />
-            </Grid>
-            */
-
 export default function RBC60Entryies() {
     const { isAuthenticated } = useAuth0();
 
@@ -100,9 +77,6 @@ export default function RBC60Entryies() {
                 {isAuthenticated ? '' : <LoginButton />}
                 <Grid item xs={12}>
                     <FleetView filter={{ name: 'RBC 60' }} role='public' />
-                </Grid>
-                <Grid item xs={12}>
-                    (map to go here)
                 </Grid>
                 <Typography>
                 Logged-in members can also see a table of all the boats registered for RBC60 events.
