@@ -36,15 +36,18 @@ export async function postPrivateScopedData(scope, subject, data, accessToken) {
 }
 
 export async function getScopedData(scope, subject, filters, accessToken) {
+  const headers = {
+    'content-type': 'application/json',
+  };
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
   return axios({
     url: `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
     params: {
       ...filters,
     },
-    headers: {
-      'content-type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
-    }
+    headers,
   });
 }
 

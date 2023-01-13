@@ -7,8 +7,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
+import { MapContainer } from 'react-leaflet/MapContainer'
+import { Popup } from 'react-leaflet/Popup'
+import { TileLayer } from 'react-leaflet/TileLayer'
+import { Marker } from 'react-leaflet/Marker'
 import { TokenContext } from './TokenProvider';
-import { FleetDisplay } from './fleetview';
+import FleetView from './fleetview';
 import { getScopedData } from './boatregisterposts';
 import LoginButton from './loginbutton';
 import EntryTable from './rbc60entrytable';
@@ -16,10 +20,10 @@ import FleetIcon from "./fleeticon";
 import RoleRestricted from './rolerestrictedcomponent';
 import { Tooltip } from '@mui/material';
 
-export default function RBC60Entryies() {
+function RCBEntryTable() {
     const name = 'RBC 60';
     const accessToken = useContext(TokenContext);
-    const { user, isAuthenticated } = useAuth0();
+    const { user } = useAuth0();
     const [data, setData] = useState();
 
     useEffect(() => {
@@ -32,42 +36,81 @@ export default function RBC60Entryies() {
         }
     }, [accessToken, user]);
 
+    if (!accessToken) {
+        return '';
+    }
     if (!data) {
         return <CircularProgress />;
     }
 
     const entries = (data?.Items) || [];
 
-    const rbc = entries.filter((e) => e.data.rbc);
+    return (
+        <RoleRestricted role='member'>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={
+                        <Tooltip placement='left' title='click to show or hide the text'>
+                            <ExpandMoreIcon />
+                        </Tooltip>
+                    }
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <FleetIcon /><Typography>Table of Entries</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <EntryTable rows={entries} />
+                </AccordionDetails>
+            </Accordion>
+        </RoleRestricted>);
+}
 
-    const filters = { oga_nos: rbc.map((e) => e.data.boat?.oga_no || '') };
+function Map() {
+    return <MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+        <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={[51.505, -0.09]}>
+            <Popup>
+                A pretty CSS3 popup. <br /> Easily customizable.
+            </Popup>
+        </Marker>
+    </MapContainer>;
+}
+
+/*
+                <Map />
+            </Grid>
+            */
+
+export default function RBC60Entryies() {
+    const { isAuthenticated } = useAuth0();
 
     return (
-        <Grid container>
-            {isAuthenticated ? '' : <LoginButton />}
-            <Grid item xs={12}>
-                <RoleRestricted role='member'>
-                    <Accordion>
-                        <AccordionSummary
-                            expandIcon={
-                            <Tooltip placement='left' title='click to show or hide the text'>
-                                <ExpandMoreIcon />
-                            </Tooltip>                                
-                            }
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <FleetIcon /><Typography>Table of Entries</Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <EntryTable rows={entries} />
-                        </AccordionDetails>
-                    </Accordion>
-                </RoleRestricted>
+        <>
+            <Typography>
+                On this page everyone can see the list of boats
+                going all the way round on the OGA 60 Round Britain Cruise.
+                You can also see a map of the cruise and when the cruise starts,
+                the positions of each boat will be updated by the skippers.
+            </Typography>
+            <Grid container>
+                {isAuthenticated ? '' : <LoginButton />}
+                <Grid item xs={12}>
+                    <FleetView filter={{ name: 'RBC 60' }} role='public' />
+                </Grid>
+                <Grid item xs={12}>
+                    (map to go here)
+                </Grid>
+                <Typography>
+                Logged-in members can also see a table of all the boats registered for RBC60 events.
+            </Typography>
+                <Grid item xs={12}>
+                    <RCBEntryTable />
+                </Grid>
             </Grid>
-            <Grid item xs={12}>
-                <FleetDisplay name={name} filters={filters} />
-            </Grid>
-        </Grid>
+        </>
     );
 }

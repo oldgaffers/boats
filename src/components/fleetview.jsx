@@ -70,29 +70,29 @@ export function Fleets({ filter }) {
   if (!data) {
     return <CircularProgress />;
   }
-
+  console.log('PFV', data);
   return (
     <RoleRestricted role='member'>
       {
-        data.Items.map(({ name, filters }) => <FleetDisplay name={name} filters={filters} />)
+        (data?.Items?.map(({ name, filters }) => <FleetDisplay name={name} filters={filters} />))||''
       }
     </RoleRestricted>
   );
 }
 
-export default function FleetView({ filter }) {
+function RoleRestrictedFleetView({ filter, role }) {
   const [data, setData] = useState();
   const accessToken = useContext(TokenContext);
 
   useEffect(() => {
     const getData = async () => {
-      const p = await getScopedData('member', 'fleets', filter, accessToken);
+      const p = await getScopedData(role, 'fleets', filter, accessToken);
       setData(p.data);
     }
     if (accessToken) {
       getData();
     }
-  }, [accessToken, filter])
+  }, [accessToken, filter, role])
 
   if (!data) {
     return <CircularProgress />;
@@ -101,8 +101,41 @@ export default function FleetView({ filter }) {
   const { filters, name } = data.Items[0];
 
   return (
-    <RoleRestricted role='member'>
+    <RoleRestricted role={role}>
       <FleetDisplay name={name} filters={filters} />
     </RoleRestricted>
   );
+}
+
+function PublicFleetView({ filter }) {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const getData = async () => {
+      const p = await getScopedData('public', 'fleets', filter);
+      setData(p.data);
+    }
+    getData();
+  }, [filter])
+
+  if (!data) {
+    return <CircularProgress />;
+  }
+
+  if (data.Items.length > 0) {
+    const { filters, name } = data.Items?.[0];
+    return <FleetDisplay name={name} filters={filters} />;  
+  }
+  return <Typography>No boats to show for fleet defined by {JSON.stringify(filter)}</Typography>;
+}
+
+export default function FleetView({ filter, role='member' }) {
+  if (role) {
+    if (role === 'public') {
+      return <PublicFleetView filter={filter}/>;
+    }
+    return <RoleRestrictedFleetView filter={filter} role={role} />;
+  } else {
+    return <PublicFleetView filter={filter}/>;
+  }
 }
