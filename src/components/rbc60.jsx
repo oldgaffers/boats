@@ -170,7 +170,7 @@ const schema = (ports, user, boats) => {
                         name: 'ddf.mandatory',
                         component: componentTypes.PLAIN_TEXT,
                         label: (<Typography component={'span'}>To help us know how many boats to plan for, we are asking all skippers to register now for £15.
-                            This entitles you an OGA 60 flag. Flags will be posted to skippers in January 2023.</Typography>),
+                            This entitles you an OGA 60 flag. Flags can be collected from the first party port you have nominated.</Typography>),
                         sx: { marginTop: "2em" }
                     },
                     {
@@ -472,12 +472,12 @@ const schema = (ports, user, boats) => {
                     const m = formOptions.getFieldState('ddf.member');
                     const purchaseUnits = [
                         {
-                            description: 'RBC 60 Sign-up with flag',
-                            amount: { currency_code: 'GBP', value: 15 },
+                            description: 'RBC 60 Sign-up with flag £20 (early bird discount no longer available)',
+                            amount: { currency_code: 'GBP', value: 20 },
                             reference_id: 'rbc60',
                         }
                     ];
-                    let helperText = '£15 to register'
+                    let helperText = '£20 to register'
                     if (m && !m.value) {
                         const j = formOptions.getFieldState('ddf.joining');
                         if (j) {
