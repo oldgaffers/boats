@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import { useAuth0 } from "@auth0/auth0-react";
-import { postPrivateScopedData } from "./boatregisterposts";
+import { postScopedData } from "./boatregisterposts";
 import { Popover, Typography } from "@mui/material";
 import { TokenContext } from './TokenProvider';
 
@@ -36,7 +36,8 @@ export default function UpdateFleet({ markList=[], fleet, updated=()=>console.lo
             filters: { oga_nos: wanted },
             updated_at: (new Date()).toISOString(),
          };
-        postPrivateScopedData('member', 'fleets', data, accessToken)
+         const scope = fleet.public ? 'public' : 'member';
+        postScopedData(scope, 'fleets', data, accessToken)
             .then(() => {
                 setPopoverOpen(false);
                 updated();

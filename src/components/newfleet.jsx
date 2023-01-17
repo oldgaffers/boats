@@ -11,7 +11,7 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Popover, Typography } from "@mui/material";
-import { postPrivateScopedData } from "./boatregisterposts";
+import { postScopedData } from "./boatregisterposts";
 import { TokenContext } from './TokenProvider';
 
 function CreateFleetDialog({
@@ -78,15 +78,16 @@ export default function NewFleet({ markList = [], updated=()=>console.log('updat
             filters: { oga_nos: markList },
             created_at: (new Date()).toISOString(),
         };
-        postPrivateScopedData('member', 'fleets', data, accessToken)
-            .then(() => {
-                setPopoverOpen(false);
-                updated();
-            })
-            .catch((e) => {
-                console.log(e);
-                setPopoverOpen(false);
-            });
+        const scope = (isPublic)? 'public' : 'member';
+        postScopedData(scope, 'fleets', data, accessToken)
+        .then(() => {
+            setPopoverOpen(false);
+            updated();
+        })
+        .catch((e) => {
+            console.log(e);
+            setPopoverOpen(false);
+        });
     }
 
     const handleClose = (value) => {

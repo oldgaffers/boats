@@ -21,17 +21,17 @@ export async function postBoatData(data) {
   );
 }
 
-export async function postPrivateScopedData(scope, subject, data, accessToken) {
+export async function postScopedData(scope, subject, data, accessToken) {
+  const headers = {
+    'content-type': 'application/json',
+  };
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
   return axios.post(
     `https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/${scope}/${subject}`,
     data,
-    {
-      'content-type': 'application/json',
-      headers: {
-        'content-type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      }
-    }
+    { 'content-type': 'application/json', headers },
   );
 }
 

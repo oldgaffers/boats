@@ -10,12 +10,11 @@ import UpdateFleet from './updatefleet';
 import { TokenContext } from './TokenProvider';
 import { MarkContext } from "../browseapp";
 
-function sortFleets(sharedFleets, memberFleets, ) {
-    const f1 = [...memberFleets];
-    f1.sort((a,b) => a.name.localeCompare(b.name));
-    const f2 = [...sharedFleets];
-    f2.sort((a,b) => a.name.localeCompare(b.name));
-    return [...f1, ...f2];
+async function getFleets(scope, filter, accessToken) {
+    const r = await getScopedData(scope, 'fleets', filter, accessToken);
+    const f = r?.data?.Items || [];
+    f.sort((a,b) => a.name.localeCompare(b.name))
+    return f;
 }
 
 export default function FleetButtons({
@@ -30,22 +29,14 @@ export default function FleetButtons({
 
     useEffect(() => {
         const getData = async () => {
-            const p = await getScopedData('member', 'fleets', {public: true}, accessToken);
-            const q = await getScopedData('member', 'fleets', {owner_gold_id: id}, accessToken);
-            setItems(sortFleets(p?.data?.Items||[], q?.data?.Items||[]));
+            const p = await getFleets('public', {public: true}, accessToken);
+            const q = await getFleets('member', {owner_gold_id: id}, accessToken);
+            setItems([...p, ...q]);
         }
         if (accessToken && !items) {
             getData();
         }
     }, [accessToken, items, id])
-
-    /*
-    useEffect(() => {
-        if (selected) {
-            onChange(selected, items.find((item) => item.name === selected).filters);
-        }
-    }, [items, onChange, selected]);
-    */
 
     if (accessToken && !items) {
         return <CircularProgress />;
