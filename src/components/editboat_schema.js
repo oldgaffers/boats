@@ -213,6 +213,7 @@ export const schema = (pickers, canBuySell, forSale) => {
             name: "misc-step",
             title: <Typography variant='h5'>Home Port and Previous Names</Typography>,
             component: 'sub-form',
+            shortcut: true,
             nextStep: "references-step",
             fields: [
               ...homeItems,
