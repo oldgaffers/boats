@@ -169,7 +169,7 @@ const schema = (ports, user, boats) => {
                     {
                         name: 'ddf.mandatory',
                         component: componentTypes.PLAIN_TEXT,
-                        label: (<Typography component={'span'}>To help us know how many boats to plan for, we are asking all skippers to register now for £15.
+                        label: (<Typography component={'span'}>To help us know how many boats to plan for, we are asking all skippers to register now for £20.
                             This entitles you an OGA 60 flag. Flags can be collected from the first party port you have nominated.</Typography>),
                         sx: { marginTop: "2em" }
                     },
