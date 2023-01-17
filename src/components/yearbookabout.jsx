@@ -1,5 +1,5 @@
 import React from 'react';
-import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Table, TableCell, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Tooltip, Typography } from "@mui/material";
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import FiberNewTwoToneIcon from '@mui/icons-material/FiberNewTwoTone';
 import RoleRestricted from './rolerestrictedcomponent';
@@ -50,19 +50,23 @@ function MemberStatus({ memberNo, members }) {
             </Typography>
             <Table>
                 <TableHead>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Yearbook</TableCell>
+                    <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Yearbook</TableCell>
+                    </TableRow>
                 </TableHead>
-                {
-                    members.map(member => (
-                        <TableRow>
-                            <TableCell>{member.salutation} {member.firstname} {member.lastname}</TableCell>
-                            <TableCell>
-                                <Typography>{statusText(member)}</Typography>
-                            </TableCell>
-                        </TableRow>
-                    ))
-                }
+                <TableBody>
+                    {
+                        members.map((member, i) => (
+                            <TableRow key={i}>
+                                <TableCell>{member.salutation} {member.firstname} {member.lastname}</TableCell>
+                                <TableCell>
+                                    <Typography>{statusText(member)}</Typography>
+                                </TableCell>
+                            </TableRow>
+                        ))
+                    }
+                </TableBody>
             </Table>
         </>;
     }
@@ -79,7 +83,7 @@ function MemberData({ boats }) {
     const myBoats = membersBoats(boats, members);
 
     return <>
-        <MemberStatus memberNo={memberNo} members={members} />
+        <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
         <Typography sx={{ marginTop: '2px' }} variant='h6'>Your 2023 entry in the members list would be</Typography>
         <YearbookMembers members={members} boats={myBoats} components={{}} />
         <Typography variant='h6'>Your 2023 entry in the boat list would be</Typography>
