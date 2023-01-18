@@ -14,7 +14,6 @@ export default function BoatCards({
   onBoatMarked,
   onBoatUnMarked,
 }) {
-  console.log('Y', state  )
 
   const handleMarkChange = (value, ogaNo) => {
     if (value) {
