@@ -503,7 +503,7 @@ const PhotoUpload = ({ component, name, title }) => {
 };
 
 const ignoredKeys = [
-  'design_class',
+  // 'design_class',
   'oga_no',
   'short_description',
   'full_description',
@@ -528,6 +528,7 @@ const ignoredKeys = [
   'nhsr',
   'callsign',
   'nsbr',
+  'hin',
   'website',
   'reference',
 ];
