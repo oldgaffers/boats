@@ -4,7 +4,6 @@ import 'leaflet';
 import React, { useContext, useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -135,7 +134,6 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export default function RBC60Entryies() {
-    const { isAuthenticated } = useAuth0();
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
