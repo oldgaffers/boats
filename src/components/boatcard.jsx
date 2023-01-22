@@ -76,7 +76,7 @@ function normaliseDescription(boat) {
   return '';
 }
 
-function BoatCardWords({ boat, owned }) {
+function BoatCardWords({ boat, owned, wanted }) {
 
   if (boat.loading) {
     return <>
@@ -132,6 +132,37 @@ function BoatCardImage({ albumKey, name }) {
   return (<AltForThumb />);
 }
 
+export function CompactBoatCard({ view='app', ogaNo }) {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    if (!data) {
+      getBoatData(ogaNo).then((r) => {
+        setData(r.data);
+      }).catch((e) => console.log(e));
+    }
+  }, [data, ogaNo]);
+
+  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
+
+  const albumKey = boat?.image_key;
+  return (
+    <Card sx={albumKey ? {
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    } : {}}>
+      {albumKey ? <BoatCardImage albumKey={albumKey} name= {boat?.name} /> : ''}
+      <CardContent sx={{ flexGrow: 1 }} >
+        <BoatCardWords boat={{ ...boat }} wanted={[]} />
+      </CardContent>
+      <CardActions>
+        <Enquiry boat={boat} text='Contact' />
+      </CardActions>
+    </Card>
+  );
+}
+
 export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const markList = useContext(MarkContext);
   const [marked, setMarked] = useState(markList.includes(ogaNo));
@@ -177,7 +208,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
         <Typography gutterBottom variant="h5" component="h2">
           <SalesBadge view={state.view} boat={boat}>{boat?.name || ''} ({ogaNo})</SalesBadge>
         </Typography>
-        <BoatCardWords boat={{ ...boat, price }} owned={owned} />
+        <BoatCardWords boat={{ ...boat, price }} owned={owned} wanted={wanted} />
       </CardContent>
       <CardActions>
         <Grid container

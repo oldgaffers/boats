@@ -9,5 +9,7 @@ export default function TextList({ fields, data }) {
             r.push({ key, label: fields[key].label, text: val });
         }
     });
-    return (<div>{r.map(n => (<Typography key={n.key}>{`${n.label}: ${n.text}`}</Typography>))}</div>);
+    return (<div>{r.map(n => (<Typography 
+        sx={{margin:0}}
+        key={n.key}>{`${n.label}: ${n.text}`}</Typography>))}</div>);
 }

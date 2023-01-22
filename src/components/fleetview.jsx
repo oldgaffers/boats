@@ -25,7 +25,6 @@ export function FleetDisplay({ name, filters }) {
   }, [data]);
 
   if (!data) return <CircularProgress />;
-  console.log('X', name, filters);
   const filtered = applyFilters(data, filters);
 
   const onPageChange = (n) => setPage(n.page);
@@ -80,7 +79,7 @@ export function Fleets({ filter }) {
   );
 }
 
-function RoleRestrictedFleetView({ filter, role }) {
+export function RoleRestrictedFleetView({ filter, role }) {
   const [data, setData] = useState();
   const accessToken = useContext(TokenContext);
 
@@ -107,7 +106,7 @@ function RoleRestrictedFleetView({ filter, role }) {
   );
 }
 
-function PublicFleetView({ filter }) {
+export function PublicFleetView({ filter }) {
   const [data, setData] = useState();
 
   useEffect(() => {
