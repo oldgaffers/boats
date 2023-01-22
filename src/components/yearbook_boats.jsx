@@ -1,16 +1,12 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
-import { DataGrid, GridToolbarContainer, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
+import { DataGrid, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
+// import { GridToolbarExport } from '@mui/x-data-grid';
 
 function CustomToolbar() {
     return (
         <GridToolbarContainer>
             <GridToolbarFilterButton />
-            <GridToolbarExport csvOptions={{
-                fileName: 'members_boats',
-                delimiter: '\t',
-                utf8WithBom: true,
-            }} />
         </GridToolbarContainer>
     );
 }
@@ -53,6 +49,7 @@ export default function YearbookBoats({ boats=[], components={ Toolbar: CustomTo
         { field: 'name', headerName: 'BOAT', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'oga_no', headerName: 'No.', width: 90 },
         { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
+        // { field: 'home_port', headerName: 'Home Port' },
     ];
 
     return (

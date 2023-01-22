@@ -1,6 +1,4 @@
-import 'leaflet/dist/leaflet.css';
-import 'leaflet/dist/images/marker-icon.png';
-import 'leaflet';
+import * as L from 'leaflet';
 import React, { useContext, useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -21,6 +19,80 @@ import EntryTable from './rbc60entrytable';
 import FleetIcon from "./fleeticon";
 import RoleRestricted from './rolerestrictedcomponent';
 import { CompactBoatCard } from './boatcard';
+
+function gaffer(colour) {
+    return L.icon({
+        iconUrl: `https://oldgaffers.github.io/boatregister//images/gaffer-${colour}.png`,
+        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
+        iconSize: [32, 37], // size of the icon
+        shadowSize: [51, 37], // size of the shadow
+        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
+        shadowAnchor: [16, 34],  // the same for the shadow
+        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
+    });
+}
+
+// <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>
+
+const gafferBlue = gaffer('blue');
+const gafferOrange = gaffer('orange');
+
+const diamond = L.icon({
+    iconUrl: `https://oldgaffers.github.io/boatregister//images/diamond.png`,
+    shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
+    iconSize: [32, 32], // size of the icon
+    shadowSize: [51, 37], // size of the shadow
+    iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
+    shadowAnchor: [16, 34],  // the same for the shadow
+    popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
+});
+
+const gaffling = L.icon({
+    iconUrl: `https://oldgaffers.github.io/boatregister//images/gaffling.png`,
+    shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
+    iconSize: [32, 32], // size of the icon
+    shadowSize: [51, 37], // size of the shadow
+    iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
+    shadowAnchor: [16, 34],  // the same for the shadow
+    popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
+});
+
+
+const lug = L.icon({
+    iconUrl: `https://oldgaffers.github.io/boatregister//images/lug.png`,
+    shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
+    iconSize: [32, 32], // size of the icon
+    shadowSize: [51, 37], // size of the shadow
+    iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
+    shadowAnchor: [16, 34],  // the same for the shadow
+    popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
+});
+
+const partyPorts = [
+    { name: 'Ramsgate', latitude: 51.329838850086986, longitude: 1.421028584328367 },
+    { name: 'Cowes', latitude: 50.74840882125257, longitude: -1.2915786665067661 },
+    { name: 'Plymouth', latitude: 50.369026121055946, longitude: -4.1322539520425465 },
+    { name: 'Neyland', latitude: 51.70795144725004, longitude: -4.941540168179836 },
+    { name: 'Dublin', latitude: 53.34362082685624, longitude: -6.217210521334736 },
+    { name: 'Oban', latitude: 56.41432278536105, longitude:  -5.486013316811266 },
+    { name: 'Arbroath', latitude: 56.55285835505399, longitude: -2.5820845535616384 },
+    { name: 'Blyth', latitude: 55.126374851993425, longitude: -1.4977966801215457 },
+    { name: 'Jubilee', latitude: 51.99487729364512, longitude: 1.268134496760611 },
+];
+
+const smallboatEvents = [
+    { name: 'Langstone Harbour', latitude: 50.83104762677879, longitude: -1.0037765769566436 },
+    { name: 'Cardiff Bay', latitude: 51.455733170865706, longitude: -3.1699478646494836 },
+    { name: 'Ullswater', latitude: 54.59583841513551, longitude: -2.841225370330696 },
+];
+
+const gafflingEvents = [
+    { name: 'Jubilee', latitude: 51.99487729364512, longitude: 1.7 },
+];
+
+const extras = [
+    { name: 'Portsoy', latitude: 57.68567483697059, longitude: -2.690178873360523}
+];
 
 function RCBEntryTable() {
     const name = 'RBC 60';
@@ -89,11 +161,45 @@ export function RCBEntryMap() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+
+            {extras.map((port, index) => <Marker
+                        key={index}
+                        position={[port.latitude, port.longitude]}
+                        icon={gafferOrange}
+                        title={port.name}
+                        ></Marker>)}
+
+            {gafflingEvents.map((port, index) => <Marker
+                        key={index}
+                        position={[port.latitude, port.longitude]}
+                        icon={gaffling}
+                        title={port.name}
+                        ></Marker>)}
+
+            {smallboatEvents.map((port, index) => <Marker
+                        key={index}
+                        position={[port.latitude, port.longitude]}
+                        icon={lug}
+                        title={port.name}
+                        ></Marker>)}
+
+            {partyPorts.map((port, index) => <Marker
+                        key={index}
+                        position={[port.latitude, port.longitude]}
+                        icon={diamond}
+                        title={port.name}
+                        ></Marker>)}
+
             {entries.map((entry, index) => {
                 if (entry.data.boat.location) {
                     const { boat } = entry.data;
                     const { latitude, longitude } = boat.location;
-                    return <Marker key={index} position={[latitude, longitude]}>
+                    return <Marker
+                        key={index}
+                        position={[latitude, longitude]}
+                        icon={gafferBlue}
+                        title={boat.name}
+                        >
                         <Popup>
                             <CompactBoatCard ogaNo={boat.oga_no} />
                         </Popup>
@@ -148,7 +254,7 @@ export default function RBC60Entryies() {
             </Typography>
             <Typography>
                 Logged-in members can see a table of all the boats registered for RBC60 events
-                and a map of the cruise. 
+                and a map of the cruise.
             </Typography>
             <Typography>When the cruise starts,
                 the positions of each boat will be updated by the skippers.
