@@ -39,7 +39,7 @@ function ContactDialog({
   };
 
   const subtitle = () => {
-    if (owners) {
+    if (owners && owners.length > 0) {
       if (owners.length > 1) {
         return (<><i>{boat_name}</i> ({oga_no})
           is owned by {isMember ? 'fellow members' : 'members'} of the OGA.
