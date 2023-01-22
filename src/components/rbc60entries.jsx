@@ -32,13 +32,22 @@ function gaffer(colour) {
     });
 }
 
-// <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>
-
 const gafferBlue = gaffer('blue');
 const gafferOrange = gaffer('orange');
 
-const diamond = L.icon({
+
+const blackDiamond = L.icon({
     iconUrl: `https://oldgaffers.github.io/boatregister//images/diamond.png`,
+    shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
+    iconSize: [32, 32], // size of the icon
+    shadowSize: [51, 37], // size of the shadow
+    iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
+    shadowAnchor: [16, 34],  // the same for the shadow
+    popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
+});
+
+const whiteDiamond = L.icon({
+    iconUrl: `https://oldgaffers.github.io/boatregister//images/diamond-white.png`,
     shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
     iconSize: [32, 32], // size of the icon
     shadowSize: [51, 37], // size of the shadow
@@ -74,9 +83,12 @@ const partyPorts = [
     { name: 'Plymouth', latitude: 50.369026121055946, longitude: -4.1322539520425465 },
     { name: 'Neyland', latitude: 51.70795144725004, longitude: -4.941540168179836 },
     { name: 'Dublin', latitude: 53.34362082685624, longitude: -6.217210521334736 },
-    { name: 'Oban', latitude: 56.41432278536105, longitude:  -5.486013316811266 },
+    { name: 'Oban', latitude: 56.41432278536105, longitude: -5.486013316811266 },
     { name: 'Arbroath', latitude: 56.55285835505399, longitude: -2.5820845535616384 },
     { name: 'Blyth', latitude: 55.126374851993425, longitude: -1.4977966801215457 },
+];
+
+const jubilee = [
     { name: 'Jubilee', latitude: 51.99487729364512, longitude: 1.268134496760611 },
 ];
 
@@ -91,7 +103,7 @@ const gafflingEvents = [
 ];
 
 const extras = [
-    { name: 'Portsoy', latitude: 57.68567483697059, longitude: -2.690178873360523}
+    { name: 'Portsoy', latitude: 57.68567483697059, longitude: -2.690178873360523 }
 ];
 
 function RCBEntryTable() {
@@ -163,32 +175,39 @@ export function RCBEntryMap() {
             />
 
             {extras.map((port, index) => <Marker
-                        key={index}
-                        position={[port.latitude, port.longitude]}
-                        icon={gafferOrange}
-                        title={port.name}
-                        ></Marker>)}
+                key={index}
+                position={[port.latitude, port.longitude]}
+                icon={gafferOrange}
+                title={port.name}
+            ></Marker>)}
 
             {gafflingEvents.map((port, index) => <Marker
-                        key={index}
-                        position={[port.latitude, port.longitude]}
-                        icon={gaffling}
-                        title={port.name}
-                        ></Marker>)}
+                key={index}
+                position={[port.latitude, port.longitude]}
+                icon={gaffling}
+                title={port.name}
+            ></Marker>)}
 
             {smallboatEvents.map((port, index) => <Marker
-                        key={index}
-                        position={[port.latitude, port.longitude]}
-                        icon={lug}
-                        title={port.name}
-                        ></Marker>)}
+                key={index}
+                position={[port.latitude, port.longitude]}
+                icon={lug}
+                title={port.name}
+            ></Marker>)}
 
             {partyPorts.map((port, index) => <Marker
-                        key={index}
-                        position={[port.latitude, port.longitude]}
-                        icon={diamond}
-                        title={port.name}
-                        ></Marker>)}
+                key={index}
+                position={[port.latitude, port.longitude]}
+                icon={blackDiamond}
+                title={port.name}
+            ></Marker>)}
+
+            {jubilee.map((port, index) => <Marker
+                key={index}
+                position={[port.latitude, port.longitude]}
+                icon={whiteDiamond}
+                title={port.name}
+            ></Marker>)}
 
             {entries.map((entry, index) => {
                 if (entry.data.boat.location) {
@@ -199,7 +218,7 @@ export function RCBEntryMap() {
                         position={[latitude, longitude]}
                         icon={gafferBlue}
                         title={boat.name}
-                        >
+                    >
                         <Popup>
                             <CompactBoatCard ogaNo={boat.oga_no} />
                         </Popup>
@@ -219,7 +238,7 @@ function a11yProps(index) {
     };
 }
 
-function TabPanel(props: TabPanelProps) {
+function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
     return (
@@ -272,6 +291,7 @@ export default function RBC60Entryies() {
             <TabPanel value={value} index={1}>
                 <RoleRestricted role='member'>
                     <RCBEntryMap />
+                    <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>
                 </RoleRestricted>
             </TabPanel>
             <TabPanel value={value} index={2}>
