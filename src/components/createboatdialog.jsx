@@ -30,6 +30,7 @@ import { findFirstAbsent } from '../util/oganoutils';
 import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
 import Photodrop from "./photodrop";
 import HtmlEditor from './ckeditor';
+import { boatm2f } from "../util/format";
 
 const schema = (pickers) => {
   return {
@@ -273,15 +274,15 @@ const schema = (pickers) => {
                   ...designerItems(pickers),
                   {
                     component: 'text-field',
-                    name: "length_on_deck",
+                    name: "handicap_data.length_on_deck",
                     label: "Length on deck  (decimal feet)",
                     type: "number",
                     dataType: 'float',
                     isRequired: true,
                     validate: [
                       {
-                       type: 'required',
-                       },
+                        type: 'required',
+                      },
                       /*{
                          type: 'min-number-value',
                          threshold: 5
@@ -297,7 +298,7 @@ const schema = (pickers) => {
                     isRequired: true,
                     validate: [
                       {
-                       type: 'required',
+                        type: 'required',
                       },
                       /*{
                         type: 'min-number-value',
@@ -307,8 +308,8 @@ const schema = (pickers) => {
                   },
                   {
                     component: 'text-field',
-                    name: "draft",
-                    label: "Draft (decimal feet)",
+                    name: "handicap_data.draft",
+                    label: "Minumum Draft (decimal feet)",
                     type: "number",
                     dataType: 'float',
                     isRequired: true,
@@ -583,13 +584,10 @@ function flattenToForm(example, prefix) {
   return flat;
 }
 
-function initialiseFromExamplesFlat(change, examples) {
-  let archetype = {};
-  examples.forEach((result) => {
-    const { boat } = result.value.data.result.pageContext;
-    const flat = flattenToForm(boat);
-    archetype = { ...archetype, ...flat };
-  });
+function initialiseFromExampleFlat(change, example) {
+  const { boat } = example.data.result.pageContext;
+  const archetype = flattenToForm(boatm2f(boat));
+  console.log(archetype);
   Object.keys(archetype).forEach((field) => {
     change(field, archetype[field]);
   });
@@ -603,10 +601,11 @@ const FieldListener = () => {
   useEffect(() => {
     if (design_class) {
       const instances = filterable.filter((boat) => boat.design_class === design_class);
-      const firstThree = instances.slice(0, 3).map((boat) => boat.oga_no);
-      Promise.allSettled(firstThree.map((ogaNo) => getBoatData(ogaNo)))
-        .then((results) => {
-          initialiseFromExamplesFlat(change, results);
+      const smallest = Math.min(...instances.map((boat) => boat.oga_no));
+      console.log('smallest', smallest);
+      getBoatData(smallest)
+        .then((result) => {
+          initialiseFromExampleFlat(change, result);
         });
     }
   }, [change, design_class, filterable]);
@@ -667,7 +666,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
         onSubmit={handleSubmit}
         onCancel={onCancel}
         initialValues={{ user, filterable, oga_no: findFirstAbsent(filterable) }}
-          subscription={{ values: true }}
+        subscription={{ values: true }}
       />
 
     </Dialog>

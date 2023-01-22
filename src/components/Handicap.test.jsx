@@ -25,7 +25,7 @@ const Transcur = {
     "fore_triangle_height": 10,
     "length_on_deck": 10.796,
     "length_on_waterline": 8.687,
-    "length_over_all": 10.79,
+    "length_overall": 10.79,
     "main": {
       "foot": 7,
       "head": 5,
@@ -102,7 +102,7 @@ const Robinetta = {
     "fore_triangle_height": 4.572,
     "length_on_deck": 6.858,
     "length_on_waterline": 6.096,
-    "length_over_all": 6.858,
+    "length_overall": 6.858,
     "main": {
       "foot": 4,
       "head": 4.267,

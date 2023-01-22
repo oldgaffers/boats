@@ -63,8 +63,10 @@ export function f2m2(val) {
 
 
 const metreKeys = [
-    'beam','draft','perpendicular','luff','head','leech','foot',
-    'length_on_deck','length_on_waterline','length_over_all',
+    'beam','draft','draft_keel_down', 'air_draft',
+    'perpendicular','luff','head','leech','foot',
+    'length_on_deck','length_on_waterline',
+    'length_over_spars', 'length_overall',
     'fore_triangle_height','fore_triangle_base',
   ];
   const squareMetreKeys = ['sailarea'];
