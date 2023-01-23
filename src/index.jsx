@@ -21,6 +21,7 @@ import LoginButton from './components/loginbutton';
 import OGA60Form from './components/oga60form';
 import TokenProvider from './components/TokenProvider';
 import ViewTable from './components/viewtable';
+import CreateBoatButton from './components/createboatbutton';
 
 const lightTheme = createTheme({
   palette: {
@@ -167,6 +168,8 @@ const Pages = ({ app, topic }) => {
           </Auth0Provider>
         );
       }
+    case 'add_boat':
+      return <CreateBoatButton />;
     default:
       // console.log('browse', app);
       return (
@@ -183,7 +186,8 @@ const Pages = ({ app, topic }) => {
 
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
-  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_button', 'oga60_interest', 'login', 'expressions',
+  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_button', 'oga60_interest',
+  'login', 'expressions', 'add_boat'
 ];
 const divs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 divs.forEach((div) => {

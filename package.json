@@ -1,6 +1,6 @@
 {
   "name": "boats",
-  "homepage": "/boat_register/",
+  "homepage": "/boats/",
   "version": "3.5.22",
   "private": true,
   "scripts": {
