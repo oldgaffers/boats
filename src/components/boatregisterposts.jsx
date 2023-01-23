@@ -1,6 +1,10 @@
 import axios from "axios";
 import { boatRegisterHome } from '../util/constants';
 
+export async function nextOgaNo() {
+  return axios.get('https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/');
+}
+
 export async function shuffleBoats() {
   return axios.post(
     'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/shuffle',

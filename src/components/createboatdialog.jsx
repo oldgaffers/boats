@@ -26,7 +26,6 @@ import {
   dinghyHullStep,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
-import { findFirstAbsent } from '../util/oganoutils';
 import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
 import Photodrop from "./photodrop";
 import HtmlEditor from './ckeditor';
@@ -459,13 +458,6 @@ const schema = (pickers) => {
               },
               {
                 component: 'text-field',
-                name: 'oga_no',
-                label: 'Make a note of the OGA No for the boat',
-                isReadOnly: true,
-                type: 'number',
-              },
-              {
-                component: 'text-field',
                 name: "email",
                 label: "email",
                 isRequired: true,
@@ -644,6 +636,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat);
   }
+
   return (
     <Dialog
       open={open}
@@ -665,7 +658,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
         schema={schema(pickers)}
         onSubmit={handleSubmit}
         onCancel={onCancel}
-        initialValues={{ user, filterable, oga_no: findFirstAbsent(filterable) }}
+        initialValues={{ user, filterable }}
         subscription={{ values: true }}
       />
 

@@ -4,7 +4,7 @@ import Snackbar from "@mui/material/Snackbar";
 import { boatf2m } from "../util/format";
 import CreateBoatDialog from "./createboatdialog";
 import { postPhotos } from "./postphotos";
-import { createPhotoAlbum, postBoatData } from './boatregisterposts';
+import { createPhotoAlbum, postBoatData, nextOgaNo } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 
 async function sendToAws(boat, email, fileList, copyright, newItems) {
@@ -15,7 +15,8 @@ async function sendToAws(boat, email, fileList, copyright, newItems) {
     await postPhotos({ copyright, email, albumKey }, fileList);
   }
   // console.log('files', fileList?.length || 0);
-  await postBoatData({ email, new: { ...boat, image_key: albumKey, newItems } });
+  const oga_no = await nextOgaNo();
+  await postBoatData({ email, new: { ...boat, oga_no, image_key: albumKey, newItems } });
   // console.log('created boat record');
 }
 
