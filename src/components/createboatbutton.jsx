@@ -7,7 +7,10 @@ import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData, nextOgaNo } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 
-async function sendToAws(boat, email, fileList, copyright, newItems) {
+export async function createBoat(boat, email, fileList, copyright, newItems) {
+  if (!boat.oga_no) {
+    boat.oga_no = await nextOgaNo();
+  }
   console.log('sendToAws', boat);
   const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);
   console.log('albumKey', albumKey);
@@ -15,8 +18,7 @@ async function sendToAws(boat, email, fileList, copyright, newItems) {
     await postPhotos({ copyright, email, albumKey }, fileList);
   }
   // console.log('files', fileList?.length || 0);
-  const oga_no = await nextOgaNo();
-  await postBoatData({ email, new: { ...boat, oga_no, image_key: albumKey, newItems } });
+  await postBoatData({ email, new: { ...boat, image_key: albumKey, newItems } });
   // console.log('created boat record');
 }
 
@@ -55,7 +57,7 @@ export default function CreateBoatButton() {
 
     const boatMetric = boatf2m(boat);
 
-    sendToAws(boatMetric, email, fileList, copyright, newItems)
+    createBoat(boatMetric, email, fileList, copyright, newItems)
     .then((response) => {
         console.log(response);
         setSnackBarOpen(true);

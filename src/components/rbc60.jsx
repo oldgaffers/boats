@@ -12,7 +12,7 @@ import Grid from "@mui/material/Grid";
 import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
-import { nextOgaNo, postGeneralEnquiry } from './boatregisterposts';
+import { disposeOgaNo, nextOgaNo, postGeneralEnquiry } from './boatregisterposts';
 import { getFilterable } from './boatregisterposts';
 const UNLISTED = "My boat isn't listed";
 
@@ -299,6 +299,16 @@ const schema = (ports, user, boats) => {
                         isRequired: true,
                         validate: [{ type: validatorTypes.REQUIRED }],
                     },
+                    {
+                        component: componentTypes.TEXT_FIELD,
+                        label: "Make a note of your boat's OGA Number",
+                        name: 'ddf.oga_no',
+                        condition: {
+                            when: 'boat',
+                            is: UNLISTED,
+                        },
+                        isReadOnly: true,
+                    },
                 ],
             },
             {
@@ -510,6 +520,7 @@ export default function RBC60() {
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const { user } = useAuth0();
     const [data, setData] = useState();
+    const [firstFreeOgaNo, setFirstFreeOgaNo] = useState();
 
     useEffect(() => {
         if (!data) {
@@ -517,10 +528,28 @@ export default function RBC60() {
         }
     }, [data]);
 
+    useEffect(() => {
+        if (!firstFreeOgaNo) {
+            nextOgaNo().then((r) => setFirstFreeOgaNo(r.data)).catch((e) => console.log(e));
+        }
+    }, [firstFreeOgaNo]);
+
     if (!data) return <CircularProgress />;
+    if (!firstFreeOgaNo) return <CircularProgress />;
 
     const handleSubmit = (values) => {
         const { ddf, ...data } = values;
+        if (data.boat === UNLISTED) {
+            data.boat = { name: ddf.boatname, oga_no: ddf.oga_no };
+            console.log('new boat', data.boat);
+            data.new_boat = true;
+        } else {
+            disposeOgaNo(firstFreeOgaNo)
+            .then(() => console.log(`disposed of oga no ${firstFreeOgaNo}`))
+            .catch((e) => console.log(e));
+            const [name, ogaNo] = data.boat.split(/[()]/);
+            data.boat = { name: name.trim(), oga_no: ogaNo && parseInt(ogaNo) };
+        }
         if (user) {
             data.user = {
                 name: user.name,
@@ -531,7 +560,7 @@ export default function RBC60() {
         } else {
             const { payer } = data.payment || {
                 payer: {
-                    email_address: 'boatregister@oga.org.uk',
+                    email_address: 'boatregister@oga.org.uk', 
                     name: { given_name: 'old', surname: 'gaffer' },
                 },
             };
@@ -548,47 +577,22 @@ export default function RBC60() {
                 return { from, to, spaces: data.leg[leg] }
             });
         }
-        if (data.boat === UNLISTED) {
-            nextOgaNo().then((r) => {
-                data.boat = { name: ddf.boatname, oga_no: r.data };
-                data.new_boat = true;
-                console.log('submit', data);
-                postGeneralEnquiry('member', 'entries', {
-                    data,
-                    topic: 'RBC 60',
-                    email: data.user.email,
-                    created_at: new Date().toISOString(),
-                })
-                    .then((response) => {
-                        console.log(response.statusText);
-                        console.log(response.data);
-                        setSnackBarOpen(true);
-                    })
-                    .catch((error) => {
-                        console.log("post", error.statusText);
-                        // TODO snackbar from response.data
-                    });
-            }).catch();
-        } else {
-            const [name, ogaNo] = data.boat.split(/[()]/);
-            data.boat = { name: name.trim(), oga_no: ogaNo && parseInt(ogaNo) };
-            console.log('submit', data);
-            postGeneralEnquiry('member', 'entries', {
-                data,
-                topic: 'RBC 60',
-                email: data.user.email,
-                created_at: new Date().toISOString(),
+        console.log('submit', data);
+        postGeneralEnquiry('member', 'entries', {
+            data,
+            topic: 'RBC 60',
+            email: data.user.email,
+            created_at: new Date().toISOString(),
+        })
+        .then((response) => {
+                console.log(response.statusText);
+                console.log(response.data);
+              setSnackBarOpen(true);
             })
-                .then((response) => {
-                    console.log(response.statusText);
-                    console.log(response.data);
-                    setSnackBarOpen(true);
-                })
-                .catch((error) => {
-                    console.log("post", error.statusText);
-                    // TODO snackbar from response.data
-                });
-        }
+            .catch((error) => {
+              console.log("post", error.statusText);
+              // TODO snackbar from response.data
+            });
     };
 
     const handleSnackBarClose = () => {
@@ -622,6 +626,7 @@ export default function RBC60() {
                 <Grid item xs={12}>
                     <FormRenderer
                         schema={schema(ports, user, data)}
+                        initialValues={ {ddf: { oga_no: firstFreeOgaNo }}}
                         subscription={{ values: true }}
                         componentMapper={{
                             ...componentMapper,

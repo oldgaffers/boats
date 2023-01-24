@@ -5,6 +5,16 @@ export async function nextOgaNo() {
   return axios.get('https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/');
 }
 
+export async function disposeOgaNo(oga_no) {
+  return axios.post(
+    'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/',
+    `${oga_no}`,
+    {
+      headers: { 'content-type': 'application/json' }
+    }
+    );
+}
+
 export async function shuffleBoats() {
   return axios.post(
     'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com/default/shuffle',
