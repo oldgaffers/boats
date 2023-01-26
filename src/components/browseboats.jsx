@@ -21,7 +21,6 @@ import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
-import AboutYearbook from './yearbookabout';
 
 function makePickers(filtered) {
   const pickers = {};
