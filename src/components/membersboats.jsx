@@ -55,16 +55,16 @@ export default function MembersBoats() {
     setExcludeNotPaid(newValue);
   }
 
-  const handleNoConsentSwitchChange = (event, newValue) => {
+  /*const handleNoConsentSwitchChange = (event, newValue) => {
     setExcludeNoConsent(newValue);
-  }
+  }*/
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <FormGroup>
           <FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />
-          <FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />
+          {/*<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />*/}
         </FormGroup>
       </Box>
       <YearbookBoats members={ybmembers} boats={ybboats} />

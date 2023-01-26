@@ -105,8 +105,7 @@ export default function UpdateMyDetails() {
 
   const id = user?.["https://oga.org.uk/id"];
   const ownedBoats = data.filter((b) => b.owners?.includes(id));
-  let boats = data;
-    return (
+  return (    
     <>
         <RoleRestricted>
             <Typography>
