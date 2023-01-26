@@ -23,6 +23,9 @@ import TokenProvider from './components/TokenProvider';
 import ViewTable from './components/viewtable';
 import CreateBoatButton from './components/createboatbutton';
 import PickOrAddBoat from './components/pick_or_add_boat';
+import MembersBoats from './components/membersboats';
+import Members from './components/members';
+import UpdateMyDetails from './components/updatemydetails';
 
 const lightTheme = createTheme({
   palette: {
@@ -52,6 +55,36 @@ const Pages = ({ app, topic }) => {
   // console.log(paypalOptions);
 
   switch (app) {
+    case 'members':
+      return (
+        <Auth0Provider {...auth} scope="member">
+          <TokenProvider>
+            <OGAProvider>
+              <Members/>
+            </OGAProvider>
+          </TokenProvider>
+        </Auth0Provider>
+      );
+      case 'members_boats':
+      return (
+        <Auth0Provider {...auth} scope="member">
+          <TokenProvider>
+            <OGAProvider>
+              <MembersBoats/>
+            </OGAProvider>
+          </TokenProvider>
+        </Auth0Provider>
+      );
+      case 'update_my_details':
+        return (
+          <Auth0Provider {...auth} scope="member">
+            <TokenProvider>
+              <OGAProvider>
+                <UpdateMyDetails/>
+              </OGAProvider>
+            </TokenProvider>
+          </Auth0Provider>
+        );    
     case 'login':
       return (
         <Auth0Provider {...auth} scope="member">
@@ -190,7 +223,8 @@ const Pages = ({ app, topic }) => {
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
   'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_button', 'oga60_interest',
-  'login', 'expressions', 'add_boat', 'pick_or_add_boat'
+  'login', 'expressions', 'add_boat', 'pick_or_add_boat',
+  'members', 'members_boats', 'update_my_details'
 ];
 const divs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 divs.forEach((div) => {

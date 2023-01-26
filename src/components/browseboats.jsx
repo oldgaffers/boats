@@ -119,7 +119,6 @@ export default function BrowseBoats({
         </RoleRestricted>
         <LoginButton />
       </Stack>
-      <AboutYearbook view={state.view} boats={boats} />
       <Intro view={state.view} />
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
