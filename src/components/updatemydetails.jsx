@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import RoleRestricted from './rolerestrictedcomponent';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
@@ -6,6 +6,7 @@ import { membersBoats } from './yearbook';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useQuery, gql } from '@apollo/client';
 import { CircularProgress, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
+import { getFilterable } from './boatregisterposts';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
@@ -89,7 +90,22 @@ function MemberData({ boats }) {
     </>;
 }
 
-export default function UpdateMyDetails({ view, boats }) {
+export default function UpdateMyDetails() {
+
+  const [data, setData] = useState();
+  const { user } = useAuth0();
+
+  useEffect(() => {
+    if (!data) {
+      getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
+    }
+  }, [data]);
+
+  if (!data) return <CircularProgress />;
+
+  const id = user?.["https://oga.org.uk/id"];
+  const ownedBoats = data.filter((b) => b.owners?.includes(id));
+  let boats = data;
     return (
     <>
         <RoleRestricted>
@@ -105,7 +121,7 @@ export default function UpdateMyDetails({ view, boats }) {
         <Typography>
             For now you can see the data that would be in the printed yearbook.
         </Typography>
-        <MemberData boats={boats} />
+        <MemberData boats={ownedBoats} />
         </RoleRestricted>
     </>
     );
