@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
 // import { GridToolbarExport } from '@mui/x-data-grid';
 import { parsePhoneNumber } from 'awesome-phonenumber'
+import Contact from './contact';
 
 /*
             <GridToolbarExport csvOptions={{
@@ -121,7 +122,7 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
     function boatFormatter(params) {
         return params.value;
     }
-
+ 
     function renderLastname(params) {
         return (<Typography variant={'body2'} fontWeight={'bold'}>{params.value}</Typography>);
     }
@@ -135,6 +136,12 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         { field: 'name', headerName: 'Given Name', width: 150, valueGetter: nameGetter },
         { field: 'member', headerName: 'No', width: 90 },
         { field: 'telephone', headerName: 'Telephone', width: 250, valueGetter: phoneGetter },
+        {
+            field: 'url',
+            headerName: 'Details',
+            width: 150,
+            renderCell: (params) => <Contact member={params.row.member}/>,
+        },
         { field: 'town', headerName: 'Town', width: 150 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'area', headerName: 'Area', width: 90, valueGetter: areaFormatter },
