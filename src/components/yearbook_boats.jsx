@@ -1,8 +1,10 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
-import Enquiry from './enquiry';
+import { Button } from '@mui/material';
 // import { GridToolbarExport } from '@mui/x-data-grid';
+import Enquiry from './enquiry';
+import { boatUrl } from '../util/rr';
 
 function CustomToolbar() {
     return (
@@ -20,7 +22,6 @@ function joinList(strings, sep, lastSep) {
 }
 
 export default function YearbookBoats({ boats=[], components={ Toolbar: CustomToolbar } }) {
-
     function ownerValueGetter({ value }) {
         if (!value) {
             return '';
@@ -50,12 +51,24 @@ export default function YearbookBoats({ boats=[], components={ Toolbar: CustomTo
         { field: 'name', headerName: 'Boat', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'oga_no', headerName: 'No.', width: 90 },
         { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
-        { field: 'home_port', headerName: 'Home Port' },
+        {
+            field: 'url',
+            headerName: 'Details',
+            width: 150,
+            renderCell: (params) => <Button
+            padding='5px'
+            size="small"
+            component={'a'}
+            href={boatUrl(params.row.oga_no, {})}
+            variant="contained"
+            color="primary"
+          >More..</Button>,
+        },
         {
             field: 'data.email',
             headerName: 'Contact',
             width: 150,
-            renderCell: (params) => <Enquiry boat={params.row.data.boat} text='Contact' />,
+            renderCell: (params) => <Enquiry boat={params.row} text='Contact' />,
         },
     ];
 

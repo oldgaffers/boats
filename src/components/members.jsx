@@ -17,7 +17,7 @@ export function membersBoats(boats, members) {
 }
 
 export default function Members() {
-  const [excludeNotPaid, setExcludeNotPaid] = useState(true);
+  const [excludeNotPaid, setExcludeNotPaid] = useState(false);
   const [excludeNoConsent, setExcludeNoConsent] = useState(true);
   const [data, setData] = useState();
   const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
@@ -65,7 +65,7 @@ export default function Members() {
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <FormGroup>
-          <FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />
+        {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />:''}
           {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />:''}
         </FormGroup>
       </Box>
