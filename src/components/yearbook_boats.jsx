@@ -1,6 +1,7 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { DataGrid, GridToolbarContainer, GridToolbarFilterButton } from '@mui/x-data-grid';
+import Enquiry from './enquiry';
 // import { GridToolbarExport } from '@mui/x-data-grid';
 
 function CustomToolbar() {
@@ -46,10 +47,16 @@ export default function YearbookBoats({ boats=[], components={ Toolbar: CustomTo
     }
 
     const columns = [
-        { field: 'name', headerName: 'BOAT', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
+        { field: 'name', headerName: 'Boat', width: 150, valueFormatter: boatFormatter, renderCell: renderBoat },
         { field: 'oga_no', headerName: 'No.', width: 90 },
         { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
-        // { field: 'home_port', headerName: 'Home Port' },
+        { field: 'home_port', headerName: 'Home Port' },
+        {
+            field: 'data.email',
+            headerName: 'Contact',
+            width: 150,
+            renderCell: (params) => <Enquiry boat={params.row.data.boat} text='Contact' />,
+        },
     ];
 
     return (

@@ -21,7 +21,9 @@ export default function MembersBoats() {
   const [excludeNoConsent, setExcludeNoConsent] = useState(true);
   const [data, setData] = useState();
   const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
-  const { isAuthenticated } = useAuth0();
+  const { user, isAuthenticated } = useAuth0();
+
+  const roles = user?.['https://oga.org.uk/roles'] || [];
 
   useEffect(() => {
     if (!data) {
@@ -55,16 +57,16 @@ export default function MembersBoats() {
     setExcludeNotPaid(newValue);
   }
 
-  /*const handleNoConsentSwitchChange = (event, newValue) => {
+  const handleNoConsentSwitchChange = (event, newValue) => {
     setExcludeNoConsent(newValue);
-  }*/
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <FormGroup>
           <FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />
-          {/*<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />*/}
+          {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />:''}
         </FormGroup>
       </Box>
       <YearbookBoats members={ybmembers} boats={ybboats} />
