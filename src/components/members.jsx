@@ -20,7 +20,9 @@ export default function Members() {
   const [excludeNotPaid, setExcludeNotPaid] = useState(false);
   const [excludeNoConsent, setExcludeNoConsent] = useState(true);
   const [data, setData] = useState();
-  const membersResult = useQuery(gql`query members { members { salutation firstname lastname member id GDPR smallboats status telephone mobile area town } }`);
+  const membersResult = useQuery(gql`query members { members { 
+    salutation firstname lastname member id GDPR smallboats status telephone mobile area town
+   } }`);
   const { user, isAuthenticated } = useAuth0();
 
   const roles = user?.['https://oga.org.uk/roles'] || [];

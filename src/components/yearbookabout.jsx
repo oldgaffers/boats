@@ -21,7 +21,7 @@ function statusText({ GDPR, status }) {
         return 'Not in Yearbook - left OGA';
     }
     if (GDPR) {
-        return 'will be in the Yearbook';
+        return 'will be in the next printed Yearbook';
     }
     return 'Not in Yearbook - consent not given';
 }
@@ -84,9 +84,9 @@ function MemberData({ boats }) {
 
     return <>
         <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
-        <Typography sx={{ marginTop: '2px' }} variant='h6'>Your 2023 entry in the members list would be</Typography>
+        <Typography sx={{ marginTop: '2px' }} variant='h6'>Your entry in the members list would be</Typography>
         <YearbookMembers members={members} boats={myBoats} components={{}} />
-        <Typography variant='h6'>Your 2023 entry in the boat list would be</Typography>
+        <Typography variant='h6'>Your entry in the boat list would be</Typography>
         <YearbookBoats boats={myBoats} components={{}} />
     </>;
 }

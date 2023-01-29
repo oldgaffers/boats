@@ -98,6 +98,9 @@ function areaFormatter(params) {
         'Solent': 'SO',
         'South West': 'SW',
         'Overseas': 'OS',
+        'The Americas': 'AM',
+        'Continental Europe': 'EU',
+        'Rest of World': 'RW',
     }[value];
     if (api.getRow(id).smallboats) {
         return `${abbrev}/sb`;
@@ -140,7 +143,7 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
             field: 'url',
             headerName: 'Details',
             width: 150,
-            renderCell: (params) => <Contact member={params.row.member}/>,
+            renderCell: (params) => <Contact member={params.row.id}/>,
         },
         { field: 'town', headerName: 'Town', width: 150 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },

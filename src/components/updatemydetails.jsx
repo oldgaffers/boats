@@ -20,7 +20,7 @@ function statusText({ GDPR, status }) {
         return 'Not in Yearbook - left OGA';
     }
     if (GDPR) {
-        return 'will be in the Yearbook';
+        return 'will be in the next printed Yearbook';
     }
     return 'Not in Yearbook - consent not given';
 }
@@ -83,9 +83,9 @@ function MemberData({ boats }) {
 
     return <>
         <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
-        <Typography sx={{ marginTop: '2px' }} variant='h6'>Your 2023 entry in the members list would be</Typography>
+        <Typography sx={{ marginTop: '2px' }} variant='h6'>Your entry in the members list would be</Typography>
         <YearbookMembers members={members} boats={myBoats} components={{}} />
-        <Typography variant='h6'>Your 2023 entry in the boat list would be</Typography>
+        <Typography variant='h6'>Your entry in the boat list would be</Typography>
         <YearbookBoats boats={myBoats} components={{}} />
     </>;
 }
@@ -113,8 +113,8 @@ export default function UpdateMyDetails() {
             </Typography>
         </RoleRestricted>
         <RoleRestricted role='member'>
+        
         <Typography>
-            Here you will be able to request updates to your profile on this page.
             You request will be checked by the membership secretary and should be active soon.
         </Typography>
         <Typography>
