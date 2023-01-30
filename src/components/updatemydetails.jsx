@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useQuery, gql } from '@apollo/client';
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, Checkbox, CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, List, ListItem, Radio, RadioGroup, Snackbar, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, List, ListItem, Radio, RadioGroup, Snackbar, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import RoleRestricted from './rolerestrictedcomponent';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
@@ -98,51 +99,52 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
             maxWidth='md'
             fullWidth
         >
-            <CssBaseline />
-            <DialogTitle>Update Preferences</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Set one primary area and any secondary areas you want to receive communications from.
-                </DialogContentText>
-                <Stack>
-                <FormGroup>
-                    <FormControlLabel control={
-                    <Checkbox checked={smallboats} onChange={(_, checked) => setSmallboats(checked)} />
-                    } label="Small boats" />
-                    <FormHelperText>If you check the small boats box, you will be told about events for small boats in all areas</FormHelperText>
-                </FormGroup>
-                <FormLabel><Typography>Areas</Typography></FormLabel>
-                <FormHelperText>
-                Your primary area will receive a portion of your membership fee.
-                    Some areas are not currently set up to be primary areas
-                    </FormHelperText>
-                <Grid2 container>
-                {areas.map((area) =>
-                <Grid2 item xs={6}>
-                    <FormControl>
-                        <FormLabel id={area.value}><Typography variant='caption'>{area.label}</Typography></FormLabel>
-                        <RadioGroup
-                            value={val(area)}
-                            onChange={handleAreaChange}
-                            row
-                            aria-labelledby="demo-row-radio-buttons-group-label"
-                            name={`${area.value}-group`}
-                        >
-                            <FormControlLabel disabled={!area.funded} value="P" control={<Radio />} label="Primary" />
-                            <FormControlLabel value="S" control={<Radio />} label="Secondary" />
-                            <FormControlLabel value="N" control={<Radio />} label="None" />
-                        </RadioGroup>
-                    </FormControl>
-                    </Grid2>)}
-                    </Grid2>
-                    <FormLabel><Typography>If anything else needs changing, just ask here.</Typography></FormLabel>
-                    <TextField multiline rows={3} label="Other changes" variant="outlined" onChange={(event) => setText(event.target.value)} />
+            <ScopedCssBaseline>
+                <DialogTitle>Update Preferences</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Set one primary area and any secondary areas you want to receive communications from.
+                    </DialogContentText>
+                    <Stack>
+                        <FormGroup>
+                            <FormControlLabel control={
+                                <Checkbox checked={smallboats} onChange={(_, checked) => setSmallboats(checked)} />
+                            } label="Small boats" />
+                            <FormHelperText>If you check the small boats box, you will be told about events for small boats in all areas</FormHelperText>
+                        </FormGroup>
+                        <FormLabel><Typography>Areas</Typography></FormLabel>
+                        <FormHelperText>
+                            Your primary area will receive a portion of your membership fee.
+                            Some areas are not currently set up to be primary areas
+                        </FormHelperText>
+                        <Grid2 container>
+                            {areas.map((area) =>
+                                <Grid2 item xs={6}>
+                                    <FormControl>
+                                        <FormLabel id={area.value}><Typography variant='caption'>{area.label}</Typography></FormLabel>
+                                        <RadioGroup
+                                            value={val(area)}
+                                            onChange={handleAreaChange}
+                                            row
+                                            aria-labelledby="demo-row-radio-buttons-group-label"
+                                            name={`${area.value}-group`}
+                                        >
+                                            <FormControlLabel disabled={!area.funded} value="P" control={<Radio />} label="Primary" />
+                                            <FormControlLabel value="S" control={<Radio />} label="Secondary" />
+                                            <FormControlLabel value="N" control={<Radio />} label="None" />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid2>)}
+                        </Grid2>
+                        <FormLabel><Typography>If anything else needs changing, just ask here.</Typography></FormLabel>
+                        <TextField multiline rows={3} label="Other changes" variant="outlined" onChange={(event) => setText(event.target.value)} />
                     </Stack>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
-            </DialogActions>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onCancel}>Cancel</Button>
+                    <Button onClick={handleSubmit}>Submit</Button>
+                </DialogActions>
+            </ScopedCssBaseline>
         </Dialog>
     );
 }
@@ -226,7 +228,7 @@ export default function UpdateMyDetails() {
     const handleSubmit = (newData, text) => {
         console.log('submit', newData, text);
         setOpen(false);
-        postGeneralEnquiry('member', 'profile', { ...newData, text})
+        postGeneralEnquiry('member', 'profile', { ...newData, text })
             .then((response) => {
                 setSnackBarOpen(true);
             })
