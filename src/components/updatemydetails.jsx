@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useQuery, gql } from '@apollo/client';
 import EditIcon from '@mui/icons-material/Edit';
-import { Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, List, ListItem, Radio, RadioGroup, Snackbar, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Button, Checkbox, CircularProgress, CssBaseline, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, List, ListItem, Radio, RadioGroup, Snackbar, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import RoleRestricted from './rolerestrictedcomponent';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
@@ -98,6 +98,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
             maxWidth='md'
             fullWidth
         >
+            <CssBaseline />
             <DialogTitle>Update Preferences</DialogTitle>
             <DialogContent>
                 <DialogContentText>
