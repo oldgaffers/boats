@@ -9,16 +9,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 export async function createBoat(boat, email, fileList, copyright, newItems) {
   if (!boat.oga_no) {
-    boat.oga_no = await nextOgaNo();
+    const r = await nextOgaNo();
+    if (r.status === 200) {
+      boat.oga_no = r.data;
+    }
   }
-  console.log('sendToAws', boat);
   const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);
-  console.log('albumKey', albumKey);
   if (fileList?.length > 0) {
     await postPhotos({ copyright, email, albumKey }, fileList);
   }
-  // console.log('files', fileList?.length || 0);
-  await postBoatData({ email, new: { ...boat, image_key: albumKey, newItems } });
+  const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
+  await postBoatData(bd);
   // console.log('created boat record');
 }
 

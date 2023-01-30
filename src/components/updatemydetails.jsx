@@ -112,7 +112,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
                             } label="Small boats" />
                             <FormHelperText>If you check the small boats box, you will be told about events for small boats in all areas</FormHelperText>
                         </FormGroup>
-                        <FormLabel><Typography>Areas</Typography></FormLabel>
+                        <FormLabel sx={{marginTop: 1}}>Areas</FormLabel>
                         <FormHelperText>
                             Your primary area will receive a portion of your membership fee.
                             Some areas are not currently set up to be primary areas
@@ -121,7 +121,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
                             {areas.map((area) =>
                                 <Grid2 item xs={6}>
                                     <FormControl>
-                                        <FormLabel id={area.value}><Typography variant='caption'>{area.label}</Typography></FormLabel>
+                                        <FormLabel id={area.value}>{area.label}</FormLabel>
                                         <RadioGroup
                                             value={val(area)}
                                             onChange={handleAreaChange}
