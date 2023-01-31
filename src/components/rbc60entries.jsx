@@ -210,8 +210,8 @@ export function RCBEntryMap() {
             ></Marker>)}
 
             {entries.map((entry, index) => {
-                if (entry.data.boat.location) {
-                    const { boat } = entry.data;
+                const { boat } = entry.data;
+                if (boat.visible && boat.location) {
                     const { latitude, longitude } = boat.location;
                     return <Marker
                         key={index}
