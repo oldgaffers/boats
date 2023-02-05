@@ -1,18 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import CircularProgress from "@mui/material/CircularProgress";
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Tab, Tabs, Tooltip } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { TokenContext } from './TokenProvider';
 import { PublicFleetView } from './fleetview';
 import { getScopedData } from './boatregisterposts';
 import EntryTable from './rbc60entrytable';
-import FleetIcon from "./fleeticon";
-import RoleRestricted from './rolerestrictedcomponent';
 import RCBEntryMap from './rbc60map';
 
 function RCBEntryTable() {
@@ -32,7 +26,7 @@ function RCBEntryTable() {
     }, [accessToken, user]);
 
     if (!accessToken) {
-        return '';
+        return <Typography>Please Login to see this content</Typography>;
     }
     if (!data) {
         return <CircularProgress />;
@@ -41,24 +35,7 @@ function RCBEntryTable() {
     const entries = (data?.Items) || [];
 
     return (
-        <RoleRestricted role='member' hide={false}>
-            <Accordion>
-                <AccordionSummary
-                    expandIcon={
-                        <Tooltip placement='left' title='click to show or hide the text'>
-                            <ExpandMoreIcon />
-                        </Tooltip>
-                    }
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <FleetIcon /><Typography>Table of Entries</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <EntryTable rows={entries} />
-                </AccordionDetails>
-            </Accordion>
-        </RoleRestricted>
+        <EntryTable rows={entries} />
     );
 }
 
@@ -99,8 +76,9 @@ export default function RBC60Entryies() {
     return (
         <>
             <Typography>
-                On this page everyone can see the list of boats
-                going all the way round on the OGA 60 Round Britain Cruise.
+                On this page everyone can see the boats
+                going all the way round on the OGA 60 Round Britain Cruise and also the boats planning
+                to visit each 'Party Port'
             </Typography>
             <Typography>
                 Logged-in members can see a table of all the boats registered for RBC60 events
@@ -111,13 +89,22 @@ export default function RBC60Entryies() {
             </Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="round britain features">
-                    <Tab label="Circumnavigators" {...a11yProps(0)} />
+                    <Tab label="The Boats" {...a11yProps(0)} />
                     <Tab label="Map" {...a11yProps(1)} />
                     <Tab label="Entries" {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
                 <PublicFleetView filter={{ name: 'RBC 60' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Ramsgate' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Cowes' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Plymouth' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Neyland' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Dublin' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Oban' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 River Tay' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Blyth' }} />
+                <PublicFleetView filter={{ name: 'RBC 60 Jubilee Party' }} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <RCBEntryMap />
