@@ -70,7 +70,6 @@ export default function Members() {
         {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />:''}
           {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />:''}
         </FormGroup>
-        <Typography>you are / are not listed (button)</Typography>
       </Box>
       <YearbookMembers members={ybmembers} boats={ybboats} />
     </Box>

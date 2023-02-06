@@ -69,7 +69,6 @@ export default function MembersBoats() {
           {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />:''}
         </FormGroup>
       </Box>
-      <Typography>your boat(s) are / are not listed (button)</Typography>
       <YearbookBoats members={ybmembers} boats={ybboats} />
     </Box>
   );
