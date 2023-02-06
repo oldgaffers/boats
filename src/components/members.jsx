@@ -21,7 +21,8 @@ export default function Members() {
   const [excludeNoConsent, setExcludeNoConsent] = useState(true);
   const [data, setData] = useState();
   const membersResult = useQuery(gql`query members { members { 
-    salutation firstname lastname member id GDPR smallboats status telephone mobile area town
+    salutation firstname lastname member id GDPR 
+    status telephone mobile town area interests smallboats
    } }`);
   const { user, isAuthenticated } = useAuth0();
 
