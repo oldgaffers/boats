@@ -125,7 +125,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
                                         <RadioGroup
                                             value={val(area)}
                                             onChange={handleAreaChange}
-                                            row
+                                            row 
                                             aria-labelledby="demo-row-radio-buttons-group-label"
                                             name={`${area.value}-group`}
                                         >
@@ -149,7 +149,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
     );
 }
 
-function statusText({ GDPR, status }) {
+function printedYearbookStatus({ GDPR, status }) {
     if (status === 'Left OGA') {
         return 'Not in Yearbook - left OGA';
     }
@@ -157,6 +157,26 @@ function statusText({ GDPR, status }) {
         return 'will be in the next printed Yearbook';
     }
     return 'Not in Yearbook - consent not given';
+}
+
+function membersAreaStatus({ GDPR, status }) {
+    if (status === 'Left OGA') {
+        return 'Not listed in the members area - left OGA';
+    }
+    if (GDPR) {
+        return <Typography>shown</Typography>;
+    }
+    return 'Not shown - consent not given';
+}
+
+function GiveWithdrawJoin({ GDPR, status }) {
+    if (status === 'Left OGA') {
+        return <Button>Re-join</Button>;
+    }
+    if (GDPR) {
+        return <Button variant='contained' color='primary'>Withdraw Consent</Button>;
+    }
+    return <Button variant='contained' color='primary'>Give Consent</Button>;
 }
 
 function MemberStatus({ memberNo, members }) {
@@ -185,7 +205,9 @@ function MemberStatus({ memberNo, members }) {
                 <TableHead>
                     <TableRow>
                         <TableCell>Name</TableCell>
+                        <TableCell>Members Area</TableCell>
                         <TableCell>Yearbook</TableCell>
+                        <TableCell>Give/Withdraw Consent</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -194,7 +216,13 @@ function MemberStatus({ memberNo, members }) {
                             <TableRow key={i}>
                                 <TableCell>{member.salutation} {member.firstname} {member.lastname}</TableCell>
                                 <TableCell>
-                                    <Typography>{statusText(member)}</Typography>
+                                    <Typography>{membersAreaStatus(member)}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <Typography>{printedYearbookStatus(member)}</Typography>
+                                </TableCell>
+                                <TableCell>
+                                    <GiveWithdrawJoin GDPR={member.GDPR} status={member.status} />
                                 </TableCell>
                             </TableRow>
                         ))
