@@ -84,8 +84,7 @@ function phoneGetter({ row }) {
     return `*** M: ${row.mobile} T: ${row.telephone} ***`;
 }
 
-function areaFormatter(params) {
-    const { id, value, api } = params;
+function areaAbbreviation(value) {
     const abbrev = {
         'Bristol Channel': 'BC',
         'Dublin Bay': 'DB',
@@ -102,10 +101,20 @@ function areaFormatter(params) {
         'Continental Europe': 'EU',
         'Rest of World': 'RW',
     }[value];
+    return abbrev;
+}
+/*
+function oldAreaFormatter(params) {
+    const { id, value, api } = params;
+    const abbrev = areaAbbreviation(value);
     if (api.getRow(id).smallboats) {
         return `${abbrev}/sb`;
     }
     return abbrev;
+}
+*/
+function areaFormatter(params) {
+    return areaAbbreviation(params.value);
 }
 
 // export default function YearbookMembers({ members=[], boats=[] }) {
@@ -134,6 +143,10 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         return params.value;
     }
 
+    function smallboatsFormatter(params) {
+        return params.value?'✓':'✗';
+    }
+
     const columns = [
         { field: 'lastname', headerName: 'Last Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
         { field: 'name', headerName: 'Given Name', width: 150, valueGetter: nameGetter },
@@ -147,7 +160,9 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         },
         { field: 'town', headerName: 'Town', width: 150 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
-        { field: 'area', headerName: 'Area', width: 90, valueGetter: areaFormatter },
+        { field: 'area', headerName: 'Primary Area', width: 100, valueGetter: areaFormatter },
+        { field: 'interests', headerName: 'Additional Areas', width: 120,  },
+        { field: 'smallboats', headerName: 'Small Boats', valueFormatter: smallboatsFormatter },
     ];
 
     return (

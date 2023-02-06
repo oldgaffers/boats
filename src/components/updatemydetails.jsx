@@ -112,7 +112,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
                             } label="Small boats" />
                             <FormHelperText>If you check the small boats box, you will be told about events for small boats in all areas</FormHelperText>
                         </FormGroup>
-                        <FormLabel sx={{marginTop: 1}}>Areas</FormLabel>
+                        <FormLabel sx={{ marginTop: 1 }}>Areas</FormLabel>
                         <FormHelperText>
                             Your primary area will receive a portion of your membership fee.
                             Some areas are not currently set up to be primary areas
@@ -125,7 +125,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
                                         <RadioGroup
                                             value={val(area)}
                                             onChange={handleAreaChange}
-                                            row 
+                                            row
                                             aria-labelledby="demo-row-radio-buttons-group-label"
                                             name={`${area.value}-group`}
                                         >
@@ -199,7 +199,7 @@ function MemberStatus({ memberNo, members }) {
     } else {
         return <>
             <Typography variant='h6'>
-                Membership {memberNo} includes the following people
+                Membership {memberNo} includes the following people:
             </Typography>
             <Table>
                 <TableHead>
@@ -231,17 +231,6 @@ function MemberStatus({ memberNo, members }) {
             </Table>
         </>;
     }
-}
-
-function MemberData({ memberNo, boats, members }) {
-    const myBoats = membersBoats(boats, members);
-    return <>
-        <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
-        <Typography sx={{ marginTop: '2px' }} variant='h6'>Your entry in the members list would be</Typography>
-        <YearbookMembers members={members} boats={myBoats} components={{}} />
-        <Typography variant='h6'>Your entry in the boat list would be</Typography>
-        <YearbookBoats boats={myBoats} components={{}} />
-    </>;
 }
 
 export default function UpdateMyDetails() {
@@ -281,6 +270,7 @@ export default function UpdateMyDetails() {
     }
     const { members } = memberResult.data;
     const record = members.find((m) => m.id === id);
+    const myBoats = membersBoats(boats, members);
     return (
         <>
             <RoleRestricted role='member'>
@@ -296,15 +286,23 @@ export default function UpdateMyDetails() {
                         </ListItem>
                     ) : ''}
                 </List>
-                <Stack direction='row' spacing={2} sx={{ marginBottom: 2 }}>
+                <Stack direction='column'>
+                    <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
+                    <Typography sx={{ marginTop: '2px' }} variant='h6'>Your entry in the members list would be</Typography>
+                    <YearbookMembers members={members} boats={myBoats} components={{}} />
+                    <Stack direction='row' spacing={2} sx={{ margin: 2 }}>
+                        <div></div>
                     <Button size="small"
                         endIcon={<EditIcon />}
                         variant="contained"
                         color="primary" onClick={() => setOpen(true)}>
                         Update My Interests
                     </Button>
+                    <div></div>
+                    </Stack>
+                    <Typography variant='h6'>Your entry in the boat list would be</Typography>
+                    <YearbookBoats boats={myBoats} components={{}} />
                 </Stack>
-                <MemberData boats={boats} memberNo={memberNo} members={members} />
                 <UpdateMyDetailsDialog user={record} onSubmit={handleSubmit} onCancel={() => setOpen(false)} open={open} />
             </RoleRestricted>
             <Snackbar
