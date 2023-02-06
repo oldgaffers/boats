@@ -149,20 +149,20 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
 
     const columns = [
         { field: 'lastname', headerName: 'Last Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
-        { field: 'name', headerName: 'Given Name', width: 150, valueGetter: nameGetter },
+        { field: 'name', headerName: 'Given Name', width: 130, valueGetter: nameGetter },
         { field: 'member', headerName: 'No', width: 90 },
-        { field: 'telephone', headerName: 'Telephone', width: 250, valueGetter: phoneGetter },
+        { field: 'telephone', headerName: 'Telephone', width: 200, valueGetter: phoneGetter },
         {
             field: 'url',
             headerName: 'Details',
             width: 150,
             renderCell: (params) => <Contact member={params.row.id}/>,
         },
-        { field: 'town', headerName: 'Town', width: 150 },
+        { field: 'town', headerName: 'Town', width: 120 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
-        { field: 'area', headerName: 'Primary Area', width: 100, valueGetter: areaFormatter },
-        { field: 'interests', headerName: 'Additional Areas', width: 120,  },
-        { field: 'smallboats', headerName: 'Small Boats', valueFormatter: smallboatsFormatter },
+        { field: 'area', headerName: 'Main Area', width: 100, valueGetter: areaFormatter },
+        { field: 'interests', headerName: 'Other Areas', width: 120,  },
+        { field: 'smallboats', headerName: 'SB', valueFormatter: smallboatsFormatter },
     ];
 
     return (
