@@ -7,7 +7,7 @@ import { applyFilters } from '../util/oganoutils';
 import { getFilterable } from './boatregisterposts';
 import { memberPredicate } from '../util/membership';
 import YearbookMembers from './yearbook_members';
-import { FormControlLabel, FormGroup, Switch } from '@mui/material';
+import { FormControlLabel, FormGroup, Switch, Typography } from '@mui/material';
 
 export function membersBoats(boats, members) {
   return boats.filter((b) => b.owners?.length > 0).map((b) => {
@@ -70,6 +70,7 @@ export default function Members() {
         {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />:''}
           {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNoConsentSwitchChange} checked={excludeNoConsent} />} label="Exclude no Consent" />:''}
         </FormGroup>
+        <Typography>you are / are not listed (button)</Typography>
       </Box>
       <YearbookMembers members={ybmembers} boats={ybboats} />
     </Box>

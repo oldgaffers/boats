@@ -149,21 +149,36 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
     );
 }
 
-function GiveWithdrawJoin({ GDPR, status }) {
+// TODO ReJoin
+
+function UpdateConsent({ member }) {
   const [open, setOpen] = useState(false);
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const { GDPR, id, firstname, lastname } = member;
+  const memberNo = member.member;
+  console.log(GDPR, id, memberNo, firstname, lastname);
   let text = 'Give Consent';
-  if (status === 'Left OGA') {
-    text = 'Re-join';
-  }
+  let longtext = 'I consent to the indicated details being shared with other members in the members area of the OGA website and printed in the OGA Yearbook';
   if (GDPR) {
     text = 'Withdraw Consent';
+    longtext = 'Your request will be processed shortly. You can still find out about events on the website';
   }
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    console.log('execute', text);
+    const newData = { ...member, GDPR: !member.GDPR };
+    delete newData.__typename
+    console.log('newData', newData);
+    postGeneralEnquiry('member', 'profile', newData)
+    .then((response) => {
+        setSnackBarOpen(true);
+    })
+    .catch((error) => {
+        console.log("post", error);
+        // TODO snackbar from response.data
+    });
     setOpen(false);
   };
 
@@ -177,17 +192,25 @@ function GiveWithdrawJoin({ GDPR, status }) {
         {text}
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Subscribe</DialogTitle>
+        <DialogTitle>{text}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Click {text} to confirm or cancel.
+            {longtext}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancel}>Cancel</Button>
-          <Button onClick={handleClose}>{text}</Button>
+          <Button onClick={handleClose}>Send</Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={snackBarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackBarOpen(false)}
+        message="Thanks, we'll get back to you."
+        severity="success"
+      />
     </div>
   );
 }
@@ -255,7 +278,7 @@ function MemberStatus({ memberNo, members }) {
                                     <Typography>{printedYearbookStatus(member)}</Typography>
                                 </TableCell>
                                 <TableCell>
-                                    <GiveWithdrawJoin GDPR={member.GDPR} status={member.status} />
+                                    <UpdateConsent member={member} />
                                 </TableCell>
                             </TableRow>
                         ))
