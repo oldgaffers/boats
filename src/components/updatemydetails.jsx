@@ -149,6 +149,49 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
     );
 }
 
+function GiveWithdrawJoin({ GDPR, status }) {
+  const [open, setOpen] = useState(false);
+  let text = 'Give Consent';
+  if (status === 'Left OGA') {
+    text = 'Re-join';
+  }
+  if (GDPR) {
+    text = 'Withdraw Consent';
+  }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    console.log('execute', text);
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Button size='small' variant='contained' color='primary' onClick={handleClickOpen}>
+        {text}
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Click {text} to confirm or cancel.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancel}>Cancel</Button>
+          <Button onClick={handleClose}>{text}</Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
 function printedYearbookStatus({ GDPR, status }) {
     if (status === 'Left OGA') {
         return 'Not in Yearbook - left OGA';
@@ -167,16 +210,6 @@ function membersAreaStatus({ GDPR, status }) {
         return <Typography>shown</Typography>;
     }
     return 'Not shown - consent not given';
-}
-
-function GiveWithdrawJoin({ GDPR, status }) {
-    if (status === 'Left OGA') {
-        return <Button>Re-join</Button>;
-    }
-    if (GDPR) {
-        return <Button variant='contained' color='primary'>Withdraw Consent</Button>;
-    }
-    return <Button variant='contained' color='primary'>Give Consent</Button>;
 }
 
 function MemberStatus({ memberNo, members }) {
