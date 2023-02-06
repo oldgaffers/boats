@@ -103,18 +103,16 @@ function areaAbbreviation(value) {
     }[value];
     return abbrev;
 }
-/*
-function oldAreaFormatter(params) {
+
+function areaFormatter(params) {
     const { id, value, api } = params;
     const abbrev = areaAbbreviation(value);
-    if (api.getRow(id).smallboats) {
-        return `${abbrev}/sb`;
+    const row = api.getRow(id);
+    const others = row.interests.filter((o) => o !== abbrev);
+    if (others.length > 0) {
+        return (<><Typography variant='body2' fontWeight='bold'>{abbrev}</Typography><Typography variant='body2'>,{others.join(',')}</Typography></>);
     }
-    return abbrev;
-}
-*/
-function areaFormatter(params) {
-    return areaAbbreviation(params.value);
+    return (<Typography variant='body2'>{abbrev}</Typography>);
 }
 
 // export default function YearbookMembers({ members=[], boats=[] }) {
@@ -160,8 +158,7 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         },
         { field: 'town', headerName: 'Town', width: 120 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
-        { field: 'area', headerName: 'Main Area', width: 100, valueGetter: areaFormatter },
-        { field: 'interests', headerName: 'Other Areas', width: 120,  },
+        { field: 'area', headerName: 'Area', width: 100, renderCell: areaFormatter },
         { field: 'smallboats', headerName: 'SB', valueFormatter: smallboatsFormatter },
     ];
 

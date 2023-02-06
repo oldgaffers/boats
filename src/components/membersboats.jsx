@@ -24,6 +24,7 @@ export default function MembersBoats() {
   const { user, isAuthenticated } = useAuth0();
 
   const roles = user?.['https://oga.org.uk/roles'] || [];
+  const memberNo = user?.["https://oga.org.uk/member"];
 
   useEffect(() => {
     if (!data) {
@@ -63,6 +64,7 @@ export default function MembersBoats() {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <Typography variant='h6'>Hi {user.name} ({memberNo}).</Typography>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <FormGroup>
         {roles.includes['editor']?<FormControlLabel control={<Switch onChange={handleNotPaidSwitchChange} checked={excludeNotPaid} />} label="Exclude not paid" />:''}

@@ -154,9 +154,7 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
 function UpdateConsent({ member }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const { GDPR, id, firstname, lastname } = member;
-  const memberNo = member.member;
-  console.log(GDPR, id, memberNo, firstname, lastname);
+  const { GDPR } = member;
   let text = 'Give Consent';
   let longtext = 'I consent to the indicated details being shared with other members in the members area of the OGA website and printed in the OGA Yearbook';
   if (GDPR) {
