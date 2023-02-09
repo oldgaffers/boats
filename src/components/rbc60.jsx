@@ -66,28 +66,6 @@ const crewlegfield = (name, label, routeName) => {
     };
 };
 
-const portFields = (ports, route) => {
-    const fields = [];
-    ports.forEach(({ name, start, end, via }, index, list) => {
-        if (index > 0) {
-            if (via) {
-                fields.push(...via.choices.map((leg) => crewlegfield(leg, leg, via.routeName)));
-            } else {
-                const legName = `${list[index - 1].name}_${name}`;
-                const label = `${list[index - 1].name} - ${name}`;
-                fields.push(crewlegfield(legName, label));
-            }
-        }
-        fields.push({
-            component: componentTypes.CHECKBOX,
-            name: `port.${name}`,
-            label: port(name, start, end),
-            dataType: 'boolean',
-        });
-    });
-    return fields;
-};
-
 const boatOptionArray = (boats, memberId) => {
     const owned = [];
     const other = [];
