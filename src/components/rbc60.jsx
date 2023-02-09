@@ -355,32 +355,14 @@ const schema = (ports, user, boats) => {
                     {
                         component: componentTypes.PLAIN_TEXT,
                         name: 'ddf.ports1',
-                        label: "Please check all the 'party' ports you plan to bring your boat to.",
+                        label: <Typography>
+                            Registration is now open for all the Party Ports. 
+                            Please visit the <a href='/oga60/rbc60.html'>main RBC60 page</a>&nbsp;
+                            to register. Please note, if you previously indicated interest in attending
+                            Party Ports on this form you will have to register formally.
+                        </Typography>,
                         variant: 'h6',
                         sx: { marginTop: ".5em" }
-                    },
-                    {
-                        component: componentTypes.CHECKBOX,
-                        name: 'crew',
-                        label: 'If you want to offer crewing opportunities for any of the legs, check here',
-                        helperText: "You don't need to decide now, just leave the box unchecked if you haven't decided yet",
-                        dataType: 'boolean',
-                    },
-                    ...portFields(ports, ''),
-                    {
-                        component: componentTypes.SUB_FORM,
-                        name: 'ddf.ecc',
-                        title: "East Coast annual Summer Cruise",
-                        fields: [
-                            {
-                                component: componentTypes.CHECKBOX,
-                                name: 'ecc',
-                                label: "I'd like to bring my boat along to the East Coast Summer Cruise",
-                                dataType: 'boolean',
-                                helperText: "The East Coast annual Summer Cruise will head south after the main OGA 60 celebration.",
-
-                            },
-                        ],
                     },
                     {
                         component: componentTypes.TEXT_FIELD,
@@ -404,40 +386,6 @@ const schema = (ports, user, boats) => {
                         },
                     },
                 ],
-            },
-            {
-                component: componentTypes.PLAIN_TEXT,
-                name: 'ddf.no_ports_no_boat',
-                label: 'To register, please tell us about your boat and check one or more ports',
-                variant: 'h6',
-                sx: { marginTop: "1em" },
-                condition: {
-                    and: [
-                        {
-                            when: 'ddf.count',
-                            is: 0,
-                        },
-                        {
-                            not: validBoatName,
-                        }
-                    ],
-                }
-            },
-            {
-                component: componentTypes.PLAIN_TEXT,
-                name: 'ddf.no_ports',
-                label: 'To register, please check one or more ports',
-                variant: 'h6',
-                sx: { marginTop: "1em" },
-                condition: {
-                    and: [
-                        {
-                            when: 'ddf.count',
-                            is: 0,
-                        },
-                        validBoatName
-                    ],
-                }
             },
             {
                 component: componentTypes.PLAIN_TEXT,
@@ -545,8 +493,8 @@ export default function RBC60() {
             data.new_boat = true;
         } else {
             disposeOgaNo(firstFreeOgaNo)
-            .then(() => console.log(`disposed of oga no ${firstFreeOgaNo}`))
-            .catch((e) => console.log(e));
+                .then(() => console.log(`disposed of oga no ${firstFreeOgaNo}`))
+                .catch((e) => console.log(e));
             const [name, ogaNo] = data.boat.split(/[()]/);
             data.boat = { name: name.trim(), oga_no: ogaNo && parseInt(ogaNo) };
         }
@@ -560,7 +508,7 @@ export default function RBC60() {
         } else {
             const { payer } = data.payment || {
                 payer: {
-                    email_address: 'boatregister@oga.org.uk', 
+                    email_address: 'boatregister@oga.org.uk',
                     name: { given_name: 'old', surname: 'gaffer' },
                 },
             };
@@ -584,14 +532,14 @@ export default function RBC60() {
             email: data.user.email,
             created_at: new Date().toISOString(),
         })
-        .then((response) => {
+            .then((response) => {
                 console.log(response.statusText);
                 console.log(response.data);
-              setSnackBarOpen(true);
+                setSnackBarOpen(true);
             })
             .catch((error) => {
-              console.log("post", error.statusText);
-              // TODO snackbar from response.data
+                console.log("post", error.statusText);
+                // TODO snackbar from response.data
             });
     };
 
@@ -619,6 +567,10 @@ export default function RBC60() {
                         Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.
                         These events are organised by the Areas and you will be able to register for them separately from the main <a href='/events/events.html'>Events page</a>.
                     </Typography>
+                    <Typography paragraph={true} variant='body1'>
+                        The OGA has arranged the dates of the Party Ports to allow skippers to plan their itinerary to match the capabilities of the boat and crew.
+                        The skipper is responsible for the safety of the boat and all the people on board, and is also responsible for complying with all the relevant rules and regulations.
+                    </Typography>
                 </Grid>
                 <Grid item xs={2}>
                     <LoginButton label='Member Login' />
@@ -626,7 +578,7 @@ export default function RBC60() {
                 <Grid item xs={12}>
                     <FormRenderer
                         schema={schema(ports, user, data)}
-                        initialValues={ {ddf: { oga_no: firstFreeOgaNo }}}
+                        initialValues={{ ddf: { oga_no: firstFreeOgaNo } }}
                         subscription={{ values: true }}
                         componentMapper={{
                             ...componentMapper,
