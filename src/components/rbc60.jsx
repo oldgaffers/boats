@@ -14,7 +14,17 @@ import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
 import { disposeOgaNo, nextOgaNo, postGeneralEnquiry } from './boatregisterposts';
 import { getFilterable } from './boatregisterposts';
+
 const UNLISTED = "My boat isn't listed";
+
+const priceList = {
+    register: 20,
+    single: 33,
+    family: 38,
+    junior: 5.5,
+};
+
+const sterling = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
 
 const ports = [
     { name: 'Ramsgate', start: '2023-04-27' },
@@ -101,7 +111,9 @@ const schema = (ports, user, boats) => {
                     {
                         name: 'ddf.mandatory',
                         component: componentTypes.PLAIN_TEXT,
-                        label: (<Typography component={'span'}>To help us know how many boats to plan for, we are asking all skippers to register now for £20.
+                        label: (<Typography component={'span'}>To help us know how many boats to plan for, we are asking all skippers to register now for {
+                        sterling.format(priceList.register)
+                        }.
                             This entitles you an OGA 60 flag. Flags can be collected from the first party port you have nominated.</Typography>),
                         sx: { marginTop: "2em" }
                     },
@@ -186,9 +198,9 @@ const schema = (ports, user, boats) => {
                         helperText: 'Choose your class of membership. Juniors must be under 25 on 1st January 2023',
                         initialValue: 'ind',
                         options: [
-                            { label: 'Individual member - £33', value: 'ind' },
-                            { label: 'Family member - £38', value: 'fam' },
-                            { label: 'Junior - £5.50', value: 'jun' },
+                            { label: `Individual member - {sterling.format(priceList.single)}`, value: 'ind' },
+                            { label: `Family member - ${sterling.format(priceList.family)}`, value: 'fam' },
+                            { label: `Junior - ${sterling.format(priceList.junior)}`, value: 'jun' },
                         ],
                         condition: {
                             when: 'ddf.member',
@@ -350,12 +362,12 @@ const schema = (ports, user, boats) => {
                     const m = formOptions.getFieldState('ddf.member');
                     const purchaseUnits = [
                         {
-                            description: 'RBC 60 Sign-up with flag £20 (early bird discount no longer available)',
-                            amount: { currency_code: 'GBP', value: 20 },
+                            description: `RBC 60 Sign-up with flag ${priceList.register} (early bird discount no longer available)`,
+                            amount: { currency_code: 'GBP', value: priceList.register },
                             reference_id: 'rbc60',
                         }
                     ];
-                    let helperText = '£20 to register'
+                    let helperText = `${sterling.format(priceList.register)} to register`
                     console.log('m', m);
                     if (m && m.value === 'non') {
                         const j = formOptions.getFieldState('ddf.joining');
@@ -363,22 +375,23 @@ const schema = (ports, user, boats) => {
                             const pu = {
                                 'ind': {
                                     description: '12m individual membership',
-                                    amount: { currency_code: 'GBP', value: 33 },
+                                    amount: { currency_code: 'GBP', value: priceList.single },
                                     reference_id: 'ind',
                                 },
                                 'fam': {
                                     description: '12m family membership',
-                                    amount: { currency_code: 'GBP', value: 38 },
+                                    amount: { currency_code: 'GBP', value: priceList.family },
                                     reference_id: 'fam',
                                 },
                                 'jun': {
                                     description: '12m junior membership',
-                                    amount: { currency_code: 'GBP', value: 5.5 },
+                                    amount: { currency_code: 'GBP', value: priceList.junior },
                                     reference_id: 'jun',
                                 },
                             }[j.value];
                             purchaseUnits.push(pu);
-                            helperText = `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(20 + pu.amount.value)} to join for 12 months and register`
+                            const total = purchaseUnits.reduce((prev, cur) => prev+cur.amount.value, 0);
+                            helperText = `${sterling.format(total)} to join for 12 months and register`
                         }
                     }
                     if (input.value) {
