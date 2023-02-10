@@ -334,15 +334,7 @@ const schema = (ports, user, boats) => {
                 variant: 'h6',
                 sx: { marginTop: "1em" },
                 condition: {
-                    and: [
-                        {
-                            when: 'ddf.count',
-                            greaterThan: 0,
-                        },
-                        {
-                            not: validBoatName,
-                        }
-                    ],
+                    not: validBoatName,
                 }
             },
             {
@@ -351,10 +343,6 @@ const schema = (ports, user, boats) => {
                 label: 'Register',
                 condition: {
                     and: [
-                        {
-                            when: 'ddf.count',
-                            greaterThan: 0,
-                        },
                         validBoatName,
                     ],
                 },
@@ -368,7 +356,8 @@ const schema = (ports, user, boats) => {
                         }
                     ];
                     let helperText = '£20 to register'
-                    if (m && !m.value) {
+                    console.log('m', m);
+                    if (m && m.value === 'non') {
                         const j = formOptions.getFieldState('ddf.joining');
                         if (j) {
                             const pu = {
@@ -389,7 +378,7 @@ const schema = (ports, user, boats) => {
                                 },
                             }[j.value];
                             purchaseUnits.push(pu);
-                            helperText = `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(15 + pu.amount.value)} to join for 12 months and register`
+                            helperText = `${new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(20 + pu.amount.value)} to join for 12 months and register`
                         }
                     }
                     if (input.value) {
