@@ -28,44 +28,6 @@ const ports = [
     { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06' },
 ];
 
-const port = (name, start, end) => {
-    if (start) {
-        const st = new Date(start);
-        const s = new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(st);
-        if (end) {
-            const ed = new Date(end);
-            const e = new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(ed);
-            return `${s}-${e} ${name}`;
-        }
-        return `${s} ${name}`;
-    }
-    return name;
-}
-
-const crewlegfield = (name, label, routeName) => {
-    const conditions = [{ when: 'crew', is: true }];
-    if (routeName) {
-        conditions.push({ when: routeName, is: name });
-    }
-    return {
-        component: componentTypes.TEXT_FIELD,
-        name: `leg.${name}`,
-        helperText: 'If you might have space for OGA members to help crew,'
-            + ' you can indicate the maximum number of spaces here.',
-        label: `possible spaces for the ${label} leg`,
-        type: 'number',
-        dataType: 'integer',
-        validate: [
-            {
-                type: validatorTypes.MIN_NUMBER_VALUE,
-                includeThreshold: true,
-                value: 0,
-            }
-        ],
-        condition: { and: conditions },
-    };
-};
-
 const boatOptionArray = (boats, memberId) => {
     const owned = [];
     const other = [];
