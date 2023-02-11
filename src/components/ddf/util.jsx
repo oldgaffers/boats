@@ -45,6 +45,7 @@ export const constructionItems = (pickers) => {
 };
 
 export const extendableItems = ({ pickers, name, label }) => {
+  console.log('extendableItems', name, label)
   return [
     {
       component: 'select',
@@ -55,6 +56,7 @@ export const extendableItems = ({ pickers, name, label }) => {
       isClearable: true,
       options: mapPicker(pickers[name]),
       resolveProps: (props, { meta, input }, formOptions) => {
+        console.log('resolveProps', name, input);  
         const state = formOptions.getState();
         if (typeof state?.initialValues[name] === 'object') {
           return {
@@ -66,8 +68,16 @@ export const extendableItems = ({ pickers, name, label }) => {
     {
       component: 'text-field',
       condition: {
+        or: [
+          {
         when: name,
         isEmpty: true,
+          },
+          {
+            when: name,
+            is: ' ',
+          }
+      ]
       },
       name: `new_${name}`,
       label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
