@@ -104,15 +104,12 @@ function areaAbbreviation(value) {
     return abbrev;
 }
 
-function areaFormatter(params) {
-    const { id, value, api } = params;
-    const abbrev = areaAbbreviation(value);
-    const row = api.getRow(id);
-    const others = row.interests.filter((o) => o !== abbrev);
+function areaFormatter({ value }) {
+    const [area, ...others] = value.split(',')
     if (others.length > 0) {
-        return (<><Typography variant='body2' fontWeight='bold'>{abbrev}</Typography><Typography variant='body2'>,{others.join(',')}</Typography></>);
+        return (<><Typography variant='body2' fontWeight='bold'>{area}</Typography><Typography variant='body2'>,{others.join(',')}</Typography></>);
     }
-    return (<Typography variant='body2'>{abbrev}</Typography>);
+    return (<Typography variant='body2'>{value}</Typography>);
 }
 
 // export default function YearbookMembers({ members=[], boats=[] }) {
@@ -145,6 +142,17 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         return params.value?'✓':'✗';
     }
 
+    const members2 = members.map((m) => {
+        const main = areaAbbreviation(m.area);
+        const others = m.interests.filter((o) => o !== main);
+        if (others.length > 0) {
+            const a = [main, ...others].join(',');
+            console.log(a)
+            return { ...m, areas: a };
+        }
+        return  { ...m, areas: main };
+    });
+
     const columns = [
         { field: 'lastname', headerName: 'Last Name', width: 90, valueFormatter: lastnameFormatter, renderCell: renderLastname },
         { field: 'name', headerName: 'Given Name', width: 130, valueGetter: nameGetter },
@@ -158,7 +166,7 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         },
         { field: 'town', headerName: 'Town', width: 120 },
         { field: 'boat', headerName: 'Boat Name', flex: 1, valueGetter: boatGetter, valueFormatter: boatFormatter, renderCell: renderBoat },
-        { field: 'area', headerName: 'Area', width: 100, renderCell: areaFormatter },
+        { field: 'areas', headerName: 'Areas', width: 100, renderCell: areaFormatter },
         { field: 'smallboats', headerName: 'SB', valueFormatter: smallboatsFormatter },
     ];
 
@@ -166,7 +174,7 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         <div style={{ display: 'flex', height: '100%' }}>
             <div style={{ flexGrow: 1 }}>
                 <DataGrid
-                    rows={members}
+                    rows={members2}
                     columns={columns}
                     components={components}
                     autoHeight={true}
