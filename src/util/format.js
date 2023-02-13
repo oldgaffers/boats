@@ -2,6 +2,16 @@ const M2F = 3.2808;
 
 const pounds = new Intl.NumberFormat('en-GB', { currency: 'GBP', style: 'currency' });
 
+export function formatDesignerBuilder (b, k) {
+  const data = b?.[k];
+  if (data?.name) {
+    return data.name;
+  }
+  if (Array.isArray(data)) {
+    return data.map((d) => d.name).join(' / ');
+  }
+}
+
 export function price(n) {
     if (n === 0) {
         return 'offers';

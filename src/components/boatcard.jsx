@@ -14,7 +14,7 @@ import Checkbox from '@mui/material/Checkbox';
 import TextList from './textlist';
 import { boatUrl } from '../util/rr';
 import { getThumb, getBoatData } from './boatregisterposts';
-import { m2f, price } from '../util/format';
+import { m2f, price, formatDesignerBuilder } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "../browseapp";
 import { currentSaleRecord } from '../util/sale_record';
@@ -42,9 +42,9 @@ const wanted = {
   home_port: { label: 'Home Port', access: (b, k) => b[k] },
   rig_type: { label: 'Rig Type', access: (b, k) => b[k] },
   length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) }, 
-  designer: { label: 'Designer', access: (b, k) => b[k]?.name || b[k] },
+  designer: { label: 'Designer', access: formatDesignerBuilder },
   design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
-  builder: { label: 'Builder', access: (b, k) => b[k]?.name || b[k] },
+  builder: { label: 'Builder', access: formatDesignerBuilder },
   previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
   price: { label: 'Price', access: (b, k) => showPrice(b[k]) },
 };

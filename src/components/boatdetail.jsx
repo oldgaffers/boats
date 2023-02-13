@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import SailTable from './sailtable';
-import { m2f, price } from '../util/format';
+import { m2f, price, formatDesignerBuilder } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
 
@@ -25,7 +25,7 @@ export default function BoatDetail({ boat, user }) {
         <ConditionalText value={ boat.design_class?.name } label="Design class"/>
         <ConditionalText label="Designer" value={ boat.designer?.name } />
         <ConditionalText value={boat.hull_form} label="Hull form"/>
-        <ConditionalText label="Builder" value = { boat.builder?.name } />
+        <ConditionalText label="Builder" value = { formatDesignerBuilder(boat, 'builder') } />
         <ConditionalText value={boat.place_built} label="Place built"/>
         <ConditionalText value={(boat.year_is_approximate?'around ':'')+boat.year} label="Year of Build"/>
         <ConditionalText value={boat.construction_material} label="Construction material"/>
