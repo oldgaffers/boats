@@ -27,16 +27,24 @@ function makePickers(filtered) {
   [
     "name",
     "designer",
-    "builder",
+    "builder", 
     "rig_type",
     "mainsail_type",
     "generic_type",
     "design_class",
     "construction_material",
   ].forEach((key) => {
-    pickers[key] = [...new Set(filtered.map((boat) => {
-      return boat[key];
-    }).filter((v) => v))]
+    const l = new Set();
+    filtered.forEach((boat) => {
+      const v = boat[key];
+      if (Array.isArray(v)) {
+        v.forEach((i) => l.add(i));
+      } else {
+        l.add(v);
+      }
+    });
+    pickers[key] = [...l].filter((v) => v);
+    pickers[key].sort();
   });
   const years = filtered.map((boat) => boat.year).filter((y) => y);
   years.sort();
