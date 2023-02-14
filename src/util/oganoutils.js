@@ -18,6 +18,9 @@ export function applyFilters(boats, filters) {
         }
         filteredBoats = filteredBoats.filter((boat) => {
             const val = boat[(filter==='oga_nos'?'oga_no':filter)];
+            if (Array.isArray(val)) {
+                return val.includes(wanted);
+            }
             if (Array.isArray(wanted)) {
                 return wanted.includes(val);
             }
