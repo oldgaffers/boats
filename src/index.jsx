@@ -26,6 +26,7 @@ import PickOrAddBoat from './components/pick_or_add_boat';
 import MembersBoats from './components/membersboats';
 import Members from './components/members';
 import UpdateMyDetails from './components/updatemydetails';
+import RCBEntryMap from './components/rbc60map';
 
 const lightTheme = createTheme({
   palette: {
@@ -157,6 +158,9 @@ const Pages = ({ app, topic }) => {
         </PayPalScriptProvider>
       )
         ;
+        case 'rbc60_map':
+        return (<RCBEntryMap />)
+          ;        
     case 'rbc60_crew':
       return (
         <Auth0Provider {...auth} scope="member">
@@ -222,7 +226,8 @@ const Pages = ({ app, topic }) => {
 
 const tags = [
   'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
-  'rbc60', 'rbc60_entries', 'rbc60_crew', 'oga60_button', 'oga60_interest',
+  'rbc60', 'rbc60_entries', 'rbc60_map', 'rbc60_crew',
+  'oga60_button', 'oga60_interest',
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
   'members', 'members_boats', 'update_my_details'
 ];

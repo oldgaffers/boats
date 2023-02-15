@@ -9,7 +9,7 @@ import { getScopedData } from './boatregisterposts';
 import EntryTable from './rbc60entrytable';
 import RCBEntryMap from './rbc60map';
 
-function RCBEntryTable() {
+function RBCEntryTable() {
     const name = 'RBC 60';
     const accessToken = useContext(TokenContext);
     const { user } = useAuth0();
@@ -110,7 +110,7 @@ export default function RBC60Entryies() {
                 <RCBEntryMap />
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <RCBEntryTable />
+                <RBCEntryTable />
             </TabPanel>
         </>
     );
