@@ -287,6 +287,13 @@ function MemberStatus({ memberNo, members }) {
     }
 }
 
+function email_indication(record) {
+    if ((record?.email||'').includes('@')) {
+        return `The OGA will email you at ${record.email}.`
+    }
+    return 'You haven\'t provided an email address so you won\t get any emails.';
+}
+
 function MyDetails() {
     const [open, setOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -313,8 +320,7 @@ function MyDetails() {
         if (!boats) {
             getFilterable()
                 .then((r) => {
-                    const b = r.data.filter((b) => b.owners?.includes(id));
-                    setBoats(b);
+                    setBoats(r.data);
                 }).catch((e) => console.log(e));
         }
     }, [boats, id]);
@@ -340,7 +346,7 @@ function MyDetails() {
             <List>
                 <ListItem>your membership number is {memberNo}</ListItem>
                 <ListItem>
-                    The OGA will email you at {record.email}.
+                    {email_indication(record)}
                 </ListItem>
                 <ListItem>
                     You {record.primary ? 'are' : 'are not'} the 'primary' member in this membership.
