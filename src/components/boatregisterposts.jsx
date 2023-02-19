@@ -105,7 +105,7 @@ export async function createPhotoAlbum(name, ogaNo) {
     }
   );
   if (r.status === 409) {
-    console.log('conflict', r.data);
+    // console.log('conflict', r.data);
   }
   return r.data.albumKey;
 }

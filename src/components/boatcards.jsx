@@ -10,7 +10,7 @@ export default function BoatCards({
   state,
   totalCount,
   boats,
-  onChangePage=(arg)=>console.log('onChangePage', arg), 
+  onChangePage=(arg)=> console.log('onChangePage', arg), 
   onBoatMarked,
   onBoatUnMarked,
 }) {

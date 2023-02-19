@@ -200,7 +200,7 @@ export default function PickOrAddBoat() {
     };
 
     const handleSnackBarClose = (event, reason) => {
-        console.log('close', reason);
+        // console.log('close', reason);
         if (reason === 'clickaway') {
             return;
         }

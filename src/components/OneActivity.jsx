@@ -23,7 +23,7 @@ export default function OneActivity({ classes, onCancel, onStart, onEmailChange 
       setEmail(e.target.value);
       onEmailChange(e.target.value);
     } else {
-      console.log('invalid email');
+      // console.log('invalid email');
     }
   };
 

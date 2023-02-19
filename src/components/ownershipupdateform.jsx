@@ -51,7 +51,7 @@ export default function OwnershipForm(props) {
     const [owners, setOwners] = useState(input.value || []);
 
     useEffect(() => {
-        console.log('useEffect', owners);
+        // console.log('useEffect', owners);
         //input.onChange(owners);
     }, [owners]);
 
@@ -81,7 +81,7 @@ export default function OwnershipForm(props) {
 
     const members = [];
     if (getMembersResults.error) {
-        console.log(`Error! ${getMembersResults.error}`);
+        // console.log(`Error! ${getMembersResults.error}`);
     } else {
         if (getMembersResults.data) {
             if (getMembersResults.data.members) {
@@ -91,9 +91,9 @@ export default function OwnershipForm(props) {
             }
         } else {
             if (getMembersResults.called) {
-                console.log('called but not loading');
+                // console.log('called but not loading');
             } else {
-                console.log('not called, calling now', memberNumbers);
+                // console.log('not called, calling now', memberNumbers);
                 getMembers({ variables: { members: memberNumbers } });
             }
         }
@@ -138,14 +138,14 @@ export default function OwnershipForm(props) {
             return (<GridEditInputCell {...params} />);
         } else {
             const onSaveRow = async (ownership, event) => {
-                console.log('onSaveRow', ownership);
+                // console.log('onSaveRow', ownership);
                 const { name, ...rest } = ownership;
                 const o = [...owners];
                 const { share, start, end, ...p } = o[id];
-                console.log('p', p);
-                console.log('rest', rest);
+                // console.log('p', p);
+                // console.log('rest', rest);
                 o[id] = { ...o[id], ...rest };
-                console.log('setOwners', o);
+                // console.log('setOwners', o);
                 setOwners(o);
                 await api.setEditCellValue({ id, field: 'name', value: name }, event);
             }
@@ -157,7 +157,7 @@ export default function OwnershipForm(props) {
     const lastEnd = (ends.length > 0) ? ends[0].end : undefined;
 
     const handleClaim = () => {
-        console.log('handleClaim');
+        // console.log('handleClaim');
         const family = members.filter((m) => m.member === membership.member);
         const no = [];
         family.forEach((m) => {
@@ -168,15 +168,15 @@ export default function OwnershipForm(props) {
     }
 
     const handleRowUpdate = (row) => {
-        console.log('handleRowUpdate', row);
+        // console.log('handleRowUpdate', row);
     };
 
     const handleCellEditStop = (r) => {
-        console.log('handleRowUpdate', r);
+        // console.log('handleRowUpdate', r);
     };
     
     const handleRowEditStop = (r) => {
-        console.log('handleRowEditStop', r);
+        // console.log('handleRowEditStop', r);
     }
 
     const handleAddRow = () => {

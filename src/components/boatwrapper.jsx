@@ -53,7 +53,7 @@ export default function BoatWrapper({ client, boat, location }) {
   // we don't bother with loading and let the owners fill in if they come
 
   if (error) {
-    console.log(`Error! ${error}`);
+    // console.log(`Error! ${error}`);
   }
   const ownerships = result || boat.ownerships || [];
   ownerships.sort((a, b) => a.start > b.start);

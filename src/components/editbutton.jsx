@@ -23,7 +23,7 @@ export default function EditButton({ boat, user }) {
           setSnackBarOpen(true);
         })
         .catch((error) => {
-          console.log("post", error);
+          // console.log("post", error);
           errorText = error;
           setErrorSnackBarOpen(true);
         });

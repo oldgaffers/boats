@@ -69,7 +69,7 @@ export function Fleets({ filter }) {
   if (!data) {
     return <CircularProgress />;
   }
-  console.log('PFV', data);
+  // console.log('PFV', data);
   return (
     <RoleRestricted role='member'>
       {

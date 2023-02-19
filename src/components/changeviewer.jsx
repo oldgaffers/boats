@@ -22,7 +22,7 @@ const renderCell = (value) => {
 
 export default function ChangeViewer({ onClose, open, different, change }) {
     const handleClose = () => {
-        console.log('ChangeViewer close');
+        // console.log('ChangeViewer close');
         onClose();
     }
     // console.log('ChangeViewer', different, change.old, change.new);

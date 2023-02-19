@@ -25,7 +25,7 @@ function makePreviousNamesField(n) {
     try {
       return n.join(', ');
     } catch (e) {
-      console.log('makePreviousNamesField', e);
+      // console.log('makePreviousNamesField', e);
     }
   }
   return undefined;

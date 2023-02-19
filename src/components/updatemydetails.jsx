@@ -7,16 +7,16 @@ import { Button, Checkbox, CircularProgress, Dialog, DialogActions, DialogConten
 import RoleRestricted from './rolerestrictedcomponent';
 import YearbookBoats from './yearbook_boats';
 import YearbookMembers from './yearbook_members';
-import { membersBoats } from './yearbook';
 import { getFilterable, postGeneralEnquiry } from './boatregisterposts';
 import { Stack } from '@mui/system';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
+import { membersBoats } from './membersboats';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
         salutation firstname lastname member id GDPR 
         smallboats status telephone mobile area town
-        interests
+        interests email primary
     }
   }`);
 
@@ -152,65 +152,65 @@ function UpdateMyDetailsDialog({ user, onCancel, onSubmit, open }) {
 // TODO ReJoin
 
 function UpdateConsent({ member }) {
-  const [open, setOpen] = useState(false);
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const { GDPR } = member;
-  let text = 'Give Consent';
-  let longtext = 'I consent to the indicated details being shared with other members in the members area of the OGA website and printed in the OGA Yearbook';
-  if (GDPR) {
-    text = 'Withdraw Consent';
-    longtext = 'Your request will be processed shortly. You can still find out about events on the website';
-  }
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+    const [open, setOpen] = useState(false);
+    const [snackBarOpen, setSnackBarOpen] = useState(false);
+    const { GDPR } = member;
+    let text = 'Give Consent';
+    let longtext = 'I consent to the indicated details being shared with other members in the members area of the OGA website and printed in the OGA Yearbook';
+    if (GDPR) {
+        text = 'Withdraw Consent';
+        longtext = 'Your request will be processed shortly. You can still find out about events on the website';
+    }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
 
-  const handleClose = () => {
-    const newData = { ...member, GDPR: !member.GDPR };
-    delete newData.__typename
-    console.log('newData', newData);
-    postGeneralEnquiry('member', 'profile', newData)
-    .then((response) => {
-        setSnackBarOpen(true);
-    })
-    .catch((error) => {
-        console.log("post", error);
-        // TODO snackbar from response.data
-    });
-    setOpen(false);
-  };
+    const handleClose = () => {
+        const newData = { ...member, GDPR: !member.GDPR };
+        delete newData.__typename
+        // console.log('newData', newData);
+        postGeneralEnquiry('member', 'profile', newData)
+            .then((response) => {
+                setSnackBarOpen(true);
+            })
+            .catch((error) => {
+                // console.log("post", error);
+                // TODO snackbar from response.data
+            });
+        setOpen(false);
+    };
 
-  const handleCancel = () => {
-    setOpen(false);
-  };
+    const handleCancel = () => {
+        setOpen(false);
+    };
 
-  return (
-    <div>
-      <Button size='small' variant='contained' color='primary' onClick={handleClickOpen}>
-        {text}
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{text}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {longtext}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancel}>Cancel</Button>
-          <Button onClick={handleClose}>Send</Button>
-        </DialogActions>
-      </Dialog>
-      <Snackbar
-        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        open={snackBarOpen}
-        autoHideDuration={2000}
-        onClose={() => setSnackBarOpen(false)}
-        message="Thanks, we'll get back to you."
-        severity="success"
-      />
-    </div>
-  );
+    return (
+        <div>
+            <Button size='small' variant='contained' color='primary' onClick={handleClickOpen}>
+                {text}
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>{text}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        {longtext}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancel}>Cancel</Button>
+                    <Button onClick={handleClose}>Send</Button>
+                </DialogActions>
+            </Dialog>
+            <Snackbar
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                open={snackBarOpen}
+                autoHideDuration={2000}
+                onClose={() => setSnackBarOpen(false)}
+                message="Thanks, we'll get back to you."
+                severity="success"
+            />
+        </div>
+    );
 }
 
 function printedYearbookStatus({ GDPR, status }) {
@@ -297,14 +297,14 @@ export default function UpdateMyDetails() {
     const memberResult = useQuery(MEMBER_QUERY, { variables: { members: [memberNo] } });
 
     const handleSubmit = (newData, text) => {
-        console.log('submit', newData, text);
+        // console.log('submit', newData, text);
         setOpen(false);
         postGeneralEnquiry('member', 'profile', { ...newData, text })
             .then((response) => {
                 setSnackBarOpen(true);
             })
             .catch((error) => {
-                console.log("post", error);
+                // console.log("post", error);
                 // TODO snackbar from response.data
             });
     }
@@ -319,12 +319,21 @@ export default function UpdateMyDetails() {
         }
     }, [boats, id]);
 
+    if (!user) {
+        return '';
+    }
+
     if (!memberResult.data) {
         return <CircularProgress />
     }
     const { members } = memberResult.data;
     const record = members.find((m) => m.id === id);
     const myBoats = membersBoats(boats, members);
+
+    let your = 'Your entry';
+    if (members.length > 1) {
+        your = `Member ${memberNo}'s entry`;
+    }
     return (
         <>
             <RoleRestricted role='member'>
@@ -332,27 +341,25 @@ export default function UpdateMyDetails() {
                 <List>
                     <ListItem>your membership number is {memberNo}</ListItem>
                     <ListItem>
-                        Your primary area is {record.area}
+                        The OGA will email you at {record.email}.
                     </ListItem>
-                    {record.smallboats ? (
-                        <ListItem>
-                            You have registered interest in small boat events
-                        </ListItem>
-                    ) : ''}
+                    <ListItem>
+                        You {record.primary ? 'are' : 'are not'} the 'primary' member in this membership.
+                    </ListItem>
                 </List>
                 <Stack direction='column'>
                     <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
-                    <Typography sx={{ marginTop: '2px' }} variant='h6'>Your entry in the members list would be</Typography>
+                    <Typography sx={{ marginTop: '2px' }} variant='h6'>{your} in the members list would be:</Typography>
                     <YearbookMembers members={members} boats={myBoats} components={{}} />
                     <Stack direction='row' spacing={2} sx={{ margin: 2 }}>
                         <div></div>
-                    <Button size="small"
-                        endIcon={<EditIcon />}
-                        variant="contained"
-                        color="primary" onClick={() => setOpen(true)}>
-                        Update My Interests
-                    </Button>
-                    <div></div>
+                        <Button size="small"
+                            endIcon={<EditIcon />}
+                            variant="contained"
+                            color="primary" onClick={() => setOpen(true)}>
+                            Update My Interests
+                        </Button>
+                        <div></div>
                     </Stack>
                     <Typography variant='h6'>Your entry in the boat list would be</Typography>
                     <YearbookBoats boats={myBoats} components={{}} />

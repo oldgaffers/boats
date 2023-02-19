@@ -98,7 +98,7 @@ export default function RBC60CrewForm() {
     }
 
     const handleSubmit = (values) => {
-        console.log('submit', values);
+        // console.log('submit', values);
         const { ddf, ...data } = values;
         postCrewEnquiry(data).then(
             () => setSnackBarOpen(true)

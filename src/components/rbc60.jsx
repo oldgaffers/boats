@@ -368,7 +368,7 @@ const schema = (ports, user, boats) => {
                         }
                     ];
                     let helperText = `${sterling.format(priceList.register)} to register`
-                    console.log('m', m);
+                    // console.log('m', m);
                     if (m && m.value === 'non') {
                         const j = formOptions.getFieldState('ddf.joining');
                         if (j) {
@@ -431,7 +431,7 @@ export default function RBC60() {
         const { ddf, ...data } = values;
         if (data.boat === UNLISTED) {
             data.boat = { name: ddf.boatname, oga_no: ddf.oga_no };
-            console.log('new boat', data.boat);
+            // console.log('new boat', data.boat);
             data.new_boat = true;
         } else {
             disposeOgaNo(firstFreeOgaNo)
@@ -467,7 +467,7 @@ export default function RBC60() {
                 return { from, to, spaces: data.leg[leg] }
             });
         }
-        console.log('submit', data);
+        // console.log('submit', data);
         postGeneralEnquiry('member', 'entries', {
             data,
             topic: 'RBC 60',
@@ -475,12 +475,12 @@ export default function RBC60() {
             created_at: new Date().toISOString(),
         })
             .then((response) => {
-                console.log(response.statusText);
-                console.log(response.data);
+                // console.log(response.statusText);
+                // console.log(response.data);
                 setSnackBarOpen(true);
             })
             .catch((error) => {
-                console.log("post", error.statusText);
+                // console.log("post", error.statusText);
                 // TODO snackbar from response.data
             });
     };

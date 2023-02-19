@@ -45,7 +45,7 @@ export const constructionItems = (pickers) => {
 };
 
 export const extendableItems = ({ pickers, name, label }) => {
-  console.log('extendableItems', name, label)
+  // console.log('extendableItems', name, label)
   return [
     {
       component: 'select',
@@ -56,7 +56,7 @@ export const extendableItems = ({ pickers, name, label }) => {
       isClearable: true,
       options: mapPicker(pickers[name]),
       resolveProps: (props, { meta, input }, formOptions) => {
-        console.log('resolveProps', name, input);  
+        // console.log('resolveProps', name, input);  
         const state = formOptions.getState();
         if (typeof state?.initialValues[name] === 'object') {
           return {

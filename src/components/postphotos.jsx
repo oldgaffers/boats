@@ -37,7 +37,7 @@ export async function postPhotos(values, fileList) {
             });
             return Promise.allSettled(uploads);
         } catch (e) {
-            console.log(e);
+            // console.log(e);
         }
     }
     return undefined;

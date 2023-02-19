@@ -108,7 +108,7 @@ export default function Contact({ member, text = 'Contact' }) {
                 setSnackBarOpen(true);
             })
             .catch((error) => {
-                console.log("post", error);
+                // console.log("post", error);
                 // TODO snackbar from response.data
             });
     };

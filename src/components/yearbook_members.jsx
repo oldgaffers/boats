@@ -147,7 +147,7 @@ export default function YearbookMembers({ members=[], boats=[], components={ Too
         const others = m.interests.filter((o) => o !== main);
         if (others.length > 0) {
             const a = [main, ...others].join(',');
-            console.log(a)
+            // console.log(a)
             return { ...m, areas: a };
         }
         return  { ...m, areas: main };

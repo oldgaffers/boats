@@ -129,7 +129,7 @@ export default function Enquiry({ boat, text }) {
         getOwners({ variables: { members: memberNumbers } })  
       }
     } else {
-      console.log('not member - userRoles', userRoles);
+      // console.log('not member - userRoles', userRoles);
     }
     setOpen(true);
   };
@@ -153,7 +153,7 @@ export default function Enquiry({ boat, text }) {
         setSnackBarOpen(true);
       })
       .catch((error) => {
-        console.log("post", error);
+        // console.log("post", error);
         // TODO snackbar from response.data
       });
   };

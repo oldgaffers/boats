@@ -12,7 +12,7 @@ export default function BoatButtons({ boat, ownerships, user /* location */ }) {
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
   const photoCancelled = () => {
-    console.log('cancel');
+    // console.log('cancel');
   }
 
   const photoDone = () => {

@@ -18,7 +18,7 @@ async function getFleets(scope, filter, accessToken) {
 }
 
 export default function FleetButtons({
-    onChange=()=>{console.log('fleet change');},
+    onChange = () => console.log('fleet change'),
 }) {
     const [items, setItems] = useState();
     const [selected, setSelected] = useState();

@@ -7,7 +7,7 @@ import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
 import AddPhotosDialog from './addphotosdialog';
 
 async function upload(boat, copyright, email, pictures) {
-  console.log('upload pictures', boat);
+  // console.log('upload pictures', boat);
   const { image_key, name, oga_no } = boat;
   let albumKey;
   if (image_key) {
@@ -36,7 +36,7 @@ export default function PhotoButton({ boat, onDone }) {
       .then(() => {
         setSnackBarOpen(true);
       }).catch((error) => {
-        console.log("post", error);
+        // console.log("post", error);
         // TODO snackbar from response.data
       });
   }

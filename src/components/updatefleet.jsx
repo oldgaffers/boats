@@ -5,7 +5,7 @@ import { postScopedData } from "./boatregisterposts";
 import { Popover, Typography } from "@mui/material";
 import { TokenContext } from './TokenProvider';
 
-export default function UpdateFleet({ markList=[], fleet, updated=()=>console.log('updated') }) {
+export default function UpdateFleet({ markList=[], fleet, updated = () => console.log('updated') }) {
     const accessToken = useContext(TokenContext);
     const { user } = useAuth0();
     const id = user?.["https://oga.org.uk/id"];
@@ -43,7 +43,7 @@ export default function UpdateFleet({ markList=[], fleet, updated=()=>console.lo
                 updated();
             })
             .catch((e) => {
-                console.log(e);
+                // console.log(e);
                 setPopoverOpen(false);
             });
     }

@@ -146,7 +146,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
         fs.summary = ddf.summary;
         updates.for_sales = [{ ...fs }, ...pfs];
       } else {
-        console.log("no current sales record - this shouldn't happen");
+        // console.log("no current sales record - this shouldn't happen");
       }
     }
     if (ddf.confirm_for_sale) {
@@ -170,7 +170,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates };
     const { newItems } = np;
-    console.log('BOAT', updates, newItems);
+    // console.log('BOAT', updates, newItems);
     onSave({ old: before, new: updatedBoat, email: email || ddf.email, newItems });
   };
 

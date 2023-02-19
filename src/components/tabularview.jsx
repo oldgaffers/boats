@@ -34,7 +34,7 @@ const columns = [
   
 export default function TabularView({ state }) {
   const { loading, error, data } = useCardQuery(state);
-  if (error) console.log(JSON.stringify(error));
+  if (error) // console.log(JSON.stringify(error));
 
   const boats = getBoats(data).map(boat => ({...boat, id: boat.oga_no}));
 
@@ -42,13 +42,13 @@ export default function TabularView({ state }) {
 
   if (loading) {
     if (data) {
-      console.log('Loading set but data here');
+      // console.log('Loading set but data here');
     } else {
       return <p>Loading...</p>;
     }
   }
 
-  console.log(boats[0]);
+  // console.log(boats[0]);
   
   return (
       <Container sx={{maxHeight: '40vh'}}>

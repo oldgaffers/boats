@@ -552,7 +552,7 @@ function flattenToForm(example, prefix) {
             flat[flatfield] = value.id;
             // console.log('id/name', flatfield, value);
           } else if (Array.isArray(value)) {
-            console.log('array', flatfield, value);
+            // console.log('array', flatfield, value);
             value.forEach((row, index) => {
               const v = flattenToForm(value, flatfield);
               // console.log('array', index, v);
@@ -567,7 +567,7 @@ function flattenToForm(example, prefix) {
           }
           break;
         default:
-          console.log('type', key, typeof value);
+          // console.log('type', key, typeof value);
           break;
       }
     }
@@ -579,7 +579,7 @@ function flattenToForm(example, prefix) {
 function initialiseFromExampleFlat(change, example) {
   const { boat } = example.data.result.pageContext;
   const archetype = flattenToForm(boatm2f(boat));
-  console.log(archetype);
+  // console.log(archetype);
   Object.keys(archetype).forEach((field) => {
     change(field, archetype[field]);
   });
@@ -594,7 +594,7 @@ const FieldListener = () => {
     if (design_class) {
       const instances = filterable.filter((boat) => boat.design_class === design_class);
       const smallest = Math.min(...instances.map((boat) => boat.oga_no));
-      console.log('smallest', smallest);
+      // console.log('smallest', smallest);
       getBoatData(smallest)
         .then((result) => {
           initialiseFromExampleFlat(change, result);

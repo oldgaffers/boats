@@ -60,11 +60,11 @@ export default function CreateBoatButton() {
 
     createBoat(boatMetric, email, fileList, copyright, newItems)
     .then((response) => {
-        console.log(response);
+        // console.log(response);
         setSnackBarOpen(true);
       },
       (error) => {
-        console.log('post', error);
+        // console.log('post', error);
         // TODO snackbar from response.data      
       },
     );

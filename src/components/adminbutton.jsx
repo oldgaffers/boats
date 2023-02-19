@@ -21,7 +21,7 @@ function AdminDialog({ boat, user, onClose, open }) {
         setPopoverText("OK, that should happen soon");
       })
       .catch((error) => {
-        console.log("post", error);
+        // console.log("post", error);
         setPopoverText(error.message);
       });
   }
@@ -35,7 +35,7 @@ function AdminDialog({ boat, user, onClose, open }) {
         setPopoverText("OK, lookout for a PR");
       })
       .catch((error) => {
-        console.log("post", error);
+        // console.log("post", error);
         setPopoverText(error.message);
       });
   }

@@ -28,7 +28,7 @@ function CustomToolbar() {
 }
 
 export default function ViewTable({ scope, table, params }) {
-    console.log('ExpressionsOfInterest', params);
+    // console.log('ExpressionsOfInterest', params);
     const { user, isAuthenticated } = useAuth0();
     const [members, setMembers] = useState();
     const accessToken = useContext(TokenContext);
@@ -40,7 +40,7 @@ export default function ViewTable({ scope, table, params }) {
             Authorization: `Bearer ${accessToken}`,
         }
     });
-    console.log('isAuthenticated', isAuthenticated);
+    // console.log('isAuthenticated', isAuthenticated);
     const [getMembers, m] = useLazyQuery(gql(`query members($members: [Int]!) {
         members(members: $members) {
           member id
@@ -60,7 +60,7 @@ export default function ViewTable({ scope, table, params }) {
 
     if (m.loading) return <CircularProgress />;
     if (m.error) {
-        console.log(m.error)
+        // console.log(m.error)
         return (<div>
             Sorry, we had a problem getting membership data
         </div>);
@@ -73,7 +73,7 @@ export default function ViewTable({ scope, table, params }) {
 
     if (eoi.loading) return <CircularProgress />;
     if (eoi.error) {
-        console.log(eoi.error)
+        // console.log(eoi.error)
         return (<div>
             Sorry, we had a problem getting the expressions of interest
         </div>);
@@ -85,9 +85,9 @@ export default function ViewTable({ scope, table, params }) {
     const rows = eoi.data.data.Items;
     if (m.data) {
         if (members) {
-            console.log('members', members);
+            // console.log('members', members);
         } else {
-            console.log('data', m.data);
+            // console.log('data', m.data);
             setMembers(m.data.members);
         }
     } else {

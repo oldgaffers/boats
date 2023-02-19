@@ -12,7 +12,7 @@ export default function OGA60Button() {
   };
 
   const handleClose = () => {
-    console.log('dialog closed')
+    // console.log('dialog closed')
     setOpen(false);
   };
 

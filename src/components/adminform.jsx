@@ -14,7 +14,7 @@ const FieldListener = (props) => {
   const { getFieldState, getState, change } = useFormApi();
   const modified = getState().modified;
 
-  console.log(getFieldState(field).value);
+  // console.log(getFieldState(field).value);
   if (field === 'some non-existing field') {
     change(field.replace('member', 'id'), 'something');
   }
@@ -22,7 +22,7 @@ const FieldListener = (props) => {
   useEffect(() => {
     const f = Object.keys(modified).find((key) => modified[key]);
     if (f) {
-      console.log('CHANGE', f);
+      // console.log('CHANGE', f);
       setField(f);
     }
   }, [modified]);

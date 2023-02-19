@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 function Owner({ owner, key }) {
-  console.log(owner);
+  // console.log(owner);
   const name = owner.name || owner.text || owner.note || 'name on record but withheld';
   const share = owner.share ? `${owner.share}/64` : '';
   return (

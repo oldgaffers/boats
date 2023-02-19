@@ -33,7 +33,7 @@ export default function OGA60({ onClose, onCancel }) {
             onClose();
           })
           .catch((error) => {
-            console.log("post", error);
+            // console.log("post", error);
             // TODO snackbar from response.data
           });
     };

@@ -7,8 +7,9 @@ import Typography from '@mui/material/Typography';
 
 export const DDFPayPalButtons = (props) => {
     const formOptions = useFormApi();
+    // eslint-disable-next-line no-unused-vars
     const { purchaseUnits, label, helperText, input, ...rest } = useFieldApi(props);
-    console.log('DDFPayPalButtons', rest);
+    // console.log('DDFPayPalButtons', rest);
 
     const createOrder = (data, actions) => {
         return actions.order.create({ purchase_units: purchaseUnits });
@@ -17,8 +18,9 @@ export const DDFPayPalButtons = (props) => {
     const approve = (data, actions) => {
         return actions.order.capture().then((details) => {
             input.onChange(details);
+            // eslint-disable-next-line no-unused-vars
             const x = formOptions.submit();
-            console.log('submit', x);
+            // console.log('submit', x);
         });
     }
     return (

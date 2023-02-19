@@ -64,7 +64,7 @@ export default function EndOwnership({ boat, owned, user }) {
 
   const handleClose = (text, year) => {
     setOpen(false);
-    console.log('handleClose', text, year, owned, boat.ownerships);
+    // console.log('handleClose', text, year, owned, boat.ownerships);
     const ownerships = boat.ownerships.map((o) => {
       const { current, ...rest } = o;
       if (current && o.id === owned.id) {
@@ -85,7 +85,7 @@ export default function EndOwnership({ boat, owned, user }) {
           setSnackBarOpen(true);
         })
         .catch((error) => {
-          console.log("post", error);
+          // console.log("post", error);
           errorText = error;
           setErrorSnackBarOpen(true);
         });

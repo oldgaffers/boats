@@ -203,15 +203,15 @@ const DDFChooseBoat = ({ component, name, label, helperText }) => {
     const [value, setValue] = useState(null);
     const { input } = useFieldApi({ component, name });
     const filter = createFilterOptions();
-    console.log('input', input);
+    // console.log('input', input);
     const memberNumber = useFieldApi('', 'ddf.member_number');
-    console.log(`member stuff '${member}' '${memberNumber && memberNumber.value}'`);
+    // console.log(`member stuff '${member}' '${memberNumber && memberNumber.value}'`);
     const membershipNumber = memberNumber && (Number(memberNumber.value) || member);
-    console.log('membershipNumber', membershipNumber);
+    // console.log('membershipNumber', membershipNumber);
     const { owned, other } = getBoatOptions(pickers, membershipNumber);
-    console.log('owned', owned);
+    // console.log('owned', owned);
     /*
-            console.log('searchValue', searchValue);
+            // console.log('searchValue', searchValue);
             if (searchValue && searchValue.length > 2) {
                 const newName = searchValue[0].toUpperCase() + searchValue.slice(1)
                 const f1 = owned.find((bo) => {
@@ -227,20 +227,20 @@ const DDFChooseBoat = ({ component, name, label, helperText }) => {
                     return newName === bo.value.name;
                 });
                 if (f1) {
-                    console.log('search found in owned', newName, f1);
+                    // console.log('search found in owned', newName, f1);
                 }
                 if (f2) {
-                    console.log('search found in other', newName, f2);
+                    // console.log('search found in other', newName, f2);
                 }
                 if (f2 || f2) {
-                    console.log('search found');
+                    // console.log('search found');
                 } else {
-                    console.log('search not found so adding');
+                    // console.log('search not found so adding');
                     const label = `${newName} (not yet on the register)`
                     additional.push({ label, value: { label, name: newName, oga_no: firstFreeOgaNo } });
                 }
             }
-            console.log('owned', owned.length, 'other', other.length, 'additional', additional.length);
+            // console.log('owned', owned.length, 'other', other.length, 'additional', additional.length);
             return
         },
     };
