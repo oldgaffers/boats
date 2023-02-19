@@ -15,9 +15,9 @@ test('renders learn react link', () => {
       sortField="rank"
       boatsPerPage="12"
       filters={{sale: false}} pickers={mockPicks}
-      onFilterChange={(x)=>// console.log(x)} 
-      onPageSizeChange={(x)=>// console.log(x)} 
-      onSortChange={(x,y)=>// console.log(x,y)}      
+      onFilterChange={(x)=> console.log(x)} 
+      onPageSizeChange={(x)=> console.log(x)} 
+      onSortChange={(x,y)=> console.log(x,y)}      
       />
     </MockedProvider>
   );
