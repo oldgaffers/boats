@@ -287,7 +287,7 @@ function MemberStatus({ memberNo, members }) {
     }
 }
 
-export default function UpdateMyDetails() {
+function MyDetails() {
     const [open, setOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
     const [boats, setBoats] = useState();
@@ -336,36 +336,34 @@ export default function UpdateMyDetails() {
     }
     return (
         <>
-            <RoleRestricted role='member'>
-                <Typography variant='h6'>Hi {user.name}.</Typography>
-                <List>
-                    <ListItem>your membership number is {memberNo}</ListItem>
-                    <ListItem>
-                        The OGA will email you at {record.email}.
-                    </ListItem>
-                    <ListItem>
-                        You {record.primary ? 'are' : 'are not'} the 'primary' member in this membership.
-                    </ListItem>
-                </List>
-                <Stack direction='column'>
-                    <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
-                    <Typography sx={{ marginTop: '2px' }} variant='h6'>{your} in the members list would be:</Typography>
-                    <YearbookMembers members={members} boats={myBoats} components={{}} />
-                    <Stack direction='row' spacing={2} sx={{ margin: 2 }}>
-                        <div></div>
-                        <Button size="small"
-                            endIcon={<EditIcon />}
-                            variant="contained"
-                            color="primary" onClick={() => setOpen(true)}>
-                            Update My Interests
-                        </Button>
-                        <div></div>
-                    </Stack>
-                    <Typography variant='h6'>Your entry in the boat list would be</Typography>
-                    <YearbookBoats boats={myBoats} components={{}} />
+            <Typography variant='h6'>Hi {user.name}.</Typography>
+            <List>
+                <ListItem>your membership number is {memberNo}</ListItem>
+                <ListItem>
+                    The OGA will email you at {record.email}.
+                </ListItem>
+                <ListItem>
+                    You {record.primary ? 'are' : 'are not'} the 'primary' member in this membership.
+                </ListItem>
+            </List>
+            <Stack direction='column'>
+                <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
+                <Typography sx={{ marginTop: '2px' }} variant='h6'>{your} in the members list would be:</Typography>
+                <YearbookMembers members={members} boats={myBoats} components={{}} />
+                <Stack direction='row' spacing={2} sx={{ margin: 2 }}>
+                    <div></div>
+                    <Button size="small"
+                        endIcon={<EditIcon />}
+                        variant="contained"
+                        color="primary" onClick={() => setOpen(true)}>
+                        Update My Interests
+                    </Button>
+                    <div></div>
                 </Stack>
-                <UpdateMyDetailsDialog user={record} onSubmit={handleSubmit} onCancel={() => setOpen(false)} open={open} />
-            </RoleRestricted>
+                <Typography variant='h6'>Your entry in the boat list would be</Typography>
+                <YearbookBoats boats={myBoats} components={{}} />
+            </Stack>
+            <UpdateMyDetailsDialog user={record} onSubmit={handleSubmit} onCancel={() => setOpen(false)} open={open} />
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 open={snackBarOpen}
@@ -376,4 +374,8 @@ export default function UpdateMyDetails() {
             />
         </>
     );
+}
+
+export default function UpdateMyDetails() {
+    return <RoleRestricted role='member'><MyDetails /></RoleRestricted>;
 }
