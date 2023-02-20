@@ -366,7 +366,7 @@ function MyDetails() {
                     </Button>
                     <div></div>
                 </Stack>
-                <Typography variant='h6'>Your entry in the boat list would be</Typography>
+                <Typography variant='h6'>{your} in the boat list would be</Typography>
                 <YearbookBoats boats={myBoats} components={{}} />
             </Stack>
             <UpdateMyDetailsDialog user={record} onSubmit={handleSubmit} onCancel={() => setOpen(false)} open={open} />
