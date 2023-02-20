@@ -354,7 +354,7 @@ function MyDetails() {
             </List>
             <Stack direction='column'>
                 <MemberStatus key={memberNo} memberNo={memberNo} members={members} />
-                <Typography sx={{ marginTop: '2px' }} variant='h6'>{your} in the members list would be:</Typography>
+                <Typography sx={{ marginTop: '2px' }} variant='h6'>{your} in the Yearbook members list would be:</Typography>
                 <YearbookMembers members={members} boats={myBoats} components={{}} />
                 <Stack direction='row' spacing={2} sx={{ margin: 2 }}>
                     <div></div>
@@ -366,7 +366,7 @@ function MyDetails() {
                     </Button>
                     <div></div>
                 </Stack>
-                <Typography variant='h6'>{your} in the boat list would be</Typography>
+                <Typography variant='h6'>{your} in the Yearbook boat list would be</Typography>
                 <YearbookBoats boats={myBoats} components={{}} />
             </Stack>
             <UpdateMyDetailsDialog user={record} onSubmit={handleSubmit} onCancel={() => setOpen(false)} open={open} />
