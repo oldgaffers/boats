@@ -89,7 +89,7 @@ const Pages = ({ app, topic }) => {
     case 'login':
       return (
         <Auth0Provider {...auth} scope="member">
-          <LoginButton label='Member Login' />
+          <LoginButton/>
         </Auth0Provider>
       );
     case 'boat':
