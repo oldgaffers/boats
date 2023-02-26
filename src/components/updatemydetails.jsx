@@ -325,10 +325,6 @@ function MyDetails() {
         }
     }, [boats, id]);
 
-    if (!user) {
-        return '';
-    }
-
     if (!memberResult.data) {
         return <CircularProgress />
     }
