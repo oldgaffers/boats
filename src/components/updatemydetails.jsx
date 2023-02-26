@@ -11,6 +11,7 @@ import { getFilterable, postGeneralEnquiry } from './boatregisterposts';
 import { Stack } from '@mui/system';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { membersBoats } from './membersboats';
+import LoginButton from './loginbutton';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
@@ -323,7 +324,7 @@ function MyDetails() {
                     setBoats(r.data);
                 }).catch((e) => console.log(e));
         }
-    }, [boats, id]);
+    }, [boats]);
 
     if (!memberResult.data) {
         return <CircularProgress />
@@ -378,6 +379,27 @@ function MyDetails() {
     );
 }
 
+function SuggestLogin() {
+    const { user } = useAuth0();
+    if (!user) {
+        return <>
+        <Typography>This is the members area. Please log-in</Typography>
+          <LoginButton/>
+        </>;
+    }
+    if (user["https://oga.org.uk/id"]) {
+        return <Typography>Welcome to the Members Area</Typography>;
+    }
+    return <Typography>
+        Sorry, we can't associate your login with a member.
+        If you are a member, please contact us to sort this out.
+    </Typography>
+}
+
 export default function UpdateMyDetails() {
-    return <RoleRestricted role='member'><MyDetails /></RoleRestricted>;
+    return <>
+        <SuggestLogin/>
+        <RoleRestricted role='member'><MyDetails /></RoleRestricted>
+        </>
+        ;
 }
