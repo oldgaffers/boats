@@ -8,6 +8,8 @@ import { getFilterable } from './boatregisterposts';
 import { memberPredicate } from '../util/membership';
 import YearbookMembers from './yearbook_members';
 import { FormControlLabel, FormGroup, Switch, Typography } from '@mui/material';
+import { SuggestLogin } from './loginbutton';
+import RoleRestricted from './rolerestrictedcomponent';
 
 export function membersBoats(boats, members) {
   return boats.filter((b) => b.owners?.length > 0).map((b) => {
@@ -16,7 +18,7 @@ export function membersBoats(boats, members) {
   }).filter((b) => b.owners.length > 0);
 }
 
-export default function Members() {
+function MembersList() {
   const [excludeNotPaid, setExcludeNotPaid] = useState(false);
   const [excludeNoConsent, setExcludeNoConsent] = useState(true);
   const [data, setData] = useState();
@@ -34,7 +36,6 @@ export default function Members() {
       getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
     }
   }, [data]);
-
 
   if (!data) return <CircularProgress />;
 
@@ -77,4 +78,12 @@ export default function Members() {
       <YearbookMembers members={ybmembers} boats={ybboats} />
     </Box>
   );
+}
+
+export default function Members() {
+  return <>
+      <SuggestLogin/>
+      <RoleRestricted role='member'><MembersList /></RoleRestricted>
+      </>
+      ;
 }

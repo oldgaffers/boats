@@ -4,6 +4,24 @@ import Tooltip from '@mui/material/Tooltip';
 import Avatar from '@mui/material/Avatar';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth0 } from "@auth0/auth0-react";
+import { Typography } from '@mui/material';
+
+export function SuggestLogin() {
+    const { user } = useAuth0();
+    if (!user) {
+        return <>
+        <Typography>This is the members area. Please log-in</Typography>
+          <LoginButton/>
+        </>;
+    }
+    if (user["https://oga.org.uk/id"]) {
+        return <Typography>Welcome to the Members Area</Typography>;
+    }
+    return <Typography>
+        Sorry, we can't associate your login with a member.
+        If you are a member, please contact us to sort this out.
+    </Typography>
+}
 
 export default function LoginButton({ label='Login/Sign-up', avatar=true }) {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();

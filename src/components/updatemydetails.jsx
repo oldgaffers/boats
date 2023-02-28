@@ -11,7 +11,7 @@ import { getFilterable, postGeneralEnquiry } from './boatregisterposts';
 import { Stack } from '@mui/system';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { membersBoats } from './membersboats';
-import LoginButton from './loginbutton';
+import LoginButton, { SuggestLogin } from './loginbutton';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
@@ -377,23 +377,6 @@ function MyDetails() {
             />
         </>
     );
-}
-
-function SuggestLogin() {
-    const { user } = useAuth0();
-    if (!user) {
-        return <>
-        <Typography>This is the members area. Please log-in</Typography>
-          <LoginButton/>
-        </>;
-    }
-    if (user["https://oga.org.uk/id"]) {
-        return <Typography>Welcome to the Members Area</Typography>;
-    }
-    return <Typography>
-        Sorry, we can't associate your login with a member.
-        If you are a member, please contact us to sort this out.
-    </Typography>
 }
 
 export default function UpdateMyDetails() {
