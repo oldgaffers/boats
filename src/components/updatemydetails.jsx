@@ -11,7 +11,7 @@ import { getFilterable, postGeneralEnquiry } from './boatregisterposts';
 import { Stack } from '@mui/system';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { membersBoats } from './membersboats';
-import LoginButton, { SuggestLogin } from './loginbutton';
+import { SuggestLogin } from './loginbutton';
 
 const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     members(members: $members) {
