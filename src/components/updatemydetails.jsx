@@ -241,7 +241,7 @@ function MemberStatus({ memberNo, members }) {
                 return <Typography> Your Yearbook entry will be as shown below.</Typography>;
             } else {
                 return <Typography>
-                    Your Yearbook entry would be as shown below, but you will
+                    Your Yearbook entry would be as shown below, but you would
                     have to contact the membership secretary to give consent.
                 </Typography>;
             }
