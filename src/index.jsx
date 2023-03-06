@@ -61,35 +61,35 @@ const Pages = ({ app, topic }) => {
         <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
-              <Members/>
+              <Members />
             </OGAProvider>
           </TokenProvider>
         </Auth0Provider>
       );
-      case 'members_boats':
+    case 'members_boats':
       return (
         <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
-              <MembersBoats/>
+              <MembersBoats />
             </OGAProvider>
           </TokenProvider>
         </Auth0Provider>
       );
-      case 'update_my_details':
-        return (
-          <Auth0Provider {...auth} scope="member">
-            <TokenProvider>
-              <OGAProvider>
-                <UpdateMyDetails/>
-              </OGAProvider>
-            </TokenProvider>
-          </Auth0Provider>
-        );    
+    case 'update_my_details':
+      return (
+        <Auth0Provider {...auth} scope="member">
+          <TokenProvider>
+            <OGAProvider>
+              <UpdateMyDetails />
+            </OGAProvider>
+          </TokenProvider>
+        </Auth0Provider>
+      );
     case 'login':
       return (
         <Auth0Provider {...auth} scope="member">
-          <LoginButton/>
+          <LoginButton />
         </Auth0Provider>
       );
     case 'boat':
@@ -158,9 +158,15 @@ const Pages = ({ app, topic }) => {
         </PayPalScriptProvider>
       )
         ;
-        case 'rbc60_map':
-        return (<RCBEntryMap />)
-          ;        
+    case 'rbc60_map':
+      return <Auth0Provider {...auth} scope="member">
+        <TokenProvider>
+          <OGAProvider>
+            <RCBEntryMap />
+          </OGAProvider>
+        </TokenProvider>
+      </Auth0Provider>
+        ;
     case 'rbc60_crew':
       return (
         <Auth0Provider {...auth} scope="member">
