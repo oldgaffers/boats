@@ -209,9 +209,7 @@ test('boatm2f Transcur feet', () => {
 });
 
 test('boatm2f Robinetta feet', () => {
-  const m = tcf;
-  const f = boatm2f(m);
-  expect(f).toMatchSnapshot();
+  expect(boatm2f(rcf)).toMatchSnapshot();
 });
 
 test('boatm2f Transcur metres', () => {

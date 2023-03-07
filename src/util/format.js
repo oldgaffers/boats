@@ -1,4 +1,4 @@
-const M2F = 3.2808;
+const OneFoot = 0.3048;
 
 const pounds = new Intl.NumberFormat('en-GB', { currency: 'GBP', style: 'currency' });
 
@@ -19,55 +19,51 @@ export function price(n) {
     return pounds.format(n);
 }
 
-export function m2df(val) {
-    if(val) {
-        return (M2F*val).toFixed(2);
-    }
+export function m2dfn(val) {
+  if(val) {
+      return Math.round(1000*val/OneFoot) / 1000;
+  }
 }
 
-export function m2f(val) {
-  if(val) {
-    return `${m2df(val)} ft`
-  }
-};
+export function m2df(val) {
+    if(val) {
+       //  return (val/OneFoot).toFixed(2);
+       return m2dfn(val).toFixed(2);
+    }
+}
 
 export function feet(n) {
   return `${n.toFixed(2)} ft`;
 }
 
-export function m2feet(val) { 
+export function m2f(val) {
   if(val) {
-      return `${m2df(val)} ft`
+    // return `${m2df(val)} ft`
+    return feet(m2dfn(val))
   }
-}
+};
 
 export function m2dsqf(val) {
     if(val) {
-        return (M2F*M2F*val).toFixed(3);
-    }
-}
-
-export function m2dfn(val) {
-    if(val) {
-        return Math.round(1000*M2F*val) / 1000;
+        return (val/OneFoot/OneFoot).toFixed(3);
     }
 }
 
 export function m2dsqfn(val) {
     if(val) {
-        return parseFloat((M2F*M2F*val).toFixed(3));
+        return parseFloat((val/OneFoot/OneFoot).toFixed(3));
     }
 }
 
 export function f2m(val) {
     if(val) {
-        return Math.round(1000*val/M2F)/1000;
+        return Math.round(1000*OneFoot*val)/1000;
     }
 }
 
 export function f2m2(val) {
     if(val) {
-        return Math.round(1000*val/M2F/M2F)/1000;
+        return Math.round(1000*OneFoot*OneFoot*val)/1000;
     }
 }
 

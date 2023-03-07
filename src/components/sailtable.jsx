@@ -6,7 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { m2feet } from '../util/format';
+import { m2f } from '../util/format';
 
 export default function SailTable( { handicapData }) {
     return (
@@ -26,9 +26,9 @@ export default function SailTable( { handicapData }) {
                 .map(([name, sail]) => 
             (<TableRow key={name}>
                 <TableCell component="th" scope="row">{name.replace(/_/g, ' ')}</TableCell>
-                <TableCell align="right">{m2feet(sail.luff)}</TableCell>
-                <TableCell align="right">{m2feet(sail.head?sail.head:sail.leach)}</TableCell>
-                <TableCell align="right">{m2feet(sail.foot?sail.foot:sail.perpendicular)}</TableCell>
+                <TableCell align="right">{m2f(sail.luff)}</TableCell>
+                <TableCell align="right">{m2f(sail.head?sail.head:sail.leach)}</TableCell>
+                <TableCell align="right">{m2f(sail.foot?sail.foot:sail.perpendicular)}</TableCell>
             </TableRow>
             ))}
         </TableBody>

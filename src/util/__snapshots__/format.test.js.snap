@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`boatDefined 1`] = `
+Object {
+  "draft": 4.921,
+  "handicap_data": Object {
+    "beam": 9.678,
+    "depth": 5,
+    "fore_triangle_base": 19.259,
+    "fore_triangle_height": 30.581,
+    "length_on_deck": 27.871,
+    "length_on_waterline": 27.231,
+    "main": Object {
+      "foot": 18.54,
+      "head": 15.909,
+      "luff": 17.221,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": undefined,
+    "topsail": Object {
+      "luff": 18.77,
+      "perpendicular": 7.051,
+    },
+  },
+  "rig_type": "Cutter",
+}
+`;
+
+exports[`boatDefined 2`] = `
+Object {
+  "draft": 2.749,
+  "handicap_data": Object {
+    "beam": 7.001,
+    "depth": 5,
+    "fore_triangle_base": 9.301,
+    "fore_triangle_height": 19.501,
+    "length_on_deck": 21.001,
+    "length_on_waterline": 17.001,
+    "main": Object {
+      "foot": 16.9,
+      "head": 16.9,
+      "luff": 9.751,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": undefined,
+  },
+  "hull_type": "deep",
+  "rig_type": "Cutter",
+}
+`;
+
+exports[`boatf2m 1`] = `
+Object {
+  "draft": 1.5,
+  "handicap_data": Object {
+    "beam": 2.95,
+    "depth": 5,
+    "fore_triangle_base": 5.87,
+    "fore_triangle_height": 9.321,
+    "length_on_deck": 8.495,
+    "length_on_waterline": 8.3,
+    "main": Object {
+      "foot": 5.651,
+      "head": 4.849,
+      "luff": 5.249,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": undefined,
+    "topsail": Object {
+      "luff": 5.721,
+      "perpendicular": 2.149,
+    },
+  },
+  "rig_type": "Cutter",
+}
+`;
+
+exports[`boatf2m 2`] = `
+Object {
+  "draft": 0.838,
+  "handicap_data": Object {
+    "beam": 2.134,
+    "depth": 5,
+    "fore_triangle_base": 2.835,
+    "fore_triangle_height": 5.944,
+    "length_on_deck": 6.401,
+    "length_on_waterline": 5.182,
+    "main": Object {
+      "foot": 5.151,
+      "head": 5.151,
+      "luff": 2.972,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": undefined,
+  },
+  "hull_type": "deep",
+  "rig_type": "Cutter",
+}
+`;
