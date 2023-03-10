@@ -372,6 +372,7 @@ export const schema = (pickers, canBuySell, forSale) => {
           {
             name: "done-step",
             component: 'sub-form',
+            shortcut: true,
             fields: [
               {
                 name: "ddf.we_are_done",
