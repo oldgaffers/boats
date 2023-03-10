@@ -42,15 +42,15 @@ export const descriptionsItems = [
     label: <Typography>The short and full descriptions should be about what makes this boat distinct.
       If you want to sell this boat, there is a separate place for the sales, text, so don't put things
       like inventory in the descriptions.
-      </Typography>,
+    </Typography>,
   },
   {
     component: 'plain-text',
     name: 'ddf.short_description_helper',
-    label: <Typography>The short description appears on 
+    label: <Typography>The short description appears on
       the boat's card and should be one or two lines long.
       It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.
-      </Typography>,
+    </Typography>,
   },
   {
     component: "html",
@@ -62,11 +62,11 @@ export const descriptionsItems = [
   {
     component: 'plain-text',
     name: 'ddf.full_description_helper',
-    label: <Typography>The full description appears on 
+    label: <Typography>The full description appears on
       the boat's detail page and can be as long as you like.
       It shouldn't replicate the short description. Include historical details, significant voyages,
       rebuilds and links to external videos, etc.
-      </Typography>,
+    </Typography>,
   },
   {
     component: "html",
@@ -173,11 +173,71 @@ export const constructionForm = (pickers) => {
         name: "place_built",
         label: "Place built",
       },
-        ...builderItems(pickers),
+      ...builderItems(pickers),
       ...constructionItems(pickers),
     ],
   };
 };
+
+export const solentFields = (thisStep, nextStep) => {
+  return {
+    name: thisStep,
+    component: 'sub-form',
+    nextStep,
+    fields: [
+      {
+        component: 'radio',
+        label: '',
+        name: "handicap_data.hull_shape",
+        options: [
+          {
+            label: "Long keel High volume",
+            value: "Long keel - High volume",
+          },
+          {
+            label: "Long keel Standard",
+            value: "Long keel - Standard",
+          },
+          {
+            label: "Long keel Low volume",
+            value: "Long keel - Low volume",
+          },
+          { label: "Fin keel", value: "Fin keel" },
+        ],
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.displacement",
+        label: "displacement in cubic metres if known",
+        type: "number",
+        dataType: 'float',
+        isRequired: false,
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.performance_factor",
+        label: "% performance factor",
+        helperText: 'You can put a value in here and see what the effect will be. The handicap committee will determine the actual value to be used.',
+        type: "number",
+        dataType: 'integer',
+        isRequired: false,
+        validate: [
+          { type: 'required' },
+          {
+            type: 'min-number-value',
+            includeThreshold: true,
+            value: 1,
+          },
+          {
+            type: 'max-number-value',
+            includeThreshold: false,
+            value: 100,
+          },
+        ]
+      },
+    ],
+  };
+}
 
 export const yachtHullStep = (nextStep) => {
   return {

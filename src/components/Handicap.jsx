@@ -1,4 +1,5 @@
 import { rig_allowance } from "../util/THCF";
+import { solentFields } from "./ddf/SubForms";
 
 export function foretriangle_area({
   fore_triangle_height,
@@ -293,7 +294,8 @@ export const steps = (nextStep) => [
         name: 'ddf.hcd',
         component: 'sub-form',
         description: `The following steps collect the information needed to calculate a traditional T(H)CF
-        handicap and the extra data for experimental and area handicaps.`,        fields: [
+        handicap and the extra data for experimental and area handicaps.`,
+        fields: [
           {
             component: 'text-field',
             name: "handicap_data.thcf",
@@ -529,7 +531,7 @@ export const steps = (nextStep) => [
       {
         component: 'text-field',
         name: "handicap_data.beam",
-        label: "Beam (decimal feet)",
+        label: "Beam (decimal feet) (measured on the waterline)",
         type: "number",
         dataType: 'float',
         isRequired: true,
@@ -540,9 +542,10 @@ export const steps = (nextStep) => [
   {
     name: "prop-step",
     component: 'sub-form',
-    nextStep: "calc-step",
+    nextStep: 'hull-shape-step',
     fields: [propellorForm],
   },
+  solentFields('hull-shape-step', 'calc-step'),
   {
     name: "calc-step",
     component: 'sub-form',
@@ -673,6 +676,7 @@ export const steps = (nextStep) => [
       },
       {
         component: 'checkbox',
+        shortcut: true,
         name: "ddf.east_coast",
         label: "Add racing headsails (e.g. for the East Coast Race)",
         dataType: "boolean",
@@ -684,6 +688,7 @@ export const steps = (nextStep) => [
   headsail("biggest_downwind_sail", "done-step"),
   {
     name: "no-handicap-step",
+    shortcut: true,
     component: 'sub-form',
     nextStep,
     fields: [
