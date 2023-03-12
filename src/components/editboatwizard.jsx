@@ -332,12 +332,10 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
   if (!open) return '';
 
-  const handleSubmit = (boat) => {
-    // console.log('handleSubmit', boat);
-    // boat.design_class = pickers.design_class.find((item) => item.id === boat.design_class);
+  const handleSubmit = ({ ddf, email, ...boat }) => {
     boat.designer = pickers.designer.find((item) => item.id === boat.designer);
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
-    onSubmit(boat);
+    onSubmit(boat, email);
   }
 
   const flattenedBoat = boatm2f(boat);

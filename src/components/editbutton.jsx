@@ -20,13 +20,11 @@ export default function EditButton({ boat, user }) {
     setOpen(false);
   };
 
-  const handleSubmit = (editedBoat) => {
+  const handleSubmit = (editedBoat, email) => {
     setOpen(false);
-    console.log('before', JSON.stringify(boat));
-    console.log('after', JSON.stringify(editedBoat));
-    const changes = undefined;
-    if (changes) {
-      postBoatData({ email: changes.email, new: changes.new, newItems: changes.newItems })
+    console.log('before', boat);
+    console.log('after', editedBoat);
+      postBoatData({ email, new: editedBoat, newItems: {} })
       .then(() => {
           setSnackBarOpen(true);
         })
@@ -35,12 +33,7 @@ export default function EditButton({ boat, user }) {
           errorText = error;
           setErrorSnackBarOpen(true);
         });
-    }
   };
-
-  const handleSnackBarClose = () => {
-    setSnackBarOpen(false);
-  }
 
   return (
     <div>
@@ -52,18 +45,18 @@ export default function EditButton({ boat, user }) {
       </Button>
       <EditBoatWizard boat={boat} user={user} open={open} onCancel={handleCancel} onSubmit={handleSubmit} />
       <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackBarOpen}
         autoHideDuration={2000}
-        onClose={handleSnackBarClose}
-        message="Thanks, we'll get back to you."
+        onClose={() => setSnackBarOpen(false)}
+        message={"Thanks, we'll get back to you."}
         severity="success"
       />
       <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={errorSnackBarOpen}
         autoHideDuration={2000}
-        onClose={handleSnackBarClose}
+        onClose={() => setErrorSnackBarOpen(false)}
         message={errorText}
         severity="error"
       />
