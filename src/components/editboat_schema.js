@@ -295,6 +295,7 @@ export const schema = (pickers, canBuySell, forSale) => {
             fields: [
               {
                 component: 'radio',
+                label: 'Update Sales Status',
                 options: [
                   { label: 'I want to take boat off the market for the present', value: 'unsell', },
                   { label: "I've sold the boat", value: 'sold', },

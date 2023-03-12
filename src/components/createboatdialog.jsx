@@ -526,7 +526,7 @@ const ignoredKeys = [
   'reference',
 ];
 
-function flattenToForm(example, prefix) {
+export function flattenToForm(example, prefix) {
   let flat = {};
   Object.keys(example).forEach((key) => {
     if (ignoredKeys.includes(key)) {

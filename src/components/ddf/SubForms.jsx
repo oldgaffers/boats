@@ -179,66 +179,6 @@ export const constructionForm = (pickers) => {
   };
 };
 
-export const solentFields = (thisStep, nextStep) => {
-  return {
-    name: thisStep,
-    component: 'sub-form',
-    nextStep,
-    fields: [
-      {
-        component: 'radio',
-        label: '',
-        name: "handicap_data.hull_shape",
-        options: [
-          {
-            label: "Long keel High volume",
-            value: "Long keel - High volume",
-          },
-          {
-            label: "Long keel Standard",
-            value: "Long keel - Standard",
-          },
-          {
-            label: "Long keel Low volume",
-            value: "Long keel - Low volume",
-          },
-          { label: "Fin keel", value: "Fin keel" },
-        ],
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.displacement",
-        label: "displacement in cubic metres if known",
-        type: "number",
-        dataType: 'float',
-        isRequired: false,
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.performance_factor",
-        label: "% performance factor",
-        helperText: 'You can put a value in here and see what the effect will be. The handicap committee will determine the actual value to be used.',
-        type: "number",
-        dataType: 'integer',
-        isRequired: false,
-        validate: [
-          { type: 'required' },
-          {
-            type: 'min-number-value',
-            includeThreshold: true,
-            value: 1,
-          },
-          {
-            type: 'max-number-value',
-            includeThreshold: false,
-            value: 100,
-          },
-        ]
-      },
-    ],
-  };
-}
-
 export const yachtHullStep = (nextStep) => {
   return {
     name: "yacht-hull-step",
@@ -252,7 +192,7 @@ export const yachtHullStep = (nextStep) => {
         fields: [
           {
             component: 'radio',
-            label: '',
+            label: 'choose from',
             name: "hull_form",
             options: [
               { label: "cut-away stern", value: "cut away stern" },

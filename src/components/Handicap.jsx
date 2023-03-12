@@ -1,5 +1,194 @@
 import { rig_allowance } from "../util/THCF";
-import { solentFields } from "./ddf/SubForms";
+import { f2m, m2dfn } from '../util/format';
+
+function shapeFactors(sf) {
+  return {
+    'Long keel - High volume': 0.25,
+    'Long keel - Standard': 0.20,
+    'Long keel - Low volume': 0.15,
+    'Fin keel': 0.10,
+  }[sf];
+}
+
+/*
+Proposed rating formula (metres):
+Measured Rating = MR = 0.2*(L*√S)/√(B*D*SF) + 0.67*(L+√S)
+OR if displacement is known:
+Measured Rating = MR = 0.2*(L*√S)/√(Disp/L) + 0.67*(L+√S)
+Where:
+L = (LWL+LOD)/2
+S = Corrected sail area (includes rig allowance)
+B = Beam (Should be water line, but in most cases the difference is insignificant)
+D = Draft
+SF = Shape Factor above
+Disp = Displacement
+
+*/
+
+
+export const solentFields = (thisStep, nextStep) => {
+  return [{
+    name: thisStep,
+    title: 'Modified Measured Rating',
+    component: 'sub-form',
+    nextStep: 'performance-factor-step',
+    fields: [
+      {
+        component: 'radio',
+        label: 'choose from',
+        name: "handicap_data.hull_shape",
+        initialValue: 'Long keel - Standard',
+        options: [
+          {
+            label: "Long keel High volume (e.g. an East Coast Smack)",
+            value: "Long keel - High volume",
+          },
+          {
+            label: "Long keel Standard (e.g. a Falmouth Working Boat)",
+            value: "Long keel - Standard",
+          },
+          {
+            label: "Long keel Low volume (e.g. Memory 19)",
+            value: "Long keel - Low volume",
+          },
+          { label: "Fin keel", value: "Fin keel" },
+        ],
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.displacement",
+        label: "volume below the waterline in cubic metres (displacement) if known",
+        type: "number",
+        dataType: 'float',
+        isRequired: false,
+      },
+      {
+        component: 'text-field',
+        name: "ddf.mmr",
+        label: "Modified Measured Rating",
+        // description: "0.15L(√S/√C)+0.2(L+√S)",
+        description: "0.2L√S/√(Disp/L)+0.2*(L+√S) - if Displacement not entered then Disp = LxBxDxSF)",
+        type: "number",
+        dataType: 'float',
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const LOD = values.handicap_data.length_on_deck || 0.0;
+          const LWL = values.handicap_data.length_on_waterline || 0.0;
+          const L = f2m((LOD + LWL) / 2);
+          const rS = f2m(values.ddf.root_s);
+          const B = values.handicap_data.beam;
+          const D = values.handicap_data.draft;
+          const SF = shapeFactors(values.handicap_data.hull_shape);
+          const disp = values.handicap_data.displacement || (L * B * D * SF);
+          const x = 0.2 * L * rS / Math.sqrt(disp / L);
+          const y = 0.2 * (L + rS);
+          const mmr = x + y;
+          formOptions.change("ddf.mmr", mmr);
+          return {
+            value: mmr,
+          };
+        },
+      },
+      {
+        component: 'text-field',
+        name: "ddf.mrf",
+        label: "T(H)CF Measured Rating",
+        description: "0.15L(√S/√C)+0.2(L+√S)",
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const v = f2m(values.ddf.mr);
+          return {
+            value: `${values.ddf.mr.toFixed(4)} ft = ${v.toFixed(4)} m`,
+          };
+        }
+      },
+      {
+        component: 'text-field',
+        name: "ddf.mrdiff",
+        label: "Difference",
+        type: "string",
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const mr = f2m(values.ddf.mr);
+          const diff = Math.abs(mr - values.ddf.mmr);
+          const v = 100*diff/mr;
+          return {
+            value: `${v.toFixed(1)}%`,
+          };
+        }
+      },
+    ],
+  },
+  {
+    name: 'performance-factor-step',
+    component: 'sub-form',
+    nextStep,
+    title: 'Modified T(H)CF',
+    fields: [
+      {
+        component: 'radio',
+        name: "handicap_data.performance_factor",
+        label: "% performance factor",
+        helperText: 'You can put a value in here and see what the effect will be. The handicap committee will determine the actual value to be used.',
+        initialValue: 0,
+        isRequired: false,
+        options: [
+          { label: '0%', value: 0 },
+          { label: '1%', value: 0.01 },
+          { label: '2%', value: 0.02 },
+          { label: '3%', value: 0.03 },
+          { label: '4%', value: 0.04 },
+          { label: '5%', value: 0.05 },
+        ]
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.mthcf",
+        label: "Modified T(H)CF",
+        type: "number",
+        dataType: 'float',
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const mmrf = m2dfn(values.ddf.mmr);
+          const pf = values.handicap_data.performance_factor || 0.0;
+          const r = mmrf - pf * values.ddf.prop_allowance * mmrf;
+          const mthcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
+          formOptions.change('handicap_data.mthcf', mthcf);
+          return { value: mthcf };
+        },
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.thcf",
+        label: "T(H)CF",
+        type: "number",
+        dataType: 'float',
+        isReadOnly: true,
+      },
+      {
+        component: 'text-field',
+        name: "ddf.diff",
+        label: "Difference",
+        type: "string",
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          console.log('D', values.handicap_data.mthcf, values.handicap_data.thcf);
+          const diff = Math.abs(values.handicap_data.mthcf - values.handicap_data.thcf);
+          const v = 100*diff/values.handicap_data.thcf;
+          return {
+            value: `${v.toFixed(1)}%`,
+          };
+        }
+      },
+    ],
+  }
+  ];
+}
 
 export function foretriangle_area({
   fore_triangle_height,
@@ -95,7 +284,7 @@ const headsail = (name, nextStep) => {
   return {
     name: `${name}-step`,
     component: 'sub-form',
-    nextStep, 
+    nextStep,
     fields: [
       {
         title: name.replace(/_/g, " "),
@@ -272,18 +461,18 @@ const topsail_fields = (sail) => [
   },
 ];
 
-export const steps = (nextStep) => [
+export const steps = (firstStep, nextStep) => [
   {
-    name: "handicap-step",
+    name: firstStep,
     component: 'sub-form',
     nextStep: ({ values }) => {
-      if(values.handicap_data && values.handicap_data.sailarea) {
+      if (values.handicap_data && values.handicap_data.sailarea) {
         return 'hull-step'
       }
-      if(['Cat Boat','Single Sail'].includes(values.rig_type)) {
+      if (['Cat Boat', 'Single Sail'].includes(values.rig_type)) {
         return 'mainsail-step';
       }
-      if(['None'].includes(values.rig_type)) {
+      if (['None'].includes(values.rig_type)) {
         return 'no-handicap-step';
       }
       return "sails-step";
@@ -294,8 +483,7 @@ export const steps = (nextStep) => [
         name: 'ddf.hcd',
         component: 'sub-form',
         description: `The following steps collect the information needed to calculate a traditional T(H)CF
-        handicap and the extra data for experimental and area handicaps.`,
-        fields: [
+        handicap and the extra data for experimental and area handicaps.`, fields: [
           {
             component: 'text-field',
             name: "handicap_data.thcf",
@@ -531,7 +719,7 @@ export const steps = (nextStep) => [
       {
         component: 'text-field',
         name: "handicap_data.beam",
-        label: "Beam (decimal feet) (measured on the waterline)",
+        label: "Beam (decimal feet)",
         type: "number",
         dataType: 'float',
         isRequired: true,
@@ -542,15 +730,21 @@ export const steps = (nextStep) => [
   {
     name: "prop-step",
     component: 'sub-form',
-    nextStep: 'hull-shape-step',
+    nextStep: "calc-step",
     fields: [propellorForm],
   },
-  solentFields('hull-shape-step', 'calc-step'),
   {
     name: "calc-step",
     component: 'sub-form',
-    nextStep: ({ values }) =>
-      values.ddf.east_coast ? "biggest_staysail-step" : "done-step",
+    nextStep: {
+      when: "ddf.handicap_options",
+      stepMapper: {
+        1: "biggest_staysail-step",
+        2: "displacement-step",
+        3: "biggest_staysail-step",
+        4: nextStep,
+      },
+    },
     fields: [
       {
         component: 'text-field',
@@ -675,20 +869,48 @@ export const steps = (nextStep) => [
         isReadOnly: true,
       },
       {
-        component: 'checkbox',
-        shortcut: true,
-        name: "ddf.east_coast",
-        label: "Add racing headsails (e.g. for the East Coast Race)",
-        dataType: "boolean",
+        component: 'radio',
+        name: "ddf.handicap_options",
+        label: "Additional Handicap Data",
+        initialValue: 4,
+        options: [
+          { label: "Add racing headsails (e.g. for the East Coast Race)", value: 1 },
+          { label: "Add displacement and performance factor (e.g. for the Solent Old Gaffers Race)", value: 2 },
+          { label: "Add both racing headsails and displacement", value: 3 },
+          { label: "I don't need either", value: 4 },
+        ],
       },
     ],
   },
   headsail("biggest_staysail", "biggest_jib-step"),
   headsail("biggest_jib", "biggest_downwind_sail-step"),
-  headsail("biggest_downwind_sail", "done-step"),
+  headsail("biggest_downwind_sail", "east-coast-calc-step"),
+  {
+    name: 'east-coast-calc-step',
+    component: 'sub-form',
+    label: 'EC Handicap Done',
+    nextStep: {
+      when: "ddf.handicap_options",
+      stepMapper: {
+        1: nextStep,
+        2: "displacement-step",
+        3: "displacement-step",
+        4: nextStep,
+      },
+    },
+    fields: [
+      {
+        component: 'plain-text',
+        name: "ddf.east-coast-done",
+        label: `That's all the headsails.
+        We don't have the calculations implemented for this yet, but the
+        values are stored in the register and will be used by the race organisers.`
+      }
+    ],
+  },
+  ...solentFields('displacement-step', nextStep),
   {
     name: "no-handicap-step",
-    shortcut: true,
     component: 'sub-form',
     nextStep,
     fields: [

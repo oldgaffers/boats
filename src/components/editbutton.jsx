@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
-import UpdateBoatDialog from './updateboatdialog';
 import { postBoatData } from './boatregisterposts';
+import EditBoatWizard from './editboatwizard';
 
 export default function EditButton({ boat, user }) {
   const [open, setOpen] = useState(false);
@@ -15,8 +15,16 @@ export default function EditButton({ boat, user }) {
   const handleClickOpen = () => {
     setOpen(true);
   };
-  const handleClose = (changes) => {
+
+  const handleCancel = () => {
     setOpen(false);
+  };
+
+  const handleSubmit = (editedBoat) => {
+    setOpen(false);
+    console.log('before', JSON.stringify(boat));
+    console.log('after', JSON.stringify(editedBoat));
+    const changes = undefined;
     if (changes) {
       postBoatData({ email: changes.email, new: changes.new, newItems: changes.newItems })
       .then(() => {
@@ -42,7 +50,7 @@ export default function EditButton({ boat, user }) {
         color="primary" onClick={handleClickOpen}>
         I have edits for this boat
       </Button>
-      <UpdateBoatDialog boat={boat} user={user} onClose={handleClose} open={open} />
+      <EditBoatWizard boat={boat} user={user} open={open} onCancel={handleCancel} onSubmit={handleSubmit} />
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         open={snackBarOpen}
