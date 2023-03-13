@@ -177,7 +177,6 @@ export const solentFields = (thisStep, nextStep) => {
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          console.log('D', values.handicap_data.mthcf, values.handicap_data.thcf);
           const diff = Math.abs(values.handicap_data.mthcf - values.handicap_data.thcf);
           const v = 100*diff/values.handicap_data.thcf;
           return {

@@ -22,14 +22,13 @@ export default function EditButton({ boat, user }) {
 
   const handleSubmit = (editedBoat, email) => {
     setOpen(false);
-    console.log('before', boat);
-    console.log('after', editedBoat);
       postBoatData({ email, new: editedBoat, newItems: {} })
       .then(() => {
+          console.log('submitted');
           setSnackBarOpen(true);
         })
         .catch((error) => {
-          // console.log("post", error);
+          console.log("post", error);
           errorText = error;
           setErrorSnackBarOpen(true);
         });
@@ -48,7 +47,7 @@ export default function EditButton({ boat, user }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackBarOpen}
         autoHideDuration={2000}
-        onClose={() => setSnackBarOpen(false)}
+        onClose={() => {console.log('ok'); setSnackBarOpen(false)}}
         message={"Thanks, we'll get back to you."}
         severity="success"
       />
@@ -56,7 +55,7 @@ export default function EditButton({ boat, user }) {
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={errorSnackBarOpen}
         autoHideDuration={2000}
-        onClose={() => setErrorSnackBarOpen(false)}
+        onClose={() => {console.log('bad');setErrorSnackBarOpen(false)}}
         message={errorText}
         severity="error"
       />

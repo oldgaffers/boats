@@ -322,6 +322,8 @@ const schema = (pickers) => {
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit }) {
   const [pickers, setPickers] = useState();
 
+  const oga_no = boat.oga_no; // this gets lost somewhere
+
   useEffect(() => {
     if (!pickers) {
       getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
@@ -333,12 +335,11 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   if (!open) return '';
 
   const handleSubmit = ({ ddf, email, ...boat }) => {
+    boat.oga_no = oga_no;
     boat.designer = pickers.designer.find((item) => item.id === boat.designer);
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat, email);
   }
-
-  const flattenedBoat = boatm2f(boat);
 
   return (
     <Dialog
@@ -359,7 +360,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
         schema={schema(pickers)}
         onSubmit={handleSubmit}
         onCancel={onCancel}
-        initialValues={{ user, ...flattenedBoat }}
+        initialValues={{ user, ...boatm2f(boat) }}
         subscription={{ values: true }}
       />
 
