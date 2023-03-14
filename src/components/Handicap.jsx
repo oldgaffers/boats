@@ -155,7 +155,7 @@ export const solentFields = (thisStep, nextStep) => {
           const { values } = formOptions.getState();
           const mmrf = m2dfn(values.ddf.mmr);
           const pf = values.handicap_data.performance_factor || 0.0;
-          const r = mmrf * (1 - pf - values.ddf.prop_allowance);
+          const r = mmrf * (1 - values.ddf.prop_allowance) / (1 - pf);
           const mthcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
           formOptions.change('handicap_data.mthcf', mthcf);
           return { value: mthcf };
