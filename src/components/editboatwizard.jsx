@@ -323,6 +323,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   const [pickers, setPickers] = useState();
 
   const oga_no = boat.oga_no; // this gets lost somewhere
+  const name = boat.name; // this also gets lost somewhere
 
   useEffect(() => {
     if (!pickers) {
@@ -336,6 +337,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
   const handleSubmit = ({ ddf, email, ...boat }) => {
     boat.oga_no = oga_no;
+    boat.name = name;
     boat.designer = pickers.designer.find((item) => item.id === boat.designer);
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat, email);
