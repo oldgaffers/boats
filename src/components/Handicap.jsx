@@ -66,8 +66,8 @@ export const solentFields = (thisStep, nextStep) => {
         component: 'text-field',
         name: "ddf.mmr",
         label: "Modified Measured Rating",
-        // description: "0.15L(√S/√C)+0.2(L+√S)",
-        description: "0.2L√S/√(Disp/L)+0.2*(L+√S) - if Displacement not entered then Disp = LxBxDxSF)",
+        // description: "0.15L(√S/√C)+0.67(L+√S)",
+        description: "0.2L√S/√(Disp/L)+0.67*(L+√S) - if Displacement not entered then Disp = LxBxDxSF)",
         type: "number",
         dataType: 'float',
         isReadOnly: true,
@@ -82,7 +82,7 @@ export const solentFields = (thisStep, nextStep) => {
           const SF = shapeFactors(values.handicap_data.hull_shape);
           const disp = values.handicap_data.displacement || (L * B * D * SF);
           const x = 0.2 * L * rS / Math.sqrt(disp / L);
-          const y = 0.2 * (L + rS);
+          const y = 0.67 * (L + rS);
           const mmr = x + y;
           formOptions.change("ddf.mmr", mmr);
           return {
@@ -155,7 +155,7 @@ export const solentFields = (thisStep, nextStep) => {
           const { values } = formOptions.getState();
           const mmrf = m2dfn(values.ddf.mmr);
           const pf = values.handicap_data.performance_factor || 0.0;
-          const r = mmrf - pf * values.ddf.prop_allowance * mmrf;
+          const r = mmrf * (1 - pf - values.ddf.prop_allowance);
           const mthcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
           formOptions.change('handicap_data.mthcf', mthcf);
           return { value: mthcf };
