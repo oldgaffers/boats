@@ -308,9 +308,31 @@ export const dinghyHullStep = (nextStep) => {
   };
 };
 
-export const preSalesStep = (step, nextStep) => ({
+export const preSalesStep = (step, yesStep, noStep) => ({
   name: step,
-  title: <Typography variant='h5'>Put Boat For Sale</Typography>,
+  component: 'sub-form',
+  shortcut: true,
+  nextStep: {
+    when: "ddf.confirm_for_sale",
+    stepMapper: {
+      true: yesStep,
+      false: noStep,
+    },
+  },
+  fields: [
+    {
+      component: 'checkbox',
+      label: 'I want to sell this boat',
+      name: 'ddf.confirm_for_sale',
+      helperText: 'check if you want to put this boat up for sale',
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+  ],
+});
+
+export const setForSaleStep = (step, nextStep) => ({
+  name: step,
   component: 'sub-form',
   shortcut: true,
   nextStep: nextStep,
@@ -330,14 +352,6 @@ export const preSalesStep = (step, nextStep) => ({
       name: "ddf.sales_text",
       controls: ["bold", "italic"],
       maxLength: 500,
-      isRequired: true,
-      validate: [{ type: 'required' }],
-    },
-    {
-      component: 'checkbox',
-      label: 'I want to sell this boat',
-      name: 'ddf.confirm_for_sale',
-      helperText: 'please confirm you want to put this boat up for sale',
       isRequired: true,
       validate: [{ type: 'required' }],
     },

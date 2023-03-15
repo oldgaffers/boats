@@ -23,6 +23,7 @@ import {
   ownerShipsForm,
   preSalesStep,
   salesSteps,
+  setForSaleStep,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
@@ -289,7 +290,7 @@ const schema = (pickers) => {
             nextStep: {
               when: "ddf.selling",
               stepMapper: {
-                1: 'sell-step',        // owner or editor and boat not for sale
+                1: 'query-sell-step',        // owner or editor and boat not for sale
                 2: 'update-sell-step', // owner or editor and boat already for sale
                 3: 'done-step',        // not owner or editor
               },
@@ -297,7 +298,8 @@ const schema = (pickers) => {
             component: 'sub-form',
             fields: descriptionsItems,
           },
-          preSalesStep('sell-step', 'done-step'),
+          preSalesStep('query-sell-step', 'sell-step', 'done-step'),
+          setForSaleStep('sell-step', 'done-step'),
           ...salesSteps('update-sell-step', 'done-step'),
           {
             name: "done-step",
