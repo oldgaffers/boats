@@ -20,11 +20,14 @@ import {
   referencesItems,
   yachtHullStep,
   dinghyHullStep,
+  ownerShipsForm,
+  preSalesStep,
+  salesSteps,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
 import HtmlEditor from './ckeditor';
-import { boatm2f } from "../util/format";
+import { boatm2f, boatf2m } from "../util/format";
 
 const schema = (pickers) => {
   return {
@@ -39,6 +42,12 @@ const schema = (pickers) => {
             name: "basic-step",
             nextStep: "build-step",
             fields: [
+              {
+                component: 'text-field',
+                name: "ddf.selling",
+                label: "can buy/sell",
+                hideField: true,
+              },
               {
                 component: 'sub-form',
                 name: "basic.form",
@@ -273,15 +282,23 @@ const schema = (pickers) => {
               },
             ],
           },
-          ...handicap_steps('handicap-step', 'descriptions-step'),
+          ...handicap_steps('handicap-step', 'own-step'),
+          ownerShipsForm('own-step', 'descriptions-step'),
           {
             name: "descriptions-step",
-            nextStep: 'done-step',
+            nextStep: {
+              when: "ddf.selling",
+              stepMapper: {
+                1: 'sell-step',        // owner or editor and boat not for sale
+                2: 'update-sell-step', // owner or editor and boat already for sale
+                3: 'done-step',        // not owner or editor
+              },
+            },
             component: 'sub-form',
-            fields: [
-              ...descriptionsItems,
-            ],
+            fields: descriptionsItems,
           },
+          preSalesStep('sell-step', 'done-step'),
+          ...salesSteps('update-sell-step', 'done-step'),
           {
             name: "done-step",
             component: 'sub-form',
@@ -306,6 +323,7 @@ const schema = (pickers) => {
                 ],
                 resolveProps: (props, { meta, input }, formOptions) => {
                   const { values } = formOptions.getState();
+                  console.log(values.ddf);
                   return {
                     initialValue: values.user?.email,
                   };
@@ -322,8 +340,8 @@ const schema = (pickers) => {
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit }) {
   const [pickers, setPickers] = useState();
 
-  const oga_no = boat.oga_no; // this gets lost somewhere
-  const name = boat.name; // this also gets lost somewhere
+  // const oga_no = boat.oga_no; // this gets lost somewhere
+  // const name = boat.name; // this also gets lost somewhere
 
   useEffect(() => {
     if (!pickers) {
@@ -335,13 +353,25 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
   if (!open) return '';
 
-  const handleSubmit = ({ ddf, email, ...boat }) => {
-    boat.oga_no = oga_no;
-    boat.name = name;
-    boat.designer = pickers.designer.find((item) => item.id === boat.designer);
-    boat.builder = pickers.builder.find((item) => item.id === boat.builder);
-    onSubmit(boat, email);
+  const handleSubmit = ({ ddf, email, designer, builder, ...changes }) => {
+    const updates = { ...boat, ...boatf2m(changes) };
+    // boat.oga_no = oga_no;
+    // boat.name = name;
+    updates.designer = pickers.designer.find((item) => item.id === designer);
+    updates.builder = pickers.builder.find((item) => item.id === builder);
+    onSubmit(updates, email);
   }
+
+  const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
+  const goldId = user?.['https://oga.org.uk/id'];
+  // const member = user?.['https://oga.org.uk/member'];
+  const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
+  const owner = ownerids.includes[goldId];
+
+  const ddf = {
+    selling: (owner || editor) ? ( (boat.selling_status === 'for_sale') ? 2 : 1) : 3,
+  };
+  console.log(ddf);
 
   return (
     <Dialog
@@ -362,7 +392,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
         schema={schema(pickers)}
         onSubmit={handleSubmit}
         onCancel={onCancel}
-        initialValues={{ user, ...boatm2f(boat) }}
+        initialValues={{ user, ...boatm2f(boat), ddf }}
         subscription={{ values: true }}
       />
 

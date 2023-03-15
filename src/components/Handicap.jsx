@@ -66,7 +66,6 @@ export const solentFields = (thisStep, nextStep) => {
         component: 'text-field',
         name: "ddf.mmr",
         label: "Modified Measured Rating",
-        // description: "0.15L(√S/√C)+0.67(L+√S)",
         description: "0.2L√S/√(Disp/L)+0.67*(L+√S) - if Displacement not entered then Disp = LxBxDxSF)",
         type: "number",
         dataType: 'float',

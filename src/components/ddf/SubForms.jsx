@@ -7,6 +7,12 @@ import {
   constructionItems,
 } from "./util";
 
+export function intField(name, label) {
+  return { name, label, 
+    component: "text-field", type: "number", dataType: 'integer',
+  };
+}
+
 export const referencesItems = [
   {
     component: 'field-array',
@@ -106,6 +112,65 @@ export const homeItems = [
     sx: { marginBottom: 2 },
   },
 ];
+
+export const ownerShipsForm = (step, nextStep) => ({
+  name: step,
+  nextStep: nextStep,
+  component: 'sub-form',
+  shortcut: true,
+  // fields: [ownershipUpdateForm],
+  fields: [
+    {
+      component: 'plain-text',
+      name: 'ddf.ownerships_label',
+      label: 'You can add, remove and edit ownership records on this page.'
+        + ' If you are listed as a current owner and this is no-longer true add an end year and uncheck the box.'
+        + ' Your changes will be send to the editors who will update the boat\'s record'
+    },
+    {
+      component: 'field-array',
+      name: "ownerships",
+      label: "Known Owners",
+      defaultItem: {
+        name: ' ',
+      },
+      fields: [
+        {
+          name: 'name',
+          label: 'Name',
+          component: 'text-field',
+          resolveProps: (props, { input }) => {
+            // if no GDPR undefined -> not required
+            // if empty string -> new row - required
+            if (typeof input.value === 'string') {
+              return {
+                isRequired: true,
+                validate: [{ type: 'required' }],      
+              };
+            }
+            return {
+              isRequired: false,
+              helperText: 'name on record but withheld',
+            }
+          },
+        },
+        {
+          ...intField('start', 'Start Year'),
+          isRequired: true,
+          validate: [{ type: 'required' }],
+        },
+        intField('end', 'End Year'),
+        {
+          ...intField('share', 'Share (64ths)'),
+          initialValue: 64,
+          isRequired: true,
+          validate: [{ type: 'required' }],
+        },
+        { name: 'current', label: 'Current', component: 'checkbox' },
+      ],
+    },
+  ]
+});
 
 export const registrationForm = {
   title: "Registrations",
@@ -242,3 +307,132 @@ export const dinghyHullStep = (nextStep) => {
     ],
   };
 };
+
+export const preSalesStep = (step, nextStep) => ({
+  name: step,
+  title: <Typography variant='h5'>Put Boat For Sale</Typography>,
+  component: 'sub-form',
+  shortcut: true,
+  nextStep: nextStep,
+  fields: [
+    {
+      component: 'text-field',
+      name: "ddf.price",
+      label: "Price (pounds)",
+      type: "number",
+      dataType: 'float',
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+    {
+      component: "html",
+      title: "Sales Text",
+      name: "ddf.sales_text",
+      controls: ["bold", "italic"],
+      maxLength: 500,
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+    {
+      component: 'checkbox',
+      label: 'I want to sell this boat',
+      name: 'ddf.confirm_for_sale',
+      helperText: 'please confirm you want to put this boat up for sale',
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+  ],
+});
+
+export const salesSteps = (firstStep, nextStep) => [
+{
+  title: <Typography variant='h5'>Change Sales Status</Typography>,
+  name: firstStep,
+  component: 'sub-form',
+  nextStep: {
+    when: "ddf.update_sale",
+    stepMapper: {
+      'update': "update-sales-data-step",
+      'sold': "sold-step",
+      'unsell': nextStep,
+    },
+  },
+  fields: [
+    {
+      component: 'radio',
+      label: 'Update Sales Status',
+      options: [
+        { label: 'I want to take boat off the market for the present', value: 'unsell', },
+        { label: "I've sold the boat", value: 'sold', },
+        { label: "I want to update the price or sales text", value: 'update', },
+      ],
+      initialValue: 'update',
+      name: 'ddf.update_sale',
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+  ],
+},
+{
+  title: <Typography variant='h5'>Update Sales Data</Typography>,
+  name: "update-sales-data-step",
+  nextStep: nextStep,
+  component: 'sub-form',
+  shortcut: true,
+  fields: [
+    {
+      component: 'text-field',
+      name: "ddf.price",
+      label: "New Price (pounds)",
+      type: "number",
+      dataType: 'float',
+    },
+    {
+      component: 'html',
+      name: "ddf.sales_text",
+      controls: ["bold", "italic"],
+      maxLength: 500,
+      title: "Updated Sales Text",
+    },
+  ],
+},
+{
+  name: "sold-step",
+  nextStep: nextStep,
+  title: <Typography variant='h5'>Congratulations on Selling your boat</Typography>,
+  component: 'sub-form',
+  shortcut: true,
+  fields: [
+    {
+      component: "date-picker",
+      label: 'Date Sold',
+      name: 'ddf.date_sold',
+      isRequired: true,
+      initialValue: new Date(),
+      validate: [{ type: 'required' }],
+    },
+    {
+      component: 'text-field',
+      name: "ddf.sale_price",
+      label: "Final Price (pounds)",
+      type: "number",
+      dataType: 'float',
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+    {
+      component: "html",
+      title: <Typography>Please add some details,
+      <br/>including the new owner's name, 
+      <br/>if they are happy to share, and whether
+      <br/>the Boat Register or
+      Gaffer's Log helped with the sale.</Typography>,
+      name: "ddf.summary",
+      controls: ["bold", "italic"],
+      maxLength: 500,
+      isRequired: true,
+      validate: [{ type: 'required' }],
+    },
+  ],
+}
+];
