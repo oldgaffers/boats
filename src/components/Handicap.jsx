@@ -64,6 +64,29 @@ export const solentFields = (thisStep, nextStep) => {
       },
       {
         component: 'text-field',
+        name: "ddf.estimated_displacement",
+        label: "Estimated Displacement",
+        description: "LxBxDxSF",
+        type: "number",
+        dataType: 'float',
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const LOD = values.handicap_data.length_on_deck || 0.0;
+          const LWL = values.handicap_data.length_on_waterline || 0.0;
+          const L = f2m((LOD + LWL) / 2);
+          const B = f2m(values.handicap_data.beam);
+          const D = f2m(values.handicap_data.draft);
+          const SF = shapeFactors(values.handicap_data.hull_shape);
+          const disp = L * B * D * SF;
+          formOptions.change("ddf.estimated_displacement", disp);
+          return {
+            value: disp,
+          };
+        },        
+      },
+      {
+        component: 'text-field',
         name: "ddf.mmr",
         label: "Modified Measured Rating",
         description: "0.2L√S/√(Disp/L)+0.67*(L+√S) - if Displacement not entered then Disp = LxBxDxSF)",
@@ -76,16 +99,14 @@ export const solentFields = (thisStep, nextStep) => {
           const LWL = values.handicap_data.length_on_waterline || 0.0;
           const L = f2m((LOD + LWL) / 2);
           const rS = f2m(values.ddf.root_s);
-          const B = values.handicap_data.beam;
-          const D = values.handicap_data.draft;
-          const SF = shapeFactors(values.handicap_data.hull_shape);
-          const disp = values.handicap_data.displacement || (L * B * D * SF);
+          const disp = values.handicap_data.displacement || values.ddf.estimated_displacement;
           const x = 0.2 * L * rS / Math.sqrt(disp / L);
           const y = 0.67 * (L + rS);
           const mmr = x + y;
           formOptions.change("ddf.mmr", mmr);
           return {
             value: mmr,
+            description: values.handicap_data.displacement ? '0.2L√S/√(Disp/L)+0.67*(L+√S)' : '0.2L√S/√(LxBxDxSF)+0.67*(L+√S)',
           };
         },
       },
@@ -154,8 +175,9 @@ export const solentFields = (thisStep, nextStep) => {
           const { values } = formOptions.getState();
           const mmrf = m2dfn(values.ddf.mmr);
           const pf = values.handicap_data.performance_factor || 0.0;
-          const r = mmrf * (1 - values.ddf.prop_allowance) / (1 - pf);
-          const mthcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
+          const r = mmrf * (1 - values.ddf.prop_allowance);
+          const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
+          const mthcf = Math.round(1000 * thcf) / 1000;
           formOptions.change('handicap_data.mthcf', mthcf);
           return { value: mthcf };
         },

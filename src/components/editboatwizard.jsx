@@ -237,10 +237,12 @@ const schema = (pickers) => {
           },
           {
             name: "construction-step",
-            nextStep: ({ values }) =>
-              ["Dinghy", "Dayboat"].includes(values.generic_type)
-                ? "dinghy-hull-step"
-                : "yacht-hull-step",
+            nextStep: ({ values }) => {
+              if (["Dinghy", "Dayboat"].includes(values.generic_type)) {
+                return 'dinghy-hull-step';
+              }
+              return 'yacht-hull-step';
+            },
             fields: [
               {
                 name: "construction",
