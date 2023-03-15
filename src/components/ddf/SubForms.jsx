@@ -325,8 +325,6 @@ export const preSalesStep = (step, yesStep, noStep) => ({
       label: 'I want to sell this boat',
       name: 'ddf.confirm_for_sale',
       helperText: 'check if you want to put this boat up for sale',
-      isRequired: true,
-      validate: [{ type: 'required' }],
     },
   ],
 });
