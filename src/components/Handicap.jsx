@@ -758,16 +758,14 @@ export const steps = (firstStep, nextStep) => [
   {
     name: "calc-step",
     component: 'sub-form',
-    nextStep: {
-      when: "ddf.handicap_options",
-      stepMapper: {
-        1: "biggest_staysail-step",
-        2: "displacement-step",
-        3: "biggest_staysail-step",
-        4: nextStep,
-      },
-    },
+    title: 'Summary',
+    nextStep: 'handicap-options-step',
     fields: [
+      {
+        component: 'plain-text',
+        name: 'ddf.hds',
+        label: 'T(H)CF Summary'
+      },
       {
         component: 'text-field',
         name: "ddf.rig_allowance",
@@ -890,6 +888,26 @@ export const steps = (firstStep, nextStep) => [
         label: "T(H)CF",
         isReadOnly: true,
       },
+    ],
+  },
+  {
+    name: 'handicap-options-step',
+    component: 'sub-form',
+    nextStep: {
+      when: "ddf.handicap_options",
+      stepMapper: {
+        1: "biggest_staysail-step",
+        2: "displacement-step",
+        3: "biggest_staysail-step",
+        4: nextStep,
+      },
+    },
+    fields: [
+      {
+        component: 'plain-text',
+        name: 'ddf.ashcol',
+        label: 'What Next?'
+      },
       {
         component: 'radio',
         name: "ddf.handicap_options",
@@ -902,7 +920,7 @@ export const steps = (firstStep, nextStep) => [
           { label: "I don't need either", value: 4 },
         ],
       },
-    ],
+    ]
   },
   headsail("biggest_staysail", "biggest_jib-step"),
   headsail("biggest_jib", "biggest_downwind_sail-step"),
