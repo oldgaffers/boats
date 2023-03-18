@@ -1,13 +1,15 @@
 import { rig_allowance } from "../util/THCF";
 import { f2m, m2dfn } from '../util/format';
 
+const shapeFactorMap = {
+  'Long keel - High volume': 0.25,
+  'Long keel - Standard': 0.20,
+  'Long keel - Low volume': 0.15,
+  'Fin keel': 0.10,
+};
+
 function shapeFactors(sf) {
-  return {
-    'Long keel - High volume': 0.25,
-    'Long keel - Standard': 0.20,
-    'Long keel - Low volume': 0.15,
-    'Fin keel': 0.10,
-  }[sf];
+  return shapeFactorMap?.[sf] || 0.2;
 }
 
 /*
