@@ -49,6 +49,12 @@ const wanted = {
   price: { label: 'Price', access: (b, k) => showPrice(b[k]) },
 };
 
+
+const compactWanted = {
+  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) }, 
+  year: { label: 'Year', access: (b, k) => b[k] },
+};
+
 function SalesBadge({ boat, view, children }) {
   switch (boat?.selling_status || '') {
     case 'for_sale':
@@ -154,7 +160,8 @@ export function CompactBoatCard({ view='app', ogaNo }) {
     } : {}}>
       {albumKey ? <BoatCardImage albumKey={albumKey} name= {boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
-        <BoatCardWords boat={{ ...boat }} wanted={[]} />
+        <Typography>{boat.name}({boat.oga_no})</Typography>
+        <BoatCardWords boat={{ ...boat }} wanted={compactWanted} />
       </CardContent>
       <CardActions>
         <Enquiry boat={boat} text='Contact' />
