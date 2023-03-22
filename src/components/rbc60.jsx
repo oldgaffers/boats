@@ -309,7 +309,7 @@ const schema = (ports, user, boats) => {
                         name: 'ddf.ports1',
                         label: <Typography>
                             Registration is now open for all the Party Ports. 
-                            Please visit the <a href='/oga60/rbc60.html'>main RBC60 page</a>&nbsp;
+                            Please visit the <a href='/oga60/rbc60_events.html'>main RBC60 page</a>&nbsp;
                             to register. Please note, if you previously indicated interest in attending
                             Party Ports on this form you will have to register formally.
                         </Typography>,
