@@ -164,7 +164,9 @@ export function CompactBoatCard({ view='app', ogaNo }) {
         <BoatCardWords boat={{ ...boat }} wanted={compactWanted} />
       </CardContent>
       <CardActions>
-        <Enquiry boat={boat} text='Contact' />
+        <Button padding='5px' size="small" component={'a'}
+          href={boatUrl(ogaNo, {})} variant="contained" color="primary"
+        >More..</Button>
       </CardActions>
     </Card>
   );
