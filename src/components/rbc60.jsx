@@ -507,7 +507,7 @@ export default function RBC60() {
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
                         Festivities are being arranged at each of the Party Ports around the country, and all OGA members and their boats are welcome at these, not only those taking part in the RBC.
-                        These events are organised by the Areas and you will be able to register for them separately from the main <a href='/events/events.html'>Events page</a>.
+                        These events are organised by the Areas and you can register for them separately via the <a href='/oga60/rbc60_events.html'>RBC60 Events</a> tab above or from the main <a href='/events/events.html'>Events page</a>.
                     </Typography>
                     <Typography paragraph={true} variant='body1'>
                         The OGA has arranged the dates of the Party Ports to allow skippers to plan their itinerary to match the capabilities of the boat and crew.
