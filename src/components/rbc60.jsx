@@ -195,7 +195,7 @@ const schema = (ports, user, boats) => {
                         component: componentTypes.RADIO,
                         name: 'ddf.joining',
                         label: 'If you are not a member and would like to join RBC60, we will add a 12 month membership for 2023 to your registration fee.',
-                        helperText: 'Choose your class of membership. Juniors must be under 25 on 1st January 2023',
+                        helperText: 'Choose your class of membership. Juniors must have been under 25 on 1st January 2023',
                         initialValue: 'ind',
                         options: [
                             { label: `Individual member - ${sterling.format(priceList.single)}`, value: 'ind' },
