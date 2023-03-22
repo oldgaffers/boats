@@ -375,7 +375,6 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   const ddf = {
     selling: (owner || editor) ? ( (boat.selling_status === 'for_sale') ? 2 : 1) : 3,
   };
-  console.log(ddf);
 
   return (
     <Dialog
