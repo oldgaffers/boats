@@ -30,10 +30,10 @@ const ports = [
     { name: 'Ramsgate', start: '2023-04-27' },
     { name: 'Cowes', start: '2023-05-06', end: '2023-05-07' },
     { name: 'Plymouth', start: '2023-05-10', end: '2023-05-11' },
-    { name: 'Milford Haven', start: '2023-05-20', end: '2023-05-21' },
+    { name: 'Neyland', start: '2023-05-20', end: '2023-05-21' },
     { name: 'Dublin', start: '2023-05-27', end: '2023-05-28' },
-    { name: 'Oban', start: '2023-06-17', end: '2023-06-18' },
-    { name: 'Arbroath', start: '2023-07-15', end: '2023-07-16', via: { routeName: 'scotland', choices: ['Caledonian Canal', 'Cape Wrath'] } },
+    { name: 'Oban', start: '2023-06-16', end: '2023-06-18' },
+    { name: 'River Tay', start: '2023-07-15', end: '2023-07-16', via: { routeName: 'scotland', choices: ['Caledonian Canal', 'Cape Wrath'] } },
     { name: 'Blyth', start: '2023-07-21', end: '2023-07-24' },
     { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06' },
 ];
@@ -198,7 +198,7 @@ const schema = (ports, user, boats) => {
                         helperText: 'Choose your class of membership. Juniors must be under 25 on 1st January 2023',
                         initialValue: 'ind',
                         options: [
-                            { label: `Individual member - {sterling.format(priceList.single)}`, value: 'ind' },
+                            { label: `Individual member - ${sterling.format(priceList.single)}`, value: 'ind' },
                             { label: `Family member - ${sterling.format(priceList.family)}`, value: 'fam' },
                             { label: `Junior - ${sterling.format(priceList.junior)}`, value: 'jun' },
                         ],
