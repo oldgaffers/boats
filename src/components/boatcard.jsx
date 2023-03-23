@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
-import TextList from './textlist';
 import { boatUrl } from '../util/rr';
 import { getThumb, getBoatData } from './boatregisterposts';
 import { m2f, price, formatDesignerBuilder } from '../util/format';
@@ -19,6 +18,7 @@ import Enquiry from './enquiry';
 import { MarkContext } from "../browseapp";
 import { currentSaleRecord } from '../util/sale_record';
 import EndOwnership from './endownership';
+import TextList from './textlist';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -41,7 +41,7 @@ const wanted = {
   place_built: { label: 'Place Built', access: (b, k) => b[k] },
   home_port: { label: 'Home Port', access: (b, k) => b[k] },
   rig_type: { label: 'Rig Type', access: (b, k) => b[k] },
-  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) }, 
+  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
   designer: { label: 'Designer', access: formatDesignerBuilder },
   design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
   builder: { label: 'Builder', access: formatDesignerBuilder },
@@ -51,7 +51,7 @@ const wanted = {
 
 
 const compactWanted = {
-  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) }, 
+  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
   year: { label: 'Year', access: (b, k) => b[k] },
 };
 
@@ -71,18 +71,21 @@ function AltForThumb() {
   return '';
 }
 
-function normaliseDescription(boat) {
-  if (boat && boat.short_description) {
-    const desc = boat.short_description.trim();
-    if (desc.startsWith('<')) {
-      return desc;
-    }
-    return `<div>${desc}</div>`;
-  }
-  return '';
+function EllipsisText({ html='' }) {
+  return <Typography variant="body2" component='div'
+    dangerouslySetInnerHTML={{ __html: html.trim() }}
+    sx={{
+      display: '-webkit-box',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      lineClamp: '3',
+      '-webkit-line-clamp': '3',
+      '-webkit-box-orient': 'vertical',
+    }}
+  />
 }
 
-function BoatCardWords({ boat, owned, wanted }) {
+function BoatCardWords({ boat, wanted }) {
 
   if (boat.loading) {
     return <>
@@ -91,24 +94,9 @@ function BoatCardWords({ boat, owned, wanted }) {
     </>;
   }
 
-
-  if (owned) {
-
-  }
-
   return (
     <>
-      <Typography variant="body2" component='div'
-        dangerouslySetInnerHTML={{ __html: normaliseDescription(boat) }}
-        sx={{
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          display: '-webkit-box',
-          '-webkit-line-clamp': '3',
-          lineClamp: '3',
-          '-webkit-box-orient': 'vertical',
-        }}
-      />
+      <EllipsisText html={boat?.short_description} />
       <TextList fields={wanted} data={boat} />
     </>
   );
@@ -131,14 +119,13 @@ function BoatCardImage({ albumKey, name }) {
     </>
   }
 
-
   if (data.ThumbnailUrl) {
     return (<CardMedia sx={{ paddingTop: '100%' }} image={data.ThumbnailUrl} title={name} />);
   }
   return (<AltForThumb />);
 }
 
-export function CompactBoatCard({ view='app', ogaNo }) {
+export function CompactBoatCard({ view = 'app', ogaNo }) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -158,10 +145,10 @@ export function CompactBoatCard({ view='app', ogaNo }) {
       display: 'flex',
       flexDirection: 'column'
     } : {}}>
-      {albumKey ? <BoatCardImage albumKey={albumKey} name= {boat?.name} /> : ''}
+      {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
         <Typography>{boat.name}({boat.oga_no})</Typography>
-        <BoatCardWords boat={{ ...boat }} wanted={compactWanted} />
+        <BoatCardWords boat={boat} wanted={compactWanted} />
       </CardContent>
       <CardActions>
         <Button padding='5px' size="small" component={'a'}
@@ -192,7 +179,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   }
 
   if (!data) {
-    return <CircularProgress/>;
+    return <CircularProgress />;
   }
 
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
@@ -203,7 +190,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const id = user?.["https://oga.org.uk/id"];
 
   const current = boat?.ownerships?.filter((o) => o.current);
-  const owned = current?.find((o) =>  o.id === id);
+  const owned = current?.find((o) => o.id === id);
 
   const albumKey = boat?.image_key;
   return (
@@ -212,43 +199,43 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
       display: 'flex',
       flexDirection: 'column'
     } : {}}>
-      {albumKey ? <BoatCardImage albumKey={albumKey} name= {boat?.name} /> : ''}
+      {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
         <Typography gutterBottom variant="h5" component="h2">
           <SalesBadge view={state.view} boat={boat}>{boat?.name || ''} ({ogaNo})</SalesBadge>
         </Typography>
-        <BoatCardWords boat={{ ...boat, price }} owned={owned} wanted={wanted} />
+        <BoatCardWords boat={{ ...boat, price }} wanted={wanted} />
       </CardContent>
       <CardActions>
         <Grid container
-        justifyContent="space-between"
+          justifyContent="space-between"
         >
           <Grid item>
-              <Button
-                padding='5px'
-                size="small"
-                component={'a'}
-                href={boatUrl(ogaNo, {})}
-                variant="contained"
-                color="primary"
-              >More..</Button>
+            <Button
+              padding='5px'
+              size="small"
+              component={'a'}
+              href={boatUrl(ogaNo, {})}
+              variant="contained"
+              color="primary"
+            >More..</Button>
           </Grid>
           <Grid item>
             {owned ?
               <EndOwnership boat={{ ...boat }} owned={owned} user={user} />
-            :
+              :
               <Enquiry boat={boat} text='Contact' />
             }
           </Grid>
           <Grid item>
-          {owned ?
+            {owned ?
               ''
-            :
-            <Checkbox sx={{ textAlign: 'right' }}
-              checked={marked}
-              color="success" onChange={(event, checked) => handleMarked(checked)}
-              inputProps={{ 'aria-label': 'add to list' }}
-            />
+              :
+              <Checkbox sx={{ textAlign: 'right' }}
+                checked={marked}
+                color="success" onChange={(event, checked) => handleMarked(checked)}
+                inputProps={{ 'aria-label': 'add to list' }}
+              />
             }
           </Grid>
         </Grid>
