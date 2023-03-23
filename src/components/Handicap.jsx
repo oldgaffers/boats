@@ -324,7 +324,7 @@ const headsail = (name, nextStep) => {
   };
 };
 
-const main_required_props = (sail, rig_type) => {
+const main_required_props = (sail, rig_type, dimension) => {
   const required_fields = {
     isRequired: true,
     validate: [{ type: 'required' }],
@@ -333,7 +333,12 @@ const main_required_props = (sail, rig_type) => {
   switch (rig_type) {
     case "Yawl":
     case "Ketch":
-      if (sail === "mizzen") return required_fields;
+      if (sail === "mizzen") {
+        if (dimension === 'head') {
+          return { isRequired: false };
+        }
+        return required_fields;
+      }
       break;
     case "Schooner":
       if (sail === "fore") return required_fields;
@@ -399,7 +404,7 @@ const mainsail_fields = (sail) => {
         if (hd) {
           formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
         }
-        return main_required_props(sail, s.values.rig_type);
+        return main_required_props(sail, s.values.rig_type, 'head');
       },
     },
     {
