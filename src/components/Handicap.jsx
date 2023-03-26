@@ -1,5 +1,6 @@
 import { rig_allowance } from "../util/THCF";
 import { f2m, m2dfn } from '../util/format';
+import { Typography } from "@mui/material";
 
 const shapeFactorMap = {
   'Long keel - High volume': 0.25,
@@ -29,16 +30,41 @@ Disp = Displacement
 
 
 export const solentFields = (thisStep, nextStep) => {
-  return [{
+  return [
+  {
     name: thisStep,
-    title: 'Modified Measured Rating',
+    title: 'Solent Rating',
     component: 'sub-form',
     nextStep: 'performance-factor-step',
     fields: [
       {
+        component: 'plain-text',
+        name: 'solent-rating-narrative',
+        label: <span><em>Solent Rating</em> is a modified T(H)CF handicap rating designed to
+          represent the displacement of a wider range of vessels more accurately than the traditional
+          OGA rating. It uses the best data available for each boat. Where no data is available an approximation
+          is calculated based on hull shape.
+        </span>,
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.displacement",
+        label: 'Displacement (kg)',
+        helperText: <Typography>Enter the weight of the boat in kg as raced.
+          If you have it in tonnes, multiply by 1000. If you don't have a value for your boat, but
+          you have a value for the design class, enter that figure.
+          If you don't have a number, leave this field blank.</Typography>,
+        type: "number",
+        dataType: 'float',
+        isRequired: false,
+      },
+      {
         component: 'radio',
-        label: 'choose from',
-        name: "handicap_data.hull_shape",
+        name: "handicap_data.solent.hull_shape",
+        label: 'Select the most appropriate hull shape',
+        helperText: <Typography>In most cases you should leave this on the default setting.
+          This value is ignored if you enter a displacement value above.</Typography>,
+        description: 'WHERE DOES THIS RENDER?',
         initialValue: 'Long keel - Standard',
         options: [
           {
@@ -53,92 +79,50 @@ export const solentFields = (thisStep, nextStep) => {
             label: "Long keel Low volume (e.g. Memory 19)",
             value: "Long keel - Low volume",
           },
-          { label: "Fin keel", value: "Fin keel" },
+          { label: "Fin keel", value: "Fin keel (e.g. Kelpie II)" },
         ],
       },
       {
         component: 'text-field',
-        name: "handicap_data.displacement",
-        label: "volume below the waterline in cubic metres (displacement) if known",
-        type: "number",
-        dataType: 'float',
-        isRequired: false,
-      },
-      {
-        component: 'text-field',
-        name: "ddf.estimated_displacement",
-        label: "Estimated Displacement",
-        description: "LxBxDxSF",
-        type: "number",
-        dataType: 'float',
-        isReadOnly: true,
+        name: "ddf.solent.length",
+        label: 'length (m)',
+        // hideField: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
           const LOD = values.handicap_data.length_on_deck || 0.0;
           const LWL = values.handicap_data.length_on_waterline || 0.0;
           const L = f2m((LOD + LWL) / 2);
-          const B = f2m(values.handicap_data.beam);
-          const D = f2m(values.handicap_data.draft);
-          const SF = shapeFactors(values.handicap_data.hull_shape);
-          const disp = L * B * D * SF;
-          formOptions.change("ddf.estimated_displacement", disp);
+          formOptions.change("ddf.solent.length", L);
           return {
-            value: disp,
-          };
-        },        
-      },
-      {
-        component: 'text-field',
-        name: "ddf.mmr",
-        label: "Modified Measured Rating",
-        description: "0.2L√S/√(Disp/L)+0.67*(L+√S) - if Displacement not entered then Disp = LxBxDxSF)",
-        type: "number",
-        dataType: 'float',
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const LOD = values.handicap_data.length_on_deck || 0.0;
-          const LWL = values.handicap_data.length_on_waterline || 0.0;
-          const L = f2m((LOD + LWL) / 2);
-          const rS = f2m(values.ddf.root_s);
-          const disp = values.handicap_data.displacement || values.ddf.estimated_displacement;
-          const x = 0.2 * L * rS / Math.sqrt(disp / L);
-          const y = 0.67 * (L + rS);
-          const mmr = x + y;
-          formOptions.change("ddf.mmr", mmr);
-          return {
-            value: mmr,
-            description: values.handicap_data.displacement ? '0.2L√S/√(Disp/L)+0.67*(L+√S)' : '0.2L√S/√(LxBxDxSF)+0.67*(L+√S)',
-          };
-        },
-      },
-      {
-        component: 'text-field',
-        name: "ddf.mrf",
-        label: "T(H)CF Measured Rating",
-        description: "0.15L(√S/√C)+0.2(L+√S)",
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const v = f2m(values.ddf.mr);
-          return {
-            value: `${values.ddf.mr.toFixed(4)} ft = ${v.toFixed(4)} m`,
+            value: L,
           };
         }
       },
       {
         component: 'text-field',
-        name: "ddf.mrdiff",
-        label: "Difference",
-        type: "string",
-        isReadOnly: true,
+        name: "ddf.solent.beam",
+        label: 'beam (m)',
+        // hideField: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const mr = f2m(values.ddf.mr);
-          const diff = Math.abs(mr - values.ddf.mmr);
-          const v = 100*diff/mr;
+          const B = f2m(values.handicap_data.beam);
+          formOptions.change("ddf.solent.beam", B);
           return {
-            value: `${v.toFixed(1)}%`,
+            value: B,
+          };
+        }
+      },      {
+        component: 'text-field',
+        name: "ddf.solent.draft",
+        label: 'draft (m)',
+        // hideField: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const D = f2m(values.handicap_data.draft);
+          // TODO use plate up if known
+          formOptions.change("ddf.solent.draft", D);
+          return {
+            value: D,
           };
         }
       },
@@ -147,14 +131,121 @@ export const solentFields = (thisStep, nextStep) => {
   {
     name: 'performance-factor-step',
     component: 'sub-form',
-    nextStep,
-    title: 'Modified T(H)CF',
+    nextStep: 'solent-rating-step',
+    title: 'Performance Factor',
     fields: [
       {
-        component: 'radio',
-        name: "handicap_data.performance_factor",
+        component: 'plain-text',
+        name: 'ddf.solent.narrative',
+        label: <div><Typography>The <em>Solent Rating</em> is intended to be as fair as possible across
+          a huge range of boats, from heavy displacement cruisers to light-weight dayboats.</Typography>
+          <Typography>Ratings for boats with high performance features may need to be adjusted to make
+            racing fair for everyone. Please describe anything you think might be relevant.
+            Examples might include carbon fibre spars or mainsail luff tracks.</Typography>
+          <Typography>The Handicap committee will review all ratings and advise if any adjustment needs
+            to be made</Typography></div>
+      },
+      {
+        component: 'textarea',
+        name: 'handicap_data.peformance_details',
+        label: 'High performance features',
+        helperText: 'Describe anything relevant.',
+      },
+    ]
+  },
+  {
+    name: 'solent-rating-step',
+    component: 'sub-form',
+    nextStep,
+    title: 'Solent Rating Summary',
+    fields: [
+      {
+        component: 'plain-text',
+        name: 'ddf.shds',
+        label: 'Solent Rating Summary'
+      },
+      {
+        component: 'text-field',
+        name: "ddf.effective_displacement",
+        label: "Effective Displacement (kg)",
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          if (values.handicap_data.displacement) {
+            formOptions.change("ddf.effective_displacement", values.handicap_data.displacement);
+            return {
+              value: values.handicap_data.displacement,
+              description: "entered displacement",
+            };
+          } else {
+            const sol = values.ddf.solent;
+            const L = sol.length;
+            const B = sol.beam;
+            const D = sol.draft;
+            const SF = shapeFactors(values.handicap_data.solent.hull_shape);
+            const disp = L * B * D * SF;
+            formOptions.change("ddf.effective_displacement", disp);
+            return {
+              value: disp.toFixed(2),
+              description: "½(LOD+LWL)⨉B⨉D⨉SF !!! This has a bug !!!",
+            };
+          }
+        },
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.solent.performance_factor",
         label: "% performance factor",
-        helperText: 'You can put a value in here and see what the effect will be. The handicap committee will determine the actual value to be used.',
+        isReadOnly: true,
+        description: 'A value determined by the handicap committee',
+        initialValue: ' ',
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.solent.measured_rating",
+        label: "Modified Measured Rating (m)",
+        description: '!!! This has a bug !!!',
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const L = values.ddf.solent.length;
+          const rS = f2m(values.ddf.root_s);
+          const disp = values.ddf.effective_displacement;
+          const x = 0.2 * L * rS / Math.sqrt(disp / L);
+          const y = 0.67 * (L + rS);
+          const mmr = x + y;
+          formOptions.change("handicap_data.solent.measured_rating", mmr);
+          return {
+            value: mmr.toFixed(2),
+            description: values.handicap_data.displacement ? '0.2L√S/√(Disp/L)+0.67*(L+√S)' : '0.2L√S/√(LxBxDxSF)+0.67*(L+√S)',
+          };
+        },
+      },
+      {
+        component: 'text-field',
+        name: "handicap_data.solent.thcf",
+        label: "Solent Rating T(H)CF",
+        description: '!!! This has a bug !!!',
+        isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
+          const pf = values.handicap_data.solent.performance_factor || 0.0;
+          const r = mmrf * (1 - values.ddf.prop_allowance);
+          const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
+          const mthcf = Math.round(1000 * thcf) / 1000;
+          formOptions.change('handicap_data.solent.thcf', mthcf);
+          return { value: mthcf };
+        },
+      },
+      {
+        component: 'radio',
+        name: "ddf.solent.performance_factor",
+        label: "Performance factor playground",
+        helperText: <Typography>
+          You can put a value in here and see what the effect would be.
+          The value here won't be saved.
+        </Typography>,
         initialValue: 0,
         isRequired: false,
         options: [
@@ -168,20 +259,17 @@ export const solentFields = (thisStep, nextStep) => {
       },
       {
         component: 'text-field',
-        name: "handicap_data.mthcf",
-        label: "Modified T(H)CF",
-        type: "number",
-        dataType: 'float',
+        name: "ddf.mthcf",
+        label: "Effect of Performance Factor",
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const mmrf = m2dfn(values.ddf.mmr);
-          const pf = values.handicap_data.performance_factor || 0.0;
+          const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
           const r = mmrf * (1 - values.ddf.prop_allowance);
+          const pf = values.ddf.solent.performance_factor || 0.0;
           const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
           const mthcf = Math.round(1000 * thcf) / 1000;
-          formOptions.change('handicap_data.mthcf', mthcf);
-          return { value: mthcf };
+          return { value: mthcf.toFixed(2) };
         },
       },
       {
@@ -200,15 +288,15 @@ export const solentFields = (thisStep, nextStep) => {
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const diff = Math.abs(values.handicap_data.mthcf - values.handicap_data.thcf);
-          const v = 100*diff/values.handicap_data.thcf;
+          const diff = Math.abs(values.handicap_data.solent.thcf - values.handicap_data.thcf);
+          const v = 100 * diff / values.handicap_data.thcf;
           return {
             value: `${v.toFixed(1)}%`,
           };
         }
       },
     ],
-  }
+  },
   ];
 }
 
@@ -378,10 +466,6 @@ const mainsail_fields = (sail) => {
       dataType: 'float',
       resolveProps: (props, { meta, input }, formOptions) => {
         const s = formOptions.getState();
-        const hd = s.values.handicap_data;
-        if (hd) {
-          formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
-        }
         return main_required_props(sail, s.values.rig_type);
       },
     },
@@ -400,10 +484,6 @@ const mainsail_fields = (sail) => {
       },
       resolveProps: (props, { meta, input }, formOptions) => {
         const s = formOptions.getState();
-        const hd = s.values.handicap_data;
-        if (hd) {
-          formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
-        }
         return main_required_props(sail, s.values.rig_type, 'head');
       },
     },
@@ -411,20 +491,19 @@ const mainsail_fields = (sail) => {
       component: 'text-field',
       name: `ddf.sail_area.${sail}`,
       label: "Calculated Area (decimal square feet)",
-      type: "number",
-      dataType: 'float',
       isReadOnly: true,
       resolveProps: (props, { meta, input }, formOptions) => {
-        const r = { description: "½l×f" };
         const s = formOptions.getState();
         const hd = s.values.handicap_data;
         if (hd) {
-          r.value = mainsail_area(hd[sail]);
-          if (hd[sail] && hd[sail].head) {
-            r.description = "½l×f+½h×√(f²+l²)";
+          const saildata = hd[sail];
+          const sa = mainsail_area(saildata);
+          formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(saildata));
+          return {
+            value: sa.toFixed(2),
+            description: saildata.head ? "½l×f+½h×√(f²+l²)" : "½l×f",
           }
         }
-        return r;
       },
     },
   ];
@@ -442,13 +521,6 @@ const topsail_fields = (sail) => [
     label: `Luff (decimal feet)`,
     type: "number",
     dataType: 'float',
-    resolveProps: (props, { meta, input }, formOptions) => {
-      const s = formOptions.getState();
-      const hd = s.values.handicap_data;
-      if (hd && hd[sail]) {
-        formOptions.change(`ddf.sail_area.${sail}`, topsail_area(hd[sail]));
-      }
-    },
   },
   {
     component: 'text-field',
@@ -456,23 +528,13 @@ const topsail_fields = (sail) => [
     label: `Perpendicular (decimal feet)`,
     type: "number",
     dataType: 'float',
-    resolveProps: (props, { meta, input }, formOptions) => {
-      const s = formOptions.getState();
-      const hd = s.values.handicap_data;
-      if (hd && hd[sail]) {
-        formOptions.change(`ddf.sail_area.${sail}`, topsail_area(hd[sail]));
-      }
-    },
   },
   {
     component: 'text-field',
     name: `ddf.sail_area.${sail}`,
     label: "Calculated Area (decimal square feet)",
     description: "½l×p",
-    type: "number",
-    dataType: 'float',
     isReadOnly: true,
-    initialValue: 0,
     resolveProps: (props, { meta, input }, formOptions) => {
       let sa = 0;
       const s = formOptions.getState();
@@ -561,11 +623,6 @@ export const steps = (firstStep, nextStep) => [
         type: "number",
         resolveProps: (props, { meta, input }, formOptions) => {
           const s = formOptions.getState();
-          const handicap_data = s.values.handicap_data;
-          if (handicap_data) {
-            const fta = foretriangle_area(handicap_data);
-            formOptions.change("ddf.sail_area.foretriangle", fta);
-          }
           switch (s.values.rig_type) {
             case "Cutter":
             case "Sloop":
@@ -593,11 +650,6 @@ export const steps = (firstStep, nextStep) => [
         dataType: 'float',
         resolveProps: (props, { meta, input }, formOptions) => {
           const s = formOptions.getState();
-          const handicap_data = s.values.handicap_data;
-          if (handicap_data) {
-            const fta = foretriangle_area(handicap_data);
-            formOptions.change("ddf.sail_area.foretriangle", fta);
-          }
           switch (s.values.rig_type) {
             case "Cutter":
             case "Sloop":
@@ -619,11 +671,19 @@ export const steps = (firstStep, nextStep) => [
         component: 'text-field',
         name: "ddf.sail_area.foretriangle",
         label: "Calculated Area (decimal square feet)",
-        description: "85% of the nominal triangle (½b×h)",
+        description: "85% of the nominal fore-triangle (½b×h)",
         type: "number",
         dataType: 'float',
         isReadOnly: true,
-        initialValue: 0,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const f = formOptions.getState();
+          const handicap_data = f.values.handicap_data;
+          if (handicap_data) {
+            return {
+              value: foretriangle_area(handicap_data).toFixed(2),
+            };
+          }
+        },
       },
     ],
   },
@@ -703,8 +763,6 @@ export const steps = (firstStep, nextStep) => [
         component: 'text-field',
         name: "ddf.calculated-sailarea",
         label: "Calculated Sail Area",
-        type: "number",
-        dataType: 'float',
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
@@ -714,7 +772,7 @@ export const steps = (firstStep, nextStep) => [
           const rsa = Math.round(1000 * sa) / 1000;
           formOptions.change("handicap_data.sailarea", rsa);
           return {
-            value: rsa,
+            value: rsa.toFixed(2),
           };
         },
       },
@@ -775,8 +833,6 @@ export const steps = (firstStep, nextStep) => [
         component: 'text-field',
         name: "ddf.rig_allowance",
         isReadOnly: true,
-        type: "number",
-        dataType: 'float',
         label: "Rig allowance",
         description: "cutter: .96, yawl: .94, schooner: .92, ketch: .90",
         resolveProps: (props, { meta, input }, formOptions) => {
@@ -784,7 +840,7 @@ export const steps = (firstStep, nextStep) => [
           const ra = rig_allowance(values.rig_type);
           formOptions.change("ddf.rig_allowance", ra);
           return {
-            value: ra,
+            value: ra.toFixed(2),
           };
         },
       },
@@ -792,8 +848,6 @@ export const steps = (firstStep, nextStep) => [
         component: 'text-field',
         name: "ddf.root_s",
         isReadOnly: true,
-        type: "number",
-        dataType: 'float',
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
@@ -802,7 +856,7 @@ export const steps = (firstStep, nextStep) => [
           const crsa = ra * Math.sqrt(SA);
           formOptions.change("ddf.root_s", crsa);
           return {
-            value: crsa,
+            value: crsa.toFixed(2),
           };
         },
       },
@@ -810,8 +864,6 @@ export const steps = (firstStep, nextStep) => [
         component: 'text-field',
         name: "ddf.c",
         isReadOnly: true,
-        type: "number",
-        dataType: 'float',
         label: "Cross section (decimal square feet)",
         description: "0.67B²",
         resolveProps: (props, { meta, input }, formOptions) => {
@@ -823,7 +875,7 @@ export const steps = (firstStep, nextStep) => [
             formOptions.change("ddf.c", c);
           }
           return {
-            value: c,
+            value: c.toFixed(2),
           };
         },
       },
@@ -832,8 +884,6 @@ export const steps = (firstStep, nextStep) => [
         name: "ddf.mr",
         label: "Measured Rating",
         description: "0.15L(√S/√C)+0.2(L+√S)",
-        type: "number",
-        dataType: 'float',
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
@@ -847,17 +897,15 @@ export const steps = (firstStep, nextStep) => [
           const mr = x + y;
           formOptions.change("ddf.mr", mr);
           return {
-            value: mr,
+            value: mr.toFixed(2),
           };
         },
       },
       {
         component: 'text-field',
         name: "ddf.prop_allowance",
-        label: "Prop allowance, none: 0%, folding: 1.5%, fixed: 3%",
+        label: "Prop allowance, none: 0%, folding/feathering: 1.5%, fixed: 3%",
         isReadOnly: true,
-        type: "number",
-        dataType: 'float',
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
           let pa = 0.015;
@@ -868,15 +916,13 @@ export const steps = (firstStep, nextStep) => [
             pa = 0.03;
           }
           formOptions.change("ddf.prop_allowance", pa);
-          return { value: pa };
+          return { value: `${(100*pa).toFixed(1)}%` };
         },
       },
       {
         component: 'text-field',
         name: "ddf.r",
         label: "Final Rating ",
-        type: "number",
-        dataType: 'float',
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
@@ -884,7 +930,7 @@ export const steps = (firstStep, nextStep) => [
           const thcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
           formOptions.change("ddf.r", r);
           formOptions.change("handicap_data.thcf", thcf);
-          return { value: r };
+          return { value: r.toFixed(2) };
         },
       },
       {
@@ -920,8 +966,8 @@ export const steps = (firstStep, nextStep) => [
         initialValue: 4,
         options: [
           { label: "Add racing headsails (e.g. for the East Coast Race)", value: 1 },
-          { label: "Add displacement and performance factor (e.g. for the Solent Old Gaffers Race)", value: 2 },
-          { label: "Add both racing headsails and displacement", value: 3 },
+          { label: <span>Get a <em>Solent Rating</em> (required for Solent Area races)</span>, value: 2 },
+          { label: "Add both racing headsails and get a Solent Rating", value: 3 },
           { label: "I don't need either", value: 4 },
         ],
       },
