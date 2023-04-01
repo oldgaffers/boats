@@ -31,272 +31,272 @@ Disp = Displacement
 
 export const solentFields = (thisStep, nextStep) => {
   return [
-  {
-    name: thisStep,
-    title: 'Solent Rating',
-    component: 'sub-form',
-    nextStep: 'performance-factor-step',
-    fields: [
-      {
-        component: 'plain-text',
-        name: 'solent-rating-narrative',
-        label: <span><em>Solent Rating</em> is a modified T(H)CF handicap rating designed to
-          represent the displacement of a wider range of vessels more accurately than the traditional
-          OGA rating. It uses the best data available for each boat. Where no data is available an approximation
-          is calculated based on hull shape.
-        </span>,
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.displacement",
-        label: 'Displacement (kg)',
-        helperText: <Typography>Enter the weight of the boat in kg as raced.
-          If you have it in tonnes, multiply by 1000. If you don't have a value for your boat, but
-          you have a value for the design class, enter that figure.
-          If you don't have a number, leave this field blank.</Typography>,
-        type: "number",
-        dataType: 'float',
-        isRequired: false,
-      },
-      {
-        component: 'radio',
-        name: "handicap_data.solent.hull_shape",
-        label: 'Select the most appropriate hull shape',
-        helperText: <Typography>In most cases you should leave this on the default setting.
-          This value is ignored if you enter a displacement value above.</Typography>,
-        description: 'WHERE DOES THIS RENDER?',
-        initialValue: 'Long keel - Standard',
-        options: [
-          {
-            label: "Long keel High volume (e.g. an East Coast Smack)",
-            value: "Long keel - High volume",
-          },
-          {
-            label: "Long keel Standard (e.g. a Falmouth Working Boat)",
-            value: "Long keel - Standard",
-          },
-          {
-            label: "Long keel Low volume (e.g. Memory 19)",
-            value: "Long keel - Low volume",
-          },
-          { label: "Fin keel", value: "Fin keel (e.g. Kelpie II)" },
-        ],
-      },
-      {
-        component: 'text-field',
-        name: "ddf.solent.length",
-        label: 'length (m)',
-        // hideField: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const LOD = values.handicap_data.length_on_deck || 0.0;
-          const LWL = values.handicap_data.length_on_waterline || 0.0;
-          const L = f2m((LOD + LWL) / 2);
-          formOptions.change("ddf.solent.length", L);
-          return {
-            value: L,
-          };
-        }
-      },
-      {
-        component: 'text-field',
-        name: "ddf.solent.beam",
-        label: 'beam (m)',
-        // hideField: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const B = f2m(values.handicap_data.beam);
-          formOptions.change("ddf.solent.beam", B);
-          return {
-            value: B,
-          };
-        }
-      },      {
-        component: 'text-field',
-        name: "ddf.solent.draft",
-        label: 'draft (m)',
-        // hideField: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const D = f2m(values.handicap_data.draft);
-          // TODO use plate up if known
-          formOptions.change("ddf.solent.draft", D);
-          return {
-            value: D,
-          };
-        }
-      },
-    ],
-  },
-  {
-    name: 'performance-factor-step',
-    component: 'sub-form',
-    nextStep: 'solent-rating-step',
-    title: 'Performance Factor',
-    fields: [
-      {
-        component: 'plain-text',
-        name: 'ddf.solent.narrative',
-        label: <div><Typography>The <em>Solent Rating</em> is intended to be as fair as possible across
-          a huge range of boats, from heavy displacement cruisers to light-weight dayboats.</Typography>
-          <Typography>Ratings for boats with high performance features may need to be adjusted to make
-            racing fair for everyone. Please describe anything you think might be relevant.
-            Examples might include carbon fibre spars or mainsail luff tracks.</Typography>
-          <Typography>The Handicap committee will review all ratings and advise if any adjustment needs
-            to be made</Typography></div>
-      },
-      {
-        component: 'textarea',
-        name: 'handicap_data.peformance_details',
-        label: 'High performance features',
-        helperText: 'Describe anything relevant.',
-      },
-    ]
-  },
-  {
-    name: 'solent-rating-step',
-    component: 'sub-form',
-    nextStep,
-    title: 'Solent Rating Summary',
-    fields: [
-      {
-        component: 'plain-text',
-        name: 'ddf.shds',
-        label: 'Solent Rating Summary'
-      },
-      {
-        component: 'text-field',
-        name: "ddf.effective_displacement",
-        label: "Effective Displacement (kg)",
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          if (values.handicap_data.displacement) {
-            formOptions.change("ddf.effective_displacement", values.handicap_data.displacement);
+    {
+      name: thisStep,
+      title: 'Solent Rating',
+      component: 'sub-form',
+      nextStep: 'performance-factor-step',
+      fields: [
+        {
+          component: 'plain-text',
+          name: 'solent-rating-narrative',
+          label: <span><em>Solent Rating</em> is a modified T(H)CF handicap rating designed to
+            represent the displacement of a wider range of vessels more accurately than the traditional
+            OGA rating. It uses the best data available for each boat. Where no data is available an approximation
+            is calculated based on hull shape.
+          </span>,
+        },
+        {
+          component: 'text-field',
+          name: "handicap_data.displacement",
+          label: 'Displacement (kg)',
+          helperText: <Typography>Enter the weight of the boat in kg as raced.
+            If you have it in tonnes, multiply by 1000. If you don't have a value for your boat, but
+            you have a value for the design class, enter that figure.
+            If you don't have a number, leave this field blank.</Typography>,
+          type: "number",
+          dataType: 'float',
+          isRequired: false,
+        },
+        {
+          component: 'radio',
+          name: "handicap_data.solent.hull_shape",
+          label: 'Select the most appropriate hull shape',
+          helperText: <Typography>In most cases you should leave this on the default setting.
+            This value is ignored if you enter a displacement value above.</Typography>,
+          description: 'WHERE DOES THIS RENDER?',
+          initialValue: 'Long keel - Standard',
+          options: [
+            {
+              label: "Long keel High volume (e.g. an East Coast Smack)",
+              value: "Long keel - High volume",
+            },
+            {
+              label: "Long keel Standard (e.g. a Falmouth Working Boat)",
+              value: "Long keel - Standard",
+            },
+            {
+              label: "Long keel Low volume (e.g. Memory 19)",
+              value: "Long keel - Low volume",
+            },
+            { label: "Fin keel", value: "Fin keel (e.g. Kelpie II)" },
+          ],
+        },
+        {
+          component: 'text-field',
+          name: "ddf.solent.length",
+          label: 'length (m)',
+          // hideField: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const LOD = values.handicap_data.length_on_deck || 0.0;
+            const LWL = values.handicap_data.length_on_waterline || 0.0;
+            const L = f2m((LOD + LWL) / 2);
+            formOptions.change("ddf.solent.length", L);
             return {
-              value: values.handicap_data.displacement,
-              description: "entered displacement",
-            };
-          } else {
-            const sol = values.ddf.solent;
-            const L = sol.length;
-            const B = sol.beam;
-            const D = sol.draft;
-            const SF = shapeFactors(values.handicap_data.solent.hull_shape);
-            const disp = L * B * D * SF;
-            formOptions.change("ddf.effective_displacement", disp);
-            return {
-              value: disp.toFixed(2),
-              description: "½(LOD+LWL)⨉B⨉D⨉SF !!! This has a bug !!!",
+              value: L,
             };
           }
         },
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.solent.performance_factor",
-        label: "% performance factor",
-        isReadOnly: true,
-        description: 'A value determined by the handicap committee',
-        initialValue: ' ',
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.solent.measured_rating",
-        label: "Modified Measured Rating (m)",
-        description: '!!! This has a bug !!!',
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const L = values.ddf.solent.length;
-          const rS = f2m(values.ddf.root_s);
-          const disp = values.ddf.effective_displacement;
-          const x = 0.2 * L * rS / Math.sqrt(disp / L);
-          const y = 0.67 * (L + rS);
-          const mmr = x + y;
-          formOptions.change("handicap_data.solent.measured_rating", mmr);
-          return {
-            value: mmr.toFixed(2),
-            description: values.handicap_data.displacement ? '0.2L√S/√(Disp/L)+0.67*(L+√S)' : '0.2L√S/√(LxBxDxSF)+0.67*(L+√S)',
-          };
+        {
+          component: 'text-field',
+          name: "ddf.solent.beam",
+          label: 'beam (m)',
+          // hideField: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const B = f2m(values.handicap_data.beam);
+            formOptions.change("ddf.solent.beam", B);
+            return {
+              value: B,
+            };
+          }
+        }, {
+          component: 'text-field',
+          name: "ddf.solent.draft",
+          label: 'draft (m)',
+          // hideField: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const D = f2m(values.handicap_data.draft);
+            // TODO use plate up if known
+            formOptions.change("ddf.solent.draft", D);
+            return {
+              value: D,
+            };
+          }
         },
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.solent.thcf",
-        label: "Solent Rating T(H)CF",
-        description: '!!! This has a bug !!!',
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
-          const pf = values.handicap_data.solent.performance_factor || 0.0;
-          const r = mmrf * (1 - values.ddf.prop_allowance);
-          const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
-          const mthcf = Math.round(1000 * thcf) / 1000;
-          formOptions.change('handicap_data.solent.thcf', mthcf);
-          return { value: mthcf };
+      ],
+    },
+    {
+      name: 'performance-factor-step',
+      component: 'sub-form',
+      nextStep: 'solent-rating-step',
+      title: 'Performance Factor',
+      fields: [
+        {
+          component: 'plain-text',
+          name: 'ddf.solent.narrative',
+          label: <div><Typography>The <em>Solent Rating</em> is intended to be as fair as possible across
+            a huge range of boats, from heavy displacement cruisers to light-weight dayboats.</Typography>
+            <Typography>Ratings for boats with high performance features may need to be adjusted to make
+              racing fair for everyone. Please describe anything you think might be relevant.
+              Examples might include carbon fibre spars or mainsail luff tracks.</Typography>
+            <Typography>The Handicap committee will review all ratings and advise if any adjustment needs
+              to be made</Typography></div>
         },
-      },
-      {
-        component: 'radio',
-        name: "ddf.solent.performance_factor",
-        label: "Performance factor playground",
-        helperText: <Typography>
-          You can put a value in here and see what the effect would be.
-          The value here won't be saved.
-        </Typography>,
-        initialValue: 0,
-        isRequired: false,
-        options: [
-          { label: '0%', value: 0 },
-          { label: '1%', value: 0.01 },
-          { label: '2%', value: 0.02 },
-          { label: '3%', value: 0.03 },
-          { label: '4%', value: 0.04 },
-          { label: '5%', value: 0.05 },
-        ]
-      },
-      {
-        component: 'text-field',
-        name: "ddf.mthcf",
-        label: "Effect of Performance Factor",
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
-          const r = mmrf * (1 - values.ddf.prop_allowance);
-          const pf = values.ddf.solent.performance_factor || 0.0;
-          const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
-          const mthcf = Math.round(1000 * thcf) / 1000;
-          return { value: mthcf.toFixed(2) };
+        {
+          component: 'textarea',
+          name: 'handicap_data.peformance_details',
+          label: 'High performance features',
+          helperText: 'Describe anything relevant.',
         },
-      },
-      {
-        component: 'text-field',
-        name: "handicap_data.thcf",
-        label: "T(H)CF",
-        type: "number",
-        dataType: 'float',
-        isReadOnly: true,
-      },
-      {
-        component: 'text-field',
-        name: "ddf.diff",
-        label: "Difference",
-        type: "string",
-        isReadOnly: true,
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          const diff = Math.abs(values.handicap_data.solent.thcf - values.handicap_data.thcf);
-          const v = 100 * diff / values.handicap_data.thcf;
-          return {
-            value: `${v.toFixed(1)}%`,
-          };
-        }
-      },
-    ],
-  },
+      ]
+    },
+    {
+      name: 'solent-rating-step',
+      component: 'sub-form',
+      nextStep,
+      title: 'Solent Rating Summary',
+      fields: [
+        {
+          component: 'plain-text',
+          name: 'ddf.shds',
+          label: 'Solent Rating Summary'
+        },
+        {
+          component: 'text-field',
+          name: "ddf.effective_displacement",
+          label: "Effective Displacement (kg)",
+          isReadOnly: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            if (values.handicap_data.displacement) {
+              formOptions.change("ddf.effective_displacement", values.handicap_data.displacement);
+              return {
+                value: values.handicap_data.displacement,
+                description: "entered displacement",
+              };
+            } else {
+              const sol = values.ddf.solent;
+              const L = sol.length;
+              const B = sol.beam;
+              const D = sol.draft;
+              const SF = shapeFactors(values.handicap_data.solent.hull_shape);
+              const disp = L * B * D * SF;
+              formOptions.change("ddf.effective_displacement", disp);
+              return {
+                value: disp.toFixed(2),
+                description: "½(LOD+LWL)⨉B⨉D⨉SF !!! This has a bug !!!",
+              };
+            }
+          },
+        },
+        {
+          component: 'text-field',
+          name: "handicap_data.solent.performance_factor",
+          label: "% performance factor",
+          isReadOnly: true,
+          description: 'A value determined by the handicap committee',
+          initialValue: ' ',
+        },
+        {
+          component: 'text-field',
+          name: "handicap_data.solent.measured_rating",
+          label: "Modified Measured Rating (m)",
+          description: '!!! This has a bug !!!',
+          isReadOnly: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const L = values.ddf.solent.length;
+            const rS = f2m(values.ddf.root_s);
+            const disp = values.ddf.effective_displacement;
+            const x = 0.2 * L * rS / Math.sqrt(disp / L);
+            const y = 0.67 * (L + rS);
+            const mmr = x + y;
+            formOptions.change("handicap_data.solent.measured_rating", mmr);
+            return {
+              value: mmr.toFixed(2),
+              description: values.handicap_data.displacement ? '0.2L√S/√(Disp/L)+0.67*(L+√S)' : '0.2L√S/√(LxBxDxSF)+0.67*(L+√S)',
+            };
+          },
+        },
+        {
+          component: 'text-field',
+          name: "handicap_data.solent.thcf",
+          label: "Solent Rating T(H)CF",
+          description: '!!! This has a bug !!!',
+          isReadOnly: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
+            const pf = values.handicap_data.solent.performance_factor || 0.0;
+            const r = mmrf * (1 - values.ddf.prop_allowance);
+            const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
+            const mthcf = Math.round(1000 * thcf) / 1000;
+            formOptions.change('handicap_data.solent.thcf', mthcf);
+            return { value: mthcf };
+          },
+        },
+        {
+          component: 'radio',
+          name: "ddf.solent.performance_factor",
+          label: "Performance factor playground",
+          helperText: <Typography>
+            You can put a value in here and see what the effect would be.
+            The value here won't be saved.
+          </Typography>,
+          initialValue: 0,
+          isRequired: false,
+          options: [
+            { label: '0%', value: 0 },
+            { label: '1%', value: 0.01 },
+            { label: '2%', value: 0.02 },
+            { label: '3%', value: 0.03 },
+            { label: '4%', value: 0.04 },
+            { label: '5%', value: 0.05 },
+          ]
+        },
+        {
+          component: 'text-field',
+          name: "ddf.mthcf",
+          label: "Effect of Performance Factor",
+          isReadOnly: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
+            const r = mmrf * (1 - values.ddf.prop_allowance);
+            const pf = values.ddf.solent.performance_factor || 0.0;
+            const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
+            const mthcf = Math.round(1000 * thcf) / 1000;
+            return { value: mthcf.toFixed(2) };
+          },
+        },
+        {
+          component: 'text-field',
+          name: "handicap_data.thcf",
+          label: "T(H)CF",
+          type: "number",
+          dataType: 'float',
+          isReadOnly: true,
+        },
+        {
+          component: 'text-field',
+          name: "ddf.diff",
+          label: "Difference",
+          type: "string",
+          isReadOnly: true,
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const diff = Math.abs(values.handicap_data.solent.thcf - values.handicap_data.thcf);
+            const v = 100 * diff / values.handicap_data.thcf;
+            return {
+              value: `${v.toFixed(1)}%`,
+            };
+          }
+        },
+      ],
+    },
   ];
 }
 
@@ -554,17 +554,19 @@ export const steps = (firstStep, nextStep) => [
   {
     name: firstStep,
     component: 'sub-form',
-    nextStep: ({ values }) => {
-      if (values.handicap_data && values.handicap_data.sailarea) {
-        return 'hull-step'
-      }
-      if (['Cat Boat', 'Single Sail'].includes(values.rig_type)) {
-        return 'mainsail-step';
-      }
-      if (['None'].includes(values.rig_type)) {
-        return 'no-handicap-step';
-      }
-      return "sails-step";
+    nextStep: {
+      when: "rig_type",
+      stepMapper: {
+        Cutter: "foretriangle-step",
+        Sloop: "foretriangle-step",
+        'Cat Boat': "mainsail-step",
+        'Single Sail': "mainsail-step",
+        Ketch: "foretriangle-step",
+        Yawl: "foretriangle-step",
+        Schooner: "foretriangle-step",
+        Other: "no-handicap-step",
+        None: "no-handicap-step",
+      },
     },
     fields: [
       {
@@ -572,7 +574,8 @@ export const steps = (firstStep, nextStep) => [
         name: 'ddf.hcd',
         component: 'sub-form',
         description: `The following steps collect the information needed to calculate a traditional T(H)CF
-        handicap and the extra data for experimental and area handicaps.`, fields: [
+        handicap and the extra data for experimental and area handicaps.`,
+        fields: [
           {
             component: 'text-field',
             name: "handicap_data.thcf",
@@ -592,20 +595,16 @@ export const steps = (firstStep, nextStep) => [
     ],
   },
   {
-    name: "sails-step",
+    name: "foretriangle-step",
     component: 'sub-form',
     nextStep: {
       when: "rig_type",
       stepMapper: {
         Cutter: "mainsail-step",
         Sloop: "mainsail-step",
-        'Cat Boat': "mainsail-step",
-        'Single Sail': "mainsail-step",
         Ketch: "mainsail-step",
         Yawl: "mainsail-step",
         Schooner: "foremast-step",
-        Other: "no-handicap-step",
-        None: "no-handicap-step",
       },
     },
     fields: [
@@ -621,24 +620,8 @@ export const steps = (firstStep, nextStep) => [
         description:
           "measured from deck to the top of the highest headsail halyard sheave (for jib topsail if one can be flown)",
         type: "number",
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const s = formOptions.getState();
-          switch (s.values.rig_type) {
-            case "Cutter":
-            case "Sloop":
-            case "Ketch":
-            case "Yawl":
-            case "Schooner":
-              return {
-                isRequired: true,
-                validate: [{ type: 'required' }],
-              };
-            default:
-              return {
-                isRequired: false,
-              };
-          }
-        },
+        isRequired: true,
+        validate: [{ type: 'required' }],
       },
       {
         component: 'text-field',
@@ -648,24 +631,8 @@ export const steps = (firstStep, nextStep) => [
           "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit",
         type: "number",
         dataType: 'float',
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const s = formOptions.getState();
-          switch (s.values.rig_type) {
-            case "Cutter":
-            case "Sloop":
-            case "Ketch":
-            case "Yawl":
-            case "Schooner":
-              return {
-                isRequired: true,
-                validate: [{ type: 'required' }],
-              };
-            default:
-              return {
-                isRequired: false,
-              };
-          }
-        },
+        isRequired: true,
+        validate: [{ type: 'required' }],
       },
       {
         component: 'text-field',
@@ -751,13 +718,13 @@ export const steps = (firstStep, nextStep) => [
     title: "Mizzen topsail",
     name: "mizzen-topsail-step",
     component: 'sub-form',
-    nextStep: "calculated-sailarea-step",
+    nextStep: 'csa-step',
     fields: topsail_fields("mizzen_topsail"),
   },
   {
     name: "calculated-sailarea-step",
     component: 'sub-form',
-    nextStep: "hull-step",
+    nextStep: 'handicap-hull-step',
     fields: [
       {
         component: 'text-field',
@@ -779,9 +746,9 @@ export const steps = (firstStep, nextStep) => [
     ],
   },
   {
-    name: "hull-step",
+    name: "handicap-hull-step",
     component: 'sub-form',
-    nextStep: "prop-step",
+    nextStep: 'prop-step',
     fields: [
       {
         component: 'text-field',
@@ -916,7 +883,7 @@ export const steps = (firstStep, nextStep) => [
             pa = 0.03;
           }
           formOptions.change("ddf.prop_allowance", pa);
-          return { value: `${(100*pa).toFixed(1)}%` };
+          return { value: `${(100 * pa).toFixed(1)}%` };
         },
       },
       {

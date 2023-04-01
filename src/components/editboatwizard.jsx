@@ -313,11 +313,11 @@ const schema = (pickers) => {
                     component: 'radio',
                     name: "ddf.skip-handicap",
                     initialValue: "1",
-                    label: 'Do you want a handicap?',
+                    label: 'Do you want to create or update a handicap?',
                     helperText: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
                     validate: [{ type: 'required' }],
                     options: [
-                      { label: "I want a handicap", value: "1" },
+                      { label: "I want to add handicap data", value: "1" },
                       { label: "I'll skip this for now",  value: "2" }
                     ],
                   },
