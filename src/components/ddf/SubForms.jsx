@@ -325,7 +325,12 @@ export const preSalesStep = (step, yesStep, noStep) => ({
       label: 'I want to sell this boat',
       name: 'ddf.confirm_for_sale',
       helperText: 'check if you want to put this boat up for sale',
-      initialValue: false,
+      resolveProps: (props, { meta, input }, formOptions) => {
+        const { values } = formOptions.getState();
+        return {
+          initialValue: !!values.ddf.current_sales_record,
+        }
+      },
     },
   ],
 });
@@ -338,7 +343,7 @@ export const setForSaleStep = (step, nextStep) => ({
   fields: [
     {
       component: 'text-field',
-      name: "ddf.price",
+      name: "ddf.current_sales_record.asking_price",
       label: "Price (pounds)",
       type: "number",
       dataType: 'float',
@@ -348,7 +353,7 @@ export const setForSaleStep = (step, nextStep) => ({
     {
       component: "html",
       title: "Sales Text",
-      name: "ddf.sales_text",
+      name: "ddf.current_sales_record.sales_text",
       controls: ["bold", "italic"],
       maxLength: 500,
       isRequired: true,
@@ -365,6 +370,7 @@ export const salesSteps = (firstStep, nextStep) => [
   nextStep: {
     when: "ddf.update_sale",
     stepMapper: {
+      'sell': "update-sales-data-step",
       'update': "update-sales-data-step",
       'sold': "sold-step",
       'unsell': nextStep,
@@ -395,14 +401,14 @@ export const salesSteps = (firstStep, nextStep) => [
   fields: [
     {
       component: 'text-field',
-      name: "ddf.price",
+      name: "ddf.current_sales_record.asking_price",
       label: "New Price (pounds)",
       type: "number",
       dataType: 'float',
     },
     {
       component: 'html',
-      name: "ddf.sales_text",
+      name: "ddf.current_sales_record.sales_text",
       controls: ["bold", "italic"],
       maxLength: 500,
       title: "Updated Sales Text",
@@ -419,14 +425,14 @@ export const salesSteps = (firstStep, nextStep) => [
     {
       component: "date-picker",
       label: 'Date Sold',
-      name: 'ddf.date_sold',
+      name: 'ddf.current_sales_record.date_sold',
       isRequired: true,
       initialValue: new Date(),
       validate: [{ type: 'required' }],
     },
     {
       component: 'text-field',
-      name: "ddf.sale_price",
+      name: "ddf.current_sales_record.sale_price",
       label: "Final Price (pounds)",
       type: "number",
       dataType: 'float',
@@ -440,7 +446,7 @@ export const salesSteps = (firstStep, nextStep) => [
       <br/>if they are happy to share, and whether
       <br/>the Boat Register or
       Gaffer's Log helped with the sale.</Typography>,
-      name: "ddf.summary",
+      name: "ddf.current_sales_record.summary",
       controls: ["bold", "italic"],
       maxLength: 500,
       isRequired: true,

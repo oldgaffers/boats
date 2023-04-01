@@ -27,7 +27,7 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
 import HtmlEditor from './ckeditor';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { currentSaleRecord, SaleRecord } from "../util/sale_record";
+import { currentSaleRecord } from "../util/sale_record";
 
 const schema = (pickers) => {
   return {
@@ -329,16 +329,15 @@ const schema = (pickers) => {
           ...handicap_steps('handicap-step', 'own-step'),
           ownerShipsForm('own-step', 'descriptions-step'),
           {
+            component: 'sub-form',
             name: "descriptions-step",
             nextStep: {
-              when: "ddf.selling",
+              when: "ddf.can_sell",
               stepMapper: {
-                1: 'query-sell-step',  // owner or editor and boat not for sale
-                2: 'update-sell-step', // owner or editor and boat already for sale
-                3: 'done-step',        // not owner or editor
+                true: 'query-sell-step',  // owner or editor and boat not for sale
+                false: 'done-step',       // not owner or editor
               },
             },
-            component: 'sub-form',
             fields: descriptionsItems,
           },
           preSalesStep('query-sell-step', 'sell-step', 'done-step'),
@@ -404,13 +403,13 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = ownerids.includes[goldId];
 
-  const ddf = { selling: 1 };
+  const ddf = {
+    can_sell: !!(owner || editor),
+    update_sale: (boat.selling_status === 'for_sale') ? 'sell' : 'unsell',
+  };
   const fs = currentSaleRecord(boat);
   if (fs) {
-    ddf.selling = (owner || editor) ? 2 : 3;
-    console.log(fs);
-    ddf.price = fs.asking_price;
-    ddf.sales_text = fs.sales_text;
+    ddf.current_sales_record = fs;
   }
 
   const handleSubmit = ({ ddf, email, designer, builder, ...changes }) => {
@@ -419,39 +418,30 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     updates.designer = pickers.designer.find((item) => item.id === designer);
     updates.builder = pickers.builder.find((item) => item.id === builder);
 
-
     // const np = newPicklistItems(result);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
     updates.handicap_data = { ...ohd, ...nhd };
-    if (ddf.update_sale === 'unsell') {
-      updates.selling_status = 'not_for_sale';
-    }
-    if (ddf.sale_price) { // sold!
-      updates.selling_status = 'not_for_sale'; // could be 'sold'
-      const fs = currentSaleRecord(boat);
-      if (fs) {
-        const pfs = boat.for_sales.filter((f) => f.created_at !== fs.created_at);
-        fs.sold = ddf.date_sold;
-        fs.asking_price = ddf.sale_price;
-        fs.summary = ddf.summary;
-        updates.for_sales = [{ ...fs }, ...pfs];
-      } else {
-        // console.log("no current sales record - this shouldn't happen");
-      }
-    }
-    if (ddf.confirm_for_sale) {
-      const current = boat.ownerships.find((o) => o.current);
-      const fs = new SaleRecord(ddf.price, ddf.sales_text, current);
-      const pfs = boat.for_sales || [];
-      const for_sales = [{ ...fs }, ...pfs];
-      if (for_sales.length > 0) {
-        updates.for_sales = for_sales;
-      } else {
-        delete updates.for_sales;
-      }
-      updates.selling_status = 'for_sale';
+
+    const pfs = boat.for_sales.filter((f) => f.created_at !== fs?.created_at);
+    switch (ddf.update_sale) {
+      case 'sell':
+        updates.selling_status = 'for_sale';
+        updates.for_sales = [...pfs, ddf.current_sales_record];
+        break;
+      case 'unsell':
+        updates.selling_status = 'not_for_sale';
+        break;
+      case 'sold':
+        updates.selling_status = 'not_for_sale';
+        updates.for_sales = [...pfs, ddf.current_sales_record];
+        break;
+      case 'update':
+        updates.for_sales = [...pfs, ddf.current_sales_record];
+        break;
+      default:
+        console.log('SELLING', ddf.update_sale)
     }
     if (updates.construction_method?.trim() === '') {
       delete updates.construction_method;
@@ -463,6 +453,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     const updatedBoat = { ...before, ...updates };
     // const { newItems } = np;
 
+    console.log('Q', updatedBoat);
     onSubmit(updatedBoat, email);
 
   }
