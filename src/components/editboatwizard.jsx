@@ -18,8 +18,6 @@ import {
   registrationForm,
   descriptionsItems,
   referencesItems,
-  yachtHullStep,
-  dinghyHullStep,
   ownerShipsForm,
   preSalesStep,
   salesSteps,
@@ -237,12 +235,7 @@ const schema = (pickers) => {
           },
           {
             name: "construction-step",
-            nextStep: ({ values }) => {
-              if (["Dinghy", "Dayboat"].includes(values.generic_type)) {
-                return 'dinghy-hull-step';
-              }
-              return 'yacht-hull-step';
-            },
+            nextStep: 'hull-step',
             fields: [
               {
                 name: "construction",
@@ -252,15 +245,62 @@ const schema = (pickers) => {
               },
             ],
           },
-          yachtHullStep("skip-handicap-step"),
-          dinghyHullStep("skip-handicap-step"),
+          {
+            name: "hull-step",
+            component: 'sub-form',
+            nextStep: 'skip-handicap-step',
+            fields: [
+              {
+                name: "hullform",
+                title: "Hull Form",
+                component: 'sub-form',
+                fields: [
+                  {
+                    component: 'radio',
+                    label: 'choose from',
+                    name: "hull_form",
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const { values } = formOptions.getState();
+                      if (["Dinghy", "Dayboat"].includes(values.generic_type)) {
+                        return {
+                          options: [
+                            { label: "dinghy", value: "dinghy" },
+                            { label: "centre-board dinghy", value: "centre-board dinghy" },
+                            { label: "lee-boarder", value: "leeboarder" },
+                          ],
+                        }
+                      }
+                      return {
+                        options: [
+                          { label: "cut-away stern", value: "cut away stern" },
+                          {
+                            label: "long keel deep forefoot",
+                            value: "long keel deep forefoot",
+                          },
+                          {
+                            label: "long keel sloping forefoot",
+                            value: "long keel sloping forefoot",
+                          },
+                          { label: "fin keel", value: "fin keel" },
+                          { label: "bilge keel", value: "bilge keel" },
+                          { label: "centre-boarder", value: "centre-boarder" },
+                          { label: "lifting bulb keel", value: "lifting bulb keel" },
+                          { label: "lee-boarder", value: "leeboarder" },
+                        ],
+                      };
+                    },
+                  },
+                ],
+              },
+            ],
+          },
           {
             name: "skip-handicap-step",
             nextStep: {
               when: "ddf.skip-handicap",
               stepMapper: {
                 1: "handicap-step",
-                2: "descriptions-step",
+                2: "own-step",
               },
             },
             fields: [
@@ -292,7 +332,7 @@ const schema = (pickers) => {
             nextStep: {
               when: "ddf.selling",
               stepMapper: {
-                1: 'query-sell-step',        // owner or editor and boat not for sale
+                1: 'query-sell-step',  // owner or editor and boat not for sale
                 2: 'update-sell-step', // owner or editor and boat already for sale
                 3: 'done-step',        // not owner or editor
               },
