@@ -24,6 +24,8 @@ import {
   referencesItems,
   yachtHullStep,
   dinghyHullStep,
+  hullFields,
+  basicFields,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
@@ -195,44 +197,7 @@ const schema = (pickers) => {
                 component: 'sub-form',
                 name: "basic.form",
                 title: "Basic Details",
-                fields: [
-                  {
-                    component: 'select',
-                    name: "generic_type",
-                    label: "Generic Type",
-                    isReadOnly: false,
-                    isSearchable: true,
-                    isClearable: true,
-                    initialValue: 'Yacht',
-                    options: mapPicker(pickers.generic_type),
-                  },
-                  {
-                    component: 'select',
-                    name: "rig_type",
-                    label: "Rig",
-                    isRequired: true,
-                    initialValue: 'Cutter',
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                    ],
-                    options: mapPicker(pickers.rig_type),
-                  },
-                  {
-                    component: 'select',
-                    name: "mainsail_type",
-                    label: "Mainsail",
-                    isRequired: true,
-                    initialValue: 'gaff',
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                    ],
-                    options: mapPicker(pickers.sail_type),
-                  },
-                ],
+                fields: basicFields(pickers),
               },
             ],
           },
@@ -382,10 +347,7 @@ const schema = (pickers) => {
           },
           {
             name: "construction-step",
-            nextStep: ({ values }) =>
-              ["Dinghy", "Dayboat"].includes(values.generic_type)
-                ? "dinghy-hull-step"
-                : "yacht-hull-step",
+            nextStep: 'hull-step',
             fields: [
               {
                 name: "construction",
@@ -395,8 +357,11 @@ const schema = (pickers) => {
               },
             ],
           },
-          yachtHullStep("skip-handicap-step"),
-          dinghyHullStep("skip-handicap-step"),
+          {
+            name: "hull-step",
+            nextStep: 'skip-handicap-step',
+            fields: hullFields,
+          },
           {
             name: "skip-handicap-step",
             nextStep: {
@@ -410,12 +375,13 @@ const schema = (pickers) => {
               {
                 name: "skip-handicap",
                 title: "Do you want a handicap",
-                description: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
                 component: 'sub-form',
                 fields: [
                   {
                     component: 'radio',
                     name: "ddf.skip-handicap",
+                    label: 'Get a Handicap',
+                    helperText: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
                     initialValue: "1",
                     validate: [
                       {
@@ -437,14 +403,12 @@ const schema = (pickers) => {
               },
             ],
           },
-          ...handicap_steps('descriptions-step'),
+          ...handicap_steps('handicap-step', 'descriptions-step'),
           {
             name: "descriptions-step",
             nextStep: 'done-step',
             component: 'sub-form',
-            fields: [
-              ...descriptionsItems,
-            ],
+            fields: descriptionsItems,
           },
           {
             name: "done-step",

@@ -14,6 +14,45 @@ export function intField(name, label) {
   };
 }
 
+export const basicFields = (pickers) => [
+  {
+    component: 'select',
+    name: "mainsail_type",
+    label: "Mainsail",
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    options: mapPicker(pickers.sail_type),
+    isOptionEqualToValue: (option, value) => option.value === value,
+  },
+  {
+    component: 'select',
+    name: "rig_type",
+    label: "Rig",
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    options: mapPicker(pickers.rig_type),
+    isOptionEqualToValue: (option, value) => option.value === value,
+  },
+  {
+    component: 'select',
+    name: "generic_type",
+    label: "Generic Type",
+    isReadOnly: false,
+    isSearchable: true,
+    isClearable: true,
+    isOptionEqualToValue: (option, value) => option.value === value,
+    options: mapPicker(pickers.generic_type),
+  },
+];
+
 export const referencesItems = [
   {
     component: 'field-array',
@@ -43,6 +82,33 @@ export const referencesItems = [
 ]
 
 export const descriptionsItems = [
+  {
+    component: "html",
+    title: "Short description",
+    name: "short_description",
+    controls: ["bold", "italic"],
+    maxLength: 100,
+    helperText: `The short description appears on the boat's card and should be one or two lines long.
+
+        It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.`,
+  },
+  {
+    component: "html",
+    title: "Full description",
+    name: "full_description",
+    controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
+    helperText: `The full description appears on the boat's detail page and can be as long as you like.
+
+        It shouldn't replicate the short description. Do include historical details, significant voyages,
+      rebuilds and links to external videos, etc.
+
+        If you want to sell this boat, there is a separate place for the sales, text, so don't put things
+    like inventory in the descriptions.`,
+  },
+];
+
+const oldDescriptionsItems = 
+[
   {
     component: 'plain-text',
     name: 'ddf.short_description_helper',
@@ -229,6 +295,51 @@ export const constructionForm = (pickers) => {
   };
 };
 
+export const hullFields = [
+  {
+    name: "hullform",
+    title: "Hull Form",
+    component: 'sub-form',
+    fields: [
+      {
+        component: 'radio',
+        label: 'choose from',
+        name: "hull_form",
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          if (["Dinghy", "Dayboat"].includes(values.generic_type)) {
+            return {
+              options: [
+                { label: "dinghy", value: "dinghy" },
+                { label: "centre-board dinghy", value: "centre-board dinghy" },
+                { label: "lee-boarder", value: "leeboarder" },
+              ],
+            }
+          }
+          return {
+            options: [
+              { label: "cut-away stern", value: "cut away stern" },
+              {
+                label: "long keel deep forefoot",
+                value: "long keel deep forefoot",
+              },
+              {
+                label: "long keel sloping forefoot",
+                value: "long keel sloping forefoot",
+              },
+              { label: "fin keel", value: "fin keel" },
+              { label: "bilge keel", value: "bilge keel" },
+              { label: "centre-boarder", value: "centre-boarder" },
+              { label: "lifting bulb keel", value: "lifting bulb keel" },
+              { label: "lee-boarder", value: "leeboarder" },
+            ],
+          };
+        },
+      },
+    ],
+  },
+];
+
 export const yachtHullStep = (nextStep) => {
   return {
     name: "yacht-hull-step",
@@ -244,6 +355,7 @@ export const yachtHullStep = (nextStep) => {
             component: 'radio',
             label: 'choose from',
             name: "hull_form",
+            initialValue: 'long keel deep forefoot',
             options: [
               { label: "cut-away stern", value: "cut away stern" },
               {
