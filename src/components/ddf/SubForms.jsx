@@ -107,39 +107,6 @@ export const descriptionsItems = [
   },
 ];
 
-const oldDescriptionsItems = 
-[
-  {
-    component: 'plain-text',
-    name: 'ddf.short_description_helper',
-    label: `The short description appears on
-      the boat's card and should be one or two lines long.
-      It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.`,
-  },
-  {
-    component: "html",
-    title: "Short description",
-    name: "short_description",
-    controls: ["bold", "italic"],
-    maxLength: 100,
-    helperText: `It shouldn't replicate the short description. Do include historical details, significant voyages,
-      rebuilds and links to external videos, etc.`,
-  },
-  {
-    component: 'plain-text',
-    name: 'ddf.full_description_helper',
-    label: "The full description appears on the boat's detail page and can be as long as you like.",
-  },
-  {
-    component: "html",
-    title: "Full description",
-    name: "full_description",
-    controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
-    helperText: `If you want to sell this boat, there is a separate place for the sales, text, so don't put things
-    like inventory in the descriptions.`,
-  },
-];
-
 export const yearItems = [
   {
     component: 'text-field',

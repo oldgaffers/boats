@@ -9,7 +9,6 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import {
-  mapPicker,
   designerItems,
   builderItems,
   constructionItems,

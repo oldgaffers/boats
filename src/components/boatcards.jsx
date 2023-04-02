@@ -13,6 +13,7 @@ export default function BoatCards({
   onChangePage=(arg)=> console.log('onChangePage', arg), 
   onBoatMarked,
   onBoatUnMarked,
+  otherNav,
 }) {
 
   const handleMarkChange = (value, ogaNo) => {
@@ -28,8 +29,10 @@ export default function BoatCards({
     const handlePageChange = (_, page) => { onChangePage({ selectedBoats: totalCount, pages: pageCount, page })};
     return (
       <Container sx={{ marginX: "4px"}}>
-        <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}/>
-          <Box py={1} />
+        <BoatPagination onChange={handlePageChange} count={pageCount} page={state.page}
+          otherNav={otherNav}
+        />
+           <Box py={1} />
           <Grid container spacing={4}>
           {boats.map((boat) => {
             return (

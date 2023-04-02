@@ -10,7 +10,7 @@ const List = styled('ul')({
   display: 'flex',
 });
 
-export default function BoatPagination({ count, page, onChange }) {
+export default function BoatPagination({ count, page, onChange, otherNav }) {
   const { items } = usePagination({ count, page, onChange });
   const otherEllipsis = {
     disabled: false,
@@ -47,6 +47,7 @@ export default function BoatPagination({ count, page, onChange }) {
   return (
     <nav>
       <List>
+        {otherNav}
         {items.map(({ page, type, selected, ...item }, index) => {
           let children = null;
           if (type.includes('ellipsis')) {

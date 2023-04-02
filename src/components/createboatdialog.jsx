@@ -10,7 +10,6 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import {
-  mapPicker,
   designerItems,
   builderItems,
   constructionItems,
@@ -22,8 +21,6 @@ import {
   registrationForm,
   descriptionsItems,
   referencesItems,
-  yachtHullStep,
-  dinghyHullStep,
   hullFields,
   basicFields,
 } from "./ddf/SubForms";
