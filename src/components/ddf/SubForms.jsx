@@ -8,7 +8,8 @@ import {
 } from "./util";
 
 export function intField(name, label) {
-  return { name, label, 
+  return {
+    name, label,
     component: "text-field", type: "number", dataType: 'integer',
   };
 }
@@ -44,19 +45,10 @@ export const referencesItems = [
 export const descriptionsItems = [
   {
     component: 'plain-text',
-    name: 'ddf.descriptions',
-    label: <Typography>The short and full descriptions should be about what makes this boat distinct.
-      If you want to sell this boat, there is a separate place for the sales, text, so don't put things
-      like inventory in the descriptions.
-    </Typography>,
-  },
-  {
-    component: 'plain-text',
     name: 'ddf.short_description_helper',
-    label: <Typography>The short description appears on
+    label: `The short description appears on
       the boat's card and should be one or two lines long.
-      It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.
-    </Typography>,
+      It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.`,
   },
   {
     component: "html",
@@ -64,21 +56,21 @@ export const descriptionsItems = [
     name: "short_description",
     controls: ["bold", "italic"],
     maxLength: 100,
+    helperText: `It shouldn't replicate the short description. Do include historical details, significant voyages,
+      rebuilds and links to external videos, etc.`,
   },
   {
     component: 'plain-text',
     name: 'ddf.full_description_helper',
-    label: <Typography>The full description appears on
-      the boat's detail page and can be as long as you like.
-      It shouldn't replicate the short description. Include historical details, significant voyages,
-      rebuilds and links to external videos, etc.
-    </Typography>,
+    label: "The full description appears on the boat's detail page and can be as long as you like.",
   },
   {
     component: "html",
     title: "Full description",
     name: "full_description",
     controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
+    helperText: `If you want to sell this boat, there is a separate place for the sales, text, so don't put things
+    like inventory in the descriptions.`,
   },
 ];
 
@@ -113,64 +105,57 @@ export const homeItems = [
   },
 ];
 
-export const ownerShipsForm = (step, nextStep) => ({
-  name: step,
-  nextStep: nextStep,
-  component: 'sub-form',
-  shortcut: true,
-  // fields: [ownershipUpdateForm],
-  fields: [
-    {
-      component: 'plain-text',
-      name: 'ddf.ownerships_label',
-      label: 'You can add, remove and edit ownership records on this page.'
-        + ' If you are listed as a current owner and this is no-longer true add an end year and uncheck the box.'
-        + ' Your changes will be send to the editors who will update the boat\'s record'
+export const ownerShipsFields = [
+  {
+    component: 'plain-text',
+    name: 'ddf.ownerships_label',
+    label: 'You can add, remove and edit ownership records on this page.'
+      + ' If you are listed as a current owner and this is no-longer true add an end year and uncheck the box.'
+      + ' Your changes will be send to the editors who will update the boat\'s record'
+  },
+  {
+    component: 'field-array',
+    name: "ownerships",
+    label: "Known Owners",
+    defaultItem: {
+      name: ' ',
     },
-    {
-      component: 'field-array',
-      name: "ownerships",
-      label: "Known Owners",
-      defaultItem: {
-        name: ' ',
-      },
-      fields: [
-        {
-          name: 'name',
-          label: 'Name',
-          component: 'text-field',
-          resolveProps: (props, { input }) => {
-            // if no GDPR undefined -> not required
-            // if empty string -> new row - required
-            if (typeof input.value === 'string') {
-              return {
-                isRequired: true,
-                validate: [{ type: 'required' }],      
-              };
-            }
+    fields: [
+      {
+        name: 'name',
+        label: 'Name',
+        component: 'text-field',
+        resolveProps: (props, { input }) => {
+          // if no GDPR undefined -> not required
+          // if empty string -> new row - required
+          if (typeof input.value === 'string') {
             return {
-              isRequired: false,
-              helperText: 'name on record but withheld',
-            }
-          },
+              isRequired: true,
+              validate: [{ type: 'required' }],
+            };
+          }
+          return {
+            isRequired: false,
+            helperText: 'name on record but withheld',
+          }
         },
-        {
-          ...intField('start', 'Start Year'),
-          isRequired: true,
-          validate: [{ type: 'required' }],
-        },
-        intField('end', 'End Year'),
-        {
-          ...intField('share', 'Share (64ths)'),
-          initialValue: 64,
-          isRequired: true,
-          validate: [{ type: 'required' }],
-        },
-        { name: 'current', label: 'Current', component: 'checkbox' },
-      ],
-    },
-  ]
-});
+      },
+      {
+        ...intField('start', 'Start Year'),
+        isRequired: true,
+        validate: [{ type: 'required' }],
+      },
+      intField('end', 'End Year'),
+      {
+        ...intField('share', 'Share (64ths)'),
+        initialValue: 64,
+        isRequired: true,
+        validate: [{ type: 'required' }],
+      },
+      { name: 'current', label: 'Current', component: 'checkbox' },
+    ],
+  },
+];
 
 export const registrationForm = {
   title: "Registrations",
@@ -308,150 +293,174 @@ export const dinghyHullStep = (nextStep) => {
   };
 };
 
-export const preSalesStep = (step, yesStep, noStep) => ({
-  name: step,
-  component: 'sub-form',
-  shortcut: true,
-  nextStep: {
-    when: "ddf.confirm_for_sale",
-    stepMapper: {
-      true: yesStep,
-      false: noStep,
-    },
-  },
-  fields: [
-    {
-      component: 'checkbox',
-      label: 'I want to sell this boat',
-      name: 'ddf.confirm_for_sale',
-      helperText: 'check if you want to put this boat up for sale',
-      resolveProps: (props, { meta, input }, formOptions) => {
-        const { values } = formOptions.getState();
-        return {
-          initialValue: !!values.ddf.current_sales_record,
-        }
+export const doneFields = [
+  {
+    name: 'done.form',
+    component: 'sub-form',
+    fields: [
+      {
+        component: 'plain-text',
+        name: "ddf.we_are_done",
+        label:
+          "Thanks for helping make the register better. The editor's will review your suggestions. An email address will let us discuss with you any queries we might have.",
       },
-    },
-  ],
-});
+      {
+        component: 'text-field',
+        name: "email",
+        label: "email",
+        isRequired: true,
+        validate: [
+          { type: 'required' },
+          {
+            type: 'pattern',
+            pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+          }
+        ],
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          return {
+            initialValue: values.user?.email,
+          };
+        },
+      },
+    ],
+  },
+];
 
-export const setForSaleStep = (step, nextStep) => ({
-  name: step,
-  component: 'sub-form',
-  shortcut: true,
-  nextStep: nextStep,
-  fields: [
-    {
-      component: 'text-field',
-      name: "ddf.current_sales_record.asking_price",
-      label: "Price (pounds)",
-      type: "number",
-      dataType: 'float',
-      isRequired: true,
-      validate: [{ type: 'required' }],
-    },
-    {
-      component: "html",
-      title: "Sales Text",
-      name: "ddf.current_sales_record.sales_text",
-      controls: ["bold", "italic"],
-      maxLength: 500,
-      isRequired: true,
-      validate: [{ type: 'required' }],
-    },
-  ],
-});
+export const sellingDataFields = [
+  {
+    component: 'text-field',
+    name: "ddf.current_sales_record.asking_price",
+    label: "Price (pounds)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [{ type: 'required' }],
+  },
+  {
+    component: "html",
+    title: "Sales Text",
+    name: "ddf.current_sales_record.sales_text",
+    controls: ["bold", "italic"],
+    maxLength: 500,
+    isRequired: true,
+    validate: [{ type: 'required' }],
+  },
+];
 
 export const salesSteps = (firstStep, nextStep) => [
-{
-  title: <Typography variant='h5'>Change Sales Status</Typography>,
-  name: firstStep,
-  component: 'sub-form',
-  nextStep: {
-    when: "ddf.update_sale",
-    stepMapper: {
-      'sell': "update-sales-data-step",
-      'update': "update-sales-data-step",
-      'sold': "sold-step",
-      'unsell': nextStep,
+  {
+    name: firstStep,
+    nextStep: {
+      when: "ddf.update_sale",
+      stepMapper: {
+        'update': "update-sales-data-step",
+        'sold': "sold-step",
+        'unsell': 'unsell-confirm-step',
+      },
     },
+    fields: [
+      {
+        component: 'sub-form',
+        name: 'update-sales.form',
+        title: 'Change Sales Status',
+        fields: [
+          {
+            component: 'radio',
+            label: 'Update Sales Status',
+            options: [
+              { label: 'I want to take boat off the market for the present', value: 'unsell' },
+              { label: "The boat has been sold", value: 'sold' },
+              { label: "I want to check the price and sales text", value: 'update' },
+            ],
+            name: 'ddf.update_sale',
+            isRequired: true,
+            validate: [{ type: 'required' }],
+          },
+        ],
+      },
+    ],
   },
-  fields: [
-    {
-      component: 'radio',
-      label: 'Update Sales Status',
-      options: [
-        { label: 'I want to take boat off the market for the present', value: 'unsell', },
-        { label: "I've sold the boat", value: 'sold', },
-        { label: "I want to update the price or sales text", value: 'update', },
-      ],
-      initialValue: 'update',
-      name: 'ddf.update_sale',
-      isRequired: true,
-      validate: [{ type: 'required' }],
-    },
-  ],
-},
-{
-  title: <Typography variant='h5'>Update Sales Data</Typography>,
-  name: "update-sales-data-step",
-  nextStep: nextStep,
-  component: 'sub-form',
-  shortcut: true,
-  fields: [
-    {
-      component: 'text-field',
-      name: "ddf.current_sales_record.asking_price",
-      label: "New Price (pounds)",
-      type: "number",
-      dataType: 'float',
-    },
-    {
-      component: 'html',
-      name: "ddf.current_sales_record.sales_text",
-      controls: ["bold", "italic"],
-      maxLength: 500,
-      title: "Updated Sales Text",
-    },
-  ],
-},
-{
-  name: "sold-step",
-  nextStep: nextStep,
-  title: <Typography variant='h5'>Congratulations on Selling your boat</Typography>,
-  component: 'sub-form',
-  shortcut: true,
-  fields: [
-    {
-      component: "date-picker",
-      label: 'Date Sold',
-      name: 'ddf.current_sales_record.date_sold',
-      isRequired: true,
-      initialValue: new Date(),
-      validate: [{ type: 'required' }],
-    },
-    {
-      component: 'text-field',
-      name: "ddf.current_sales_record.sale_price",
-      label: "Final Price (pounds)",
-      type: "number",
-      dataType: 'float',
-      isRequired: true,
-      validate: [{ type: 'required' }],
-    },
-    {
-      component: "html",
-      title: <Typography>Please add some details,
-      <br/>including the new owner's name, 
-      <br/>if they are happy to share, and whether
-      <br/>the Boat Register or
-      Gaffer's Log helped with the sale.</Typography>,
-      name: "ddf.current_sales_record.summary",
-      controls: ["bold", "italic"],
-      maxLength: 500,
-      isRequired: true,
-      validate: [{ type: 'required' }],
-    },
-  ],
-}
+  {
+    name: 'unsell-confirm-step',
+    nextStep: nextStep,
+    fields: [
+      {
+        component: 'plain-text',
+        name: 'ddf.confirm-unsell',
+        label: 'The boat will no-longer appear in the list of boats for sale, and the normal full description will be provided instead of the sales text'
+      }
+    ],
+  },
+  {
+    name: "update-sales-data-step",
+    nextStep: nextStep,
+    fields: [
+      {
+        title: 'Update Sales Data',
+        component: 'sub-form',
+        name: 's2.form',
+        fields: [
+          {
+            component: 'text-field',
+            name: "ddf.current_sales_record.asking_price",
+            label: "New Price (pounds)",
+            type: "number",
+            dataType: 'float',
+          },
+          {
+            component: 'html',
+            name: "ddf.current_sales_record.sales_text",
+            controls: ["bold", "italic"],
+            maxLength: 500,
+            title: "Updated Sales Text",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    name: "sold-step",
+    nextStep: nextStep,
+    fields: [
+      {
+        title: 'Congratulations on Selling your boat',
+        component: 'sub-form',
+        name: 's3.form',
+        fields: [
+          {
+            component: "date-picker",
+            label: 'Date Sold',
+            name: 'ddf.current_sales_record.date_sold',
+            isRequired: true,
+            initialValue: new Date(),
+            DatePickerProps: {},
+            validate: [{ type: 'required' }],
+          },
+          {
+            component: 'text-field',
+            name: "ddf.current_sales_record.sale_price",
+            label: "Final Price (pounds)",
+            type: "number",
+            dataType: 'float',
+            isRequired: true,
+            validate: [{ type: 'required' }],
+          },
+          {
+            component: "html",
+            helperText: <Typography component='span'>Please add some details,
+              <br />including the new owner's name,
+              <br />if they are happy to share, and whether
+              <br />the Boat Register or
+              Gaffer's Log helped with the sale.</Typography>,
+            name: "ddf.current_sales_record.summary",
+            controls: ["bold", "italic"],
+            maxLength: 500,
+            isRequired: true,
+            validate: [{ type: 'required' }],
+          },
+        ],
+      },
+    ],
+  }
 ];

@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import enGB from "date-fns/locale/en-GB";
 import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
@@ -16,18 +19,16 @@ import {
   yearItems,
   homeItems,
   registrationForm,
-  descriptionsItems,
   referencesItems,
-  ownerShipsForm,
-  preSalesStep,
   salesSteps,
-  setForSaleStep,
+  ownerShipsFields,
+  sellingDataFields,
+  doneFields,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
 import HtmlEditor from './ckeditor';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { currentSaleRecord } from "../util/sale_record";
 
 const schema = (pickers) => {
   return {
@@ -38,13 +39,12 @@ const schema = (pickers) => {
         name: "boat",
         fields: [
           {
-            title: "Basic Details",
             name: "basic-step",
-            nextStep: "build-step",
+            nextStep: "descriptions-step",
             fields: [
               {
                 component: 'text-field',
-                name: "ddf.selling",
+                name: "ddf.can_sell",
                 label: "can buy/sell",
                 hideField: true,
               },
@@ -64,6 +64,7 @@ const schema = (pickers) => {
                       },
                     ],
                     options: mapPicker(pickers.sail_type),
+                    isOptionEqualToValue: (option, value) => option.value === value,
                   },
                   {
                     component: 'select',
@@ -76,6 +77,7 @@ const schema = (pickers) => {
                       },
                     ],
                     options: mapPicker(pickers.rig_type),
+                    isOptionEqualToValue: (option, value) => option.value === value,
                   },
                   {
                     component: 'select',
@@ -84,9 +86,39 @@ const schema = (pickers) => {
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
+                    isOptionEqualToValue: (option, value) => option.value === value,
                     options: mapPicker(pickers.generic_type),
                   },
                 ],
+              },
+            ],
+          },
+          {
+            name: "descriptions-step",
+            nextStep: 'build-step',
+            fields: [
+              {
+                component: "html",
+                title: "Short description",
+                name: "short_description",
+                controls: ["bold", "italic"],
+                maxLength: 100,
+                helperText: `The short description appears on the boat's card and should be one or two lines long.
+
+                    It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.`,
+              },
+              {
+                component: "html",
+                title: "Full description",
+                name: "full_description",
+                controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
+                helperText: `The full description appears on the boat's detail page and can be as long as you like.
+
+                    It shouldn't replicate the short description. Do include historical details, significant voyages,
+                  rebuilds and links to external videos, etc.
+
+                    If you want to sell this boat, there is a separate place for the sales, text, so don't put things
+                like inventory in the descriptions.`,
               },
             ],
           },
@@ -248,7 +280,6 @@ const schema = (pickers) => {
           },
           {
             name: "hull-step",
-            component: 'sub-form',
             nextStep: 'skip-handicap-step',
             fields: [
               {
@@ -319,7 +350,7 @@ const schema = (pickers) => {
                     validate: [{ type: 'required' }],
                     options: [
                       { label: "I want to add handicap data", value: "1" },
-                      { label: "I'll skip this for now", value: "2" }
+                      { label: "I'll leave it for now", value: "2" }
                     ],
                   },
                 ],
@@ -327,53 +358,53 @@ const schema = (pickers) => {
             ],
           },
           ...handicap_steps('handicap-step', 'own-step'),
-          ownerShipsForm('own-step', 'descriptions-step'),
           {
-            component: 'sub-form',
-            name: "descriptions-step",
+            name: 'own-step',
+            nextStep: ({ values }) => {
+              if (values.ddf.can_sell) {
+                if (values.ddf.update_sale === 'update') {
+                  return 'update-sell-step';
+                }
+                return 'query-sell-step';
+              }
+              return 'done-step';
+            },
+            fields: ownerShipsFields,
+          },
+          {
+            name: 'query-sell-step',
             nextStep: {
-              when: "ddf.can_sell",
+              when: "ddf.confirm_for_sale",
               stepMapper: {
-                true: 'query-sell-step',  // owner or editor and boat not for sale
-                false: 'done-step',       // not owner or editor
+                true: 'sell-step',
+                false: 'done-step',
               },
             },
-            fields: descriptionsItems,
-          },
-          preSalesStep('query-sell-step', 'sell-step', 'done-step'),
-          setForSaleStep('sell-step', 'done-step'),
-          ...salesSteps('update-sell-step', 'done-step'),
-          {
-            name: "done-step",
-            component: 'sub-form',
             fields: [
               {
-                component: 'plain-text',
-                name: "ddf.we_are_done",
-                label:
-                  "Thanks for helping make the register better. The editor's will review your suggestions. An email address will let us discuss with you any queries we might have.",
-              },
-              {
-                component: 'text-field',
-                name: "email",
-                label: "email",
-                isRequired: true,
-                validate: [
-                  { type: 'required' },
-                  {
-                    type: 'pattern',
-                    pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-                  }
-                ],
+                component: 'checkbox',
+                label: 'I want to sell this boat',
+                name: 'ddf.confirm_for_sale',
+                helperText: 'check if you want to put this boat up for sale',
                 resolveProps: (props, { meta, input }, formOptions) => {
                   const { values } = formOptions.getState();
-                  console.log(values.ddf);
                   return {
-                    initialValue: values.user?.email,
-                  };
+                    initialValue: !!values.ddf.current_sales_record,
+                    isReadOnly: !values.ddf.can_sell
+                  }
                 },
               },
             ],
+          },
+          {
+            name: 'sell-step',
+            nextStep: 'done-step',
+            fields: sellingDataFields,
+          },
+          ...salesSteps('update-sell-step', 'done-step'),
+          {
+            name: "done-step",
+            fields: doneFields,
           },
         ],
       },
@@ -405,14 +436,18 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
   const ddf = {
     can_sell: !!(owner || editor),
-    update_sale: (boat.selling_status === 'for_sale') ? 'sell' : 'unsell',
+    update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
   };
-  const fs = currentSaleRecord(boat);
+  const fs = boat.for_sales?.sort((a, b) => a.created_at < b.created_at)?.[0];
   if (fs) {
     ddf.current_sales_record = fs;
   }
 
   const handleSubmit = ({ ddf, email, designer, builder, ...changes }) => {
+    console.log('handleSubmit DDF', ddf);
+    console.log('handleSubmit designer', designer);
+    console.log('handleSubmit builder', builder);
+    console.log('handleSubmit changes', changes);
     const updates = { ...boat, ...boatf2m(changes) };
 
     updates.designer = pickers.designer.find((item) => item.id === designer);
@@ -426,10 +461,6 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
     const pfs = boat.for_sales.filter((f) => f.created_at !== fs?.created_at);
     switch (ddf.update_sale) {
-      case 'sell':
-        updates.selling_status = 'for_sale';
-        updates.for_sales = [...pfs, ddf.current_sales_record];
-        break;
       case 'unsell':
         updates.selling_status = 'not_for_sale';
         break;
@@ -438,10 +469,11 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
         updates.for_sales = [...pfs, ddf.current_sales_record];
         break;
       case 'update':
+        updates.selling_status = 'for_sale';
         updates.for_sales = [...pfs, ddf.current_sales_record];
         break;
       default:
-        console.log('SELLING', ddf.update_sale)
+        console.log('handleSubmit unexpected update_sale value', ddf.update_sale);
     }
     if (updates.construction_method?.trim() === '') {
       delete updates.construction_method;
@@ -453,10 +485,11 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     const updatedBoat = { ...before, ...updates };
     // const { newItems } = np;
 
-    console.log('Q', updatedBoat);
-    onSubmit(updatedBoat, email);
+    console.log('handleSubmit final', updatedBoat);
+    // onSubmit(updatedBoat, email);
 
   }
+  const initialValues = { user, ...boatm2f(boat), ddf };
 
   return (
     <Dialog
@@ -466,20 +499,22 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
       <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
         <Typography variant="h5" >Update {boat.name} ({boat.oga_no})</Typography>
       </Box>
-      <FormRenderer
-        componentMapper={{
-          ...componentMapper,
-          html: HtmlEditor,
-        }}
-        FormTemplate={(props) => (
-          <FormTemplate {...props} showFormControls={false} />
-        )}
-        schema={schema(pickers)}
-        onSubmit={handleSubmit}
-        onCancel={onCancel}
-        initialValues={{ user, ...boatm2f(boat), ddf }}
-        subscription={{ values: true }}
-      />
+      <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
+        <FormRenderer
+          componentMapper={{
+            ...componentMapper,
+            html: HtmlEditor,
+          }}
+          FormTemplate={(props) => (
+            <FormTemplate {...props} showFormControls={false} />
+          )}
+          schema={schema(pickers)}
+          onSubmit={handleSubmit}
+          onCancel={onCancel}
+          initialValues={initialValues}
+          subscription={{ values: true }}
+        />
+      </LocalizationProvider>
 
     </Dialog>
   );
