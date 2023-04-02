@@ -17,6 +17,7 @@ export const constructionItems = (pickers) => {
       isSearchable: true,
       isClearable: true,
       options: mapPicker(pickers.construction_material),
+      isOptionEqualToValue: (option, value) => option.value === value,
     },
     {
       component: 'select',
@@ -26,6 +27,7 @@ export const constructionItems = (pickers) => {
       isSearchable: true,
       isClearable: true,
       options: mapPicker(pickers.construction_method),
+      isOptionEqualToValue: (option, value) => option.value === value,
     },
     {
       component: 'select',
@@ -35,6 +37,7 @@ export const constructionItems = (pickers) => {
       isSearchable: true,
       isClearable: true,
       options: mapPicker(pickers.spar_material),
+      isOptionEqualToValue: (option, value) => option.value === value,
     },
     {
       component: 'text-field',
@@ -55,6 +58,7 @@ export const extendableItems = ({ pickers, name, label }) => {
       isSearchable: true,
       isClearable: true,
       options: mapPicker(pickers[name]),
+      isOptionEqualToValue: (option, value) => option.value === value,
       resolveProps: (props, { meta, input }, formOptions) => {
         // console.log('resolveProps', name, input);  
         const state = formOptions.getState();
