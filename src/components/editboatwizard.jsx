@@ -100,6 +100,27 @@ const schema = (pickers) => {
                 fields: [
                   ...designerItems(pickers),
                   {
+                    component: 'select',
+                    name: 'design_class',
+                    label: 'Design Class',
+                    isReadOnly: false,
+                    isSearchable: true,
+                    isClearable: true,
+                    noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
+                    options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
+                  },
+                  {
+                    component: 'text-field',
+                    name: 'new_design_class',
+                    label: 'New design class',
+                    helperText: 'if the design class is not listed and you know the name add it here',
+                    isRequired: false,
+                    condition: {
+                      when: 'design_class',
+                      isEmpty: true,
+                    },
+                  },
+                  {
                     component: 'text-field',
                     name: "handicap_data.length_on_deck",
                     label: "Length on deck  (decimal feet)",
@@ -343,16 +364,12 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   }
 
   const handleSubmit = ({ ddf, email, designer, builder, ...changes }) => {
-    console.log('handleSubmit DDF', ddf);
-    console.log('handleSubmit designer', designer);
-    console.log('handleSubmit builder', builder);
-    console.log('handleSubmit changes', changes);
     const updates = { ...boat, ...boatf2m(changes) };
 
     updates.designer = pickers.designer.find((item) => item.id === designer);
     updates.builder = pickers.builder.find((item) => item.id === builder);
 
-    // const np = newPicklistItems(result);
+    // const np = newPicklistItems(changes);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
@@ -383,8 +400,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     const before = boatDefined(boat);
     const updatedBoat = { ...before, ...updates };
     // const { newItems } = np;
-
-    console.log('handleSubmit final', updatedBoat);
+    console.log(updatedBoat);
     // onSubmit(updatedBoat, email);
 
   }
