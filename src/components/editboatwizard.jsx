@@ -32,6 +32,7 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
 import HtmlEditor from './ckeditor';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
+import { newPicklistItems } from "./createboatbutton";
 
 const schema = (pickers) => {
   return {
@@ -369,7 +370,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     updates.designer = pickers.designer.find((item) => item.id === designer);
     updates.builder = pickers.builder.find((item) => item.id === builder);
 
-    // const np = newPicklistItems(changes);
+    const np = newPicklistItems(changes);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
@@ -398,10 +399,9 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
       delete updates.year_is_approximate;
     }
     const before = boatDefined(boat);
-    const updatedBoat = { ...before, ...updates };
-    // const { newItems } = np;
-    console.log(updatedBoat);
-    // onSubmit(updatedBoat, email);
+    const { newItems } = np;
+    const updatedBoat = { ...before, ...updates, newItems };
+    onSubmit(updatedBoat, email);
 
   }
   const initialValues = { user, ...boatm2f(boat), ddf };
