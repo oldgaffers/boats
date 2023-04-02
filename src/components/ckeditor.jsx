@@ -36,7 +36,7 @@ export default function HtmlEditor({
                     // console.log('Focus.', editor);
                 }}
             />
-            <p/>
+            <Typography variant='caption'>{helperText||''}</Typography>
         </div>
     );
 
