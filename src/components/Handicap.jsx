@@ -497,11 +497,17 @@ const mainsail_fields = (sail) => {
         const hd = s.values.handicap_data;
         if (hd) {
           const saildata = hd[sail];
-          const sa = mainsail_area(saildata);
-          formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(saildata));
+          if (saildata) {
+            console.log('Q', sail, saildata);
+            const sa = mainsail_area(saildata);
+            // formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(saildata));
+            return {
+              value: sa.toFixed(2),
+              description: saildata.head ? "½l×f+½h×√(f²+l²)" : "½l×f",
+            }  
+          }
           return {
-            value: sa.toFixed(2),
-            description: saildata.head ? "½l×f+½h×√(f²+l²)" : "½l×f",
+            description: (sail === 'main') ? "½l×f+½h×√(f²+l²)" : "½l×f",
           }
         }
       },
