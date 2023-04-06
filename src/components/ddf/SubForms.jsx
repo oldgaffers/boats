@@ -446,13 +446,13 @@ export const salesSteps = (firstStep, nextStep) => [
         fields: [
           {
             component: 'radio',
+            name: 'ddf.update_sale',
             label: 'Update Sales Status',
             options: [
               { label: 'I want to take boat off the market for the present', value: 'unsell' },
               { label: "The boat has been sold", value: 'sold' },
               { label: "I want to check the price and sales text", value: 'update' },
             ],
-            name: 'ddf.update_sale',
             isRequired: true,
             validate: [{ type: 'required' }],
           },
