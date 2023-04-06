@@ -375,7 +375,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     const nhd = updates.handicap_data;
     updates.handicap_data = { ...ohd, ...nhd };
 
-    const pfs = boat.for_sales.filter((f) => f.created_at !== fs?.created_at);
+    const pfs = boat.for_sales?.filter((f) => f.created_at !== fs?.created_at) || [];
     switch (ddf.update_sale) {
       case 'unsell':
         updates.selling_status = 'not_for_sale';
