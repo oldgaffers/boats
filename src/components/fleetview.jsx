@@ -6,20 +6,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import { TokenContext } from './TokenProvider';
-import { getScopedData } from './boatregisterposts';
+import { getLargestImage, getScopedData } from './boatregisterposts';
 import RoleRestricted from './rolerestrictedcomponent';
 import { getFilterable } from './boatregisterposts';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { CSVLink } from "react-csv";
 import { gql, useQuery } from '@apollo/client';
 import { getBoatData } from './boatregisterposts';
-import { Button, Dialog } from '@mui/material';
-
-// thumb			short_description			place_built			construction_details		hull_form	draft	beam	loa	lwl	spar_material	thcf			
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 
 async function getBoats(ogaNos) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
@@ -43,49 +40,116 @@ function id2name(id, members) {
   }
 }
 
-function ExportFleet({ name, boats }) {
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState([]);
+function combineFieldsForExport(shortData, fullData, members) {
+  return shortData.map((b) => {
+    const fb = fullData.find((boat) => boat.oga_no === b.oga_no);
+    const owners = (b.owners?.map((id) => id2name(id, members)) || []).join(',');
+    return { ...b, owners, ...(fb || {}) };
+  });
+}
+
+function selectFieldsForExport(data, fields, handicapFields) {
+  return data.map((b) => {
+    const boat = {};
+    fields.forEach((key) => {
+      if (b[key]) {
+        boat[key] = b[key];
+      }
+    });
+    const handicap_data = b.handicap_data || {};
+    if (handicapFields === 'all') {
+      Object.keys(handicap_data).forEach((key) => {
+        const item = handicap_data[key];
+        if (item) {
+          if (typeof item === 'object') {
+            Object.keys(item).forEach((k2) => {
+              boat[`${key}.${k2}`] = item[k2];
+            });
+          } else {
+            boat[key] = handicap_data[key];
+          }
+        }
+      });
+    } else {
+      handicapFields.forEach((key) => {
+        if (handicap_data[key]) {
+          boat[key] = handicap_data[key];
+        }
+      });
+    }
+    return boat;
+  });
+}
+
+function ExportFleetOptions({ name, boats }) {
+  const [data, setData] = useState();
   const ids = boats.map((b) => b.owners).flat();
   const membersResult = useQuery(MEMBER_QUERY, { variables: { ids } });
   const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
 
-  // eslint-disable-next-line no-unused-expressions
   useEffect(() => {
-    if (open) {
-      getBoats(boats?.map((b) => b?.oga_no))?.then((r) => setData(r))
+    if (!data) {
+      const oganos = boats?.map((b) => b?.oga_no);
+      console.log('Q', oganos);
+      getBoats(oganos).then(async (r) => {
+        const images = await Promise.allSettled(r.map((b) => {
+          if (b.image_key) {
+            console.log('has image', b.image_key);
+            return getLargestImage(b.image_key);
+          } else {
+            console.log('no image', b);
+            return undefined;
+          }
+        }));
+        console.log(images);
+        r.forEach((b, i) => {
+          if (images[i].value) {
+            b.image = images[i].value.data.url;
+            b.copyright = images[i].value.data.caption;
+          }
+        });
+        setData(r);
+      });
     }
-  }, [open, boats]);
+  }, [data, boats]);
+
+
 
   if (!data) {
-    return <Button disabled={true}>Export</Button>
+    return <CircularProgress />
   }
-  const mb = boats.map((b) => {
-    const boat = { ...b, owners: b?.owners?.map((id) => id2name(id, members)) };
-    const fb = data.find((boat) => boat.oga_no === b.oga_no);
-    if (!fb) {
-      console.log('missing full data for', b);
-      return boat;
-    }
-    const handicap_data = fb.handicap_data || {};
-    console.log(handicap_data);
-    [
-      'short_description', 'hull_form', 'place_built', 'construction_details', 'spar_material',
-    ].forEach((key) => {
-      if (fb[key]) {
-        boat[key] = fb[key];
-      }
-    });
-    [
-      'beam',	'draft',	'length_over_all',	'length_on_waterline',	'thcf',
-    ].forEach((key) => {
-      if (handicap_data[key]) {
-        boat[key] = handicap_data[key];
-      }
-    });
-    return boat;
-  });
 
+  const fullData = combineFieldsForExport(boats, data, members);
+
+  const leaflet = selectFieldsForExport(fullData, [
+    'name', 'oga_no', 'place_built', 'owners',
+    'construction_material', 'construction_method',
+    'builder', 'designer', 'design_class',
+    'mainsail_type', 'rig_type',
+    'short_description', 'hull_form', 'place_built',
+    'construction_details', 'spar_material',
+    'image', 'copyright',
+  ],
+    [
+      'beam', 'draft', 'length_on_deck', 'length_over_all', 'length_on_waterline', 'thcf',
+    ]
+  );
+
+  const race = selectFieldsForExport(fullData, [
+    'name', 'oga_no', 'owners',
+    'short_description', 'hull_form',
+  ],
+    'all'
+  );
+  return <Stack alignContent='end' spacing='1em'>
+    <CSVLink filename={`${name}.csv`} data={leaflet}>Spreadsheet (csv) for boats attending leaflet</CSVLink>
+    <CSVLink filename={`${name}.csv`} data={race}>Spreadsheet for Race Officers</CSVLink>
+    N.B. all dimensions in metres
+  </Stack>;
+}
+
+function ExportFleet({ name, boats }) {
+  const [open, setOpen] = useState(false);
   return <RoleRestricted role='member'>
     <Button onClick={() => setOpen(true)}>Export</Button>
     <Dialog
@@ -94,7 +158,17 @@ function ExportFleet({ name, boats }) {
       maxWidth='md'
       fullWidth
     >
-      <CSVLink filename={`${name}.csv`} data={mb}><FileDownloadIcon /></CSVLink>
+      <DialogTitle id="form-dialog-title">Export Fleet {name}</DialogTitle>
+      <DialogContent>
+        <DialogContentText variant="subtitle2">
+          <ExportFleetOptions name={name} boats={boats} />
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setOpen(false)} color="primary">
+          Close
+        </Button>
+      </DialogActions>
     </Dialog>
   </RoleRestricted>;
 }
