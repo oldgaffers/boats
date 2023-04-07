@@ -170,20 +170,19 @@ export const solentSteps = (thisStep, nextStep) => {
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             if (values.handicap_data.displacement) {
+              formOptions.change("ddf.effective_displacement", values.handicap_data.displacement);
               return {
                 value: values.handicap_data.displacement,
                 description: "entered displacement",
               };
             } else {
-              /*
               const sol = values.ddf.solent;
               const L = sol.length;
               const B = sol.beam;
               const D = sol.draft;
               const SF = shapeFactors(values.handicap_data.solent.hull_shape);
               const disp = Math.round(1000 * L * B * D * SF);
-              */
-             const disp = 0;
+              formOptions.change("ddf.effective_displacement", disp);
               return {
                 value: disp,
                 description: "½(LOD+LWL)⨉B⨉D⨉SF⨉1000",
