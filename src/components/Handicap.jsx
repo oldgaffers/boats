@@ -29,12 +29,11 @@ Disp = Displacement
 */
 
 
-export const solentFields = (thisStep, nextStep) => {
+export const solentSteps = (thisStep, nextStep) => {
   return [
     {
       name: thisStep,
       title: 'Solent Rating',
-      component: 'sub-form',
       nextStep: 'performance-factor-step',
       fields: [
         {
@@ -131,7 +130,6 @@ export const solentFields = (thisStep, nextStep) => {
     },
     {
       name: 'performance-factor-step',
-      component: 'sub-form',
       nextStep: 'solent-rating-step',
       title: 'Performance Factor',
       fields: [
@@ -156,7 +154,6 @@ export const solentFields = (thisStep, nextStep) => {
     },
     {
       name: 'solent-rating-step',
-      component: 'sub-form',
       nextStep,
       title: 'Solent Rating Summary',
       fields: [
@@ -173,19 +170,20 @@ export const solentFields = (thisStep, nextStep) => {
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             if (values.handicap_data.displacement) {
-              formOptions.change("ddf.effective_displacement", values.handicap_data.displacement);
               return {
                 value: values.handicap_data.displacement,
                 description: "entered displacement",
               };
             } else {
+              /*
               const sol = values.ddf.solent;
               const L = sol.length;
               const B = sol.beam;
               const D = sol.draft;
               const SF = shapeFactors(values.handicap_data.solent.hull_shape);
-              const disp = Math.ceil(1000 * L * B * D * SF);
-              // formOptions.change("ddf.effective_displacement", disp);
+              const disp = Math.round(1000 * L * B * D * SF);
+              */
+             const disp = 0;
               return {
                 value: disp,
                 description: "½(LOD+LWL)⨉B⨉D⨉SF⨉1000",
@@ -239,7 +237,7 @@ export const solentFields = (thisStep, nextStep) => {
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             const mmrf = m2dfn(values.handicap_data.solent.measured_rating);
-            const pf = values.handicap_data.solent.performance_factor || 0.0;
+            const pf = Number(values.handicap_data.solent.performance_factor);
             const r = mmrf * (1 - values.ddf.prop_allowance);
             const thcf = (1 + pf) * 0.125 * (Math.sqrt(r) + 3);
             const mthcf = Math.round(1000 * thcf) / 1000;
@@ -314,7 +312,7 @@ export function foretriangle_area({
   fore_triangle_base,
 }) {
   if (fore_triangle_height && fore_triangle_base) {
-    return 0.85 * 0.5 * fore_triangle_height * fore_triangle_base;
+    return Math.round(100 * 0.85 * 0.5 * fore_triangle_height * fore_triangle_base) / 100;
   }
   return 0;
 }
@@ -325,12 +323,12 @@ export function mainsail_area(sail) {
       const { luff, head, foot } = sail;
       if (luff && head && foot) {
         return (
-          0.5 * luff * foot + 0.5 * head * Math.sqrt(foot * foot + luff * luff)
+          Math.round(100 * 0.5 * luff * foot + 0.5 * head * Math.sqrt(foot * foot + luff * luff)) / 100
         );
       }
     } else {
       if (sail.luff && sail.foot) {
-        return 0.5 * sail.luff * sail.foot;
+        return Math.round(100 * 0.5 * sail.luff * sail.foot) / 100;
       }
     }
   }
@@ -340,7 +338,7 @@ export function mainsail_area(sail) {
 export function topsail_area(sail) {
   if (sail) {
     if (sail.luff && sail.perpendicular) {
-      return 0.5 * sail.luff * sail.perpendicular;
+      return Math.round(100 * 0.5 * sail.luff * sail.perpendicular) / 100;
     }
   }
   return 0;
@@ -358,7 +356,7 @@ export function sail_area({ values }) {
     total += mainsail_area(values.mainsail_type, values.handicap_data.mizzen);
     total += topsail_area(values.handicap_data.mizzen_topsail);
   }
-  return total;
+  return Math.round(100 * total) / 100;
 }
 
 const sailFields = (sides) => {
@@ -460,10 +458,6 @@ const mainsail_fields = (sail) => {
       dataType: 'float',
       resolveProps: (props, { meta, input }, formOptions) => {
         const s = formOptions.getState();
-        const hd = s.values.handicap_data;
-        if (hd) {
-          formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(hd[sail]));
-        }
         return main_required_props(sail, s.values.rig_type);
       },
     },
@@ -508,9 +502,9 @@ const mainsail_fields = (sail) => {
           const saildata = hd[sail];
           if (saildata) {
             const sa = mainsail_area(saildata);
-            // formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(saildata));
+            formOptions.change(`ddf.sail_area.${sail}`, sa);
             return {
-              value: sa.toFixed(2),
+              value: sa,
               description: saildata.head ? "½l×f+½h×√(f²+l²)" : "½l×f",
             }
           }
@@ -659,9 +653,11 @@ export const steps = (firstStep, nextStep) => [
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
           const handicap_data = f.values.handicap_data;
+          const sa = foretriangle_area(handicap_data);
+          formOptions.change('ddf.sail_area.foretriangle', sa);
           if (handicap_data) {
             return {
-              value: foretriangle_area(handicap_data).toFixed(2),
+              value: sa,
             };
           }
         },
@@ -742,18 +738,19 @@ export const steps = (firstStep, nextStep) => [
     fields: [
       {
         component: 'text-field',
-        name: "ddf.calculated-sailarea",
+        name: "ddf.total_sail_area",
         label: "Calculated Sail Area",
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
           const ddf = f.values.ddf;
+          console.log('ddf', ddf);
           const vals = Object.keys(ddf.sail_area).map((k) => ddf.sail_area[k]);
           const sa = vals.reduce((p, v) => p + v);
           const rsa = Math.round(1000 * sa) / 1000;
-          formOptions.change("handicap_data.sailarea", rsa);
+          formOptions.change('ddf.total_sail_area', sa);
           return {
-            value: rsa.toFixed(2),
+            value: rsa,
           };
         },
       },
@@ -832,7 +829,7 @@ export const steps = (firstStep, nextStep) => [
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const SA = values.handicap_data.sailarea;
+          const SA = values.handicap_data.sailarea || values.ddf.total_sail_area;
           const ra = rig_allowance(values.rig_type);
           const crsa = ra * Math.sqrt(SA);
           formOptions.change("ddf.root_s", crsa);
@@ -980,7 +977,7 @@ export const steps = (firstStep, nextStep) => [
       }
     ],
   },
-  ...solentFields('displacement-step', nextStep),
+  ...solentSteps('displacement-step', nextStep),
   {
     name: "no-handicap-step",
     component: 'sub-form',
