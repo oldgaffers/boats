@@ -86,6 +86,7 @@ export const solentFields = (thisStep, nextStep) => {
           component: 'text-field',
           name: "ddf.solent.length",
           label: 'length (m)',
+          description: '½(LOD+LWL)',
           // hideField: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
@@ -183,11 +184,11 @@ export const solentFields = (thisStep, nextStep) => {
               const B = sol.beam;
               const D = sol.draft;
               const SF = shapeFactors(values.handicap_data.solent.hull_shape);
-              const disp = L * B * D * SF;
-              formOptions.change("ddf.effective_displacement", disp);
+              const disp = Math.ceil(1000 * L * B * D * SF);
+              // formOptions.change("ddf.effective_displacement", disp);
               return {
-                value: disp.toFixed(2),
-                description: "½(LOD+LWL)⨉B⨉D⨉SF !!! This has a bug !!!",
+                value: disp,
+                description: "½(LOD+LWL)⨉B⨉D⨉SF⨉1000",
               };
             }
           },
@@ -208,17 +209,25 @@ export const solentFields = (thisStep, nextStep) => {
           isReadOnly: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
-            const L = values.ddf.solent.length;
+            const sol = values.ddf.solent;
+            const L = sol.length;
             const rS = f2m(values.ddf.root_s);
-            const disp = values.ddf.effective_displacement;
+            const disp = values.ddf.effective_displacement / 1000;
             const x = 0.2 * L * rS / Math.sqrt(disp / L);
             const y = 0.67 * (L + rS);
             const mmr = x + y;
             formOptions.change("handicap_data.solent.measured_rating", mmr);
-            return {
-              value: mmr.toFixed(2),
-              description: values.handicap_data.displacement ? '0.2L√S/√(Disp/L)+0.67*(L+√S)' : '0.2L√S/√(LxBxDxSF)+0.67*(L+√S)',
-            };
+            if (values.handicap_data.displacement) {
+              return {
+                value: mmr.toFixed(2),
+                description: '0.2L√S/√(Disp/L)+0.67*(L+√S)',
+              };
+            } else {
+              return {
+                value: mmr.toFixed(2),
+                description: '0.2L√S/√(B×D×SF)+0.67*(L+√S)',
+              };
+            }
           },
         },
         {
@@ -498,13 +507,12 @@ const mainsail_fields = (sail) => {
         if (hd) {
           const saildata = hd[sail];
           if (saildata) {
-            console.log('Q', sail, saildata);
             const sa = mainsail_area(saildata);
             // formOptions.change(`ddf.sail_area.${sail}`, mainsail_area(saildata));
             return {
               value: sa.toFixed(2),
               description: saildata.head ? "½l×f+½h×√(f²+l²)" : "½l×f",
-            }  
+            }
           }
           return {
             description: (sail === 'main') ? "½l×f+½h×√(f²+l²)" : "½l×f",
@@ -724,7 +732,7 @@ export const steps = (firstStep, nextStep) => [
     title: "Mizzen topsail",
     name: "mizzen-topsail-step",
     component: 'sub-form',
-    nextStep: 'csa-step',
+    nextStep: 'calculated-sailarea-step',
     fields: topsail_fields("mizzen_topsail"),
   },
   {
