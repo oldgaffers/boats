@@ -1,3 +1,7 @@
+import { f2m, m2dfn } from "./format";
+
+export const baseLengthInFeetForTHCF = 25;
+
 export const rig_allowance = (r) => {
     switch(r.toLowerCase()) {
         case 'cutter': return 0.96;
@@ -153,9 +157,76 @@ export function fR(boat) {
     return 0;
 }
 
-export function thcf(boat) {
-    if(boat) {
-        return 0.125*(Math.sqrt(fR(boat))+3);
+export function fThcf(r = baseLengthInFeetForTHCF) {
+    return 0.125*(Math.sqrt(r)+3);
+}
+
+const shapeFactorMap = {
+    'Long keel - High volume': 0.25,
+    'Long keel - Standard': 0.20,
+    'Long keel - Low volume': 0.15,
+    'Fin keel': 0.10,
+  };
+
+export function shapeFactors(sf) {
+    return shapeFactorMap?.[sf] || 0.2;
+}
+
+export function solentLength(data) {
+    const LOD = data.length_on_deck || baseLengthInFeetForTHCF;
+    const LWL = data.length_on_waterline || baseLengthInFeetForTHCF;
+    return f2m(0.5*(LOD+LWL));
+}
+
+// normalised to kg using 1000 kg per cubic metre for salt water
+export function solentEstimatedDisplacement(data) {
+    const L = solentLength(data);
+    const B = f2m(data.beam);
+    const D = f2m(data.draft);
+    const SF = shapeFactors(data.solent.hull_shape);
+    return Math.round(1000 * L * B * D * SF);
+}
+  
+/*
+Proposed rating formula (metres):
+Measured Rating = MR = 0.2*(L*√S)/√(B*D*SF) + 0.67*(L+√S)
+OR if displacement is known:
+Measured Rating = MR = 0.2*(L*√S)/√(Disp/L) + 0.67*(L+√S)
+Where:
+L = (LWL+LOD)/2
+S = Corrected sail area (includes rig allowance)
+B = Beam (Should be water line, but in most cases the difference is insignificant)
+D = Draft
+SF = Shape Factor above
+Disp = Displacement
+
+*/
+
+export function solentMR(boat) {
+    const data = boat.handicap_data;
+    const L = solentLength(data);
+    const rS = f2m(fSqrtS(boat));
+    const y = 0.67 * (L + rS);
+    if (data.displacement) {
+        const enteredDisplacement = data.displacement / 1000; // in cubic metres
+        const x = 0.2 * L * rS / Math.sqrt(enteredDisplacement / L);
+        return x + y;    
+    } else {
+        // const estimatedDisplacement = solentEstimatedDisplacement(data) / 1000; // in cubic metres
+        // const x2 = 0.2 * L * rS / Math.sqrt(estimatedDisplacement / L);
+        const B = f2m(data.beam);
+        const D = f2m(data.draft);
+        const SF = shapeFactors(data.solent.hull_shape);   
+        const x = 0.2 * L * rS / Math.sqrt(B*D*SF);
+        return x + y;            
     }
-    return 0;    
+}
+
+export function solentRating(boat) {
+    const data = boat.handicap_data;
+    const mmrf = data.solent.measured_rating;
+    const thcf = fThcf(mmrf);
+    const pf = Number(data.solent.performance_factor);
+    const sr = (1 + pf) * thcf;
+    return Math.round(1000 * sr) / 1000;
 }

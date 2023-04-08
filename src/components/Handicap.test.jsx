@@ -271,7 +271,7 @@ test('Transcur fR', () => {
 });
 
 test('Transcur T(H)CF', () => {
-  expect(thcf(boatm2f(Transcur)).toFixed(3)).toMatchSnapshot();
+  expect(thcf(fR(boatm2f(Transcur))).toFixed(3)).toMatchSnapshot();
 });
 
 test('t1', () => {
@@ -279,5 +279,5 @@ test('t1', () => {
 });
 
 test('Robinetta T(H)CF', () => {
-  expect(thcf(boatm2f(Robinetta)).toFixed(3)).toMatchSnapshot();
+  expect(thcf(fR(boatm2f(Robinetta))).toFixed(3)).toMatchSnapshot();
 });
