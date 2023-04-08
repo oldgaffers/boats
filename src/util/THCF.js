@@ -1,4 +1,4 @@
-import { f2m, m2dfn } from "./format";
+import { f2m } from "./format";
 
 export const baseLengthInFeetForTHCF = 25;
 
