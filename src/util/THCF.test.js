@@ -1,4 +1,4 @@
-import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, thcf } from './THCF';
+import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, thcf, fThcf } from './THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};
@@ -88,18 +88,18 @@ expect(fMSA(aboat.handicap_data).toFixed(2)).toEqual('312.77');
 });
 
 test('thcf thcf empty', () => {
-  expect(thcf()).toEqual(1);
+  expect(fThcf()).toEqual(1);
 });
 
 test('thcf thcf aboat', () => {
   expect(fL(aboat.handicap_data)).toBe((21+17)/2);
   expect(fSqrtS(aboat).toFixed()).toEqual('17');
   expect(fSqrtS(aboat)).toBeLessThan(18.1);
-  expect(thcf(fR(aboat)).toFixed(3)).toEqual('0.862');
+  expect(fThcf(fR(aboat)).toFixed(3)).toEqual('0.862');
 });
 
 test('thcf thcf aboat2', () => {
   expect(fL(aboat2.handicap_data)).toBe((27.87+27.23)/2);
   expect(fSqrtS(aboat2)).toBeGreaterThan(20);
-  expect(thcf(fR(aboat2)).toFixed(3)).toEqual("0.966");
+  expect(fThcf(fR(aboat2)).toFixed(3)).toEqual("0.966");
 });

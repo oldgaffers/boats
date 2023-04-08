@@ -1,5 +1,5 @@
 import { foretriangle_area } from './Handicap';
-import { thcf, fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fMR, fBD, fSqrtS, fR } from '../util/THCF';
+import { thcf, fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
 import { boatm2f, boatf2m } from "../util/format";
 
 const Transcur = {
@@ -271,7 +271,7 @@ test('Transcur fR', () => {
 });
 
 test('Transcur T(H)CF', () => {
-  expect(thcf(fR(boatm2f(Transcur))).toFixed(3)).toMatchSnapshot();
+  expect(fThcf(fR(boatm2f(Transcur))).toFixed(3)).toMatchSnapshot();
 });
 
 test('t1', () => {
@@ -279,5 +279,5 @@ test('t1', () => {
 });
 
 test('Robinetta T(H)CF', () => {
-  expect(thcf(fR(boatm2f(Robinetta))).toFixed(3)).toMatchSnapshot();
+  expect(fThcf(fR(boatm2f(Robinetta))).toFixed(3)).toMatchSnapshot();
 });
