@@ -1,4 +1,4 @@
-import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, thcf, fThcf } from './THCF';
+import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, fThcf } from './THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};

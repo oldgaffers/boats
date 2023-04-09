@@ -1,5 +1,5 @@
 import { foretriangle_area } from './Handicap';
-import { thcf, fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
+import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
 import { boatm2f, boatf2m } from "../util/format";
 
 const Transcur = {
