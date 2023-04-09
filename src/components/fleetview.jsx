@@ -81,6 +81,33 @@ function selectFieldsForExport(data, fields, handicapFields) {
   });
 }
 
+function km(k) {
+  return k.replace('_', ' ');
+}
+
+function vm(v) {
+  return v; // ?.replace('© ', '') || '';
+}
+
+function boatForLeaflet(boat) {
+  const { name, oga_no, short_description, image, ...text } = boat;
+  return `
+  <table border="1">
+  <tbody>
+  <tr>
+  <td style="width: 50%;">
+  <div>${name.toUpperCase()} (${oga_no})<div>
+  <div>${short_description}</div>
+  ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name?boat[k].name:boat[k])}`).join('<p>')}
+  </td>
+  <td style="width: 50%;">
+  <img width="600" src="${image}"/>
+  </td>
+  </tr>
+  </tbody>
+  </table>`;
+}
+
 function ExportFleetOptions({ name, boats }) {
   const [data, setData] = useState();
   const ids = boats.map((b) => b.owners).flat();
@@ -90,18 +117,15 @@ function ExportFleetOptions({ name, boats }) {
   useEffect(() => {
     if (!data) {
       const oganos = boats?.map((b) => b?.oga_no);
-      console.log('Q', oganos);
       getBoats(oganos).then(async (r) => {
         const images = await Promise.allSettled(r.map((b) => {
           if (b.image_key) {
-            console.log('has image', b.image_key);
             return getLargestImage(b.image_key);
           } else {
             console.log('no image', b);
             return undefined;
           }
         }));
-        console.log(images);
         r.forEach((b, i) => {
           if (images[i].value) {
             b.image = images[i].value.data.url;
@@ -112,8 +136,6 @@ function ExportFleetOptions({ name, boats }) {
       });
     }
   }, [data, boats]);
-
-
 
   if (!data) {
     return <CircularProgress />
@@ -141,8 +163,19 @@ function ExportFleetOptions({ name, boats }) {
   ],
     'all'
   );
+
+  const html = `<div>${leaflet.map((boat) => boatForLeaflet(boat))}</div>`;
+  console.log(html);
+  const doc = new Blob([html], { type: 'text/html' });
+  const uRL = window.URL.createObjectURL(doc);
+
   return <Stack alignContent='end' spacing='1em'>
     <CSVLink filename={`${name}.csv`} data={leaflet}>Spreadsheet (csv) for boats attending leaflet</CSVLink>
+    <a
+      target='_self'
+      download={`${name}.html`}
+      href={uRL}
+    >HTML  for boats attending leaflet</a>
     <CSVLink filename={`${name}.csv`} data={race}>Spreadsheet for Race Officers</CSVLink>
     N.B. all dimensions in metres
   </Stack>;
