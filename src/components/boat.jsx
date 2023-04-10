@@ -3,19 +3,39 @@ import { ApolloConsumer } from '@apollo/client';
 import CircularProgress from "@mui/material/CircularProgress";
 import BoatWrapper from './boatwrapper';
 import { getBoatData } from './boatregisterposts';
+import { Typography } from '@mui/material';
 
-export default function Boat({ location = { search: '?oga_no=' } }) {
+function getOgaNo(location) {
   const params = new URLSearchParams(location.search);
-  const ogaNo = params.get('oga_no') || '';
+  console.log('P', params);
+  const qp = params.get('oga_no');
+  if (qp) {
+    return qp;
+  }
+  const path = location.pathname?.split('/') || ['boat', ''];
+  const p = path.indexOf('boat') + 1;
+  console.log('L', path, );
+  if (Number(path[p]) !== 0) {
+    return path[p];
+  }
+  return undefined;
+}
+
+export default function Boat({ location }) {
+  const ogaNo = getOgaNo(location);
   const [data, setData] = useState();
 
   useEffect(() => {
-    if (!data) {
+    if (ogaNo && !data) {
       getBoatData(ogaNo).then((r) => {
         setData(r.data);
       }).catch((e) => console.log(e));
     }
   }, [data, ogaNo]);
+
+  if (!ogaNo) {
+    return <Typography>Nothing here, go back to the <a href="..">main page</a></Typography>;
+  }
 
   if (!data) return <CircularProgress />;
 
