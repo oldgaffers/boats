@@ -7,7 +7,6 @@ import { Typography } from '@mui/material';
 
 function getOgaNo(location) {
   const params = new URLSearchParams(location.search);
-  console.log('P', params);
   const qp = params.get('oga_no');
   if (qp) {
     return qp;
