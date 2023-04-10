@@ -45,46 +45,12 @@ export function fForeTriangle(data) {
     return 0;
 }
 
-// The measured sail area is the sum of:-
-// 0.5(b x h) + 0.5(g x d) for mainsail and mizzen  where d = √(b^2+h^2 ), 
-// plus 0.5(i x h) for topsails, 
-// plus O.425(i x j) for the foretriangle.
-export function fMSA(data) {
-    if(data) {
-        const sa = 0
-        + fGaffSA(data.main)
-        + fGaffSA(data.mizzen)
-        + fTopSA(data.topsail)
-        + fTopSA(data.mizzen_topsail)
-        + 0.85*fForeTriangle(data);
-        return sa;
-    }
-    return 0;
-}
-
 export function fL(data) {
     if(data && data.length_on_deck && data.length_on_waterline ) {
         return 0.5*(data.length_on_deck+data.length_on_waterline);
     }
     return 0;
 }
-
-export function fSqrtS(boat) {
-    if(boat && boat.handicap_data) {
-        const SA = boat.handicap_data.sailarea || fMSA(boat.handicap_data);
-        return rig_allowance(boat.rig_type)*Math.sqrt(SA);
-    }
-    return 0;
-}
-
-/*
-export function fD(data) {
-    if(data && data.depth) {
-        return 1.25*data.depth;
-    }
-    return 0;
-}
-*/
 
 export function fBD(boat) {
     // John Scarlett
@@ -94,9 +60,10 @@ export function fBD(boat) {
 }
 
 export function fMR(boat) {
-    if(boat) {
-        const L = fL(boat.handicap_data);
-        const sqrtS = fSqrtS(boat);
+    const { ddf, handicap_data } = boat;
+    if(handicap_data) {
+        const L = fL(handicap_data);
+        const sqrtS = ddf.root_s || 0.0;
         const BD = fBD(boat);
         if ( BD>0) {   
             const x = 0.15*L*sqrtS/Math.sqrt(BD);
@@ -203,20 +170,20 @@ Disp = Displacement
 */
 
 export function solentMR(boat) {
-    const data = boat.handicap_data;
-    const L = solentLength(data);
-    const rS = f2m(fSqrtS(boat));
+    const { ddf, handicap_data } = boat;
+    const L = solentLength(handicap_data);
+    const rS = f2m(ddf.root_s || 0.0);
     const y = 0.67 * (L + rS);
-    if (data.displacement) {
-        const enteredDisplacement = data.displacement / 1000; // in cubic metres
+    if (handicap_data.displacement) {
+        const enteredDisplacement = handicap_data.displacement / 1000; // in cubic metres
         const x = 0.2 * L * rS / Math.sqrt(enteredDisplacement / L);
         return x + y;    
     } else {
         // const estimatedDisplacement = solentEstimatedDisplacement(data) / 1000; // in cubic metres
         // const x2 = 0.2 * L * rS / Math.sqrt(estimatedDisplacement / L);
-        const B = f2m(data.beam);
-        const D = f2m(data.draft);
-        const SF = shapeFactors(data.solent.hull_shape);   
+        const B = f2m(handicap_data.beam);
+        const D = f2m(handicap_data.draft);
+        const SF = shapeFactors(handicap_data.solent.hull_shape);   
         const x = 0.2 * L * rS / Math.sqrt(B*D*SF);
         return x + y;            
     }
