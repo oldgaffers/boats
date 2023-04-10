@@ -34,9 +34,8 @@ export const solentSteps = (thisStep, nextStep) => {
           component: 'radio',
           name: "handicap_data.solent.hull_shape",
           label: 'Select the most appropriate hull shape',
-          helperText: <Typography>In most cases you should leave this on the default setting.
-            This value is ignored if you enter a displacement value above.</Typography>,
-          description: 'WHERE DOES THIS RENDER?',
+          helperText: `In most cases you should leave this on the default setting.
+            This value is ignored if you enter a displacement value above.`,
           initialValue: 'Long keel - Standard',
           options: [
             {
@@ -59,7 +58,7 @@ export const solentSteps = (thisStep, nextStep) => {
           name: "ddf.solent.length",
           label: 'length (m)',
           description: '½(LOD+LWL)',
-          // hideField: true,
+          hideField: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             const LOD = values.handicap_data.length_on_deck || 0.0;
@@ -74,7 +73,7 @@ export const solentSteps = (thisStep, nextStep) => {
           component: 'text-field',
           name: "ddf.solent.beam",
           label: 'beam (m)',
-          // hideField: true,
+          hideField: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             const B = f2m(values.handicap_data.beam);
@@ -86,7 +85,7 @@ export const solentSteps = (thisStep, nextStep) => {
           component: 'text-field',
           name: "ddf.solent.draft",
           label: 'draft (m)',
-          // hideField: true,
+          hideField: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             const D = f2m(values.handicap_data.draft);
@@ -105,19 +104,26 @@ export const solentSteps = (thisStep, nextStep) => {
         {
           component: 'plain-text',
           name: 'ddf.solent.narrative',
-          label:`The <em>Solent Rating</em> is intended to be as fair as possible across
+          label: <>The <em>Solent Rating</em> is intended to be as fair as possible across
             a huge range of boats, from heavy displacement cruisers to light-weight dayboats.
             Ratings for boats with high performance features may need to be adjusted to make
-              racing fair for everyone. Please describe anything you think might be relevant.
-              Examples might include carbon fibre spars or mainsail luff tracks.
+            racing fair for everyone. Please describe anything you think might be relevant.
+            Examples might include carbon fibre spars or mainsail luff tracks.
             The Handicap committee will review all ratings and advise if any adjustment needs
-              to be made`
+            to be made</>
         },
         {
           component: 'textarea',
           name: 'handicap_data.peformance_details',
           label: 'High performance features',
           helperText: 'Describe anything relevant.',
+          minRows: 2,
+          maxRows: 10,
+          onKeyDown: (e) => {
+            if (e.key === 'Enter') {
+              e.stopPropagation();
+            }
+          }
         },
       ]
     },
@@ -273,14 +279,13 @@ export function mainsail_area(sail) {
   if (sail) {
     if (sail.head) {
       const { luff, head, foot } = sail;
+      console.log(sail, luff, head, foot);
       if (luff && head && foot) {
-        return (
-          Math.round(1000 * 0.5 * luff * foot + 0.5 * head * Math.sqrt(foot * foot + luff * luff)) / 1000
-        );
+        return 0.5 * luff * foot + 0.5 * head * Math.sqrt(foot * foot + luff * luff);
       }
     } else {
       if (sail.luff && sail.foot) {
-        return Math.round(1000 * 0.5 * sail.luff * sail.foot) / 1000;
+        return 0.5 * sail.luff * sail.foot;
       }
     }
   }
@@ -290,7 +295,7 @@ export function mainsail_area(sail) {
 export function topsail_area(sail) {
   if (sail) {
     if (sail.luff && sail.perpendicular) {
-      return Math.round(1000 * 0.5 * sail.luff * sail.perpendicular) / 1000;
+      return 0.5 * sail.luff * sail.perpendicular;
     }
   }
   return 0;
@@ -308,7 +313,7 @@ export function sail_area({ values }) {
     total += mainsail_area(values.mainsail_type, values.handicap_data.mizzen);
     total += topsail_area(values.handicap_data.mizzen_topsail);
   }
-  return Math.round(1000 * total) / 1000;
+  return total;
 }
 
 const sailFields = (sides) => {
@@ -453,7 +458,8 @@ const mainsail_fields = (sail) => {
         if (hd) {
           const saildata = hd[sail];
           if (saildata) {
-            const sa = mainsail_area(saildata);
+            const sa = Math.round(1000 * mainsail_area(saildata)) / 1000;
+            console.log('S', sail, saildata, sa)
             formOptions.change(`ddf.sail_area.${sail}`, sa);
             return {
               value: sa,
@@ -500,7 +506,7 @@ const topsail_fields = (sail) => [
       const s = formOptions.getState();
       const hd = s.values.handicap_data;
       if (hd) {
-        sa = topsail_area(hd[sail]);
+        sa = Math.round(1000 * topsail_area(hd[sail])) / 1000;
         formOptions.change(`ddf.sail_area.${sail}`, sa);
       }
       return {
