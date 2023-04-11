@@ -1,4 +1,4 @@
-import { foretriangle_area } from './Handicap';
+import { foretriangle_area, mainsail_area } from './Handicap';
 import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
 import { boatm2f, boatf2m } from "../util/format";
 
@@ -242,7 +242,11 @@ test('Transcur fForeTriangle', () => {
 });
 
 test('Transcur fMSA', () => {
-  expect(fMSA(tcf).toFixed(1)).toMatchSnapshot();
+  const sail_area = {
+    foretriangle: foretriangle_area(tcf),
+    main: mainsail_area(tcf.main),
+  }
+  expect(fMSA(sail_area).toFixed(1)).toMatchSnapshot();
 });
 
 test('Transcur fL', () => {
@@ -255,23 +259,55 @@ test('Transcur fBD', () => {
 });
 
 test('Transcur fSqrtS', () => {
-  expect(fSqrtS(boatm2f(Transcur)).toFixed(2)).toMatchSnapshot();
+  const b = boatm2f(Transcur);
+  const sail_area = {
+    foretriangle: foretriangle_area(b.handicap_data),
+    main: mainsail_area(b.handicap_data.main),
+  }
+  expect(fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur C', () => {
   expect((.67 * tcf.beam * tcf).toFixed(2)).toMatchSnapshot();
 });
- 
+
 test('Transcur fMR', () => {
-  expect(fMR(boatm2f(Transcur)).toFixed(2)).toMatchSnapshot();
+  const b = boatm2f(Transcur);
+  const { handicap_data } = b;
+  const sail_area = {
+    foretriangle: foretriangle_area(handicap_data),
+    main: mainsail_area(handicap_data.main),
+  }
+  const ddf = {
+    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+  };
+  expect(fMR({ handicap_data, ddf }).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur fR', () => {
-  expect(fR(boatm2f(Transcur)).toFixed(2)).toMatchSnapshot();
+  const b = boatm2f(Transcur);
+  const { handicap_data } = b;
+  const sail_area = {
+    foretriangle: foretriangle_area(handicap_data),
+    main: mainsail_area(handicap_data.main),
+  }
+  const ddf = {
+    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+  };
+  expect(fR({ handicap_data, ddf }).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur T(H)CF', () => {
-  expect(fThcf(fR(boatm2f(Transcur))).toFixed(3)).toMatchSnapshot();
+  const b = boatm2f(Transcur);
+  const { handicap_data } = b;
+  const sail_area = {
+    foretriangle: foretriangle_area(handicap_data),
+    main: mainsail_area(handicap_data.main),
+  }
+  const ddf = {
+    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+  };
+  expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toMatchSnapshot();
 });
 
 test('t1', () => {
@@ -279,5 +315,14 @@ test('t1', () => {
 });
 
 test('Robinetta T(H)CF', () => {
-  expect(fThcf(fR(boatm2f(Robinetta))).toFixed(3)).toMatchSnapshot();
+  const b = boatm2f(Robinetta);
+  const { handicap_data } = b;
+  const sail_area = {
+    foretriangle: foretriangle_area(handicap_data),
+    main: mainsail_area(handicap_data.main),
+  }
+  const ddf = {
+    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+  };
+  expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toMatchSnapshot();
 });

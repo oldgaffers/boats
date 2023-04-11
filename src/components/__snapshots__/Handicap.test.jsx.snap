@@ -6,19 +6,19 @@ exports[`Robinetta foretriangle_area 1`] = `2.961`;
 
 exports[`Transcur C 1`] = `"NaN"`;
 
-exports[`Transcur T(H)CF 1`] = `"1.025"`;
+exports[`Transcur T(H)CF 1`] = `"1.012"`;
 
 exports[`Transcur fForeTriangle 1`] = `"31.09"`;
 
 exports[`Transcur fGaffSA 1`] = `"41.44"`;
 
-exports[`Transcur fMR 1`] = `"27.49"`;
+exports[`Transcur fMR 1`] = `"26.36"`;
 
-exports[`Transcur fMSA 1`] = `"76.0"`;
+exports[`Transcur fMSA 1`] = `"72.5"`;
 
-exports[`Transcur fR 1`] = `"27.08"`;
+exports[`Transcur fR 1`] = `"25.96"`;
 
-exports[`Transcur fSqrtS 1`] = `"28.35"`;
+exports[`Transcur fSqrtS 1`] = `"26.82"`;
 
 exports[`Transcur fTopSA 1`] = `"8"`;
 

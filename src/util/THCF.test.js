@@ -1,3 +1,4 @@
+import { foretriangle_area, mainsail_area } from '../components/Handicap';
 import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, fThcf } from './THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
@@ -79,27 +80,40 @@ test('thcf fore triangle valid', () => {
   expect(fForeTriangle(aft).toFixed(2)).toEqual("42.50");
 });
 
-test('thcf measured sail area empty', () => {
-  expect(fMSA()).toEqual(0);
-});
-
 test('thcf measured sail area valid', () => {
-expect(fMSA(aboat.handicap_data).toFixed(2)).toEqual('312.77');
+  const sail_area = {
+    foretriangle: foretriangle_area(aboat.handicap_data),
+    main: mainsail_area(aboat.handicap_data.main),
+  }
+  expect(fMSA(sail_area).toFixed(2)).toEqual('324.33');
 });
 
-test('thcf thcf empty', () => {
+test('thcf empty', () => {
   expect(fThcf()).toEqual(1);
 });
 
-test('thcf thcf aboat', () => {
+test('thcf aboat', () => {
   expect(fL(aboat.handicap_data)).toBe((21+17)/2);
-  expect(fSqrtS(aboat).toFixed()).toEqual('17');
-  expect(fSqrtS(aboat)).toBeLessThan(18.1);
-  expect(fThcf(fR(aboat)).toFixed(3)).toEqual('0.862');
+  const sail_area = {
+    foretriangle: foretriangle_area(aboat.handicap_data),
+    main: mainsail_area(aboat.handicap_data.main),
+  }
+  const ddf = {
+    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+  };
+  expect(ddf.root_s.toFixed()).toEqual('17');
+  expect(fThcf(fR({...aboat, ddf})).toFixed(3)).toEqual('0.865');
 });
 
-test('thcf thcf aboat2', () => {
-  expect(fL(aboat2.handicap_data)).toBe((27.87+27.23)/2);
-  expect(fSqrtS(aboat2)).toBeGreaterThan(20);
-  expect(fThcf(fR(aboat2)).toFixed(3)).toEqual("0.966");
+test('thcf aboat2', () => {
+  const { handicap_data } = aboat2;
+  expect(fL(handicap_data)).toBe((27.87+27.23)/2);
+  const sail_area = {
+    foretriangle: foretriangle_area(handicap_data),
+    main: mainsail_area(handicap_data.main),
+  }
+  const ddf = {
+    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+  };
+  expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toEqual("0.961");
 });

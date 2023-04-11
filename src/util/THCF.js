@@ -59,6 +59,15 @@ export function fBD(boat) {
     return 0.67*boat.handicap_data.beam*boat.handicap_data.beam;
 }
 
+export function fMSA(sail_area) {
+    const vals = Object.keys(sail_area).map((k) => sail_area[k]);
+    return vals.reduce((p, v) => p + v, 0);
+}
+
+export function fSqrtS(data) {
+    return data.rig_allowance * Math.sqrt(data.total_sail_area)
+}
+
 export function fMR(boat) {
     const { ddf, handicap_data } = boat;
     if(handicap_data) {

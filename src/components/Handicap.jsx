@@ -1,4 +1,4 @@
-import { fMR, fPropellorBonus, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
+import { fMR, fMSA, fPropellorBonus, fSqrtS, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { f2m } from '../util/format';
 import { Typography } from "@mui/material";
 
@@ -699,9 +699,10 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
-          const ddf = f.values.ddf;
-          const vals = Object.keys(ddf.sail_area).map((k) => ddf.sail_area[k]);
-          const sa = vals.reduce((p, v) => p + v);
+          // const ddf = f.values.ddf;
+          // const vals = Object.keys(ddf.sail_area).map((k) => ddf.sail_area[k]);
+          // const sa = vals.reduce((p, v) => p + v);
+          const sa = fMSA(f.values.ddf.sail_area);
           const rsa = Math.round(1000 * sa) / 1000;
           formOptions.change('ddf.total_sail_area', sa);
           return {
@@ -784,7 +785,7 @@ export const steps = (firstStep, nextStep) => [
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const crsa = values.ddf.rig_allowance * Math.sqrt(values.ddf.total_sail_area);
+          const crsa = fSqrtS(values.ddf);
           formOptions.change("ddf.root_s", crsa);
           return {
             value: crsa.toFixed(2),
