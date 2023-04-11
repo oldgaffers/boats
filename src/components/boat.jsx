@@ -13,7 +13,6 @@ function getOgaNo(location) {
   }
   const path = location.pathname?.split('/') || ['boat', ''];
   const p = path.indexOf('boat') + 1;
-  console.log('L', path, );
   if (Number(path[p]) !== 0) {
     return path[p];
   }
