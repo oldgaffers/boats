@@ -37,12 +37,19 @@ function combineFieldsForExport(shortData, fullData, members) {
   });
 }
 
+function fieldDiplayValue(item) {
+    if (item.name) {
+        return item.name;
+    }
+    return item;
+}
+
 function selectFieldsForExport(data, fields, handicapFields) {
   return data.map((b) => {
     const boat = {};
     fields.forEach((key) => {
       if (b[key]) {
-        boat[key] = b[key];
+        boat[key] = fieldDiplayValue(b[key]);
       }
     });
     const handicap_data = b.handicap_data || {};
@@ -99,7 +106,7 @@ function boatForLeaflet(boat) {
 
 function ExportFleetOptions({ name, boats }) {
   const [data, setData] = useState();
-  const ids = boats.map((b) => b.owners).flat();
+  const ids = (boats?.map((b) => b.owners) || []).flat();
   const membersResult = useQuery(MEMBER_QUERY, { variables: { ids } });
   const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
 
