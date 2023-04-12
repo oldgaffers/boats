@@ -172,7 +172,6 @@ export const solentSteps = (thisStep, nextStep) => {
           component: 'text-field',
           name: "handicap_data.solent.measured_rating",
           label: "Modified Measured Rating (m)",
-          // description: '!!! This has a bug !!!',
           isReadOnly: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
@@ -852,11 +851,9 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const r = values.ddf.mr - values.ddf.prop_allowance * values.ddf.mr;
-          const thcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
+          const r = Math.round(1000 * values.ddf.mr - values.ddf.prop_allowance * values.ddf.mr) / 1000;
           formOptions.change("ddf.r", r);
-          formOptions.change("handicap_data.thcf", thcf);
-          return { value: r.toFixed(2) };
+          return { value: r };
         },
       },
       {
@@ -864,6 +861,12 @@ export const steps = (firstStep, nextStep) => [
         name: "handicap_data.thcf",
         label: "T(H)CF",
         isReadOnly: true,
+        resolveProps: (props, { meta, input }, formOptions) => {
+          const { values } = formOptions.getState();
+          const thcf = Math.round(1000 * 0.125 * (Math.sqrt(values.ddf.r) + 3)) / 1000;
+          formOptions.change("handicap_data.thcf", thcf);
+          return { value: thcf };
+        },
       },
     ],
   },

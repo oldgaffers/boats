@@ -199,7 +199,7 @@ export function solentMR(boat) {
 export function solentRating(boat) {
     const data = boat.handicap_data;
     const mmrf = data.solent.measured_rating;
-    const thcf = fThcf(mmrf);
+    const thcf = fThcf(mmrf*(1 - boat.ddf.prop_allowance));
     const pf = Number(data.solent.performance_factor);
     const sr = (1 + pf) * thcf;
     return Math.round(1000 * sr) / 1000;
