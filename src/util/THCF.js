@@ -96,15 +96,13 @@ These bonuses are:-
     less than 80% - 2%. 
     Shoal draft bonus halved if centreboard or leeboards fitted.
 */
-export function fPropellorBonus(R, data) {
-    if(data) {
-        switch(data.propellor.type) {
-            case 'fixed': return 0.03*R;
-            case 'folding': return 0.015*R;
-            default: return 0;
-        }    
+export function fPropellorBonus(data) {
+    switch(data?.propellor?.type) {
+        case 'fixed': return 0.03;
+        case 'folding': return 0.015;
+        case 'feathering': return 0.015;
+        default: return 0;
     }
-    return 0;
 }
 
 export function fShoalBonus(R, boat) {
@@ -127,7 +125,7 @@ export function fR(boat) {
     if(boat) {
         const MR = fMR(boat);
         return MR
-        - fPropellorBonus(MR, boat.handicap_data)
+        - MR*fPropellorBonus(boat.handicap_data)
         ;//- fShoalBonus(MR, boat);    
     }
     return 0;

@@ -349,6 +349,12 @@ const propellorForm = {
       ],
       isRequired: true,
       validate: [{ type: 'required' }],
+      resolveProps: (props, { meta, input }, formOptions) => {
+        const s = formOptions.getState();
+        console.log('prop', s.values.handicap_data.propellor);
+        return {};
+      },
+
     },
   ],
 };
@@ -833,7 +839,8 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const pa = fPropellorBonus(1, values.handicap_data);
+          const pa = fPropellorBonus(values.handicap_data);
+          console.log('PA', pa, values.handicap_data.propellor);
           formOptions.change("ddf.prop_allowance", pa);
           return { value: `${(100 * pa).toFixed(1)}%` };
         },
