@@ -1,4 +1,4 @@
-import { fMR, fMSA, fPropellorBonus, fSqrtS, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
+import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { f2m } from '../util/format';
 import { Typography } from "@mui/material";
 
@@ -342,18 +342,12 @@ const propellorForm = {
       label: "propellor type",
       options: [
         { label: "None", value: "none" },
-        { label: "Fixed", value: "fixed" },
-        { label: "Folding", value: "folding" },
-        { label: "Feathering", value: "feathering" },
+        { label: "Folding (1.5%)", value: "folding" },
+        { label: "Feathering (1.5%)", value: "feathering" },
+        { label: "Fixed (3%)", value: "fixed" },
       ],
       isRequired: true,
       validate: [{ type: 'required' }],
-      resolveProps: (props, { meta, input }, formOptions) => {
-        const s = formOptions.getState();
-        console.log('prop', s.values.handicap_data.propellor);
-        return {};
-      },
-
     },
   ],
 };
@@ -824,10 +818,10 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const mr = fMR(values);
+          const mr = Math.round(1000*fMR(values))/1000;
           formOptions.change("ddf.mr", mr);
           return {
-            value: mr.toFixed(2),
+            value: mr,
           };
         },
       },
@@ -839,7 +833,6 @@ export const steps = (firstStep, nextStep) => [
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
           const pa = fPropellorBonus(values.handicap_data);
-          console.log('PA', pa, values.handicap_data.propellor);
           formOptions.change("ddf.prop_allowance", pa);
           return { value: `${(100 * pa).toFixed(1)}%` };
         },
@@ -851,7 +844,7 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const r = Math.round(1000 * values.ddf.mr - values.ddf.prop_allowance * values.ddf.mr) / 1000;
+          const r = Math.round(1000 * values.ddf.mr * (1 - values.ddf.prop_allowance)) / 1000;
           formOptions.change("ddf.r", r);
           return { value: r };
         },
@@ -863,7 +856,7 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const thcf = Math.round(1000 * 0.125 * (Math.sqrt(values.ddf.r) + 3)) / 1000;
+          const thcf = Math.round(1000 * fThcf(values.ddf.r)) / 1000;
           formOptions.change("handicap_data.thcf", thcf);
           return { value: thcf };
         },
