@@ -205,6 +205,12 @@ const schema = (pickers) => {
             nextStep: "locations-step",
             fields: [
               {
+                label: "New name",
+                component: 'text-field',
+                name: "ddf.new_name",
+                description: 'if you have changed the name, enter the new name here.'
+              },
+              {
                 label: "Previous names",
                 component: 'field-array',
                 name: "previous_names",
@@ -369,7 +375,6 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     updates.designer = pickers.designer.find((item) => item.id === designer);
     updates.builder = pickers.builder.find((item) => item.id === builder);
 
-    const np = newPicklistItems(changes);
     // the following is because sail data might be skipped in the form
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
@@ -396,6 +401,15 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
           console.log('handleSubmit unexpected update_sale value', ddf);
         }
     }
+    if (ddf.new_name) {
+      console.log('NN', ddf, boat.previous_names);
+      if (boat.previous_names) {
+        boat.previous_names.unshift(boat.name);
+      } else {
+        boat.previous_names = [boat.name];
+      }
+      boat.name = ddf.new_name;
+    }
     if (updates.construction_method?.trim() === '') {
       delete updates.construction_method;
     }
@@ -403,7 +417,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
       delete updates.year_is_approximate;
     }
     const before = boatDefined(boat);
-    const { newItems } = np;
+    const { newItems } = newPicklistItems(changes);
     const updatedBoat = { ...before, ...updates, newItems };
     onSubmit(updatedBoat, email);
 
