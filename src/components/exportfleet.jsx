@@ -3,7 +3,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { getLargestImage } from './boatregisterposts';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { gql, useQuery } from '@apollo/client';
+import { ApolloConsumer, gql } from '@apollo/client';
 import { getBoatData } from './boatregisterposts';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 
@@ -29,19 +29,11 @@ function id2name(id, members) {
   }
 }
 
-function combineFieldsForExport(shortData, fullData, members) {
-  return shortData.map((b) => {
-    const fb = fullData.find((boat) => boat.oga_no === b.oga_no);
-    const owners = (b.owners?.map((id) => id2name(id, members)) || []).join(',');
-    return { ...b, owners, ...(fb || {}) };
-  });
-}
-
 function fieldDiplayValue(item) {
-    if (item.name) {
-        return item.name;
-    }
-    return item;
+  if (item.name) {
+    return item.name;
+  }
+  return item;
 }
 
 function selectFieldsForExport(data, fields, handicapFields) {
@@ -94,7 +86,7 @@ function boatForLeaflet(boat) {
   <td style="width: 50%;">
   <div>${name.toUpperCase()} (${oga_no})<div>
   <div>${short_description}</div>
-  ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name?boat[k].name:boat[k])}`).join('<p>')}
+  ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
   </td>
   <td style="width: 50%;">
   <img width="600" src="${image}"/>
@@ -104,16 +96,13 @@ function boatForLeaflet(boat) {
   </table>`;
 }
 
-function ExportFleetOptions({ name, boats }) {
+function ExportFleetOptions({ client, name, ogaNos }) {
   const [data, setData] = useState();
-  const ids = (boats?.map((b) => b.owners) || []).flat();
-  const membersResult = useQuery(MEMBER_QUERY, { variables: { ids } });
-  const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
 
   useEffect(() => {
     if (!data) {
-      const oganos = boats?.map((b) => b?.oga_no);
-      getBoats(oganos).then(async (r) => {
+      // const oganos = boats?.map((b) => b?.oga_no);
+      getBoats(ogaNos).then(async (r) => {
         const images = await Promise.allSettled(r.map((b) => {
           if (b.image_key) {
             return getLargestImage(b.image_key);
@@ -128,18 +117,26 @@ function ExportFleetOptions({ name, boats }) {
             b.copyright = images[i].value.data.caption;
           }
         });
+        const ids = [...new Set(
+          r.map(({ ownerships }) => ownerships?.filter((o) => o.current)).flat().map((o) => o.id)
+        )].filter((id) => id);
+        const membersResult = await client.query({ query: MEMBER_QUERY, variables: { ids } });
+        const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
+        r.forEach((b) => {
+          const o = b.ownerships?.filter((o) => o.current)?.map((o) => id2name(o.id, members)) || [];
+          console.log('M', o);
+          b.owners = o.join(', ');
+        });
         setData(r);
       });
     }
-  }, [data, boats]);
+  }, [data, ogaNos, client]);
 
   if (!data) {
     return <CircularProgress />
   }
 
-  const fullData = combineFieldsForExport(boats, data, members);
-
-  const leaflet = selectFieldsForExport(fullData, [
+  const leaflet = selectFieldsForExport(data, [
     'name', 'oga_no', 'place_built', 'owners',
     'construction_material', 'construction_method',
     'builder', 'designer', 'design_class',
@@ -153,7 +150,7 @@ function ExportFleetOptions({ name, boats }) {
     ]
   );
 
-  const race = selectFieldsForExport(fullData, [
+  const race = selectFieldsForExport(data, [
     'name', 'oga_no', 'owners',
     'short_description', 'hull_form',
   ],
@@ -177,8 +174,10 @@ function ExportFleetOptions({ name, boats }) {
   </Stack>;
 }
 
-export function ExportFleet({ name, boats }) {
+export function ExportFleet({ name, boats, filters }) {
   const [open, setOpen] = useState(false);
+  const ogaNos = filters?.oga_nos || boats?.map((b) => b?.oga_no);
+
   return <RoleRestricted role='member'>
     <Button onClick={() => setOpen(true)}>Export</Button>
     <Dialog
@@ -190,7 +189,9 @@ export function ExportFleet({ name, boats }) {
       <DialogTitle id="form-dialog-title">Export Fleet {name}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          <ExportFleetOptions name={name} boats={boats} />
+          <ApolloConsumer>
+            {client => <ExportFleetOptions client={client} name={name} ogaNos={ogaNos} />}
+          </ApolloConsumer>
         </DialogContentText>
       </DialogContent>
       <DialogActions>

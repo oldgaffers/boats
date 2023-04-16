@@ -77,7 +77,7 @@ export default function FleetButtons({
                 fleet={fleet}
                 updated={fleetsUpdated}
             />
-            { fleet ? <ExportFleet name={fleet.name} boats={fleet.filters}/> : '' }
+            { fleet ? <ExportFleet name={fleet.name} filters={fleet.filters}/> : '' }
         </Stack>
     );
 }
