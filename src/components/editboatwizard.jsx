@@ -389,7 +389,12 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
         updates.for_sales = [...pfs, ddf.current_sales_record];
         break;
       default:
-        console.log('handleSubmit unexpected update_sale value', ddf.update_sale);
+        if (ddf.confirm_for_sale && ddf.current_sales_record) {
+          updates.selling_status = 'for_sale';
+          updates.for_sales = [...pfs, ddf.current_sales_record];  
+        } else {
+          console.log('handleSubmit unexpected update_sale value', ddf);
+        }
     }
     if (updates.construction_method?.trim() === '') {
       delete updates.construction_method;
