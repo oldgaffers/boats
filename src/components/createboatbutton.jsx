@@ -38,7 +38,10 @@ export function newPicklistItems(b) {
     newItems.builder = { name: new_builder, id: uuidv4() };
     boat.builder = newItems.builder.id;
   }
-  return { boat, newItems };
+  if (new_design_class || new_designer || new_builder) {
+    return { boat, newItems };
+  }
+  return { boat };
 }
 
 export default function CreateBoatButton() {
