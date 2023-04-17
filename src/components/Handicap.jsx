@@ -516,21 +516,7 @@ const topsail_fields = (sail) => [
 export const steps = (firstStep, nextStep) => [
   {
     name: firstStep,
-    component: 'sub-form',
-    nextStep: {
-      when: "rig_type",
-      stepMapper: {
-        Cutter: "foretriangle-step",
-        Sloop: "foretriangle-step",
-        'Cat Boat': "mainsail-step",
-        'Single Sail': "mainsail-step",
-        Ketch: "foretriangle-step",
-        Yawl: "foretriangle-step",
-        Schooner: "foretriangle-step",
-        Other: "no-handicap-step",
-        None: "no-handicap-step",
-      },
-    },
+    nextStep: ({ values }) =>  values.ddf.use_sailarea ? "handicap-hull-step" : "foretriangle-step",
     fields: [
       {
         title: "Handicap Details",
@@ -552,6 +538,20 @@ export const steps = (firstStep, nextStep) => [
             description: "If you know the sail area you can enter it here",
             type: "number",
             dataType: 'float',
+          },
+          {
+            component: 'checkbox',
+            name: "ddf.use_sailarea",
+            label: "Use the sail area",
+            description: "skip entering fore-triangle and sail measurements",
+            initialValue: false,
+            resolveProps: (props, { meta, input }, formOptions) => {
+              const f = formOptions.getState();
+              const handicap_data = f.values.handicap_data;
+              return {
+                isDisabled: !handicap_data.sailarea,
+              };
+            },
           },
         ],
       },
@@ -784,11 +784,20 @@ export const steps = (firstStep, nextStep) => [
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const crsa = fSqrtS(values.ddf);
-          formOptions.change("ddf.root_s", crsa);
-          return {
-            value: crsa.toFixed(2),
-          };
+          console.log('P', values);
+          if (values.ddf.use_sailarea) {
+            const crsa = fSqrtS(values.handicap_data.sailarea);
+            formOptions.change("ddf.root_s", crsa);
+            return {
+              value: crsa.toFixed(2),
+            };  
+          } else {
+            const crsa = fSqrtS(values.ddf);
+            formOptions.change("ddf.root_s", crsa);
+            return {
+              value: crsa.toFixed(2),
+            };  
+          }
         },
       },
       {
