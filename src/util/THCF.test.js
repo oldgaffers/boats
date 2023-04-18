@@ -99,7 +99,7 @@ test('thcf aboat', () => {
     main: mainsail_area(aboat.handicap_data.main),
   }
   const ddf = {
-    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+    root_s: fSqrtS(0.96, fMSA(sail_area)),
   };
   expect(ddf.root_s.toFixed()).toEqual('17');
   expect(fThcf(fR({...aboat, ddf})).toFixed(3)).toEqual('0.865');
@@ -113,7 +113,7 @@ test('thcf aboat2', () => {
     main: mainsail_area(handicap_data.main),
   }
   const ddf = {
-    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+    root_s: fSqrtS(0.96, fMSA(sail_area)),
   };
   expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toEqual("0.961");
 });

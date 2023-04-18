@@ -64,8 +64,8 @@ export function fMSA(sail_area) {
     return vals.reduce((p, v) => p + v, 0);
 }
 
-export function fSqrtS(data) {
-    return data.rig_allowance * Math.sqrt(data.total_sail_area)
+export function fSqrtS(rig_allowance, sailarea) {
+    return rig_allowance * Math.sqrt(sailarea)
 }
 
 export function fMR(boat) {

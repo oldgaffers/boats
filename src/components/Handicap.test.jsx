@@ -264,7 +264,7 @@ test('Transcur fSqrtS', () => {
     foretriangle: foretriangle_area(b.handicap_data),
     main: mainsail_area(b.handicap_data.main),
   }
-  expect(fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }).toFixed(2)).toMatchSnapshot();
+  expect(fSqrtS(0.96, fMSA(sail_area)).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur C', () => {
@@ -279,7 +279,7 @@ test('Transcur fMR', () => {
     main: mainsail_area(handicap_data.main),
   }
   const ddf = {
-    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+    root_s: fSqrtS(0.96, fMSA(sail_area)),
   };
   expect(fMR({ handicap_data, ddf }).toFixed(2)).toMatchSnapshot();
 });
@@ -292,7 +292,7 @@ test('Transcur fR', () => {
     main: mainsail_area(handicap_data.main),
   }
   const ddf = {
-    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+    root_s: fSqrtS(0.96, fMSA(sail_area)),
   };
   expect(fR({ handicap_data, ddf }).toFixed(2)).toMatchSnapshot();
 });
@@ -305,7 +305,7 @@ test('Transcur T(H)CF', () => {
     main: mainsail_area(handicap_data.main),
   }
   const ddf = {
-    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+    root_s: fSqrtS(0.96, fMSA(sail_area)),
   };
   expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toMatchSnapshot();
 });
@@ -322,7 +322,7 @@ test('Robinetta T(H)CF', () => {
     main: mainsail_area(handicap_data.main),
   }
   const ddf = {
-    root_s: fSqrtS({ rig_allowance: 0.96, total_sail_area: fMSA(sail_area) }),
+    root_s: fSqrtS(0.96, fMSA(sail_area)),
   };
   expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toMatchSnapshot();
 });

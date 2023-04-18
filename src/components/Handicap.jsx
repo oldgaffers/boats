@@ -516,7 +516,7 @@ const topsail_fields = (sail) => [
 export const steps = (firstStep, nextStep) => [
   {
     name: firstStep,
-    nextStep: ({ values }) =>  values.ddf.use_sailarea ? "handicap-hull-step" : "foretriangle-step",
+    nextStep: ({ values }) => values.ddf.use_sailarea ? "handicap-hull-step" : "foretriangle-step",
     fields: [
       {
         title: "Handicap Details",
@@ -693,7 +693,7 @@ export const steps = (firstStep, nextStep) => [
     fields: [
       {
         component: 'text-field',
-        name: "ddf.total_sail_area",
+        name: "ddf.total_sailarea",
         label: "Calculated Sail Area",
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
@@ -703,7 +703,7 @@ export const steps = (firstStep, nextStep) => [
           // const sa = vals.reduce((p, v) => p + v);
           const sa = fMSA(f.values.ddf.sail_area);
           const rsa = Math.round(1000 * sa) / 1000;
-          formOptions.change('ddf.total_sail_area', sa);
+          formOptions.change('ddf.total_sailarea', sa);
           return {
             value: rsa,
           };
@@ -784,20 +784,15 @@ export const steps = (firstStep, nextStep) => [
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          console.log('P', values);
-          if (values.ddf.use_sailarea) {
-            const crsa = fSqrtS(values.handicap_data.sailarea);
-            formOptions.change("ddf.root_s", crsa);
-            return {
-              value: crsa.toFixed(2),
-            };  
-          } else {
-            const crsa = fSqrtS(values.ddf);
-            formOptions.change("ddf.root_s", crsa);
-            return {
-              value: crsa.toFixed(2),
-            };  
-          }
+          const { ddf, handicap_data } = values;
+          const crsa = fSqrtS(
+            ddf.rig_allowance,
+            ddf.use_sailarea ? handicap_data.sailarea : ddf.total_sailarea,
+          );
+          formOptions.change("ddf.root_s", crsa);
+          return {
+            value: crsa.toFixed(2),
+          };
         },
       },
       {
@@ -827,7 +822,7 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const mr = Math.round(1000*fMR(values))/1000;
+          const mr = Math.round(1000 * fMR(values)) / 1000;
           formOptions.change("ddf.mr", mr);
           return {
             value: mr,
