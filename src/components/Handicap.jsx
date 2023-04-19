@@ -209,6 +209,12 @@ export const solentSteps = (thisStep, nextStep) => {
           },
         },
         {
+          component: 'checkbox',
+          name: 'ddf.playground',
+          label: 'check to see the effect of performance factor on T(H)CF',
+          initialValue: false,
+        },
+        {
           component: 'radio',
           name: "ddf.spf",
           label: "Performance factor playground",
@@ -225,7 +231,11 @@ export const solentSteps = (thisStep, nextStep) => {
             { label: '3%', value: 0.03 },
             { label: '4%', value: 0.04 },
             { label: '5%', value: 0.05 },
-          ]
+          ],
+          condition: {
+            when: 'ddf.playground',
+            is: true,
+          },
         },
         {
           component: 'text-field',
@@ -234,13 +244,18 @@ export const solentSteps = (thisStep, nextStep) => {
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
             const v = JSON.parse(JSON.stringify(values)); // deep copy
-            v.handicap_data.solent.performance_factor = values.ddf.spf;
+            const spf = v.ddf?.spf || 0.0;
+            v.handicap_data.solent.performance_factor = spf;
             const mthcf = solentRating(v);
             formOptions.change('ddf.mthcf', mthcf);
             return {
               value: mthcf,
-              label: `Solent Rating with a performance factor of ${100 * values.ddf.spf}% `,
+              label: `Solent Rating with a performance factor of ${100 * spf}% `,
             };
+          },
+          condition: {
+            when: 'ddf.playground',
+            is: true,
           },
         },
         {
@@ -257,14 +272,16 @@ export const solentSteps = (thisStep, nextStep) => {
           isReadOnly: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
-            const diff = Math.abs(values.ddf.mthcf - values.handicap_data.thcf);
+            const mthcf = values.ddf.mthcf || values.handicap_data.solent.thcf;
+            const diff = Math.abs(mthcf - values.handicap_data.thcf);
             const v = 100 * diff / values.handicap_data.thcf;
             formOptions.change('ddf.diff', v);
             return {
               value: `${v.toFixed(1)}%`,
             };
-          }
+          },
         },
+        
       ],
     },
   ];
