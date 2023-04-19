@@ -118,7 +118,7 @@ function ExportFleetOptions({ client, name, ogaNos }) {
           }
         });
         const ids = [...new Set(
-          r.map(({ ownerships }) => ownerships?.filter((o) => o.current)).flat().map((o) => o.id)
+          r.map((b) => (b?.ownerships?.filter((o) => o.current)) || []).flat().map((o) => o?.id)
         )].filter((id) => id);
         const membersResult = await client.query({ query: MEMBER_QUERY, variables: { ids } });
         const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
