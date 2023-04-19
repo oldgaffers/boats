@@ -1,6 +1,5 @@
 import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { f2m } from '../util/format';
-import { Typography } from "@mui/material";
 
 export const solentSteps = (thisStep, nextStep) => {
   return [
