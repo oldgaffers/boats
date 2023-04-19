@@ -22,10 +22,10 @@ export const solentSteps = (thisStep, nextStep) => {
           component: 'text-field',
           name: "handicap_data.displacement",
           label: 'Displacement (kg)',
-          helperText: <Typography>Enter the weight of the boat in kg as raced.
+          helperText: <>Enter the weight of the boat in kg as raced.
             If you have it in tonnes, multiply by 1000. If you don't have a value for your boat, but
             you have a value for the design class, enter that figure.
-            If you don't have a number, leave this field blank.</Typography>,
+            If you don't have a number, leave this field blank.</>,
           type: "number",
           dataType: 'float',
           isRequired: false,
@@ -162,11 +162,17 @@ export const solentSteps = (thisStep, nextStep) => {
         },
         {
           component: 'text-field',
-          name: "handicap_data.solent.performance_factor",
+          name: "ddf.performance_factor",
           label: "% performance factor",
           isReadOnly: true,
           description: 'A value determined by the handicap committee',
-          initialValue: ' ',
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            const value = values.handicap_data.solent.performance_factor;
+            return {
+              value: `${100*value}%`,
+            }
+          },
         },
         {
           component: 'text-field',
