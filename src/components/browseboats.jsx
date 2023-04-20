@@ -83,6 +83,7 @@ export default function BrowseBoats({
   onSortChange,
   onFilterChange,
   onMarkedOnlyChange,
+  onClearAllMarks,
   isMarkedOnly,
   onBoatMarked,
   onBoatUnMarked,
@@ -143,6 +144,7 @@ export default function BrowseBoats({
             onSortChange={onSortChange}
             onFilterChange={onFilterChange}
             onMarkedOnlyChange={onMarkedOnlyChange}
+            onClearAllMarks={onClearAllMarks}
             isMarkedOnly={isMarkedOnly}
             onOwnedOnlyChange={(v) => setOwnedOnly(v)}
             isOwnedOnly={ownedOnly}

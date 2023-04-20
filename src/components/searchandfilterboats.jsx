@@ -8,7 +8,7 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
@@ -45,6 +45,7 @@ export default function SearchAndFilterBoats({
   onSortChange = () => console.log('onSortChange'),
   onMarkedOnlyChange = (v) => console.log('onMarkedOnly', v),
   isMarkedOnly,
+  onClearAllMarks=() => console.log('clear all marks'),
   onOwnedOnlyChange = (v) => console.log('onOwnedOnly', v),
   isOwnedOnly,
   enableOwnersOnly = false,
@@ -335,6 +336,13 @@ export default function SearchAndFilterBoats({
             control={<Switch checked={isMarkedOnly} />}
             label="Only Marked Boats"
           />
+        </Grid>
+          <Button
+            disabled={markList.length === 0}
+            onClick={onClearAllMarks}
+            variant='contained' size='small' color='secondary'
+          >Clear Marks</Button>
+        <Grid item>
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>

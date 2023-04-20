@@ -161,9 +161,9 @@ export function CompactBoatCard({ view = 'app', ogaNo }) {
 
 export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const markList = useContext(MarkContext);
-  const [marked, setMarked] = useState(markList.includes(ogaNo));
   const [data, setData] = useState();
   const { user } = useAuth0();
+  const marked = markList.includes(ogaNo);
 
   useEffect(() => {
     if (!data) {
@@ -174,7 +174,6 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   }, [data, ogaNo]);
 
   const handleMarked = (checked) => {
-    setMarked(checked);
     onMarkChange(checked, ogaNo);
   }
 

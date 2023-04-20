@@ -11,16 +11,16 @@ export default function BoatCards({
   totalCount,
   boats,
   onChangePage=(arg)=> console.log('onChangePage', arg), 
-  onBoatMarked,
-  onBoatUnMarked,
+  onBoatMarked = () => undefined,
+  onBoatUnMarked = () => undefined,
   otherNav,
 }) {
 
   const handleMarkChange = (value, ogaNo) => {
     if (value) {
-      onBoatMarked && onBoatMarked(ogaNo);
+      onBoatMarked(ogaNo);
     } else {
-      onBoatUnMarked && onBoatUnMarked(ogaNo);
+      onBoatUnMarked(ogaNo);
     }
   }
 

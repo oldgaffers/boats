@@ -69,6 +69,13 @@ export default function BrowseApp({ view = 'app' }) {
     setMarkList(newMarkList);
   };
 
+  const handleClearAllMarks = () => {
+    console.log('handle clear all marks');
+    setMarkList([]);
+    setMarkedOnly(false);
+    updateOgaNosFilter([], false);
+  }
+
   return (
     <MarkContext.Provider value={markList}>
       <BrowseBoats
@@ -78,6 +85,7 @@ export default function BrowseApp({ view = 'app' }) {
         onFilterChange={handleFilterChange}
         onPageChange={handlePageChange}
         onMarkedOnlyChange={handleMarkedOnlyChange}
+        onClearAllMarks={handleClearAllMarks}
         isMarkedOnly={markedOnly}
         onBoatMarked={handleBoatMarked}
         onBoatUnMarked={handleBoatUnMarked}
