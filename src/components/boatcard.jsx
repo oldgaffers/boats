@@ -189,7 +189,8 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const id = user?.["https://oga.org.uk/id"];
 
   const current = boat?.ownerships?.filter((o) => o.current);
-  const owned = current?.find((o) => o.id === id);
+
+  const owned = id && current?.find((o) => o.id === id);
 
   const albumKey = boat?.image_key;
   return (
