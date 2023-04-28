@@ -15,7 +15,7 @@ import { getFilterable } from './boatregisterposts';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 
-export function FleetDisplay({ name, filters, tooltip = 'Click to expand' }) {
+export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defaultExpanded=false }) {
   const [page, setPage] = useState(1);
   const [data, setData] = useState();
 
@@ -32,7 +32,7 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand' }) {
 
   const state = { filters, bpp: 12, page, sort: 'name', sortDirection: 'asc', view: 'app', };
 
-  return (<Accordion>
+  return (<Accordion defaultExpanded={defaultExpanded}>
     <AccordionSummary
       expandIcon={
         <Tooltip placement='left' title={tooltip}>
@@ -81,9 +81,10 @@ export function Fleets({ filter }) {
   );
 }
 
-export function RoleRestrictedFleetView({ filter, role }) {
+export function RoleRestrictedFleetView({ filter, role, defaultExpanded=false }) {
   const [data, setData] = useState();
   const accessToken = useContext(TokenContext);
+  console.log('RoleRestrictedFleetView', filter, role, defaultExpanded);
 
   useEffect(() => {
     const getData = async () => {
@@ -103,13 +104,14 @@ export function RoleRestrictedFleetView({ filter, role }) {
 
   return (
     <RoleRestricted role={role}>
-      <FleetDisplay name={name} filters={filters} />
+      <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded}/>
     </RoleRestricted>
   );
 }
 
-export function PublicFleetView({ filter }) {
+export function PublicFleetView({ filter, defaultExpanded=false }) {
   const [data, setData] = useState();
+  console.log('PublicFleetView', filter, defaultExpanded);
 
   useEffect(() => {
     const getData = async () => {
@@ -125,18 +127,23 @@ export function PublicFleetView({ filter }) {
 
   if (data.Items.length > 0) {
     const { filters, name } = data.Items?.[0];
-    return <FleetDisplay name={name} filters={filters} />;
+    return <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded} />;
   }
   return <Typography>No boats to show for fleet defined by {JSON.stringify(filter)}</Typography>;
 }
 
-export default function FleetView({ filter, role = 'member' }) {
+export default function FleetView(props) {
+  console.log(props);
+  const { role } = props;
+  const filter = props.filter || { name: props.topic };
+  const defaultExpanded = Object.keys(props).includes('defaultexpanded');
+  console.log('FleetView', filter, role, defaultExpanded);
   if (role) {
     if (role === 'public') {
-      return <PublicFleetView filter={filter} />;
+      return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
     }
-    return <RoleRestrictedFleetView filter={filter} role={role} />;
+    return <RoleRestrictedFleetView filter={filter} role={role} defaultExpanded={defaultExpanded} />;
   } else {
-    return <PublicFleetView filter={filter} />;
+    return <PublicFleetView filter={filter}  defaultExpanded={defaultExpanded} />;
   }
 }

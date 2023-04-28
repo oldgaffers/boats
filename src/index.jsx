@@ -27,6 +27,7 @@ import MembersBoats from './components/membersboats';
 import Members from './components/members';
 import UpdateMyDetails from './components/updatemydetails';
 import RCBEntryMap from './components/rbc60map';
+import FleetView from './components/fleetview';
 
 const lightTheme = createTheme({
   palette: {
@@ -34,7 +35,27 @@ const lightTheme = createTheme({
   },
 });
 
-const Pages = ({ app, topic }) => {
+function Wrapper({ redirectUri, scope, children }) {
+  const auth = {
+    domain: "dev-uf87e942.eu.auth0.com",
+    clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
+    redirectUri: redirectUri,
+    audience: "https://oga.org.uk/boatregister",
+    useRefreshTokens: true,
+    cacheLocation: 'localstorage',
+  }
+  return <Auth0Provider {...auth} scope={scope}>
+  <TokenProvider>
+    <OGAProvider>
+      {children}
+    </OGAProvider>
+  </TokenProvider>
+</Auth0Provider>
+}
+
+const Pages = (props) => {
+  const { topic } = props;
+  const app = props.id;
   const red = window.location.origin + window.location.pathname;
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
@@ -102,6 +123,10 @@ const Pages = ({ app, topic }) => {
           </TokenProvider>
         </Auth0Provider>
       );
+    case 'fleet':
+      return <Wrapper {...auth} scope="member">
+        <FleetView {...props} />
+      </Wrapper>;
     case 'my_fleets':
       return (
         <Auth0Provider {...auth} scope="member">
@@ -231,7 +256,8 @@ const Pages = ({ app, topic }) => {
 };
 
 const tags = [
-  'app', 'boat', 'sell', 'small', 'pending', 'yearbook', 'my_fleets', 'shared_fleets',
+  'app', 'boat', 'fleet', 'my_fleets', 'shared_fleets',
+  'sell', 'small', 'pending', 'yearbook',
   'rbc60', 'rbc60_entries', 'rbc60_map', 'rbc60_crew',
   'oga60_button', 'oga60_interest',
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
@@ -239,15 +265,17 @@ const tags = [
 ];
 const divs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 divs.forEach((div) => {
-  const tag = div.getAttribute('id');
-  const topic = div.getAttribute('topic');
+  const attributes = {};
+  div.getAttributeNames().forEach((name) => {
+    attributes[name] = div.getAttribute(name);
+  });
   const root = createRoot(div);
   root.render(
     <React.StrictMode>
       <CookiesProvider>
         <ThemeProvider theme={lightTheme}>
           <CssBaseline />
-          <Pages app={tag} topic={topic} />
+          <Pages {...attributes} />
         </ThemeProvider>
       </CookiesProvider>
     </React.StrictMode>
