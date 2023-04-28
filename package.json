@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "/boat_register/",
-  "version": "3.5.122",
+  "version": "3.5.123",
   "private": true,
   "scripts": {
     "postversion": "git push && git push --tags",
