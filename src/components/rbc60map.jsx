@@ -1,12 +1,16 @@
 import * as L from 'leaflet';
 import React, { useState, useEffect } from 'react';
 import { MapContainer } from 'react-leaflet/MapContainer';
+import MarkerClusterGroup from 'react-leaflet-cluster'
+// import { useMap } from 'react-leaflet/hooks'
 import { TileLayer } from 'react-leaflet/TileLayer';
 import { Marker } from 'react-leaflet/Marker';
 import { Popup } from 'react-leaflet/Popup';
 import { CompactBoatCard } from './boatcard';
 import { getScopedData } from './boatregisterposts';
 import { Stack } from '@mui/system';
+
+// const { OverlappingMarkerSpiderfier } = window;
 
 function gaffer(colour) {
     return L.icon({
@@ -93,6 +97,37 @@ const extras = [
     { name: 'Portsoy', latitude: 57.68567483697059, longitude: -2.690178873360523 }
 ];
 
+function BoatMarker({ boat }) {
+
+    const { latitude, longitude } = boat.location;
+    return <Marker
+        key={boat.oga_no}
+        position={[latitude, longitude]}
+        icon={gafferBlue}
+        title={boat.name}
+        eventHandlers={{
+            click: () => {
+                console.log('marker clicked')
+            },
+        }}
+    >
+        <Popup>
+            <CompactBoatCard ogaNo={boat.oga_no} />
+        </Popup>
+    </Marker>;
+}
+
+function BoatMarkers({ entries }) {
+    // const map = useMap()
+    // const oms = new OverlappingMarkerSpiderfier(map);
+
+    const visible = (entries || []).filter((boat) => boat.visible && boat.location);
+
+    return <MarkerClusterGroup chunkedLoading>
+        {visible.map((boat) => <BoatMarker boat={boat} />)}
+    </MarkerClusterGroup>;
+}
+
 export default function RCBEntryMap() {
     const [data, setData] = useState();
     useEffect(() => {
@@ -104,7 +139,7 @@ export default function RCBEntryMap() {
             getData();
         }
     }, [data]);
-    const entries = (data?.Items) || [];
+
     return (
         <Stack>
             <MapContainer style={{ height: '800px' }} center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
@@ -148,23 +183,8 @@ export default function RCBEntryMap() {
                     title={port.name}
                 ></Marker>)}
 
-                {entries.map((boat, index) => {
-                    if (boat.visible && boat.location) {
-                        const { latitude, longitude } = boat.location;
-                        return <Marker
-                            key={index}
-                            position={[latitude, longitude]}
-                            icon={gafferBlue}
-                            title={boat.name}
-                        >
-                            <Popup>
-                                <CompactBoatCard ogaNo={boat.oga_no} />
-                            </Popup>
-                        </Marker>;
-                    } else {
-                        return '';
-                    }
-                })}
+                <BoatMarkers entries={data?.Items} />
+
             </MapContainer>
             <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>
         </Stack>
