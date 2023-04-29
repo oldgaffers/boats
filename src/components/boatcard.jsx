@@ -19,7 +19,6 @@ import { MarkContext } from "../browseapp";
 import { currentSaleRecord } from '../util/sale_record';
 import EndOwnership from './endownership';
 import TextList from './textlist';
-import { Stack } from '@mui/material';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
