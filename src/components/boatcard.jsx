@@ -19,6 +19,7 @@ import { MarkContext } from "../browseapp";
 import { currentSaleRecord } from '../util/sale_record';
 import EndOwnership from './endownership';
 import TextList from './textlist';
+import { Stack } from '@mui/material';
 
 function makePreviousNamesField(n) {
   if (n && n.length > 0) {
@@ -71,8 +72,8 @@ function AltForThumb() {
   return '';
 }
 
-function EllipsisText({ html='' }) {
-  return <Typography variant="body2" component='div'
+function EllipsisText({ variant = 'body2', html = '' }) {
+  return <Typography variant={variant} component='div'
     dangerouslySetInnerHTML={{ __html: html.trim() }}
     sx={{
       display: '-webkit-box',
@@ -85,7 +86,7 @@ function EllipsisText({ html='' }) {
   />
 }
 
-function BoatCardWords({ boat, wanted }) {
+function BoatCardWords({ boat, wanted, variant = 'body2' }) {
 
   if (boat.loading) {
     return <>
@@ -96,8 +97,8 @@ function BoatCardWords({ boat, wanted }) {
 
   return (
     <>
-      <EllipsisText html={boat?.short_description} />
-      <TextList fields={wanted} data={boat} />
+      <EllipsisText variant={variant} html={boat.short_description} />
+      <TextList variant={variant} fields={wanted} data={boat} />
     </>
   );
 }
@@ -115,12 +116,12 @@ function BoatCardImage({ albumKey, name }) {
 
   if (!data) {
     return <>
-      <Skeleton variant='rounded' animation='wave' height={260} />
+      <Skeleton variant='rounded' animation='wave' height={140} />
     </>
   }
 
   if (data.ThumbnailUrl) {
-    return (<CardMedia sx={{ paddingTop: '100%' }} image={data.ThumbnailUrl} title={name} />);
+    return (<CardMedia sx={{ height: 140 }} image={data.ThumbnailUrl} title={name} />);
   }
   return (<AltForThumb />);
 }
@@ -138,22 +139,19 @@ export function CompactBoatCard({ view = 'app', ogaNo }) {
 
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
-  const albumKey = boat?.image_key;
   return (
-    <Card sx={albumKey ? {
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column'
-    } : {}}>
-      {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
-      <CardContent sx={{ flexGrow: 1 }} >
-        <Typography>{boat.name}({boat.oga_no})</Typography>
-        <BoatCardWords boat={boat} wanted={compactWanted} />
+    <Card sx={{ width: 200 }}>
+      <BoatCardImage albumKey={boat.image_key} name={boat.name} />
+      <CardContent>
+        <Typography variant='subtitle2'>{boat.name} ({boat.oga_no})</Typography>
+        <BoatCardWords boat={boat} wanted={compactWanted} variant='caption' />
       </CardContent>
       <CardActions>
-        <Button padding='5px' size="small" component={'a'}
-          href={boatUrl(ogaNo, {})} variant="contained" color="primary"
-        >More..</Button>
+        <Button
+          size="small"
+          component={'a'}
+          href={boatUrl(ogaNo, {})}
+        >More</Button>
       </CardActions>
     </Card>
   );

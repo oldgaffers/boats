@@ -1,16 +1,13 @@
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import * as L from 'leaflet';
 import React, { useState, useEffect } from 'react';
 import { MapContainer } from 'react-leaflet/MapContainer';
-import MarkerClusterGroup from 'react-leaflet-cluster'
-// import { useMap } from 'react-leaflet/hooks'
 import { TileLayer } from 'react-leaflet/TileLayer';
 import { Marker } from 'react-leaflet/Marker';
 import { Popup } from 'react-leaflet/Popup';
 import { CompactBoatCard } from './boatcard';
 import { getScopedData } from './boatregisterposts';
 import { Stack } from '@mui/system';
-
-// const { OverlappingMarkerSpiderfier } = window;
 
 function gaffer(colour) {
     return L.icon({
@@ -111,7 +108,7 @@ function BoatMarker({ boat }) {
             },
         }}
     >
-        <Popup>
+        <Popup maxWidth='200'>
             <CompactBoatCard ogaNo={boat.oga_no} />
         </Popup>
     </Marker>;
