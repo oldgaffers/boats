@@ -272,7 +272,19 @@ const brdivs = tags.map((tag) => {
   const attributes = {};
   console.log('D', div);
   div.getAttributeNames().forEach((name) => {
-    attributes[name] = div.getAttribute(name);
+    if (name === 'class') {
+      const val = div.getAttribute(name);
+      if (val.includes('br_')) {
+        const names = val.split(' ');
+        names.forEach((n) => {
+          if (n.startsWith('br_')) {
+            attributes['id'] = n.replace('br_', '');            
+          }
+        });
+      }
+    } else {
+      attributes[name] = div.getAttribute(name);
+    }
   });
   const root = createRoot(div);
   root.render(
