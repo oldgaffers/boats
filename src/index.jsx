@@ -263,9 +263,14 @@ const tags = [
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
   'members', 'members_boats', 'update_my_details'
 ];
-const divs = tags.map((id) => document.getElementById(id)).filter((div) => div);
-divs.forEach((div) => {
+const iddivs = tags.map((id) => document.getElementById(id)).filter((div) => div);
+const brdivs = tags.map((tag) => {
+  const c = document.getElementsByClassName(`br_${tag}`);
+  return [...c];
+}).flat();
+[...iddivs, ...brdivs].forEach((div) => {
   const attributes = {};
+  console.log('D', div);
   div.getAttributeNames().forEach((name) => {
     attributes[name] = div.getAttribute(name);
   });
