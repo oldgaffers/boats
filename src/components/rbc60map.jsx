@@ -67,7 +67,7 @@ const lug = L.icon({
 
 const partyPorts = [
     { name: 'Ramsgate', latitude: 51.329838850086986, longitude: 1.421028584328367 },
-    { name: 'Cowes', latitude: 50.74840882125257, longitude: -1.2915786665067661 },
+    { name: 'Cowes', latitude: 50.75920541556864, longitude: -1.2931364360365005 },
     { name: 'Plymouth', latitude: 50.369026121055946, longitude: -4.1322539520425465 },
     { name: 'Neyland', latitude: 51.70795144725004, longitude: -4.941540168179836 },
     { name: 'Dublin', latitude: 53.34362082685624, longitude: -6.217210521334736 },
