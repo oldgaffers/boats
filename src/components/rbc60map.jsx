@@ -118,7 +118,20 @@ function BoatMarkers({ entries }) {
     // const map = useMap()
     // const oms = new OverlappingMarkerSpiderfier(map);
 
-    const visible = (entries || []).filter((boat) => boat.visible && boat.location);
+    const visible = (entries || []).filter((boat) => 
+    {
+        if (boat.location) {
+            const up = new Date(boat.location.timestamp).getTime();
+            const n = new Date().getTime();
+            const days_old = Math.floor((n - up) / 86400000);
+            console.log(days_old);
+            if (days_old > 6) {
+                return false;
+            }
+            return boat.visible;
+        }
+        return false;
+    });
 
     return <MarkerClusterGroup chunkedLoading>
         {visible.map((boat) => <BoatMarker boat={boat} />)}
