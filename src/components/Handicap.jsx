@@ -143,14 +143,15 @@ export const solentSteps = (thisStep, nextStep) => {
           isReadOnly: true,
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
-            if (values.handicap_data.displacement) {
-              formOptions.change("ddf.effective_displacement", values.handicap_data.displacement);
+            const displacement = values?.handicap_data?.displacement;            
+            if (displacement && !Number.isNaN(displacement)) {
+              formOptions.change("ddf.effective_displacement", displacement);
               return {
-                value: values.handicap_data.displacement,
+                value: displacement,
                 description: "entered displacement",
               };
             } else {
-              const disp = solentEstimatedDisplacement(values.handicap_data);
+              const disp = solentEstimatedDisplacement(values?.handicap_data);
               formOptions.change("ddf.effective_displacement", disp);
               return {
                 value: disp,
@@ -167,7 +168,7 @@ export const solentSteps = (thisStep, nextStep) => {
           description: 'A value determined by the handicap committee',
           resolveProps: (props, { meta, input }, formOptions) => {
             const { values } = formOptions.getState();
-            const value = values.handicap_data.solent.performance_factor;
+            const value = values?.handicap_data?.solent?.performance_factor || 0;
             return {
               value: `${100*value}%`,
             }
@@ -182,7 +183,7 @@ export const solentSteps = (thisStep, nextStep) => {
             const { values } = formOptions.getState();
             const mmr = solentMR(values);
             formOptions.change("handicap_data.solent.measured_rating", mmr);
-            if (values.handicap_data.displacement) {
+            if (values?.handicap_data?.displacement) {
               return {
                 value: mmr.toFixed(2),
                 description: '0.2L√S/√(Disp/L)+0.67*(L+√S)',
