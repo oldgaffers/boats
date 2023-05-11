@@ -270,7 +270,6 @@ const brdivs = tags.map((tag) => {
 }).flat();
 [...iddivs, ...brdivs].forEach((div) => {
   const attributes = {};
-  console.log('D', div);
   div.getAttributeNames().forEach((name) => {
     if (name === 'class') {
       const val = div.getAttribute(name);
