@@ -20,9 +20,9 @@ export default function EditButton({ boat, user }) {
     setOpen(false);
   };
 
-  const handleSubmit = (editedBoat, email) => {
+  const handleSubmit = (changes, newItems, updated, email) => {
     setOpen(false);
-      postBoatData({ email, new: editedBoat, newItems: {} })
+      postBoatData({ email, changes, newItems, new: updated })
       .then(() => {
           console.log('submitted');
           setSnackBarOpen(true);

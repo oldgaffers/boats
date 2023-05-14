@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
+import { v4 as uuidv4 } from 'uuid';
 import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
@@ -31,7 +32,6 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
 import HtmlEditor from './ckeditor';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { newPicklistItems } from "./createboatbutton";
 
 const schema = (pickers) => {
   return {
@@ -338,6 +338,53 @@ const schema = (pickers) => {
   };
 };
 
+function recursiveUpdate(previous, submitted) {
+  const merged = { ...previous };
+  Object.keys(submitted).forEach((key) => {
+    switch(typeof submitted[key]) {
+      case 'object':
+        merged[key] = boatdiff(previous[key], submitted[key]);
+        break;
+      default:
+        merged[key] = submitted[key];
+    }
+  });
+  return merged;
+}
+
+function boatdiff(previous, submitted) {
+  const changes = {};
+  Object.keys(submitted).forEach((key) => {
+    switch(typeof submitted[key]) {
+      case 'number':
+      case 'boolean':
+      case 'string':
+        if (previous?.[key] !== submitted[key]) {
+          changes[key] = submitted[key];
+        }
+        break;
+      case 'object':
+        {
+          const nested = boatdiff(previous?.[key], submitted[key]);
+          if (Object.keys(nested).length > 0) {
+            changes[key] = nested;
+          }
+        }
+        break;
+      case 'undefined':
+        if (previous?.[key]) {
+          changes[key] = undefined; // to remove this field
+        } else {
+          console.log('noop', key);
+        }
+        break;
+      default:
+        console.log('TODO', key, typeof submitted[key]);
+    }
+  });
+  return changes;
+}
+
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit }) {
   const [pickers, setPickers] = useState();
 
@@ -369,57 +416,64 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     ddf.current_sales_record = fs;
   }
 
-  const handleSubmit = ({ ddf, email, designer, builder, ...changes }) => {
-    const updates = { ...boat, ...boatf2m(changes) };
+  const handleSubmit = ({
+    ddf, email, new_design_class, new_designer, new_builder, ...submitted
+  }) => {
 
-    updates.designer = pickers.designer.find((item) => item.id === designer);
-    updates.builder = pickers.builder.find((item) => item.id === builder);
+    const submittedMetres = boatf2m(submitted)
 
-    // the following is because sail data might be skipped in the form
-    const ohd = boat.handicap_data;
-    const nhd = updates.handicap_data;
-    updates.handicap_data = { ...ohd, ...nhd };
+    submittedMetres.design_class = pickers.designer.find((item) => item.id === submitted.design_class);
+    submittedMetres.designer = pickers.designer.find((item) => item.id === submitted.designer);
+    submittedMetres.builder = pickers.builder.find((item) => item.id === submitted.builder);
+
+    const changes = boatdiff(boatDefined(boat), submittedMetres);
 
     const pfs = boat.for_sales?.filter((f) => f.created_at !== fs?.created_at) || [];
     switch (ddf.update_sale) {
       case 'unsell':
-        updates.selling_status = 'not_for_sale';
+        changes.selling_status = 'not_for_sale';
         break;
       case 'sold':
-        updates.selling_status = 'not_for_sale';
-        updates.for_sales = [...pfs, ddf.current_sales_record];
+        changes.selling_status = 'not_for_sale';
+        changes.for_sales = [...pfs, ddf.current_sales_record];
         break;
       case 'update':
-        updates.selling_status = 'for_sale';
-        updates.for_sales = [...pfs, ddf.current_sales_record];
+        changes.selling_status = 'for_sale';
+        changes.for_sales = [...pfs, ddf.current_sales_record];
         break;
       default:
         if (ddf.confirm_for_sale && ddf.current_sales_record) {
-          updates.selling_status = 'for_sale';
-          updates.for_sales = [...pfs, ddf.current_sales_record];  
+          changes.selling_status = 'for_sale';
+          changes.for_sales = [...pfs, ddf.current_sales_record];  
         } else {
-          console.log('handleSubmit unexpected update_sale value', ddf);
+          console.log('handleSubmit unexpected update_sale value', ddf);//XXX
         }
     }
     if (ddf.new_name) {
       console.log('NN', ddf, boat.previous_names);
-      if (boat.previous_names) {
-        boat.previous_names.unshift(boat.name);
+      if (changes.previous_names) {
+        changes.previous_names.unshift(boat.name);
       } else {
-        boat.previous_names = [boat.name];
+        changes.previous_names = [boat.name];
       }
-      boat.name = ddf.new_name;
+      changes.name = ddf.new_name;
     }
-    if (updates.construction_method?.trim() === '') {
-      delete updates.construction_method;
+
+    const newItems = {};
+    if (new_design_class) {
+      newItems.design_class = { name: new_design_class, id: uuidv4() };
+      changes.design_class = newItems.design_class.id;
     }
-    if (!updates.year_is_approximate) {
-      delete updates.year_is_approximate;
+    if (new_designer) {
+      newItems.designer = { name: new_designer, id: uuidv4() } ;
+      changes.designer = newItems.designer.id;
     }
-    const before = boatDefined(boat);
-    const { newItems } = newPicklistItems(changes);
-    const updatedBoat = { ...before, ...updates, newItems };
-    onSubmit(updatedBoat, email);
+    if (new_builder) {
+      newItems.builder = { name: new_builder, id: uuidv4() };
+      changes.builder = newItems.builder.id;
+    }
+  
+    onSubmit(changes, newItems, recursiveUpdate(boat, changes), email);
 
   }
   const initialValues = { user, ...boatm2f(boat), ddf };
