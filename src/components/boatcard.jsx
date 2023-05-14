@@ -105,6 +105,8 @@ function BoatCardWords({ boat, wanted, variant = 'body2' }) {
 function BoatCardImage({ albumKey, name }) {
   const [data, setData] = useState();
 
+  const height = 250;
+
   useEffect(() => {
     if (!data) {
       getThumb(albumKey).then((r) => {
@@ -115,12 +117,12 @@ function BoatCardImage({ albumKey, name }) {
 
   if (!data) {
     return <>
-      <Skeleton variant='rounded' animation='wave' height={140} />
+      <Skeleton variant='rounded' animation='wave' height={height} />
     </>
   }
 
   if (data.ThumbnailUrl) {
-    return (<CardMedia sx={{ height: 140 }} image={data.ThumbnailUrl} title={name} />);
+    return (<CardMedia sx={{ height }} image={data.ThumbnailUrl} title={name} />);
   }
   return (<AltForThumb />);
 }
