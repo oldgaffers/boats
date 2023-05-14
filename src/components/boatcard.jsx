@@ -105,7 +105,7 @@ function BoatCardWords({ boat, wanted, variant = 'body2' }) {
 function BoatCardImage({ albumKey, name }) {
   const [data, setData] = useState();
 
-  const height = 250;
+  const height = 220;
 
   useEffect(() => {
     if (!data) {
