@@ -355,31 +355,43 @@ function recursiveUpdate(previous, submitted) {
 function boatdiff(previous, submitted) {
   const changes = {};
   Object.keys(submitted).forEach((key) => {
-    switch(typeof submitted[key]) {
+    const item = submitted[key];
+    const prev = previous?.[key];
+    switch(typeof item) {
       case 'number':
       case 'boolean':
       case 'string':
-        if (previous?.[key] !== submitted[key]) {
-          changes[key] = submitted[key];
+        if (prev !== item) {
+          changes[key] = item;
         }
         break;
       case 'object':
-        {
-          const nested = boatdiff(previous?.[key], submitted[key]);
+        if (Array.isArray(item)) {
+          if (Array.isArray(prev)) {
+            const p = prev.map((i) => JSON.stringify(i));
+            const n = item.filter((i) => !p.includes(JSON.stringify(i)));
+            if (n.length > 0) {
+              changes[key] = n;
+            }
+          } else {
+            changes[key] = item;
+          }
+        } else {
+          const nested = boatdiff(prev, item);
           if (Object.keys(nested).length > 0) {
             changes[key] = nested;
-          }
+          }  
         }
         break;
       case 'undefined':
-        if (previous?.[key]) {
+        if (prev) {
           changes[key] = undefined; // to remove this field
         } else {
           console.log('noop', key);
         }
         break;
       default:
-        console.log('TODO', key, typeof submitted[key]);
+        console.log('TODO', key, typeof item);
     }
   });
   return changes;
