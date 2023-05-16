@@ -97,14 +97,15 @@ const extras = [
 
 function BoatMarker({ boat }) {
 
-    const { latitude, longitude, timestamp } = boat.location;
-    const d = humanizeDuration((new Date()).getTime() - (new Date(timestamp)).getTime(), { round: true });
-    console.log(d);
+    const { latitude, longitude, timestamp, source } = boat.location;
+    const age = (new Date()).getTime() - (new Date(timestamp)).getTime()
+    const d = humanizeDuration(age, { round: true, largest: 2 });
+    const title = `${boat.name} ${d} ago from ${source || 'whatsapp'}`;
     return <Marker
         key={boat.oga_no}
         position={[latitude, longitude]}
         icon={gafferBlue}
-        title={`${boat.name} ${d} ago`}
+        title={title}
         eventHandlers={{
             click: () => {
                 console.log('marker clicked')
