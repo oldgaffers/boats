@@ -8,6 +8,7 @@ import { Popup } from 'react-leaflet/Popup';
 import { CompactBoatCard } from './boatcard';
 import { getScopedData } from './boatregisterposts';
 import { Stack } from '@mui/system';
+import humanizeDuration from 'humanize-duration';
 
 function gaffer(colour) {
     return L.icon({
@@ -96,12 +97,14 @@ const extras = [
 
 function BoatMarker({ boat }) {
 
-    const { latitude, longitude } = boat.location;
+    const { latitude, longitude, timestamp } = boat.location;
+    const d = humanizeDuration((new Date()).getTime() - (new Date(timestamp)).getTime(), { round: true });
+    console.log(d);
     return <Marker
         key={boat.oga_no}
         position={[latitude, longitude]}
         icon={gafferBlue}
-        title={boat.name}
+        title={`${boat.name} ${d} ago`}
         eventHandlers={{
             click: () => {
                 console.log('marker clicked')
