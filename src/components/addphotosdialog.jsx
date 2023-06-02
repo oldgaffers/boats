@@ -7,25 +7,36 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
+import { postPhotos } from "./postphotos";
+import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
 import Photodrop from "./photodrop";
+import { CircularProgress } from "@mui/material";
 
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const { user } = useAuth0();
   const [pictures, setPictures] = useState([]);
   const [email, setEmail] = useState(user && user.email);
   const [copyright, setCopyright] = useState(''); // user && user.name);
-
+  const [progress, setProgress] = useState(0);
 
   const onDrop = (p) => {
     setPictures(p);
   };
 
-  const onUpload = () => {
-    onClose(
-      copyright,
-      email,
-      pictures
-    );
+  const onUpload = async () => {
+    const { image_key, name, oga_no } = boat;
+    let albumKey;
+    if (image_key) {
+      albumKey = image_key;
+    } else {
+      albumKey = await createPhotoAlbum(name, oga_no);
+    }
+    await postPhotos(copyright, email, albumKey, pictures, setProgress);
+    if (!boat.image_key) {
+      boat.image_key = albumKey;
+      await postBoatData({ new: boat, email })
+    }
+    onClose();
   };
 
   const ready = () => {
@@ -78,6 +89,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
             >
               Upload
             </Button>
+            <CircularProgress variant="determinate" value={progress}/>
           </Stack>
         </Stack>
       </Paper>

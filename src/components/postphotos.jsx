@@ -15,7 +15,7 @@ function allProgress(proms, progress_cb) {
     }));
 }
 
-export async function postPhotos({ email, albumKey, copyright }, fileList) {
+export async function postPhotos(copyright, email, albumKey, fileList, setProgress) {
     if (fileList?.length > 0) {
         try {
             const { bucketName, region, identityId } = await getUploadCredentials();
@@ -37,8 +37,9 @@ export async function postPhotos({ email, albumKey, copyright }, fileList) {
                 return p;
             });
             const a = await allProgress(uploads, (p) => {
-                console.log(`% Done = ${p.toFixed(2)}`);
+                setProgress(p);
             });
+            console.log(a);
             return a;
         } catch (e) {
             // console.log(e);
