@@ -1,39 +1,25 @@
-import AWS from 'aws-sdk';
 import { getUploadCredentials } from './boatregisterposts';
+import { fromCognitoIdentity } from "@aws-sdk/credential-providers";
+import { S3Client } from "@aws-sdk/client-s3";
+import { Upload } from"@aws-sdk/lib-storage";
 
-export async function postPhotos(values, fileList) {
+export async function postPhotos({ email, albumKey, copyright }, fileList) {
     if (fileList?.length > 0) {
         try {
-            const r = await getUploadCredentials();
-            const uploadConfig = r.data;
-            AWS.config.update({
-                region: uploadConfig.region,
-                credentials: new AWS.CognitoIdentityCredentials({
-                    IdentityPoolId: `${uploadConfig.region}:${uploadConfig.identityId}`,
-                })
+            const { bucketName, region, identityId } = await getUploadCredentials();
+            const client = new S3Client({
+                region,
+                credentials: fromCognitoIdentity({ identityId }),
             });
-            /*
-                const p = {
-                region: uploadConfig.region,
-                credentials: fromCognitoIdentity({
-                    identityId: uploadConfig.identityId,
-                })};
-                const client = new S3(p) || new S3Client(p);
-            */
             const uploads = fileList.map((file) => {
-                const photoKey = `${values.email}/${file.name}`;
                 const params = {
-                    Bucket: uploadConfig.bucketName,
-                    Key: photoKey,
+                    Bucket: bucketName,
+                    Key: `${email}/${file.name}`,
                     ContentType: file.type,
                     Body: file,
-                    Metadata: {
-                        albumKey: values.albumKey,
-                        copyright: values.copyright,
-                    },
+                    Metadata: { albumKey, copyright },
                 };
-                // return new Upload({ client, params });
-                return new AWS.S3.ManagedUpload({ params }).promise();
+                return new Upload({ client, params });
             });
             return Promise.allSettled(uploads);
         } catch (e) {

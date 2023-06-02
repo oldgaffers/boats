@@ -121,7 +121,8 @@ export async function getBoatData(ogaNo) {
 }
 
 export async function getUploadCredentials() {
-  return axios.get('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/');
+  const r = await axios.get('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/');
+  return r.data;
 }
 
 export async function getPicklists() {
