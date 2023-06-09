@@ -33,6 +33,9 @@ function fieldDiplayValue(item) {
   if (item.name) {
     return item.name;
   }
+  if (typeof item === 'string') {
+    return item.replaceAll('\n', '');
+  }
   return item;
 }
 
@@ -124,7 +127,6 @@ function ExportFleetOptions({ client, name, ogaNos }) {
         const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
         r.forEach((b) => {
           const o = b.ownerships?.filter((o) => o.current)?.map((o) => id2name(o.id, members)) || [];
-          console.log('M', o);
           b.owners = o.join(', ');
         });
         setData(r);
@@ -158,7 +160,6 @@ function ExportFleetOptions({ client, name, ogaNos }) {
   );
 
   const html = `<div>${leaflet.map((boat) => boatForLeaflet(boat))}</div>`;
-  console.log(html);
   const doc = new Blob([html], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
 
