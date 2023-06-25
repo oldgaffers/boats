@@ -217,6 +217,11 @@ export const registrationForm = {
     },
     {
       component: 'text-field',
+      name: "mmsi",
+      label: "MMSI",
+    },
+    {
+      component: 'text-field',
       name: "callsign",
       label: "Call Sign",
     },
