@@ -6,6 +6,7 @@ import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
+import ApproveHandicapButton from './approvehandicapbutton';
 
 export default function BoatButtons({ boat, ownerships, user /* location */ }) {
 
@@ -48,6 +49,7 @@ export default function BoatButtons({ boat, ownerships, user /* location */ }) {
           ? (<Grid item xs={'auto'} ><AdminButton boat={boat} user={user} color='secondary'/></Grid>)
           : ''
         }
+        <ApproveHandicapButton boat={boat} user={user} />
         </Grid>
     </Paper>
   );

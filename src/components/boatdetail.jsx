@@ -61,12 +61,22 @@ export default function BoatDetail({ boat, user }) {
       )});    
   }
   if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
+    let solentlabel;
+    let label;
+    if (hd.approved) {
+      label = 'Approved T(H)CF';
+      solentlabel = 'Approved Solent Rating';
+    } else {
+      label = 'Proposed T(H)CF';
+      solentlabel = 'Proposed Solent Rating';
+    }
       panes.push({ title: 'Rig and Sails', children: (
         <Paper>
           <ConditionalText label="Fore triangle base" value={m2f(hd.fore_triangle_base)}/>
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)}/>
           <ConditionalText label="Calculated T(H)CF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
-          <ConditionalText label="T(H)CF" value={hd.thcf && hd.thcf.toFixed(3)}/>
+          <ConditionalText label={label} value={hd.thcf && hd.thcf.toFixed(3)}/>
+          <ConditionalText label={solentlabel} value={hd.solent?.thcf && hd.solent.thcf.toFixed(3)}/>
           <SailTable handicapData={hd}/>
         </Paper>
       )});    

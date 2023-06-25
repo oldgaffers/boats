@@ -55,6 +55,15 @@ export default function BoatSummary({ location, boat }) {
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
+  let solentlabel;
+  let label;
+  if (boat.handicap_data.approved) {
+    label = 'Approved T(H)CF';
+    solentlabel = 'Approved Solent Rating';
+  } else {
+    label = 'Proposed T(H)CF';
+    solentlabel = 'Proposed Solent Rating';
+  }
   return (
     <Paper sx={{height: "100%", paddingLeft: '0.5em', paddingRight: '0.5em'}}>
     <Typography variant="h4" component="h4">Summary</Typography>
@@ -68,10 +77,8 @@ export default function BoatSummary({ location, boat }) {
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
     </Box>
-    <ConditionalText
-      label="T(H)CF"
-      value={boat.handicap_data?.thcf?.toFixed(3)}
-    />
+    <ConditionalText label={label} value={boat.handicap_data?.thcf?.toFixed(3)} />
+    <ConditionalText label={solentlabel} value={boat.handicap_data?.solent?.thcf?.toFixed(3)} />
     <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
     <div>
