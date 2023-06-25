@@ -614,9 +614,8 @@ export const steps = (firstStep, nextStep) => [
         name: "handicap_data.fore_triangle_base",
         label: "Base (decimal feet)",
         description:
-          "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit",
+          "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit. If you have no foresails enter 0.",
         type: "number",
-        dataType: 'float',
         isRequired: true,
         validate: [{ type: 'required' }],
       },
