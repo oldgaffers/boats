@@ -6,9 +6,9 @@ import PhotoButton from './photobutton';
 import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
-import ApproveHandicapButton from './approvehandicapbutton';
+import SetHandicapCheckedButton from './sethandicapchecked';
 
-export default function BoatButtons({ boat, ownerships, user /* location */ }) {
+export default function BoatButtons({ boat, user }) {
 
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
@@ -49,7 +49,7 @@ export default function BoatButtons({ boat, ownerships, user /* location */ }) {
           ? (<Grid item xs={'auto'} ><AdminButton boat={boat} user={user} color='secondary'/></Grid>)
           : ''
         }
-        <ApproveHandicapButton boat={boat} user={user} />
+        <SetHandicapCheckedButton boat={boat} user={user} />
         </Grid>
     </Paper>
   );

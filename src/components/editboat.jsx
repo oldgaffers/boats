@@ -133,6 +133,13 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
     const ohd = boat.handicap_data;
     const nhd = updates.handicap_data;
     updates.handicap_data = { ...ohd, ...nhd };
+    if (ohd.thcf && nhd.thcf && Math.abs(nhd.thcf - ohd.thcf) > 0.01) {
+      updates.handicap_data.checked = false;
+    }
+    if (ohd.solent?.thcf && nhd.solent?.thcf && Math.abs(nhd.solent.thcf - ohd.solent.thcf) > 0.01) {
+      updates.handicap_data.checked = false;
+    }
+    console.log(updates);
     if (ddf.update_sale === 'unsell') {
       updates.selling_status = 'not_for_sale';
     }

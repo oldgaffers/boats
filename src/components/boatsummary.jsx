@@ -57,9 +57,9 @@ export default function BoatSummary({ location, boat }) {
   }
   let solentlabel;
   let label;
-  if (boat.handicap_data.approved) {
-    label = 'Approved T(H)CF';
-    solentlabel = 'Approved Solent Rating';
+  if (boat.handicap_data.checked) {
+    label = 'Checked T(H)CF';
+    solentlabel = 'Checked Solent Rating';
   } else {
     label = 'Proposed T(H)CF';
     solentlabel = 'Proposed Solent Rating';

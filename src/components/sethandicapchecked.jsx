@@ -4,11 +4,11 @@ import RoleRestricted from './rolerestrictedcomponent';
 import { postBoatData } from "./boatregisterposts";
 import { Dialog, DialogActions, DialogTitle, Snackbar } from "@mui/material";
 
-function ApproveHandicapDialog({ boat, user, onClose, open }) {
+function SetHandicapCheckedDialog({ boat, user, onClose, open }) {
     const [popoverText, setPopoverText] = useState('');
   
-    function approve() {
-      postBoatData({ email: user.email, new: { oga_no: boat.oga_no }, changes: { handicap_data: { approved: true }} })
+    function setchecked() {
+      postBoatData({ email: user.email, new: { oga_no: boat.oga_no }, changes: { handicap_data: { checked: true }} })
         .then(() => {
           setPopoverText("OK, that should happen soon");
           onClose();
@@ -27,8 +27,8 @@ function ApproveHandicapDialog({ boat, user, onClose, open }) {
       >
         <DialogTitle id="form-dialog-title">Approve Handicap For {boat.name || ''}</DialogTitle>
         <DialogActions>
-          <Button onClick={approve} color="primary">
-            Approve
+          <Button onClick={setchecked} color="primary">
+            Handicap looks OK
           </Button>
           <Button onClick={onClose} color="secondary">
             Cancel
@@ -47,8 +47,8 @@ function ApproveHandicapDialog({ boat, user, onClose, open }) {
       />
     </>;
   }
-  
-export default function ApproveHandicapButton({ boat, user }) {
+
+export default function SetHandicapCheckedButton({ boat, user }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -69,7 +69,7 @@ export default function ApproveHandicapButton({ boat, user }) {
       >
         Approve Handicap
       </Button>
-      <ApproveHandicapDialog boat={boat} user={user}
+      <SetHandicapCheckedDialog boat={boat} user={user}
         onClose={handleClose} onCancel={() => setOpen(false)} open={open} 
       />
     </RoleRestricted>

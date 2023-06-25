@@ -63,9 +63,9 @@ export default function BoatDetail({ boat, user }) {
   if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
     let solentlabel;
     let label;
-    if (hd.approved) {
-      label = 'Approved T(H)CF';
-      solentlabel = 'Approved Solent Rating';
+    if (hd.checked) {
+      label = 'Checked T(H)CF';
+      solentlabel = 'Checked Solent Rating';
     } else {
       label = 'Proposed T(H)CF';
       solentlabel = 'Proposed Solent Rating';
