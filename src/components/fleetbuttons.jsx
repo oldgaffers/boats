@@ -9,7 +9,6 @@ import NewFleet from './newfleet';
 import UpdateFleet from './updatefleet';
 import { TokenContext } from './TokenProvider';
 import { MarkContext } from "../browseapp";
-import { ExportFleet } from './exportfleet';
 
 async function getFleets(scope, filter, accessToken) {
     const r = await getScopedData(scope, 'fleets', filter, accessToken);
@@ -77,7 +76,6 @@ export default function FleetButtons({
                 fleet={fleet}
                 updated={fleetsUpdated}
             />
-            { fleet ? <ExportFleet name={fleet.name} filters={fleet.filters}/> : '' }
         </Stack>
     );
 }

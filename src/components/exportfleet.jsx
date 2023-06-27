@@ -177,8 +177,12 @@ function ExportFleetOptions({ client, name, ogaNos }) {
 
 export function ExportFleet({ name, boats, filters }) {
   const [open, setOpen] = useState(false);
-  const ogaNos = filters?.oga_nos || boats?.map((b) => b?.oga_no);
+  const ogaNos = filters?.oga_nos || boats?.map((b) => b?.oga_no) || [];
+  console.log('filters', filters, 'ogaNos', ogaNos, 'boats', boats);
 
+  if (ogaNos.length === 0) {
+    return '';
+  }
   return <RoleRestricted role='member'>
     <Button onClick={() => setOpen(true)}>Export</Button>
     <Dialog

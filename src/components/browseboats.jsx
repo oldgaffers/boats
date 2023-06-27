@@ -21,6 +21,7 @@ import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import SmallBoatsIntro from "./smallboatsintro";
+import { ExportFleet } from './exportfleet';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -76,6 +77,13 @@ function Intro({ view }) {
   );
 }
 
+function ExportOptions({ name, boats, filters }) {
+  if (name) {
+    return  <ExportFleet name={name} boats={boats} filters={filters} />
+  }
+  return '';
+}
+
 export default function BrowseBoats({
   state,
   onPageChange,
@@ -93,12 +101,18 @@ export default function BrowseBoats({
   const [data, setData] = useState();
   const [ownedOnly, setOwnedOnly] = useState();
   const { user } = useAuth0();
+  const [fleetName, setFleetName] = useState();
 
   useEffect(() => {
     if (!data) {
       getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
     }
   }, [data]);
+
+  const handleFilterChange = (filters, name) => {
+    onFilterChange(filters);
+    setFleetName(name);
+  }
 
   if (!data) return <CircularProgress />;
 
@@ -142,7 +156,7 @@ export default function BrowseBoats({
             pickers={pickers}
             onPageSizeChange={onPageSizeChange}
             onSortChange={onSortChange}
-            onFilterChange={onFilterChange}
+            onFilterChange={handleFilterChange}
             onMarkedOnlyChange={onMarkedOnlyChange}
             onClearAllMarks={onClearAllMarks}
             isMarkedOnly={isMarkedOnly}
@@ -150,6 +164,7 @@ export default function BrowseBoats({
             isOwnedOnly={ownedOnly}
             enableOwnersOnly={enableOwnersOnly}
           />
+          <ExportOptions boats={filtered} filters={filters} name={fleetName} />
         </AccordionDetails>
       </Accordion>
       <Divider />

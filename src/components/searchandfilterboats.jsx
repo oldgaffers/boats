@@ -153,7 +153,7 @@ export default function SearchAndFilterBoats({
     // clever stuff if other filters are set as well as fleet
     // but name is cleared if we need to clear the fleet filter
     if (name) {
-      onFilterChange(filters);
+      onFilterChange(filters, name);
     } else {
       onFilterChange({});
     }
