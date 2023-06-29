@@ -108,6 +108,7 @@ const schema = (pickers) => {
                     isClearable: true,
                     noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
                     options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
+                    isOptionEqualToValue: (option, value) => option.label === value,
                   },
                   {
                     component: 'text-field',
@@ -387,7 +388,7 @@ function boatdiff(previous, submitted) {
         if (prev) {
           changes[key] = undefined; // to remove this field
         } else {
-          console.log('noop', key);
+          console.log('unchanged', key);
         }
         break;
       default:
@@ -434,7 +435,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
     const submittedMetres = boatf2m(submitted)
 
-    submittedMetres.design_class = pickers.designer.find((item) => item.id === submitted.design_class);
+    submittedMetres.design_class = pickers.design_class.find((item) => item.name === submitted.design_class);
     submittedMetres.designer = pickers.designer.find((item) => item.id === submitted.designer);
     submittedMetres.builder = pickers.builder.find((item) => item.id === submitted.builder);
 
