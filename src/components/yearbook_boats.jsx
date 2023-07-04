@@ -53,8 +53,8 @@ export default function YearbookBoats({ boats=[], components={ Toolbar: CustomTo
         { field: 'owners', headerName: 'Owner', flex: 1, valueGetter: ownerValueGetter },
         {
             field: 'url',
-            headerName: 'Details',
-            width: 150,
+            headerName: 'View in the Boat Register',
+            width: 250,
             renderCell: (params) => <Button
             padding='5px'
             size="small"
