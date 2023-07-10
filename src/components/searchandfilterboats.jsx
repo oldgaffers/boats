@@ -346,7 +346,7 @@ export default function SearchAndFilterBoats({
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>
-            <FleetButtons onChange={filterByFleet} />
+            <FleetButtons filters={filters} onChange={filterByFleet} />
           </RoleRestricted>
         </Grid>
         <RoleRestricted role='member'>

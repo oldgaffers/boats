@@ -4,18 +4,17 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Popover, Typography } from "@mui/material";
+import { FormControl, Popover, Radio, RadioGroup, Typography } from "@mui/material";
 import { postScopedData } from "./boatregisterposts";
 import { TokenContext } from './TokenProvider';
 
 function CreateFleetDialog({
-    onCancel, onClose, open
+    onCancel, onClose, open, filterCount, markedBoatCount,
 }) {
     const [name, setName] = useState('');
     const [pub, setPub] = useState(false);
@@ -32,7 +31,7 @@ function CreateFleetDialog({
         setName(event.target.value);
     };
 
-    const handleSwitchChange = (event) => {
+    const handleVisibilityChange = (event) => {
         setPub(event.target.checked);
     };
 
@@ -40,12 +39,20 @@ function CreateFleetDialog({
         <Dialog onClose={handleClose} open={open}>
             <DialogTitle>Create Fleet</DialogTitle>
             <DialogContent>
-                <DialogContentText>
-                    Name and create a personal fleet.
-                </DialogContentText>
+                <FormControl>
+                    <RadioGroup
+                        aria-labelledby="demo-radio-buttons-group-label"
+                        defaultValue={(markedBoatCount===0)?"static":"marked"}
+                        name="radio-buttons-group"
+                    >
+                        <FormControlLabel value="dynamic" control={<Radio disabled={filterCount===0}/>} label="New Fleet from filter - new matching boats are automatically added" />
+                        <FormControlLabel value="static" control={<Radio disabled={filterCount===0}/>} label="New Fleet from the boats currently visible" />
+                        <FormControlLabel value="marked" control={<Radio disabled={markedBoatCount===0}/>} label={`New Fleet from ${markedBoatCount} marked boats`} />
+                    </RadioGroup>
+                </FormControl>
                 <Stack spacing={2} direction="row">
                     <TextField onChange={handleNameChange} id="name" label="Name" variant="outlined" />
-                    <FormControlLabel control={<Switch onChange={handleSwitchChange} />} label="Public" />
+                    <FormControlLabel control={<Switch onChange={handleVisibilityChange} />} label="Public" />
                 </Stack>
             </DialogContent>
             <DialogActions>
@@ -56,7 +63,12 @@ function CreateFleetDialog({
     );
 }
 
-export default function NewFleet({ markList = [], updated=()=>console.log('updated') }) {
+export default function NewFleet({
+    markList = [],
+    selected,
+    filters,
+    updated = () => console.log('updated'),
+}) {
     const { user } = useAuth0();
     const id = user?.["https://oga.org.uk/id"];
     const accessToken = useContext(TokenContext);
@@ -78,16 +90,16 @@ export default function NewFleet({ markList = [], updated=()=>console.log('updat
             filters: { oga_nos: markList },
             created_at: (new Date()).toISOString(),
         };
-        const scope = (isPublic)? 'public' : 'member';
+        const scope = (isPublic) ? 'public' : 'member';
         postScopedData(scope, 'fleets', data, accessToken)
-        .then(() => {
-            setPopoverOpen(false);
-            updated();
-        })
-        .catch((e) => {
-            console.log(e);
-            setPopoverOpen(false);
-        });
+            .then(() => {
+                setPopoverOpen(false);
+                updated();
+            })
+            .catch((e) => {
+                console.log(e);
+                setPopoverOpen(false);
+            });
     }
 
     const handleClose = (value) => {
@@ -101,7 +113,14 @@ export default function NewFleet({ markList = [], updated=()=>console.log('updat
         setOpen(false);
     };
 
-    if (markList?.length === 0) {
+    if (selected) {
+        return '';
+    }
+
+    const markedBoatCount = markList?.length || 0;
+    const filterCount = Object.keys(filters).length;
+
+    if (( markedBoatCount === 0) && (filterCount === 0)) {
         return '';
     }
 
@@ -113,9 +132,10 @@ export default function NewFleet({ markList = [], updated=()=>console.log('updat
                 variant="contained"
                 color='primary'
                 onClick={handleClickOpen}
-            >New Fleet from {markList.length} Marked</Button>
+            >New Fleet</Button>
             <CreateFleetDialog
-                ogaNos={markList}
+                markedBoatCount={markedBoatCount}
+                filterCount={filterCount}
                 open={open}
                 onCancel={handleCancel}
                 onClose={handleClose}
