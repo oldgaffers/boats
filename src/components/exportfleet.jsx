@@ -34,7 +34,7 @@ function fieldDiplayValue(item) {
     return item.name;
   }
   if (typeof item === 'string') {
-    return item.replaceAll('\n', '');
+    return '"'+item.replaceAll('\n', '').replaceAll('"', '“')+'"';
   }
   return item;
 }
