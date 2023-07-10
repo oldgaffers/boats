@@ -20,6 +20,7 @@ async function getFleets(scope, filter, accessToken) {
 export default function FleetButtons({
     onChange = () => console.log('fleet change'),
     filters,
+    filtered,
 }) {
     const [items, setItems] = useState();
     const [selected, setSelected] = useState();
@@ -69,7 +70,7 @@ export default function FleetButtons({
                     value={selected}
                 />
             </Box>
-            <NewFleet markList={markList} filters={filters} selected={selected} updated={fleetsUpdated} />
+            <NewFleet markList={markList} filters={filters} selected={selected} updated={fleetsUpdated} filtered={filtered} />
             <UpdateFleet
                 markList={markList}
                 fleet={fleet}

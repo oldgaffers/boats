@@ -163,6 +163,7 @@ export default function BrowseBoats({
             onOwnedOnlyChange={(v) => setOwnedOnly(v)}
             isOwnedOnly={ownedOnly}
             enableOwnersOnly={enableOwnersOnly}
+            filtered={filtered}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
         </AccordionDetails>

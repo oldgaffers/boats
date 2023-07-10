@@ -18,13 +18,14 @@ function CreateFleetDialog({
 }) {
     const [name, setName] = useState('');
     const [pub, setPub] = useState(false);
+    const [type, setType] = useState((markedBoatCount===0)?"static":"marked");
 
     const handleCancel = () => {
         onCancel();
     };
 
     const handleClose = () => {
-        onClose({ name, public: pub });
+        onClose({ name, public: pub, type });
     };
 
     const handleNameChange = (event) => {
@@ -42,8 +43,9 @@ function CreateFleetDialog({
                 <FormControl>
                     <RadioGroup
                         aria-labelledby="demo-radio-buttons-group-label"
-                        defaultValue={(markedBoatCount===0)?"static":"marked"}
+                        defaultValue={type}
                         name="radio-buttons-group"
+                        onChange={(value) => setType(value)}
                     >
                         <FormControlLabel value="dynamic" control={<Radio disabled={filterCount===0}/>} label="New Fleet from filter - new matching boats are automatically added" />
                         <FormControlLabel value="static" control={<Radio disabled={filterCount===0}/>} label="New Fleet from the boats currently visible" />
@@ -68,6 +70,7 @@ export default function NewFleet({
     selected,
     filters,
     updated = () => console.log('updated'),
+    filtered,
 }) {
     const { user } = useAuth0();
     const id = user?.["https://oga.org.uk/id"];
@@ -81,15 +84,28 @@ export default function NewFleet({
         setOpen(true);
     };
 
-    const addFleet = (name, isPublic) => {
-        console.log('addFleet', name, isPublic, markList);
+    const addFleet = (name, isPublic, type) => {
+        console.log('addFleet', name, isPublic, markList, filters);
         const data = {
             name,
             owner_gold_id: id,
             public: isPublic,
-            filters: { oga_nos: markList },
             created_at: (new Date()).toISOString(),
         };
+        switch (type) {
+            case 'dynamic':
+                data.filters = filters;
+                break;
+            case 'static':
+                {
+                    const ogaNos = filtered.map((boat) => boat.oga_no);
+                    console.log('F', ogaNos);
+                    data.filters = { oga_nos: ogaNos };
+                }
+                break;
+            case 'marked':
+                data.filters = { oga_nos: markList };
+        }
         const scope = (isPublic) ? 'public' : 'member';
         postScopedData(scope, 'fleets', data, accessToken)
             .then(() => {
@@ -106,7 +122,7 @@ export default function NewFleet({
         setOpen(false);
         setAnchorEl(buttonRef.current);
         setPopoverOpen(true);
-        addFleet(value.name, value.public);
+        addFleet(value.name, value.public, value.type);
     };
 
     const handleCancel = () => {
