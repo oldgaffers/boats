@@ -47,7 +47,7 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
     </AccordionSummary>
     <AccordionDetails>
       <BoatCards
-        state={state} onChangePage={onPageChange} totalCount={filters.oga_nos.length}
+        state={state} onChangePage={onPageChange} totalCount={filtered.length}
         boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
       />
     </AccordionDetails>
@@ -111,7 +111,6 @@ export function RoleRestrictedFleetView({ filter, role, defaultExpanded=false })
 
 export function PublicFleetView({ filter, defaultExpanded=false }) {
   const [data, setData] = useState();
-  console.log('PublicFleetView', filter, defaultExpanded);
 
   useEffect(() => {
     const getData = async () => {
@@ -133,11 +132,12 @@ export function PublicFleetView({ filter, defaultExpanded=false }) {
 }
 
 export default function FleetView(props) {
-  console.log(props);
   const { role } = props;
-  const filter = props.filter || { name: props.topic };
+  console.log('FleetView', props);
+  const searchParams = new URLSearchParams(props?.location?.search);
+  const name = props.topic || searchParams.get('name');
+  const filter = props.filter || { name };
   const defaultExpanded = Object.keys(props).includes('defaultexpanded');
-  console.log('FleetView', filter, role, defaultExpanded);
   if (role) {
     if (role === 'public') {
       return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;

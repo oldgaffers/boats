@@ -125,28 +125,16 @@ const Pages = (props) => {
       );
     case 'fleet':
       return <Wrapper {...auth} scope="member">
-        <FleetView {...props} />
+        <FleetView {...props} location={window.location} />
       </Wrapper>;
     case 'my_fleets':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <MyFleets location={window.location} />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
+      return <Wrapper {...auth} scope="member">
+          <MyFleets />
+        </Wrapper>;
     case 'shared_fleets':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <SharedFleets location={window.location} />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
+      return <Wrapper {...auth} scope="member">
+          <SharedFleets/>
+        </Wrapper>;
     case 'yearbook':
       return (
         <Auth0Provider {...auth} scope="member">
