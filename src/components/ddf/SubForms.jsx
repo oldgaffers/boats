@@ -159,6 +159,7 @@ export const ownerShipsFields = [
         label: 'Name',
         component: 'text-field',
         resolveProps: (props, { input }) => {
+          // console.log('O', props);
           // if no GDPR undefined -> not required
           // if empty string -> new row - required
           if (typeof input.value === 'string') {
