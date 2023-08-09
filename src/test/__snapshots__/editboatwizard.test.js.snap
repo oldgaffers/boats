@@ -1,144 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`buildChanges name change 1`] = `
+exports[`diff name change 1`] = `
 Object {
-  "name": "Cloud",
+  "name": Array [
+    "Robinetta",
+    "Cloud",
+  ],
   "previous_names": Array [
-    "Spray",
-    "Victoria",
+    Array [
+      "Victoria",
+    ],
   ],
 }
 `;
 
-exports[`buildChanges none 1`] = `Object {}`;
-
-exports[`handle submit 1 1`] = `
-Object {
-  "air_draft": 3.048,
-  "construction_details": "Built-in bouyancy",
-  "construction_material": "grp",
-  "design_class": Object {
-    "id": "c05a2174-4b46-410f-829f-894193f020c3",
-    "name": "Falmouth Bass Boat",
-  },
-  "draft": 1.219,
-  "for_sale_state": Object {
-    "text": "not_for_sale",
-  },
-  "for_sales": Array [],
-  "generic_type": "Dinghy",
-  "handicap_data": Object {
-    "beam": 1.829,
-    "draft": 0.305,
-    "length_on_deck": 4.267,
-  },
-  "home_country": "UK",
-  "home_port": "Bristol",
-  "hull_form": "centre-board dinghy",
-  "id": "5598c94d-4720-4423-a575-44b0845a308b",
-  "image_key": "ddgWxx",
-  "length_on_deck": 4.877,
-  "mainsail_type": "gunter",
-  "name": "Test Boat Record Entry",
-  "oga_no": 9001,
-  "ownerships": Array [
-    Object {
-      "current": true,
-      "id": 35000,
-      "member": 6583,
-      "share": 64,
-      "start": 2021,
-    },
-  ],
-  "place_built": "Falmouth",
-  "rig_type": "Yawl",
-  "short_description": "<p>Open sailing dinghy.</p>",
-  "spar_material": "wood",
-  "year": 1985,
-  "year_is_approximate": true,
-}
-`;
-
-exports[`nameChanges no previous change 1`] = `
-Object {
-  "name": "Cloud",
-  "previous_names": Array [
-    "Spray",
-  ],
-}
-`;
-
-exports[`nameChanges with previous change 1`] = `
-Object {
-  "name": "Cloud",
-  "previous_names": Array [
-    "Spray",
-    "Victoria",
-  ],
-}
-`;
-
-exports[`recursiveUpdate new owner 1`] = `
-Array [
-  Object {
-    "end": 1946,
-    "name": "Denys Rayner",
-    "share": 64,
-    "start": 1937,
-  },
-  Object {
-    "end": 1949,
-    "name": "Audrey Parker",
-    "share": 32,
-    "start": 1946,
-  },
-  Object {
-    "end": 1949,
-    "name": "Henry Parker",
-    "share": 32,
-    "start": 1946,
-  },
-  Object {
-    "end": 1985,
-    "name": "Nigel Heriot",
-    "share": 64,
-    "start": 1949,
-  },
-  Object {
-    "end": 1986,
-    "name": "Frank Driscoll",
-    "share": 64,
-    "start": 1985,
-  },
-  Object {
-    "end": 2007,
-    "name": "Mike Garnham",
-    "share": 64,
-    "start": 1986,
-  },
-  Object {
-    "end": 2025,
-    "id": 559,
-    "member": 5004,
-    "share": 32,
-    "start": 2007,
-  },
-  Object {
-    "end": 2025,
-    "id": 1219,
-    "member": 5004,
-    "share": 32,
-    "start": 2007,
-  },
-  Object {
-    "current": true,
-    "name": "John Smith",
-    "share": 64,
-    "start": 2025,
-  },
-]
-`;
-
-exports[`salesChanges no change 1`] = `Object {}`;
-
-exports[`salesChanges none 1`] = `Object {}`;
+exports[`diff no change 1`] = `undefined`;

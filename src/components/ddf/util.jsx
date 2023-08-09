@@ -57,33 +57,18 @@ export const extendableItems = ({ pickers, name, label }) => {
       isReadOnly: false,
       isSearchable: true,
       isClearable: true,
-      options: mapPicker(pickers[name]),
-      isOptionEqualToValue: (option, value) => option.value === value,
-      resolveProps: (props, { meta, input }, formOptions) => {
-        // console.log('resolveProps', name, input);  
-        const state = formOptions.getState();
-        if (typeof state?.initialValues[name] === 'object') {
-          return {
-            initialValue: state?.initialValues[name].id,
-          }  
-        }
-      }
+      options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
+      noOptionsMessage: 'we don\'t have that one - you can add it below',
     },
     {
       component: 'text-field',
       condition: {
         or: [
-          {
-        when: name,
-        isEmpty: true,
-          },
-          {
-            when: name,
-            is: ' ',
-          }
-      ]
+          { when: name, isEmpty: true },
+          { when: name, is: ' ' }
+        ]
       },
-      name: `new_${name}`,
+      name: `ddf.new_${name}`,
       label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
       isRequired: false,
     },

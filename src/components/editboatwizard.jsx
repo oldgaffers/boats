@@ -1,9 +1,9 @@
-import { isEqual } from 'lodash';
 import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
 import { v4 as uuidv4 } from 'uuid';
+import { create, formatters } from 'jsondiffpatch';
 import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
@@ -14,6 +14,7 @@ import {
   designerItems,
   builderItems,
   constructionItems,
+  designClassItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -100,44 +101,13 @@ const schema = (pickers) => {
                 component: 'sub-form',
                 fields: [
                   ...designerItems(pickers),
-                  {
-                    component: 'select',
-                    name: 'design_class',
-                    label: 'Design Class',
-                    isReadOnly: false,
-                    isSearchable: true,
-                    isClearable: true,
-                    noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
-                    options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
-                    isOptionEqualToValue: (option, value) => option.label === value,
-                  },
-                  {
-                    component: 'text-field',
-                    name: 'new_design_class',
-                    label: 'New design class',
-                    helperText: 'if the design class is not listed and you know the name add it here',
-                    isRequired: false,
-                    condition: {
-                      when: 'design_class',
-                      isEmpty: true,
-                    },
-                  },
+                  ...designClassItems(pickers),
                   {
                     component: 'text-field',
                     name: "handicap_data.length_on_deck",
-                    label: "Length on deck  (decimal feet)",
+                    label: "Length on deck (decimal feet)",
                     type: "number",
                     dataType: 'float',
-                    isRequired: true,
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                      /*{
-                         type: 'min-number-value',
-                         threshold: 5
-                      }*/
-                    ],
                   },
                   {
                     component: 'text-field',
@@ -340,223 +310,35 @@ const schema = (pickers) => {
   };
 };
 
-export function includes(ar, val) {
-  return ar.reduce((acc, item) => {
-    return isEqual(item, val) || acc;
-  }, false);
+export function boatdiff(before, after) {
+  const cj = create({ objectHash: (obj) => `${obj.id || obj.name}-${obj.start}`});
+  return cj.diff(before, after);
 }
 
-export function elements_matching_by_field(a, b, field) {
-  return a.reduce((acc, p) => {
-    const matching = b.find((n) => {
-      if (p[field] && n[field]) {
-        return p[field] === n[field];
-      }
-      return false;
-    });
-    if (matching) {
-      return [...acc, p];
-    }
-    return acc;
-}, []);
-}
-
-export function updateOwnership(current, submitted) {
-  const merged = { ...current, ...submitted };
-  if (current.current && !submitted.current) {
-    delete merged.current;
-  }
-  if (merged.id && merged.name) {
-    delete merged.name;
-  }
-  return merged;
-}
-
-export function updateOwnerships(previous, submitted) {
-  const s2 = submitted.map((v) => {
-    const { name, ...rest } = v;
-    if (rest.id) {
-      return rest;
-    }
-    if (name) {
-      return { ...rest, name };
-    }
-    return rest;
-  });
-
-  const pidmatching = elements_matching_by_field(previous, s2, 'id');
-  const pnamematching = elements_matching_by_field(previous, s2, 'name');
-  const pnotmatching = previous.filter((p) => {
-    if (pidmatching.map((v) => v.id).includes(p.id)) { return false; }
-    if (pnamematching.map((v) => v.name).includes(p.name)) { return false; }
-    return true;
-  });
-  const sidmatching = elements_matching_by_field(s2, previous, 'id');
-  const snamematching = elements_matching_by_field(s2, previous, 'name');
-  const snotmatching = s2.filter((n) => {
-    if (sidmatching.map((v) => v.id).includes(n.id)) { return false; }
-    if (snamematching.map((v) => v.name).includes(n.name)) { return false; }
-    return true;
-  });
-  const updated1 = pidmatching.map((p) => {
-    const s = sidmatching.find((o) => o.id === p.id);
-    return updateOwnership(p, s);
-  });
-  const updated2 = pnamematching.map((p) => {
-    const s = snamematching.find((o) => o.name === p.name);
-    return updateOwnership(p, s);
-  });
-  const r = [...pnotmatching, ...snotmatching, ...updated1, ...updated2];
-  r.sort((a, b) => a.start - b.start);
-  return r;
-}
-
-export function recursiveUpdate(previous, submitted, removed) {
-  const merged = { ...previous };
-  (removed||[]).forEach((key) => delete merged[key]);
-  Object.keys(submitted).forEach((key) => {
-    if (Array.isArray(submitted[key])) {
-      if (previous[key]) {
-        if (key === 'ownerships') {
-          merged[key] = updateOwnerships(previous[key], submitted[key]);
-        } else {
-          const onlyNew = submitted[key].filter((item) => !includes(previous[key], item));
-          merged[key] = [...previous[key], ...onlyNew];
-        }
-      } else {
-        merged[key] = submitted[key];
-      }
-    } else {
-      switch (typeof submitted[key]) {
-        case 'object':
-          merged[key] = recursiveUpdate(previous[key], submitted[key]);
-          break;
-        default:
-          merged[key] = submitted[key];
-      }
-    }
-  });
-  return merged;
-}
-
-export function boatdiff(previous, submitted) {
-  const changes = {};
-  const newKeys = Object.keys(submitted);
-  newKeys.forEach((key) => {
-    const item = submitted[key];
-    const prev = previous?.[key];
-    switch (typeof item) {
-      case 'number':
-      case 'boolean':
-      case 'string':
-        if (prev !== item) {
-          changes[key] = item;
-        }
-        break;
-      case 'object':
-        if (Array.isArray(item)) {
-          if (Array.isArray(prev)) {
-            const p = prev.map((i) => JSON.stringify(i));
-            const n = item.filter((i) => !p.includes(JSON.stringify(i)));
-            if (n.length > 0) {
-              changes[key] = n;
-            }
-          } else {
-            changes[key] = item;
-          }
-        } else {
-          const nested = boatdiff(prev, item);
-          if (Object.keys(nested.changes).length > 0) {
-            changes[key] = nested;
-            // TODO nested removed
-          }
-        }
-        break;
-      case 'undefined':
-        if (prev) {
-          console.log('removed', key);
-          changes[key] = undefined; // to remove this field
-        } else {
-          console.log('unchanged', key);
-        }
-        break;
-      default:
-        console.log('TODO', key, typeof item);
-    }
-  });
-  const removed = Object.keys(previous).filter((key) => !newKeys.includes(key));
-  return { changes, removed };
-}
-
-export function buildNewItems({ new_design_class, new_designer, new_builder }) {
-  const newItems = {};
-  if (new_design_class) {
-    newItems.design_class = { name: new_design_class, id: uuidv4() };
-  }
-  if (new_designer) {
-    newItems.designer = { name: new_designer, id: uuidv4() };
-  }
-  if (new_builder) {
-    newItems.builder = { name: new_builder, id: uuidv4() };
-  }
-  return newItems;
-}
-
-export function nameChanges(boat, new_name) {
-  if (new_name) {
-    const changes = {};
-    if (boat.previous_names) {
-      changes.previous_names = [boat.name, ...boat.previous_names]
-    } else {
-      changes.previous_names = [boat.name];
-    }
-    changes.name = new_name;
-    return changes;
-  }
-}
-
-export function salesChanges(boat, ddf, fs) {
+export function salesChanges(ddf) {
   const changes = {};
 
-  const pfs = boat.for_sales?.filter((f) => f.created_at !== fs?.created_at) || [];
   switch (ddf.update_sale) {
     case 'unsell':
-      changes.selling_status = 'not_for_sale';
-      break;
     case 'sold':
+    case undefined:
       changes.selling_status = 'not_for_sale';
-      changes.for_sales = [...pfs, ddf.current_sales_record];
       break;
     case 'update':
       changes.selling_status = 'for_sale';
-      changes.for_sales = [...pfs, ddf.current_sales_record];
       break;
     default:
       if (ddf.confirm_for_sale && ddf.current_sales_record) {
         changes.selling_status = 'for_sale';
-        changes.for_sales = [...pfs, ddf.current_sales_record];
       } else {
-        console.log('handleSubmit unexpected update_sale value', ddf);//XXX
+        console.log('handleSubmit unexpected update_sale value', ddf);
       }
   }
+  changes.for_sales = [
+    ...(ddf.other_sales || []), 
+    ...(ddf.current_sales_record || []),
+  ];
   return changes;
-}
-
-export function buildChanges(fs, boat, submitted, ddf, newItems, pickers) {
-
-  const {
-    new_design_class, new_designer, new_builder,
-    ...others
-  } = submitted;
-
-  const updates = boatf2m(others);
-  ['design_class', 'designer', 'builder'].forEach((key) => {
-    if (updates[key]) {
-      updates[key] = newItems[key] || pickers[key].find((it) => it.name === updates[key]);
-    }
-  })
-  const { changes, removed } = boatdiff(boatDefined(boat), updates);
-  return { removed, ...changes, ...salesChanges(boat, ddf, fs), ...nameChanges(boat, ddf.new_name) };
 }
 
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit }) {
@@ -576,32 +358,65 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = ownerids.includes[goldId];
+  const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
 
-  const ddf = {
-    can_sell: !!(owner || editor),
-    update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
-  };
-  const fs = boat.for_sales?.sort((a, b) => a.created_at < b.created_at)?.[0];
-  if (fs) {
-    ddf.current_sales_record = fs;
-  }
+  const handleSubmit = (values, formApi) => {
+    const { ddf, email, ...submitted } = values;
+    const { initialValues } = formApi.getState();
+    [
+      'ddf', 'email', 'user',
+    ].forEach((key) => delete initialValues[key]);
 
-  const handleSubmit = ({ ddf, email, ...submitted }) => {
+    const u = {
+      ...boatm2f(submitted),
+      name: ddf.new_name || name,
+      previous_names: [
+        ...((ddf.new_name && [name]) || []),
+        ...(submitted.previous_names||[]),
+      ],
+      oga_no, id, image_key,
+      ...salesChanges(ddf),
+    };
+    const newItems = {};
+    ['builder', 'designer', 'design_class'].forEach((key) => {
+      const new_val =  ddf[`new_${key}`];
+      if (new_val) {
+        u[key] = newItems[key] = { name: new_val, id: uuidv4() };
+      } else {
+        u[key] = pickers[key].find((p) => p.name === u[key]);
+      }
+    });
+    console.log('newItems', newItems);
 
-    const newItems = buildNewItems(submitted);
-    const { removed, ...changes } = buildChanges(fs, boat, submitted, ddf, newItems, pickers);
-    const u = recursiveUpdate(boat, changes, removed);
-    console.log('Q', JSON.stringify(u));
-    /*
+    const fulldelta = formatters.jsonpatch.format(boatdiff(boat, u));
+    console.log('delta', fulldelta);
+    console.log(boatDefined(u));
+
     onSubmit(
-      changes,
+      fulldelta,
       newItems,
-      u,
+      boatDefined(u),
       email,
     );
-    */
   }
-  const initialValues = { user, ...boatm2f(boat), ddf };
+
+  const sortedsales = for_sales?.sort((a, b) => a.created_at < b.created_at) || [];
+
+  const initialValues = {
+    user,
+    ...boatf2m(rest),
+    ddf: {
+      name, oga_no, id, image_key, 
+      can_sell: !!(owner || editor),
+      update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
+      current_sales_record: sortedsales[0],
+      other_sales: sortedsales.slice(1),
+    },
+  };
+
+  ['builder', 'designer', 'design_class'].forEach((key) => {
+    initialValues[key] = initialValues[key]?.name;
+  });
 
   return (
     <Dialog

@@ -80,6 +80,7 @@
     "axios": "^0.19.2",
     "graphql": "^16.6.0",
     "humanize-duration": "^3.28.0",
+    "jsondiffpatch": "^0.4.1",
     "leaflet": "^1.9.3",
     "react": "^18.2.0",
     "react-async-hook": "^4.0.0",
