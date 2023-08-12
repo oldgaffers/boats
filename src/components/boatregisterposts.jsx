@@ -27,7 +27,7 @@ export async function shuffleBoats() {
 
 export async function postBoatData(data) {
   return axios.post(
-    'https://5cegnkuukaqp3y2xznxdfg75my0ciulc.lambda-url.eu-west-1.on.aws/',
+    'https://t5lcpwbufg6ewyxswawwsbtkjq0kupbb.lambda-url.eu-west-1.on.aws/',
     data,
     {
       headers: { 'content-type': 'application/json' }
