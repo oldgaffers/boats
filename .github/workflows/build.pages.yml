@@ -45,6 +45,8 @@ jobs:
         cp build/static/js/main.*.js.map build
         cp build/static/js/main.*.js build/main.js
         echo build complete
+    - name: add test
+      run: cp test.js build
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
