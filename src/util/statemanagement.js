@@ -15,6 +15,14 @@ export const DEFAULT_BROWSE_STATE = {
         filters: { sale: true },
         view: 'sell',    
     },
+    sail: {
+        bpp: 12, 
+        page: 1, 
+        sort: 'rank', 
+        sortDirection: 'asc', 
+        filters: { sail: ['hire', 'crew'] },
+        view: 'sail',    
+    },
     small: {
         bpp: 12, 
         page: 1, 

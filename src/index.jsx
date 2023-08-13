@@ -262,7 +262,7 @@ const Pages = (props) => {
 
 const tags = [
   'app', 'boat', 'fleet', 'my_fleets', 'shared_fleets',
-  'sell', 'small', 'pending', 'yearbook',
+  'sail', 'sell', 'small', 'pending', 'yearbook',
   'rbc60', 'rbc60_entries', 'rbc60_map', 'rbc60_crew',
   'oga60_button', 'oga60_interest',
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',

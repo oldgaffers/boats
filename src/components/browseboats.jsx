@@ -20,6 +20,7 @@ import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { getFilterable } from './boatregisterposts';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
+import BoatsToSailIntro from "./boatstosailintro";
 import SmallBoatsIntro from "./smallboatsintro";
 import { ExportFleet } from './exportfleet';
 
@@ -64,6 +65,9 @@ function Intro({ view }) {
   }
   if (view === 'small') {
     IntroText = SmallBoatsIntro;
+  }
+  if (view === 'sail') {
+    IntroText = BoatsToSailIntro;
   }
   return (
     <Accordion defaultExpanded={true}>
