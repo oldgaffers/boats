@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import Dialog from '@mui/material/Dialog';
 import AdminForm from './adminform';
+// const AdminForm = lazy(()=> import("./adminform"));
 
 const useStyles = makeStyles((theme) => ({
   appBar: {

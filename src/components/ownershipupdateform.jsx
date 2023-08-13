@@ -138,14 +138,10 @@ export default function OwnershipForm(props) {
             return (<GridEditInputCell {...params} />);
         } else {
             const onSaveRow = async (ownership, event) => {
-                // console.log('onSaveRow', ownership);
                 const { name, ...rest } = ownership;
                 const o = [...owners];
                 const { share, start, end, ...p } = o[id];
-                // console.log('p', p);
-                // console.log('rest', rest);
                 o[id] = { ...o[id], ...rest };
-                // console.log('setOwners', o);
                 setOwners(o);
                 await api.setEditCellValue({ id, field: 'name', value: name }, event);
             }

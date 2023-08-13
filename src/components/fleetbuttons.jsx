@@ -29,7 +29,6 @@ export default function FleetButtons({
     const { user } = useAuth0()
     const id = user?.["https://oga.org.uk/id"];
 
-    console.log('F', filters);
     useEffect(() => {
         const getData = async () => {
             const p = await getFleets('public', {public: true}, accessToken);

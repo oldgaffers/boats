@@ -1,5 +1,5 @@
 import 'react-app-polyfill/ie11';
-import React from 'react';
+import React, { lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from "@auth0/auth0-react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
@@ -13,21 +13,37 @@ import Boat from './components/boat';
 import Yearbook from './components/yearbook';
 import MyFleets from './components/myfleets';
 import SharedFleets from './components/sharedfleets';
+import FleetView from './components/fleetview';
+import LoginButton from './components/loginbutton';
+import TokenProvider from './components/TokenProvider';
+import ViewTable from './components/viewtable';
+
+
+import RCBEntryMap from './components/rbc60map';
 import RBC60 from './components/rbc60';
 import RBC60Entries from './components/rbc60entries';
 import RBC60CrewForm from './components/rbc60crewform';
 import OGA60Button from './components/oga60button';
-import LoginButton from './components/loginbutton';
 import OGA60Form from './components/oga60form';
-import TokenProvider from './components/TokenProvider';
-import ViewTable from './components/viewtable';
 import CreateBoatButton from './components/createboatbutton';
 import PickOrAddBoat from './components/pick_or_add_boat';
 import MembersBoats from './components/membersboats';
 import Members from './components/members';
 import UpdateMyDetails from './components/updatemydetails';
-import RCBEntryMap from './components/rbc60map';
-import FleetView from './components/fleetview';
+
+/*
+const RCBEntryMap = lazy(()=> import('./components/rbc60map'));
+const RBC60 = lazy(()=> import('./components/rbc60'));
+const RBC60Entries = lazy(()=> import('./components/rbc60entries'));
+const RBC60CrewForm = lazy(()=> import('./components/rbc60crewform'));
+const OGA60Button = lazy(()=> import('./components/oga60button'));
+const OGA60Form = lazy(()=> import('./components/oga60form'));
+const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
+const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
+const MembersBoats = lazy(()=> import('./components/membersboats'));
+const Members = lazy(()=> import('./components/members'));
+const UpdateMyDetails = lazy(()=> import('./components/updatemydetails'));
+*/
 
 const lightTheme = createTheme({
   palette: {

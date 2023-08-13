@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, lazy } from 'react';
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { boatf2m } from "../util/format";
-import CreateBoatDialog from "./createboatdialog";
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, postBoatData, nextOgaNo } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
+import CreateBoatDialog from "./createboatdialog";
+// const CreateBoatDialog = lazy(()=> import("./createboatdialog"));
 
 export async function createBoat(boat, email, fileList, copyright, newItems) {
   if (!boat.oga_no) {

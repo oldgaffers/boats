@@ -47,6 +47,8 @@ jobs:
         echo build complete
     - name: add test
       run: cp test.js build
+    - name: add members
+      run: cp members.js build
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact

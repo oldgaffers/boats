@@ -72,8 +72,6 @@ export default function NewFleet({
     const [open, setOpen] = useState(false);
     const buttonRef = useRef();
 
-    console.log('NewFleet', filters);
-
     const addFleet = (name, isPublic, type) => {
         console.log('addFleet', name, isPublic, markList, filters);
         const data = {
