@@ -1,5 +1,5 @@
 import 'react-app-polyfill/ie11';
-import React, { lazy } from 'react';
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from "@auth0/auth0-react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
@@ -32,6 +32,7 @@ import Members from './components/members';
 import UpdateMyDetails from './components/updatemydetails';
 
 /*
+import { lazy } from 'react';
 const RCBEntryMap = lazy(()=> import('./components/rbc60map'));
 const RBC60 = lazy(()=> import('./components/rbc60'));
 const RBC60Entries = lazy(()=> import('./components/rbc60entries'));
