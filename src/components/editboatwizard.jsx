@@ -334,10 +334,8 @@ export function salesChanges(ddf) {
         console.log('handleSubmit unexpected update_sale value', ddf);
       }
   }
-  changes.for_sales = [
-    ...(ddf.other_sales || []), 
-    ...(ddf.current_sales_record || []),
-  ];
+
+  changes.for_sales = [...(ddf.other_sales || []), ddf.current_sales_record].filter((s) => s);
   return changes;
 }
 
@@ -368,7 +366,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
     ].forEach((key) => delete initialValues[key]);
 
     const u = {
-      ...boatm2f(submitted),
+      ...boatf2m(submitted),
       name: ddf.new_name || name,
       previous_names: [
         ...((ddf.new_name && [name]) || []),
@@ -404,7 +402,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
   const initialValues = {
     user,
-    ...boatf2m(rest),
+    ...boatm2f(rest),
     ddf: {
       name, oga_no, id, image_key, 
       can_sell: !!(owner || editor),
