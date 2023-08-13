@@ -311,7 +311,10 @@ const schema = (pickers) => {
 };
 
 export function boatdiff(before, after) {
-  const cj = create({ objectHash: (obj) => `${obj.id || obj.name}-${obj.start}`});
+  const cj = create({
+    objectHash: (obj) => `${obj.id || obj.name}-${obj.start}`,
+    textDiff: { minLength: 60000 }, // prevent textdiff not supported by the RFC formatter
+  });
   return cj.diff(before, after);
 }
 
@@ -386,11 +389,8 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
         u[key] = pickers[key].find((p) => p.name === u[key]);
       }
     });
-    console.log('newItems', newItems);
-
+    console.log('old', JSON.stringify(boat), 'new', JSON.stringify(u));
     const fulldelta = formatters.jsonpatch.format(boatdiff(boat, u));
-    console.log('delta', fulldelta);
-    console.log(boatDefined(u));
 
     onSubmit(
       fulldelta,

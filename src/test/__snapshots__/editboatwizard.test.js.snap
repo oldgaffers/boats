@@ -1,5 +1,94 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Grosso 1`] = `
+Object {
+  "design_class": Array [
+    Object {
+      "id": "47040682-ee05-42de-a493-400ebd5956db",
+      "name": "Heard 28",
+    },
+  ],
+  "for_sales": Object {
+    "0": Object {
+      "sales_text": Array [
+        "<p>Settling import tax and delivery to the UK are negotiable.</p>
+<p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696 Sleeps 4 The dinette is a
+double berth One sleeping place in the dog cage, in the bow is a single bed. 4
+Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x
+50 cm in foredeck. Goyot handanchorwinch, CQR anchor and chain. Overhaul
+2021/22. Renewed: Plastic water tank 77 liter + deck filler cap incl. All hoses.
+“Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump
+Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna”
+lever gauge. Round stainless steel galley sink incl. all hoses. All electric
+systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the
+hand bilge pump. Thru-hull fittings with valves are renewed or replaced
+Navigation lights The paneling has been partially replaced and executed in clear
+lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is
+partially renewed and made self draining. New teak list round the boat All the
+paint at the underwatership is removed. New epoxy layers and antifouling The
+rudder is renewed incl. three bronze/stainless steel bearings.</p>
+<p>Engine: New Yanmar vibration dampers, Extensive service. New exhaust system with
+silencer, goose neck and thru hull fitting. Gaff rigged Ironable mast with
+stainless steel mast sleeve. Oregeon pine mast, boom, gaff and bow sprit.
+Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p>
+<p>Deck: Stainless steel pulpit Stainless steel railing Boom support aftdeck.
+Wooden part is renewed. 2 Self tailing winches staysail and two winches jib.
+Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone
+chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground
+fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder
+and speed log. We can install modern navigational instruments. Cabin cushions
+will be renewed to the new owners colour choice.</p>",
+        "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
+      ],
+    },
+    "_t": "a",
+  },
+}
+`;
+
+exports[`Grosso 2`] = `
+Array [
+  "<p>Settling import tax and delivery to the UK are negotiable.</p>
+<p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696 Sleeps 4 The dinette is a
+double berth One sleeping place in the dog cage, in the bow is a single bed. 4
+Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x
+50 cm in foredeck. Goyot handanchorwinch, CQR anchor and chain. Overhaul
+2021/22. Renewed: Plastic water tank 77 liter + deck filler cap incl. All hoses.
+“Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump
+Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna”
+lever gauge. Round stainless steel galley sink incl. all hoses. All electric
+systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the
+hand bilge pump. Thru-hull fittings with valves are renewed or replaced
+Navigation lights The paneling has been partially replaced and executed in clear
+lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is
+partially renewed and made self draining. New teak list round the boat All the
+paint at the underwatership is removed. New epoxy layers and antifouling The
+rudder is renewed incl. three bronze/stainless steel bearings.</p>
+<p>Engine: New Yanmar vibration dampers, Extensive service. New exhaust system with
+silencer, goose neck and thru hull fitting. Gaff rigged Ironable mast with
+stainless steel mast sleeve. Oregeon pine mast, boom, gaff and bow sprit.
+Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p>
+<p>Deck: Stainless steel pulpit Stainless steel railing Boom support aftdeck.
+Wooden part is renewed. 2 Self tailing winches staysail and two winches jib.
+Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone
+chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground
+fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder
+and speed log. We can install modern navigational instruments. Cabin cushions
+will be renewed to the new owners colour choice.</p>",
+  "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
+]
+`;
+
+exports[`Grosso 3`] = `
+Array [
+  Object {
+    "op": "replace",
+    "path": "/",
+    "value": "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
+  },
+]
+`;
+
 exports[`diff name change 1`] = `
 Object {
   "name": Array [
