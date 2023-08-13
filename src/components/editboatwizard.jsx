@@ -316,27 +316,29 @@ export function boatdiff(before, after) {
 }
 
 export function salesChanges(ddf) {
-  const changes = {};
+  let selling_status = 'not_for_sale';
 
   switch (ddf.update_sale) {
     case 'unsell':
     case 'sold':
     case undefined:
-      changes.selling_status = 'not_for_sale';
+      selling_status = 'not_for_sale';
       break;
     case 'update':
-      changes.selling_status = 'for_sale';
+      selling_status = 'for_sale';
       break;
     default:
       if (ddf.confirm_for_sale && ddf.current_sales_record) {
-        changes.selling_status = 'for_sale';
+        selling_status = 'for_sale';
       } else {
         console.log('handleSubmit unexpected update_sale value', ddf);
       }
   }
 
-  changes.for_sales = [...(ddf.other_sales || []), ddf.current_sales_record].filter((s) => s);
-  return changes;
+  const fs = [...(ddf.other_sales || []), ddf.current_sales_record];
+  const for_sales = fs.filter((s) => s);
+
+  return { for_sales, selling_status };
 }
 
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit }) {
