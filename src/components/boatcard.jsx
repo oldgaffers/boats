@@ -66,6 +66,20 @@ function SalesBadge({ boat, view, children }) {
   }
 }
 
+function CrewingBadge({ boat, children }) {
+  if (boat?.crewing_opportunities) {
+    return (<Badge badgeContent="crew on her" color="info">{children}</Badge>);
+  }
+  return children;
+}
+
+function HireBadge({ boat, children }) {
+  if (boat?.for_hire) {
+    return (<Badge badgeContent="hire her" color="info">{children}</Badge>);
+  }
+  return children;
+}
+
 function AltForThumb() {
   // return 'know anyone who can add a photo?';
   return '';
@@ -201,7 +215,13 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
       {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
         <Typography gutterBottom variant="h5" component="h2">
-          <SalesBadge view={state.view} boat={boat}>{boat?.name || ''} ({ogaNo})</SalesBadge>
+          <HireBadge boat={boat}>
+            <CrewingBadge boat={boat}>
+              <SalesBadge view={state.view} boat={boat}>
+              {boat?.name || ''} ({ogaNo})
+              </SalesBadge>
+            </CrewingBadge>
+          </HireBadge>
         </Typography>
         <BoatCardWords boat={{ ...boat, price }} wanted={wanted} />
       </CardContent>
