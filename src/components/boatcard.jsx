@@ -66,14 +66,20 @@ function SalesBadge({ boat, view, children }) {
   }
 }
 
-function CrewingBadge({ boat, children }) {
+function CrewingBadge({ boat, view, children }) {
+  if (view === 'sail') {
+    return children;
+  }
   if (boat?.sail === 'crew') {
     return (<Badge badgeContent="crew on her" color="info">{children}</Badge>);
   }
   return children;
 }
 
-function HireBadge({ boat, children }) {
+function HireBadge({ boat, view, children }) {
+  if (view === 'sail') {
+    return children;
+  }
   if (boat?.sail === 'hire') {
     return (<Badge badgeContent="hire her" color="info">{children}</Badge>);
   }
