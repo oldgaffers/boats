@@ -47,7 +47,7 @@ test('Grosso', () => {
   expect(delta).toMatchSnapshot();
   // const jp = formatters.jsonpatch.format(delta);
   // expect(jp).toMatchSnapshot();
-  console.log(old.for_sales[0].sales_text.length, submitted.for_sales[0].sales_text.length);
+  // console.log(old.for_sales[0].sales_text.length, submitted.for_sales[0].sales_text.length);
   const fsd = boatdiff(old.for_sales[0].sales_text, submitted.for_sales[0].sales_text);
   expect(fsd).toMatchSnapshot();
   expect(formatters.jsonpatch.format(fsd)).toMatchSnapshot();
