@@ -414,13 +414,13 @@ export default function RBC60() {
 
     useEffect(() => {
         if (!data) {
-            getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
+            getFilterable().then((r) => setData(r)).catch((e) => console.log(e));
         }
     }, [data]);
 
     useEffect(() => {
         if (!firstFreeOgaNo) {
-            nextOgaNo().then((r) => setFirstFreeOgaNo(r.data)).catch((e) => console.log(e));
+            nextOgaNo().then((r) => setFirstFreeOgaNo(r)).catch((e) => console.log(e));
         }
     }, [firstFreeOgaNo]);
 

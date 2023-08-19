@@ -21,7 +21,7 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
 
   useEffect(() => {
     if (!data) {
-      getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
+      getFilterable().then((r) => setData(r)).catch((e) => console.log(e));
     }
   }, [data]);
 

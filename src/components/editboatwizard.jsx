@@ -350,7 +350,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   useEffect(() => {
     if (!pickers) {
       getPicklists().then((r) => {
-        setPickers(r.data)}).catch((e) => console.log(e));
+        setPickers(r)}).catch((e) => console.log(e));
     }
   }, [pickers]);
 

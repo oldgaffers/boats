@@ -12,7 +12,7 @@ export async function createBoat(boat, email, fileList, copyright, newItems) {
   if (!boat.oga_no) {
     const r = await nextOgaNo();
     if (r.status === 200) {
-      boat.oga_no = r.data;
+      boat.oga_no = r;
     }
   }
   const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);

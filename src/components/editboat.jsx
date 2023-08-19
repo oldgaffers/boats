@@ -107,7 +107,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
 
   useEffect(() => {
     if (!pickers) {
-      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
+      getPicklists().then((r) => setPickers(r)).catch((e) => console.log(e));
     }
   }, [pickers]);
 

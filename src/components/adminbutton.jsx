@@ -29,7 +29,7 @@ function AdminDialog({ boat, user, onClose, open }) {
   function setGallery() {
     getAlbumKey(boat.oga_no).then((r) => postBoatData({ email: user.email, new: {
       ...boat,
-      image_key: r.data.albumKey,
+      image_key: r.albumKey,
     } }))
       .then(() => {
         setPopoverText("OK, lookout for a PR");

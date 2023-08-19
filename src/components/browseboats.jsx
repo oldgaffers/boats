@@ -12,7 +12,6 @@ import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
 import LoginButton from './loginbutton';
-import YearbookButton from './yearbookbutton';
 import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
@@ -109,7 +108,10 @@ export default function BrowseBoats({
 
   useEffect(() => {
     if (!data) {
-      getFilterable().then((r) => setData(r.data)).catch((e) => console.log(e));
+      getFilterable().then((r) => {
+        console.log(r);
+        setData(r);
+      }).catch((e) => console.log(e));
     }
   }, [data]);
 
@@ -140,7 +142,6 @@ export default function BrowseBoats({
       >
         <CreateBoatButton />
         <RoleRestricted role='editor'>
-          <YearbookButton />
           <ShuffleBoatsButton />
         </RoleRestricted>
         <LoginButton />

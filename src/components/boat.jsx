@@ -26,7 +26,7 @@ export default function Boat({ location }) {
   useEffect(() => {
     if (ogaNo && !data) {
       getBoatData(ogaNo).then((r) => {
-        setData(r.data);
+        setData(r);
       }).catch((e) => console.log(e));
     }
   }, [data, ogaNo]);

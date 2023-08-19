@@ -575,18 +575,18 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
 
   useEffect(() => {
     if (!filterable) {
-      getFilterable().then((r) => setFilterable(r.data)).catch((e) => console.log(e));
+      getFilterable().then((r) => setFilterable(r)).catch((e) => console.log(e));
     }
   }, [filterable]);
 
   useEffect(() => {
     if (!pickers) {
-      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
+      getPicklists().then((r) => setPickers(r)).catch((e) => console.log(e));
     }
   }, [pickers]);
-
-  if (!filterable) return <CircularProgress />;
+ 
   if (!pickers) return <CircularProgress />;
+  if (!filterable) return <CircularProgress />;
 
   if (!open) return '';
 

@@ -70,7 +70,7 @@ export default function SimpleFleetView({filters}) {
   }
 
   if (!data) {
-      return <CircularProgress/>;
+      return <CircularProgress />;
   }
   const fleets = data.Items; 
 

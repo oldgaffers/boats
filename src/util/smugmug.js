@@ -17,8 +17,8 @@ const getThumbNail = async albumKey => {
         }
       }
     );
-    if (r.data.Response.AlbumImage) {
-      return r.data.Response.AlbumImage.ThumbnailUrl;
+    if (r.Response.AlbumImage) {
+      return r.Response.AlbumImage.ThumbnailUrl;
     }
     return null;
   };
@@ -32,8 +32,8 @@ const getThumbNail = async albumKey => {
         WebUri: "//oga.smugmug.com/Boats/OGA-" + id
       }
     });
-    if (r.data.Response.Album) {
-      return r.data.Response.Album.AlbumKey;
+    if (r.Response.Album) {
+      return r.Response.Album.AlbumKey;
     }
     return null;
   };
