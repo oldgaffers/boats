@@ -12,7 +12,7 @@ f2m2,
 boatm2f,
 boatf2m,
 boatDefined,
-m2fall } from './format';
+m2fall } from '../util/format';
 
 const t = [undefined, 3.281, 4.921];
 

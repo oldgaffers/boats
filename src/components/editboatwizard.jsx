@@ -349,7 +349,8 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
 
   useEffect(() => {
     if (!pickers) {
-      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
+      getPicklists().then((r) => {
+        setPickers(r.data)}).catch((e) => console.log(e));
     }
   }, [pickers]);
 
@@ -389,7 +390,6 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
         u[key] = pickers[key].find((p) => p.name === u[key]);
       }
     });
-    console.log('old', JSON.stringify(boat), 'new', JSON.stringify(u));
     const fulldelta = formatters.jsonpatch.format(boatdiff(boat, u));
 
     onSubmit(
