@@ -96,9 +96,14 @@ export default function NewFleet({
         }
         const scope = (isPublic) ? 'public' : 'member';
         postScopedData(scope, 'fleets', data, accessToken)
-            .then(() => {
-                setPopoverOpen(false);
-                updated();
+            .then((response) => {
+                if (response.ok) {
+                    setPopoverOpen(false);
+                    updated();    
+                } else {
+                    console.log(response.statusText);
+                    setPopoverOpen(false);
+                }
             })
             .catch((e) => {
                 console.log(e);

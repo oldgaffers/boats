@@ -38,9 +38,13 @@ export default function UpdateFleet({ markList=[], fleet, updated = () => consol
          };
          const scope = fleet.public ? 'public' : 'member';
         postScopedData(scope, 'fleets', data, accessToken)
-            .then(() => {
-                setPopoverOpen(false);
-                updated();
+            .then((response) => {
+                if (response.ok) {
+                    setPopoverOpen(false);
+                    updated();
+                } else {
+                    setPopoverOpen(false);
+                }
             })
             .catch((e) => {
                 // console.log(e);

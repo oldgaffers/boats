@@ -17,8 +17,12 @@ function AdminDialog({ boat, user, onClose, open }) {
 
   function feature() {
     postBoatData({ email: user.email, new: {} })
-      .then(() => {
+      .then((response) => {
+        if (response.ok) {
         setPopoverText("OK, that should happen soon");
+        } else {
+          setPopoverText(response.statusText);
+        }
       })
       .catch((error) => {
         // console.log("post", error);

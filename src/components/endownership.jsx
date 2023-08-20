@@ -81,8 +81,13 @@ export default function EndOwnership({ boat, owned, user }) {
     const changes = { new: { ...boat, ownerships,  for_sales, }};
     if (year) {
       postBoatData({ email: user.email, new: changes.new })
-        .then(() => {
-          setSnackBarOpen(true);
+        .then((response) => {
+          if (response.ok) {
+            setSnackBarOpen(true);
+          } else {
+            errorText = response.statusText;
+            setErrorSnackBarOpen(true);  
+          }
         })
         .catch((error) => {
           // console.log("post", error);

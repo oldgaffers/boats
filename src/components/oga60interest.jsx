@@ -30,10 +30,16 @@ export default function OGA60({ onClose, onCancel }) {
         }
         putGeneralEnquiry('public', 'enquiry', data)
         .then((response) => {
-            onClose();
+            if (response.ok) {
+                onClose();
+            } else {
+                // TODO snackbar from response.data
+                console.log(response.statusText);
+                onClose();
+            }
           })
           .catch((error) => {
-            // console.log("post", error);
+            console.log("post", error);
             // TODO snackbar from response.data
           });
     };

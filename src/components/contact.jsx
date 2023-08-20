@@ -105,7 +105,12 @@ export default function Contact({ member, text = 'Contact' }) {
         }
         postGeneralEnquiry('public', 'contact', data)
             .then((response) => {
-                setSnackBarOpen(true);
+                if (response.ok) {
+                    setSnackBarOpen(true);
+                } else {
+                    console.log("post", response.statusText);
+                    // TODO snackbar from response.data
+                }
             })
             .catch((error) => {
                 // console.log("post", error);

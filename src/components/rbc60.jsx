@@ -475,9 +475,12 @@ export default function RBC60() {
             created_at: new Date().toISOString(),
         })
             .then((response) => {
-                // console.log(response.statusText);
-                // console.log(response.data);
-                setSnackBarOpen(true);
+                if (response.ok) {
+                    setSnackBarOpen(true);
+                } else {
+                    console.log("post", response.statusText);
+                    // TODO snackbar from response.data
+                }
             })
             .catch((error) => {
                 // console.log("post", error.statusText);

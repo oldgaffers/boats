@@ -126,7 +126,7 @@ export default function Enquiry({ boat, text }) {
       const current = boat?.ownerships?.filter((o) => o.current) || [];
       if (current.length > 0) {
         const memberNumbers = [...new Set(current.map((owner) => owner.member))];
-        getOwners({ variables: { members: memberNumbers } })  
+        getOwners({ variables: { members: memberNumbers } })
       }
     } else {
       // console.log('not member - userRoles', userRoles);
@@ -150,7 +150,12 @@ export default function Enquiry({ boat, text }) {
     }
     postGeneralEnquiry('public', 'enquiry', data)
       .then((response) => {
-        setSnackBarOpen(true);
+        if (response.ok) {
+          setSnackBarOpen(true);
+        } else {
+          console.log("post", response.statusText);
+          // TODO snackbar from response.data
+        }
       })
       .catch((error) => {
         // console.log("post", error);
