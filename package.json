@@ -145,6 +145,8 @@
     "@aws-sdk/client-s3": "^3.344.0",
     "@aws-sdk/credential-providers": "^3.344.0",
     "@aws-sdk/lib-storage": "^3.344.0",
+    "@ckeditor/ckeditor5-build-classic": "^39.0.1",
+    "@ckeditor/ckeditor5-react": "^6.1.0",
     "@data-driven-forms/mui-component-mapper": "^3.19.0",
     "@data-driven-forms/react-form-renderer": "^3.19.0",
     "@dropzone-ui/react": "^7.0.4",
