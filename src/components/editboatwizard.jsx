@@ -32,7 +32,7 @@ import {
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
-import HtmlEditor from './ckeditor';
+import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 
 const defaultSchema = (pickers) => {

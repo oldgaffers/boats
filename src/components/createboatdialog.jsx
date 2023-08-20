@@ -27,7 +27,7 @@ import {
 import Typography from "@mui/material/Typography";
 import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
 import Photodrop from "./photodrop";
-import HtmlEditor from './ckeditor';
+import HtmlEditor from './tinymce';
 import { boatm2f } from "../util/format";
 
 const schema = (pickers) => {

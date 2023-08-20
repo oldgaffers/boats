@@ -18,7 +18,7 @@ import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { getPicklists } from './boatregisterposts';
 import { schema } from './editboat_schema';
 import { currentSaleRecord, SaleRecord } from '../util/sale_record';
-import HtmlEditor from './ckeditor';
+import HtmlEditor from './tinymce';
 import { newPicklistItems } from './createboatbutton';
 
 const WizardInternal = (props) => {

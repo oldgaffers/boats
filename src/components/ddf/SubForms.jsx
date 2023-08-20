@@ -6,7 +6,7 @@ import {
   designClassItems,
   constructionItems,
 } from "./util";
-
+ 
 export function intField(name, label) {
   return {
     name, label,
@@ -86,8 +86,10 @@ export const descriptionsItems = [
     component: "html",
     title: "Short description",
     name: "short_description",
-    controls: ["bold", "italic"],
+    controls: ["bold", "italic"], // for ckeditor
+    toolbar: 'undo redo | bold italic removeformat | help', // for tinymce
     maxLength: 100,
+    height: 2,
     helperText: `The short description appears on the boat's card and should be one or two lines long.
 
         It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.`,
@@ -97,14 +99,22 @@ export const descriptionsItems = [
     title: "Full description",
     name: "full_description",
     controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
+    toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
+    height: 3,
     helperText: `The full description appears on the boat's detail page and can be as long as you like.
 
         It shouldn't replicate the short description. Do include historical details, significant voyages,
       rebuilds and links to external videos, etc.
-
-        If you want to sell this boat, there is a separate place for the sales, text, so don't put things
-    like inventory in the descriptions.`,
+    `,
   },
+  {
+    component: 'plain-text',
+    name: 'ddf.explain_descriptions',
+    label: <Typography variant="caption" sx={{ paddingTop: "1em" }}>
+      If you want to sell this boat, there is a separate place for the sales, text,
+      so don't put things like inventory in the descriptions.
+      </Typography>
+  }
 ];
 
 export const yearItems = [
@@ -420,7 +430,9 @@ export const sellingDataFields = [
     component: "html",
     title: "Sales Text",
     name: "ddf.current_sales_record.sales_text",
-    controls: ["bold", "italic"],
+    controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
+    toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
+    height: 4,
     maxLength: 500,
     isRequired: true,
     validate: [{ type: 'required' }],
@@ -490,7 +502,8 @@ export const salesSteps = (firstStep, nextStep) => [
           {
             component: 'html',
             name: "ddf.current_sales_record.sales_text",
-            controls: ["bold", "italic"],
+            controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
+            toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
             maxLength: 500,
             title: "Updated Sales Text",
           },
@@ -534,6 +547,7 @@ export const salesSteps = (firstStep, nextStep) => [
               Gaffer's Log helped with the sale.</Typography>,
             name: "ddf.current_sales_record.summary",
             controls: ["bold", "italic"],
+            toolbar: 'undo redo | bold italic removeformat | help', // for tinymce
             maxLength: 500,
             isRequired: true,
             validate: [{ type: 'required' }],
