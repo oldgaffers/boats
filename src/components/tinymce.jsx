@@ -33,7 +33,7 @@ export default function HtmlEditor({
                         plugins: [
                             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                            'insertdatetime', 'media', 'table', 'help', 'wordcount'
                         ],
                         toolbar,
                         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
