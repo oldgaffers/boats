@@ -140,7 +140,7 @@ export default function OwnershipForm(props) {
             const onSaveRow = async (ownership, event) => {
                 const { name, ...rest } = ownership;
                 const o = [...owners];
-                const { share, start, end, ...p } = o[id];
+                // const { share, start, end } = o[id];
                 o[id] = { ...o[id], ...rest };
                 setOwners(o);
                 await api.setEditCellValue({ id, field: 'name', value: name }, event);

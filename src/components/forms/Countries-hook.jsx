@@ -2,7 +2,6 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from "@mui/material/styles";
 import { Controller } from "react-hook-form";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
@@ -12,7 +11,7 @@ const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 // ISO 3166-1 alpha-2
 // ⚠️ No support for IE 11
-function countryToFlag(isoCode) {
+export function countryToFlag(isoCode) {
   return typeof String.fromCodePoint !== "undefined"
     ? isoCode
         .toUpperCase()
@@ -22,18 +21,7 @@ function countryToFlag(isoCode) {
     : isoCode;
 }
 
-const useStyles = makeStyles({
-  option: {
-    fontSize: 15,
-    "& > span": {
-      marginRight: 10,
-      fontSize: 18
-    }
-  }
-});
-
 export default function CountrySelect({ onChange, control }) {
-  const classes = useStyles();
 
   /* multiple was specified in the demo after id  */
   return (

@@ -11,7 +11,7 @@ import BoatAnchoredIcon from "./boatanchoredicon";
 
 const FieldListener = (props) => {
   const [field, setField] = useState();
-  const { getFieldState, getState, change } = useFormApi();
+  const { getState, change } = useFormApi();
   const modified = getState().modified;
 
   // console.log(getFieldState(field).value);

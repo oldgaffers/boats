@@ -12,9 +12,9 @@ import { TokenContext } from './TokenProvider';
 import { useLazyAxios } from 'use-axios-client';
 
 function FleetView({fleet}) {
-  const onBoatMarked = () => // console.log('marked');
-  const onBoatUnMarked = () => // console.log('unmarked');
-  const onPageChange = () => // console.log('pageChange');
+  const onBoatMarked = () => {};// console.log('marked');
+  const onBoatUnMarked = () => {};// console.log('unmarked');
+  const onPageChange = () => {};// console.log('pageChange');
 
   const state = { filters: fleet.filters, bpp: 12, page: 1, sort: 'name', sortDirection: 'asc', view: 'app', };
 

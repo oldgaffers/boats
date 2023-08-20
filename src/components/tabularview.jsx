@@ -34,9 +34,9 @@ const columns = [
   
 export default function TabularView({ state }) {
   const { loading, error, data } = useCardQuery(state);
-  if (error) // console.log(JSON.stringify(error));
+  if (error) {}// console.log(JSON.stringify(error));
 
-  const boats = getBoats(data).map(boat => ({...boat, id: boat.oga_no}));
+  const boats = getBoats(data).map((boat) => ({...boat, id: boat.oga_no}));
 
   if (error) return <p>Error: (TabularView)</p>;
 

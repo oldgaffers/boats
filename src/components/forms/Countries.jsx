@@ -2,20 +2,8 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
 import Autocomplete from '@mui/material/Autocomplete';
-import { makeStyles } from "@mui/material/styles";
-
-const useStyles = makeStyles({
-  option: {
-    fontSize: 15,
-    "& > span": {
-      marginRight: 10,
-      fontSize: 18
-    }
-  }
-});
 
 export default function CountrySelect({ onChange }) {
-  const classes = useStyles();
 
   /* multiple was specified in the demo after id  */
   return (
