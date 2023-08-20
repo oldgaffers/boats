@@ -1,8 +1,41 @@
 import fs from 'fs';
 import { formatters } from 'jsondiffpatch';
-import {  boatdiff } from '../components/editboatwizard';
+import {  boatdiff, prepareInitialValues, prepareModifiedValues } from '../components/editboatwizard';
+import { boatDefined } from '../util/format';
 
 const robinetta = JSON.parse(fs.readFileSync('src/test/robinetta.json'));
+const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
+
+const pickers = {
+  boatNames: [],
+  designer: [
+    {
+      "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
+      "name": "D.A. Rayner",  
+    },
+  ],
+  builder: [
+    {
+      "id": "a27bca50-d155-428a-be49-a542d64ba316",
+      "name": "Enterprise Small Craft",  
+    },
+  ],
+  rig_type: [],
+  sail_type: [],
+  design_class: [],
+  generic_type: [],
+  construction_material: [],
+  construction_method: [],
+  hull_form: [],
+  spar_material: [],
+};
+
+test('boat defined', () => {
+  const defined = boatDefined(robinetta);
+  expect(defined).toMatchSnapshot();
+  expect(defined).toEqual(robinetta);
+  expect(boatDefined({ ...robinetta, previous_names: [], for_sales: [] })).toEqual(robinetta);
+});
 
 test('diff no change', () => {
   const delta = boatdiff(robinetta, robinetta);
@@ -15,6 +48,45 @@ test('diff name change', () => {
   after.previous_names = ['Victoria'];
   const delta = boatdiff(robinetta, after);
   expect(delta).toMatchSnapshot();
+});
+
+test('prepareInitialValues', () => {
+  const user = {
+    email: 'x@b.c',
+    ['https://oga.org.uk/id']: 559,
+    ['https://oga.org.uk/roles']: ['editor', 'member'],
+  };
+
+  expect(prepareInitialValues(robinetta)).toMatchSnapshot();
+  const iv = prepareInitialValues(robinetta, user);
+  expect(iv).toMatchSnapshot();
+  expect(iv.designer).toBe('D.A. Rayner')
+  expect(iv.builder).toBe('Enterprise Small Craft')
+});
+
+test('prepareModifiedValues', () => {
+  const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = robinetta;
+  const ddf = {};
+  const submitted = { ...rest, ddf };
+  const mv = prepareModifiedValues(submitted, robinetta, pickers);
+  expect(mv).toMatchSnapshot();
+});
+
+test('no change', () => {
+  const user = {
+    email: 'x@b.c',
+    ['https://oga.org.uk/id']: 559,
+    ['https://oga.org.uk/roles']: ['editor', 'member'],
+  };
+  {
+    const iv = prepareInitialValues(robinetta, user);
+    const { boat, newItems, email } = prepareModifiedValues(iv, robinetta, pickers);
+    expect(boat).toEqual(robinetta);
+    expect(newItems).toEqual({});
+    expect(email).toEqual(user.email);
+  }
+
+
 });
 
 test('Grosso', () => {

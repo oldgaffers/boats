@@ -401,12 +401,6 @@ export const doneFields = [
             pattern: /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
           }
         ],
-        resolveProps: (props, { meta, input }, formOptions) => {
-          const { values } = formOptions.getState();
-          return {
-            initialValue: values.user?.email,
-          };
-        },
       },
     ],
   },
