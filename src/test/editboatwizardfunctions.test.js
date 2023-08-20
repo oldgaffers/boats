@@ -53,8 +53,8 @@ test('diff name change', () => {
 test('prepareInitialValues', () => {
   const user = {
     email: 'x@b.c',
-    ['https://oga.org.uk/id']: 559,
-    ['https://oga.org.uk/roles']: ['editor', 'member'],
+    'https://oga.org.uk/id': 559,
+    'https://oga.org.uk/roles': ['editor', 'member'],
   };
 
   expect(prepareInitialValues(robinetta)).toMatchSnapshot();
@@ -75,8 +75,8 @@ test('prepareModifiedValues', () => {
 test('no change', () => {
   const user = {
     email: 'x@b.c',
-    ['https://oga.org.uk/id']: 559,
-    ['https://oga.org.uk/roles']: ['editor', 'member'],
+    'https://oga.org.uk/id': 559,
+    'https://oga.org.uk/roles': ['editor', 'member'],
   };
   {
     const iv = prepareInitialValues(robinetta, user);
@@ -126,9 +126,8 @@ test('Grosso', () => {
 });
 
 test('Ro-an-mor', () => {
-  const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
-  expect(boat).toBeDefined();
-  expect(boatdiff(boat, boat)).toBeUndefined();
-  const { ownerships, ...boatNoOwnerships } = boat;
-  expect(boatdiff(boat, boatNoOwnerships)).toEqual(boatdiff({ ownerships }, {}));
+  expect(roanmor).toBeDefined();
+  expect(boatdiff(roanmor, roanmor)).toBeUndefined();
+  const { ownerships, ...boatNoOwnerships } = roanmor;
+  expect(boatdiff(roanmor, boatNoOwnerships)).toEqual(boatdiff({ ownerships }, {}));
 });

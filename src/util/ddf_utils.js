@@ -41,7 +41,7 @@ export function unflatten(o) {
                 if(key.startsWith(outer)) {
                     const f = key.split(JC);
                     f.shift();
-                    if(f.length == 1) {
+                    if(f.length === 1) {
                         c[f[0]] = o[key];
                     } else {
                         t[f.join(JC)] = o[key];
