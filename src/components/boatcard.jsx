@@ -130,7 +130,7 @@ function BoatCardImage({ albumKey, name }) {
   useEffect(() => {
     if (!data) {
       getThumb(albumKey).then((r) => {
-        setData(r.data);
+        setData(r);
       }).catch((e) => console.log(e));
     }
   }, [data, albumKey]);
@@ -153,7 +153,7 @@ export function CompactBoatCard({ view = 'app', ogaNo }) {
   useEffect(() => {
     if (!data) {
       getBoatData(ogaNo).then((r) => {
-        setData(r.data);
+        setData(r);
       }).catch((e) => console.log(e));
     }
   }, [data, ogaNo]);
@@ -187,7 +187,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   useEffect(() => {
     if (!data) {
       getBoatData(ogaNo).then((r) => {
-        setData(r.data);
+        setData(r);
       }).catch((e) => console.log(e));
     }
   }, [data, ogaNo]);

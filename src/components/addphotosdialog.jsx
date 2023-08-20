@@ -29,12 +29,20 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     if (image_key) {
       albumKey = image_key;
     } else {
-      albumKey = await createPhotoAlbum(name, oga_no);
+      const response = await createPhotoAlbum(name, oga_no);
+      if (response.ok) {
+        albumKey = (await response.json()).albumKey;
+      } else {
+        console.log(response.statusText);
+      }
     }
     await postPhotos(copyright, email, albumKey, pictures, setProgress);
     if (!boat.image_key) {
       boat.image_key = albumKey;
-      await postBoatData({ new: boat, email })
+      const response = await postBoatData({ new: boat, email })
+      if (!response.ok) {
+        console.log(response.statusText);
+      }
     }
     onClose();
   };

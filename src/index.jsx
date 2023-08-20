@@ -10,13 +10,11 @@ import CssBaseline from '@mui/material/CssBaseline';
 import OGAProvider from "./util/gql";
 import BrowseApp from './browseapp';
 import Boat from './components/boat';
-import Yearbook from './components/yearbook';
 import MyFleets from './components/myfleets';
 import SharedFleets from './components/sharedfleets';
 import FleetView from './components/fleetview';
 import LoginButton from './components/loginbutton';
 import TokenProvider from './components/TokenProvider';
-import ViewTable from './components/viewtable';
 
 
 import RCBEntryMap from './components/rbc60map';
@@ -27,9 +25,6 @@ import OGA60Button from './components/oga60button';
 import OGA60Form from './components/oga60form';
 import CreateBoatButton from './components/createboatbutton';
 import PickOrAddBoat from './components/pick_or_add_boat';
-import MembersBoats from './components/membersboats';
-import Members from './components/members';
-import UpdateMyDetails from './components/updatemydetails';
 
 /*
 import { lazy } from 'react';
@@ -41,9 +36,6 @@ const OGA60Button = lazy(()=> import('./components/oga60button'));
 const OGA60Form = lazy(()=> import('./components/oga60form'));
 const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
-const MembersBoats = lazy(()=> import('./components/membersboats'));
-const Members = lazy(()=> import('./components/members'));
-const UpdateMyDetails = lazy(()=> import('./components/updatemydetails'));
 */
 
 const lightTheme = createTheme({
@@ -71,7 +63,6 @@ function Wrapper({ redirectUri, scope, children }) {
 }
 
 const Pages = (props) => {
-  const { topic } = props;
   const app = props.id;
   const red = window.location.origin + window.location.pathname;
   const auth = {
@@ -94,36 +85,6 @@ const Pages = (props) => {
   // console.log(paypalOptions);
 
   switch (app) {
-    case 'members':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <Members />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
-    case 'members_boats':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <MembersBoats />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
-    case 'update_my_details':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <UpdateMyDetails />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
     case 'login':
       return (
         <Auth0Provider {...auth} scope="member">
@@ -152,16 +113,6 @@ const Pages = (props) => {
       return <Wrapper {...auth} scope="member">
           <SharedFleets/>
         </Wrapper>;
-    case 'yearbook':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <Yearbook />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>)
-        ;
     case 'rbc60':
       return (
         <PayPalScriptProvider options={paypalOptions}>
@@ -230,18 +181,6 @@ const Pages = (props) => {
         </Auth0Provider>
       )
         ;
-    case 'expressions':
-      {
-        return (
-          <Auth0Provider {...auth} scope="member">
-            <TokenProvider>
-              <OGAProvider>
-                <ViewTable scope='editor' table='expression_of_interest' params={{ topic }} />
-              </OGAProvider>
-            </TokenProvider>
-          </Auth0Provider>
-        );
-      }
     case 'add_boat':
       return <CreateBoatButton />;
     case 'pick_or_add_boat':
@@ -262,11 +201,11 @@ const Pages = (props) => {
 
 const tags = [
   'app', 'boat', 'fleet', 'my_fleets', 'shared_fleets',
-  'sail', 'sell', 'small', 'pending', 'yearbook',
+  'sail', 'sell', 'small', 'pending',
   'rbc60', 'rbc60_entries', 'rbc60_map', 'rbc60_crew',
   'oga60_button', 'oga60_interest',
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
-  'members', 'members_boats', 'update_my_details'
+  
 ];
 const iddivs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 const brdivs = tags.map((tag) => {

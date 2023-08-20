@@ -15,15 +15,15 @@ import { postCrewEnquiry } from "./boatregisterposts";
 
 const TwoColumns = ({ fields }) => {
     const { renderForm } = useFormApi();
-  
+
     return (
-      <Grid container spacing={2} justifyContent="space-around">
-        {fields.map((field) => (
-          <Grid key={field.name} item xs={6}>
-            {renderForm([field])}
-          </Grid>
-        ))}
-      </Grid>
+        <Grid container spacing={2} justifyContent="space-around">
+            {fields.map((field) => (
+                <Grid key={field.name} item xs={6}>
+                    {renderForm([field])}
+                </Grid>
+            ))}
+        </Grid>
     );
 };
 
@@ -39,7 +39,7 @@ const ports = [
     { name: 'OGA60, Suffolk Yacht Harbour, River Orwell', start: '2023-08-02', end: '2023-08-06' },
 ];
 
-const startDate = ({start, end}) => {
+const startDate = ({ start, end }) => {
     if (start) {
         const st = new Date(start);
         const s = new Intl.DateTimeFormat('en-GB', { month: 'short', day: 'numeric' }).format(st);
@@ -70,7 +70,7 @@ const portFields = (ports, route) => {
                 fields.push(...via.choices.map((leg) => crewlegfield(leg, leg, via.routeName)));
             } else {
                 const legName = `${list[index - 1].name}_${name}`;
-                const label = `The ${list[index - 1].name} - ${name} leg starting ${startDate(list[index-1])}`;
+                const label = `The ${list[index - 1].name} - ${name} leg starting ${startDate(list[index - 1])}`;
                 fields.push(crewlegfield(legName, label));
             }
         }
@@ -100,9 +100,16 @@ export default function RBC60CrewForm() {
     const handleSubmit = (values) => {
         // console.log('submit', values);
         const { ddf, ...data } = values;
-        postCrewEnquiry(data).then(
-            () => setSnackBarOpen(true)
-        ).catch((error => console.log(error)));
+        postCrewEnquiry(data)
+            .then((response) => {
+                if (response.ok) {
+                    setSnackBarOpen(true)
+                } else {
+                    console.log(response.statusText);
+                    // TODO
+                }
+            })
+            .catch((error => console.log(error)));
     };
 
     const handleSnackBarClose = () => {
@@ -136,46 +143,46 @@ export default function RBC60CrewForm() {
                             initialValue: userState,
                         },
                         {
-                        name: 'layout',
-                        component: 'two-columns',
-                        fields: [
-                            {
-                                component: componentTypes.PLAIN_TEXT,
-                                name: 'ddf.show_user',
-                                label: (<Typography>We've identified you as {user ? user.given_name : ''} {user ? user.family_name : '-'}. This form is for members. you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
-                                condition: {
-                                    when: 'ddf.userState',
-                                    is: 'user',
+                            name: 'layout',
+                            component: 'two-columns',
+                            fields: [
+                                {
+                                    component: componentTypes.PLAIN_TEXT,
+                                    name: 'ddf.show_user',
+                                    label: (<Typography>We've identified you as {user ? user.given_name : ''} {user ? user.family_name : '-'}. This form is for members. you can do so by taking out a 12 month membership for 2023 <a href="https://oga.org.uk/about/membership.html">here</a>.</Typography>),
+                                    condition: {
+                                        when: 'ddf.userState',
+                                        is: 'user',
+                                    },
                                 },
-                            },
-                            {
-                                component: componentTypes.PLAIN_TEXT,
-                                name: 'ddf.show_member',
-                                label: `We've identified you as ${user ? user.given_name : ''} ${user ? user.family_name : '-'}, member ${member}.`,
-                                condition: {
-                                    when: 'ddf.userState',
-                                    is: 'member',
+                                {
+                                    component: componentTypes.PLAIN_TEXT,
+                                    name: 'ddf.show_member',
+                                    label: `We've identified you as ${user ? user.given_name : ''} ${user ? user.family_name : '-'}, member ${member}.`,
+                                    condition: {
+                                        when: 'ddf.userState',
+                                        is: 'member',
+                                    },
                                 },
-                            },
-                            {
-                                component: componentTypes.PLAIN_TEXT,
-                                name: 'ddf.show_login',
-                                label: <>If you are a member please <LoginButton label='login' /></>,
-                                condition: {
-                                    when: 'ddf.userState',
-                                    is: 'not logged in',
+                                {
+                                    component: componentTypes.PLAIN_TEXT,
+                                    name: 'ddf.show_login',
+                                    label: <>If you are a member please <LoginButton label='login' /></>,
+                                    condition: {
+                                        when: 'ddf.userState',
+                                        is: 'not logged in',
+                                    },
+                                    sx: { marginTop: ".8em" }
                                 },
-                                sx: { marginTop: ".8em" }
-                            },
-                            {
-                                component: componentTypes.TEXT_FIELD,
-                                name: 'email',
-                                label: 'Otherwise enter your email address here',
-                                condition: {
-                                    when: 'ddf.userState',
-                                    is: 'not logged in',
+                                {
+                                    component: componentTypes.TEXT_FIELD,
+                                    name: 'email',
+                                    label: 'Otherwise enter your email address here',
+                                    condition: {
+                                        when: 'ddf.userState',
+                                        is: 'not logged in',
+                                    },
                                 },
-                            },
                             ],
                             sx: { marginTop: "1em" }
                         },

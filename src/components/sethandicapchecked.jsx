@@ -9,9 +9,14 @@ function SetHandicapCheckedDialog({ boat, user, onClose, open }) {
   
     function setchecked() {
       postBoatData({ email: user.email, new: { oga_no: boat.oga_no }, changes: { handicap_data: { checked: true }} })
-        .then(() => {
-          setPopoverText("OK, that should happen soon");
-          onClose();
+        .then((response) => {
+          if (response.ok) {
+            setPopoverText("OK, that should happen soon");
+            onClose();  
+          } else {
+            setPopoverText(response.statusText);
+            onClose();  
+          }
         })
         .catch((error) => {
           // console.log("post", error);

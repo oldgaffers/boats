@@ -1,0 +1,736 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Grosso 1`] = `
+Object {
+  "design_class": Array [
+    Object {
+      "id": "47040682-ee05-42de-a493-400ebd5956db",
+      "name": "Heard 28",
+    },
+  ],
+  "for_sales": Object {
+    "0": Object {
+      "sales_text": Array [
+        "<p>Settling import tax and delivery to the UK are negotiable.</p>
+<p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696 Sleeps 4 The dinette is a
+double berth One sleeping place in the dog cage, in the bow is a single bed. 4
+Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x
+50 cm in foredeck. Goyot handanchorwinch, CQR anchor and chain. Overhaul
+2021/22. Renewed: Plastic water tank 77 liter + deck filler cap incl. All hoses.
+“Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump
+Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna”
+lever gauge. Round stainless steel galley sink incl. all hoses. All electric
+systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the
+hand bilge pump. Thru-hull fittings with valves are renewed or replaced
+Navigation lights The paneling has been partially replaced and executed in clear
+lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is
+partially renewed and made self draining. New teak list round the boat All the
+paint at the underwatership is removed. New epoxy layers and antifouling The
+rudder is renewed incl. three bronze/stainless steel bearings.</p>
+<p>Engine: New Yanmar vibration dampers, Extensive service. New exhaust system with
+silencer, goose neck and thru hull fitting. Gaff rigged Ironable mast with
+stainless steel mast sleeve. Oregeon pine mast, boom, gaff and bow sprit.
+Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p>
+<p>Deck: Stainless steel pulpit Stainless steel railing Boom support aftdeck.
+Wooden part is renewed. 2 Self tailing winches staysail and two winches jib.
+Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone
+chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground
+fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder
+and speed log. We can install modern navigational instruments. Cabin cushions
+will be renewed to the new owners colour choice.</p>",
+        "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
+      ],
+    },
+    "_t": "a",
+  },
+}
+`;
+
+exports[`Grosso 2`] = `
+Array [
+  "<p>Settling import tax and delivery to the UK are negotiable.</p>
+<p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696 Sleeps 4 The dinette is a
+double berth One sleeping place in the dog cage, in the bow is a single bed. 4
+Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x
+50 cm in foredeck. Goyot handanchorwinch, CQR anchor and chain. Overhaul
+2021/22. Renewed: Plastic water tank 77 liter + deck filler cap incl. All hoses.
+“Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump
+Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna”
+lever gauge. Round stainless steel galley sink incl. all hoses. All electric
+systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the
+hand bilge pump. Thru-hull fittings with valves are renewed or replaced
+Navigation lights The paneling has been partially replaced and executed in clear
+lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is
+partially renewed and made self draining. New teak list round the boat All the
+paint at the underwatership is removed. New epoxy layers and antifouling The
+rudder is renewed incl. three bronze/stainless steel bearings.</p>
+<p>Engine: New Yanmar vibration dampers, Extensive service. New exhaust system with
+silencer, goose neck and thru hull fitting. Gaff rigged Ironable mast with
+stainless steel mast sleeve. Oregeon pine mast, boom, gaff and bow sprit.
+Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p>
+<p>Deck: Stainless steel pulpit Stainless steel railing Boom support aftdeck.
+Wooden part is renewed. 2 Self tailing winches staysail and two winches jib.
+Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone
+chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground
+fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder
+and speed log. We can install modern navigational instruments. Cabin cushions
+will be renewed to the new owners colour choice.</p>",
+  "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
+]
+`;
+
+exports[`Grosso 3`] = `
+Array [
+  Object {
+    "op": "replace",
+    "path": "/",
+    "value": "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
+  },
+]
+`;
+
+exports[`boat defined 1`] = `
+Object {
+  "builder": Object {
+    "id": "a27bca50-d155-428a-be49-a542d64ba316",
+    "name": "Enterprise Small Craft",
+  },
+  "callsign": "MKDZ8",
+  "construction_details": "pitch pine on oak and elm",
+  "construction_material": "wood",
+  "construction_method": "carvel",
+  "designer": Object {
+    "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
+    "name": "D.A. Rayner",
+  },
+  "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
+Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
+\\"How To\\" articles in the Y.M. Economy limited the size to less than 23''
+overall, while a plea from the Shipmate was more or less an order for 6ft
+headroom.\\"</p>
+<p>The preceding extract from the February 1937 issue of Yachting Monthly was
+penned by Maurice Griffith.</p>
+<p><em>Robinetta</em> was designed from the outset for single handing, with all lines
+except the jib halyard let to the cockpit. She was strongly built with pine
+planking on an oak and elm frame with an iron keel and a good deal of lead
+ballast. Her main cabin is cavernous for such a tiny boat. Part of this stems
+from the extension of the hull upwards to form the cabin sides. Griffith goes on
+to say, \\"Perhaps the most striking feature of this experimental design is the
+fullness of the hull, the pronounced tumblehome of the topsides from amidships
+aft, and the enormous quarters, which appear to be based on those of the French
+crabbers.\\"</p>
+<p><em>Robinetta</em> is mostly original, but her iron keel was replaced by lead in the
+1950 or 60s when small changes were also made to her foredeck, both to the
+designs of Alan Buchanan.</p>
+<p>Significant changes were made by Mike Garnham who replaced the previous engine
+with a Yanmar 1GM10 and re-worked the cockpit. Major structural repairs were
+performed during the winter of 2007/2008 strengthening the keel fixings and
+doubling several ribs.</p>
+<p>In 2012, she was re-caulked by Paul Drake of Tollesbury and given a new sail
+plan by Mark Butler of James Lawrence. This necessitated a new gaff, made by
+owner using a birdsmouth construction and the one fitted is the prototype, which
+by 2022 had done 10 seasons.</p>
+<p>Previous sail dimensions: Mainsail Head: 9.17 ft Topsail Perpendicular: 6ft
+Topsail luff 13 ft.</p>
+<p>Deck beam replaced and other repairs winter 2017/18. New Yanmar 1GM10 2022.</p>
+<p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
+explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
+history of ownership and other exploits.</p>",
+  "generic_type": "Pocket Cruiser",
+  "handicap_data": Object {
+    "beam": 2.441,
+    "displacement": 5000,
+    "draft": 1.372,
+    "fore_triangle_base": 3.048,
+    "fore_triangle_height": 4.572,
+    "length_on_deck": 6.858,
+    "length_on_waterline": 6.096,
+    "length_over_all": 6.858,
+    "main": Object {
+      "foot": 4,
+      "head": 4.267,
+      "luff": 4.319,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": 24.156,
+    "solent": Object {
+      "hull_shape": "Long keel - High volume",
+      "measured_rating": 15.059284660998381,
+      "thcf": 0.853,
+    },
+    "thcf": 0.86,
+  },
+  "home_country": "GBR",
+  "home_port": "Rosneath",
+  "hull_form": "long keel deep forefoot",
+  "image_key": "9NV8KW",
+  "mainsail_type": "gaff",
+  "mmsi": "235109366",
+  "name": "Robinetta",
+  "nsbr": "1717",
+  "oga_no": 315,
+  "ownerships": Array [
+    Object {
+      "end": 1946,
+      "name": "Denys Rayner",
+      "share": 64,
+      "start": 1937,
+    },
+    Object {
+      "end": 1949,
+      "name": "Audrey Parker",
+      "share": 32,
+      "start": 1946,
+    },
+    Object {
+      "end": 1949,
+      "name": "Henry Parker",
+      "share": 32,
+      "start": 1946,
+    },
+    Object {
+      "end": 1985,
+      "name": "Nigel Heriot",
+      "share": 64,
+      "start": 1949,
+    },
+    Object {
+      "end": 1986,
+      "name": "Frank Driscoll",
+      "share": 64,
+      "start": 1985,
+    },
+    Object {
+      "end": 2007,
+      "name": "Mike Garnham",
+      "share": 64,
+      "start": 1986,
+    },
+    Object {
+      "current": true,
+      "id": 559,
+      "member": 5004,
+      "share": 32,
+      "start": 2007,
+    },
+    Object {
+      "current": true,
+      "id": 1219,
+      "member": 5004,
+      "share": 32,
+      "start": 2007,
+    },
+  ],
+  "place_built": "Rock Ferry, Birkenhead",
+  "reference": Array [
+    "YM May 1937",
+    "YM Nov 1937",
+    "YM Nov 1947",
+    "YM Nov 2022",
+  ],
+  "rig_type": "Cutter",
+  "sail_number": "315",
+  "selling_status": "not_for_sale",
+  "short_description": "<p><em>Robinetta</em> is a 22' 6\\" tabloid cruiser, designed by Denys Rayner and built for
+him by the Enterprise Small Craft Company, Rock Ferry, Birkenhead.</p>",
+  "spar_material": "wood",
+  "ssr": "131134",
+  "uk_part1": "165315",
+  "website": "https://robinetta-log.blogspot.com/p/robinetta.html",
+  "year": 1937,
+  "year_is_approximate": false,
+}
+`;
+
+exports[`diff name change 1`] = `
+Object {
+  "name": Array [
+    "Robinetta",
+    "Cloud",
+  ],
+  "previous_names": Array [
+    Array [
+      "Victoria",
+    ],
+  ],
+}
+`;
+
+exports[`diff no change 1`] = `undefined`;
+
+exports[`prepareInitialValues 1`] = `
+Object {
+  "builder": "Enterprise Small Craft",
+  "callsign": "MKDZ8",
+  "construction_details": "pitch pine on oak and elm",
+  "construction_material": "wood",
+  "construction_method": "carvel",
+  "ddf": Object {
+    "can_sell": false,
+    "current_sales_record": undefined,
+    "id": undefined,
+    "image_key": "9NV8KW",
+    "name": "Robinetta",
+    "oga_no": 315,
+    "other_sales": Array [],
+    "update_sale": "unsell",
+  },
+  "design_class": undefined,
+  "designer": "D.A. Rayner",
+  "email": "",
+  "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
+Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
+\\"How To\\" articles in the Y.M. Economy limited the size to less than 23''
+overall, while a plea from the Shipmate was more or less an order for 6ft
+headroom.\\"</p>
+<p>The preceding extract from the February 1937 issue of Yachting Monthly was
+penned by Maurice Griffith.</p>
+<p><em>Robinetta</em> was designed from the outset for single handing, with all lines
+except the jib halyard let to the cockpit. She was strongly built with pine
+planking on an oak and elm frame with an iron keel and a good deal of lead
+ballast. Her main cabin is cavernous for such a tiny boat. Part of this stems
+from the extension of the hull upwards to form the cabin sides. Griffith goes on
+to say, \\"Perhaps the most striking feature of this experimental design is the
+fullness of the hull, the pronounced tumblehome of the topsides from amidships
+aft, and the enormous quarters, which appear to be based on those of the French
+crabbers.\\"</p>
+<p><em>Robinetta</em> is mostly original, but her iron keel was replaced by lead in the
+1950 or 60s when small changes were also made to her foredeck, both to the
+designs of Alan Buchanan.</p>
+<p>Significant changes were made by Mike Garnham who replaced the previous engine
+with a Yanmar 1GM10 and re-worked the cockpit. Major structural repairs were
+performed during the winter of 2007/2008 strengthening the keel fixings and
+doubling several ribs.</p>
+<p>In 2012, she was re-caulked by Paul Drake of Tollesbury and given a new sail
+plan by Mark Butler of James Lawrence. This necessitated a new gaff, made by
+owner using a birdsmouth construction and the one fitted is the prototype, which
+by 2022 had done 10 seasons.</p>
+<p>Previous sail dimensions: Mainsail Head: 9.17 ft Topsail Perpendicular: 6ft
+Topsail luff 13 ft.</p>
+<p>Deck beam replaced and other repairs winter 2017/18. New Yanmar 1GM10 2022.</p>
+<p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
+explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
+history of ownership and other exploits.</p>",
+  "generic_type": "Pocket Cruiser",
+  "handicap_data": Object {
+    "beam": 8.009,
+    "displacement": 5000,
+    "draft": 4.501,
+    "fore_triangle_base": 10,
+    "fore_triangle_height": 15,
+    "length_on_deck": 22.5,
+    "length_on_waterline": 20,
+    "length_over_all": 22.5,
+    "main": Object {
+      "foot": 13.123,
+      "head": 13.999,
+      "luff": 14.17,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": 260.013,
+    "solent": Object {
+      "hull_shape": "Long keel - High volume",
+      "measured_rating": 15.059284660998381,
+      "thcf": 0.853,
+    },
+    "thcf": 0.86,
+  },
+  "home_country": "GBR",
+  "home_port": "Rosneath",
+  "hull_form": "long keel deep forefoot",
+  "mainsail_type": "gaff",
+  "mmsi": "235109366",
+  "nsbr": "1717",
+  "ownerships": Array [
+    Object {
+      "end": 1946,
+      "name": "Denys Rayner",
+      "share": 64,
+      "start": 1937,
+    },
+    Object {
+      "end": 1949,
+      "name": "Audrey Parker",
+      "share": 32,
+      "start": 1946,
+    },
+    Object {
+      "end": 1949,
+      "name": "Henry Parker",
+      "share": 32,
+      "start": 1946,
+    },
+    Object {
+      "end": 1985,
+      "name": "Nigel Heriot",
+      "share": 64,
+      "start": 1949,
+    },
+    Object {
+      "end": 1986,
+      "name": "Frank Driscoll",
+      "share": 64,
+      "start": 1985,
+    },
+    Object {
+      "end": 2007,
+      "name": "Mike Garnham",
+      "share": 64,
+      "start": 1986,
+    },
+    Object {
+      "current": true,
+      "id": 559,
+      "member": 5004,
+      "share": 32,
+      "start": 2007,
+    },
+    Object {
+      "current": true,
+      "id": 1219,
+      "member": 5004,
+      "share": 32,
+      "start": 2007,
+    },
+  ],
+  "place_built": "Rock Ferry, Birkenhead",
+  "reference": Array [
+    "YM May 1937",
+    "YM Nov 1937",
+    "YM Nov 1947",
+    "YM Nov 2022",
+  ],
+  "rig_type": "Cutter",
+  "sail_number": "315",
+  "selling_status": "not_for_sale",
+  "short_description": "<p><em>Robinetta</em> is a 22' 6\\" tabloid cruiser, designed by Denys Rayner and built for
+him by the Enterprise Small Craft Company, Rock Ferry, Birkenhead.</p>",
+  "spar_material": "wood",
+  "ssr": "131134",
+  "uk_part1": "165315",
+  "website": "https://robinetta-log.blogspot.com/p/robinetta.html",
+  "year": 1937,
+  "year_is_approximate": false,
+}
+`;
+
+exports[`prepareInitialValues 2`] = `
+Object {
+  "builder": "Enterprise Small Craft",
+  "callsign": "MKDZ8",
+  "construction_details": "pitch pine on oak and elm",
+  "construction_material": "wood",
+  "construction_method": "carvel",
+  "ddf": Object {
+    "can_sell": true,
+    "current_sales_record": undefined,
+    "id": undefined,
+    "image_key": "9NV8KW",
+    "name": "Robinetta",
+    "oga_no": 315,
+    "other_sales": Array [],
+    "update_sale": "unsell",
+  },
+  "design_class": undefined,
+  "designer": "D.A. Rayner",
+  "email": "x@b.c",
+  "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
+Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
+\\"How To\\" articles in the Y.M. Economy limited the size to less than 23''
+overall, while a plea from the Shipmate was more or less an order for 6ft
+headroom.\\"</p>
+<p>The preceding extract from the February 1937 issue of Yachting Monthly was
+penned by Maurice Griffith.</p>
+<p><em>Robinetta</em> was designed from the outset for single handing, with all lines
+except the jib halyard let to the cockpit. She was strongly built with pine
+planking on an oak and elm frame with an iron keel and a good deal of lead
+ballast. Her main cabin is cavernous for such a tiny boat. Part of this stems
+from the extension of the hull upwards to form the cabin sides. Griffith goes on
+to say, \\"Perhaps the most striking feature of this experimental design is the
+fullness of the hull, the pronounced tumblehome of the topsides from amidships
+aft, and the enormous quarters, which appear to be based on those of the French
+crabbers.\\"</p>
+<p><em>Robinetta</em> is mostly original, but her iron keel was replaced by lead in the
+1950 or 60s when small changes were also made to her foredeck, both to the
+designs of Alan Buchanan.</p>
+<p>Significant changes were made by Mike Garnham who replaced the previous engine
+with a Yanmar 1GM10 and re-worked the cockpit. Major structural repairs were
+performed during the winter of 2007/2008 strengthening the keel fixings and
+doubling several ribs.</p>
+<p>In 2012, she was re-caulked by Paul Drake of Tollesbury and given a new sail
+plan by Mark Butler of James Lawrence. This necessitated a new gaff, made by
+owner using a birdsmouth construction and the one fitted is the prototype, which
+by 2022 had done 10 seasons.</p>
+<p>Previous sail dimensions: Mainsail Head: 9.17 ft Topsail Perpendicular: 6ft
+Topsail luff 13 ft.</p>
+<p>Deck beam replaced and other repairs winter 2017/18. New Yanmar 1GM10 2022.</p>
+<p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
+explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
+history of ownership and other exploits.</p>",
+  "generic_type": "Pocket Cruiser",
+  "handicap_data": Object {
+    "beam": 8.009,
+    "displacement": 5000,
+    "draft": 4.501,
+    "fore_triangle_base": 10,
+    "fore_triangle_height": 15,
+    "length_on_deck": 22.5,
+    "length_on_waterline": 20,
+    "length_over_all": 22.5,
+    "main": Object {
+      "foot": 13.123,
+      "head": 13.999,
+      "luff": 14.17,
+    },
+    "propellor": Object {
+      "type": "fixed",
+    },
+    "sailarea": 260.013,
+    "solent": Object {
+      "hull_shape": "Long keel - High volume",
+      "measured_rating": 15.059284660998381,
+      "thcf": 0.853,
+    },
+    "thcf": 0.86,
+  },
+  "home_country": "GBR",
+  "home_port": "Rosneath",
+  "hull_form": "long keel deep forefoot",
+  "mainsail_type": "gaff",
+  "mmsi": "235109366",
+  "nsbr": "1717",
+  "ownerships": Array [
+    Object {
+      "end": 1946,
+      "name": "Denys Rayner",
+      "share": 64,
+      "start": 1937,
+    },
+    Object {
+      "end": 1949,
+      "name": "Audrey Parker",
+      "share": 32,
+      "start": 1946,
+    },
+    Object {
+      "end": 1949,
+      "name": "Henry Parker",
+      "share": 32,
+      "start": 1946,
+    },
+    Object {
+      "end": 1985,
+      "name": "Nigel Heriot",
+      "share": 64,
+      "start": 1949,
+    },
+    Object {
+      "end": 1986,
+      "name": "Frank Driscoll",
+      "share": 64,
+      "start": 1985,
+    },
+    Object {
+      "end": 2007,
+      "name": "Mike Garnham",
+      "share": 64,
+      "start": 1986,
+    },
+    Object {
+      "current": true,
+      "id": 559,
+      "member": 5004,
+      "share": 32,
+      "start": 2007,
+    },
+    Object {
+      "current": true,
+      "id": 1219,
+      "member": 5004,
+      "share": 32,
+      "start": 2007,
+    },
+  ],
+  "place_built": "Rock Ferry, Birkenhead",
+  "reference": Array [
+    "YM May 1937",
+    "YM Nov 1937",
+    "YM Nov 1947",
+    "YM Nov 2022",
+  ],
+  "rig_type": "Cutter",
+  "sail_number": "315",
+  "selling_status": "not_for_sale",
+  "short_description": "<p><em>Robinetta</em> is a 22' 6\\" tabloid cruiser, designed by Denys Rayner and built for
+him by the Enterprise Small Craft Company, Rock Ferry, Birkenhead.</p>",
+  "spar_material": "wood",
+  "ssr": "131134",
+  "uk_part1": "165315",
+  "website": "https://robinetta-log.blogspot.com/p/robinetta.html",
+  "year": 1937,
+  "year_is_approximate": false,
+}
+`;
+
+exports[`prepareModifiedValues 1`] = `
+Object {
+  "boat": Object {
+    "builder": Object {
+      "id": "a27bca50-d155-428a-be49-a542d64ba316",
+      "name": "Enterprise Small Craft",
+    },
+    "callsign": "MKDZ8",
+    "construction_details": "pitch pine on oak and elm",
+    "construction_material": "wood",
+    "construction_method": "carvel",
+    "designer": Object {
+      "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
+      "name": "D.A. Rayner",
+    },
+    "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
+Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
+\\"How To\\" articles in the Y.M. Economy limited the size to less than 23''
+overall, while a plea from the Shipmate was more or less an order for 6ft
+headroom.\\"</p>
+<p>The preceding extract from the February 1937 issue of Yachting Monthly was
+penned by Maurice Griffith.</p>
+<p><em>Robinetta</em> was designed from the outset for single handing, with all lines
+except the jib halyard let to the cockpit. She was strongly built with pine
+planking on an oak and elm frame with an iron keel and a good deal of lead
+ballast. Her main cabin is cavernous for such a tiny boat. Part of this stems
+from the extension of the hull upwards to form the cabin sides. Griffith goes on
+to say, \\"Perhaps the most striking feature of this experimental design is the
+fullness of the hull, the pronounced tumblehome of the topsides from amidships
+aft, and the enormous quarters, which appear to be based on those of the French
+crabbers.\\"</p>
+<p><em>Robinetta</em> is mostly original, but her iron keel was replaced by lead in the
+1950 or 60s when small changes were also made to her foredeck, both to the
+designs of Alan Buchanan.</p>
+<p>Significant changes were made by Mike Garnham who replaced the previous engine
+with a Yanmar 1GM10 and re-worked the cockpit. Major structural repairs were
+performed during the winter of 2007/2008 strengthening the keel fixings and
+doubling several ribs.</p>
+<p>In 2012, she was re-caulked by Paul Drake of Tollesbury and given a new sail
+plan by Mark Butler of James Lawrence. This necessitated a new gaff, made by
+owner using a birdsmouth construction and the one fitted is the prototype, which
+by 2022 had done 10 seasons.</p>
+<p>Previous sail dimensions: Mainsail Head: 9.17 ft Topsail Perpendicular: 6ft
+Topsail luff 13 ft.</p>
+<p>Deck beam replaced and other repairs winter 2017/18. New Yanmar 1GM10 2022.</p>
+<p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
+explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
+history of ownership and other exploits.</p>",
+    "generic_type": "Pocket Cruiser",
+    "handicap_data": Object {
+      "beam": 0.744,
+      "displacement": 5000,
+      "draft": 0.418,
+      "fore_triangle_base": 0.929,
+      "fore_triangle_height": 1.394,
+      "length_on_deck": 2.09,
+      "length_on_waterline": 1.858,
+      "length_over_all": 2.09,
+      "main": Object {
+        "foot": 1.219,
+        "head": 1.301,
+        "luff": 1.316,
+      },
+      "propellor": Object {
+        "type": "fixed",
+      },
+      "sailarea": 2.244,
+      "solent": Object {
+        "hull_shape": "Long keel - High volume",
+        "measured_rating": 15.059284660998381,
+        "thcf": 0.853,
+      },
+      "thcf": 0.86,
+    },
+    "home_country": "GBR",
+    "home_port": "Rosneath",
+    "hull_form": "long keel deep forefoot",
+    "image_key": "9NV8KW",
+    "mainsail_type": "gaff",
+    "mmsi": "235109366",
+    "name": "Robinetta",
+    "nsbr": "1717",
+    "oga_no": 315,
+    "ownerships": Array [
+      Object {
+        "end": 1946,
+        "name": "Denys Rayner",
+        "share": 64,
+        "start": 1937,
+      },
+      Object {
+        "end": 1949,
+        "name": "Audrey Parker",
+        "share": 32,
+        "start": 1946,
+      },
+      Object {
+        "end": 1949,
+        "name": "Henry Parker",
+        "share": 32,
+        "start": 1946,
+      },
+      Object {
+        "end": 1985,
+        "name": "Nigel Heriot",
+        "share": 64,
+        "start": 1949,
+      },
+      Object {
+        "end": 1986,
+        "name": "Frank Driscoll",
+        "share": 64,
+        "start": 1985,
+      },
+      Object {
+        "end": 2007,
+        "name": "Mike Garnham",
+        "share": 64,
+        "start": 1986,
+      },
+      Object {
+        "current": true,
+        "id": 559,
+        "member": 5004,
+        "share": 32,
+        "start": 2007,
+      },
+      Object {
+        "current": true,
+        "id": 1219,
+        "member": 5004,
+        "share": 32,
+        "start": 2007,
+      },
+    ],
+    "place_built": "Rock Ferry, Birkenhead",
+    "reference": Array [
+      "YM May 1937",
+      "YM Nov 1937",
+      "YM Nov 1947",
+      "YM Nov 2022",
+    ],
+    "rig_type": "Cutter",
+    "sail_number": "315",
+    "selling_status": "not_for_sale",
+    "short_description": "<p><em>Robinetta</em> is a 22' 6\\" tabloid cruiser, designed by Denys Rayner and built for
+him by the Enterprise Small Craft Company, Rock Ferry, Birkenhead.</p>",
+    "spar_material": "wood",
+    "ssr": "131134",
+    "uk_part1": "165315",
+    "website": "https://robinetta-log.blogspot.com/p/robinetta.html",
+    "year": 1937,
+    "year_is_approximate": false,
+  },
+  "email": undefined,
+  "newItems": Object {},
+}
+`;

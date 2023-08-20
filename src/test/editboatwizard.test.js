@@ -1,60 +1,624 @@
-import fs from 'fs';
-import { formatters } from 'jsondiffpatch';
-import { buildChanges, includes, elements_matching_by_field, nameChanges, recursiveUpdate, salesChanges, updateOwnerships, updateOwnership, boatdiff } from '../components/editboatwizard';
-import { channel } from 'diagnostics_channel';
+import fs from "fs";
+import React from "react";
+import { act, render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
+import EditBoatWizard from '../components/editboatwizard';
+import '../components/boatregisterposts';
+import {
+  designerItems,
+  builderItems,
+  constructionItems,
+  designClassItems,
+} from "../components/ddf/util";
+import { steps as handicap_steps } from "../components/Handicap";
+import {
+  yearItems,
+  homeItems,
+  registrationForm,
+  referencesItems,
+  salesSteps,
+  ownerShipsFields,
+  sellingDataFields,
+  doneFields,
+  hullFields,
+  descriptionsItems,
+  basicFields,
+} from "../components/ddf/SubForms";
 
-const robinetta = JSON.parse(fs.readFileSync('src/test/robinetta.json'));
 const pickers = {
-  design_class: [{ "id": "c05a2174-4b46-410f-829f-894193f020c3", "name": "Falmouth Bass Boat" }],
+  boatNames: [],
   designer: [],
   builder: [],
+  rig_type: [],
+  sail_type: [],
+  design_class: [],
+  generic_type: [],
+  construction_material: [],
+  construction_method: [],
+  hull_form: [],
+  spar_material: [],
 };
 
-test('diff no change', () => {
-  const delta = boatdiff(robinetta, robinetta);
-  expect(delta).toMatchSnapshot();
+jest.mock('../components/boatregisterposts', () => {
+  return {
+    getPicklists: async () => pickers,
+  };
 });
 
-test('diff name change', () => {
-  const after = JSON.parse(JSON.stringify(robinetta));
-  after.name = 'Cloud';
-  after.previous_names = ['Victoria'];
-  const delta = boatdiff(robinetta, after);
-  expect(delta).toMatchSnapshot();
-});
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-test('Grosso', () => {
+const test_schema = (pickers) => {
+  return {
+    "fields": [
+      {
+        "component": "wizard",
+        "name": "edit",
+        "fields": [
+          {
+            name: "basic-step",
+            nextStep: "descriptions-step",
+            fields: [
+              {
+                component: 'text-field',
+                name: "ddf.can_sell",
+                label: "can buy/sell",
+                hideField: true,
+              },
+              {
+                component: 'sub-form',
+                name: "basic.form",
+                title: "Basic Details",
+                fields: basicFields(pickers),
+              },
+            ],
+          },
+          {
+            "title": "step2",
+            "name": "descriptions-step",
+            "nextStep": "build-step",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "sd",
+                "type": "text",
+                "label": "Short Description"
+              },
+              {
+                "component": "plain-text",
+                "name": "fd",
+                "type": "text",
+                "label": "Full Description"
+              }
+            ]
+          },
+          {
+            name: "build-step",
+            nextStep: "design-step",
+            fields: [
+              {
+                title: "Build",
+                name: "build",
+                component: 'sub-form',
+                fields: [
+                  ...yearItems,
+                  {
+                    component: 'text-field',
+                    name: "place_built",
+                    label: "Place Built",
+                  },
+                  ...builderItems(pickers),
+                  {
+                    component: 'text-field',
+                    name: "hin",
+                    label: "Hull Identification Number (HIN)",
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "design-step",
+            nextStep: "references-step",
+            fields: [
+              {
+                title: "Design",
+                name: "design",
+                component: 'sub-form',
+                fields: [
+                  ...designerItems(pickers),
+                  ...designClassItems(pickers),
+                  {
+                    component: 'text-field',
+                    name: "handicap_data.length_on_deck",
+                    label: "Length on deck (decimal feet)",
+                    type: "number",
+                    dataType: 'float',
+                  },
+                  {
+                    component: 'text-field',
+                    name: "handicap_data.beam",
+                    label: "Beam (decimal feet)",
+                    type: "number",
+                    dataType: 'float',
+                    isRequired: true,
+                    validate: [
+                      {
+                        type: 'required',
+                      },
+                      /*{
+                        type: 'min-number-value',
+                        threshold: 1,
+                      }*/
+                    ],
+                  },
+                  {
+                    component: 'text-field',
+                    name: "handicap_data.draft",
+                    label: "Minumum Draft (decimal feet)",
+                    type: "number",
+                    dataType: 'float',
+                    isRequired: true,
+                    validate: [
+                      {
+                        type: 'required',
+                      },
+                      /*{
+                       type: 'min-number-value',
+                       threshold: 1
+                      }*/
+                    ],
+                  },
+                  {
+                    component: 'text-field',
+                    name: "air_draft",
+                    label: "Air Draft (decimal feet)",
+                    type: "number",
+                    dataType: 'float',
+                    validate: [
+                      /*{
+                        type: 'min-number-value',
+                        threshold: 1
+                      }*/
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "references-step",
+            nextStep: "previousnames-step",
+            fields: [
+              {
+                name: "references",
+                title: "References",
+                component: 'sub-form',
+                fields: referencesItems,
+              },
+            ],
+          },
+          {
+            name: "previousnames-step",
+            nextStep: "locations-step",
+            fields: [
+              {
+                label: "New name",
+                component: 'text-field',
+                name: "ddf.new_name",
+                description: 'if you have changed the name, enter the new name here.'
+              },
+              {
+                label: "Previous names",
+                component: 'field-array',
+                name: "previous_names",
+                fields: [{ component: "text-field" }],
+              },
+            ],
+          },
+          {
+            name: "locations-step",
+            nextStep: "registrations-step",
+            fields: [
+              {
+                title: "Locations",
+                name: "locations",
+                component: 'sub-form',
+                fields: homeItems,
+              },
+            ],
+          },
+          {
+            name: "registrations-step",
+            nextStep: "construction-step",
+            fields: [registrationForm],
+          },
+          {
+            "title": "step9",
+            "name": "construction-step",
+            "nextStep": "step-10",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "construction",
+                "type": "text",
+                "label": "Construction"
+              }
+            ]
+          },
+          {
+            "title": "step10",
+            "name": "step-10",
+            "nextStep": "step-11",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "hull_form",
+                "type": "text",
+                "label": "Hull Form"
+              }
+            ]
+          },
+          {
+            "title": "step11",
+            "name": "step-11",
+            "nextStep": "step-12",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "handicaps",
+                "type": "text",
+                "label": "Handicaps"
+              },
+              {
+                component: 'radio',
+                name: "ddf.skip-handicap",
+                label: 'Get a Handicap',
+                initialValue: "1",
+                validate: [
+                  {
+                    type: 'required',
+                  },
+                ],
+                options: [
+                  {
+                    label: "I want a handicap",
+                    value: "1",
+                  },
+                  {
+                    label: "I'll leave it for now",
+                    value: "2",
+                  },
+                ],
+              },
+            ]
+          },
+          {
+            "title": "step12",
+            "name": "step-12",
+            "nextStep": "step-13",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "ownerships",
+                "type": "text",
+                "label": "Known Owners"
+              }
+            ]
+          },
+          {
+            "title": "step13",
+            "name": "step-13",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "done",
+                "type": "text",
+                "label": "Done"
+              }
+            ]
+          },
+        ]
+      }
+    ]
+  }
+};
 
-  const old = {
-    "builder": { "id": "ee814a69-d5ad-46d9-88a9-a0598ae6d33b", "name": "Martin Heard" }, "construction_details": "G R P", "construction_material": "grp", "designer": { "id": "7ac480da-7d09-4dd7-9c89-61199ff30913", "name": "Percy Dalton" },
-    "for_sales": [
+const default_test_schema = (pickers) => {
+  return {
+    "fields": [
       {
-        "asking_price": 29500, 
-        "sales_text": "<p>Settling import tax and delivery to the UK are negotiable.</p>\n<p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696 Sleeps 4 The dinette is a\ndouble berth One sleeping place in the dog cage, in the bow is a single bed. 4\nBronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x\n50 cm in foredeck. Goyot handanchorwinch, CQR anchor and chain. Overhaul\n2021/22. Renewed: Plastic water tank 77 liter + deck filler cap incl. All hoses.\n“Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump\nPlastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna”\nlever gauge. Round stainless steel galley sink incl. all hoses. All electric\nsystems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the\nhand bilge pump. Thru-hull fittings with valves are renewed or replaced\nNavigation lights The paneling has been partially replaced and executed in clear\nlacquered mahogany. 9 New ceiling lights, partially led. The cockpit is\npartially renewed and made self draining. New teak list round the boat All the\npaint at the underwatership is removed. New epoxy layers and antifouling The\nrudder is renewed incl. three bronze/stainless steel bearings.</p>\n<p>Engine: New Yanmar vibration dampers, Extensive service. New exhaust system with\nsilencer, goose neck and thru hull fitting. Gaff rigged Ironable mast with\nstainless steel mast sleeve. Oregeon pine mast, boom, gaff and bow sprit.\nMainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p>\n<p>Deck: Stainless steel pulpit Stainless steel railing Boom support aftdeck.\nWooden part is renewed. 2 Self tailing winches staysail and two winches jib.\nAutopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone\nchargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground\nfault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder\nand speed log. We can install modern navigational instruments. Cabin cushions\nwill be renewed to the new owners colour choice.</p>",
-      },
-    ],
-    "generic_type": "Yacht",
-    "handicap_data": { "beam": 3.048, "draft": 1.524, "length_on_deck": 8.534 },
-    "hull_form": "long keel sloping forefoot", "id": "1dab7650-151e-44a6-b6d1-b7928ed732fe", "image_key": "2JTzFg", "mainsail_type": "gaff", "name": "Grosso", "oga_no": 2511, "ownerships": [], "place_built": "Mylor Bridge", "previous_names": [], "rig_type": "Cutter", "selling_status": "for_sale", "spar_material": "wood", "uk_part1": "28255", "year": 1988, "year_is_approximate": false,
-  };
-  const submitted = {
-    "mainsail_type": "gaff", "rig_type": "Cutter", "generic_type": "Yacht", "year": 1988, "year_is_approximate": false, "place_built": "Mylor Bridge", "builder": { "name": "Martin Heard", "id": "ee814a69-d5ad-46d9-88a9-a0598ae6d33b" }, "designer": { "name": "Percy Dalton", "id": "7ac480da-7d09-4dd7-9c89-61199ff30913" }, "design_class": { "name": "Heard 28", "id": "47040682-ee05-42de-a493-400ebd5956db" },
-    "handicap_data": { "length_on_deck": 8.534, "beam": 3.048, "draft": 1.524 },
-    "previous_names": [], "uk_part1": "28255", "construction_material": "grp", "spar_material": "wood", "construction_details": "G R P", "hull_form": "long keel sloping forefoot", "ownerships": [], "name": "Grosso", "oga_no": 2511, "id": "1dab7650-151e-44a6-b6d1-b7928ed732fe", "image_key": "2JTzFg",
-    "for_sales": [
-      {
-        "asking_price": 29500,
-        "sales_text": "<p>Settling import tax and delivery to the UK are negotiable.</p><p>Sleeps 4 The dinette is a double berth One sleeping place in the dog cage, in the bow is a single bed.</p><p>4 Bronze portholes which can be opened and two fixed bronze portholes. Hatch 50 x 50 cm in foredeck. Goyot hand anchor winch, CQR anchor and chain. Overhaul 2021/22.&nbsp;</p><p>Renewed: Plastic water tank 77 litre + deck filler cap incl. All hoses. “Wyna”water lever gauge. Holding tank Galley with automatic diaphragm pump Plastic diesel tank 42 Liter + deck filler cap incl. all hoses. Tevens “Wyna” lever gauge. Round stainless steel galley sink incl. all hoses. All electric systems incl. switch panel. Electric bilge pump incl. all hoses. New hose on the hand bilge pump. Thru-hull fittings with valves are renewed or replaced</p><p>Navigation lights.</p><p>The paneling has been partially replaced and executed in clear lacquered mahogany. 9 New ceiling lights, partially led. The cockpit is partially renewed and made self draining. New teak list round the boat All the paint at the underwatership is removed. New epoxy layers and antifouling The rudder is renewed incl. three bronze/stainless steel bearings.</p><p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696. New Yanmar vibration dampers, Extensive service. New exhaust system with silencer, goose neck and thru hull fitting.</p><p>Gaff rigged Ironable mast with stainless steel mast sleeve. Oregon pine mast, boom, gaff and bow sprit. Mainsail Staysail Jibb ( 2 ) “Wykeham Martin” ( jib )</p><p>Deck: Stainless steel pulpit Stainless steel railing Boom support aft-deck. Wooden part is renewed. 2 Self tailing winches staysail and two winches jib. Autopilot ( old ) GPS with speed, course and verity. Voltmeter, telephone chargers. ( 2 ) Victron 15 ah accucharger Shore connection with cable, ground fault and 2 x 16 ah automatic fuses. 3 Varta batter 70 ah No VHF, Depth sounder and speed log.</p><p>We can install modern navigational instruments. Cabin cushions will be renewed to the new owners colour choice.</p>",
-      },
-    ],
-    "selling_status": "for_sale",
-  };
-  const delta = boatdiff(old, submitted);
-  expect(delta).toMatchSnapshot();
-  // const jp = formatters.jsonpatch.format(delta);
-  // expect(jp).toMatchSnapshot();
-  console.log(old.for_sales[0].sales_text.length, submitted.for_sales[0].sales_text.length);
-  const fsd = boatdiff(old.for_sales[0].sales_text, submitted.for_sales[0].sales_text);
-  expect(fsd).toMatchSnapshot();
-  expect(formatters.jsonpatch.format(fsd)).toMatchSnapshot();
+        "component": "wizard",
+        "name": "edit",
+        "fields": [
+          {
+            "title": "step1",
+            "name": "step-1",
+            "nextStep": "step-2",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "basic",
+                "type": "text",
+                "label": "Basic Details"
+              }
+            ]
+          },
+          {
+            "title": "step2",
+            "name": "step-2",
+            "nextStep": "step-3",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "sd",
+                "type": "text",
+                "label": "Short Description"
+              },
+              {
+                "component": "plain-text",
+                "name": "fd",
+                "type": "text",
+                "label": "Full Description"
+              }
+            ]
+          },
+          {
+            "title": "step3",
+            "name": "step-3",
+            "nextStep": "step-4",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "build",
+                "type": "text",
+                "label": "Build"
+              }
+            ]
+          }, {
+            "title": "step4",
+            "name": "step-4",
+            "nextStep": "step-5",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "design",
+                "type": "text",
+                "label": "Design"
+              }
+            ]
+          }, {
+            "title": "step5",
+            "name": "step-5",
+            "nextStep": "step-6",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "references",
+                "type": "text",
+                "label": "References"
+              }
+            ]
+          }, {
+            "title": "step6",
+            "name": "step-6",
+            "nextStep": "step-7",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "previous_names",
+                "type": "text",
+                "label": "Previous names"
+              }
+            ]
+          }, {
+            "title": "step7",
+            "name": "step-7",
+            "nextStep": "step-8",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "locations",
+                "type": "text",
+                "label": "Locations"
+              }
+            ]
+          },
+          {
+            "title": "step8",
+            "name": "step-8",
+            "nextStep": "step-9",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "registrations",
+                "type": "text",
+                "label": "Registrations"
+              }
+            ]
+          },
+          {
+            "title": "step9",
+            "name": "step-9",
+            "nextStep": "step-10",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "construction",
+                "type": "text",
+                "label": "Construction"
+              }
+            ]
+          },
+          {
+            "title": "step10",
+            "name": "step-10",
+            "nextStep": "step-11",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "hull_form",
+                "type": "text",
+                "label": "Hull Form"
+              }
+            ]
+          },
+          {
+            "title": "step11",
+            "name": "step-11",
+            "nextStep": "step-12",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "handicaps",
+                "type": "text",
+                "label": "Handicaps"
+              },
+              {
+                component: 'radio',
+                name: "ddf.skip-handicap",
+                label: 'Get a Handicap',
+                initialValue: "1",
+                validate: [
+                  {
+                    type: 'required',
+                  },
+                ],
+                options: [
+                  {
+                    label: "I want a handicap",
+                    value: "1",
+                  },
+                  {
+                    label: "I'll leave it for now",
+                    value: "2",
+                  },
+                ],
+              },
+            ]
+          },
+          {
+            "title": "step12",
+            "name": "step-12",
+            "nextStep": "step-13",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "ownerships",
+                "type": "text",
+                "label": "Known Owners"
+              }
+            ]
+          },
+          {
+            "title": "step13",
+            "name": "step-13",
+            "fields": [
+              {
+                "component": "plain-text",
+                "name": "done",
+                "type": "text",
+                "label": "Done"
+              }
+            ]
+          },
+        ]
+      }
+    ]
+  }
+};
+
+describe('EditBoatWizard component tests', () => {
+  const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
+  test('EditBoatWizard test rendering', async () => {
+    const user = userEvent.setup();
+    const onSubmit = jest.fn();
+    act(() => {
+      render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com'}} open={true} onSubmit={onSubmit} 
+      // schema={test_schema(pickers)} 
+      />);
+    });
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    await waitFor(() => {
+      screen.findByRole('dialog');
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
+    await waitFor(() => {
+      screen.getByText('Basic Details');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getAllByText(/full description/i);
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Build');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Design');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('References');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Previous names');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Locations');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Registrations');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Construction');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Hull Form');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Handicaps');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('I\'ll leave it for now'));
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => {
+      screen.getByText('Known Owners');
+    });
+    act(() => {
+      fireEvent.click(screen.getByText('Continue'));
+    });
+    await waitFor(() => userEvent.click(screen.getByText('Submit'), { pointerEventsCheck: 0 }))
+    await sleep(400);
+    expect(onSubmit).toBeCalled();
+  });
 });

@@ -76,13 +76,7 @@ const metreKeys = [
 ];
 const squareMetreKeys = ['sailarea'];
 const booleanKeys = ['year_is_approximate'];
-const keysToOmit = [
-];
-/*
-biggest staysail (luff, leech, foot)
-biggest jib (luff, leech, foot)
-biggest downwind sail (luff, leech, foot)
-*/
+
 export function boatm2f(obj) {
   if (obj) {
     if (Array.isArray(obj)) {
@@ -138,33 +132,21 @@ export function boatf2m(obj) {
   return obj;
 }
 
-export function boatDefined(obj) {
-  if (obj) {
-    if (Array.isArray(obj)) {
-      return obj.map((n) => boatDefined(n))
-    } else if (typeof obj === 'object') {
-      const r = {};
-      Object.keys(obj).forEach(k => {
-        if (metreKeys.includes(k)) {
-          r[k] = obj[k];
-        } else if (squareMetreKeys.includes(k)) {
-          r[k] = obj[k];
-        } else if (booleanKeys.includes(k)) {
-          r[k] = !!obj[k];
-        } else if (keysToOmit.includes(k)) {
-          // console.log('omitting', k);
-        } else {
-          if (obj[k]) {
-            r[k] = boatDefined(obj[k]);
-          }
-        }
-      });
-      return r;
-    } else {
-      return obj;
+export function boatDefined(value) {
+  if (typeof value === 'object') {
+    if (Array.isArray(value)) {
+      if (value.length === 0) {
+        return undefined;
+      }
+      return value.map((n) => boatDefined(n)).filter((item) => item);
     }
+    return Object.fromEntries(
+      Object.keys(value)
+      .map((key) => [key, boatDefined(value[key]) ])
+      .filter(([key, value]) => value !== undefined)
+    );
   }
-  return obj;
+  return value;
 }
 
 export function m2fall(o) {

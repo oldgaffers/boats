@@ -18,7 +18,6 @@ Object {
     "propellor": Object {
       "type": "fixed",
     },
-    "sailarea": undefined,
     "topsail": Object {
       "luff": 18.77,
       "perpendicular": 7.051,
@@ -46,7 +45,6 @@ Object {
     "propellor": Object {
       "type": "fixed",
     },
-    "sailarea": undefined,
   },
   "hull_type": "deep",
   "rig_type": "Cutter",

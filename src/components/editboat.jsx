@@ -18,7 +18,7 @@ import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { getPicklists } from './boatregisterposts';
 import { schema } from './editboat_schema';
 import { currentSaleRecord, SaleRecord } from '../util/sale_record';
-import HtmlEditor from './ckeditor';
+import HtmlEditor from './tinymce';
 import { newPicklistItems } from './createboatbutton';
 
 const WizardInternal = (props) => {
@@ -107,7 +107,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
 
   useEffect(() => {
     if (!pickers) {
-      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
+      getPicklists().then((r) => setPickers(r)).catch((e) => console.log(e));
     }
   }, [pickers]);
 

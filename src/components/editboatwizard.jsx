@@ -32,10 +32,10 @@ import {
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from './boatregisterposts';
-import HtmlEditor from './ckeditor';
+import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 
-const schema = (pickers) => {
+const defaultSchema = (pickers) => {
   return {
     fields: [
       {
@@ -344,18 +344,7 @@ export function salesChanges(ddf) {
   return { for_sales, selling_status };
 }
 
-export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit }) {
-  const [pickers, setPickers] = useState();
-
-  useEffect(() => {
-    if (!pickers) {
-      getPicklists().then((r) => setPickers(r.data)).catch((e) => console.log(e));
-    }
-  }, [pickers]);
-
-  if (!pickers) return <CircularProgress />;
-
-  if (!open) return '';
+export function prepareInitialValues(boat, user) {
 
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
@@ -363,50 +352,14 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   const owner = ownerids.includes[goldId];
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
 
-  const handleSubmit = (values, formApi) => {
-    const { ddf, email, ...submitted } = values;
-    const { initialValues } = formApi.getState();
-    [
-      'ddf', 'email', 'user',
-    ].forEach((key) => delete initialValues[key]);
-
-    const u = {
-      ...boatf2m(submitted),
-      name: ddf.new_name || name,
-      previous_names: [
-        ...((ddf.new_name && [name]) || []),
-        ...(submitted.previous_names||[]),
-      ],
-      oga_no, id, image_key,
-      ...salesChanges(ddf),
-    };
-    const newItems = {};
-    ['builder', 'designer', 'design_class'].forEach((key) => {
-      const new_val =  ddf[`new_${key}`];
-      if (new_val) {
-        u[key] = newItems[key] = { name: new_val, id: uuidv4() };
-      } else {
-        u[key] = pickers[key].find((p) => p.name === u[key]);
-      }
-    });
-    console.log('old', JSON.stringify(boat), 'new', JSON.stringify(u));
-    const fulldelta = formatters.jsonpatch.format(boatdiff(boat, u));
-
-    onSubmit(
-      fulldelta,
-      newItems,
-      boatDefined(u),
-      email,
-    );
-  }
 
   const sortedsales = for_sales?.sort((a, b) => a.created_at < b.created_at) || [];
 
   const initialValues = {
-    user,
+    email: user?.email || '',
     ...boatm2f(rest),
     ddf: {
-      name, oga_no, id, image_key, 
+      name, oga_no, id, image_key,
       can_sell: !!(owner || editor),
       update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
       current_sales_record: sortedsales[0],
@@ -417,6 +370,100 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
   ['builder', 'designer', 'design_class'].forEach((key) => {
     initialValues[key] = initialValues[key]?.name;
   });
+
+  return initialValues;
+
+}
+
+export function prepareModifiedValues(values, { name, oga_no, id, image_key }, pickers) {
+  const { ddf, email, ...submitted } = values;
+
+  const newItems = Object.fromEntries(
+    ['builder', 'designer', 'design_class']
+      .filter((key) => ddf[`new_${key}`])
+      .map((key) => {
+        return { name: ddf[`new_${key}`], id: uuidv4() };
+      })
+  );
+
+  const idItems = Object.fromEntries(
+    ['builder', 'designer', 'design_class']
+      .filter((key) => values[key])
+      .map((key) => {
+        const picker = [...pickers[key], newItems[key]].filter((i) => i);
+        const value = values[key];
+        if (value.id) {
+          // its already an object - this shouldn't happen but it does
+          return [key, value];
+        }
+        const r = picker.find((p) => p.name === value);
+        if (r) {
+          return [key, r];
+        }
+        console.log(`${value} is missing in ${key} picklist, making a new uuid`);
+        return [key, { name: value, id: uuidv4() }];
+      })
+  );
+  const boat = {
+    ...boatf2m(submitted),
+    name: ddf.new_name || name,
+    previous_names: [
+      ...((ddf.new_name && [name]) || []),
+      ...(submitted.previous_names || []),
+    ],
+    oga_no, id, image_key,
+    ...salesChanges(ddf),
+    ...idItems,
+  };
+
+  return { boat: boatDefined(boat), newItems, email };
+}
+
+export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
+
+  const [pickers, setPickers] = useState();
+
+  const handleSubmit = (values, formApi) => {
+
+    /*
+    // This might not be a good idea
+
+    const { initialValues } = formApi.getState();
+
+    const {
+      ddf,
+      email: emailFromInitialValues,
+      userFromInitialValues,
+      ...boatInitialValuesFromFormApi,
+    } = initialValues;
+
+    */
+
+    const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(values, boat, pickers);
+
+    const fulldelta = formatters.jsonpatch.format(boatdiff(boat, modifiedBoat));
+
+    onSubmit(
+      fulldelta,
+      newItems,
+      modifiedBoat,
+      email,
+    );
+  }
+
+  useEffect(() => {
+    if (!pickers) {
+      getPicklists().then((r) => {
+        setPickers(r)
+      }).catch((e) => console.log(e));
+    }
+  }, [pickers]);
+
+  if (!pickers) return <CircularProgress />;
+
+  if (!open) return '';
+
+  const activeSchema = schema || defaultSchema(pickers);
 
   return (
     <Dialog
@@ -435,10 +482,10 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit })
           FormTemplate={(props) => (
             <FormTemplate {...props} showFormControls={false} />
           )}
-          schema={schema(pickers)}
+          schema={activeSchema}
           onSubmit={handleSubmit}
           onCancel={onCancel}
-          initialValues={initialValues}
+          initialValues={prepareInitialValues(boat, user)}
           subscription={{ values: true }}
         />
       </LocalizationProvider>

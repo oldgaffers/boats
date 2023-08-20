@@ -10,18 +10,23 @@ import CreateBoatDialog from "./createboatdialog";
 
 export async function createBoat(boat, email, fileList, copyright, newItems) {
   if (!boat.oga_no) {
-    const r = await nextOgaNo();
-    if (r.status === 200) {
-      boat.oga_no = r.data;
+    const response = await nextOgaNo();
+    if (response.ok) {
+      boat.oga_no = await response.json();
     }
   }
-  const albumKey = await createPhotoAlbum(boat.name, boat.oga_no);
-  if (fileList?.length > 0) {
-    await postPhotos({ copyright, email, albumKey }, fileList);
+  const response = await createPhotoAlbum(boat.name, boat.oga_no);
+  if (response.ok) {
+    const albumKey = (await response.json()).albumKey;
+    if (fileList?.length > 0) {
+      await postPhotos({ copyright, email, albumKey }, fileList);
+    }
+    const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
+    await postBoatData(bd);
+    // console.log('created boat record');
+  } else {
+    console.log(response.statusText);
   }
-  const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
-  await postBoatData(bd);
-  // console.log('created boat record');
 }
 
 export function newPicklistItems(b) {
@@ -32,7 +37,7 @@ export function newPicklistItems(b) {
     boat.design_class = newItems.design_class.id;
   }
   if (new_designer) {
-    newItems.designer = { name: new_designer, id: uuidv4() } ;
+    newItems.designer = { name: new_designer, id: uuidv4() };
     boat.designer = newItems.designer.id;
   }
   if (new_builder) {
@@ -63,15 +68,15 @@ export default function CreateBoatButton() {
     const boatMetric = boatf2m(boat);
 
     createBoat(boatMetric, email, fileList, copyright, newItems)
-    .then((response) => {
+      .then((response) => {
         // console.log(response);
         setSnackBarOpen(true);
       },
-      (error) => {
-        // console.log('post', error);
-        // TODO snackbar from response.data      
-      },
-    );
+        (error) => {
+          // console.log('post', error);
+          // TODO snackbar from response.data      
+        },
+      );
   }
 
   const snackBarClose = () => {
