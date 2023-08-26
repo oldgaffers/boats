@@ -85,6 +85,57 @@ const hasJsxRuntime = (() => {
   }
 })();
 
+function fromDir(startPath, filter) {
+
+    if (!fs.existsSync(startPath)) {
+        return [];
+    }
+
+    const files = fs.readdirSync(startPath);
+    return files.map(file => {
+      const filename = path.join(startPath, file);
+      const stat = fs.lstatSync(filename);
+      if (stat.isDirectory()) {
+          return fromDir(filename, filter); //recurse
+      } else if (filename.endsWith(filter)) {
+          return filename;
+      };
+    }).flat().filter(p => p);
+};
+
+function allPublicHtml(isEnvProduction) {
+  console.log(paths.appPublic);
+  const files = fromDir(paths.appPublic, 'index.html');
+  return files.map(file =>
+    new HtmlWebpackPlugin(
+      Object.assign(
+        {},
+        {
+          inject: true,
+          filename: file.replace(`${paths.appPublic}/`, ''),
+          template: file,
+        },
+        isEnvProduction
+          ? {
+              minify: {
+                removeComments: true,
+                collapseWhitespace: true,
+                removeRedundantAttributes: true,
+                useShortDoctype: true,
+                removeEmptyAttributes: true,
+                removeStyleLinkTypeAttributes: true,
+                keepClosingSlash: true,
+                minifyJS: true,
+                minifyCSS: true,
+                minifyURLs: true,
+              },
+            }
+          : undefined
+      )
+    )
+  );
+}
+
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function (webpackEnv) {
@@ -563,32 +614,8 @@ module.exports = function (webpackEnv) {
       ].filter(Boolean),
     },
     plugins: [
-      // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin(
-        Object.assign(
-          {},
-          {
-            inject: true,
-            template: paths.appHtml,
-          },
-          isEnvProduction
-            ? {
-                minify: {
-                  removeComments: true,
-                  collapseWhitespace: true,
-                  removeRedundantAttributes: true,
-                  useShortDoctype: true,
-                  removeEmptyAttributes: true,
-                  removeStyleLinkTypeAttributes: true,
-                  keepClosingSlash: true,
-                  minifyJS: true,
-                  minifyCSS: true,
-                  minifyURLs: true,
-                },
-              }
-            : undefined
-        )
-      ),
+      // Generates `index.html` files with the <script> injected.
+      ...allPublicHtml(isEnvProduction),
       // Inlines the webpack runtime script. This script is too small to warrant
       // a network request.
       // https://github.com/facebook/create-react-app/issues/5358
