@@ -109,7 +109,6 @@ export default function BrowseBoats({
   useEffect(() => {
     if (!data) {
       getFilterable().then((r) => {
-        console.log(r);
         setData(r);
       }).catch((e) => console.log(e));
     }
