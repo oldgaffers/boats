@@ -207,6 +207,7 @@ const tags = [
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
   
 ];
+console.log(window.location);
 const iddivs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 const brdivs = tags.map((tag) => {
   const c = document.getElementsByClassName(`br_${tag}`);
