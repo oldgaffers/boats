@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { boatf2m } from "../util/format";
 import { postPhotos } from "./postphotos";
-import { createPhotoAlbum, postBoatData, nextOgaNo } from './boatregisterposts';
+import { createPhotoAlbum, postBoatData, nextOgaNo, disposeOgaNo } from './boatregisterposts';
 import { v4 as uuidv4 } from 'uuid';
 import CreateBoatDialog from "./createboatdialog";
 // const CreateBoatDialog = React.lazy(()=> import("./createboatdialog"));
@@ -13,20 +13,25 @@ export async function createBoat(boat, email, fileList, copyright, newItems) {
     const response = await nextOgaNo();
     if (response.ok) {
       boat.oga_no = await response.json();
+    } else {
+      console.log('nextOgaNo', response);
     }
   }
+  // const b = Object.fromEntries(Object.entries(boat).filter((k, v) => v));
   const response = await createPhotoAlbum(boat.name, boat.oga_no);
-  if (response.ok) {
-    const albumKey = (await response.json()).albumKey;
-    if (fileList?.length > 0) {
-      await postPhotos({ copyright, email, albumKey }, fileList);
-    }
-    const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
-    await postBoatData(bd);
-    // console.log('created boat record');
-  } else {
+  if (!response.ok) {
     console.log(response.statusText);
+    await disposeOgaNo(boat.oga_no);
+    return undefined;
   }
+  const j = await response.json();
+  const albumKey = j.albumKey;
+  if ((fileList?.length || 0) > 0) {
+    await postPhotos({ copyright, email, albumKey }, fileList);
+  }
+  const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
+  await postBoatData(bd);
+  console.log('created boat record');
 }
 
 export function newPicklistItems(b) {

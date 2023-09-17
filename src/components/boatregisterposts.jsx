@@ -71,18 +71,13 @@ export async function postCrewEnquiry(data) {
 }
 
 export async function createPhotoAlbum(name, ogaNo) {
-  const r = await fetch('https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/',
+  return fetch('https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws/',
     {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ name, oga_no: ogaNo }),
       method: 'POST',
-      validateStatus: (status) => (status >= 200 && status < 300) || (status === 409),
     }
   );
-  if (r.status === 409) {
-    console.log('conflict', r);
-  }
-  return r.albumKey;
 }
 
 export async function getBoatData(ogaNo) {
@@ -114,7 +109,7 @@ export async function getLargestImage(albumKey) {
 }
 
 export async function nextOgaNo() {
-  return (await fetch('https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/')).json();
+  return fetch('https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/');
 }
 
 export async function disposeOgaNo(oga_no) {
