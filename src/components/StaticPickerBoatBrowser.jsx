@@ -10,7 +10,7 @@ export default function StaticPickerBoatBrowser({ title, state, ...props }) {
           Sorry, we had a problem getting the data to browse the register
           </div>);
   }
-  if (loading || !data) return <CircularProgress />
+  if (loading || !data) return '';//<CircularProgress />
 
   return (
       <BrowseBoats 

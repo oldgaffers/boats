@@ -35,7 +35,7 @@ export default function Boat({ location }) {
     return <Typography>Nothing here, go back to the <a href="..">main page</a></Typography>;
   }
 
-  if (!data) return <CircularProgress />;
+  if (!data) return '';//<CircularProgress />;
 
   if (ogaNo === '') {
     return (<div>

@@ -7,8 +7,35 @@ import SailTable from './sailtable';
 import { m2f, price, formatDesignerBuilder } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
+import { Typography } from '@mui/material';
 
 const registration_fields = ['sail_number','ssr','nhsr','fishing_number','mmsi','callsign','nsbr','uk_part1'];
+
+export function HandicapDisplay({ handicapData }) {
+  let solentlabel;
+  let label;
+  if (handicapData.checked) {
+    label = 'Checked T(H)CF';
+    solentlabel = 'Checked Solent Rating';
+  } else {
+    label = 'Proposed T(H)CF';
+    solentlabel = 'Proposed Solent Rating';
+  }
+  return <>
+      <ConditionalText label="Calculated T(H)CF" value={handicapData?.calculated_thcf?.toFixed(3)}/>
+      <ConditionalText label={label} value={handicapData?.thcf?.toFixed(3)}/>
+      <ConditionalText label={solentlabel} value={handicapData?.solent.thcf?.toFixed(3)}/>
+  </>;
+}
+
+export function HandicapNoDisplay() {
+  return (<><Typography variant='subtitle2' component='span'>T(H)CF: </Typography><Typography variant="body1" component='span'>
+    We are asking all boat owners to re-validate the date used to calculate handicaps.
+    The best way to do this is to use the 'I have Edits' button and step through the choices,
+    making any changes you want. If all is correct, just submit the form. Alternatively, email
+    the boat register editors.
+  </Typography></>)
+}
 
 export default function BoatDetail({ boat, user }) {
   const [value, setValue] = useState(0);
@@ -60,23 +87,13 @@ export default function BoatDetail({ boat, user }) {
         </Paper>
       )});    
   }
-  if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
-    let solentlabel;
-    let label;
-    if (hd.checked) {
-      label = 'Checked T(H)CF';
-      solentlabel = 'Checked Solent Rating';
-    } else {
-      label = 'Proposed T(H)CF';
-      solentlabel = 'Proposed Solent Rating';
-    }
+  // if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
+  if(hd.main || hd.fore_triangle_base) {
       panes.push({ title: 'Rig and Sails', children: (
         <Paper>
           <ConditionalText label="Fore triangle base" value={m2f(hd.fore_triangle_base)}/>
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)}/>
-          <ConditionalText label="Calculated T(H)CF" value={hd.calculated_thcf && hd.calculated_thcf.toFixed(3)}/>
-          <ConditionalText label={label} value={hd.thcf && hd.thcf.toFixed(3)}/>
-          <ConditionalText label={solentlabel} value={hd.solent?.thcf && hd.solent.thcf.toFixed(3)}/>
+          <HandicapNoDisplay handicapData={hd} />
           <SailTable handicapData={hd}/>
         </Paper>
       )});    
