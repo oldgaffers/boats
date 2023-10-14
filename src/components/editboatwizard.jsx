@@ -341,7 +341,7 @@ export function salesChanges(ddf) {
 
   const fs = [...(ddf.other_sales || []), ddf.current_sales_record];
 
-  const for_sales = fs.filter((s) => s);
+  const for_sales = fs.filter((s) => s && s.asking_price > 0);
 
   return { for_sales, selling_status };
 }
@@ -404,6 +404,9 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key }, p
   );
 
   function name2object(value, picker, newItem) {
+    if (value?.name) {
+      return value;
+    }
     if (value === newItem?.name) {
       return newItem;
     }

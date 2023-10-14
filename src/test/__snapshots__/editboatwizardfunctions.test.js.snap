@@ -271,7 +271,11 @@ Object {
   "construction_method": "carvel",
   "ddf": Object {
     "can_sell": false,
-    "current_sales_record": undefined,
+    "current_sales_record": Object {
+      "asking_price": 0,
+      "flexibility": "normal",
+      "sales_text": "",
+    },
     "id": undefined,
     "image_key": "9NV8KW",
     "name": "Robinetta",
@@ -433,7 +437,11 @@ Object {
   "construction_method": "carvel",
   "ddf": Object {
     "can_sell": true,
-    "current_sales_record": undefined,
+    "current_sales_record": Object {
+      "asking_price": 0,
+      "flexibility": "normal",
+      "sales_text": "",
+    },
     "id": undefined,
     "image_key": "9NV8KW",
     "name": "Robinetta",
@@ -589,11 +597,8 @@ Object {
   "boat": Object {
     "builder": Array [
       Object {
-        "id": "e2d3f709-09ac-47b3-8f72-b9b4777abdd0",
-        "name": Object {
-          "id": "a27bca50-d155-428a-be49-a542d64ba316",
-          "name": "Enterprise Small Craft",
-        },
+        "id": "a27bca50-d155-428a-be49-a542d64ba316",
+        "name": "Enterprise Small Craft",
       },
     ],
     "callsign": "MKDZ8",
@@ -602,11 +607,8 @@ Object {
     "construction_method": "carvel",
     "designer": Array [
       Object {
-        "id": "274f593f-7560-4bfc-a5bb-3b46fe4b99bd",
-        "name": Object {
-          "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
-          "name": "D.A. Rayner",
-        },
+        "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
+        "name": "D.A. Rayner",
       },
     ],
     "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
