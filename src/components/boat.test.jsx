@@ -31,7 +31,7 @@ const mocks = [
 test('renders boat', async () => {
   render(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <Boat location={{ search: '?oga_no=1' }}/>
+      <Boat ogaNo={1}/>
     </MockedProvider>
   );
   await waitFor(() => {
@@ -44,9 +44,9 @@ test('renders boat', async () => {
 test('renders missing ogano', async () => {
   render(
     <MockedProvider mocks={mocks} addTypename={false}>
-      <Boat location={{ search: '?oga_no=0' }}/>
+      <Boat ogaNo={0}/>
     </MockedProvider>
   );
-  expect(screen.getAllByRole('link').length).toBe(3);
+  expect(screen.getAllByRole('link').length).toBe(4);
 
 });

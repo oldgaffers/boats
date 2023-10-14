@@ -65,9 +65,9 @@ export function HandicapDisplay({ boat }) {
   </>
 }
 
-export default function BoatSummary({ location, boat }) {
+export default function BoatSummary({ boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const href = boatUrl(boat.oga_no, location);
+  const href = boatUrl(boat.oga_no);
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
