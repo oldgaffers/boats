@@ -47,6 +47,24 @@ export const constructionItems = (pickers) => {
   ];
 };
 
+export const extendableList = ({ pickers, name, label }) => {
+  console.log('extendableList', name, label)
+  return [
+    {
+      component: 'dual-list-select',
+      name,
+      label: `${label}(s)`,
+      options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
+    },
+    {
+      component: 'text-field',
+      name: `ddf.new_${name}`,
+      label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
+      isRequired: false,
+    },
+  ];
+};
+
 export const extendableItems = ({ pickers, name, label }) => {
   // console.log('extendableItems', name, label)
   return [
@@ -75,6 +93,6 @@ export const extendableItems = ({ pickers, name, label }) => {
   ];
 };
 
-export const builderItems = (pickers) => extendableItems({ pickers, name: 'builder', label: 'Builder' })
-export const designerItems = (pickers) => extendableItems({ pickers, name: 'designer', label: 'Designer' })
+export const builderItems = (pickers) => extendableList({ pickers, name: 'builder', label: 'Builder' })
+export const designerItems = (pickers) => extendableList({ pickers, name: 'designer', label: 'Designer' })
 export const designClassItems = (pickers) => extendableItems({ pickers, name: 'design_class', label: 'Design Class' })

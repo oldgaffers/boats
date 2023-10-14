@@ -345,7 +345,6 @@ export function salesChanges(ddf) {
 }
 
 export function prepareInitialValues(boat, user) {
-
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
@@ -367,7 +366,18 @@ export function prepareInitialValues(boat, user) {
     },
   };
 
-  ['builder', 'designer', 'design_class'].forEach((key) => {
+  ['builder', 'designer'].forEach((key) => {
+    const val = initialValues[key];
+    if (Array.isArray(val)) {
+      initialValues[key] = val.map((v) => v.name);
+    } else if (val) {
+      initialValues[key] = [val.name]
+    } else {
+      initialValues[key] = [];
+    }
+  });
+
+  ['design_class'].forEach((key) => {
     initialValues[key] = initialValues[key]?.name;
   });
 
@@ -386,24 +396,23 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key }, p
       })
   );
 
-  const idItems = Object.fromEntries(
-    ['builder', 'designer', 'design_class']
-      .filter((key) => values[key])
-      .map((key) => {
-        const picker = [...pickers[key], newItems[key]].filter((i) => i);
-        const value = values[key];
-        if (value.id) {
-          // its already an object - this shouldn't happen but it does
-          return [key, value];
-        }
-        const r = picker.find((p) => p.name === value);
-        if (r) {
-          return [key, r];
-        }
-        console.log(`${value} is missing in ${key} picklist, making a new uuid`);
-        return [key, { name: value, id: uuidv4() }];
-      })
-  );
+  function name2object(value, picker, newItem) {
+    if (value === newItem?.name) {
+      return newItem;
+    }
+    const r = picker.find((p) => p.name === value);
+    if (r) {
+      return r;
+    }
+    console.log(`${value} is missing in picklist, making a new uuid`);
+    return { name: value, id: uuidv4() };
+  }
+
+  const design_class = name2object(values.design_class, pickers['design_class'], newItems['design_class']);
+
+  const builder = values.builder.map((v) =>  name2object(v, pickers['builder'], newItems['builder']));
+  const designer = values.designer.map((v) =>  name2object(v, pickers['designer'], newItems['designer']));
+
   const boat = {
     ...boatf2m(submitted),
     name: ddf.new_name || name,
@@ -413,7 +422,9 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key }, p
     ],
     oga_no, id, image_key,
     ...salesChanges(ddf),
-    ...idItems,
+    builder,
+    designer,
+    design_class,
   };
 
   return { boat: boatDefined(boat), newItems, email };
@@ -442,6 +453,9 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
     const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(values, boat, pickers);
 
     const fulldelta = formatters.jsonpatch.format(boatdiff(boat, modifiedBoat));
+
+    console.log('A', JSON.stringify(boat));
+    console.log('B', JSON.stringify(modifiedBoat));
 
     onSubmit(
       fulldelta,
