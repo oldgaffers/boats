@@ -11,7 +11,7 @@ import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
 
-const MEMBER_QUERY = gql(`query members($members: [Int]!) {
+export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
   members(members: $members) {
     firstname
     lastname
