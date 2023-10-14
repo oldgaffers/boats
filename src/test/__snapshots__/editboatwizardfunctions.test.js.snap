@@ -262,7 +262,9 @@ exports[`diff no change 1`] = `undefined`;
 
 exports[`prepareInitialValues 1`] = `
 Object {
-  "builder": "Enterprise Small Craft",
+  "builder": Array [
+    "Enterprise Small Craft",
+  ],
   "callsign": "MKDZ8",
   "construction_details": "pitch pine on oak and elm",
   "construction_material": "wood",
@@ -278,7 +280,9 @@ Object {
     "update_sale": "unsell",
   },
   "design_class": undefined,
-  "designer": "D.A. Rayner",
+  "designer": Array [
+    "D.A. Rayner",
+  ],
   "email": "",
   "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
 Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
@@ -420,7 +424,9 @@ him by the Enterprise Small Craft Company, Rock Ferry, Birkenhead.</p>",
 
 exports[`prepareInitialValues 2`] = `
 Object {
-  "builder": "Enterprise Small Craft",
+  "builder": Array [
+    "Enterprise Small Craft",
+  ],
   "callsign": "MKDZ8",
   "construction_details": "pitch pine on oak and elm",
   "construction_material": "wood",
@@ -436,7 +442,9 @@ Object {
     "update_sale": "unsell",
   },
   "design_class": undefined,
-  "designer": "D.A. Rayner",
+  "designer": Array [
+    "D.A. Rayner",
+  ],
   "email": "x@b.c",
   "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
 Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
@@ -579,18 +587,28 @@ him by the Enterprise Small Craft Company, Rock Ferry, Birkenhead.</p>",
 exports[`prepareModifiedValues 1`] = `
 Object {
   "boat": Object {
-    "builder": Object {
-      "id": "a27bca50-d155-428a-be49-a542d64ba316",
-      "name": "Enterprise Small Craft",
-    },
+    "builder": Array [
+      Object {
+        "id": "e2d3f709-09ac-47b3-8f72-b9b4777abdd0",
+        "name": Object {
+          "id": "a27bca50-d155-428a-be49-a542d64ba316",
+          "name": "Enterprise Small Craft",
+        },
+      },
+    ],
     "callsign": "MKDZ8",
     "construction_details": "pitch pine on oak and elm",
     "construction_material": "wood",
     "construction_method": "carvel",
-    "designer": Object {
-      "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
-      "name": "D.A. Rayner",
-    },
+    "designer": Array [
+      Object {
+        "id": "274f593f-7560-4bfc-a5bb-3b46fe4b99bd",
+        "name": Object {
+          "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
+          "name": "D.A. Rayner",
+        },
+      },
+    ],
     "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
 Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
 \\"How To\\" articles in the Y.M. Economy limited the size to less than 23''

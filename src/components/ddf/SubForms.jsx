@@ -437,6 +437,51 @@ export const sellingDataFields = [
     isRequired: true,
     validate: [{ type: 'required' }],
   },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.reduced',
+    hideField: false,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.flexibility',
+    hideField: false ,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.summary',
+    hideField: true,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.sold',
+    hideField: true,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.offered',
+    hideField: true,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.updated_at',
+    hideField: true,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.created_at',
+    hideField: true,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.seller_gold_id',
+    hideField: true,
+  },
+  {
+    component: "text-field",
+    name: 'ddf.current_sales_record.seller_member',
+    hideField: true,
+  },
 ];
 
 export const salesSteps = (firstStep, nextStep) => [
@@ -500,12 +545,59 @@ export const salesSteps = (firstStep, nextStep) => [
             dataType: 'float',
           },
           {
+            component: "checkbox",
+            name: 'ddf.current_sales_record.reduced',
+            label: 'Reduced',
+            hideField: false,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.flexibility',
+            label: 'Price flexibility',
+            hideField: false ,
+          },
+          {
             component: 'html',
             name: "ddf.current_sales_record.sales_text",
             controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
             toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
             maxLength: 500,
             title: "Updated Sales Text",
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.summary',
+            hideField: true,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.sold',
+            hideField: true,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.offered',
+            hideField: true,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.updated_at',
+            hideField: true,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.created_at',
+            hideField: true,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.seller_gold_id',
+            hideField: true,
+          },
+          {
+            component: "text-field",
+            name: 'ddf.current_sales_record.seller_member',
+            hideField: true,
           },
         ],
       },

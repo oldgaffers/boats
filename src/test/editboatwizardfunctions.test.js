@@ -60,13 +60,15 @@ test('prepareInitialValues', () => {
   expect(prepareInitialValues(robinetta)).toMatchSnapshot();
   const iv = prepareInitialValues(robinetta, user);
   expect(iv).toMatchSnapshot();
-  expect(iv.designer).toBe('D.A. Rayner')
-  expect(iv.builder).toBe('Enterprise Small Craft')
+  expect(iv.designer).toEqual(['D.A. Rayner']);
+  expect(iv.builder).toEqual(['Enterprise Small Craft']);
 });
 
 test('prepareModifiedValues', () => {
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = robinetta;
   const ddf = {};
+  rest.builder = [rest.builder];
+  rest.designer = [rest.designer];
   const submitted = { ...rest, ddf };
   const mv = prepareModifiedValues(submitted, robinetta, pickers);
   expect(mv).toMatchSnapshot();
@@ -81,6 +83,8 @@ test('no change', () => {
   {
     const iv = prepareInitialValues(robinetta, user);
     const { boat, newItems, email } = prepareModifiedValues(iv, robinetta, pickers);
+    robinetta.builder = [robinetta.builder];
+    robinetta.designer = [robinetta.designer];
     expect(boat).toEqual(robinetta);
     expect(newItems).toEqual({});
     expect(email).toEqual(user.email);
