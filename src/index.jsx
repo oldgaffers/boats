@@ -98,6 +98,12 @@ const Pages = (props) => {
   }
   // console.log(paypalOptions);
 
+  if (app === 'app' && window.location.pathname.includes('/boat/')) {
+    return <Wrapper {...auth} scope="member">
+      <Boat ogaNo={getOgaNo()} />
+    </Wrapper>
+  }
+
   switch (app) {
     case 'login':
       return (
