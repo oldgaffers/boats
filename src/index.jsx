@@ -38,6 +38,20 @@ const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
 */
 
+function getOgaNo() {
+  const params = new URLSearchParams(window.location.search);
+  const qp = params.get('oga_no');
+  if (qp) {
+    return Number(qp);
+  }
+  const path = window.location.pathname?.split('/') || ['boat', ''];
+  const p = path.indexOf('boat') + 1;
+  if (Number(path[p]) !== 0) {
+    return Number(path[p]);
+  }
+  return 0;
+}
+
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
@@ -96,7 +110,7 @@ const Pages = (props) => {
         <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
-              <Boat location={window.location} />
+              <Boat ogaNo={getOgaNo()} />
             </OGAProvider>
           </TokenProvider>
         </Auth0Provider>
@@ -207,7 +221,6 @@ const tags = [
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
   
 ];
-console.log(window.location);
 const iddivs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 const brdivs = tags.map((tag) => {
   const c = document.getElementsByClassName(`br_${tag}`);

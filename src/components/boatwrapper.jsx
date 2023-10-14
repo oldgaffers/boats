@@ -58,6 +58,7 @@ export default function BoatWrapper({ client, boat, location }) {
   const ownerships = result || boat.ownerships || [];
   ownerships.sort((a, b) => a.start > b.start);
 
+  return <div>Boatwrapper</div>;
   return (
     <Paper sx={{paddingTop: '20px', paddingBottom: '20px'}}>
       <Container maxWidth="lg">
