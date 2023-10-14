@@ -339,8 +339,11 @@ export function salesChanges(ddf) {
   }
 
   const fs = [...(ddf.other_sales || []), ddf.current_sales_record];
-  const for_sales = fs.filter((s) => s);
 
+  const for_sales = fs.filter((s) => s);
+  console.log('SALES 1', ddf.other_sales, ddf.current_sales_record);
+  console.log('SALES 2', for_sales);
+  console.log('SALES 3', for_sales);
   return { for_sales, selling_status };
 }
 
@@ -353,6 +356,8 @@ export function prepareInitialValues(boat, user) {
 
 
   const sortedsales = for_sales?.sort((a, b) => a.created_at < b.created_at) || [];
+
+  console.log('sortedsales', sortedsales);
 
   const initialValues = {
     email: user?.email || '',
@@ -410,6 +415,7 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key }, p
 
   const design_class = name2object(values.design_class, pickers['design_class'], newItems['design_class']);
 
+  console.log('Q', values.builder, values.designer);
   const builder = values.builder.map((v) =>  name2object(v, pickers['builder'], newItems['builder']));
   const designer = values.designer.map((v) =>  name2object(v, pickers['designer'], newItems['designer']));
 
@@ -436,26 +442,9 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
 
   const handleSubmit = (values, formApi) => {
 
-    /*
-    // This might not be a good idea
-
-    const { initialValues } = formApi.getState();
-
-    const {
-      ddf,
-      email: emailFromInitialValues,
-      userFromInitialValues,
-      ...boatInitialValuesFromFormApi,
-    } = initialValues;
-
-    */
-
     const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(values, boat, pickers);
 
     const fulldelta = formatters.jsonpatch.format(boatdiff(boat, modifiedBoat));
-
-    console.log('A', JSON.stringify(boat));
-    console.log('B', JSON.stringify(modifiedBoat));
 
     onSubmit(
       fulldelta,
