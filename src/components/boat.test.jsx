@@ -1,24 +1,52 @@
 import React from 'react';
-import { screen, render } from '@testing-library/react';
+import { screen, render, waitFor } from '@testing-library/react';
+import { MockedProvider } from "@apollo/client/testing";
 import Boat from './boat';
+import { MEMBER_QUERY } from './boatwrapper';
+import * as api from '../components/boatregisterposts';
 
-test('renders back link', () => {
-  render(
-      <Boat location={{ search: '' }}/>
-  );
-  expect(screen.getByRole('link')).toBeInTheDocument();
+jest.mock("../components/boatregisterposts", () => {
+  return {
+    getBoatData: () => Promise.resolve({ name: 'x' }),
+    getPicklists: () => Promise.resolve({}),
+  };
 });
-/*
-test('renders progress bar', () => {
+
+const mocks = [
+  {
+    request: {
+      query: MEMBER_QUERY,
+      variables: {
+        name: "Buck"
+      }
+    },
+    result: {
+      data: {
+        dog: { id: "1", name: "Buck", breed: "bulldog" }
+      }
+    }
+  }
+];
+
+test('renders boat', async () => {
   render(
+    <MockedProvider mocks={mocks} addTypename={false}>
       <Boat location={{ search: '?oga_no=1' }}/>
+    </MockedProvider>
   );
-  expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  await waitFor(() => {
+    const buttons = screen.getAllByRole('button');
+    expect(buttons.length).toBe(5);
+  });
+
 });
-*/
-test('renders progress bar too', () => {
+
+test('renders missing ogano', async () => {
   render(
-      <Boat location={{ pathname: '/boat/1' }}/>
+    <MockedProvider mocks={mocks} addTypename={false}>
+      <Boat location={{ search: '?oga_no=0' }}/>
+    </MockedProvider>
   );
-  expect(screen.getByRole('progressbar')).toBeInTheDocument();
+  expect(screen.getAllByRole('link').length).toBe(3);
+
 });
