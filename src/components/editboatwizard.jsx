@@ -319,12 +319,13 @@ export function boatdiff(before, after) {
 }
 
 export function salesChanges(ddf) {
+
+  console.log()
   let selling_status = 'not_for_sale';
 
   switch (ddf.update_sale) {
     case 'unsell':
     case 'sold':
-    case undefined:
       selling_status = 'not_for_sale';
       break;
     case 'update':
@@ -362,10 +363,15 @@ export function prepareInitialValues(boat, user) {
       name, oga_no, id, image_key,
       can_sell: !!(owner || editor),
       update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
-      current_sales_record: sortedsales[0],
-      other_sales: sortedsales.slice(1),
+      current_sales_record: { asking_price: 0, sales_text: '', flexibility: 'normal' },
+      other_sales: sortedsales,
     },
   };
+
+  if (boat.selling_status === 'for_sale') {
+    initialValues.ddf.current_sales_record = sortedsales[0];
+    initialValues.ddf.other_sales = sortedsales.slice(1)    
+  }
 
   ['builder', 'designer'].forEach((key) => {
     const val = initialValues[key];

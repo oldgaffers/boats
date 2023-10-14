@@ -440,11 +440,13 @@ export const sellingDataFields = [
   {
     component: "text-field",
     name: 'ddf.current_sales_record.reduced',
-    hideField: false,
+    hideField: true,
+    value: false
   },
   {
     component: "text-field",
     name: 'ddf.current_sales_record.flexibility',
+    label: 'Price flexibility',
     hideField: false ,
   },
   {

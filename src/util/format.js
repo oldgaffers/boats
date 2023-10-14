@@ -133,6 +133,12 @@ export function boatf2m(obj) {
 }
 
 export function boatDefined(value) {
+  if (value === false) {
+    return false;
+  }
+  if (!value) {
+    return undefined;
+  }
   if (typeof value === 'object') {
     if (Array.isArray(value)) {
       if (value.length === 0) {
@@ -140,11 +146,13 @@ export function boatDefined(value) {
       }
       return value.map((n) => boatDefined(n)).filter((item) => item);
     }
-    return Object.fromEntries(
-      Object.keys(value)
-      .map((key) => [key, boatDefined(value[key]) ])
-      .filter(([key, value]) => value !== undefined)
-    );
+    if (Object.keys(value).length > 0) {
+      return Object.fromEntries(
+        Object.keys(value)
+          .map((key) => [key, boatDefined(value[key])])
+          .filter(([key, value]) => value !== undefined)
+      );
+    }
   }
   return value;
 }
