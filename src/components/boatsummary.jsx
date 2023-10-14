@@ -35,7 +35,7 @@ function ReactFBLike({
     js.crossOrigin = 'anonymous';
     js.nonce = 'u3igJ9S2';
     js.src = `//connect.facebook.net/${language}/sdk.js#xfbml=1&version=${version}&appId=${appId}`;
-    last.parentNode.insertBefore(js, last);
+    last?.parentNode?.insertBefore(js, last);
   }, [appId, language, version]);
   return (
     <div
