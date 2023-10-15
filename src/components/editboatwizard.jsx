@@ -93,7 +93,7 @@ const defaultSchema = (pickers) => {
           },
           {
             name: "design-step",
-            nextStep: "references-step",
+            nextStep: "basic-dimensions-step",
             fields: [
               {
                 title: "Design",
@@ -102,10 +102,30 @@ const defaultSchema = (pickers) => {
                 fields: [
                   ...designerItems(pickers),
                   ...designClassItems(pickers),
+                ],
+              },
+            ],
+          },
+          {
+            name: "basic-dimensions-step",
+            nextStep: "references-step",
+            fields: [
+              {
+                title: "Basic Dimensions",
+                name: "basic-dimensions",
+                component: 'sub-form',
+                fields: [
                   {
                     component: 'text-field',
                     name: "handicap_data.length_on_deck",
-                    label: "Length on deck (decimal feet)",
+                    label: "Length on deck (LOD) (decimal feet)",
+                    type: "number",
+                    dataType: 'float',
+                  },
+                  {
+                    component: 'text-field',
+                    name: "handicap_data.length_on_waterline",
+                    label: "Waterline Length {LWL) (decimal feet)",
                     type: "number",
                     dataType: 'float',
                   },
