@@ -29,7 +29,7 @@ const addNames = async (client, owners) => {
     return owners;
   }
   const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
-  const members = r.members;
+  const members = r.data.members;
   return owners.map((owner) => {
     if (owner.name) {
       return owner;
