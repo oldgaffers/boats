@@ -30,7 +30,7 @@ export function HandicapDisplay({ handicapData }) {
 
 export function HandicapNoDisplay() {
   return (<><Typography variant='subtitle2' component='span'>T(H)CF: </Typography><Typography variant="body1" component='span'>
-    We are asking all boat owners to re-validate the date used to calculate handicaps.
+    We are asking all boat owners to re-validate the data used to calculate handicaps.
     The best way to do this is to use the 'I have Edits' button and step through the choices,
     making any changes you want. If all is correct, just submit the form. Alternatively, email
     the boat register editors.
