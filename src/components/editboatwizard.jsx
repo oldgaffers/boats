@@ -49,8 +49,14 @@ const defaultSchema = (pickers) => {
             fields: [
               {
                 component: 'text-field',
-                name: "ddf.can_sell",
-                label: "can buy/sell",
+                name: "ddf.owner",
+                label: "is current owner",
+                hideField: true,
+              },
+              {
+                component: 'text-field',
+                name: "ddf.editor",
+                label: "is editor",
                 hideField: true,
               },
               {
@@ -176,6 +182,11 @@ const defaultSchema = (pickers) => {
                       }*/
                     ],
                   },
+                  {
+                    component: 'plain-text',
+                    name: "ddf.h1",
+                    label: "LOD, LWL, beam and draft affect handicaps",
+                  },
                 ],
               },
             ],
@@ -267,7 +278,7 @@ const defaultSchema = (pickers) => {
                     helperText: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
                     validate: [{ type: 'required' }],
                     options: [
-                      { label: "I want to add handicap data", value: "1" },
+                      { label: "I want to add or check handicap data", value: "1" },
                       { label: "I'll leave it for now", value: "2" }
                     ],
                   },
@@ -279,7 +290,7 @@ const defaultSchema = (pickers) => {
           {
             name: 'own-step',
             nextStep: ({ values }) => {
-              if (values.ddf.can_sell) {
+              if (values.ddf.owner || values.ddf.editor) {
                 if (values.ddf.update_sale === 'update') {
                   return 'update-sell-step';
                 }
@@ -308,7 +319,7 @@ const defaultSchema = (pickers) => {
                   const { values } = formOptions.getState();
                   return {
                     initialValue: !!values.ddf.current_sales_record,
-                    isReadOnly: !values.ddf.can_sell
+                    isReadOnly: !(values.ddf.owner || values.ddf.editor)
                   }
                 },
               },
@@ -370,9 +381,8 @@ export function prepareInitialValues(boat, user) {
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
-  const owner = ownerids.includes[goldId];
+  const owner = ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
-
 
   const sortedsales = for_sales?.sort((a, b) => a.created_at < b.created_at) || [];
 
@@ -381,7 +391,7 @@ export function prepareInitialValues(boat, user) {
     ...boatm2f(rest),
     ddf: {
       name, oga_no, id, image_key,
-      can_sell: !!(owner || editor),
+      owner, editor,
       update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
       current_sales_record: { asking_price: 0, sales_text: '', flexibility: 'normal' },
       other_sales: sortedsales,

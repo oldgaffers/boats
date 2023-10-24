@@ -394,6 +394,15 @@ export const doneFields = [
     component: 'sub-form',
     fields: [
       {
+        component: 'checkbox',
+        name: "handicap_data.checked",
+        label: "I've checked all handicap data and I believe it to be correct.",
+        condition: {
+          when: "ddf.owner",
+          is: true,
+        }
+      },
+      {
         component: 'plain-text',
         name: "ddf.we_are_done",
         label:
