@@ -36,6 +36,10 @@ export function feet(n) {
   return `${n.toFixed(2)} ft`;
 }
 
+export function kg(n) {
+  return `${Math.floor(n)} kg`;
+}
+
 export function m2f(val) {
   if (val) {
     // return `${m2df(val)} ft`

@@ -9,7 +9,7 @@ import ConditionalText from './conditionaltext';
 import References from './references';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { boatUrl } from '../util/rr';
-import { HandicapNoDisplay } from './boatdetail';
+import { HandicapDisplay } from './boatdetail';
 
 function ReactFBLike({
   language='en_GB',
@@ -50,21 +50,6 @@ function ReactFBLike({
     );
 }
 
-export function HandicapDisplay({ boat }) {
-  let solentlabel;
-  let label;
-  if (boat.handicap_data.checked) {
-    label = 'Checked T(H)CF';
-    solentlabel = 'Checked Solent Rating';
-  } else {
-    label = 'Proposed T(H)CF';
-    solentlabel = 'Proposed Solent Rating';
-  }
-  return <><ConditionalText label={label} value={boat.handicap_data?.thcf?.toFixed(3)} />
-  <ConditionalText label={solentlabel} value={boat.handicap_data?.solent?.thcf?.toFixed(3)} />
-  </>
-}
-
 export default function BoatSummary({ boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const href = boatUrl(boat.oga_no);
@@ -85,7 +70,7 @@ export default function BoatSummary({ boat }) {
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
     </Box>
-    <HandicapNoDisplay/>
+    <HandicapDisplay/>
     <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
     <div>
