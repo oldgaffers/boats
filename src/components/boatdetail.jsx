@@ -59,7 +59,7 @@ export default function BoatDetail({ boat, user }) {
           <ConditionalText value={m2f(hd.length_on_deck)} label="Length on deck (LOD)" />
           <ConditionalText label="Waterline Length (LWL)" value={m2f(hd.length_on_waterline)} />
           <ConditionalText value={m2f(hd.beam)} label="Beam" />
-          <ConditionalText value={m2f(boat.draft)} label="Draft" />
+          <ConditionalText value={m2f(hd.draft)} label="Draft" />
           <ConditionalText value={kg(hd.displacement)} label="Displacement" />
           <ConditionalText value={hd.solent?.hull_shape} label="Solent Rating Hull Shape" />
         </Paper>)
