@@ -265,6 +265,10 @@ describe('EditBoatWizard component tests', () => {
     });
     fireEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
+      screen.getByText('Basic Dimensions');
+    });
+    fireEvent.click(screen.getByText('Continue'));
+    await waitFor(() => {
       screen.getByText('References');
     });
     fireEvent.click(screen.getByText('Continue'));
@@ -296,6 +300,11 @@ describe('EditBoatWizard component tests', () => {
     await waitFor(() => {
       screen.getByText('Known Owners');
     });
+    fireEvent.click(screen.getByText('Continue'));
+    await waitFor(() => {
+      screen.getByText('I want to sell this boat');
+    });
+    fireEvent.click(screen.getByRole('checkbox'));
     fireEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Submit');
