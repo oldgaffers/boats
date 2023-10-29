@@ -36,10 +36,11 @@ function andfilter(boats, k, filters) {
 }
 
 export function applyFilters(boats, filters) {
-    const [sail, ...k] = Object.keys(filters || {});
+    const all = Object.keys(filters || {});
+    const k = all.filter((v) => v !== 'sail');
     let filteredBoats = [...boats];
-    if (sail) {
-       filteredBoats = boats.filter((b) => filters[sail].some(k => { return b[k]}));
+    if (all.includes('sail')) {
+       filteredBoats = boats.filter((b) => filters.sail.some(k => { return b[k]}));
     }
     if (k.length === 0) {
         return filteredBoats;
