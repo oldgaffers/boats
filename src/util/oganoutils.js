@@ -8,8 +8,7 @@ export function findFirstAbsent(boat) {
     return ogaNos[idx] + 1;
 }
 
-export function applyFilters(boats, filters) {
-    const k = Object.keys(filters || {});
+function andfilter(boats, k, filters) {
     let filteredBoats = [...boats];
     k.forEach(filter => {
         let wanted = filters[filter];
@@ -34,6 +33,18 @@ export function applyFilters(boats, filters) {
         });
     });
     return filteredBoats;
+}
+
+export function applyFilters(boats, filters) {
+    const [sail, ...k] = Object.keys(filters || {});
+    let filteredBoats = [...boats];
+    if (sail) {
+       filteredBoats = boats.filter((b) => filters[sail].some(k => { return b[k]}));
+    }
+    if (k.length === 0) {
+        return filteredBoats;
+    }
+    return andfilter(filteredBoats, k, filters);
 }
 
 export function sortAndPaginate(boats, state) {

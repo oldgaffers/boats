@@ -20,7 +20,7 @@ export const DEFAULT_BROWSE_STATE = {
         page: 1, 
         sort: 'rank', 
         sortDirection: 'asc', 
-        filters: { sail: ['hire', 'crew'] },
+        filters: { sail: ['hire', 'crewing'] },
         view: 'sail',    
     },
     small: {

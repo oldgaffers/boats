@@ -70,7 +70,7 @@ function CrewingBadge({ boat, view, children }) {
   if (view === 'sail') {
     return children;
   }
-  if (boat?.sail === 'crew') {
+  if (boat?.crewing) {
     return (<Badge badgeContent="crew on her" color="info">{children}</Badge>);
   }
   return children;
@@ -80,7 +80,7 @@ function HireBadge({ boat, view, children }) {
   if (view === 'sail') {
     return children;
   }
-  if (boat?.sail === 'hire') {
+  if (boat?.hire) {
     return (<Badge badgeContent="hire her" color="info">{children}</Badge>);
   }
   return children;

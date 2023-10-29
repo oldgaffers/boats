@@ -96,8 +96,8 @@ export async function getFilterable() {
   const ex = Object.fromEntries(extra.Items.map((item) => [item.oga_no, item]));
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
   return filterable.map((b) => {
-    if (ex[b.ogaNo]) {
-      return { ...b, ...ex[b.ogaNo]}
+    if (ex[b.oga_no]) {
+      return { ...b, ...ex[b.oga_no]};
     }
     return b;
   });
