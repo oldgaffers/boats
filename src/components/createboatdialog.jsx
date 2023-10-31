@@ -538,8 +538,7 @@ export function flattenToForm(example, prefix) {
 }
 
 function initialiseFromExampleFlat(change, example) {
-  const { boat } = example.data.result.pageContext;
-  const archetype = flattenToForm(boatm2f(boat));
+  const archetype = flattenToForm(boatm2f(example));
   // console.log(archetype);
   Object.keys(archetype).forEach((field) => {
     change(field, archetype[field]);
@@ -558,7 +557,8 @@ const FieldListener = () => {
       // console.log('smallest', smallest);
       getBoatData(smallest)
         .then((result) => {
-          initialiseFromExampleFlat(change, result);
+          console.log('R', result);
+          initialiseFromExampleFlat(change, result.result.pageContext.boat);
         });
     }
   }, [change, design_class, filterable]);
