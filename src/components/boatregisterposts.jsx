@@ -120,7 +120,8 @@ export async function getLargestImage(albumKey) {
 }
 
 export async function nextOgaNo() {
-  return (await fetch(`${api2}/`)).json();
+  const url = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws';
+  return (await fetch(`${url}/`)).json();
 }
 
 export async function disposeOgaNo(oga_no) {

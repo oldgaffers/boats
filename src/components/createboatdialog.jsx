@@ -510,8 +510,11 @@ export function flattenToForm(example, prefix) {
           break;
         case 'object':
           if (['designer', 'builder'].includes(key)) {
-            flat[flatfield] = value.id;
-            // console.log('id/name', flatfield, value);
+            if (Array.isArray(value)) {
+              flat[flatfield] = value;
+            } else {
+              flat[flatfield] = [value];
+            }
           } else if (Array.isArray(value)) {
             // console.log('array', flatfield, value);
             value.forEach((row, index) => {
@@ -557,7 +560,6 @@ const FieldListener = () => {
       // console.log('smallest', smallest);
       getBoatData(smallest)
         .then((result) => {
-          console.log('R', result);
           initialiseFromExampleFlat(change, result.result.pageContext.boat);
         });
     }

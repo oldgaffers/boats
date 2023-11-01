@@ -10,12 +10,7 @@ import CreateBoatDialog from "./createboatdialog";
 
 export async function createBoat(boat, email, fileList, copyright, newItems) {
   if (!boat.oga_no) {
-    const response = await nextOgaNo();
-    if (response.ok) {
-      boat.oga_no = await response.json();
-    } else {
-      console.log('nextOgaNo', response);
-    }
+    boat.oga_no = await nextOgaNo();
   }
   // const b = Object.fromEntries(Object.entries(boat).filter((k, v) => v));
   const response = await createPhotoAlbum(boat.name, boat.oga_no);
