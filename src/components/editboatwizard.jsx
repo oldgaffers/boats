@@ -342,6 +342,8 @@ const defaultSchema = (pickers) => {
 };
 
 export function boatdiff(before, after) {
+  console.log('BEFORE', before);
+  console.log('AFTER', after);
   const cj = create({
     objectHash: (obj) => `${obj.id || obj.name}-${obj.start}`,
     textDiff: { minLength: 60000 }, // prevent textdiff not supported by the RFC formatter
@@ -350,8 +352,7 @@ export function boatdiff(before, after) {
 }
 
 export function salesChanges(ddf) {
-
-  console.log()
+  console.log(salesChanges, ddf);
   let selling_status = 'not_for_sale';
 
   switch (ddf.update_sale) {
@@ -372,7 +373,7 @@ export function salesChanges(ddf) {
 
   const fs = [...(ddf.other_sales || []), ddf.current_sales_record];
 
-  const for_sales = fs.filter((s) => s && s.asking_price > 0);
+  const for_sales = fs.filter((s) => s && (s.asking_price > 0 || s.flexibility === 'any'));
 
   return { for_sales, selling_status };
 }
@@ -423,7 +424,9 @@ export function prepareInitialValues(boat, user) {
 }
 
 export function prepareModifiedValues(values, { name, oga_no, id, image_key }, pickers) {
+  console.log('prepareModifiedValues');
   const { ddf, email, ...submitted } = values;
+  console.log('prepareModifiedValues ddf', ddf);
 
   const newItems = Object.fromEntries(
     ['builder', 'designer', 'design_class']
