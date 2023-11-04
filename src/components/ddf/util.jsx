@@ -57,7 +57,6 @@ export const extendableList = ({ pickers, name, label }) => {
       options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
       resolveProps: (props, { meta, input }, formOptions) => {
         const { values } = formOptions.getState();
-        console.log('V', values);
         return {
         };
       },
