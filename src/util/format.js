@@ -37,7 +37,9 @@ export function feet(n) {
 }
 
 export function kg(n) {
-  return `${Math.floor(n)} kg`;
+  if (n) {
+    return `${Math.floor(n)} kg`;
+  }
 }
 
 export function m2f(val) {
