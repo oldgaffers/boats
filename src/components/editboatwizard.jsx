@@ -403,7 +403,12 @@ export function prepareInitialValues(boat, user) {
 }
 
 export function salesChanges(ddf, original_for_sales = []) {
-  console.log(salesChanges, ddf, original_for_sales);
+  console.log('SALES', ddf, original_for_sales);
+
+  const other_sales = original_for_sales.filter((fs) => fs.created_at !== ddf?.current_sales_record?.created_at);
+
+  const for_sales = [...other_sales];
+
   let selling_status = 'not_for_sale';
 
   switch (ddf.update_sale) {
@@ -421,10 +426,10 @@ export function salesChanges(ddf, original_for_sales = []) {
         console.log('handleSubmit unexpected update_sale value', ddf);
       }
   }
-  
-  const other_sales = original_for_sales.filter((fs) => fs.created_at !== ddf.current_sales_record.created_at);
 
-  const for_sales = [ddf.current_sales_record, ...other_sales];
+  if ((for_sales.length !== other_sales.length) && (selling_status === 'for_sale')) {
+    for_sales.unshift(ddf.current_sales_record);
+  }
 
   // descending
   for_sales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
