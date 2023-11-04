@@ -342,40 +342,11 @@ const defaultSchema = (pickers) => {
 };
 
 export function boatdiff(before, after) {
-  console.log('BEFORE', before);
-  console.log('AFTER', after);
   const cj = create({
     objectHash: (obj) => `${obj.id || obj.name}-${obj.start}`,
     textDiff: { minLength: 60000 }, // prevent textdiff not supported by the RFC formatter
   });
   return cj.diff(before, after);
-}
-
-export function salesChanges(ddf) {
-  console.log(salesChanges, ddf);
-  let selling_status = 'not_for_sale';
-
-  switch (ddf.update_sale) {
-    case 'unsell':
-    case 'sold':
-      selling_status = 'not_for_sale';
-      break;
-    case 'update':
-      selling_status = 'for_sale';
-      break;
-    default:
-      if (ddf.confirm_for_sale && ddf.current_sales_record) {
-        selling_status = 'for_sale';
-      } else {
-        console.log('handleSubmit unexpected update_sale value', ddf);
-      }
-  }
-
-  const fs = [...(ddf.other_sales || []), ddf.current_sales_record];
-
-  const for_sales = fs.filter((s) => s && (s.asking_price > 0 || s.flexibility === 'any'));
-
-  return { for_sales, selling_status };
 }
 
 export function prepareInitialValues(boat, user) {
@@ -385,24 +356,32 @@ export function prepareInitialValues(boat, user) {
   const owner = ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
 
-  const sortedsales = for_sales?.sort((a, b) => a.created_at < b.created_at) || [];
+  const sortedsales = [...(for_sales || [])];
+  // descending
+  sortedsales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+
+  const ddf = { name, oga_no, id, image_key, owner, editor };
+
+  if (boat.selling_status === 'for_sale') {
+    ddf.current_sales_record = sortedsales[0];
+    ddf.update_sale = 'update';
+  } else {
+    ddf.current_sales_record = {
+      created_at: new Date().toISOString(),
+      asking_price: 0, 
+      sales_text: '', 
+      flexibility: 'normal',
+    };
+    ddf.update_sale = 'unsell';
+  }
 
   const initialValues = {
     email: user?.email || '',
     ...boatm2f(rest),
-    ddf: {
-      name, oga_no, id, image_key,
-      owner, editor,
-      update_sale: (boat.selling_status === 'for_sale') ? 'update' : 'unsell',
-      current_sales_record: { asking_price: 0, sales_text: '', flexibility: 'normal' },
-      other_sales: sortedsales,
-    },
+    ddf,
   };
 
-  if (boat.selling_status === 'for_sale') {
-    initialValues.ddf.current_sales_record = sortedsales[0];
-    initialValues.ddf.other_sales = sortedsales.slice(1)    
-  }
+  console.log('DDF', ddf);
 
   ['builder', 'designer'].forEach((key) => {
     const val = initialValues[key];
@@ -423,10 +402,38 @@ export function prepareInitialValues(boat, user) {
 
 }
 
-export function prepareModifiedValues(values, { name, oga_no, id, image_key }, pickers) {
-  console.log('prepareModifiedValues');
+export function salesChanges(ddf, original_for_sales = []) {
+  console.log(salesChanges, ddf, original_for_sales);
+  let selling_status = 'not_for_sale';
+
+  switch (ddf.update_sale) {
+    case 'unsell':
+    case 'sold':
+      selling_status = 'not_for_sale';
+      break;
+    case 'update':
+      selling_status = 'for_sale';
+      break;
+    default:
+      if (ddf.confirm_for_sale && ddf.current_sales_record) {
+        selling_status = 'for_sale';
+      } else {
+        console.log('handleSubmit unexpected update_sale value', ddf);
+      }
+  }
+  
+  const other_sales = original_for_sales.filter((fs) => fs.created_at !== ddf.current_sales_record.created_at);
+
+  const for_sales = [ddf.current_sales_record, ...other_sales];
+
+  // descending
+  for_sales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+
+  return { for_sales, selling_status };
+}
+
+export function prepareModifiedValues(values, { name, oga_no, id, image_key, for_sales }, pickers) {
   const { ddf, email, ...submitted } = values;
-  console.log('prepareModifiedValues ddf', ddf);
 
   const newItems = Object.fromEntries(
     ['builder', 'designer', 'design_class']
@@ -464,7 +471,7 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key }, p
       ...(submitted.previous_names || []),
     ],
     oga_no, id, image_key,
-    ...salesChanges(ddf),
+    ...salesChanges(ddf, for_sales),
     builder,
     designer,
     design_class,
