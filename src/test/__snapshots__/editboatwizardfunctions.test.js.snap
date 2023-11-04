@@ -10,6 +10,10 @@ Object {
   ],
   "for_sales": Object {
     "0": Object {
+      "created_at": Array [
+        "2022-09-29T17:28:21.36815+00:00",
+        "2022-01-01T00:00:00Z",
+      ],
       "sales_text": Array [
         "<p>Settling import tax and delivery to the UK are negotiable.</p>
 <p>Engine: Yanmar diesel 3GM30 27 pk Engine number 05696 Sleeps 4 The dinette is a
@@ -272,6 +276,7 @@ Object {
   "ddf": Object {
     "current_sales_record": Object {
       "asking_price": 0,
+      "created_at": "2023-11-04T12:11:28.134Z",
       "flexibility": "normal",
       "sales_text": "",
     },
@@ -280,7 +285,6 @@ Object {
     "image_key": "9NV8KW",
     "name": "Robinetta",
     "oga_no": 315,
-    "other_sales": Array [],
     "owner": false,
     "update_sale": "unsell",
   },
@@ -439,6 +443,7 @@ Object {
   "ddf": Object {
     "current_sales_record": Object {
       "asking_price": 0,
+      "created_at": "2023-11-04T12:11:28.139Z",
       "flexibility": "normal",
       "sales_text": "",
     },
@@ -447,7 +452,6 @@ Object {
     "image_key": "9NV8KW",
     "name": "Robinetta",
     "oga_no": 315,
-    "other_sales": Array [],
     "owner": true,
     "update_sale": "unsell",
   },

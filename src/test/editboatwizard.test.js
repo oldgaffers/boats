@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import EditBoatWizard from '../components/editboatwizard';
 import '../components/boatregisterposts';
+import * as MockDate from 'mockdate';
 
 const pickers = {
   boatNames: [],
@@ -18,6 +19,8 @@ const pickers = {
   hull_form: [],
   spar_material: [],
 };
+
+MockDate.set(1434319925275);
 
 jest.mock('../components/boatregisterposts', () => {
   return {
