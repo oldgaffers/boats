@@ -2,6 +2,7 @@ import fs from 'fs';
 import { formatters } from 'jsondiffpatch';
 import {  boatdiff, prepareInitialValues, prepareModifiedValues } from '../components/editboatwizard';
 import { boatDefined } from '../util/format';
+import * as MockDate from 'mockdate';
 
 const robinetta = JSON.parse(fs.readFileSync('src/test/robinetta.json'));
 const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
@@ -29,6 +30,8 @@ const pickers = {
   hull_form: [],
   spar_material: [],
 };
+
+MockDate.set(1699091602308);
 
 test('boat defined', () => {
   const defined = boatDefined(robinetta);
