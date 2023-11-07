@@ -95,18 +95,22 @@ Array [
 
 exports[`boat defined 1`] = `
 Object {
-  "builder": Object {
-    "id": "a27bca50-d155-428a-be49-a542d64ba316",
-    "name": "Enterprise Small Craft",
-  },
+  "builder": Array [
+    Object {
+      "id": "a27bca50-d155-428a-be49-a542d64ba316",
+      "name": "Enterprise Small Craft",
+    },
+  ],
   "callsign": "MKDZ8",
   "construction_details": "pitch pine on oak and elm",
   "construction_material": "wood",
   "construction_method": "carvel",
-  "designer": Object {
-    "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
-    "name": "D.A. Rayner",
-  },
+  "designer": Array [
+    Object {
+      "id": "afc68d59-e7ba-466e-861f-741e2eeae526",
+      "name": "D.A. Rayner",
+    },
+  ],
   "full_description": "<p>\\"When his last boat, the 42' Tredwin barge <em>Pearl</em>, was burnt out on moorings,
 Mr. Denys Rayner decided to try his hand at designing a boat, after studying the
 \\"How To\\" articles in the Y.M. Economy limited the size to less than 23''

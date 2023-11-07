@@ -362,16 +362,18 @@ export function prepareInitialValues(boat, user) {
 
   const ddf = { name, oga_no, id, image_key, owner, editor };
 
+  const defaultSalesRecord = {
+    created_at: new Date().toISOString(),
+    asking_price: 0, 
+    sales_text: '', 
+    flexibility: 'normal',
+  };
+
   if (boat.selling_status === 'for_sale') {
-    ddf.current_sales_record = sortedsales[0];
+    ddf.current_sales_record = { ...defaultSalesRecord, ...sortedsales[0] };
     ddf.update_sale = 'update';
   } else {
-    ddf.current_sales_record = {
-      created_at: new Date().toISOString(),
-      asking_price: 0, 
-      sales_text: '', 
-      flexibility: 'normal',
-    };
+    ddf.current_sales_record = defaultSalesRecord;
     ddf.update_sale = 'unsell';
   }
 
@@ -381,14 +383,11 @@ export function prepareInitialValues(boat, user) {
     ddf,
   };
 
-  console.log('DDF', ddf);
-
+  // prepare for dual-list
   ['builder', 'designer'].forEach((key) => {
     const val = initialValues[key];
-    if (Array.isArray(val)) {
+    if (val) {
       initialValues[key] = val.map((v) => v.name);
-    } else if (val) {
-      initialValues[key] = [val.name]
     } else {
       initialValues[key] = [];
     }
@@ -403,7 +402,6 @@ export function prepareInitialValues(boat, user) {
 }
 
 export function salesChanges(ddf, original_for_sales = []) {
-  console.log('SALES', ddf, original_for_sales);
 
   const other_sales = original_for_sales.filter((fs) => fs.created_at !== ddf?.current_sales_record?.created_at);
 
@@ -426,8 +424,7 @@ export function salesChanges(ddf, original_for_sales = []) {
         console.log('handleSubmit unexpected update_sale value', ddf);
       }
   }
-
-  if ((for_sales.length !== other_sales.length) && (selling_status === 'for_sale')) {
+  if ((original_for_sales.length !== other_sales.length) && (selling_status === 'for_sale')) {
     for_sales.unshift(ddf.current_sales_record);
   }
 
@@ -501,6 +498,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
       modifiedBoat,
       email,
     );
+
   }
 
   useEffect(() => {

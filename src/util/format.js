@@ -8,7 +8,7 @@ export function formatDesignerBuilder(b, k) {
     return data.name;
   }
   if (Array.isArray(data)) {
-    return data.map((d) => d.name).join(' / ');
+    return data.map((d) => d?.name).join(' / ');
   }
 }
 

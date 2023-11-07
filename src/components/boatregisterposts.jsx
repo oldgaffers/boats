@@ -84,7 +84,18 @@ export async function createPhotoAlbum(name, ogaNo) {
 }
 
 export async function getBoatData(ogaNo) {
-  return (await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`)).json();
+  const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
+  if (r.ok) {
+    const data = await r.json();
+    if (!Array.isArray(data.result.pageContext.boat.builder)) {
+      data.result.pageContext.boat.builder = [data.result.pageContext.boat.builder];
+    }
+    if (!Array.isArray(data.result.pageContext.boat.designer)) {
+      data.result.pageContext.boat.designer = [data.result.pageContext.boat.designer];
+    }
+    data.result.pageContext.boat.for_sales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+    return data;  
+  }
 }
 
 export async function getPicklists() {

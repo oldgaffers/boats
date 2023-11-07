@@ -5,17 +5,17 @@
         "pageContext": {
             "absolute": "https://oga.org.uk",
             "boat": {
-                "builder": {
+                "builder": [{
                     "id": "bf86c19b-e994-4b0e-839a-f9b04d952f7b",
                     "name": "Treve Marine Ltd"
-                },
+                }],
                 "construction_details": " GRP hull over inside mould with ply deck over beams with lead keel",
                 "construction_material": "grp",
                 "created_at": "2020-04-25T16:55:07.056636+00:00",
-                "designer": {
+                "designer": [{
                     "id": "3a457a8b-d19d-4843-8c97-937489f0635f",
                     "name": "Frank Argall"
-                },
+                }],
                 "for_sales": [
                     {
                         "asking_price": 15000,
