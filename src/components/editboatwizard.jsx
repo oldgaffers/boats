@@ -387,7 +387,7 @@ export function prepareInitialValues(boat, user) {
   ['builder', 'designer'].forEach((key) => {
     const val = initialValues[key];
     if (val) {
-      initialValues[key] = val.map((v) => v.name);
+      initialValues[key] = val.map((v) => v?.name);
     } else {
       initialValues[key] = [];
     }
