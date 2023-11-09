@@ -511,9 +511,9 @@ export function flattenToForm(example, prefix) {
         case 'object':
           if (['designer', 'builder'].includes(key)) {
             if (Array.isArray(value)) {
-              flat[flatfield] = value;
+              flat[flatfield] = value.map((m) => m.name);
             } else {
-              flat[flatfield] = [value];
+              flat[flatfield] = [value.name];
             }
           } else if (Array.isArray(value)) {
             // console.log('array', flatfield, value);
@@ -542,7 +542,6 @@ export function flattenToForm(example, prefix) {
 
 function initialiseFromExampleFlat(change, example) {
   const archetype = flattenToForm(boatm2f(example));
-  // console.log(archetype);
   Object.keys(archetype).forEach((field) => {
     change(field, archetype[field]);
   });
@@ -599,7 +598,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat);
   }
-
+  
   return (
     <Dialog
       open={open}
