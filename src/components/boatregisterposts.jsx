@@ -93,7 +93,7 @@ export async function getBoatData(ogaNo) {
     if (!Array.isArray(data.result.pageContext.boat.designer)) {
       data.result.pageContext.boat.designer = [data.result.pageContext.boat.designer];
     }
-    data.result.pageContext.boat.for_sales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+    data.result.pageContext.boat?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
     return data;  
   }
 }
