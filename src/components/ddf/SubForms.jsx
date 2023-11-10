@@ -1,18 +1,12 @@
 import { Typography } from "@mui/material";
 import { mapPicker } from "./util";
 import {
+  intField,
   designerItems,
   builderItems,
   designClassItems,
   constructionItems,
 } from "./util";
- 
-export function intField(name, label) {
-  return {
-    name, label,
-    component: "text-field", type: "number", dataType: 'integer',
-  };
-}
 
 export const basicFields = (pickers) => [
   {

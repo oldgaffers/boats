@@ -7,6 +7,114 @@ export const mapPicker = (m) => {
   }) || [];
 }
 
+export function intField(name, label) {
+  return {
+    name, label,
+    component: "text-field", type: "number", dataType: 'integer',
+  };
+}
+
+export const basicDimensionItems = [
+  {
+    component: 'text-field',
+    name: "handicap_data.length_on_deck",
+    label: "Length on deck (LOD) (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.length_on_deck === undefined) {
+        return {
+          initialValue: 30,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "handicap_data.length_on_waterline",
+    label: "Waterline Length {LWL) (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.length_on_waterline === undefined) {
+        return {
+          initialValue: 28,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "handicap_data.beam",
+    label: "Beam (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.beam === undefined) {
+        return {
+          initialValue: 8,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "handicap_data.draft",
+    label: "Minumum Draft (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.draft === undefined) {
+        return {
+          initialValue: 4.5,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "air_draft",
+    label: "Air Draft (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    validate: [
+    ],
+  },
+  {
+    component: 'plain-text',
+    name: "ddf.h1",
+    label: "LOD, LWL, beam and draft affect handicaps",
+  },
+];
+
 export const constructionItems = (pickers) => {
   return [
     {
@@ -55,13 +163,6 @@ export const extendableList = ({ pickers, name, label }) => {
       name,
       label: `${label}(s)`,
       options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
-      /*
-      resolveProps: (props, { meta, input }, formOptions) => {
-        const { values } = formOptions.getState();
-        return {
-        };
-      },
-      */
     },
     {
       component: 'text-field',

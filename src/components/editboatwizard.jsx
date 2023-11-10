@@ -15,6 +15,7 @@ import {
   builderItems,
   constructionItems,
   designClassItems,
+  basicDimensionItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -120,74 +121,7 @@ const defaultSchema = (pickers) => {
                 title: "Basic Dimensions",
                 name: "basic-dimensions",
                 component: 'sub-form',
-                fields: [
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.length_on_deck",
-                    label: "Length on deck (LOD) (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                  },
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.length_on_waterline",
-                    label: "Waterline Length {LWL) (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                  },
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.beam",
-                    label: "Beam (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    isRequired: true,
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                      /*{
-                        type: 'min-number-value',
-                        threshold: 1,
-                      }*/
-                    ],
-                  },
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.draft",
-                    label: "Minumum Draft (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    isRequired: true,
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                      /*{
-                       type: 'min-number-value',
-                       threshold: 1
-                      }*/
-                    ],
-                  },
-                  {
-                    component: 'text-field',
-                    name: "air_draft",
-                    label: "Air Draft (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    validate: [
-                      /*{
-                        type: 'min-number-value',
-                        threshold: 1
-                      }*/
-                    ],
-                  },
-                  {
-                    component: 'plain-text',
-                    name: "ddf.h1",
-                    label: "LOD, LWL, beam and draft affect handicaps",
-                  },
-                ],
+                fields: basicDimensionItems,
               },
             ],
           },
