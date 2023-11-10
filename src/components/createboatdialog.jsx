@@ -13,6 +13,7 @@ import {
   designerItems,
   builderItems,
   constructionItems,
+  basicDimensionItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -78,16 +79,39 @@ const schema = (pickers) => {
               },
               {
                 component: 'checkbox',
+                name: "ddf.owned",
+                label: "I'm a current owner of this boat.",
+                helperText: 'anyone can suggest a new boat for the register',
+              },
+              {
+                component: 'checkbox',
+                name: 'ddf.have_pictures',
+                label: 'I have pictures to upload',
+                initialValue: true,
+                helperText: 'pictures are really important',
+              },
+              {
+                component: 'checkbox',
                 name: "ddf.dc.isnew",
                 label: "I've checked and the boat isn't already on the register.",
                 isRequired: true,
                 validate: [{ type: 'required' }],
-              }
+              },
             ]
           },
           {
             name: "prefill-step",
-            nextStep: ({ values }) => (values.ddf && values.ddf.have_pictures) ? "picture-step" : "basic-step",
+            nextStep: ({ values }) => {
+              if (values.ddf) {
+                if (values.ddf.have_pictures) {
+                  return 'picture-step';
+                }
+                if (values.ddf.owned) {
+                  return 'owner-step';
+                }
+              }
+              return 'basic-step';
+            },
             fields: [
               {
                 component: 'sub-form',
@@ -119,31 +143,14 @@ const schema = (pickers) => {
                     component: 'select',
                     name: 'design_class',
                     label: 'Design Class',
-                    //helperText: 'If your boat is in a design class we have data for, will pre-fill the form from another boat in the class.'
-                    //+' You will be able to change the values as boats do vary within a class.',
+                    helperText: 'If your boat is in a design class we have data for, will pre-fill the form from another boat in the class.'
+                      + ' You will be able to change the values as boats do vary within a class.'
+                      + ' If we don\'t have your design class you can add it once the boat is created.',
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
                     noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
                     options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
-                  },
-                  {
-                    component: 'text-field',
-                    name: 'new_design_class',
-                    label: 'New design class',
-                    helperText: 'if the design class is not listed and you know the name add it here',
-                    isRequired: false,
-                    condition: {
-                      when: 'design_class',
-                      isEmpty: true,
-                    },
-                  },
-                  {
-                    component: 'checkbox',
-                    name: 'ddf.have_pictures',
-                    label: 'I have pictures to upload',
-                    initialValue: true,
-                    helperText: 'pictures are really important',
                   },
                 ]
               }
@@ -151,7 +158,14 @@ const schema = (pickers) => {
           },
           {
             name: "picture-step",
-            nextStep: "basic-step",
+            nextStep: ({ values }) => {
+              if (values.ddf) {
+                if (values.ddf.owned) {
+                  return 'owner-step';
+                }
+              }
+              return 'basic-step';
+            },
             fields: [
               {
                 name: "ddf.picture",
@@ -186,7 +200,59 @@ const schema = (pickers) => {
             ],
           },
           {
-            title: "Basic Details",
+            name: "owner-step",
+            nextStep: "basic-step",
+            fields: [
+              {
+                component: 'sub-form',
+                title: 'Current Owners',
+                name: 'owners',
+                fields: [
+                  {
+                    component: 'text-field',
+                    name: "ddf.owner.name",
+                    label: "Name",
+                    resolveProps: (props, { meta, input }, formOptions) => {
+                      const { values } = formOptions.getState();
+                      return {
+                        initialValue: values.user?.name || '',
+                      };
+                    },
+                    isRequired: true,
+                    validate: [{ type: 'required' }],
+                    sx: { marginTop: 2 },
+                  },
+                  {
+                    component: 'text-field',
+                    name: "ddf.owner.start",
+                    label: "Start Year",
+                    isRequired: true,
+                    validate: [{ type: 'required' }],
+                  },
+                  {
+                    component: 'checkbox',
+                    name: 'ddf.owner.part',
+                    label: 'This is a joint ownership',
+                    initialValue: false,
+                    helperText: 'You can add other current owners here. Once the boat is created you will be able to add more details.'
+                  },
+                  {
+                    component: 'field-array',
+                    name: 'ddf.otherowners',
+                    label: 'Other current owners',
+                    fields: [
+                      { component: 'text-field', name: 'name', label: 'Name' },
+                    ],
+                    condition: {
+                      when: 'ddf.owner.part',
+                      is: true,
+                    }
+                  },
+                ],
+              },
+            ],
+          },
+          {
             name: "basic-step",
             nextStep: "build-step",
             fields: [
@@ -233,70 +299,7 @@ const schema = (pickers) => {
                 component: 'sub-form',
                 fields: [
                   ...designerItems(pickers),
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.length_on_deck",
-                    label: "Length on deck  (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    isRequired: true,
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                      /*{
-                         type: 'min-number-value',
-                         threshold: 5
-                      }*/
-                    ],
-                  },
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.beam",
-                    label: "Beam (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    isRequired: true,
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                      /*{
-                        type: 'min-number-value',
-                        threshold: 1,
-                      }*/
-                    ],
-                  },
-                  {
-                    component: 'text-field',
-                    name: "handicap_data.draft",
-                    label: "Minumum Draft (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    isRequired: true,
-                    validate: [
-                      {
-                        type: 'required',
-                      },
-                      /*{
-                       type: 'min-number-value',
-                       threshold: 1
-                      }*/
-                    ],
-                  },
-                  {
-                    component: 'text-field',
-                    name: "air_draft",
-                    label: "Air Draft (decimal feet)",
-                    type: "number",
-                    dataType: 'float',
-                    validate: [
-                      /*{
-                        type: 'min-number-value',
-                        threshold: 1
-                      }*/
-                    ],
-                  },
+                  ...basicDimensionItems,
                 ],
               },
             ],
@@ -432,7 +435,7 @@ const schema = (pickers) => {
                 resolveProps: (props, { meta, input }, formOptions) => {
                   const { values } = formOptions.getState();
                   return {
-                    initialValue: values.user && values.user.email,
+                    initialValue: values.user?.email || '',
                   };
                 },
               },
@@ -569,6 +572,31 @@ const FieldListener = () => {
 
 const FieldListenerWrapper = () => <FormSpy subcription={{ values: true }}>{() => <FieldListener />}</FormSpy>;
 
+export function makeOwnerships({ owner, otherowners }) {
+  if (owner.part) {
+    const start = owner.start;
+    const share = Math.floor(64 / (otherowners.length + 1));
+    const o = otherowners.map((r) => ({
+      name: r.name,
+      start,
+      share,
+      current: true,
+    }));
+    return [{
+      name: owner.name,
+      start: owner.start,
+      share: 64 - share * otherowners.length,
+      current: true,
+    }, ...o];
+  }
+  return [{
+    name: owner.name,
+    start: owner.start,
+    share: 64,
+    current: true,
+  }];
+}
+
 export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
   const [filterable, setFilterable] = useState();
@@ -585,20 +613,22 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
       getPicklists().then((r) => setPickers(r)).catch((e) => console.log(e));
     }
   }, [pickers]);
- 
+
   if (!pickers) return <CircularProgress />;
   if (!filterable) return <CircularProgress />;
 
   if (!open) return '';
 
   const handleSubmit = (boat) => {
-    // console.log('handleSubmit', boat);
+    if (boat.ddf.owned) {
+      boat.ownerships = makeOwnerships(boat.ddf);
+    }
     boat.design_class = pickers.design_class.find((item) => item.name === boat.design_class);
     boat.designer = pickers.designer.find((item) => item.id === boat.designer);
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat);
   }
-  
+
   return (
     <Dialog
       open={open}
