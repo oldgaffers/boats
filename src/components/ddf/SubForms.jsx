@@ -185,11 +185,27 @@ export const ownerShipsFields = [
         },
       },
       {
-        ...intField('start', 'Start Year'),
+        ...intField('start', 'First Possible Start Year'),
         isRequired: true,
         validate: [{ type: 'required' }],
+        FormFieldGridProps: { xs: 6 },
       },
-      intField('end', 'End Year'),
+      {
+        name: 'start_is_approximate',
+        label: 'approximate',
+        component: 'checkbox',
+        FormFieldGridProps: { xs: 6 },
+      },
+      {
+        ...intField('end', 'Last Possible End Year'),
+        FormFieldGridProps: { xs: 6 },
+      },
+      {
+        name: 'end_is_approximate',
+        label: 'approximate',
+        component: 'checkbox',
+        FormFieldGridProps: { xs: 6 },
+      },
       {
         ...intField('share', 'Share (64ths)'),
         initialValue: 64,
