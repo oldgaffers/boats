@@ -76,7 +76,19 @@ function Wrapper({ redirectUri, scope, children }) {
 </Auth0Provider>
 }
 
+function viewFromReferrer() {
+  const r = document.referrer;
+  if (r.includes('sail')) {
+    return 'sail';
+  }
+  if (r.includes('sale')) {
+    return 'sell';
+  }
+  return '';
+}
+
 const Pages = (props) => {
+  console.log('referrer', document.referrer.split('/'));
   const app = props.id;
   const red = window.location.origin + window.location.pathname;
   const auth = {
@@ -100,7 +112,7 @@ const Pages = (props) => {
 
   if (app === 'app' && window.location.pathname.includes('/boat/')) {
     return <Wrapper {...auth} scope="member">
-      <Boat view={app} ogaNo={getOgaNo()} />
+      <Boat view={viewFromReferrer()} ogaNo={getOgaNo()} />
     </Wrapper>
   }
 
@@ -116,7 +128,7 @@ const Pages = (props) => {
         <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
-              <Boat view={app} ogaNo={getOgaNo()} />
+              <Boat view={viewFromReferrer()} ogaNo={getOgaNo()} />
             </OGAProvider>
           </TokenProvider>
         </Auth0Provider>
