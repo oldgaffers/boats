@@ -15,7 +15,7 @@ export function MissingOGANumber() {
   </div>);
 }
 
-export default function Boat({ ogaNo }) {
+export default function Boat({ view, ogaNo }) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function Boat({ ogaNo }) {
 
   return (
     <ApolloConsumer>
-      {client => <BoatWrapper client={client} boat={boat} />}
+      {client => <BoatWrapper view={view} client={client} boat={boat} />}
     </ApolloConsumer>
   );
 

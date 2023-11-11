@@ -27,11 +27,8 @@ export function HandicapDisplay({ handicapData }) {
   }
 }
 
-export default function BoatDetail({ boat, user }) {
+export default function BoatDetail({ view, boat, user }) {
   const [value, setValue] = useState(0);
-
-  // TODO const { ref } = useInView({ threshold: 0 });
-
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
   const hd = boat.handicap_data || {};
@@ -96,7 +93,6 @@ export default function BoatDetail({ boat, user }) {
       )
     });
   }
-
   if (roles.includes('member')) {
     panes.push({
       title: 'Owners', children: (
@@ -122,6 +118,22 @@ export default function BoatDetail({ boat, user }) {
     panes.unshift(
       { title: 'Details', children: (<Paper dangerouslySetInnerHTML={{ __html: boat.full_description }} />) },
     );
+  }
+
+  if (view === 'sail') {
+    const skippers = boat.ownerships.filter((b) => b.profile);
+    if (skippers.length > 0) {
+      panes.push({
+        title: 'About the Skippers', children: (
+          <>
+            {skippers.map((skipper, index) => <Paper key={index} >
+              <Typography variant='h6' sx={{ bottomMargin: 1 }}>{skipper.name}</Typography>
+              <Paper dangerouslySetInnerHTML={{ __html: skipper.profile }} />
+            </Paper>)}
+          </>
+        )
+      });
+    }
   }
 
   // newest for sale record

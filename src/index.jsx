@@ -100,7 +100,7 @@ const Pages = (props) => {
 
   if (app === 'app' && window.location.pathname.includes('/boat/')) {
     return <Wrapper {...auth} scope="member">
-      <Boat ogaNo={getOgaNo()} />
+      <Boat view={app} ogaNo={getOgaNo()} />
     </Wrapper>
   }
 
@@ -116,7 +116,7 @@ const Pages = (props) => {
         <Auth0Provider {...auth} scope="member">
           <TokenProvider>
             <OGAProvider>
-              <Boat ogaNo={getOgaNo()} />
+              <Boat view={app} ogaNo={getOgaNo()} />
             </OGAProvider>
           </TokenProvider>
         </Auth0Provider>

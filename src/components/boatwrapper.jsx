@@ -18,6 +18,7 @@ export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     member
     id
     GDPR
+    profile
   }
 }`);
 
@@ -31,22 +32,22 @@ const addNames = async (client, owners) => {
   const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
   const members = r.data.members;
   return owners.map((owner) => {
-    if (owner.name) {
-      return owner;
-    }
     const r = { ...owner };
     const m = members.filter((member) => member.id === owner.id);
     if (m.length > 0) {
-      const { GDPR, firstname, lastname } = m[0];
+      const { profile, GDPR, firstname, lastname } = m[0];
       if (GDPR) {
         r.name = `${firstname} ${lastname}`;
+      }
+      if (profile) {
+        r.profile = profile;
       }
     }
     return r;
   });
 };
 
-export default function BoatWrapper({ client, boat, location }) {
+export default function BoatWrapper({ view, client, boat, location }) {
   const { error, result } = useAsync(addNames, [client, boat.ownerships]);
   const { user } = useAuth0();
 
@@ -77,7 +78,7 @@ export default function BoatWrapper({ client, boat, location }) {
         <BoatSummary boat={boat} location={location} />
       </Grid>
       <Grid item xs={12}>
-          <BoatDetail boat={{...boat, ownerships }} user={user}/>
+          <BoatDetail view={view} boat={{...boat, ownerships }} user={user}/>
       </Grid>
     </Grid>
     <BoatButtons  boat={{ ...boat, ownerships }} location={location} user={user} />
