@@ -47,9 +47,10 @@ const addNames = async (client, owners) => {
   });
 };
 
-export default function BoatWrapper({ view, client, boat, location }) {
+export default function BoatWrapper({ client, boat, location }) {
   const { error, result } = useAsync(addNames, [client, boat.ownerships]);
   const { user } = useAuth0();
+  const view = sessionStorage.getItem('BOAT_CURRENT_VIEW');
 
   // we don't bother with loading and let the owners fill in if they come
 
