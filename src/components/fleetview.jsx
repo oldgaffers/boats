@@ -25,6 +25,8 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
     }
   }, [data]);
 
+  console.log('D', name, filters);
+
   if (!data) return <CircularProgress />;
   const filtered = applyFilters(data, filters);
 
@@ -115,7 +117,7 @@ export function PublicFleetView({ filter, defaultExpanded=false }) {
   useEffect(() => {
     const getData = async () => {
       const p = await getFleets('public', filter);
-      setData(p.data);
+      setData(p);
     }
     getData();
   }, [filter])
@@ -124,16 +126,16 @@ export function PublicFleetView({ filter, defaultExpanded=false }) {
     return <CircularProgress />;
   }
 
-  if (data.Items.length > 0) {
-    const { filters, name } = data.Items?.[0];
+  if (data.length > 0) {
+    const { filters, name } = data[0];
     return <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded} />;
   }
   return <Typography>No boats to show for fleet defined by {JSON.stringify(filter)}</Typography>;
 }
 
 export default function FleetView(props) {
-  const { role } = props;
   console.log('FleetView', props);
+  const role = props.role || 'public';
   const searchParams = new URLSearchParams(props?.location?.search);
   const name = props.topic || searchParams.get('name');
   const filter = props.filter || { name };

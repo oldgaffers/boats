@@ -205,6 +205,22 @@ const Pages = (props) => {
       return <CreateBoatButton />;
     case 'pick_or_add_boat':
       return <PickOrAddBoat />;
+    case undefined:
+      return (
+        <Auth0Provider {...auth} scope={props.scope}>
+          <TokenProvider>
+            <OGAProvider>
+              {
+                (props.fleet)
+                ?
+                <FleetView role={props.scope} topic={props.fleet} />
+                :
+                <BrowseApp {...props} />
+              }
+            </OGAProvider>
+          </TokenProvider>
+        </Auth0Provider>
+      );
     default:
       // console.log('browse', app);
       return (
@@ -217,6 +233,20 @@ const Pages = (props) => {
         </Auth0Provider>
       );
   }
+};
+
+const xx = (div, attributes) => {
+  const root = createRoot(div);
+  root.render(
+    <React.StrictMode>
+      <CookiesProvider>
+        <ThemeProvider theme={lightTheme}>
+          <CssBaseline />
+          <Pages {...attributes} />
+        </ThemeProvider>
+      </CookiesProvider>
+    </React.StrictMode>
+  );
 };
 
 const tags = [
@@ -249,17 +279,13 @@ const brdivs = tags.map((tag) => {
       attributes[name] = div.getAttribute(name);
     }
   });
-  const root = createRoot(div);
-  root.render(
-    <React.StrictMode>
-      <CookiesProvider>
-        <ThemeProvider theme={lightTheme}>
-          <CssBaseline />
-          <Pages {...attributes} />
-        </ThemeProvider>
-      </CookiesProvider>
-    </React.StrictMode>
-  );
+  xx(div, attributes);
 });
+const alldivs = document.getElementsByTagName('div');
+for(let i = 0; i< alldivs.length; i++) {
+  const div = alldivs.item(i);
+  const attr = div.dataset;
+  xx(div, attr); 
+}
 
 // serviceWorker.unregister();
