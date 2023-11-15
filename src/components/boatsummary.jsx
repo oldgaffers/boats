@@ -9,7 +9,7 @@ import ConditionalText from './conditionaltext';
 import References from './references';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { boatUrl } from '../util/rr';
-import { HandicapDisplay } from './boatdetail';
+import { HandicapDisplay } from './Handicap';
 
 function ReactFBLike({
   language='en_GB',
@@ -70,7 +70,7 @@ export default function BoatSummary({ boat }) {
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
     </Box>
-    <HandicapDisplay/>
+    <HandicapDisplay handicapData={boat.handicap_data} />
     <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
     <div>

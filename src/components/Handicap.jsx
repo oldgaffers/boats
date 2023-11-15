@@ -1,5 +1,26 @@
+import React from "react";
+import { Typography } from "@mui/material";
 import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { f2m } from '../util/format';
+import ConditionalText from './conditionaltext';
+
+export function HandicapDisplay({handicapData}) {
+    if (handicapData.checked) {
+      return <>
+        <ConditionalText label='T(H)CF' value={handicapData.thcf?.toFixed(3)} />
+        <ConditionalText label='Solent Rating' value={handicapData.solent.thcf?.toFixed(3)} />
+      </>;
+    }
+    return <>
+     <Typography variant='subtitle2' component='span'>T(H)CF: </Typography>
+     <Typography variant="body1" component='span'>
+        We are asking all boat owners to re-validate the data used to calculate handicaps.
+        The best way to do this is to use the 'I have Edits' button and step through the choices,
+        making any changes you want. If all is correct, just submit the form. Alternatively, email
+        the boat register editors.
+      </Typography>
+    </>;
+}
 
 export const solentSteps = (thisStep, nextStep) => {
   return [

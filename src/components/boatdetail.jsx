@@ -1,34 +1,15 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
-import Paper from '@mui/material/Paper';
-import TabPanel from './tabpanel';
+import { Paper, Typography } from '@mui/material';
 import ConditionalText from './conditionaltext';
+import TabPanel from './tabpanel';
 import SailTable from './sailtable';
+import { HandicapDisplay } from './Handicap';
 import { m2f, price, formatDesignerBuilder, kg } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
-import { Typography } from '@mui/material';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
-
-export function HandicapDisplay(handicapData) {
-  if (!handicapData) {
-    return '';
-  }
-  if (handicapData.checked) {
-    return <>
-      <ConditionalText label='T(H)CF' value={handicapData?.thcf?.toFixed(3)} />
-      <ConditionalText label='Solent Rating' value={handicapData?.solent.thcf?.toFixed(3)} />
-    </>;
-  } else {
-    return (<><Typography variant='subtitle2' component='span'>T(H)CF: </Typography><Typography variant="body1" component='span'>
-      We are asking all boat owners to re-validate the data used to calculate handicaps.
-      The best way to do this is to use the 'I have Edits' button and step through the choices,
-      making any changes you want. If all is correct, just submit the form. Alternatively, email
-      the boat register editors.
-    </Typography></>)
-  }
-}
 
 export default function BoatDetail({ view, boat, user }) {
   const [value, setValue] = useState(0);
