@@ -292,8 +292,8 @@ for(let i = 0; i< alldivs.length; i++) {
   const relevant = tags.find((tag) => attrKeys.includes(tag));
   if (relevant) {
     console.log('RELEVANT', div, attr);
+    // xx(div, attr); 
   }
-  xx(div, attr); 
 }
 
 // serviceWorker.unregister();
