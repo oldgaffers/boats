@@ -205,8 +205,10 @@ const Pages = (props) => {
       return <CreateBoatButton />;
     case 'pick_or_add_boat':
       return <PickOrAddBoat />;
-      /*
     case undefined:
+      console.log('Q', props);
+      return '';
+      /*
       return (
         <Auth0Provider {...auth} scope={props.scope}>
           <TokenProvider>
@@ -291,8 +293,8 @@ for(let i = 0; i< alldivs.length; i++) {
   const attrKeys = Object.keys(attr);
   const relevant = tags.find((tag) => attrKeys.includes(tag));
   if (relevant) {
-    console.log('RELEVANT', div, attr);
-    // xx(div, attr); 
+    // console.log('RELEVANT', div, attr);
+    xx(div, attr); 
   }
 }
 
