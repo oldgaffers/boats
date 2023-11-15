@@ -283,11 +283,13 @@ const brdivs = tags.map((tag) => {
   });
   xx(div, attributes);
 });
+/*
 const alldivs = document.getElementsByTagName('div');
 for(let i = 0; i< alldivs.length; i++) {
   const div = alldivs.item(i);
   const attr = div.dataset;
   xx(div, attr); 
 }
+*/
 
 // serviceWorker.unregister();
