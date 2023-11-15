@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloConsumer } from '@apollo/client';
 import BoatWrapper from './boatwrapper';
-import { getBoatData } from './boatregisterposts';
+import { getBoatData, getScopedData } from './boatregisterposts';
 
 export function MissingOGANumber() {
   const origin = '';
@@ -19,11 +19,16 @@ export default function Boat({ ogaNo }) {
   const [data, setData] = useState();
 
   useEffect(() => {
-    if (ogaNo && !data) {
-      getBoatData(ogaNo).then((r) => {
-        setData(r);
-      }).catch((e) => console.log(e));
-    }
+    const get = async () => {
+      if (ogaNo && !data) {
+        const extra = await getScopedData('public', 'crewing', { oga_no: ogaNo });
+        const e = extra?.Items?.[0] || {};
+        const r = await getBoatData(ogaNo);
+        const d = r?.result?.pageContext?.boat;
+        setData({ ...d, ...e });
+      }  
+    };
+    get();
   }, [data, ogaNo]);
 
   if (ogaNo === 0) {
@@ -34,7 +39,11 @@ export default function Boat({ ogaNo }) {
     return '';
   }
 
-  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
+  const boat = data || { boat: { oga_no: ogaNo, name: '', loading: true } };
+
+  if (boat.show_handicap) {
+    boat.handicap_data.checked = boat.show_handicap; // TODO
+  }
 
   document.title = `${boat.name} (${boat.oga_no})`;
 

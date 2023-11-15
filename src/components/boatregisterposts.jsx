@@ -104,7 +104,7 @@ export async function getPicklists() {
  
 export async function getFilterable() {
   const extra = await getScopedData('public', 'crewing');
-  const ex = Object.fromEntries(extra.Items.map((item) => [item.oga_no, item]));
+  const ex = Object.fromEntries((extra?.Items || []).map((item) => [item.oga_no, item]));
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
   return filterable.map((b) => {
     if (ex[b.oga_no]) {

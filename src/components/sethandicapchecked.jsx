@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import { postBoatData } from "./boatregisterposts";
 import { Box, Checkbox, Dialog, DialogActions, DialogContentText, DialogTitle, FormControlLabel, Snackbar } from "@mui/material";
+import { useAuth0 } from '@auth0/auth0-react';
+import { postScopedData } from "./boatregisterposts";
 
 function SetHandicapCheckedDialog({ boat, user, onClose, open }) {
   const [popoverText, setPopoverText] = useState('');
@@ -9,9 +10,19 @@ function SetHandicapCheckedDialog({ boat, user, onClose, open }) {
   const [sails, setSails] = useState(false);
   const [measurements, setMeasurements] = useState(false);
   const [updated, setUpdated] = useState(false);
+  const { getAccessTokenSilently } = useAuth0();
+
+  const postBoatExtraData = async (cd) => {
+    const token = await getAccessTokenSilently();
+    const response = await postScopedData('public', 'crewing', cd, token);
+    if (response.ok) {
+      return true;
+    }
+    throw response;
+  };
 
   function setchecked() {
-    postBoatData({ email: user.email, new: { oga_no: boat.oga_no }, changes: { handicap_data: { checked: true } } })
+    postBoatExtraData({ key: { oga_no: boat.oga_no }, show_handicap: true })
       .then((response) => {
         if (response.ok) {
           setPopoverText("OK, that should happen soon");

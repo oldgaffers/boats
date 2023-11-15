@@ -11,8 +11,12 @@ import { Typography } from '@mui/material';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
-export function HandicapDisplay({ handicapData }) {
-  if (handicapData?.checked) {
+export function HandicapDisplay(handicapData) {
+  if (!handicapData) {
+    return '';
+  }
+  console.log('H', handicapData);
+  if (handicapData.checked) {
     return <>
       <ConditionalText label='T(H)CF' value={handicapData?.thcf?.toFixed(3)} />
       <ConditionalText label='Solent Rating' value={handicapData?.solent.thcf?.toFixed(3)} />
@@ -30,7 +34,6 @@ export function HandicapDisplay({ handicapData }) {
 export default function BoatDetail({ view, boat, user }) {
   const [value, setValue] = useState(0);
   const roles = user?.['https://oga.org.uk/roles'] || [];
-
   const hd = boat.handicap_data || {};
   const panes = [
     {
