@@ -15,7 +15,6 @@ export function HandicapDisplay(handicapData) {
   if (!handicapData) {
     return '';
   }
-  console.log('H', handicapData);
   if (handicapData.checked) {
     return <>
       <ConditionalText label='T(H)CF' value={handicapData?.thcf?.toFixed(3)} />
