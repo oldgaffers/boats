@@ -215,7 +215,7 @@ const Pages = (props) => {
                 ?
                 <FleetView role={props.scope} topic={props.fleet} />
                 :
-                <BrowseApp {...props} />
+                '' // <BrowseApp {...props} />
               }
             </OGAProvider>
           </TokenProvider>
