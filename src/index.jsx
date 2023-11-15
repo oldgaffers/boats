@@ -77,7 +77,6 @@ function Wrapper({ redirectUri, scope, children }) {
 }
 
 const Pages = (props) => {
-  console.log('referrer', document.referrer.split('/'));
   const app = props.id;
   const red = window.location.origin + window.location.pathname;
   const auth = {
