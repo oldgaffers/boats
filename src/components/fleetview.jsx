@@ -9,7 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import { TokenContext } from './TokenProvider';
-import { getScopedData } from './boatregisterposts';
+import { getFleets,  } from './boatregisterposts';
 import RoleRestricted from './rolerestrictedcomponent';
 import { getFilterable } from './boatregisterposts';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
@@ -60,13 +60,13 @@ export function Fleets({ filter }) {
 
   useEffect(() => {
     const getData = async () => {
-      const p = await getScopedData('member', 'fleets', filter, accessToken);
-      setData(p.data);
+      if (accessToken) {
+        const p = await getFleets('member', filter, accessToken);
+        setData(p);
+      }
     }
-    if (accessToken) {
-      getData();
-    }
-  }, [accessToken, filter])
+    getData();
+  }, [accessToken, filter]);
 
   if (!data) {
     return <CircularProgress />;
@@ -88,8 +88,8 @@ export function RoleRestrictedFleetView({ filter, role, defaultExpanded=false })
 
   useEffect(() => {
     const getData = async () => {
-      const p = await getScopedData(role, 'fleets', filter, accessToken);
-      setData(p.data);
+      const p = await getFleets(role, filter, accessToken);
+      setData(p);
     }
     if (accessToken) {
       getData();
@@ -114,7 +114,7 @@ export function PublicFleetView({ filter, defaultExpanded=false }) {
 
   useEffect(() => {
     const getData = async () => {
-      const p = await getScopedData('public', 'fleets', filter);
+      const p = await getFleets('public', filter);
       setData(p.data);
     }
     getData();

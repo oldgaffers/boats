@@ -161,3 +161,10 @@ export async function getScopedData(scope, subject, filters, accessToken) {
     });
   return r.json();
 }
+
+export async function getFleets(scope, filter, accessToken) {
+  const r = await getScopedData(scope, 'fleets', filter, accessToken);
+  const f = r?.Items || [];
+  f.sort((a,b) => a.name.localeCompare(b.name))
+  return f;
+}

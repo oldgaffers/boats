@@ -3,19 +3,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useAuth0 } from '@auth0/auth0-react';
-import { getScopedData } from './boatregisterposts';
+import { getFleets } from './boatregisterposts';
 import Picker from './picker';
 import NewFleet from './newfleet';
 import UpdateFleet from './updatefleet';
 import { TokenContext } from './TokenProvider';
 import { MarkContext } from "../browseapp";
-
-async function getFleets(scope, filter, accessToken) {
-    const r = await getScopedData(scope, 'fleets', filter, accessToken);
-    const f = r?.data?.Items || [];
-    f.sort((a,b) => a.name.localeCompare(b.name))
-    return f;
-}
 
 export default function FleetButtons({
     onChange = () => console.log('fleet change'),
