@@ -25,7 +25,6 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
     }
   }, [data]);
 
-  console.log('D', name, filters);
 
   if (!data) return <CircularProgress />;
   const filtered = applyFilters(data, filters);
@@ -134,10 +133,9 @@ export function PublicFleetView({ filter, defaultExpanded=false }) {
 }
 
 export default function FleetView(props) {
-  console.log('FleetView', props);
   const role = props.role || 'public';
   const searchParams = new URLSearchParams(props?.location?.search);
-  const name = props.topic || searchParams.get('name');
+  const name = props.topic || props.fleet || searchParams.get('name');
   const filter = props.filter || { name };
   const defaultExpanded = Object.keys(props).includes('defaultexpanded');
   if (role) {

@@ -103,7 +103,6 @@ const Pages = (props) => {
       <Boat ogaNo={getOgaNo()} />
     </Wrapper>
   }
-
   switch (app) {
     case 'login':
       return (
@@ -205,26 +204,6 @@ const Pages = (props) => {
       return <CreateBoatButton />;
     case 'pick_or_add_boat':
       return <PickOrAddBoat />;
-    case undefined:
-      console.log('Q', props);
-      return '';
-      /*
-      return (
-        <Auth0Provider {...auth} scope={props.scope}>
-          <TokenProvider>
-            <OGAProvider>
-              {
-                (props.fleet)
-                ?
-                <FleetView role={props.scope} topic={props.fleet} />
-                :
-                '' // <BrowseApp {...props} />
-              }
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
-      */
     default:
       // console.log('browse', app);
       return (
@@ -291,10 +270,9 @@ for(let i = 0; i< alldivs.length; i++) {
   const div = alldivs.item(i);
   const attr = div.dataset;
   const attrKeys = Object.keys(attr);
-  const relevant = tags.find((tag) => attrKeys.includes(tag));
-  if (relevant) {
-    // console.log('RELEVANT', div, attr);
-    xx(div, attr); 
+  const id = tags.find((tag) => attrKeys.includes(tag));
+  if (id) {
+    xx(div, { id, ...attr }); 
   }
 }
 
