@@ -205,6 +205,7 @@ const Pages = (props) => {
       return <CreateBoatButton />;
     case 'pick_or_add_boat':
       return <PickOrAddBoat />;
+      /*
     case undefined:
       return (
         <Auth0Provider {...auth} scope={props.scope}>
@@ -221,6 +222,7 @@ const Pages = (props) => {
           </TokenProvider>
         </Auth0Provider>
       );
+      */
     default:
       // console.log('browse', app);
       return (
