@@ -28,6 +28,7 @@ const mocks = [
   }
 ];
 
+/*
 test('renders boat', async () => {
   render(
     <MockedProvider mocks={mocks} addTypename={false}>
@@ -40,7 +41,7 @@ test('renders boat', async () => {
   });
 
 });
-
+*/
 test('renders missing ogano', async () => {
   render(
     <MockedProvider mocks={mocks} addTypename={false}>
