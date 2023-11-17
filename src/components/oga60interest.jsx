@@ -8,7 +8,7 @@ import componentMapper from "@data-driven-forms/mui-component-mapper/component-m
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Grid from "@mui/material/Grid";
-import { putGeneralEnquiry } from "./boatregisterposts";
+import { putGeneralEnquiry } from '../util/api';
 
 export default function OGA60({ onClose, onCancel }) {
 

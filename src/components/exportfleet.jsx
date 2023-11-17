@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
-import { getLargestImage } from './boatregisterposts';
+import { getLargestImage } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
 import { ApolloConsumer, gql } from '@apollo/client';
-import { getBoatData } from './boatregisterposts';
+import { getBoatData } from '../util/api';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 
 async function getBoats(ogaNos) {

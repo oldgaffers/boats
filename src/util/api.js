@@ -1,4 +1,19 @@
-import { boatRegisterHome } from '../util/constants';
+import { boatRegisterHome } from './constants';
+
+const mock = false; // true;
+
+const mocks = {
+  filterable: [
+    {
+      oga_no: 315,
+      name: 'Robinetta',
+    },
+  ],
+  boat: {
+    oga_no: 315,
+    name: 'Robinetta',
+  },
+};
 
 const api1 = 'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws';
@@ -84,6 +99,9 @@ export async function createPhotoAlbum(name, ogaNo) {
 }
 
 export async function getBoatData(ogaNo) {
+  if (mock) {
+    return mocks.boat;
+  }
   const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
   if (r.ok) {
     const data = await r.json();
@@ -99,10 +117,16 @@ export async function getBoatData(ogaNo) {
 }
 
 export async function getPicklists() {
+  if (mock) {
+    return {};
+  }
   return (await fetch(`${boatRegisterHome}/boatregister/pickers.json`)).json();
 }
  
 export async function getFilterable() {
+  if (mock) {
+    return mocks.filterable;
+  }
   const extra = await getScopedData('public', 'crewing');
   const ex = Object.fromEntries((extra?.Items || []).map((item) => [item.oga_no, item]));
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
@@ -148,6 +172,10 @@ export async function disposeOgaNo(oga_no) {
 }
 
 export async function getScopedData(scope, subject, filters, accessToken) {
+  if (mock) {
+    return {};
+  }
+  console.log('getScopedData', process.env)
   const headers = {
     'content-type': 'application/json',
   };

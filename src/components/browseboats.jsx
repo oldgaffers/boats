@@ -16,7 +16,7 @@ import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
-import { getFilterable } from './boatregisterposts';
+import { getFilterable } from '../util/api';
 import BoatRegisterIntro from "./boatregisterintro";
 import BoatsForSaleIntro from "./boatsforsaleintro";
 import BoatsToSailIntro from "./boatstosailintro";

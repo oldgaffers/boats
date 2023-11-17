@@ -26,7 +26,7 @@ import {
   basicFields,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
-import { getBoatData, getFilterable, getPicklists } from './boatregisterposts';
+import { getBoatData, getFilterable, getPicklists } from '../util/api';
 import Photodrop from "./photodrop";
 import HtmlEditor from './tinymce';
 import { boatm2f } from "../util/format";

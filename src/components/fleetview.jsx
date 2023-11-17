@@ -9,9 +9,9 @@ import Tooltip from '@mui/material/Tooltip';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import { TokenContext } from './TokenProvider';
-import { getFleets,  } from './boatregisterposts';
+import { getFleets,  } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
-import { getFilterable } from './boatregisterposts';
+import { getFilterable } from '../util/api';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 

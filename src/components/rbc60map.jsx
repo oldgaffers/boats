@@ -6,7 +6,7 @@ import { TileLayer } from 'react-leaflet/TileLayer';
 import { Marker } from 'react-leaflet/Marker';
 import { Popup } from 'react-leaflet/Popup';
 import { CompactBoatCard } from './boatcard';
-import { getScopedData } from './boatregisterposts';
+import { getScopedData } from '../util/api';
 import { Stack } from '@mui/system';
 import humanizeDuration from 'humanize-duration';
 

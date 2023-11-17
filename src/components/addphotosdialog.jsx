@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { postPhotos } from "./postphotos";
-import { createPhotoAlbum, postBoatData } from "./boatregisterposts";
+import { createPhotoAlbum, postBoatData } from '../util/api';
 import Photodrop from "./photodrop";
 import { CircularProgress } from "@mui/material";
 

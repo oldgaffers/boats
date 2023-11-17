@@ -67,27 +67,6 @@ function Wrapper({ redirectUri, scope, children }) {
     useRefreshTokens: true,
     cacheLocation: 'localstorage',
   }
-  return <Auth0Provider {...auth} scope={scope}>
-  <TokenProvider>
-    <OGAProvider>
-      {children}
-    </OGAProvider>
-  </TokenProvider>
-</Auth0Provider>
-}
-
-const Pages = (props) => {
-  const app = props.id;
-  const red = window.location.origin + window.location.pathname;
-  const auth = {
-    domain: "dev-uf87e942.eu.auth0.com",
-    clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
-    redirectUri: red,
-    audience: "https://oga.org.uk/boatregister",
-    useRefreshTokens: true,
-    cacheLocation: 'localstorage',
-  }
-  // console.log('paypal', window.location);
   const paypalOptions = {
     "client-id": 'Ab7dxlH_fK99yWWn7Z2V9WdaSiX1H26jJLtfIQ4sOcgFtqYklvaxTLZgXCSwOb2scdRGIRYJluxWH6cM',
     currency: "GBP",
@@ -96,140 +75,68 @@ const Pages = (props) => {
   if (window.location.pathname.includes('beta') || window.location.hostname === 'localhost') {
     paypalOptions['client-id'] = 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT';
   }
-  // console.log(paypalOptions);
 
-  if (app === 'app' && window.location.pathname.includes('/boat/')) {
-    return <Wrapper {...auth} scope="member">
-      <Boat ogaNo={getOgaNo()} />
-    </Wrapper>
-  }
+  return <PayPalScriptProvider options={paypalOptions}>
+    <Auth0Provider {...auth} scope={scope}>
+      <TokenProvider>
+        <OGAProvider>
+          {children}
+        </OGAProvider>
+      </TokenProvider>
+    </Auth0Provider>
+  </PayPalScriptProvider>
+}
+
+const Pages = (props) => {
+  const app = props.id;
   switch (app) {
+    case 'app':
+      if (window.location.pathname.includes('/boat/')) {
+        return <Boat ogaNo={getOgaNo()} />;
+      }
+      return <BrowseApp view='app' />;
     case 'login':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <LoginButton />
-        </Auth0Provider>
-      );
+      return <LoginButton />;
     case 'boat':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <Boat ogaNo={getOgaNo()} />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
+      return <Boat ogaNo={getOgaNo()} />;
     case 'fleet':
-      return <Wrapper {...auth} scope="member">
-        <FleetView {...props} location={window.location} />
-      </Wrapper>;
+      return <FleetView {...props} location={window.location} />;
     case 'my_fleets':
-      return <Wrapper {...auth} scope="member">
-          <MyFleets />
-        </Wrapper>;
+      return <MyFleets />;
     case 'shared_fleets':
-      return <Wrapper {...auth} scope="member">
-          <SharedFleets/>
-        </Wrapper>;
+      return <SharedFleets />;
     case 'rbc60':
-      return (
-        <PayPalScriptProvider options={paypalOptions}>
-          <Auth0Provider {...auth} scope="member">
-            <TokenProvider>
-              <OGAProvider>
-                <RBC60 />
-              </OGAProvider>
-            </TokenProvider>
-          </Auth0Provider>
-        </PayPalScriptProvider>
-      )
-        ;
+      return <RBC60 />;
     case 'rbc60_entries': // 60
-      return (
-        <PayPalScriptProvider options={paypalOptions}>
-          <Auth0Provider {...auth} scope="member">
-            <TokenProvider>
-              <OGAProvider>
-                <RBC60Entries />
-              </OGAProvider>
-            </TokenProvider>
-          </Auth0Provider>
-        </PayPalScriptProvider>
-      )
-        ;
+      return <RBC60Entries />;
     case 'rbc60_map':
-      return <Auth0Provider {...auth} scope="member">
-        <TokenProvider>
-          <OGAProvider>
-            <RCBEntryMap />
-          </OGAProvider>
-        </TokenProvider>
-      </Auth0Provider>
-        ;
+      return <RCBEntryMap />;
     case 'rbc60_crew':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <RBC60CrewForm />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      )
-        ;
+      return <RBC60CrewForm />;
     case 'oga60_button':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <OGA60Button />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      )
-        ;
+      return <OGA60Button />;
     case 'oga60_interest':
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <OGA60Form />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      )
-        ;
+      return <OGA60Form />;
     case 'add_boat':
       return <CreateBoatButton />;
     case 'pick_or_add_boat':
       return <PickOrAddBoat />;
     default:
-      // console.log('browse', app);
-      return (
-        <Auth0Provider {...auth} scope="member">
-          <TokenProvider>
-            <OGAProvider>
-              <BrowseApp view={app} />
-            </OGAProvider>
-          </TokenProvider>
-        </Auth0Provider>
-      );
+      return <BrowseApp view={app} />;
   }
 };
 
-const xx = (div, attributes) => {
-  const root = createRoot(div);
-  root.render(
-    <React.StrictMode>
-      <CookiesProvider>
-        <ThemeProvider theme={lightTheme}>
-          <CssBaseline />
-          <Pages {...attributes} />
-        </ThemeProvider>
-      </CookiesProvider>
-    </React.StrictMode>
-  );
+const BoatRegister = (props) => {
+  return <React.StrictMode>
+    <CookiesProvider>
+      <ThemeProvider theme={lightTheme}>
+        <CssBaseline />
+        <Wrapper scope={props.scope || 'member'}>
+          <Pages {...props} />
+        </Wrapper>
+      </ThemeProvider>
+    </CookiesProvider>
+  </React.StrictMode>;
 };
 
 const tags = [
@@ -238,7 +145,7 @@ const tags = [
   'rbc60', 'rbc60_entries', 'rbc60_map', 'rbc60_crew',
   'oga60_button', 'oga60_interest',
   'login', 'expressions', 'add_boat', 'pick_or_add_boat',
-  
+
 ];
 const iddivs = tags.map((id) => document.getElementById(id)).filter((div) => div);
 const brdivs = tags.map((tag) => {
@@ -254,7 +161,7 @@ const brdivs = tags.map((tag) => {
         const names = val.split(' ');
         names.forEach((n) => {
           if (n.startsWith('br_')) {
-            attributes['id'] = n.replace('br_', '');            
+            attributes['id'] = n.replace('br_', '');
           }
         });
       }
@@ -262,17 +169,17 @@ const brdivs = tags.map((tag) => {
       attributes[name] = div.getAttribute(name);
     }
   });
-  xx(div, attributes);
+  createRoot(div).render(<BoatRegister {...attributes} />);
 });
 
 const alldivs = document.getElementsByTagName('div');
-for(let i = 0; i< alldivs.length; i++) {
+for (let i = 0; i < alldivs.length; i++) {
   const div = alldivs.item(i);
   const attr = div.dataset;
   const attrKeys = Object.keys(attr);
   const id = tags.find((tag) => attrKeys.includes(tag));
   if (id) {
-    xx(div, { id, ...attr }); 
+    createRoot(div).render(<BoatRegister id={id} {...attr} />);
   }
 }
 

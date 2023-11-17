@@ -1,4 +1,4 @@
-import { getUploadCredentials } from './boatregisterposts';
+import { getUploadCredentials } from '../util/api';
 import { fromCognitoIdentity } from "@aws-sdk/credential-providers";
 import { S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
