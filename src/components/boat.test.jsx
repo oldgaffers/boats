@@ -3,9 +3,9 @@ import { screen, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from "@apollo/client/testing";
 import Boat from './boat';
 import { MEMBER_QUERY } from './boatwrapper';
-import * as api from '../components/boatregisterposts';
+import * as api from '../util/api';
 
-jest.mock("../components/boatregisterposts", () => {
+jest.mock("../util/api", () => {
   return {
     getBoatData: () => Promise.resolve({ name: 'x' }),
     getPicklists: () => Promise.resolve({}),
