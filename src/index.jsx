@@ -112,11 +112,12 @@ const Pages = (props) => {
 };
 
 const BoatRegister = (props) => {
+  const red = window.location.origin + window.location.pathname;
   return <React.StrictMode>
     <CookiesProvider>
       <ThemeProvider theme={lightTheme}>
         <CssBaseline />
-        <Wrapper scope={props.scope || 'member'}>
+        <Wrapper redirectUri={red} scope={props.scope || 'member'}>
           <Pages {...props} />
         </Wrapper>
       </ThemeProvider>
