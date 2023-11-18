@@ -15,16 +15,11 @@ import SharedFleets from './components/sharedfleets';
 import FleetView from './components/fleetview';
 import LoginButton from './components/loginbutton';
 import TokenProvider from './components/TokenProvider';
-
-
-import RCBEntryMap from './components/rbc60map';
-import RBC60 from './components/rbc60';
-import RBC60Entries from './components/rbc60entries';
-import RBC60CrewForm from './components/rbc60crewform';
-import OGA60Button from './components/oga60button';
-import OGA60Form from './components/oga60form';
 import CreateBoatButton from './components/createboatbutton';
 import PickOrAddBoat from './components/pick_or_add_boat';
+
+import CustomMap from './components/custommap';
+
 
 /*
 import { lazy } from 'react';
@@ -102,27 +97,17 @@ const Pages = (props) => {
     case 'fleet':
       return <FleetView {...props} location={window.location} />;
     case 'my_fleets':
-      return <MyFleets />;
+      return <MyFleets {...props} />;
     case 'shared_fleets':
-      return <SharedFleets />;
-    case 'rbc60':
-      return <RBC60 />;
-    case 'rbc60_entries': // 60
-      return <RBC60Entries />;
-    case 'rbc60_map':
-      return <RCBEntryMap />;
-    case 'rbc60_crew':
-      return <RBC60CrewForm />;
-    case 'oga60_button':
-      return <OGA60Button />;
-    case 'oga60_interest':
-      return <OGA60Form />;
+      return <SharedFleets {...props} />;
+    case 'map':
+      return <CustomMap {...props} />;
     case 'add_boat':
-      return <CreateBoatButton />;
+      return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat':
-      return <PickOrAddBoat />;
+      return <PickOrAddBoat {...props} />;
     default:
-      return <BrowseApp view={app} />;
+      return <BrowseApp view={app} {...props} />;
   }
 };
 
@@ -140,46 +125,32 @@ const BoatRegister = (props) => {
 };
 
 const tags = [
-  'app', 'boat', 'fleet', 'my_fleets', 'shared_fleets',
-  'sail', 'sell', 'small', 'pending',
-  'rbc60', 'rbc60_entries', 'rbc60_map', 'rbc60_crew',
-  'oga60_button', 'oga60_interest',
-  'login', 'expressions', 'add_boat', 'pick_or_add_boat',
-
+  'app', 'boat', 'fleet', 'sail', 'sell', 'small', 
+  'login', 
+  'pending',
+  'expressions', 'add_boat', 'pick_or_add_boat',
+  'my_fleets', 'shared_fleets',
 ];
-const iddivs = tags.map((id) => document.getElementById(id)).filter((div) => div);
-const brdivs = tags.map((tag) => {
-  const c = document.getElementsByClassName(`br_${tag}`);
-  return [...c];
-}).flat();
-[...iddivs, ...brdivs].forEach((div) => {
-  const attributes = {};
-  div.getAttributeNames().forEach((name) => {
-    if (name === 'class') {
-      const val = div.getAttribute(name);
-      if (val.includes('br_')) {
-        const names = val.split(' ');
-        names.forEach((n) => {
-          if (n.startsWith('br_')) {
-            attributes['id'] = n.replace('br_', '');
-          }
-        });
-      }
-    } else {
-      attributes[name] = div.getAttribute(name);
-    }
-  });
-  createRoot(div).render(<BoatRegister {...attributes} />);
-});
 
 const alldivs = document.getElementsByTagName('div');
 for (let i = 0; i < alldivs.length; i++) {
   const div = alldivs.item(i);
   const attr = div.dataset;
-  const attrKeys = Object.keys(attr);
-  const id = tags.find((tag) => attrKeys.includes(tag));
-  if (id) {
-    createRoot(div).render(<BoatRegister id={id} {...attr} />);
+  // oga-component is converted to ogaComponent by the browser
+  if (attr.ogaComponent) {
+    createRoot(div).render(<BoatRegister id={attr.ogaComponent} {...attr} />);    
+  } else {
+    const attrKeys = Object.keys(attr);
+    const wanted = tags.find((tag) => attrKeys.includes(tag));
+    if (wanted) {
+      createRoot(div).render(<BoatRegister id={wanted} {...attr} />);
+    } else {
+      // legacy
+      const id = div.getAttribute('id');
+      if (tags.includes(id)) {
+        createRoot(div).render(<BoatRegister id={id} {...attr} />);
+      }
+    }  
   }
 }
 
