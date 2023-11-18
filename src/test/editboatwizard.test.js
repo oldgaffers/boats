@@ -3,7 +3,7 @@ import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import EditBoatWizard from '../components/editboatwizard';
-import '../components/boatregisterposts';
+import '../util/api';
 import * as MockDate from 'mockdate';
 
 const pickers = {
@@ -22,7 +22,7 @@ const pickers = {
 
 MockDate.set(1434319925275);
 
-jest.mock('../components/boatregisterposts', () => {
+jest.mock('../util/api', () => {
   return {
     getPicklists: async () => pickers,
   };
