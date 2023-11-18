@@ -125,7 +125,7 @@ export default function CustomMap(props) {
         if (!data) {
             getData();
         }
-    }, [data]);
+    }, [data, props.scope, props.location]);
 
     return (
         <Stack>
