@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import { Box, Checkbox, Dialog, DialogActions, DialogContentText, DialogTitle, FormControlLabel, Snackbar } from "@mui/material";
 import { useAuth0 } from '@auth0/auth0-react';
-import { postScopedData } from "./boatregisterposts";
+import { postScopedData } from '../util/api';
 
-function SetHandicapCheckedDialog({ boat, user, onClose, open }) {
+function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
   const [popoverText, setPopoverText] = useState('');
   const [dimensions, setDimensions] = useState(false);
   const [sails, setSails] = useState(false);
@@ -42,7 +42,7 @@ function SetHandicapCheckedDialog({ boat, user, onClose, open }) {
   const id = user['https://oga.org.uk/id'];
   const owned = boat.ownerships.find((o) => o.id === id && o.current);
 
-  if (owned === undefined && ! user['https://oga.org.uk/roles'].includes('editor')) {
+  if (owned === undefined && ! (user['https://oga.org.uk/roles'] ||[]).includes('editor')) {
     return <Dialog
       open={open}
       aria-labelledby="form-dialog-title"

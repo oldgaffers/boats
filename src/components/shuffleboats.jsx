@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Snackbar from '@mui/material/Snackbar';
-import { shuffleBoats } from "./boatregisterposts";
+import { shuffleBoats } from '../util/api';
 
 export default function ShuffleBoatsButton() {
   const [snackBarOpen, setSnackBarOpen] = useState(false);

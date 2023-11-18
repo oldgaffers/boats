@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { boatf2m } from "../util/format";
 import { postPhotos } from "./postphotos";
-import { createPhotoAlbum, postBoatData, nextOgaNo, disposeOgaNo } from './boatregisterposts';
+import { createPhotoAlbum, postBoatData, nextOgaNo, disposeOgaNo } from '../util/api';
 import { v4 as uuidv4 } from 'uuid';
 import CreateBoatDialog from "./createboatdialog";
 // const CreateBoatDialog = React.lazy(()=> import("./createboatdialog"));

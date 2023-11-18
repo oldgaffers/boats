@@ -1,7 +1,7 @@
 import React from "react"
 import BrowseBoats from './browseboats';
 import { CircularProgress } from "@mui/material";
-import { useGetPicklists } from "./boatregisterposts";
+import { useGetPicklists } from '../util/api';
 
 export default function StaticPickerBoatBrowser({ title, state, ...props }) {
   const { data, error, loading } = useGetPicklists();

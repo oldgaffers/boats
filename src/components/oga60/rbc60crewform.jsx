@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Snackbar from "@mui/material/Snackbar";
 import Grid from "@mui/material/Grid";
 import LoginButton from './loginbutton';
-import { postCrewEnquiry } from "./boatregisterposts";
+import { postCrewEnquiry } from '../util/api';
 
 const TwoColumns = ({ fields }) => {
     const { renderForm } = useFormApi();

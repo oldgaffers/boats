@@ -12,7 +12,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import { boatUrl } from '../util/rr';
-import { getThumb, getBoatData } from './boatregisterposts';
+import { getThumb, getBoatData } from '../util/api';
 import { m2f, price, formatDesignerBuilder } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "../browseapp";

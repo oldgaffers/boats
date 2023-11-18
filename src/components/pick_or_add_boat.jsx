@@ -7,7 +7,7 @@ import TextField from '@data-driven-forms/mui-component-mapper/text-field';
 import { FormRenderer } from '@data-driven-forms/react-form-renderer';
 import { Stack } from '@mui/system';
 import { m2df } from '../util/format';
-import { disposeOgaNo, getFilterable, nextOgaNo } from './boatregisterposts';
+import { disposeOgaNo, getFilterable, nextOgaNo } from '../util/api';
 import { createBoat } from './createboatbutton';
 
 const FormTemplate = ({ formFields, schema }) => {

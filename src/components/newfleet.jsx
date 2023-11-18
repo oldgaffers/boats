@@ -10,7 +10,7 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FormControl, Popover, Radio, RadioGroup, Typography } from "@mui/material";
-import { postScopedData } from "./boatregisterposts";
+import { postScopedData } from '../util/api';
 import { TokenContext } from './TokenProvider';
 
 function CreateFleetDialog({

@@ -32,7 +32,7 @@ import {
   basicFields,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
-import { getPicklists } from './boatregisterposts';
+import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 

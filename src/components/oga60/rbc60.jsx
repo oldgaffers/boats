@@ -12,8 +12,8 @@ import Grid from "@mui/material/Grid";
 import { CircularProgress } from '@mui/material';
 import LoginButton from './loginbutton';
 import { DDFPayPalButtons } from './ddf/paypal';
-import { disposeOgaNo, nextOgaNo, postGeneralEnquiry } from './boatregisterposts';
-import { getFilterable } from './boatregisterposts';
+import { disposeOgaNo, nextOgaNo, postGeneralEnquiry } from '../util/api';
+import { getFilterable } from '../util/api';
 
 const UNLISTED = "My boat isn't listed";
 

@@ -3,7 +3,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useAuth0 } from '@auth0/auth0-react';
-import { getFleets } from './boatregisterposts';
+import { getFleets } from '../util/api';
 import Picker from './picker';
 import NewFleet from './newfleet';
 import UpdateFleet from './updatefleet';

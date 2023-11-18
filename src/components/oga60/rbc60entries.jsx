@@ -5,7 +5,7 @@ import { Box, Tab, Tabs } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { TokenContext } from './TokenProvider';
 import { PublicFleetView } from './fleetview';
-import { getScopedData } from './boatregisterposts';
+import { getScopedData } from '../util/api';
 import EntryTable from './rbc60entrytable';
 import RCBEntryMap from './rbc60map';
 

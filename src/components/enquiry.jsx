@@ -11,7 +11,7 @@ import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
 import { useAuth0 } from "@auth0/auth0-react";
 import { gql, useLazyQuery } from "@apollo/client";
-import { postGeneralEnquiry } from "./boatregisterposts";
+import { postGeneralEnquiry } from '../util/api';
 
 function ContactDialog({
   open,

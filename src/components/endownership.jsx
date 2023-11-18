@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import Snackbar from '@mui/material/Snackbar';
-import { postBoatData } from './boatregisterposts';
+import { postBoatData } from '../util/api';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@mui/material';
 
 function EndOwnershipDialog({

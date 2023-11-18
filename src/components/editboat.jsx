@@ -15,7 +15,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import HullForm from "./HullForm";
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { getPicklists } from './boatregisterposts';
+import { getPicklists } from '../util/api';
 import { schema } from './editboat_schema';
 import { currentSaleRecord, SaleRecord } from '../util/sale_record';
 import HtmlEditor from './tinymce';
