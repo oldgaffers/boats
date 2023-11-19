@@ -15,7 +15,7 @@ import { boatUrl } from '../util/rr';
 import { getThumb, getBoatData } from '../util/api';
 import { m2f, price, formatDesignerBuilder } from '../util/format';
 import Enquiry from './enquiry';
-import { MarkContext } from "../browseapp";
+import { MarkContext } from "./browseapp";
 import { currentSaleRecord } from '../util/sale_record';
 import EndOwnership from './endownership';
 import TextList from './textlist';

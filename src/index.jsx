@@ -8,18 +8,16 @@ import { CookiesProvider } from "react-cookie";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import OGAProvider from "./util/gql";
-import BrowseApp from './browseapp';
-import Boat from './components/boat';
-import MyFleets from './components/myfleets';
-import SharedFleets from './components/sharedfleets';
-import FleetView from './components/fleetview';
-import LoginButton from './components/loginbutton';
 import TokenProvider from './components/TokenProvider';
-import CreateBoatButton from './components/createboatbutton';
-import PickOrAddBoat from './components/pick_or_add_boat';
 
+import BrowseApp from './components/browseapp';
+import Boat from './components/boat';
+import FleetView, { Fleets } from './components/fleetview';
+import LoginButton from './components/loginbutton';
+import CreateBoatButton from './components/createboatbutton';
 import CustomMap from './components/custommap';
 
+import PickOrAddBoat from './components/pick_or_add_boat';
 
 /*
 import { lazy } from 'react';
@@ -32,6 +30,22 @@ const OGA60Form = lazy(()=> import('./components/oga60form'));
 const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
 */
+
+const tags = [
+  'app', 
+  'boat', 
+  'fleet', 
+  'sail', 
+  'sell', 
+  'small', 
+  'login', 
+  'pending',
+  'expressions', 
+  'add_boat', 
+  'pick_or_add_boat',
+  'my_fleets', 
+  'shared_fleets',
+];
 
 function getOgaNo() {
   const params = new URLSearchParams(window.location.search);
@@ -90,23 +104,16 @@ const Pages = (props) => {
         return <Boat ogaNo={getOgaNo()} />;
       }
       return <BrowseApp view='app' />;
-    case 'login':
-      return <LoginButton />;
-    case 'boat':
-      return <Boat ogaNo={getOgaNo()} />;
-    case 'fleet':
-      return <FleetView {...props} location={window.location} />;
-    case 'my_fleets':
-      return <MyFleets {...props} />;
-    case 'shared_fleets':
-      return <SharedFleets {...props} />;
-    case 'map':
-      return <CustomMap {...props} />;
-    case 'add_boat':
-      return <CreateBoatButton {...props} />;
-    case 'pick_or_add_boat':
-      return <PickOrAddBoat {...props} />;
+    case 'login': return <LoginButton />;
+    case 'boat': return <Boat ogaNo={getOgaNo()} />;
+    case 'fleet': return <FleetView {...props} location={window.location} />;
+    case 'my_fleets': return <Fleets filter={{ owned: true }}/>;
+    case 'shared_fleets': return <Fleets filter={{ public: true}}/>;
+    case 'map': return <CustomMap {...props} />;
+    case 'add_boat': return <CreateBoatButton {...props} />;
+    case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
     default:
+      // sail, sell, small, ...
       return <BrowseApp view={app} {...props} />;
   }
 };
@@ -125,13 +132,6 @@ const BoatRegister = (props) => {
   </React.StrictMode>;
 };
 
-const tags = [
-  'app', 'boat', 'fleet', 'sail', 'sell', 'small', 
-  'login', 
-  'pending',
-  'expressions', 'add_boat', 'pick_or_add_boat',
-  'my_fleets', 'shared_fleets',
-];
 
 const alldivs = document.getElementsByTagName('div');
 for (let i = 0; i < alldivs.length; i++) {

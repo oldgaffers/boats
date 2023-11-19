@@ -175,7 +175,6 @@ export async function getScopedData(scope, subject, filters, accessToken) {
   if (mock) {
     return {};
   }
-  console.log('getScopedData', process.env)
   const headers = {
     'content-type': 'application/json',
   };

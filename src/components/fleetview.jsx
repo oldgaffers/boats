@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -9,13 +10,13 @@ import Tooltip from '@mui/material/Tooltip';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import { TokenContext } from './TokenProvider';
-import { getFleets,  } from '../util/api';
+import { getFleets, } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { getFilterable } from '../util/api';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 
-export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defaultExpanded=false }) {
+export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defaultExpanded = false }) {
   const [page, setPage] = useState(1);
   const [data, setData] = useState();
 
@@ -24,7 +25,6 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
       getFilterable().then((r) => setData(r)).catch((e) => console.log(e));
     }
   }, [data]);
-
 
   if (!data) return <CircularProgress />;
   const filtered = applyFilters(data, filters);
@@ -57,32 +57,40 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
 
 export function Fleets({ filter }) {
   const [data, setData] = useState();
-  const accessToken = useContext(TokenContext);
+  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     const getData = async () => {
-      if (accessToken) {
-        const p = await getFleets('member', filter, accessToken);
-        setData(p);
+      if (isAuthenticated) {
+        const token = await getAccessTokenSilently();
+        if (filter.owned) {
+          const { owned, ...f } = filter;
+          const owner_gold_id = user?.["https://oga.org.uk/id"];
+          const p = await getFleets('member', {...f, owner_gold_id}, token);
+          setData(p);
+        } else {
+          const p = await getFleets('member', filter, token);
+          setData(p);
+        }
       }
-    }
+    };
     getData();
-  }, [accessToken, filter]);
+  }, [filter, isAuthenticated, getAccessTokenSilently, user]);
 
   if (!data) {
     return <CircularProgress />;
   }
-  // console.log('PFV', data);
+
   return (
     <RoleRestricted role='member'>
       {
-        (data?.Items?.map(({ name, filters }) => <FleetDisplay name={name} filters={filters} />)) || ''
+        (data.map(({ name, filters }) => <FleetDisplay key={name} name={name} filters={filters} />)) || ''
       }
     </RoleRestricted>
   );
 }
 
-export function RoleRestrictedFleetView({ filter, role, defaultExpanded=false }) {
+export function RoleRestrictedFleetView({ filter, role, defaultExpanded = false }) {
   const [data, setData] = useState();
   const accessToken = useContext(TokenContext);
   console.log('RoleRestrictedFleetView', filter, role, defaultExpanded);
@@ -105,12 +113,12 @@ export function RoleRestrictedFleetView({ filter, role, defaultExpanded=false })
 
   return (
     <RoleRestricted role={role}>
-      <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded}/>
+      <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded} />
     </RoleRestricted>
   );
 }
 
-export function PublicFleetView({ filter, defaultExpanded=false }) {
+export function PublicFleetView({ filter, defaultExpanded = false }) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -144,6 +152,6 @@ export default function FleetView(props) {
     }
     return <RoleRestrictedFleetView filter={filter} role={role} defaultExpanded={defaultExpanded} />;
   } else {
-    return <PublicFleetView filter={filter}  defaultExpanded={defaultExpanded} />;
+    return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
   }
 }

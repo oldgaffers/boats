@@ -10,6 +10,8 @@ import { m2df } from '../util/format';
 import { disposeOgaNo, getFilterable, nextOgaNo } from '../util/api';
 import { createBoat } from './createboatbutton';
 
+// useful for custom forms, e.g. for what boat you will bring to an event.
+
 const FormTemplate = ({ formFields, schema }) => {
     const { handleSubmit, onCancel, getState } = useFormApi();
     const { submitting, valid } = getState();

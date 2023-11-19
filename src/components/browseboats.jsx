@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import PropTypes from 'prop-types';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import { Accordion, AccordionDetails, AccordionSummary, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Paper, Stack } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
@@ -16,12 +13,10 @@ import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
-import { getFilterable } from '../util/api';
-import BoatRegisterIntro from "./boatregisterintro";
-import BoatsForSaleIntro from "./boatsforsaleintro";
-import BoatsToSailIntro from "./boatstosailintro";
-import SmallBoatsIntro from "./smallboatsintro";
 import { ExportFleet } from './exportfleet';
+import Intro from './Intro';
+import BoatRegisterFooter from './BoatRegisterFooter';
+import { useBoats } from '../util/boats';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -57,29 +52,6 @@ function makePickers(filtered) {
   return pickers;
 }
 
-function Intro({ view }) {
-  let IntroText = BoatRegisterIntro;
-  if (view === 'sell') {
-    IntroText = BoatsForSaleIntro;
-  }
-  if (view === 'small') {
-    IntroText = SmallBoatsIntro;
-  }
-  if (view === 'sail') {
-    IntroText = BoatsToSailIntro;
-  }
-  return (
-    <Accordion defaultExpanded={true}>
-      <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
-        <Typography>About the boat Register</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <IntroText />
-      </AccordionDetails>
-    </Accordion>
-  );
-}
-
 function ExportOptions({ name, boats, filters }) {
   if (name) {
     return  <ExportFleet name={name} boats={boats} filters={filters} />
@@ -100,39 +72,23 @@ export default function BrowseBoats({
   onBoatUnMarked,
 }) {
   const { bpp, sort, sortDirection, filters } = state;
-
-  const [data, setData] = useState();
   const [ownedOnly, setOwnedOnly] = useState();
   const { user } = useAuth0();
   const [fleetName, setFleetName] = useState();
+  const id = user?.["https://oga.org.uk/id"];
 
-  useEffect(() => {
-    if (!data) {
-      getFilterable().then((r) => {
-        setData(r);
-      }).catch((e) => console.log(e));
-    }
-  }, [data]);
+  const boats = useBoats(id, ownedOnly);
 
   const handleFilterChange = (filters, name) => {
     onFilterChange(filters);
     setFleetName(name);
   }
 
-  if (!data) return <CircularProgress />;
+  if (!boats) return <CircularProgress />;
 
-  const blank = "_blank";
-
-  const id = user?.["https://oga.org.uk/id"];
-  const ownedBoats = data.filter((b) => b.owners?.includes(id));
-  let boats = data;
-  if (ownedOnly && ownedBoats.length > 0) {
-    boats = ownedBoats;
-  }
   const filtered = applyFilters(boats, filters);
   const pickers = makePickers(filtered);
-  const enableOwnersOnly = ownedBoats.length > 0;
-  // sx={{ height: '76px', backgroundColor: 'rgb(219, 235, 255)' }}
+
   return (
     <Paper>
       <Stack
@@ -166,7 +122,7 @@ export default function BrowseBoats({
             isMarkedOnly={isMarkedOnly}
             onOwnedOnlyChange={(v) => setOwnedOnly(v)}
             isOwnedOnly={ownedOnly}
-            enableOwnersOnly={enableOwnersOnly}
+            enableOwnersOnly={!!id}
             filtered={filtered}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
@@ -182,26 +138,7 @@ export default function BrowseBoats({
         onBoatUnMarked={onBoatUnMarked}
       />
       <Divider />
-      <Typography>
-        Other great places to look for boats are:
-      </Typography>
-      <List>
-        <ListItem>
-          <Typography>
-            <a target={blank} href="https://www.nationalhistoricships.org.uk">
-              National Historic Ships
-            </a>
-          </Typography>
-        </ListItem>
-        <ListItem>
-          <Typography>
-            <a target={blank} href="https://nmmc.co.uk/explore/databases/">NMM Cornwall</a>&nbsp;
-            maintain a number of interesting databases including small boats and
-            yacht designs
-          </Typography>
-        </ListItem>
-      </List>
-      <Typography variant='body2'>OGA Boat Register %%VERSION%%</Typography>
+      <BoatRegisterFooter />
     </Paper>
   );
 }
