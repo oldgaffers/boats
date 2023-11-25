@@ -416,15 +416,28 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, for
   return { boat: boatDefined(boat), newItems, email };
 }
 
+export function oldvalue(path, boat) {
+  const [, root, ...p] = path.split('/');
+  return p.reduce((prev, current) => prev[current], boat[root]);
+}
+
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
 
   const handleSubmit = (values, formApi) => {
 
-    const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(values, boat, pickers);
+    // console.log('handleSubmit handicap data', values.handicap_data);
+    const state = formApi.getState()
+    // console.log('handleSubmit handicap data from state', state.values.handicap_data);
 
-    const fulldelta = formatters.jsonpatch.format(boatdiff(boat, modifiedBoat));
+    // N.B. the values from the values parameter can be incomplete.
+    // the values in the state seem correct
+
+    const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(state.values, boat, pickers);
+
+    const rounded = boatf2m(boatm2f(boat)); // to exclude changes due to rounding
+    const fulldelta = formatters.jsonpatch.format(boatdiff(rounded, modifiedBoat));
 
     onSubmit(
       fulldelta,
