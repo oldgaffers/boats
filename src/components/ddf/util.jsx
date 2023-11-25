@@ -156,7 +156,7 @@ export const constructionItems = (pickers) => {
 };
 
 export const extendableList = ({ pickers, name, label }) => {
-  console.log('extendableList', name, label)
+  // console.log('extendableList', name, label)
   return [
     {
       component: 'dual-list-select',
