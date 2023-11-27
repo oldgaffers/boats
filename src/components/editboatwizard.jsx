@@ -299,7 +299,7 @@ export function prepareInitialValues(boat, user) {
     flexibility: 'normal',
   };
 
-  const sales_records = for_sales?.toSorted((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)) || [];
+  const sales_records = [...(for_sales||[])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
   if (boat.selling_status === 'for_sale') {
     ddf.current_sales_record = { ...defaultSalesRecord, ...sales_records.shift() };
@@ -356,7 +356,7 @@ export function salesChanges(ddf, for_sales) {
 export function prepareModifiedValues(values, { name, oga_no, id, image_key, selling_status, for_sales }, pickers) {
   const { ddf, email, ...submitted } = values;
 
-  const sales_records = for_sales?.toSorted((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)) || [];
+  const sales_records = [...(for_sales||[])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
   if (selling_status === 'for_sale') {
     sales_records.shift();

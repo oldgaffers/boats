@@ -290,7 +290,6 @@ Object {
     "name": "Robinetta",
     "oga_no": 315,
     "owner": false,
-    "update_sale": "unsell",
   },
   "design_class": undefined,
   "designer": Array [
@@ -457,7 +456,6 @@ Object {
     "name": "Robinetta",
     "oga_no": 315,
     "owner": true,
-    "update_sale": "unsell",
   },
   "design_class": undefined,
   "designer": Array [
