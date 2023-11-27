@@ -39,6 +39,8 @@ export async function shuffleBoats() {
 }
 
 export async function postBoatData(data) {
+  // console.log('postBoatData', data);
+  // return { ok: true };
   return fetch(
     'https://t5lcpwbufg6ewyxswawwsbtkjq0kupbb.lambda-url.eu-west-1.on.aws/',
     {

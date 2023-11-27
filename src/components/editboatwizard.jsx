@@ -225,7 +225,7 @@ const defaultSchema = (pickers) => {
             name: 'own-step',
             nextStep: ({ values }) => {
               if (values.ddf.owner || values.ddf.editor) {
-                if (values.ddf.update_sale === 'update') {
+                if (values.selling_status === 'for_sale') {
                   return 'update-sell-step';
                 }
                 return 'query-sell-step';
@@ -290,25 +290,21 @@ export function prepareInitialValues(boat, user) {
   const owner = ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
 
-  const sortedsales = [...(for_sales || [])];
-  // descending
-  sortedsales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-
   const ddf = { name, oga_no, id, image_key, owner, editor };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
-    asking_price: 0, 
-    sales_text: '', 
+    asking_price: 0,
+    sales_text: '',
     flexibility: 'normal',
   };
 
+  const sales_records = for_sales?.toSorted((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)) || [];
+
   if (boat.selling_status === 'for_sale') {
-    ddf.current_sales_record = { ...defaultSalesRecord, ...sortedsales[0] };
-    ddf.update_sale = 'update';
+    ddf.current_sales_record = { ...defaultSalesRecord, ...sales_records.shift() };
   } else {
     ddf.current_sales_record = defaultSalesRecord;
-    ddf.update_sale = 'unsell';
   }
 
   const initialValues = {
@@ -335,41 +331,36 @@ export function prepareInitialValues(boat, user) {
 
 }
 
-export function salesChanges(ddf, original_for_sales = []) {
-
-  const other_sales = original_for_sales.filter((fs) => fs.created_at !== ddf?.current_sales_record?.created_at);
-
-  const for_sales = [...other_sales];
-
-  let selling_status = 'not_for_sale';
-
-  switch (ddf.update_sale) {
-    case 'unsell':
-    case 'sold':
-      selling_status = 'not_for_sale';
-      break;
-    case 'update':
-      selling_status = 'for_sale';
-      break;
-    default:
-      if (ddf.confirm_for_sale && ddf.current_sales_record) {
-        selling_status = 'for_sale';
-      } else {
-        console.log('handleSubmit unexpected update_sale value', ddf);
-      }
+export function salesChanges(ddf, for_sales) {
+  if (ddf.confirm_for_sale === true) {
+    return {
+      selling_status: 'for_sale',
+      for_sales: [ddf.current_sales_record, ...for_sales],
+    }
   }
-  if ((original_for_sales.length !== other_sales.length) && (selling_status === 'for_sale')) {
-    for_sales.unshift(ddf.current_sales_record);
+  if (ddf.update_sale === 'unsell') {
+    return {
+      selling_status: 'not_for_sale',
+      for_sales: [ddf.current_sales_record, ...for_sales],
+    }
   }
-
-  // descending
-  for_sales.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-
-  return { for_sales, selling_status };
+  if (ddf.update_sale === 'sold') {
+    return {
+      selling_status: 'not_for_sale',
+      for_sales: [ddf.current_sales_record, ...for_sales],
+    }
+  }
+  return { for_sales };
 }
 
-export function prepareModifiedValues(values, { name, oga_no, id, image_key, for_sales }, pickers) {
+export function prepareModifiedValues(values, { name, oga_no, id, image_key, selling_status, for_sales }, pickers) {
   const { ddf, email, ...submitted } = values;
+
+  const sales_records = for_sales?.toSorted((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)) || [];
+
+  if (selling_status === 'for_sale') {
+    sales_records.shift();
+  }
 
   const newItems = Object.fromEntries(
     ['builder', 'designer', 'design_class']
@@ -396,8 +387,8 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, for
 
   const design_class = name2object(values.design_class, pickers['design_class'], newItems['design_class']);
 
-  const builder = values.builder.map((v) =>  name2object(v, pickers['builder'], newItems['builder']));
-  const designer = values.designer.map((v) =>  name2object(v, pickers['designer'], newItems['designer']));
+  const builder = values.builder.map((v) => name2object(v, pickers['builder'], newItems['builder']));
+  const designer = values.designer.map((v) => name2object(v, pickers['designer'], newItems['designer']));
 
   const boat = {
     ...boatf2m(submitted),
@@ -407,7 +398,7 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, for
       ...(submitted.previous_names || []),
     ],
     oga_no, id, image_key,
-    ...salesChanges(ddf, for_sales),
+    ...salesChanges(ddf, sales_records),
     builder,
     designer,
     design_class,
@@ -424,6 +415,20 @@ export function oldvalue(path, boat) {
 export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
+
+  useEffect(() => {
+    if (!pickers) {
+      getPicklists().then((r) => {
+        setPickers(r)
+      }).catch((e) => console.log(e));
+    }
+  }, [pickers]);
+
+  if (!pickers) return <CircularProgress />;
+
+  if (!open) return '';
+
+  const activeSchema = schema || defaultSchema(pickers);
 
   const handleSubmit = (values, formApi) => {
 
@@ -448,19 +453,6 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
 
   }
 
-  useEffect(() => {
-    if (!pickers) {
-      getPicklists().then((r) => {
-        setPickers(r)
-      }).catch((e) => console.log(e));
-    }
-  }, [pickers]);
-
-  if (!pickers) return <CircularProgress />;
-
-  if (!open) return '';
-
-  const activeSchema = schema || defaultSchema(pickers);
 
   return (
     <Dialog

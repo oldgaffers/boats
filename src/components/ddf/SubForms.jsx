@@ -525,6 +525,7 @@ export const salesSteps = (firstStep, nextStep) => [
           {
             component: 'radio',
             name: 'ddf.update_sale',
+            initialValue: 'update',
             label: 'Update Sales Status',
             options: [
               { label: 'I want to take boat off the market for the present', value: 'unsell' },
