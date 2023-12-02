@@ -8,7 +8,7 @@ export function HandicapDisplay({handicapData}) {
     if (handicapData?.checked) {
       return <>
         <ConditionalText label='T(H)CF' value={handicapData.thcf?.toFixed(3)} />
-        <ConditionalText label='Solent Rating' value={handicapData.solent.thcf?.toFixed(3)} />
+        <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
       </>;
     }
     return <>
