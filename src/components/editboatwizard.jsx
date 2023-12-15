@@ -24,13 +24,14 @@ import {
   registrationForm,
   referencesItems,
   salesSteps,
-  ownerShipsFields,
+  // ownerShipsFields,
   sellingDataFields,
   doneFields,
   hullFields,
   descriptionsItems,
   basicFields,
 } from "./ddf/SubForms";
+import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
@@ -232,45 +233,46 @@ const defaultSchema = (pickers) => {
               }
               return 'done-step';
             },
-            fields: ownerShipsFields,
+            // fields: ownerShipsFields,   
+            fields: ownershipUpdateFields,         
           },
+      {
+        name: 'query-sell-step',
+        nextStep: {
+          when: "ddf.confirm_for_sale",
+          stepMapper: {
+            true: 'sell-step',
+            false: 'done-step',
+          },
+        },
+        fields: [
           {
-            name: 'query-sell-step',
-            nextStep: {
-              when: "ddf.confirm_for_sale",
-              stepMapper: {
-                true: 'sell-step',
-                false: 'done-step',
-              },
+            component: 'checkbox',
+            label: 'I want to sell this boat',
+            name: 'ddf.confirm_for_sale',
+            helperText: 'check if you want to put this boat up for sale',
+            resolveProps: (props, { meta, input }, formOptions) => {
+              const { values } = formOptions.getState();
+              return {
+                initialValue: !!values.ddf.current_sales_record,
+                isReadOnly: !(values.ddf.owner || values.ddf.editor)
+              }
             },
-            fields: [
-              {
-                component: 'checkbox',
-                label: 'I want to sell this boat',
-                name: 'ddf.confirm_for_sale',
-                helperText: 'check if you want to put this boat up for sale',
-                resolveProps: (props, { meta, input }, formOptions) => {
-                  const { values } = formOptions.getState();
-                  return {
-                    initialValue: !!values.ddf.current_sales_record,
-                    isReadOnly: !(values.ddf.owner || values.ddf.editor)
-                  }
-                },
-              },
-            ],
-          },
-          {
-            name: 'sell-step',
-            nextStep: 'done-step',
-            fields: sellingDataFields,
-          },
-          ...salesSteps('update-sell-step', 'done-step'),
-          {
-            name: "done-step",
-            fields: doneFields,
           },
         ],
       },
+      {
+        name: 'sell-step',
+        nextStep: 'done-step',
+        fields: sellingDataFields,
+      },
+      ...salesSteps('update-sell-step', 'done-step'),
+      {
+        name: "done-step",
+        fields: doneFields,
+      },
+    ],
+  },
     ],
   };
 };
@@ -299,7 +301,7 @@ export function prepareInitialValues(boat, user) {
     flexibility: 'normal',
   };
 
-  const sales_records = [...(for_sales||[])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+  const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
   if (boat.selling_status === 'for_sale') {
     ddf.current_sales_record = { ...defaultSalesRecord, ...sales_records.shift() };
@@ -356,7 +358,7 @@ export function salesChanges(ddf, for_sales) {
 export function prepareModifiedValues(values, { name, oga_no, id, image_key, selling_status, for_sales }, pickers) {
   const { ddf, email, ...submitted } = values;
 
-  const sales_records = [...(for_sales||[])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+  const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
   if (selling_status === 'for_sale') {
     sales_records.shift();
@@ -467,6 +469,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
           componentMapper={{
             ...componentMapper,
             html: HtmlEditor,
+            'ownership-form': OwnershipForm,
           }}
           FormTemplate={(props) => (
             <FormTemplate {...props} showFormControls={false} />
