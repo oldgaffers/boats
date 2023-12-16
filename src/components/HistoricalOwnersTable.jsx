@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -35,19 +35,23 @@ export default function ownersTable({ owners, onUpdate }) {
         onUpdate(o);
     }
 
-    const handleCellEditStop = ({ id, field, value, reason }, event) => {
-        // console.log('handleCellEditStop', id, field, value, reason, event);
+    const handleCellEditStop = ({ reason }, event) => {
         if (reason === 'enterKeyDown') {
             event.preventDefault();
             event.stopPropagation();
         }
-        const updated = [...owners];
-        updated.forEach((o) => {
-            if (o.id === id) {
-                o[field] = value;
+    };
+
+    const processRowUpdate = (updatedRow, originalRow) => {
+        console.log('processRowUpdate', updatedRow, originalRow);
+        const updated = owners.map((o) => {
+            if (o.id === updatedRow.id) {
+                return updatedRow;
             }
+            return o;
         });
         onUpdate(updated);
+        return updatedRow;
     };
 
     return <>
@@ -58,6 +62,8 @@ export default function ownersTable({ owners, onUpdate }) {
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
                 rows={owners}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={(error) => console.log(error)}
                 onCellEditStop={handleCellEditStop}
                 columns={[
                     {

@@ -23,6 +23,7 @@ export default function EditButton({ boat, user }) {
 
   const handleSubmit = (changes, newItems, updated, email) => {
     setOpen(false);
+    console.log('SUBMIT', changes, newItems, updated);
     postBoatData({ email, changes, newItems, new: updated })
       .then((response) => {
         if (response.ok) {

@@ -343,8 +343,6 @@ export function prepareInitialValues(boat, user) {
 
   // ownersWithId.sort((a, b) => a.start > b.start);
 
-  console.log('PREPARE', initialValues.ownerships);
-
   return initialValues;
 
 }
@@ -371,8 +369,22 @@ export function salesChanges(ddf, for_sales) {
   return { for_sales };
 }
 
-export function prepareModifiedValues(values, { name, oga_no, id, image_key, selling_status, for_sales }, pickers) {
-  const { ddf, email, ...submitted } = values;
+export function updateOwnerships(old, updated) {
+  const notes = old.filter((o) => !(o.name || o.id))
+  console.log(notes, updated);
+  const withoutRowIds = updated.map((o) => {
+    const { id, goldId, ...rest } = o;
+    if (goldId) {
+      rest.id = goldId;
+    }
+    return rest;
+  })
+  return [...withoutRowIds, ...notes];
+}
+
+export function prepareModifiedValues(values, boat, pickers) {
+  const { name, oga_no, id, image_key, selling_status, for_sales } = boat
+  const { ddf, email, ownerships, ...submitted } = values;
 
   const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
@@ -408,8 +420,9 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, sel
   const builder = values.builder.map((v) => name2object(v, pickers['builder'], newItems['builder']));
   const designer = values.designer.map((v) => name2object(v, pickers['designer'], newItems['designer']));
 
-  const boat = {
+  const modifiedBoat = {
     ...boatf2m(submitted),
+    ownerships: updateOwnerships(boat.ownerships, ownerships),
     name: ddf.new_name || name,
     previous_names: [
       ...((ddf.new_name && [name]) || []),
@@ -422,7 +435,7 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, sel
     design_class,
   };
 
-  return { boat: boatDefined(boat), newItems, email };
+  return { boat: boatDefined(modifiedBoat), newItems, email };
 }
 
 export function oldvalue(path, boat) {

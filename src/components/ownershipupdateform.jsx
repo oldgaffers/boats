@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import Box from '@mui/material/Box';
@@ -29,28 +29,49 @@ export const ownershipUpdateForm = {
 };
 
 export default function OwnershipForm(props) {
+    const [up, setUp] = useState();
 
     const { input } = useFieldApi(props);
 
-    const owners = input.value;
-    const [currentOwners, setCurrentOwners] = useState(owners.filter((o) => o.current));
-    const [historicalOwners, setHistoricalOwners] = useState(owners.filter((o) => !o.current));
+    useEffect(() => {
+        if (up) {
+            input.onChange(up);
+            setUp(undefined);
+        }
+    }, [input, up]);
+
+    function handleAddHistorical(row) {
+        const other = input.value.filter((o) => o.id !== row.id); // will be all rows if we are adding
+        const r = [...other, row];
+        console.log('handleAddHistorical', r);
+        setUp(r);
+        // input.onChange(r);
+    }
+
+    function handleOnUpdateCurrent(rows) {
+        const hist = input.value.filter((o) => !o.current);
+        console.log('handleOnUpdateCurrent', hist, rows);
+       // input.onChange([...hist, ...rows]);
+       setUp([...hist, ...rows]);
+    }
+
+    function handleOnUpdateHistorical(rows) {
+        const current = input.value.filter((o) => o.current);
+        console.log('handleOnUpdateHistorical', current, rows);
+        // input.onChange([...rows, ...current]);
+        setUp([...rows, ...current]);
+    }
 
     return (
-        <Box sx={{
-            width: '100%',
-            marginRight: "1em",
-            border: "0.5em", display: 'grid', gridTemplateRows: 'auto',
-        }}
-        >
+        <Box sx={{ width: '100%', marginRight: "1em", border: "0.5em" }}>
             <HistoricalOwnersTable
-                owners={historicalOwners}
-                onUpdate={(rows) => setHistoricalOwners(rows)}
+                owners={input.value.filter((o) => !o.current)}
+                onUpdate={handleOnUpdateHistorical}
             />
             <CurrentOwnersTable
-                owners={currentOwners}
-                onAddHistorical={(row) => setHistoricalOwners([...historicalOwners, row])}
-                onUpdate={(rows) => setCurrentOwners(rows)}
+                owners={input.value.filter((o) => o.current)}
+                onAddHistorical={handleAddHistorical}
+                onUpdate={handleOnUpdateCurrent}
             />
         </Box >
     );
