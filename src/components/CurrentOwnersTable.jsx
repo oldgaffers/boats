@@ -6,13 +6,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Typography } from '@mui/material';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
+import { yearFormatter } from './HistoricalOwnersTable';
 
-function ownerNameEditor(a) {
-    console.log('E', a);
-}
-
-export default function CurrentOwnersTable({ owners }) {
-    const [currentOwners, setCurrentOwners] = useState(owners);
+export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
     const { user } = useAuth0();
 
     let membership;
@@ -23,35 +19,36 @@ export default function CurrentOwnersTable({ owners }) {
         };
     }
 
-    const theirBoat = currentOwners.map((o) => o.id).includes(membership?.id);
-
-    const lastEnd = () => {
-        return currentOwners.map((o) => o.end).reduce((a, b) => Math.max(a, b), -Infinity);
-    };
+    const theirBoat = owners.map((o) => o.id).includes(membership?.id);
 
     const handleAddRow = () => {
-        setCurrentOwners([...currentOwners, { name: '', start: lastEnd(), share: 64 }]);
+        // use negative ids to not clash with provided ids
+        const r = { id: -owners.length, name: 'An Owner', start: new Date().getFullYear(), share: 64 };
+        onUpdate([...owners, r]);
     }
 
     const deleteRow = (row) => {
-        const o = currentOwners.filter((o, index) => index !== row.id);
-        setCurrentOwners(o);
+        const o = owners.filter((o) => o.id !== row.id);
+        onUpdate(o);
     }
 
-    const handleRowUpdate = (row) => {
-        // console.log('handleRowUpdate', row);
+    const handleCellEditStop = ({ id, field, value, reason }, event) => {
+        // console.log('handleCellEditStop', id, field, value, reason, event);
+        if (reason === 'enterKeyDown') {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const updated = [...owners];
+        updated.forEach((o) => {
+            if (o.id === id) {
+                o[field] = value;
+            }
+        });
+        onUpdate(updated);
     };
-
-    const handleCellEditStop = (r) => {
-        // console.log('handleRowUpdate', r);
-    };
-
-    const handleRowEditStop = (r) => {
-        // console.log('handleRowEditStop', r);
-    }
 
     const handleClaim = () => {
-        // console.log('handleClaim');
+        console.log('handleClaim');
         /*
         const family = members.filter((m) => m.member === membership.member);
         const no = [];
@@ -59,12 +56,14 @@ export default function CurrentOwnersTable({ owners }) {
             const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64 / family.length) };
             no.push(o);
         })
-        setCurrentOwners([...currentOwners, ...no]);
+        setowners([...owners, ...no]);
         */
     }
 
-    const endOwnership = () => {
-        console.log('endOwnership');
+    const endOwnership = (p) => {
+        console.log('endOwnership', p);
+        onAddHistorical({ ...p, end: new Date().getFullYear());
+        onUpdate(owners.filter((o) => o.id !== p.id));
     };
 
     if (!user) {
@@ -76,7 +75,16 @@ export default function CurrentOwnersTable({ owners }) {
             <Typography variant='h6'>Current Owners</Typography>
         </Box>
         <Box>
-            {theirBoat ? '' : (
+            {theirBoat ? (
+                <>
+                <Button size="small" onClick={() => deleteRow(owners.find((o) => o.goldId === membership.id)))}>
+                    This was never my boat
+                </Button>
+                <Button size="small" onClick={() => endOwnership(owners.find((o) => o.goldId === membership.id))}>
+                    This isn't my boat any longer
+                </Button>
+                </>
+            ) : (
                 <Button size="small" onClick={handleClaim}>
                     This is my boat
                 </Button>)
@@ -85,10 +93,8 @@ export default function CurrentOwnersTable({ owners }) {
         <Box sx={{ height: '215px' }}>
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
-                rows={currentOwners}
+                rows={owners}
                 onCellEditStop={handleCellEditStop}
-                onRowEditStop={handleRowEditStop}
-                onProcessRowUpdate={handleRowUpdate}
                 columns={[
                     {
                         field: 'name',
@@ -96,11 +102,10 @@ export default function CurrentOwnersTable({ owners }) {
                         flex: 1,
                         editable: true,
                         valueFormatter: ({ value }) => value ?? 'N/A',
-                        renderEditCell: ownerNameEditor,
                     },
                     { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true, },
                     { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
-                    { field: 'start', headerName: 'Start', type: 'text', width: 60, editable: true },
+                    { field: 'start', headerName: 'Start', type: 'text', width: 60, editable: true, valueFormatter: yearFormatter },
                     { field: 'share', headerName: 'Share', width: 70, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
                     {
                         width: 60,

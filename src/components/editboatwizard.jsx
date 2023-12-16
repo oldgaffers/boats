@@ -329,6 +329,22 @@ export function prepareInitialValues(boat, user) {
     initialValues[key] = initialValues[key]?.name;
   });
 
+  const ownersWithId = boat.ownerships
+  .filter((owner) => owner.name || owner.id) // remove note and text rows
+  .map((owner, index) => {
+    return {
+        ...owner,
+        id: index,
+        goldId: owner.id, // needed for ownerName? name has already been merged in!!!
+    };
+  });
+
+  initialValues.ownerships = ownersWithId;
+
+  // ownersWithId.sort((a, b) => a.start > b.start);
+
+  console.log('PREPARE', initialValues.ownerships);
+
   return initialValues;
 
 }

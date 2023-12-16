@@ -2,47 +2,53 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { DataGrid, GridActionsCellItem, useGridApiContext } from '@mui/x-data-grid';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import { Typography } from '@mui/material';
 
-function ownerNameEditor(a) {
-    console.log('E', a);
-}
-
-function yearFormatter(y) {
-    if (isNaN(y)) {
+export function yearFormatter({ value }) {
+    if (isNaN(value)) {
         return '';
     }
-    return y;
+    if (value === 0) {
+        return '';
+    }
+    return value;
 }
 
-export default function HistoricalOwnersTable({ owners, members }) {
-    const [historicalOwners, setHistoricalOwners] = useState(owners);
+// note id fields are numeric but not contiguous or starting from zero
+// because current and historical owners are split
+
+export default function ownersTable({ owners, onUpdate }) {
 
     const lastEnd = () => {
-        return historicalOwners.map((o) => o.end).reduce((a, b) => Math.max(a, b), -Infinity);
+        return owners.map((o) => o.end).reduce((a, b) => Math.max(a, b), -Infinity);
     };
 
-    const handleAddRow = (x,y,z) => {
-        setHistoricalOwners([...historicalOwners, { id: historicalOwners.length, name: '', start: lastEnd(), share: 64 }]);
+    const handleAddRow = () => {
+        // use negative ids to not clash with provided ids
+        const r = { id: -owners.length, name: 'An Owner', start: lastEnd(), share: 64 };
+        onUpdate([...owners, r]);
     }
 
     const deleteRow = (row) => {
-        const o = historicalOwners.filter((o, index) => index !== row.id);
-        setHistoricalOwners(o);
+        const o = owners.filter((o) => o.id !== row.id);
+        onUpdate(o);
     }
 
-    const handleRowUpdate = (row) => {
-        // console.log('handleRowUpdate', row);
+    const handleCellEditStop = ({ id, field, value, reason }, event) => {
+        // console.log('handleCellEditStop', id, field, value, reason, event);
+        if (reason === 'enterKeyDown') {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        const updated = [...owners];
+        updated.forEach((o) => {
+            if (o.id === id) {
+                o[field] = value;
+            }
+        });
+        onUpdate(updated);
     };
-
-    const handleCellEditStop = (r) => {
-        // console.log('handleRowUpdate', r);
-    };
-
-    const handleRowEditStop = (r) => {
-        // console.log('handleRowEditStop', r);
-    }
 
     return <>
         <Box>
@@ -51,10 +57,8 @@ export default function HistoricalOwnersTable({ owners, members }) {
         <Box sx={{ height: '215px' }}>
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
-                rows={historicalOwners}
+                rows={owners}
                 onCellEditStop={handleCellEditStop}
-                onRowEditStop={handleRowEditStop}
-                onProcessRowUpdate={handleRowUpdate}
                 columns={[
                     {
                         field: 'name',
@@ -62,7 +66,6 @@ export default function HistoricalOwnersTable({ owners, members }) {
                         flex: 1,
                         editable: true,
                         valueFormatter: ({ value }) => value ?? 'N/A',
-                        renderEditCell: ownerNameEditor,
                     },
                     { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true, },
                     { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
