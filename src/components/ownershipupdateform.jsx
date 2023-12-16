@@ -29,48 +29,46 @@ export const ownershipUpdateForm = {
 };
 
 export default function OwnershipForm(props) {
-    const [up, setUp] = useState();
 
     const { input } = useFieldApi(props);
+    const [owners, setowners] = useState(input.value);
 
     useEffect(() => {
-        if (up) {
-            input.onChange(up);
-            setUp(undefined);
+        if (JSON.stringify(owners) !== JSON.stringify(input.value)) {
+            // console.log('update form', owners);
+            input.onChange(owners);
         }
-    }, [input, up]);
+    }, [input, owners]);
 
-    function handleAddHistorical(row) {
-        const other = input.value.filter((o) => o.id !== row.id); // will be all rows if we are adding
-        const r = [...other, row];
-        console.log('handleAddHistorical', r);
-        setUp(r);
-        // input.onChange(r);
+    function handleMakeHistorical(row) {
+        const hist = owners.filter((o) => !o.current);
+        const current = owners.filter((o) => o.current && o.id !== row.id);
+        const up = [...hist, row, ...current];
+        // console.log('handleMakeHistorical', up);
+        setowners(up);
     }
 
     function handleOnUpdateCurrent(rows) {
-        const hist = input.value.filter((o) => !o.current);
-        console.log('handleOnUpdateCurrent', hist, rows);
-       // input.onChange([...hist, ...rows]);
-       setUp([...hist, ...rows]);
+        const hist = owners.filter((o) => !o.current);
+        // console.log('handleOnUpdateCurrent', hist, rows);
+        setowners([...hist, ...rows]);
     }
 
     function handleOnUpdateHistorical(rows) {
-        const current = input.value.filter((o) => o.current);
-        console.log('handleOnUpdateHistorical', current, rows);
-        // input.onChange([...rows, ...current]);
-        setUp([...rows, ...current]);
+        const current = owners.filter((o) => o.current);
+        // console.log('handleOnUpdateHistorical', current, rows);
+        setowners([...rows, ...current]);
     }
 
     return (
         <Box sx={{ width: '100%', marginRight: "1em", border: "0.5em" }}>
             <HistoricalOwnersTable
-                owners={input.value.filter((o) => !o.current)}
+                owners={owners.filter((o) => !o.current)}
                 onUpdate={handleOnUpdateHistorical}
             />
             <CurrentOwnersTable
-                owners={input.value.filter((o) => o.current)}
-                onAddHistorical={handleAddHistorical}
+                owners={owners.filter((o) => o.current)}
+                onMakeHistorical={handleMakeHistorical}
                 onUpdate={handleOnUpdateCurrent}
             />
         </Box >

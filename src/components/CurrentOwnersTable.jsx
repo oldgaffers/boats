@@ -8,7 +8,7 @@ import { Typography } from '@mui/material';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 import { yearFormatter } from './HistoricalOwnersTable';
 
-export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
+export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
     const { user } = useAuth0();
 
     let membership;
@@ -19,11 +19,17 @@ export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
         };
     }
 
-    const theirBoat = owners.map((o) => o.id).includes(membership?.id);
+    const theirBoat = owners.map((o) => o.goldId).includes(membership?.id);
 
     const handleAddRow = () => {
         // use negative ids to not clash with provided ids
-        const r = { id: -owners.length, name: 'An Owner', start: new Date().getFullYear(), share: 64 };
+        const r = {
+            id: -owners.length,
+            name: 'An Owner',
+            start: new Date().getFullYear(),
+            share: 64,
+            current: true,
+        };
         onUpdate([...owners, r]);
     }
 
@@ -32,38 +38,43 @@ export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
         onUpdate(o);
     }
 
-    const handleCellEditStop = ({ id, field, value, reason }, event) => {
-        // console.log('handleCellEditStop', id, field, value, reason, event);
+    const handleCellEditStop = ({ reason }, event) => {
         if (reason === 'enterKeyDown') {
             event.preventDefault();
             event.stopPropagation();
         }
-        const updated = [...owners];
-        updated.forEach((o) => {
-            if (o.id === id) {
-                o[field] = value;
+    };
+
+    const processRowUpdate = (updatedRow, originalRow) => {
+        // console.log('processRowUpdate', updatedRow, originalRow);
+        const updated = owners.map((o) => {
+            if (o.id === updatedRow.id) {
+                return updatedRow;
             }
+            return o;
         });
         onUpdate(updated);
+        return updatedRow;
     };
 
     const handleClaim = () => {
-        console.log('handleClaim');
-        /*
-        const family = members.filter((m) => m.member === membership.member);
-        const no = [];
-        family.forEach((m) => {
-            const o = { start: lastEnd, id: m.id, member: m.member, current: true, share: Math.floor(64 / family.length) };
-            no.push(o);
-        })
-        setowners([...owners, ...no]);
-        */
+        // console.log('handleClaim');
+        const r = {
+            id: -owners.length,
+            name: `${user.given_name} ${user.family_name}`,
+            start: new Date().getFullYear(),
+            share: 64,
+            current: true,
+            goldId: membership.id,
+            member: membership.member,
+        };
+        onUpdate([...owners, r]);
     }
 
     const endOwnership = (p) => {
-        console.log('endOwnership', p);
-        onAddHistorical({ ...p, end: new Date().getFullYear() });
-        onUpdate(owners.filter((o) => o.id !== p.id));
+        // console.log('endOwnership', p);
+        const { current, ...rest } = p;
+        onMakeHistorical({ ...rest, end: new Date().getFullYear() });
     };
 
     if (!user) {
@@ -94,6 +105,8 @@ export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
                 rows={owners}
+                processRowUpdate={processRowUpdate}
+                onProcessRowUpdateError={(error) => console.log(error)}
                 onCellEditStop={handleCellEditStop}
                 columns={[
                     {
