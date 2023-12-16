@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -62,7 +62,7 @@ export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
 
     const endOwnership = (p) => {
         console.log('endOwnership', p);
-        onAddHistorical({ ...p, end: new Date().getFullYear());
+        onAddHistorical({ ...p, end: new Date().getFullYear() });
         onUpdate(owners.filter((o) => o.id !== p.id));
     };
 
@@ -77,7 +77,7 @@ export default function OwnersTable({ owners, onAddHistorical, onUpdate }) {
         <Box>
             {theirBoat ? (
                 <>
-                <Button size="small" onClick={() => deleteRow(owners.find((o) => o.goldId === membership.id)))}>
+                <Button size="small" onClick={() => deleteRow(owners.find((o) => o.goldId === membership.id))}>
                     This was never my boat
                 </Button>
                 <Button size="small" onClick={() => endOwnership(owners.find((o) => o.goldId === membership.id))}>
