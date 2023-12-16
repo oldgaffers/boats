@@ -371,7 +371,7 @@ export function salesChanges(ddf, for_sales) {
 
 export function updateOwnerships(old, updated) {
   const notes = old.filter((o) => !(o.name || o.id))
-  console.log(notes, updated);
+  // console.log(notes, updated);
   const withoutRowIds = updated.map((o) => {
     const { id, goldId, ...rest } = o;
     if (goldId) {
@@ -411,7 +411,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     if (r) {
       return r;
     }
-    console.log(`${value} is missing in picklist, making a new uuid`);
+    // console.log(`${value} is missing in picklist, making a new uuid`);
     return { name: value, id: uuidv4() };
   }
 

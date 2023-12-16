@@ -3,7 +3,7 @@ import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 
 export default function DataGridField(props) {
     const { input, meta, label, ...rest } = useFieldApi(props);
-    console.log('DataGridField', rest);
+    // console.log('DataGridField', rest);
     return (
         <div>
             <div>

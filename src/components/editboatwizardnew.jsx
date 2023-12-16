@@ -30,11 +30,11 @@ const Step1 = (props) => {
   const { register, handleSubmit } = useForm();
   const { actions, state } = useStateMachine({ updateAction });
   const onSubmit = (data) => {
-    console.log('step 1 on submit', data);
+    // console.log('step 1 on submit', data);
     actions.updateAction(data);
     navigate("step2");
   };
-  console.log('<Step1/>', props);
+  // console.log('<Step1/>', props);
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h2>Step 1</h2>
@@ -59,7 +59,7 @@ const Step2 = (props) => {
     actions.updateAction(data);
     navigate("result");
   };
-  console.log('<Step2/>');
+  // console.log('<Step2/>');
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <h2>Step 2</h2>
@@ -102,7 +102,7 @@ const router = createMemoryRouter([
         path: "/step2",
         element: <Step2 />,
         loader: async ({ params }) => {
-          console.log('step 2 loader', params);
+          // console.log('step 2 loader', params);
           return ''; // fetch(`/api/teams/${params.teamId}.json`);
         },
       },
@@ -126,7 +126,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
     if (!pickers) {
       getPicklists().then((r) => {
         setPickers(r)
-      }).catch((e) => console.log(e));
+      }).catch((e) => // console.log(e));
     }
   }, [pickers]);
 

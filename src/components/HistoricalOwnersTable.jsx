@@ -43,7 +43,7 @@ export default function ownersTable({ owners, onUpdate }) {
     };
 
     const processRowUpdate = (updatedRow, originalRow) => {
-        console.log('processRowUpdate', updatedRow, originalRow);
+        // console.log('processRowUpdate', updatedRow, originalRow);
         const updated = owners.map((o) => {
             if (o.id === updatedRow.id) {
                 return updatedRow;

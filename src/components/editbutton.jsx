@@ -23,20 +23,20 @@ export default function EditButton({ boat, user }) {
 
   const handleSubmit = (changes, newItems, updated, email) => {
     setOpen(false);
-    console.log('SUBMIT', changes, newItems, updated);
+    // console.log('SUBMIT', changes, newItems, updated);
     postBoatData({ email, changes, newItems, new: updated })
       .then((response) => {
         if (response.ok) {
-          console.log('submitted');
+          // console.log('submitted');
           setSnackBarOpen(true);
         } else {
-          console.log("post", response.statusText);
+          // console.log("post", response.statusText);
           errorText = response.statusText;
           setErrorSnackBarOpen(true);
         }
       })
       .catch((error) => {
-        console.log("post", error);
+        // console.log("post", error);
         errorText = error.message;
         setErrorSnackBarOpen(true);
       });

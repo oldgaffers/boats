@@ -82,7 +82,7 @@ function BoatMarker({ boat }) {
         title={title}
         eventHandlers={{
             click: () => {
-                console.log('marker clicked')
+                // console.log('marker clicked')
             },
         }}
     >
@@ -101,7 +101,7 @@ function BoatMarkers({ entries }) {
             const up = new Date(boat.location.timestamp).getTime();
             const n = new Date().getTime();
             const days_old = Math.floor((n - up) / 86400000);
-            console.log(days_old);
+            // console.log(days_old);
             if (days_old > 6) {
                 return false;
             }
