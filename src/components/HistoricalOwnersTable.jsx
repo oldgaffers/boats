@@ -57,7 +57,6 @@ export default function ownersTable({ owners, onUpdate }) {
                 <GridArrowUpwardIcon onClick={() => moveUp(row.id, index)} />
             </>);
         }
-        return <>?</>;
     }
 
     const lastEnd = () => {
