@@ -68,9 +68,9 @@ test('prepareInitialValues', () => {
 });
 
 test('prepareModifiedValues', () => {
-  const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = robinetta;
+  const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = JSON.parse(JSON.stringify(robinetta));
   const ddf = {};
-  rest.ownerships.array.forEach((o) => {
+  rest.ownerships.forEach((o) => {
     o.goldId = o.id;
   });
   const submitted = { ...rest, ddf };
