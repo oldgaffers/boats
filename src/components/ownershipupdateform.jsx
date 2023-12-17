@@ -4,6 +4,8 @@ import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import Box from '@mui/material/Box';
 import HistoricalOwnersTable from './HistoricalOwnersTable';
 import CurrentOwnersTable from './CurrentOwnersTable';
+import { Typography } from '@mui/material';
+import RoleRestricted from './rolerestrictedcomponent';
 
 export const ownershipUpdateFields = [
     {
@@ -21,7 +23,7 @@ export const ownershipUpdateFields = [
 ];
 
 export const ownershipUpdateForm = {
-    title: "Update Ownerships",
+    title: "Known Owners",
     name: "ownerships",
     component: componentTypes.SUB_FORM,
     TitleProps: { sx: { marginBottom: '1em' } },
@@ -34,6 +36,7 @@ export default function OwnershipForm(props) {
     const [owners, setowners] = useState(input.value);
 
     useEffect(() => {
+        // we get an infinite render loop if we don't deep compare input.value and owners
         if (JSON.stringify(owners) !== JSON.stringify(input.value)) {
             // console.log('update form', owners);
             input.onChange(owners);
@@ -60,17 +63,52 @@ export default function OwnershipForm(props) {
         setowners([...rows, ...current]);
     }
 
+    // we don't need to restrict access if we don't have any data
+    if (owners.length === 0) {
+        return (
+            <Box sx={{ width: '100%', marginRight: "1em", border: "0.5em" }}>
+                <Typography variant='h6'>{props.label}</Typography>
+                <HistoricalOwnersTable
+                    owners={owners.filter((o) => !o.current)}
+                    onUpdate={handleOnUpdateHistorical}
+                />
+                <CurrentOwnersTable
+                    owners={owners.filter((o) => o.current)}
+                    onMakeHistorical={handleMakeHistorical}
+                    onUpdate={handleOnUpdateCurrent}
+                />
+            </Box >
+        );
+    }
+
     return (
         <Box sx={{ width: '100%', marginRight: "1em", border: "0.5em" }}>
-            <HistoricalOwnersTable
-                owners={owners.filter((o) => !o.current)}
-                onUpdate={handleOnUpdateHistorical}
-            />
-            <CurrentOwnersTable
-                owners={owners.filter((o) => o.current)}
-                onMakeHistorical={handleMakeHistorical}
-                onUpdate={handleOnUpdateCurrent}
-            />
+            <Typography variant='h6'>{props.label}</Typography>
+            <RoleRestricted
+                role='member'
+                hide={false}
+                fallback={(
+                    <>
+                        <Typography>
+                            We have {owners.length} ownership records.
+                        </Typography>
+                        <Typography>
+                            Please log-in to view them and propose updates.
+                        </Typography>
+                    </>
+                )
+                }
+            >
+                <HistoricalOwnersTable
+                    owners={owners.filter((o) => !o.current)}
+                    onUpdate={handleOnUpdateHistorical}
+                />
+                <CurrentOwnersTable
+                    owners={owners.filter((o) => o.current)}
+                    onMakeHistorical={handleMakeHistorical}
+                    onUpdate={handleOnUpdateCurrent}
+                />
+            </RoleRestricted>
         </Box >
     );
 }

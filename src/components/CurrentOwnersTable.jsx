@@ -83,7 +83,7 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
 
     return <>
         <Box>
-            <Typography variant='h6'>Current Owners</Typography>
+            <Typography variant='h7'>Current</Typography>
         </Box>
         <Box>
             {theirBoat ? (

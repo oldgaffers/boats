@@ -56,7 +56,7 @@ export default function ownersTable({ owners, onUpdate }) {
 
     return <>
         <Box>
-            <Typography variant='h6'>Historical Owners</Typography>
+            <Typography variant='h7'>Historical</Typography>
         </Box>
         <Box sx={{ height: '215px' }}>
             <DataGrid
