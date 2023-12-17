@@ -1,10 +1,8 @@
 import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { yearFormatter } from './HistoricalOwnersTable';
@@ -84,7 +82,7 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
 
     return <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>Current</AccordionSummary>
-        <AccordionDetails sx={{ height: '32vh'}}>
+        <AccordionDetails sx={{ height: '32vh', minHeight: '215px'}}>
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
                 rows={owners}
