@@ -307,7 +307,6 @@ export function prepareInitialValues(boat, user) {
   } else {
     ddf.current_sales_record = defaultSalesRecord;
   }
-
   const initialValues = {
     email: user?.email || '',
     ...boatm2f(rest),
@@ -347,7 +346,7 @@ export function prepareInitialValues(boat, user) {
 }
 
 export function salesChanges(ddf, for_sales) {
-  if (ddf.confirm_for_sale === true) {
+  if (ddf.update_sale === 'update') {
     return {
       selling_status: 'for_sale',
       for_sales: [ddf.current_sales_record, ...for_sales],
