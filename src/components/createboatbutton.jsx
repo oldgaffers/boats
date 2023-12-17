@@ -15,7 +15,7 @@ export async function createBoat(boat, email, fileList, copyright, newItems) {
   // const b = Object.fromEntries(Object.entries(boat).filter((k, v) => v));
   const response = await createPhotoAlbum(boat.name, boat.oga_no);
   if (!response.ok) {
-    console.log(response.statusText);
+    // console.log(response.statusText);
     await disposeOgaNo(boat.oga_no);
     return undefined;
   }
@@ -26,7 +26,7 @@ export async function createBoat(boat, email, fileList, copyright, newItems) {
   }
   const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
   await postBoatData(bd);
-  console.log('created boat record');
+  // console.log('created boat record');
 }
 
 export function newPicklistItems(b) {

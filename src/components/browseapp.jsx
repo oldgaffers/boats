@@ -70,7 +70,7 @@ export default function BrowseApp({ view = 'app' }) {
   };
 
   const handleClearAllMarks = () => {
-    console.log('handle clear all marks');
+    // console.log('handle clear all marks');
     setMarkList([]);
     setMarkedOnly(false);
     updateOgaNosFilter([], false);

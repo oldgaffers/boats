@@ -13,7 +13,7 @@ const defaultToolbar = 'undo redo | blocks | ' +
 
 export default function HtmlEditor({
     component, name, title = '', helperText = '', toolbar = defaultToolbar, height = 10, maxLength, initialValue }) {
-    console.log('editor TODO maxLength', maxLength);
+    // console.log('editor TODO maxLength', maxLength);
     const { input } = useFieldApi({ component, name });
     return (
         <>

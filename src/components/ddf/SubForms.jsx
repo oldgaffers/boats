@@ -142,7 +142,7 @@ export const homeItems = [
   },
 ];
 
-export const ownerShipsFields = [
+export const ownershipUpdateFields = [
   {
     component: 'plain-text',
     name: 'ddf.ownerships_label',

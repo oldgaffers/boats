@@ -24,13 +24,14 @@ import {
   registrationForm,
   referencesItems,
   salesSteps,
-  ownerShipsFields,
+  // ownershipUpdateFields,
   sellingDataFields,
   doneFields,
   hullFields,
   descriptionsItems,
   basicFields,
 } from "./ddf/SubForms";
+import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
@@ -232,45 +233,45 @@ const defaultSchema = (pickers) => {
               }
               return 'done-step';
             },
-            fields: ownerShipsFields,
+            fields: ownershipUpdateFields,         
           },
+      {
+        name: 'query-sell-step',
+        nextStep: {
+          when: "ddf.confirm_for_sale",
+          stepMapper: {
+            true: 'sell-step',
+            false: 'done-step',
+          },
+        },
+        fields: [
           {
-            name: 'query-sell-step',
-            nextStep: {
-              when: "ddf.confirm_for_sale",
-              stepMapper: {
-                true: 'sell-step',
-                false: 'done-step',
-              },
+            component: 'checkbox',
+            label: 'I want to sell this boat',
+            name: 'ddf.confirm_for_sale',
+            helperText: 'check if you want to put this boat up for sale',
+            resolveProps: (props, { meta, input }, formOptions) => {
+              const { values } = formOptions.getState();
+              return {
+                initialValue: !!values.ddf.current_sales_record,
+                isReadOnly: !(values.ddf.owner || values.ddf.editor)
+              }
             },
-            fields: [
-              {
-                component: 'checkbox',
-                label: 'I want to sell this boat',
-                name: 'ddf.confirm_for_sale',
-                helperText: 'check if you want to put this boat up for sale',
-                resolveProps: (props, { meta, input }, formOptions) => {
-                  const { values } = formOptions.getState();
-                  return {
-                    initialValue: !!values.ddf.current_sales_record,
-                    isReadOnly: !(values.ddf.owner || values.ddf.editor)
-                  }
-                },
-              },
-            ],
-          },
-          {
-            name: 'sell-step',
-            nextStep: 'done-step',
-            fields: sellingDataFields,
-          },
-          ...salesSteps('update-sell-step', 'done-step'),
-          {
-            name: "done-step",
-            fields: doneFields,
           },
         ],
       },
+      {
+        name: 'sell-step',
+        nextStep: 'done-step',
+        fields: sellingDataFields,
+      },
+      ...salesSteps('update-sell-step', 'done-step'),
+      {
+        name: "done-step",
+        fields: doneFields,
+      },
+    ],
+  },
     ],
   };
 };
@@ -299,14 +300,13 @@ export function prepareInitialValues(boat, user) {
     flexibility: 'normal',
   };
 
-  const sales_records = [...(for_sales||[])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+  const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
   if (boat.selling_status === 'for_sale') {
     ddf.current_sales_record = { ...defaultSalesRecord, ...sales_records.shift() };
   } else {
     ddf.current_sales_record = defaultSalesRecord;
   }
-
   const initialValues = {
     email: user?.email || '',
     ...boatm2f(rest),
@@ -327,12 +327,26 @@ export function prepareInitialValues(boat, user) {
     initialValues[key] = initialValues[key]?.name;
   });
 
+  const ownersWithId = boat.ownerships
+  .filter((owner) => owner.name || owner.id) // remove note and text rows
+  .map((owner, index) => {
+    return {
+        ...owner,
+        id: index,
+        goldId: owner.id, // needed for ownerName? name has already been merged in!!!
+    };
+  });
+
+  initialValues.ownerships = ownersWithId;
+
+  // ownersWithId.sort((a, b) => a.start > b.start);
+
   return initialValues;
 
 }
 
 export function salesChanges(ddf, for_sales) {
-  if (ddf.confirm_for_sale === true) {
+  if (ddf.update_sale === 'update') {
     return {
       selling_status: 'for_sale',
       for_sales: [ddf.current_sales_record, ...for_sales],
@@ -353,10 +367,24 @@ export function salesChanges(ddf, for_sales) {
   return { for_sales };
 }
 
-export function prepareModifiedValues(values, { name, oga_no, id, image_key, selling_status, for_sales }, pickers) {
-  const { ddf, email, ...submitted } = values;
+export function updateOwnerships(old, updated) {
+  const notes = old.filter((o) => !(o.name || o.id))
+  // console.log(notes, updated);
+  const withoutRowIds = updated.map((o) => {
+    const { id, goldId, ...rest } = o;
+    if (goldId) {
+      rest.id = goldId;
+    }
+    return rest;
+  })
+  return [...withoutRowIds, ...notes];
+}
 
-  const sales_records = [...(for_sales||[])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+export function prepareModifiedValues(values, boat, pickers) {
+  const { name, oga_no, id, image_key, selling_status, for_sales } = boat
+  const { ddf, email, ownerships, ...submitted } = values;
+
+  const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
   if (selling_status === 'for_sale') {
     sales_records.shift();
@@ -381,7 +409,7 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, sel
     if (r) {
       return r;
     }
-    console.log(`${value} is missing in picklist, making a new uuid`);
+    // console.log(`${value} is missing in picklist, making a new uuid`);
     return { name: value, id: uuidv4() };
   }
 
@@ -390,8 +418,9 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, sel
   const builder = values.builder.map((v) => name2object(v, pickers['builder'], newItems['builder']));
   const designer = values.designer.map((v) => name2object(v, pickers['designer'], newItems['designer']));
 
-  const boat = {
+  const modifiedBoat = {
     ...boatf2m(submitted),
+    ownerships: updateOwnerships(boat.ownerships, ownerships),
     name: ddf.new_name || name,
     previous_names: [
       ...((ddf.new_name && [name]) || []),
@@ -404,7 +433,7 @@ export function prepareModifiedValues(values, { name, oga_no, id, image_key, sel
     design_class,
   };
 
-  return { boat: boatDefined(boat), newItems, email };
+  return { boat: boatDefined(modifiedBoat), newItems, email };
 }
 
 export function oldvalue(path, boat) {
@@ -467,6 +496,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
           componentMapper={{
             ...componentMapper,
             html: HtmlEditor,
+            'ownership-form': OwnershipForm,
           }}
           FormTemplate={(props) => (
             <FormTemplate {...props} showFormControls={false} />
