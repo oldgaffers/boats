@@ -70,6 +70,9 @@ test('prepareInitialValues', () => {
 test('prepareModifiedValues', () => {
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = robinetta;
   const ddf = {};
+  rest.ownerships.array.forEach((o) => {
+    o.goldId = o.id;
+  });
   const submitted = { ...rest, ddf };
   const mv = prepareModifiedValues(submitted, robinetta, pickers);
   expect(mv).toMatchSnapshot();
