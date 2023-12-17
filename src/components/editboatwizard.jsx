@@ -24,7 +24,7 @@ import {
   registrationForm,
   referencesItems,
   salesSteps,
-  // ownerShipsFields,
+  // ownershipUpdateFields,
   sellingDataFields,
   doneFields,
   hullFields,
@@ -233,7 +233,6 @@ const defaultSchema = (pickers) => {
               }
               return 'done-step';
             },
-            // fields: ownerShipsFields,   
             fields: ownershipUpdateFields,         
           },
       {
