@@ -4,8 +4,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import { Typography } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { yearFormatter } from './HistoricalOwnersTable';
 
 export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
@@ -78,30 +79,12 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
     };
 
     if (!user) {
-        return <Typography sx={{marginTop: 1}}>To propose updates to current ownerships please log-in.</Typography>
+        return <Typography sx={{ marginTop: 1 }}>To propose updates to current ownerships please log-in.</Typography>
     }
 
-    return <>
-        <Box>
-            <Typography variant='h7'>Current</Typography>
-        </Box>
-        <Box>
-            {theirBoat ? (
-                <>
-                <Button size="small" onClick={() => deleteRow(owners.find((o) => o.goldId === membership.id))}>
-                    This was never my boat
-                </Button>
-                <Button size="small" onClick={() => endOwnership(owners.find((o) => o.goldId === membership.id))}>
-                    This isn't my boat any longer
-                </Button>
-                </>
-            ) : (
-                <Button size="small" onClick={handleClaim}>
-                    This is my boat
-                </Button>)
-            }
-        </Box>
-        <Box sx={{ height: '215px' }}>
+    return <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>Current</AccordionSummary>
+        <AccordionDetails sx={{ height: '32vh'}}>
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
                 rows={owners}
@@ -149,13 +132,26 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
                     },
                 }}
             />
-        </Box>
-        <Box sx={{ border: "0.5em", display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-            <Box>
-                <Button size="small" onClick={handleAddRow}>
-                    Add a record
-                </Button>
-            </Box>
-        </Box>
-    </>;
+        </AccordionDetails>
+        <AccordionActions>
+            <Button size="small" onClick={handleAddRow}>
+                Add a record
+            </Button>
+            {theirBoat ? (
+                <>
+                    <Button size="small" onClick={() => deleteRow(owners.find((o) => o.goldId === membership.id))}>
+                        This was never my boat
+                    </Button>
+                    <Button size="small" onClick={() => endOwnership(owners.find((o) => o.goldId === membership.id))}>
+                        This isn't my boat any longer
+                    </Button>
+                </>
+            ) : (
+                <Button size="small" onClick={handleClaim}>
+                    This is my boat
+                </Button>)
+            }
+
+        </AccordionActions>
+    </Accordion>;
 }

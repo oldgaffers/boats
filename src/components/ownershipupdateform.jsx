@@ -67,7 +67,7 @@ export default function OwnershipForm(props) {
     if (owners.length === 0) {
         return (
             <Box sx={{ width: '100%', marginRight: "1em", border: "0.5em" }}>
-                <Typography variant='h6'>{props.label}</Typography>
+                <Typography variant='h5'>{props.label}</Typography>
                 <HistoricalOwnersTable
                     owners={owners.filter((o) => !o.current)}
                     onUpdate={handleOnUpdateHistorical}
@@ -83,7 +83,7 @@ export default function OwnershipForm(props) {
 
     return (
         <Box sx={{ width: '100%', marginRight: "1em", border: "0.5em" }}>
-            <Typography variant='h6'>{props.label}</Typography>
+            <Typography variant='h5'>{props.label}</Typography>
             <RoleRestricted
                 role='member'
                 hide={false}

@@ -1,9 +1,8 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import { Typography } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button } from '@mui/material';
 
 export function yearFormatter({ value }) {
     if (isNaN(value)) {
@@ -54,11 +53,9 @@ export default function ownersTable({ owners, onUpdate }) {
         return updatedRow;
     };
 
-    return <>
-        <Box>
-            <Typography variant='h7'>Historical</Typography>
-        </Box>
-        <Box sx={{ height: '215px' }}>
+    return <Accordion>
+        <AccordionSummary expandIcon={<ExpandCircleDownIcon/>}>Historical</AccordionSummary>
+        <AccordionDetails sx={{ height: '40vh'}}>
             <DataGrid
                 experimentalFeatures={{ newEditingApi: true }}
                 rows={owners}
@@ -102,11 +99,11 @@ export default function ownersTable({ owners, onUpdate }) {
                     },
                 }}
             />;
-        </Box>
-        <Box>
+        </AccordionDetails>
+        <AccordionActions>
             <Button size="small" onClick={handleAddRow}>
                 Add a record
             </Button>
-        </Box>
-    </>;
+        </AccordionActions>
+    </Accordion>;
 }
