@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Typography } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Tooltip, Typography } from '@mui/material';
 import EventBusyIcon from '@mui/icons-material/EventBusy';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { yearFormatter } from './HistoricalOwnersTable';
@@ -106,16 +106,20 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
                         field: 'actions',
                         type: 'actions',
                         getActions: ({ row }) => [
-                            <GridActionsCellItem
-                                icon={<EventBusyIcon />}
-                                label="End"
-                                onClick={() => endOwnership(row)}
-                            />,
-                            <GridActionsCellItem
-                                icon={<DeleteIcon />}
-                                label="Delete"
-                                onClick={() => deleteRow(row)}
-                            />,
+                            <Tooltip title="End ownership">
+                                <GridActionsCellItem
+                                    icon={<EventBusyIcon />}
+                                    label="End"
+                                    onClick={() => endOwnership(row)}
+                                />
+                            </Tooltip>,
+                            <Tooltip title="Delete record">
+                                <GridActionsCellItem
+                                    icon={<DeleteIcon />}
+                                    label="Delete"
+                                    onClick={() => deleteRow(row)}
+                                />
+                            </Tooltip>,
                         ]
                     }
                 ]}
