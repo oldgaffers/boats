@@ -11,7 +11,7 @@ export const ownershipUpdateFields = [
     {
         component: componentTypes.PLAIN_TEXT,
         name: 'ddf.ownerships_label',
-        label: 'You can add, remove and edit ownership records on this page.'
+        label: 'Logged in members can add, remove and edit ownership records on this page.'
             + 'New records will be added to the end of the list. You can edit rows once added.'
             + ' Your changes will be send to the editors who will update the boat\'s record'
     },
