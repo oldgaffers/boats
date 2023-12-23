@@ -93,9 +93,12 @@ export default function ownersTable({ owners, onUpdate }) {
         return updatedRow;
     };
 
+    // TODO ?
     const reorderNeeded = !!owners.find((o) => !o.start);
 
-    // console.log('reorderNeeded', reorderNeeded);
+    if (reorderNeeded) {
+        // console.log('reorderNeeded', reorderNeeded);
+    }
 
     return <Accordion>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon/>}>Historical</AccordionSummary>
