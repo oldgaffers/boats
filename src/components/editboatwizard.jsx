@@ -364,6 +364,12 @@ export function salesChanges(ddf, for_sales) {
       for_sales: [ddf.current_sales_record, ...for_sales],
     }
   }
+  if (ddf.confirm_for_sale === true) {
+    return {
+      selling_status: 'for_sale',
+      for_sales: [ddf.current_sales_record, ...for_sales],
+    }    
+  }
   return { for_sales };
 }
 
