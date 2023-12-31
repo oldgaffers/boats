@@ -9,7 +9,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogContentText, Dialog
 
 async function getBoats(ogaNos) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
-  return r.map((b) => b.value.data.result.pageContext.boat);
+  const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.result?.pageContext?.boat);
+  return pages.map((p) => p);
 }
 
 const MEMBER_QUERY = gql(`query members($ids: [Int]!) {
@@ -116,8 +117,9 @@ function ExportFleetOptions({ client, name, ogaNos }) {
         }));
         r.forEach((b, i) => {
           if (images[i].value) {
-            b.image = images[i].value.data.url;
-            b.copyright = images[i].value.data.caption;
+            console.log('I', images[i].value);
+            b.image = images[i].value.url;
+            b.copyright = images[i].value.caption;
           }
         });
         const ids = [...new Set(
