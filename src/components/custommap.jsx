@@ -111,7 +111,7 @@ function BoatMarkers({ entries }) {
     });
 
     return <MarkerClusterGroup chunkedLoading>
-        {visible.map((boat) => <BoatMarker boat={boat} />)}
+        {visible.map((boat) => <BoatMarker key={boat.ogaNo} boat={boat} />)}
     </MarkerClusterGroup>;
 }
 
@@ -119,13 +119,13 @@ export default function CustomMap(props) {
     const [data, setData] = useState();
     useEffect(() => {
         const getData = async () => {
-            const p = await getScopedData(props.scope, props.location);
-            setData(p.data);
+            const p = await getScopedData(props.scope, props.table);
+            setData(p.Items);
         }
         if (!data) {
             getData();
         }
-    }, [data, props.scope, props.location]);
+    }, [data, props.scope, props.table]);
 
     return (
         <Stack>
@@ -142,7 +142,7 @@ export default function CustomMap(props) {
                     title={port.name}
                 ></Marker>)}
 
-                <BoatMarkers entries={data?.Items} />
+                <BoatMarkers entries={data} />
 
             </MapContainer>
             <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>
