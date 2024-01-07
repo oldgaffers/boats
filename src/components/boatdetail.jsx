@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useState } from 'react';
-import { Paper, Typography } from '@mui/material';
+import { Paper } from '@mui/material';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
