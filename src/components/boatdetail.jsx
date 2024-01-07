@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, { useState } from 'react';
-import { Paper } from '@mui/material';
+import React, { useContext, useEffect, useState } from 'react';
+import { Box, Paper } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
@@ -9,13 +10,31 @@ import { m2f, price, formatDesignerBuilder, kg } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
 import Skippers from './skippers';
+import { getScopedData } from '../util/api';
+import { useAuth0 } from '@auth0/auth0-react';
+import Voyage from './voyage';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
 export default function BoatDetail({ view, boat, user }) {
+  const { getAccessTokenSilently } = useAuth0();
   const [value, setValue] = useState(0);
+  const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];
   const hd = boat.handicap_data || {};
+
+  useEffect(() => {
+    const getData = async () => {
+      // TODO filter by boat
+      const token = await getAccessTokenSilently();
+      const p = await getScopedData('member', 'voyage', undefined, token);
+      setVoyages(p.Items.filter((v) => v.boat.oga_no === boat.oga_no));
+    }
+    if (user) {
+      getData();
+    }
+  }, [user]);
+
   const panes = [
     {
       title: 'Design & Build', children: (
@@ -89,7 +108,7 @@ export default function BoatDetail({ view, boat, user }) {
         title: 'About the Skippers', children: (
           <Skippers skippers={skippers} email={user.email} />
         )
-      });  
+      });
     }
   }
 
@@ -113,47 +132,63 @@ export default function BoatDetail({ view, boat, user }) {
   }
 
   if (view === 'sail') {
-    console.log('Boats to Sail View');
+    if (voyages?.length > 0) {
+
+      const sortedVoyages = [...voyages];
+      sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
+
+      panes.unshift({
+        title: 'Voyages', children: <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
+          <Grid container spacing={2}>
+            {sortedVoyages.map((voyage, index) =>
+              <Grid key={index} xs={4} minWidth={300}>
+                <Voyage key={`v${index}`} voyage={voyage} />
+              </Grid>
+            )}
+          </Grid>
+        </Box>
+      });
   }
+}
 
-  // newest for sale record
-  if (boat.selling_status === 'for_sale') {
-    const fs = boat.for_sales.reduce((prev, curr) =>
-      (new Date(prev.created_at)
-        >
-        new Date(curr.created_at)
-      ) ? prev : curr
-    );
-
-    if (fs) {
-      panes.unshift(
-        {
-          title: 'For Sale', children: (
-            <Paper>
-              <ConditionalText label="Price" value={price(fs.asking_price)} />
-              <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
-            </Paper>
-          )
-        },
-      );
-    }
-  }
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  return (
-    <>
-      <DetailBar
-        sx={{ height: "8rem" }}
-        onChange={handleChange} value={value} panes={panes}
-      />
-      {panes.map((pane, i) => (
-        <TabPanel key={i} value={value} index={i}>
-          {pane.children}
-        </TabPanel>
-      ))}
-    </>
+// newest for sale record
+if (boat.selling_status === 'for_sale') {
+  const fs = boat.for_sales.reduce((prev, curr) =>
+    (new Date(prev.created_at)
+      >
+      new Date(curr.created_at)
+    ) ? prev : curr
   );
+
+  if (fs) {
+    panes.unshift(
+      {
+        title: 'For Sale', children: (
+          <Paper>
+            <ConditionalText label="Price" value={price(fs.asking_price)} />
+            <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
+          </Paper>
+        )
+      },
+    );
+  }
+}
+
+const handleChange = (event, newValue) => {
+  setValue(newValue);
+};
+
+return (
+  <>
+    <DetailBar
+      sx={{ height: "8rem" }}
+      onChange={handleChange} value={value} panes={panes}
+    />
+    {panes.map((pane, i) => (
+      <TabPanel key={i} value={value} index={i}>
+        {pane.children}
+      </TabPanel>
+    ))}
+  </>
+);
 }
