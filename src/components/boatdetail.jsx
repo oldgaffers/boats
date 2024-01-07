@@ -8,6 +8,7 @@ import { HandicapDisplay } from './Handicap';
 import { m2f, price, formatDesignerBuilder, kg } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
+import Skippers from './skippers';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
@@ -82,6 +83,14 @@ export default function BoatDetail({ view, boat, user }) {
         <Owners owners={boat.ownerships} email={user.email} />
       )
     });
+    const skippers = boat.ownerships.filter((o) => o.skipper);
+    if (skippers.length > 0) {
+      panes.push({
+        title: 'About the Skippers', children: (
+          <Skippers skippers={skippers} email={user.email} />
+        )
+      });  
+    }
   }
 
   /*
@@ -104,19 +113,7 @@ export default function BoatDetail({ view, boat, user }) {
   }
 
   if (view === 'sail') {
-    const skippers = boat.ownerships.filter((b) => b.profile);
-    if (skippers.length > 0) {
-      panes.push({
-        title: 'About the Skippers', children: (
-          <>
-            {skippers.map((skipper, index) => <Paper key={index} >
-              <Typography variant='h6' sx={{ bottomMargin: 1 }}>{skipper.name}</Typography>
-              <Paper dangerouslySetInnerHTML={{ __html: skipper.profile }} />
-            </Paper>)}
-          </>
-        )
-      });
-    }
+    console.log('Boats to Sail View');
   }
 
   // newest for sale record
