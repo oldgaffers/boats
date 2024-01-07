@@ -33,7 +33,7 @@ export default function BoatDetail({ view, boat, user }) {
     if (user) {
       getData();
     }
-  }, [user]);
+  }, [user, getAccessTokenSilently, boat.oga_no]);
 
   const panes = [
     {
