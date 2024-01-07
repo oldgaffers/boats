@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import 'dayjs/locale/en-gb';
-import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
+import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet'
 import L, { LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
@@ -15,8 +15,6 @@ export const defaultIcon = L.icon({
 });
 
 function MapComponent({ data }) {
-    const [markers, setMarkers] = useState(data);
-    const [hack, setHack] = useState();
     const bounds = L.latLngBounds(data[0], data[0]);
     data.slice(1).forEach((d) => bounds.extend(d));
 
@@ -28,31 +26,11 @@ function MapComponent({ data }) {
     }
 
     const map = useMapEvents({
-        click: (a) => {
-            map.locate();
-            // console.log('clicked', a.latlng);
-            // console.log('hack', hack);
-            if (hack) {
-                setHack(undefined);
-            } else {
-                if (markers) {
-                    setMarkers([...markers, a.latlng])
-                } else {
-                    setMarkers([a.latlng]);
-                }
-            }
-        },
-        locationfound: (location) => {
-            // console.log('location found:', location);
-        },
     })
 
     map.fitBounds(bounds);
 
-    return (<>{markers?.map((m) => <Marker key={JSON.stringify(m)} position={m} icon={defaultIcon}>
-        <Popup>
-            we might want to say something here
-        </Popup>
+    return (<>{data?.map((m) => <Marker key={JSON.stringify(m)} position={m} icon={defaultIcon}>
     </Marker>)}</>);
 }
 

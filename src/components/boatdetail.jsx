@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useEffect, useState } from 'react';
-import { Box, Paper } from '@mui/material';
+import { Box, Paper, Stack, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
@@ -25,14 +25,19 @@ export default function BoatDetail({ view, boat, user }) {
 
   useEffect(() => {
     const getData = async () => {
-      // TODO filter by boat
-      const token = await getAccessTokenSilently();
-      const p = await getScopedData('member', 'voyage', undefined, token);
-      setVoyages(p.Items.filter((v) => v.boat.oga_no === boat.oga_no));
+      // TODO filter by boat in the query
+      const d = await getScopedData('public', 'voyage');
+      const p = d?.Items ?? [];
+      if ((user?.['https://oga.org.uk/roles'] || []).includes('member')) {
+        const token = await getAccessTokenSilently();
+        const q = await getScopedData('member', 'voyage', undefined, token);
+        if (q?.Items) {
+          p.push(...q.Items);
+        }
+      }
+      setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
     }
-    if (user) {
-      getData();
-    }
+    getData();
   }, [user, getAccessTokenSilently, boat.oga_no]);
 
   const panes = [
@@ -131,14 +136,27 @@ export default function BoatDetail({ view, boat, user }) {
     );
   }
 
-  if (view === 'sail') {
-    if (voyages?.length > 0) {
+  if (view === 'sail' && voyages?.length > 0) {
 
-      const sortedVoyages = [...voyages];
-      sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
+    const sortedVoyages = [...voyages];
+    sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
 
-      panes.unshift({
-        title: 'Voyages', children: <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
+    let introText = 'These are the voyages the owners have made public.';
+  
+    if (user) {
+      if (roles.includes('member')) {
+        introText = 'The owners have told us about the following voyages.';
+      } else {
+        introText = `${introText} Members get to see any additional voyages restricted to members only.`;
+      }
+    } else {
+      introText = `${introText} Logged in members get to see any additional voyages restricted to members only.`;
+    }
+
+    panes.unshift({
+      title: 'Voyages', children: <Stack>
+        <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
+          <Typography>{introText}</Typography>
           <Grid container spacing={2}>
             {sortedVoyages.map((voyage, index) =>
               <Grid key={index} xs={4} minWidth={300}>
@@ -147,48 +165,48 @@ export default function BoatDetail({ view, boat, user }) {
             )}
           </Grid>
         </Box>
-      });
+      </Stack>
+    });
   }
-}
 
-// newest for sale record
-if (boat.selling_status === 'for_sale') {
-  const fs = boat.for_sales.reduce((prev, curr) =>
-    (new Date(prev.created_at)
-      >
-      new Date(curr.created_at)
-    ) ? prev : curr
-  );
-
-  if (fs) {
-    panes.unshift(
-      {
-        title: 'For Sale', children: (
-          <Paper>
-            <ConditionalText label="Price" value={price(fs.asking_price)} />
-            <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
-          </Paper>
-        )
-      },
+  // newest for sale record
+  if (boat.selling_status === 'for_sale') {
+    const fs = boat.for_sales.reduce((prev, curr) =>
+      (new Date(prev.created_at)
+        >
+        new Date(curr.created_at)
+      ) ? prev : curr
     );
+
+    if (fs) {
+      panes.unshift(
+        {
+          title: 'For Sale', children: (
+            <Paper>
+              <ConditionalText label="Price" value={price(fs.asking_price)} />
+              <div dangerouslySetInnerHTML={{ __html: fs.sales_text }} />
+            </Paper>
+          )
+        },
+      );
+    }
   }
-}
 
-const handleChange = (event, newValue) => {
-  setValue(newValue);
-};
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-return (
-  <>
-    <DetailBar
-      sx={{ height: "8rem" }}
-      onChange={handleChange} value={value} panes={panes}
-    />
-    {panes.map((pane, i) => (
-      <TabPanel key={i} value={value} index={i}>
-        {pane.children}
-      </TabPanel>
-    ))}
-  </>
-);
+  return (
+    <>
+      <DetailBar
+        sx={{ height: "8rem" }}
+        onChange={handleChange} value={value} panes={panes}
+      />
+      {panes.map((pane, i) => (
+        <TabPanel key={i} value={value} index={i}>
+          {pane.children}
+        </TabPanel>
+      ))}
+    </>
+  );
 }
