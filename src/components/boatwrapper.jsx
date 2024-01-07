@@ -25,10 +25,11 @@ export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
 const addNames = async (client, owners) => {
-  const memberNumbers = owners?.filter((o) => queryIf(o)).map((o) => o.member) || [];
-  if (memberNumbers.length === 0) {
+  const rawMemberNumbers = owners?.filter((o) => queryIf(o)).map((o) => o.member) || [];
+  if (rawMemberNumbers.length === 0) {
     return owners;
   }
+  const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
   const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
   const members = r.data.members;
   return owners.map((owner) => {
@@ -40,7 +41,7 @@ const addNames = async (client, owners) => {
         r.name = `${firstname} ${lastname}`;
       }
       if (skipper) {
-        r.profile = skipper;
+        r.skipper = skipper;
       }
     }
     return r;
