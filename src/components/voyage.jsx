@@ -1,25 +1,77 @@
 import React, { useState } from 'react';
-import { Alert, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Typography } from "@mui/material";
+import { Alert, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
 import { postGeneralEnquiry } from '../util/api';
 
-function InterestDialog({open, onSubmit, onCancel, voyage}) {
+function interestEmail(from, fromEmail, to, user, voyage) {
+
+    const contact = `${from} <${fromEmail}>`;
+
+    if (user) {
+        return {
+            to: [voyage.organiserEmail],
+            cc: [contact],
+            subject: `Crewing interest from an OGA Member for your ${voyage.title}`,
+            message: `Hello from the OGA,
+OGA Member ${from} has expressed interest in your voyage.
+They can be contacted with a 'reply all' to this email.
+If they have a crewing profile you will find it in the membership area.
+Their OGA Membership number is ${user['https://oga.org.uk/member']}`,
+        };
+    }
+    return {
+        to: [voyage.organiserEmail],
+        subject: `Crewing interest for your ${voyage.title}`,
+        message: `Hello from the OGA,
+Someone viewing the Boat Register has expressed interest in your voyage.
+They can be contacted by email at ${contact}.`,
+    };
+}
+
+function EntryFields({ from, fromEmail, onChangeName, onChangeEmail }) {
+    if (from && fromEmail) {
+        return '';
+    }
+    return <Stack direction='column'>
+        <TextField
+            onChange={(e) => onChangeEmail(e.target.value)}
+            margin="dense"
+            label="Your Email"
+            type="text"
+            value={fromEmail}
+        />
+        <TextField
+            onChange={(e) => onChangeName(e.target.value)}
+            margin="dense"
+            label="Your Name"
+            type="text"
+            value={from}
+        />
+    </Stack>;
+
+}
+
+function InterestDialog({ from, fromEmail, open, onSubmit, onCancel, voyage }) {
+    const [name, setName] = useState(from);
+    const [email, setEmail] = useState(fromEmail);
+
+    const bad = name === undefined || name.trim() === '' || email === undefined || !email.includes('@')
+
     return <Dialog open={open}>
         <DialogTitle>{voyage.title} on {voyage.boat.name} ({voyage.boat.oga_no})</DialogTitle>
         <DialogContent>
-        <DialogContentText>
-            Would you like us to email the organiser and ask them to contact you?
-        </DialogContentText>
+            <EntryFields onChangeEmail={setEmail} onChangeName={setName} />
+            <DialogContentText>
+                Would you like us to email the organiser and ask them to contact you?
+            </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button onClick={onSubmit}>Yes</Button>
+            <Button disabled={bad} onClick={() => onSubmit(name, email)}>Yes</Button>
             <Button onClick={onCancel}>No</Button>
         </DialogActions>
     </Dialog>;
 }
-
-// TODO make skipper profile accessible
 
 export default function Voyage({ voyage }) {
     const [open, setOpen] = useState(false);
@@ -29,25 +81,12 @@ export default function Voyage({ voyage }) {
 
     const { user } = useAuth0();
 
-    const me = user ?? {};
-
-    const myemail = `${me.name} <${me.email}>`;
-
-    function handleSubmit() {
+    function handleSubmit(from, fromEmail) {
+        console.log(from, fromEmail);
         setOpen(false);
-        const data: any = {
-            to: [voyage.organiserEmail],
-            cc: [myemail],
-            subject: `Crewing interest from an OGA Member for your ${voyage.title}`,
-            message: `Hello from the OGA,
-OGA Member ${user?.name} has expressed interest in your voyage.
-They can be contacted with a 'reply all' to this email.
-If they have a crewing profile you will find it in the membership area.
-Their OGA Membership number is ${me['https://oga.org.uk/member']}`,
-         };
+        const data = interestEmail(from, fromEmail, user, voyage);
         postGeneralEnquiry('public', 'contact', data)
             .then((response) => {
-                console.log(response)
                 setSnackBarOpen(true);
             })
             .catch((error) => {
@@ -58,8 +97,8 @@ Their OGA Membership number is ${me['https://oga.org.uk/member']}`,
 
     if (voyage) {
         return <Card>
-            <CardHeader title={title}/>
-            <CardMedia>{(voyage.places?.length > 0) ? <VoyageMap places={voyage.places}/>: ''}</CardMedia>
+            <CardHeader title={title} />
+            <CardMedia>{(voyage.places?.length > 0) ? <VoyageMap places={voyage.places} /> : ''}</CardMedia>
             <CardContent>
                 <Typography>Skippered by {voyage.skipper}</Typography>
                 <Typography>Between {voyage.start} and {voyage.end}</Typography>
@@ -73,15 +112,18 @@ Their OGA Membership number is ${me['https://oga.org.uk/member']}`,
             <CardActions>
                 <Button onClick={() => setOpen(true)}>I'm Interested</Button>
             </CardActions>
-            <InterestDialog open={open} onSubmit={handleSubmit} onCancel={() => setOpen(false)} voyage={voyage} />
+            <InterestDialog
+              from={user?.name} fromEmail={user?.email}
+              open={open} onSubmit={handleSubmit} onCancel={() => setOpen(false)} voyage={voyage}
+            />
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 open={snackBarOpen}
                 autoHideDuration={2000}
-                onClose={() => setSnackBarOpen(false)}                
+                onClose={() => setSnackBarOpen(false)}
             >
                 <Alert severity="success">Thanks, we've let them know.</Alert>
-                </Snackbar>
+            </Snackbar>
         </Card>;
     }
     return "nothing to see here";
