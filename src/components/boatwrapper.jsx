@@ -18,7 +18,7 @@ export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
     member
     id
     GDPR
-    profile
+    skipper { text }
   }
 }`);
 
@@ -35,12 +35,12 @@ const addNames = async (client, owners) => {
     const r = { ...owner };
     const m = members.filter((member) => member.id === owner.id);
     if (m.length > 0) {
-      const { profile, GDPR, firstname, lastname } = m[0];
+      const { skipper, GDPR, firstname, lastname } = m[0];
       if (GDPR) {
         r.name = `${firstname} ${lastname}`;
       }
-      if (profile) {
-        r.profile = profile;
+      if (skipper) {
+        r.profile = skipper;
       }
     }
     return r;
@@ -59,7 +59,7 @@ export default function BoatWrapper({ client, boat, location }) {
   }
   const ownerships = result || boat.ownerships || [];
   ownerships.sort((a, b) => a.start > b.start);
-
+  console.log(ownerships);
   return (
     <Paper sx={{paddingTop: '20px', paddingBottom: '20px'}}>
       <Container maxWidth="lg">
