@@ -161,6 +161,7 @@
     "apollo-link-context": "^1.0.20",
     "awesome-phonenumber": "^4.1.0",
     "camelcase": "^6.2.1",
+    "dayjs": "^1.11.10",
     "graphql": "^16.6.0",
     "humanize-duration": "^3.28.0",
     "jsondiffpatch": "^0.4.1",
