@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
 import { postGeneralEnquiry } from '../util/api';
 
-function interestEmail(from, fromEmail, to, user, voyage) {
+function interestEmail(from, fromEmail, user, voyage) {
 
     const contact = `${from} <${fromEmail}>`;
 
@@ -113,8 +113,9 @@ export default function Voyage({ voyage }) {
                 <Button onClick={() => setOpen(true)}>I'm Interested</Button>
             </CardActions>
             <InterestDialog
+              voyage={voyage}
               from={user?.name} fromEmail={user?.email}
-              open={open} onSubmit={handleSubmit} onCancel={() => setOpen(false)} voyage={voyage}
+              open={open} onSubmit={handleSubmit} onCancel={() => setOpen(false)}
             />
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
