@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import 'dayjs/locale/en-gb';
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from 'react-leaflet'
-import L, { LatLng, Point } from 'leaflet';
+import L, { LatLng } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 export const defaultIcon = L.icon({

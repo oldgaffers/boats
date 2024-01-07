@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Alert, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Typography } from "@mui/material";
-import { LatLng } from "leaflet";
 import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
 import { postGeneralEnquiry } from '../util/api';
@@ -39,7 +38,7 @@ export default function Voyage({ voyage }) {
         const data: any = {
             to: [voyage.organiserEmail],
             cc: [myemail],
-            subject: 'Crewing interest from an OGA Member for your ${vo}',
+            subject: `Crewing interest from an OGA Member for your ${voyage.title}`,
             message: `Hello from the OGA,
 OGA Member ${user?.name} has expressed interest in your voyage.
 They can be contacted with a 'reply all' to this email.
