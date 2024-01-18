@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Alert, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar, Stack, TextField, Typography } from "@mui/material";
+import { Alert, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
+import Disclaimer from './Disclaimer';
 import { postGeneralEnquiry } from '../util/api';
 
 function interestEmail(from, fromEmail, user, voyage) {
@@ -55,18 +56,27 @@ function EntryFields({ from, fromEmail, onChangeName, onChangeEmail }) {
 function InterestDialog({ from, fromEmail, open, onSubmit, onCancel, voyage }) {
     const [name, setName] = useState(from);
     const [email, setEmail] = useState(fromEmail);
+    const [oldEnough, setOldEnough] = useState(false);
 
-    const bad = name === undefined || name.trim() === '' || email === undefined || !email.includes('@')
+    const bad =  (!oldEnough) || name ===  undefined || name.trim() === '' || email === undefined || !email.includes('@')
 
     return <Dialog open={open}>
         <DialogTitle>{voyage.title} on {voyage.boat.name} ({voyage.boat.oga_no})</DialogTitle>
         <DialogContent>
-            <EntryFields onChangeEmail={setEmail} onChangeName={setName} />
+            <EntryFields from={name} fromEmail={email} onChangeEmail={setEmail} onChangeName={setName} />
             <DialogContentText>
+                <Disclaimer />
                 Would you like us to email the organiser and ask them to contact you?
             </DialogContentText>
         </DialogContent>
         <DialogActions>
+            <FormControlLabel
+                control={<Checkbox
+                    checked={oldEnough}
+                    onChange={(e) => setOldEnough(e.target.checked)}
+                />}
+                label="I confirm I am over 18 years old"
+            />
             <Button disabled={bad} onClick={() => onSubmit(name, email)}>Yes</Button>
             <Button onClick={onCancel}>No</Button>
         </DialogActions>
