@@ -70,7 +70,11 @@ function Contact() {
         if (user) {
             data.cc = [user.email]
             data.to = ['boatregister@oga.org.uk']
-            data.message = Object.entries(user).map(([k, v]) => `${k}: ${v}`).join('\n');
+            data.message = `The person with the login details below has requested that their account
+            be associated with an OGA membership.
+        
+            If this was you, you should get an email from an OGA officer.
+        ${Object.entries(user).map(([k, v]) => `${k}: ${v}`).join('\n')}`;
         }
         postGeneralEnquiry('public', 'associate', data)
             .then((response) => {
