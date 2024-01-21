@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
-import { Accordion, AccordionDetails, AccordionSummary, Paper, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Paper, Stack } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
-import LoginButton from './loginbutton';
 import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
@@ -17,6 +16,7 @@ import { ExportFleet } from './exportfleet';
 import Intro from './Intro';
 import BoatRegisterFooter from './BoatRegisterFooter';
 import { useBoats } from '../util/boats';
+import Welcome from './Welcome';
 
 function makePickers(filtered) {
   const pickers = {};
@@ -91,15 +91,16 @@ export default function BrowseBoats({
 
   return (
     <Paper>
-      <Stack
-        direction='row' spacing={2}
-        alignItems='center' justifyContent='space-evenly'
-      >
+      <Stack direction='row' spacing={2} margin={2}>
+        <Welcome/>
+        <Box maxHeight={200}>
         <CreateBoatButton />
+        </Box>
+        <Box maxHeight={200}>
         <RoleRestricted role='editor'>
           <ShuffleBoatsButton />
         </RoleRestricted>
-        <LoginButton />
+        </Box>
       </Stack>
       <Intro view={state.view} />
       <Accordion defaultExpanded={true}>
