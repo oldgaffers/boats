@@ -136,22 +136,18 @@ export default function Welcome() {
     return (
         <Stack marginTop={2} spacing={1} maxWidth='50%'>
             <Typography>
-                Sorry {user.given_name}, we can't associate your login with a member.
-                When you create a login, the system matches your email address with the one we have on record.
-                If you used the same one, it just works. If you use a different one we need to make the association for you.
+                Sorry{user.given_name ? ` ${user.given_name}` : ''}, we didn't manage to associate your login with a member.
+                If this is your first time logging in, and you used the same email for your login as the OGA has on
+                record, then please log-out now and log straight back in again. If this doesn't work, don't worry.
+                Just read on.
             </Typography>
-            <Typography component='div'>
-                <ul>
-                    <li>If you've recently joined the OGA, it might be just that our systems haven't caught up yet:</li>
-                    <ul>
-                        <li>Please wait until at least the morning after you received your membership number.</li>
-                    </ul>
-                    <li>If you've just created your login:</li>
-                    <ul>
-                        <li>Try logging out and back in again. Sometimes it just takes a little while</li>
-                        <li>If you might have used a different email address then click the button below and we'll contact you to sort it out.</li>
-                    </ul>
-                </ul>
+            <Typography>
+                When you create a login, the system matches your email address with the one we have on record.
+                If you used the same one, the second time you log in, it almost always just works.
+                If you use a different one we need to make the association for you.
+            </Typography>
+            <Typography>
+                If you've tried logging out and back in again and you are still getting this message then click the button below and we'll contact you to sort it out.
             </Typography>
             <Contact />
             <Box maxWidth={100}>
