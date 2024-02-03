@@ -137,7 +137,7 @@ for (let i = 0; i < allparas.length; i++) {
   const p = allparas.item(i);
   const text = p.innerText;
   const q = text.match(/^<<(.*):(.*)>>$/);
-  if (q.length === 3) {
+  if (q?.length === 3) {
     const [, component, args] = q;
     // console.log('X', component, args);
     createRoot(p).render(<BoatRegister id={component} fleet={args} />);
