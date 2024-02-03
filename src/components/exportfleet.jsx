@@ -30,7 +30,7 @@ function id2name(id, members) {
   }
 }
 
-function fieldDiplayValue(item) {
+function fieldDisplayValue(item) {
   if (Number.isInteger(item)) {
     return item;
   }
@@ -54,7 +54,7 @@ function selectFieldsForExport(data, fields, handicapFields) {
     const boat = {};
     fields.forEach((key) => {
       if (b[key]) {
-        boat[key] = fieldDiplayValue(b[key]);
+        boat[key] = fieldDisplayValue(b[key]);
       }
     });
     const handicap_data = b.handicap_data || {};
@@ -64,17 +64,17 @@ function selectFieldsForExport(data, fields, handicapFields) {
         if (item) {
           if (typeof item === 'object') {
             Object.keys(item).forEach((k2) => {
-              boat[`${key}.${k2}`] = fieldDiplayValue(item[k2]);
+              boat[`${key}.${k2}`] = fieldDisplayValue(item[k2]);
             });
           } else {
-            boat[key] = fieldDiplayValue(handicap_data[key]);
+            boat[key] = fieldDisplayValue(handicap_data[key]);
           }
         }
       });
     } else {
       handicapFields.forEach((key) => {
         if (handicap_data[key]) {
-          boat[key] = fieldDiplayValue(handicap_data[key]);
+          boat[key] = fieldDisplayValue(handicap_data[key]);
         }
       });
     }
