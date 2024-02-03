@@ -31,10 +31,19 @@ function id2name(id, members) {
 }
 
 function fieldDiplayValue(item) {
+  if (Number.isInteger(item)) {
+    return item;
+  }
+  if ((typeof item) === 'number') {
+    return item.toFixed(2);
+  }
   if (item.name) {
     return item.name;
   }
-  if (typeof item === 'string') {
+  if (Array.isArray(item)) {
+    return item.filter((it) => it).map((it) => it.name).join(', ');
+  }
+  if ((typeof item) === 'string') {
     return item.replaceAll('\n', '').replaceAll('"', '“');
   }
   return item;
@@ -55,17 +64,17 @@ function selectFieldsForExport(data, fields, handicapFields) {
         if (item) {
           if (typeof item === 'object') {
             Object.keys(item).forEach((k2) => {
-              boat[`${key}.${k2}`] = item[k2];
+              boat[`${key}.${k2}`] = fieldDiplayValue(item[k2]);
             });
           } else {
-            boat[key] = handicap_data[key];
+            boat[key] = fieldDiplayValue(handicap_data[key]);
           }
         }
       });
     } else {
       handicapFields.forEach((key) => {
         if (handicap_data[key]) {
-          boat[key] = handicap_data[key];
+          boat[key] = fieldDiplayValue(handicap_data[key]);
         }
       });
     }
@@ -117,7 +126,6 @@ function ExportFleetOptions({ client, name, ogaNos }) {
         }));
         r.forEach((b, i) => {
           if (images[i].value) {
-            console.log('I', images[i].value);
             b.image = images[i].value.url;
             b.copyright = images[i].value.caption;
           }
