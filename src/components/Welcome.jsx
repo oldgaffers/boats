@@ -7,11 +7,13 @@ import { postGeneralEnquiry } from '../util/api';
 import LoginButton from './loginbutton';
 
 function playground(user) {
-    console.log('playground', user);
-    if (user.name !== 'Julian Cable') {
+    // console.log('playground', user);
+    if (user['https://oga.org.uk/id] !== 559) {
         return '';
     }
-    return JSON.stringify(user);
+    el = document.getElementsByClassName('schoolPopout__button');
+    el.forEach((e) => console.log(e));
+    return '';
 }
 
 function ContactDialog({
