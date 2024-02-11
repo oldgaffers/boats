@@ -149,7 +149,8 @@ if (Auth0Context) {
     const user = token?.user;
     if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
       console.log('from local storage', user.name);
-      document.addEventListener("DOMContentLoaded", (event) => {
+      //document.addEventListener("DOMContentLoaded", (event) => {
+      window.setTimeout(() => {
         // const phoneButton = getPopoutButton('fa-phone');
         // const emailButton = getPopoutButton('fa-envelope');
         const userButton = getPopoutButton('fa-user');
@@ -172,7 +173,7 @@ if (Auth0Context) {
             logout();
           });
         }
-      });
+      }, 1000);
     }
   }
 }
