@@ -142,6 +142,9 @@ function getPopoutButton(className) {
 }
 
 const takeoverbuttons = () => {
+  const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
+  const authData = JSON.parse(localStorage[k]);
+  const user = authData.body.decodedToken.user;
   // const phoneButton = getPopoutButton('fa-phone');
   // const emailButton = getPopoutButton('fa-envelope');
   const userButton = getPopoutButton('fa-user');
