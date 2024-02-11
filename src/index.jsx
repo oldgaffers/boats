@@ -142,15 +142,15 @@ function getPopoutButton(className) {
 }
 
 const takeoverbuttons = () => {
-  const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
-  const authData = JSON.parse(localStorage[k]);
-  const user = authData.body.decodedToken.user;
   // const phoneButton = getPopoutButton('fa-phone');
   // const emailButton = getPopoutButton('fa-envelope');
   const userButton = getPopoutButton('fa-user');
   console.log('userButton', userButton);
   // console.log('token', token);
   if (userButton) {
+    const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
+    const authData = JSON.parse(localStorage[k]);
+    const user = authData.body.decodedToken.user;
     // console.log(user.name, user.picture);
     const logout = Auth0Context?._currentValue?.logout;
     userButton.removeAttribute('href');
@@ -177,6 +177,7 @@ if (Auth0Context) {
     const user = token?.user;
     if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
       // console.log('from local storage', user.name);
+      window.setTimeout(takeoverbuttons, 1000);
       if (document.readyState === "loading") {
         // Loading hasn't finished yet
         document.addEventListener("DOMContentLoaded", takeoverbuttons);
@@ -184,7 +185,6 @@ if (Auth0Context) {
         // `DOMContentLoaded` has already fired
         takeoverbuttons();
       }
-      // window.setTimeout(, 1000);
     }
   }
 }
