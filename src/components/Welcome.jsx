@@ -41,8 +41,10 @@ function playground(user, logout) {
     if (user['https://oga.org.uk/id'] !== 559) {
         return '';
     }
-    const el = document.getElementsByClassName('schoolPopout__button');
-    el.forEach((e) => console.log(e));
+    const userIcon = document.getElementsByClassName('fa-user');
+    const phoneIcon = document.getElementsByClassName('fa-phone');
+    const emailIcon = document.getElementsByClassName('fa-envelope');
+    console.log(userIcon, phoneIcon, emailIcon);
     return '';
 }
 
