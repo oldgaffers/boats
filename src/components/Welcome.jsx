@@ -6,14 +6,44 @@ import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContent
 import { postGeneralEnquiry } from '../util/api';
 import LoginButton from './loginbutton';
 
+function makePopoutButton(el, href, icon, text) {
+    el.innerHTML = '<a class="schoolPopout__button" href="' + href + '" target="_blank" rel="me"><span class="schoolPopout__circle"><i class="fa ' + icon + '" aria-hidden="true"></i></span><p class="schoolPopout__label">' + text + '</p></a>';
+}
+
+function makeJoinButton(el) {
+    makePopoutButton(el, 'https://www.oga.org.uk/about/membership/membership.html', 'fa-user-plus', 'Join Us');
+}
+
+function makeEmailButton(el) {
+    makePopoutButton(el, 'mailto:secretary@oga.org.uk?subject=Enquiry Via Website', 'fa-envelope', 'Email Us');
+}
+
+function makeLoginButton(el, auth0Client) {
+    el.innerHTML = '<div class="schoolPopout__button" style="cursor: pointer"><span class="schoolPopout__circle"><i class="fa fa-user" aria-hidden="true"></i></span><p class="schoolPopout__label">Login</p></div>';
+    el.firstElementChild.addEventListener("click", (e) => {
+        e.preventDefault();
+        auth0Client.loginWithRedirect();
+    });
+}
+
+async function makeLogoutButton(el, auth0Client) {
+    const userProfile = await auth0Client.getUser();
+    const { name, picture } = userProfile;
+    el.innerHTML = '<div class="schoolPopout__button" style="cursor: pointer"><span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + name + '" src="' + picture + '"></span><p class="schoolPopout__label">Logout</p></div>';
+    el.firstElementChild.addEventListener("click", (e) => {
+        e.preventDefault();
+        auth0Client.logout();
+    });
+}
+
 function playground(user) {
     // console.log('playground', user);
-    if (user['https://oga.org.uk/id] !== 559) {
+    if (user['https://oga.org.uk/id'] !== 559) {
         return '';
-    }
-    el = document.getElementsByClassName('schoolPopout__button');
-    el.forEach((e) => console.log(e));
-    return '';
+}
+el = document.getElementsByClassName('schoolPopout__button');
+el.forEach((e) => console.log(e));
+return '';
 }
 
 function ContactDialog({
