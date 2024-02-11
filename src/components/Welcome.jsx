@@ -6,6 +6,14 @@ import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContent
 import { postGeneralEnquiry } from '../util/api';
 import LoginButton from './loginbutton';
 
+function playground(user) {
+    console.log('playground', user);
+    if (user.name !== 'Julian Cable') {
+        return '';
+    }
+    return JSON.stringify(user);
+}
+
 function ContactDialog({
     open,
     onSend,
@@ -129,6 +137,7 @@ export default function Welcome() {
         return (
             <>
                 <Typography variant="h6">Hi{' '}{user.name}.</Typography>
+                {playground(user)}
                 <LoginButton />
             </>
         );
