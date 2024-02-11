@@ -158,6 +158,7 @@ if (Auth0Context) {
         if (userButton) {
           console.log(user.name, user.picture);
           const logout = Auth0Context?._currentValue?.logout;
+          console.log('L', logout);
           // GET https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}&returnTo=LOGOUT_URL
 
           userButton.removeAttribute('href');
