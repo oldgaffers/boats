@@ -149,8 +149,8 @@ const takeoverbuttons = () => {
   console.log('userButton', userButton);
   // console.log('token', token);
   if (userButton) {
-    const auth = auth0Client;
-    console.log('auth', Object.keys(auth));
+    const logoutFn = auth0Client.logout;
+    console.log('auth0Client.logout', logoutFn));
     const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
     const authData = JSON.parse(localStorage[k]);
     const user = authData.body.decodedToken.user;
@@ -158,8 +158,7 @@ const takeoverbuttons = () => {
     userButton.style = 'cursor: pointer';
     userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
     userButton.addEventListener("click", (e) => {
-      const logout = auth.logout();
-      console.log('A', auth);
+      const logout = logoutFn;
       console.log('L', logout);
       e.preventDefault();
       logout();
