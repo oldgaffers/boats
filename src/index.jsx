@@ -156,20 +156,20 @@ if (Auth0Context) {
         console.log('userButton', userButton);
         // console.log('token', token);
         if (userButton) {
-          console.log(user.name, user.picture);
+          // console.log(user.name, user.picture);
           const logout = Auth0Context?._currentValue?.logout;
-          console.log('L', logout);
-          // GET https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}&returnTo=LOGOUT_URL
-
           userButton.removeAttribute('href');
           userButton.style = 'cursor: pointer';
           userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
           userButton.addEventListener("click", (e) => {
             e.preventDefault();
+            /*
+            // GET https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}&returnTo=LOGOUT_URL
             fetch(`https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}`)
               .then((r) => console.log(r))
               .catch((e) => console.log(e));
-            // logout();
+            */
+            logout();
           });
         }
       });
