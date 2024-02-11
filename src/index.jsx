@@ -140,15 +140,20 @@ if (Auth0Context) {
   const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
   if (k) {
     const authData = JSON.parse(localStorage[k]);
-    const user = authData?.body?.decodedToken?.user;
+    const token = authData?.body?.decodedToken;
+    const user = token?.user;
     if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
       console.log('from local storage', user.name);
       // const phoneButton = getPopoutButton('fa-phone');
       // const emailButton = getPopoutButton('fa-envelope');
       const userButton = getPopoutButton('fa-user');
+      console.log('userButton', userButton);
+      console.log('token', token);
       if (userButton) {
         console.log(user.name, user.picture);
         const logout = Auth0Context._currentValue.logout;
+        // GET https://{yourDomain}/v2/logout?client_id={yourClientId}&returnTo=LOGOUT_URL
+
         userButton.removeAttribute('href');
         userButton.style = 'cursor: pointer';
         userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
