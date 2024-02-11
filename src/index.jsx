@@ -1,7 +1,7 @@
 import 'react-app-polyfill/ie11';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Auth0Provider } from "@auth0/auth0-react";
+import { Auth0Context, Auth0Provider } from "@auth0/auth0-react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from "react-cookie";
@@ -131,6 +131,14 @@ const BoatRegister = (props) => {
     </CookiesProvider>
   </React.StrictMode>;
 };
+
+const k = Object.keys(localStorage).find(k => k.includes('auth0spajs')) 
+if (k) {
+  const authData = JSON.parse(localStorage[k]);
+  const user = authData.body.decodedToken.user;
+  const x = Auth0Context;
+  console.log('Auth0Context', x);
+}
 
 const allparas = document.getElementsByTagName('p');
 for (let i = 0; i < allparas.length; i++) {
