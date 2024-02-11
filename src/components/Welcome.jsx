@@ -16,8 +16,8 @@ function playground(user, logout) {
         return '';
     }
     const userButton = getPopoutButton('fa-user');
-    const phoneButton = getPopoutButton('fa-phone');
-    const emailButton = getPopoutButton('fa-envelope');
+    // const phoneButton = getPopoutButton('fa-phone');
+    // const emailButton = getPopoutButton('fa-envelope');
     userButton.removeAttribute('href');
     userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label">Logout</span>';
     return '';
