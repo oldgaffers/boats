@@ -136,6 +136,7 @@ const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
 if (k) {
   const authData = JSON.parse(localStorage[k]);
   const user = authData.body.decodedToken.user;
+  console.log(user?.name);
   const x = Auth0Context;
   console.log('Auth0Context', x);
 }
