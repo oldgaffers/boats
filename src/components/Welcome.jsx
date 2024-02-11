@@ -6,27 +6,6 @@ import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogContent
 import { postGeneralEnquiry } from '../util/api';
 import LoginButton from './loginbutton';
 
-function getPopoutButton(className) {
-    return document.getElementsByClassName(className).item(0).parentElement.parentElement;
-}
-
-function playground(user, logout) {
-    if ([1219, 559].includes(user['https://oga.org.uk/id'])) {
-        const userButton = getPopoutButton('fa-user');
-        // const phoneButton = getPopoutButton('fa-phone');
-        // const emailButton = getPopoutButton('fa-envelope');
-        console.log(user.name, user.picture);
-        userButton.removeAttribute('href');
-        userButton.style = 'cursor: pointer';
-        userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
-        userButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            logout();
-        });
-    }
-    return '';
-}
-
 function ContactDialog({
     open,
     onSend,
@@ -138,7 +117,7 @@ function Contact() {
 }
 
 export default function Welcome() {
-    const { logout, user } = useAuth0();
+    const { user } = useAuth0();
     if (!user) {
         return (
             <Tooltip title='If you are a member then please log-in to enable extra members only features.'>
@@ -150,7 +129,6 @@ export default function Welcome() {
         return (
             <>
                 <Typography variant="h6">Hi{' '}{user.name}.</Typography>
-                {playground(user, logout)}
                 <LoginButton />
             </>
         );
