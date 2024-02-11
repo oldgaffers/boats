@@ -1,7 +1,8 @@
 import 'react-app-polyfill/ie11';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { Auth0Context, Auth0Provider } from "@auth0/auth0-react";
+import { Auth0Provider } from "@auth0/auth0-react";
+import auth0Client from "@auth0/auth0-spa-js";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from "react-cookie";
@@ -148,43 +149,34 @@ const takeoverbuttons = () => {
   console.log('userButton', userButton);
   // console.log('token', token);
   if (userButton) {
+    console.log(auth0Client);
     const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
     const authData = JSON.parse(localStorage[k]);
     const user = authData.body.decodedToken.user;
-    // console.log(user.name, user.picture);
-    const logout = Auth0Context?._currentValue?.logout;
     userButton.removeAttribute('href');
     userButton.style = 'cursor: pointer';
     userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
     userButton.addEventListener("click", (e) => {
       e.preventDefault();
-      /*
-      // GET https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}&returnTo=LOGOUT_URL
-      fetch(`https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}`)
-        .then((r) => console.log(r))
-        .catch((e) => console.log(e));
-      */
-      logout();
+      auth0Client.logout();
     });
   }
 }
 
-if (Auth0Context) {
-  const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
-  if (k) {
-    const authData = JSON.parse(localStorage[k]);
-    const token = authData?.body?.decodedToken;
-    const user = token?.user;
-    if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
-      // console.log('from local storage', user.name);
-      window.setTimeout(takeoverbuttons, 1000);
-      if (document.readyState === "loading") {
-        // Loading hasn't finished yet
-        document.addEventListener("DOMContentLoaded", takeoverbuttons);
-      } else {
-        // `DOMContentLoaded` has already fired
-        takeoverbuttons();
-      }
+const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
+if (k) {
+  const authData = JSON.parse(localStorage[k]);
+  const token = authData?.body?.decodedToken;
+  const user = token?.user;
+  if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
+    // console.log('from local storage', user.name);
+    window.setTimeout(takeoverbuttons, 1000);
+    if (document.readyState === "loading") {
+      // Loading hasn't finished yet
+      document.addEventListener("DOMContentLoaded", takeoverbuttons);
+    } else {
+      // `DOMContentLoaded` has already fired
+      takeoverbuttons();
     }
   }
 }
