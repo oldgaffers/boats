@@ -36,8 +36,7 @@ async function makeLogoutButton(el, auth0Client) {
     });
 }
 
-function playground() {
-    const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+function playground(user, logout) {
     // console.log('playground', user);
     if (user['https://oga.org.uk/id'] !== 559) {
         return '';
@@ -158,7 +157,7 @@ function Contact() {
 }
 
 export default function Welcome() {
-    const { user } = useAuth0();
+    const { logout, user } = useAuth0();
     if (!user) {
         return (
             <Tooltip title='If you are a member then please log-in to enable extra members only features.'>
@@ -170,7 +169,7 @@ export default function Welcome() {
         return (
             <>
                 <Typography variant="h6">Hi{' '}{user.name}.</Typography>
-                {playground()}
+                {playground(user, logout)}
                 <LoginButton />
             </>
         );
