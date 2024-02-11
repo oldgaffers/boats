@@ -2,7 +2,7 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from "@auth0/auth0-react";
-import auth0Client from "@auth0/auth0-spa-js";
+// import auth0Client from "@auth0/auth0-spa-js";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from "react-cookie";
@@ -138,6 +138,8 @@ const BoatRegister = (props) => {
   </React.StrictMode>;
 };
 
+/*
+
 function getPopoutButton(className) {
   return document.getElementsByClassName(className)?.item(0)?.parentElement?.parentElement;
 }
@@ -183,6 +185,7 @@ if (k) {
     }
   }
 }
+*/
 
 const allparas = document.getElementsByTagName('p');
 for (let i = 0; i < allparas.length; i++) {
