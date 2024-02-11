@@ -17,7 +17,8 @@ function playground(user, logout) {
         // const emailButton = getPopoutButton('fa-envelope');
         console.log(user.name, user.picture);
         userButton.removeAttribute('href');
-        userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label">Logout</span>';
+        userButton.style = 'cursor: pointer';
+        userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
         userButton.addEventListener("click", (e) => {
             e.preventDefault();
             logout();
