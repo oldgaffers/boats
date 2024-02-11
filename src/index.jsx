@@ -31,6 +31,11 @@ const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
 */
 
+const auth0Params = {
+  domain: "dev-uf87e942.eu.auth0.com",
+  clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
+}
+
 const tags = [
   'app',
   'boat',
@@ -69,8 +74,8 @@ const lightTheme = createTheme({
 
 function Wrapper({ redirectUri, scope, children }) {
   const auth = {
-    domain: "dev-uf87e942.eu.auth0.com",
-    clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
+    domain: auth0Params.domain,
+    clientId: auth0Params.clientId,
     redirectUri: redirectUri,
     audience: "https://oga.org.uk/boatregister",
     useRefreshTokens: true,
@@ -151,8 +156,8 @@ if (Auth0Context) {
       console.log('token', token);
       if (userButton) {
         console.log(user.name, user.picture);
-        const logout = Auth0Context._currentValue.logout;
-        // GET https://{yourDomain}/v2/logout?client_id={yourClientId}&returnTo=LOGOUT_URL
+        const logout = Auth0Context?._currentValue?.logout;
+        // GET https://{auth0Params.domain}/v2/logout?client_id={auth0Params.clientId}&returnTo=LOGOUT_URL
 
         userButton.removeAttribute('href');
         userButton.style = 'cursor: pointer';
