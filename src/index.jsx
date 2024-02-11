@@ -133,28 +133,30 @@ const BoatRegister = (props) => {
 };
 
 function getPopoutButton(className) {
-  return document.getElementsByClassName(className).item(0).parentElement.parentElement;
+  return document.getElementsByClassName(className)?.item(0)?.parentElement?.parentElement;
 }
 
 if (Auth0Context) {
   const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
   if (k) {
-    const logout = Auth0Context._currentValue.logout;
     const authData = JSON.parse(localStorage[k]);
     const user = authData?.body?.decodedToken?.user;
     if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
       console.log('from local storage', user.name);
-      const userButton = getPopoutButton('fa-user');
       // const phoneButton = getPopoutButton('fa-phone');
       // const emailButton = getPopoutButton('fa-envelope');
-      console.log(user.name, user.picture);
-      userButton.removeAttribute('href');
-      userButton.style = 'cursor: pointer';
-      userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
-      userButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        logout();
-      });
+      const userButton = getPopoutButton('fa-user');
+      if (userButton) {
+        console.log(user.name, user.picture);
+        const logout = Auth0Context._currentValue.logout;
+        userButton.removeAttribute('href');
+        userButton.style = 'cursor: pointer';
+        userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
+        userButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          logout();
+        });
+      }
     }
   }
 }
