@@ -36,14 +36,15 @@ async function makeLogoutButton(el, auth0Client) {
     });
 }
 
-function playground(user) {
+function playground() {
+    const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
     // console.log('playground', user);
     if (user['https://oga.org.uk/id'] !== 559) {
         return '';
-}
-el = document.getElementsByClassName('schoolPopout__button');
-el.forEach((e) => console.log(e));
-return '';
+    }
+    const el = document.getElementsByClassName('schoolPopout__button');
+    el.forEach((e) => console.log(e));
+    return '';
 }
 
 function ContactDialog({
@@ -169,7 +170,7 @@ export default function Welcome() {
         return (
             <>
                 <Typography variant="h6">Hi{' '}{user.name}.</Typography>
-                {playground(user)}
+                {playground()}
                 <LoginButton />
             </>
         );
