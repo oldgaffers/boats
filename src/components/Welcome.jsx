@@ -11,15 +11,18 @@ function getPopoutButton(className) {
 }
 
 function playground(user, logout) {
-    // console.log('playground', user);
-    if (user['https://oga.org.uk/id'] !== 559) {
-        return '';
+    if ([1219, 559].includes(user['https://oga.org.uk/id'])) {
+        const userButton = getPopoutButton('fa-user');
+        // const phoneButton = getPopoutButton('fa-phone');
+        // const emailButton = getPopoutButton('fa-envelope');
+        console.log(user.name, user.picture);
+        userButton.removeAttribute('href');
+        userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label">Logout</span>';
+        userButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            logout();
+        });
     }
-    const userButton = getPopoutButton('fa-user');
-    // const phoneButton = getPopoutButton('fa-phone');
-    // const emailButton = getPopoutButton('fa-envelope');
-    userButton.removeAttribute('href');
-    userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label">Logout</span>';
     return '';
 }
 
