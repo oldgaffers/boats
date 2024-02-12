@@ -2,7 +2,6 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Auth0Provider } from "@auth0/auth0-react";
-// import auth0Client from "@auth0/auth0-spa-js";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 // import * as serviceWorker from './serviceWorker';
 import { CookiesProvider } from "react-cookie";
@@ -32,24 +31,19 @@ const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
 */
 
-const auth0Params = {
-  domain: "dev-uf87e942.eu.auth0.com",
-  clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
-}
-
 const tags = [
-  'app',
-  'boat',
-  'fleet',
-  'sail',
-  'sell',
-  'small',
-  'login',
+  'app', 
+  'boat', 
+  'fleet', 
+  'sail', 
+  'sell', 
+  'small', 
+  'login', 
   'pending',
-  'expressions',
-  'add_boat',
+  'expressions', 
+  'add_boat', 
   'pick_or_add_boat',
-  'my_fleets',
+  'my_fleets', 
   'shared_fleets',
 ];
 
@@ -75,8 +69,8 @@ const lightTheme = createTheme({
 
 function Wrapper({ redirectUri, scope, children }) {
   const auth = {
-    domain: auth0Params.domain,
-    clientId: auth0Params.clientId,
+    domain: "dev-uf87e942.eu.auth0.com",
+    clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
     redirectUri: redirectUri,
     audience: "https://oga.org.uk/boatregister",
     useRefreshTokens: true,
@@ -113,8 +107,8 @@ const Pages = (props) => {
     case 'login': return <LoginButton />;
     case 'boat': return <Boat ogaNo={getOgaNo()} />;
     case 'fleet': return <FleetView {...props} location={window.location} />;
-    case 'my_fleets': return <Fleets filter={{ owned: true }} />;
-    case 'shared_fleets': return <Fleets filter={{ public: true }} />;
+    case 'my_fleets': return <Fleets filter={{ owned: true }}/>;
+    case 'shared_fleets': return <Fleets filter={{ public: true}}/>;
     case 'map': return <CustomMap {...props} />;
     case 'add_boat': return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
@@ -138,55 +132,6 @@ const BoatRegister = (props) => {
   </React.StrictMode>;
 };
 
-/*
-
-function getPopoutButton(className) {
-  return document.getElementsByClassName(className)?.item(0)?.parentElement?.parentElement;
-}
-
-const takeoverbuttons = () => {
-  // const phoneButton = getPopoutButton('fa-phone');
-  // const emailButton = getPopoutButton('fa-envelope');
-  const userButton = getPopoutButton('fa-user');
-  console.log('userButton', userButton);
-  // console.log('token', token);
-  if (userButton) {
-    const logoutFn = auth0Client.logout;
-    console.log('auth0Client.logout', logoutFn));
-    const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
-    const authData = JSON.parse(localStorage[k]);
-    const user = authData.body.decodedToken.user;
-    userButton.removeAttribute('href');
-    userButton.style = 'cursor: pointer';
-    userButton.innerHTML = '<span class="schoolPopout__circle" style="overflow: hidden; border-radius:50%"><img height="30px" alt="' + user.name + '" src="' + user.picture + '"></span><span class="schoolPopout__label" style="color: red">Logout</span>';
-    userButton.addEventListener("click", (e) => {
-      const logout = logoutFn;
-      console.log('L', logout);
-      e.preventDefault();
-      logout();
-    });
-  }
-}
-
-const k = Object.keys(localStorage).find(k => k.includes('auth0spajs'))
-if (k) {
-  const authData = JSON.parse(localStorage[k]);
-  const token = authData?.body?.decodedToken;
-  const user = token?.user;
-  if (user && [1219, 559].includes(user['https://oga.org.uk/id'])) {
-    // console.log('from local storage', user.name);
-    window.setTimeout(takeoverbuttons, 1000);
-    if (document.readyState === "loading") {
-      // Loading hasn't finished yet
-      document.addEventListener("DOMContentLoaded", takeoverbuttons);
-    } else {
-      // `DOMContentLoaded` has already fired
-      takeoverbuttons();
-    }
-  }
-}
-*/
-
 const allparas = document.getElementsByTagName('p');
 for (let i = 0; i < allparas.length; i++) {
   const p = allparas.item(i);
@@ -204,7 +149,7 @@ for (let i = 0; i < alldivs.length; i++) {
   const attr = div.dataset;
   // oga-component is converted to ogaComponent by the browser
   if (attr.ogaComponent) {
-    createRoot(div).render(<BoatRegister id={attr.ogaComponent} {...attr} />);
+    createRoot(div).render(<BoatRegister id={attr.ogaComponent} {...attr} />);    
   } else {
     const attrKeys = Object.keys(attr);
     const wanted = tags.find((tag) => attrKeys.includes(tag));
@@ -216,7 +161,7 @@ for (let i = 0; i < alldivs.length; i++) {
       if (tags.includes(id)) {
         createRoot(div).render(<BoatRegister id={id} {...attr} />);
       }
-    }
+    }  
   }
 }
 
