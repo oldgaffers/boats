@@ -400,29 +400,44 @@ export function prepareModifiedValues(values, boat, pickers) {
     ['builder', 'designer', 'design_class']
       .filter((key) => ddf[`new_${key}`])
       .map((key) => {
-        return [`new_${key}`, { name: ddf[`new_${key}`], id: uuidv4() }];
+        return [key, { name: ddf[`new_${key}`], id: uuidv4() }];
       })
   );
 
   function name2object(value, picker, newItem) {
+    console.log('name2object', value, newItem);
+    if (newItem) {
+      return newItem;
+    }
     if (value?.name) {
       return value;
-    }
-    if (value === newItem?.name) {
-      return newItem;
     }
     const r = picker.find((p) => p.name === value);
     if (r) {
       return r;
     }
-    // console.log(`${value} is missing in picklist, making a new uuid`);
-    return { name: value, id: uuidv4() };
+    return undefined; // not possible to specify a value we don't have
   }
 
-  const design_class = name2object(values.design_class, pickers['design_class'], newItems['design_class']);
+  function listMapper(values, newItems, field) {
+    if (values[field]) {
+      const r = values[field].map((v) => name2object(v, pickers[field]));
+      if (newItems[field]) {
+        r.push(newItems[field]);
+      }
+      return r;
+    } else {
+      if (newItems[field]) {
+        return [newItems[field]];
+      }
+    }
+    return undefined;
+  }
 
-  const builder = values.builder.map((v) => name2object(v, pickers['builder'], newItems['builder']));
-  const designer = values.designer.map((v) => name2object(v, pickers['designer'], newItems['designer']));
+  const design_class = name2object(values.design_class, pickers.design_class, newItems.design_class);
+
+  const builder = listMapper(values, newItems, 'builder');
+  const designer = listMapper(values, newItems, 'designer');
 
   const modifiedBoat = {
     ...boatf2m(submitted),
