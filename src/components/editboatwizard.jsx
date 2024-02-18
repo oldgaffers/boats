@@ -400,7 +400,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     ['builder', 'designer', 'design_class']
       .filter((key) => ddf[`new_${key}`])
       .map((key) => {
-        return { name: ddf[`new_${key}`], id: uuidv4() };
+        return [`new_${key}`, { name: ddf[`new_${key}`], id: uuidv4() }];
       })
   );
 
