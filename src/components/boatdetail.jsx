@@ -46,7 +46,7 @@ export default function BoatDetail({ view, boat, user }) {
         <Paper>
           <ConditionalText value={boat.generic_type} label="Generic type" />
           <ConditionalText value={boat.design_class?.name} label="Design class" />
-          <ConditionalText label="Designer" value={boat.designer?.name} />
+          <ConditionalText label="Designer" value={formatDesignerBuilder(boat, 'designer')} />
           <ConditionalText value={boat.hull_form} label="Hull form" />
           <ConditionalText label="Builder" value={formatDesignerBuilder(boat, 'builder')} />
           <ConditionalText value={boat.place_built} label="Place built" />
