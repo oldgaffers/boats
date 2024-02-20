@@ -51,16 +51,18 @@ export default function OwnershipForm(props) {
         setowners(up);
     }
 
-    function handleOnUpdateCurrent(rows) {
+    function handleOnUpdateCurrent(cur) {
         const hist = owners.filter((o) => !o.current);
-        // console.log('handleOnUpdateCurrent', hist, rows);
-        setowners([...hist, ...rows]);
+        // console.log('handleOnUpdateCurrent', hist, cur);
+        setowners([...hist, ...cur]);
     }
 
-    function handleOnUpdateHistorical(rows) {
-        const current = owners.filter((o) => o.current);
-        // console.log('handleOnUpdateHistorical', current, rows);
-        setowners([...rows, ...current]);
+    function handleOnUpdateHistorical(hist) {
+        const hids = hist.map((row) => row.id);
+        const rest = owners.filter((o) => !hids.includes(o.id));
+        // merge and renumber
+        const merged = [...hist, ...rest].map((row, index) => ({...row, id: index}));
+        setowners(merged);
     }
 
     // we don't need to restrict access if we don't have any data
