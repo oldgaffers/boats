@@ -100,6 +100,30 @@ export default function BoatDetail({ view, boat, user }) {
         </Paper>
       )
     });
+    panes.push({
+      title: 'Handicap Measurements', children: (
+        <Paper>
+          <Stack direction='row'>
+            <img width='80%' src='https://oldgaffers.github.io/boatregister/handicapmeasurements.svg' alt='boat measurement diagram' />
+            <Stack width='20%'>
+              <Typography variant='h6'>Sail Dimensions</Typography>
+              <Typography>Mainsail, mizzen and main and mizzen
+topsails, and schooners’ foresails and
+fore-topsails, are measured as the
+actual sail dimensions, not the spar
+lengths. Headsails - it is the size of the
+foretriangle that is measured.</Typography>
+              <Typography variant='h6'>Foretriangle</Typography>
+              <Typography>I is measured from deck to the top of
+the highest headsail halyard sheave
+(for jib topsail if one can be flown). J is
+measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
+the jib outhaul at the end of the bowsprit.</Typography>
+            </Stack>
+          </Stack>
+        </Paper>
+      )
+    });
   }
   if (roles.includes('member')) {
     panes.push({
@@ -142,7 +166,7 @@ export default function BoatDetail({ view, boat, user }) {
     sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
 
     let introText = 'These are the voyages the owners have made public.';
-  
+
     if (user) {
       if (roles.includes('member')) {
         introText = 'The owners have told us about the following voyages.';

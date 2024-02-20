@@ -15,20 +15,21 @@ export const dimensionsForm = {
     {
       component: componentTypes.TEXT_FIELD,
       name: "handicap_data.length_over_all",
-      label: "Length overall (LOA) (excluding spars)",
+      label: "Length overall (LOA) (excluding spars and rudder)",
       type: 'number',
       dataType: 'float',
       },
     {
       component: componentTypes.TEXT_FIELD,
       name: "handicap_data.length_on_waterline",
-      label: "Waterline Length (LWL)",
+      label: "Waterline Length (LWL) excluding rudder",
       type: 'number',
       dataType: 'float',
     },
     {
       component: componentTypes.TEXT_FIELD,
       name: "handicap_data.beam",
+      helperText: 'the outside measurement of widest part of the hull excluding rubbing strakes and other appendages',
       label: "Beam",
       type: 'number',
       dataType: 'float',
