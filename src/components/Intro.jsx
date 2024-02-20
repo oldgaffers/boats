@@ -20,13 +20,14 @@ function IntroText({ view }) {
 }
 
 export default function Intro({ view }) {
+    console.log('Intro', view);
     return (
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
           <Typography>About the boat Register</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <IntroText />
+          <IntroText view={view}/>
         </AccordionDetails>
       </Accordion>
     );
