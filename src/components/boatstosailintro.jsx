@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import UpdateCrewingProfile from './updatecrewingprofile';
 
 export default function BoatsToSailIntro() {
     return (
@@ -15,6 +16,7 @@ export default function BoatsToSailIntro() {
             <Typography variant="body1">
                 Want to see your boat on this list? For now, contact the boat register editors and we will sort it.
             </Typography>
+            <UpdateCrewingProfile/>
         </>
     );
 }

@@ -1,9 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import { Box, BoxProps, Typography } from "@mui/material";
 
 export default function Disclaimer(props) {
     return <Box {...props}>
-    <Typography marginBottom={2} marginLeft={1} marginRight={1}>The
-    OGA is only providing an introduction service
+    <Typography marginBottom={2} marginLeft={1} marginRight={1}>The OGA is only providing an introduction service
     between potential skipper and potential crew.
     </Typography>
     <Typography marginBottom={2} marginLeft={1} marginRight={1}>
