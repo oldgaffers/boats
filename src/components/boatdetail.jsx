@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Stack, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { Paper, Stack, Typography } from '@mui/material';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
@@ -12,7 +11,7 @@ import Owners from './owners';
 import Skippers from './skippers';
 import { getScopedData } from '../util/api';
 import { useAuth0 } from '@auth0/auth0-react';
-import Voyage from './voyage';
+import Voyages from './voyages';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
@@ -104,34 +103,34 @@ export default function BoatDetail({ view, boat, user }) {
       title: 'Handicap Measurements', children: (
         <Paper>
           <Typography>To assist with keeping the boat register up to date and accurate members have been asked
-to remeasure their boats hull and sail plan. Many boats have been re rigged over the years
-and it is correct to update the national OGA boat register data base with accurate figures.
-Standard production boats with the builders / designers sail plan should not need to
-remeasure as their measurements will be readily available. If however, you have a more
-modern gaffer with a custom sail plan then we need to know the new sail details.
-</Typography>
-<Typography>Please complete the form by clicking on the 'I have edits for this boat' button below.</Typography>
-<Typography>You can also email your data to the boat register editors.</Typography>
+            to remeasure their boats hull and sail plan. Many boats have been re rigged over the years
+            and it is correct to update the national OGA boat register data base with accurate figures.
+            Standard production boats with the builders / designers sail plan should not need to
+            remeasure as their measurements will be readily available. If however, you have a more
+            modern gaffer with a custom sail plan then we need to know the new sail details.
+          </Typography>
+          <Typography>Please complete the form by clicking on the 'I have edits for this boat' button below.</Typography>
+          <Typography>You can also email your data to the boat register editors.</Typography>
           <Stack direction='row'>
             <img width='80%' src='https://oldgaffers.github.io/boatregister/handicapmeasurements.svg' alt='boat measurement diagram' />
             <Stack width='20%'>
               <Typography variant='h6'>Sail Dimensions</Typography>
               <Typography>Mainsail, mizzen and main and mizzen
-topsails, and schooners’ foresails and
-fore-topsails, are measured as the
-actual sail dimensions, not the spar
-lengths. Headsails - it is the size of the
-foretriangle that is measured.</Typography>
+                topsails, and schooners’ foresails and
+                fore-topsails, are measured as the
+                actual sail dimensions, not the spar
+                lengths. Headsails - it is the size of the
+                foretriangle that is measured.</Typography>
               <Typography variant='h6'>Foretriangle</Typography>
               <Typography>I is measured from deck to the top of
-the highest headsail halyard sheave
-(for jib topsail if one can be flown). J is
-measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
-the jib outhaul at the end of the bowsprit.</Typography>
-<Typography variant='h6'>Hull</Typography>
-<Typography>
-  LOA is hull length excluding spars and rudder, LWL excludes the rudder and Beam is the widest part of the hull (outside
-measurement) excluding rubbing strakes and other appendages.</Typography>
+                the highest headsail halyard sheave
+                (for jib topsail if one can be flown). J is
+                measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
+                the jib outhaul at the end of the bowsprit.</Typography>
+              <Typography variant='h6'>Hull</Typography>
+              <Typography>
+                LOA is hull length excluding spars and rudder, LWL excludes the rudder and Beam is the widest part of the hull (outside
+                measurement) excluding rubbing strakes and other appendages.</Typography>
             </Stack>
           </Stack>
         </Paper>
@@ -173,37 +172,17 @@ measurement) excluding rubbing strakes and other appendages.</Typography>
     );
   }
 
-  if (view === 'sail' && voyages?.length > 0) {
+  if (voyages?.length > 0) {
+    if (view === 'sail') {
+      panes.unshift({
+        title: 'Voyages', children: <Voyages voyages={voyages} user={user} />
+      });
 
-    const sortedVoyages = [...voyages];
-    sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
-
-    let introText = 'These are the voyages the owners have made public.';
-
-    if (user) {
-      if (roles.includes('member')) {
-        introText = 'The owners have told us about the following voyages.';
-      } else {
-        introText = `${introText} Members get to see any additional voyages restricted to members only.`;
-      }
     } else {
-      introText = `${introText} Logged in members get to see any additional voyages restricted to members only.`;
+      panes.push({
+        title: 'Voyages', children: <Voyages voyages={voyages} user={user} />
+      });
     }
-
-    panes.unshift({
-      title: 'Voyages', children: <Stack>
-        <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
-          <Typography>{introText}</Typography>
-          <Grid container spacing={2}>
-            {sortedVoyages.map((voyage, index) =>
-              <Grid key={index} xs={4} minWidth={300}>
-                <Voyage key={`v${index}`} voyage={voyage} />
-              </Grid>
-            )}
-          </Grid>
-        </Box>
-      </Stack>
-    });
   }
 
   // newest for sale record
