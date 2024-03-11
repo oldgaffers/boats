@@ -158,7 +158,6 @@ function parseprops(props) {
 
 export default function FleetView(props) {
   const { role, name, filter, defaultExpanded } = parseprops(props);
-  console.log('Fleetview', role, filter, defaultExpanded);
   if (role) {
     if (role === 'public') {
       return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
