@@ -122,7 +122,7 @@ function BoatCardWords({ boat, wanted, variant = 'body2' }) {
   );
 }
 
-function BoatCardImage({ albumKey, name }) {
+export function BoatCardImage({ albumKey, name }) {
   const [data, setData] = useState();
 
   const height = 220;

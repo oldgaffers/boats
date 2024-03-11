@@ -9,6 +9,7 @@ import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
+import BoatGallery from './boatgallery';
 import { TokenContext } from './TokenProvider';
 import { getFleets, } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
@@ -16,7 +17,7 @@ import { getFilterable } from '../util/api';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 
-export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defaultExpanded = false }) {
+export function FleetDisplay({ view, name, filters, tooltip = 'Click to expand', defaultExpanded = false }) {
   const [page, setPage] = useState(1);
   const [data, setData] = useState();
 
@@ -31,7 +32,9 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
 
   const onPageChange = (n) => setPage(n.page);
 
-  const state = { filters, bpp: 12, page, sort: 'name', sortDirection: 'asc', view: 'app', };
+  const bpp = (view === 'gallery') ? 100 : 12;
+
+  const state = { filters, bpp, page, sort: 'name', sortDirection: 'asc', view: 'app', };
 
   return (<Accordion defaultExpanded={defaultExpanded}>
     <AccordionSummary
@@ -47,10 +50,15 @@ export function FleetDisplay({ name, filters, tooltip = 'Click to expand', defau
       <Typography>&nbsp;&nbsp;{name}</Typography>
     </AccordionSummary>
     <AccordionDetails>
-      <BoatCards
-        state={state} onChangePage={onPageChange} totalCount={filtered.length}
-        boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
-      />
+      {(view === 'gallery')
+        ?
+          <BoatGallery boats={sortAndPaginate(filtered, state)} />
+        :
+          <BoatCards
+            state={state} onChangePage={onPageChange} totalCount={filtered.length}
+            boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
+          />
+      }
     </AccordionDetails>
   </Accordion>);
 }
@@ -90,7 +98,7 @@ export function Fleets({ filter }) {
   );
 }
 
-export function RoleRestrictedFleetView({ filter, role, defaultExpanded = false }) {
+export function RoleRestrictedFleetView({ view, filter, role, defaultExpanded = false }) {
   const [data, setData] = useState();
   const accessToken = useContext(TokenContext);
   console.log('RoleRestrictedFleetView', filter, role, defaultExpanded);
@@ -113,12 +121,12 @@ export function RoleRestrictedFleetView({ filter, role, defaultExpanded = false 
 
   return (
     <RoleRestricted role={role}>
-      <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded} />
+      <FleetDisplay view={view} name={name} filters={filters} defaultExpanded={defaultExpanded} />
     </RoleRestricted>
   );
 }
 
-export function PublicFleetView({ filter, defaultExpanded = false }) {
+export function PublicFleetView({ view, filter, defaultExpanded = false }) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -135,35 +143,36 @@ export function PublicFleetView({ filter, defaultExpanded = false }) {
 
   if (data.length > 0) {
     const { filters, name } = data[0];
-    return <FleetDisplay name={name} filters={filters} defaultExpanded={defaultExpanded} />;
+    return <FleetDisplay view={view} name={name} filters={filters} defaultExpanded={defaultExpanded} />;
   }
   return <Typography>No boats to show for fleet defined by {JSON.stringify(filter)}</Typography>;
 }
 
 function parseprops(props) {
   if (props.args) {
-    console.log('ARGS', props.args);
     const name = props.args[0];
     const filter = props.filter || { name };
     const defaultExpanded = props.args.includes('open');
-    return { role: 'public', filter, defaultExpanded };
+    const view = props.args.includes('gallery') ? 'gallery' : 'cards';
+    return { role: 'public', filter, defaultExpanded, view };
   }
   const role = props.role || 'public';
   const searchParams = new URLSearchParams(props?.location?.search);
   const name = props.topic || props.fleet || searchParams.get('name');
   const filter = props.filter || { name };
   const defaultExpanded = Object.keys(props).includes('defaultexpanded');
-  return { role, filter, defaultExpanded };
+  const view = props.view ?? 'cards';
+  return { role, filter, defaultExpanded, view };
 }
 
 export default function FleetView(props) {
-  const { role, filter, defaultExpanded } = parseprops(props);
+  const { role, filter, defaultExpanded, view } = parseprops(props);
   if (role) {
     if (role === 'public') {
-      return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
+      return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} view={view} />;
     }
-    return <RoleRestrictedFleetView filter={filter} role={role} defaultExpanded={defaultExpanded} />;
+    return <RoleRestrictedFleetView filter={filter} role={role} defaultExpanded={defaultExpanded} view={view} />;
   } else {
-    return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
+    return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} view={view} />;
   }
 }
