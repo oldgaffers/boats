@@ -146,7 +146,7 @@ function parseprops(props) {
     const name = props.args[0];
     const filter = props.filter || { name };
     const defaultExpanded = props.args.includes('open');
-    return { role, filter, defaultExpanded };
+    return { role: 'public', filter, defaultExpanded };
   }
   const role = props.role || 'public';
   const searchParams = new URLSearchParams(props?.location?.search);
@@ -157,7 +157,7 @@ function parseprops(props) {
 }
 
 export default function FleetView(props) {
-  const { role, name, filter, defaultExpanded } = parseprops(props);
+  const { role, filter, defaultExpanded } = parseprops(props);
   if (role) {
     if (role === 'public') {
       return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
