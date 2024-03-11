@@ -96,9 +96,8 @@ function Wrapper({ redirectUri, scope, children }) {
   </PayPalScriptProvider>
 }
 
-const Pages = (props) => {
-  const app = props.id;
-  switch (app) {
+const Pages = ({ id, ...props }) => {
+  switch (id) {
     case 'app':
       if (window.location.pathname.includes('/boat/')) {
         return <Boat ogaNo={getOgaNo()} />;
@@ -114,7 +113,7 @@ const Pages = (props) => {
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
     default:
       // sail, sell, small, ...
-      return <BrowseApp view={app} {...props} />;
+      return <BrowseApp view={id} {...props} />;
   }
 };
 
@@ -136,11 +135,13 @@ const allparas = document.getElementsByTagName('p');
 for (let i = 0; i < allparas.length; i++) {
   const p = allparas.item(i);
   const text = p.innerText;
-  const q = text.match(/^<<(.*):(.*)>>$/);
+  const q = text.match(/^<<(.*?):(.*)>>$/);
   if (q?.length === 3) {
-    const [, component, args] = q;
-    // console.log('X', component, args);
-    createRoot(p).render(<BoatRegister id={component} fleet={args} />);
+    const [, component, arglist] = q;
+    const args = arglist.split(':');
+    if (tags.includes(component)) {
+      createRoot(p).render(<BoatRegister id={component} args={args} />);
+    }
   }
 }
 const alldivs = document.getElementsByTagName('div');

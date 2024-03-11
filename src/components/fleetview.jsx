@@ -140,12 +140,25 @@ export function PublicFleetView({ filter, defaultExpanded = false }) {
   return <Typography>No boats to show for fleet defined by {JSON.stringify(filter)}</Typography>;
 }
 
-export default function FleetView(props) {
+function parseprops(props) {
+  if (props.args) {
+    console.log('ARGS', props.args);
+    const name = props.args[0];
+    const filter = props.filter || { name };
+    const defaultExpanded = props.args.includes('open');
+    return { role, filter, defaultExpanded };
+  }
   const role = props.role || 'public';
   const searchParams = new URLSearchParams(props?.location?.search);
   const name = props.topic || props.fleet || searchParams.get('name');
   const filter = props.filter || { name };
   const defaultExpanded = Object.keys(props).includes('defaultexpanded');
+  return { role, filter, defaultExpanded };
+}
+
+export default function FleetView(props) {
+  const { role, name, filter, defaultExpanded } = parseprops(props);
+  console.log('Fleetview', role, filter, defaultExpanded);
   if (role) {
     if (role === 'public') {
       return <PublicFleetView filter={filter} defaultExpanded={defaultExpanded} />;
