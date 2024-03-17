@@ -155,14 +155,19 @@ export const constructionItems = (pickers) => {
   ];
 };
 
+function optionsFromPicker(p) {
+  const l = [...new Set(p)];
+  return l.map((o) => ({ label: o.name, value: o.name }));
+}
+
 export const extendableList = ({ pickers, name, label }) => {
-  // console.log('extendableList', name, label)
+  console.log('extendableList', name, label)
   return [
     {
       component: 'dual-list-select',
       name,
       label: `${label}(s)`,
-      options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
+      options: optionsFromPicker(pickers[name]),
     },
     {
       component: 'text-field',
@@ -174,7 +179,7 @@ export const extendableList = ({ pickers, name, label }) => {
 };
 
 export const extendableItems = ({ pickers, name, label }) => {
-  // console.log('extendableItems', name, label)
+  console.log('extendableItems', name, label)
   return [
     {
       component: 'select',
