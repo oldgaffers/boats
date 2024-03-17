@@ -513,16 +513,18 @@ export function flattenToForm(example, prefix) {
           break;
         case 'object':
           if (['designer', 'builder'].includes(key)) {
+            let val;
             if (Array.isArray(value)) {
-              flat[flatfield] = value.map((m) => m.name);
+              val = value.map((m) => m?.name);
             } else {
-              flat[flatfield] = [value.name];
+              val = [value?.name];
+            }
+            if (val) {
+              flat[flatfield] = val;
             }
           } else if (Array.isArray(value)) {
-            // console.log('array', flatfield, value);
             value.forEach((row, index) => {
               const v = flattenToForm(value, flatfield);
-              // console.log('array', index, v);
               flat[flatfield] = v;
             });
           } else {
