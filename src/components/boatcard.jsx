@@ -253,15 +253,11 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
             }
           </Grid>
           <Grid item>
-            {owned ?
-              ''
-              :
-              <Checkbox sx={{ textAlign: 'right' }}
-                checked={marked}
-                color="success" onChange={(event, checked) => handleMarked(checked)}
-                inputProps={{ 'aria-label': 'add to list' }}
-              />
-            }
+            <Checkbox sx={{ textAlign: 'right' }}
+              checked={marked}
+              color="success" onChange={(event, checked) => handleMarked(checked)}
+              inputProps={{ 'aria-label': 'add to list' }}
+            />
           </Grid>
         </Grid>
       </CardActions>

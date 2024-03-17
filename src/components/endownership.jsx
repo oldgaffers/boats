@@ -107,7 +107,7 @@ export default function EndOwnership({ boat, owned, user }) {
         endIcon={<DeleteIcon />}
         variant="contained"
         color="success" onClick={() => setOpen(true)}>
-        I don't own her
+        not mine
       </Button>
       <EndOwnershipDialog
         name={boat.name}
