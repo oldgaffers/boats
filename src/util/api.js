@@ -197,3 +197,9 @@ export async function getFleets(scope, filter, accessToken) {
   f.sort((a,b) => a.name.localeCompare(b.name))
   return f;
 }
+
+export async function getBoatLastModified(oga_no) {
+  const r = await fetch(`https://api.github.com/repos/oldgaffers/boatregister/commits?path=boat/${oga_no}/boat.yml&page=1&per_page=1`);
+  const d = await r.json();
+  return d[0].commit.author.date;
+}

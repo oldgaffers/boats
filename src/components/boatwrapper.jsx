@@ -48,7 +48,7 @@ const addNames = async (client, owners) => {
   });
 };
 
-export default function BoatWrapper({ client, boat, location }) {
+export default function BoatWrapper({ client, boat, location, lastModified }) {
   const { error, result } = useAsync(addNames, [client, boat.ownerships]);
   const { user } = useAuth0();
   const view = sessionStorage.getItem('BOAT_CURRENT_VIEW');
@@ -76,7 +76,7 @@ export default function BoatWrapper({ client, boat, location }) {
         </Paper>
       </Grid>
       <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary boat={boat} location={location} />
+        <BoatSummary boat={boat} location={location} lastModified={lastModified} />
       </Grid>
       <Grid item xs={12}>
           <BoatDetail view={view} boat={{...boat, ownerships }} user={user}/>

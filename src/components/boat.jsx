@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloConsumer } from '@apollo/client';
 import BoatWrapper from './boatwrapper';
-import { getBoatData, getScopedData } from '../util/api';
+import { getBoatData, getBoatLastModified, getScopedData } from '../util/api';
 
 export function MissingOGANumber() {
   const origin = '';
@@ -17,6 +17,7 @@ export function MissingOGANumber() {
 
 export default function Boat({ ogaNo }) {
   const [data, setData] = useState();
+  const [lastModified, setLastModified] = useState();
 
   useEffect(() => {
     const get = async () => {
@@ -30,6 +31,16 @@ export default function Boat({ ogaNo }) {
     };
     get();
   }, [data, ogaNo]);
+  
+  useEffect(() => {
+    const get = async () => {
+      if (ogaNo && !lastModified) {
+        const lmd = await getBoatLastModified(ogaNo);
+        setLastModified(lmd);
+      }  
+    };
+    get();
+  }, [lastModified, ogaNo]);
 
   if (ogaNo === 0) {
     return <MissingOGANumber/>;
@@ -49,7 +60,7 @@ export default function Boat({ ogaNo }) {
 
   return (
     <ApolloConsumer>
-      {client => <BoatWrapper client={client} boat={boat} />}
+      {client => <BoatWrapper client={client} boat={boat} lastModified={lastModified} />}
     </ApolloConsumer>
   );
 
