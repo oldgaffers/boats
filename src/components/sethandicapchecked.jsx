@@ -39,7 +39,7 @@ function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
       });
   }
 
-  const id = user['https://oga.org.uk/id'];
+  const id = user?.['https://oga.org.uk/id'];
   const owned = boat.ownerships.find((o) => o.id === id && o.current);
 
   if (owned === undefined && ! (user['https://oga.org.uk/roles'] ||[]).includes('editor')) {
@@ -53,7 +53,6 @@ function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
           We don't have you registered as an owner of this boat.
           Please click cancel and contact the boat register editors.
         </DialogContentText>
-        <DialogContentText>{JSON.stringify(user)}</DialogContentText>
         <DialogActions>
           <Button onClick={onClose} color="primary">
             Cancel
@@ -133,6 +132,10 @@ export default function SetHandicapCheckedButton({ boat, user }) {
 
   const handleClose = () => {
     setOpen(false);
+  }
+
+  if (!user) {
+    return '';
   }
 
   return (
