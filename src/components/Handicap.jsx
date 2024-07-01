@@ -5,7 +5,8 @@ import { f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
 export function HandicapDisplay({handicapData}) {
-    if (handicapData?.checked) {
+    const checked = true; // handicapData?.checked;
+    if (checked) {
       return <>
         <ConditionalText label='T(H)CF' value={handicapData.thcf?.toFixed(3)} />
         <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
