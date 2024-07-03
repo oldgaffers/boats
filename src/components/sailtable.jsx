@@ -9,6 +9,9 @@ import Paper from '@mui/material/Paper';
 import { m2f } from '../util/format';
 
 export default function SailTable( { handicapData }) {
+    if (!handicapData.main) {
+        return '';
+    }
     return (
     <TableContainer component={Paper}>
         <Table size="small" aria-label="sail data">

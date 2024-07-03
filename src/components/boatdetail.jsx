@@ -6,7 +6,7 @@ import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
 import { HandicapDisplay } from './Handicap';
-import { m2f, price, formatDesignerBuilder, kg } from '../util/format';
+import { m2f, price, formatDesignerBuilder, kg, m2f2 } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
 import Skippers from './skippers';
@@ -88,13 +88,13 @@ export default function BoatDetail({ view, boat, user }) {
         )
       });
   }
-  // if(hd.main || hd.thcf || hd.calculated_thcf || hd.fore_triangle_base) {
-  if (hd.main || hd.fore_triangle_base) {
+  if (hd.main || hd.fore_triangle_base || hd.sailarea) {
     panes.push({
       title: 'Rig and Sails', children: (
         <Paper>
           <ConditionalText label="Fore triangle base" value={m2f(hd.fore_triangle_base)} />
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)} />
+          <ConditionalText label="Sail Area" value={m2f2(hd.sailarea)} />
           <HandicapDisplay handicapData={hd} />
           <SailTable handicapData={hd} />
         </Paper>
