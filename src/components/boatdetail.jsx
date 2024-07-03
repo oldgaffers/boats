@@ -6,7 +6,7 @@ import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
 import { HandicapDisplay } from './Handicap';
-import { m2f, price, formatDesignerBuilder, kg, m2f2 } from '../util/format';
+import { m2f, price, formatDesignerBuilder, kg, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
 import Skippers from './skippers';
@@ -206,14 +206,8 @@ measurement) excluding rubbing strakes and other appendages.</Typography>
     });
   }
 
-  // newest for sale record
   if (boat.selling_status === 'for_sale') {
-    const fs = boat.for_sales.reduce((prev, curr) =>
-      (new Date(prev.created_at)
-        >
-        new Date(curr.created_at)
-      ) ? prev : curr
-    );
+    const fs = newestForSaleRecord(boat);
 
     if (fs) {
       panes.unshift(

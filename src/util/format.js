@@ -178,3 +178,13 @@ export function m2fall(o) {
     return Object.keys(o).map(k => m2dfn(o[k]));
   }
 }
+
+export function newestForSaleRecord(boat) {
+  return boat?.for_sales?.reduce((prev, curr) =>
+    (new Date(prev.created_at)
+      >
+      new Date(curr.created_at)
+    ) ? prev : curr,
+    { created_at: '1970-01-01T00:00:00Z' },
+  );
+}

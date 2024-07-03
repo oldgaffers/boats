@@ -13,7 +13,7 @@ import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import { boatUrl } from '../util/rr';
 import { getThumb, getBoatData } from '../util/api';
-import { m2f, price, formatDesignerBuilder } from '../util/format';
+import { m2f, price, formatDesignerBuilder, newestForSaleRecord } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "./browseapp";
 import { currentSaleRecord } from '../util/sale_record';
@@ -31,8 +31,9 @@ function makePreviousNamesField(n) {
   return undefined;
 }
 
-function showPrice(n) {
-  if (n) return price(n);
+function showPrice(b, k) {
+  const fs = newestForSaleRecord(b);
+  if (fs?.[k]) return price(fs[k]);
   return undefined;
 }
 
@@ -46,7 +47,7 @@ const wanted = {
   design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
   builder: { label: 'Builder', access: formatDesignerBuilder },
   previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
-  price: { label: 'Price', access: (b, k) => showPrice(b[k]) },
+  asking_price: { label: 'Price', access: (b, k) => showPrice(b, k) },
 };
 
 
