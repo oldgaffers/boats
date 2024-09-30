@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloConsumer } from '@apollo/client';
 import BoatWrapper from './boatwrapper';
-import { getBoatData, getBoatLastModified, getScopedData } from '../util/api';
+import { getBoatData, getBoatLastModified } from '../util/api';
 
 export function MissingOGANumber() {
   const origin = '';
