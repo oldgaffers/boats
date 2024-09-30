@@ -22,7 +22,7 @@ export default function Boat({ ogaNo }) {
   useEffect(() => {
     const get = async () => {
       if (ogaNo && !data) {
-        const extra = await getScopedData('public', 'crewing', { oga_no: ogaNo });
+        const extra = undefined; // await getScopedData('public', 'crewing', { oga_no: ogaNo });
         const e = extra?.Items?.[0] || {};
         const r = await getBoatData(ogaNo);
         const d = r?.result?.pageContext?.boat;
