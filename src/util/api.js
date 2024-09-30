@@ -124,12 +124,21 @@ export async function getPicklists() {
   }
   return (await fetch(`${boatRegisterHome}/boatregister/pickers.json`)).json();
 }
- 
+
+export async function getExtra() {
+  try {
+    return getScopedData('public', 'crewing');
+  } catch(e) {
+    console.log(e);
+  }
+  return undefined;
+}
+
 export async function getFilterable() {
   if (mock) {
     return mocks.filterable;
   }
-  const extra = await getScopedData('public', 'crewing');
+  const extra = await getExtra();
   const ex = Object.fromEntries((extra?.Items || []).map((item) => [item.oga_no, item]));
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
   return filterable.map((b) => {
