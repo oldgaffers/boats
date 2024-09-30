@@ -139,6 +139,7 @@ export async function getFilterable() {
     return mocks.filterable;
   }
   const extra = await getExtra();
+  console.log('crewing', extra);
   const ex = Object.fromEntries((extra?.Items || []).map((item) => [item.oga_no, item]));
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
   return filterable.map((b) => {
