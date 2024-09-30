@@ -126,11 +126,12 @@ export async function getPicklists() {
 }
 
 export async function getExtra() {
-  try {
+  /* try {
     return getScopedData('public', 'crewing');
   } catch(e) {
     console.log(e);
   }
+    */
   return undefined;
 }
 
