@@ -13,7 +13,7 @@ import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import { boatUrl } from '../util/rr';
 import { getThumb, getBoatData } from '../util/api';
-import { m2f, price, formatDesignerBuilder, newestForSaleRecord } from '../util/format';
+import { m2f, price, formatDesignerBuilder } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "./browseapp";
 import { currentSaleRecord } from '../util/sale_record';
@@ -31,12 +31,6 @@ function makePreviousNamesField(n) {
   return undefined;
 }
 
-function showPrice(b, k) {
-  const fs = newestForSaleRecord(b);
-  if (fs?.[k]) return price(fs[k]);
-  return undefined;
-}
-
 const wanted = {
   year: { label: 'Year Built', access: (b, k) => b[k] },
   place_built: { label: 'Place Built', access: (b, k) => b[k] },
@@ -47,9 +41,7 @@ const wanted = {
   design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
   builder: { label: 'Builder', access: formatDesignerBuilder },
   previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
-  asking_price: { label: 'Price', access: (b, k) => showPrice(b, k) },
 };
-
 
 const compactWanted = {
   length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
@@ -204,7 +196,9 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
   const currentSR = currentSaleRecord(boat);
-  const price = currentSR?.asking_price;
+  if (currentSR) {
+    wanted.asking_price = { label: 'Price', access: (b, k) => price(currentSR[k]) };
+  }
 
   const id = user?.["https://oga.org.uk/id"];
 
@@ -230,7 +224,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
             </CrewingBadge>
           </HireBadge>
         </Typography>
-        <BoatCardWords boat={{ ...boat, price }} wanted={wanted} />
+        <BoatCardWords boat={boat} wanted={wanted} />
       </CardContent>
       <CardActions>
         <Grid container
