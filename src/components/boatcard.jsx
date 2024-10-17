@@ -31,18 +31,6 @@ function makePreviousNamesField(n) {
   return undefined;
 }
 
-const wanted = {
-  year: { label: 'Year Built', access: (b, k) => b[k] },
-  place_built: { label: 'Place Built', access: (b, k) => b[k] },
-  home_port: { label: 'Home Port', access: (b, k) => b[k] },
-  rig_type: { label: 'Rig Type', access: (b, k) => b[k] },
-  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
-  designer: { label: 'Designer', access: formatDesignerBuilder },
-  design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
-  builder: { label: 'Builder', access: formatDesignerBuilder },
-  previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
-};
-
 const compactWanted = {
   length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
   year: { label: 'Year', access: (b, k) => b[k] },
@@ -196,6 +184,19 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
   const currentSR = currentSaleRecord(boat);
+
+  const wanted = {
+    year: { label: 'Year Built', access: (b, k) => b[k] },
+    place_built: { label: 'Place Built', access: (b, k) => b[k] },
+    home_port: { label: 'Home Port', access: (b, k) => b[k] },
+    rig_type: { label: 'Rig Type', access: (b, k) => b[k] },
+    length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
+    designer: { label: 'Designer', access: formatDesignerBuilder },
+    design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
+    builder: { label: 'Builder', access: formatDesignerBuilder },
+    previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
+  };
+
   if (currentSR) {
     wanted.asking_price = { label: 'Price', access: (b, k) => price(currentSR[k]) };
   }
@@ -219,7 +220,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
           <HireBadge boat={boat}>
             <CrewingBadge boat={boat}>
               <SalesBadge view={state.view} boat={boat}>
-              {boat?.name || ''} ({ogaNo})
+                {boat?.name || ''} ({ogaNo})
               </SalesBadge>
             </CrewingBadge>
           </HireBadge>
