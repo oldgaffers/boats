@@ -8,7 +8,8 @@ export function HandicapDisplay({handicapData}) {
     const checked = true; // handicapData?.checked;
 	let thcf = handicapData.thcf?.toFixed(3);
 	if (handicapData.last_modified) {
-        thcf = `${thcf} (last modified ${handicapData.last_modified.toLocaleDateString()})`;
+        const lmd = new Date(handicapData.last_modified);
+        thcf = `${thcf} (last modified ${lmd.toLocaleDateString()})`;
     }
     if (checked) {
       return <>
