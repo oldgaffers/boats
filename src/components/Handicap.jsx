@@ -909,6 +909,9 @@ export const steps = (firstStep, nextStep) => [
           const { values } = formOptions.getState();
           const thcf = Math.round(1000 * fThcf(values.ddf.r)) / 1000;
           console.log('HC from', values.handicap_data.thcf, 'to', thcf);
+          if (thcf !== values.handicap_data.thcf) {
+            formOptions.change("handicap_data.last_modified", new Date().toISOString());
+          }
           formOptions.change("handicap_data.thcf", thcf);
           return { value: thcf };
         },
