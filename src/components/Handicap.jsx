@@ -6,11 +6,13 @@ import ConditionalText from './conditionaltext';
 
 export function HandicapDisplay({handicapData}) {
     const checked = true; // handicapData?.checked;
+	let thcf = handicapData.thcf?.toFixed(3);
+	if (handicapData.last_modified) {
+        thcf = '${thcf} (last modified ${handicapData.last_modified.toLocaleDateString()})';
     if (checked) {
       return <>
-        <ConditionalText label='T(H)CF' value={handicapData.thcf?.toFixed(3)} />
+        <ConditionalText label='T(H)CF' value={thcf} />
         <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
-        <ConditionalText label='Last Modifed' value={handicapData.last_modified?.toString()} />
       </>;
     }
     return <>
