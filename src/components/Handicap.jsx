@@ -908,7 +908,7 @@ export const steps = (firstStep, nextStep) => [
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
           const thcf = Math.round(1000 * fThcf(values.ddf.r)) / 1000;
-          console.log('HC', handicap_data.thcf, 'to', thcf);
+          console.log('HC from', handicap_data.thcf, 'to', thcf);
           formOptions.change("handicap_data.thcf", thcf);
           return { value: thcf };
         },
