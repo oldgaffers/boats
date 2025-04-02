@@ -10,6 +10,7 @@ export function HandicapDisplay({handicapData}) {
       return <>
         <ConditionalText label='T(H)CF' value={handicapData.thcf?.toFixed(3)} />
         <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
+        <ConditionalText label='Last Modifed' value={handicapData.last_modified?.toString()} />
       </>;
     }
     return <>
