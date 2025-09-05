@@ -288,7 +288,7 @@ export function prepareInitialValues(boat, user) {
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
-  const owner = ownerids.includes(goldId);
+  const owner = (!!goldId) && ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
 
   const ddf = { name, oga_no, id, image_key, owner, editor };
