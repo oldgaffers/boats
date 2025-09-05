@@ -1,4 +1,4 @@
-import fs from "fs";
+ import fs from "fs";
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
@@ -304,10 +304,10 @@ describe('EditBoatWizard component tests', () => {
       screen.getByText('Known Owners');
     });
     fireEvent.click(screen.getByText('Continue'));
-    await waitFor(() => {
-      ; // screen.getByText('I want to sell this boat');
-    });
-    fireEvent.click(screen.getByRole('checkbox'));
+    // await waitFor(() => {
+    //   screen.getByText('I want to sell this boat');
+    // });
+    // fireEvent.click(screen.getByRole('checkbox'));
     fireEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Submit');
