@@ -70,36 +70,11 @@
                 "oga_no": 843,
                 "ownerships": [
                     {
-                        "end": 2014,
-                        "name": "Michael Feather",
-                        "share": 64,
-                        "start": 2007
-                    },
-                    {
-                        "end": 2018,
-                        "name": "Sam Friend",
-                        "share": 64,
-                        "start": 2014
-                    },
-                    {
-                        "end": 2020,
-                        "name": "Paul Blyth",
-                        "share": 64,
-                        "start": 2018
-                    },
-                    {
-                        "end": 2023,
+                        "current": true,
                         "id": 35034,
                         "member": 6610,
-                        "name": "Jack Verkruysse",
                         "share": 64,
                         "start": 2020
-                    },
-                    {
-                        "current": true,
-                        "name": " Sean Collins",
-                        "share": 64,
-                        "start": 2023
                     }
                 ],
                 "place_built": "Penryn",
