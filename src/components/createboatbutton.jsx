@@ -9,10 +9,10 @@ import CreateBoatDialog from "./createboatdialog";
 // const CreateBoatDialog = React.lazy(()=> import("./createboatdialog"));
 
 export async function createBoat(boat, email, fileList, copyright, newItems) {
-  if (!boat.oga_no) {
-    boat.oga_no = await nextOgaNo();
+  if (boat.oga_no) {
+    console.log('boat data already has oga_no, overwriting it', boat.oga_no);
   }
-  // const b = Object.fromEntries(Object.entries(boat).filter((k, v) => v));
+  boat.oga_no = await nextOgaNo();
   const response = await createPhotoAlbum(boat.name, boat.oga_no);
   if (response.ok || response.status === 409) {
     const j = await response.json();
@@ -21,7 +21,6 @@ export async function createBoat(boat, email, fileList, copyright, newItems) {
       await postPhotos({ copyright, email, albumKey }, fileList);
     }
     const bd = { email, new: { ...boat, image_key: albumKey, newItems } };
-    console.log('QQ', bd);
     await postBoatData(bd);
     // console.log('created boat record');
   }
@@ -81,7 +80,6 @@ export default function CreateBoatButton() {
   const snackBarClose = () => {
     setSnackBarOpen(false);
   };
-
   return (
     <>
       <Button

@@ -493,10 +493,10 @@ const ignoredKeys = [
 export function flattenToForm(example, prefix) {
   let flat = {};
   Object.keys(example).forEach((key) => {
+    const value = example[key];
     if (ignoredKeys.includes(key)) {
-      // console.log('omit', key);
+      console.log('omit', key, value);
     } else {
-      const value = example[key];
       const flatfield = `${prefix || ''}${(prefix && '.') || ''}${key}`;
       switch (typeof value) {
         case 'string':
