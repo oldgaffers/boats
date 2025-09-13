@@ -6,7 +6,7 @@ import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
 import { HandicapDisplay } from './Handicap';
-import { m2f, price, formatDesignerBuilder, kg, m2f2, newestForSaleRecord } from '../util/format';
+import { m2f, price, formatList, kg, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
 import Owners from './owners';
 import Skippers from './skippers';
@@ -44,11 +44,11 @@ export default function BoatDetail({ view, boat, user }) {
     {
       title: 'Design & Build', children: (
         <Paper>
-          <ConditionalText value={boat.generic_type} label="Generic type" />
+          <ConditionalText value={formatList(boat, 'generic_type')} label="Generic type" />
           <ConditionalText value={boat.design_class?.name} label="Design class" />
-          <ConditionalText label="Designer" value={formatDesignerBuilder(boat, 'designer')} />
+          <ConditionalText label="Designer" value={formatList(boat, 'designer')} />
           <ConditionalText value={boat.hull_form} label="Hull form" />
-          <ConditionalText label="Builder" value={formatDesignerBuilder(boat, 'builder')} />
+          <ConditionalText label="Builder" value={formatList(boat, 'builder')} />
           <ConditionalText value={boat.place_built} label="Place built" />
           <ConditionalText value={(boat.year_is_approximate ? 'around ' : '') + boat.year} label="Year of Build" />
           <ConditionalText value={boat.construction_material} label="Construction material" />

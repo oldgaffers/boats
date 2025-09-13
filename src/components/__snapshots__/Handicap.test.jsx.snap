@@ -32,7 +32,7 @@ Object {
   "fore_triangle_height": 15,
   "length_on_deck": 22.5,
   "length_on_waterline": 20,
-  "length_overall": 22.5,
+  "length_over_all": 22.5,
   "main": Object {
     "foot": 13.123,
     "head": 13.999,
@@ -54,7 +54,7 @@ Object {
   "fore_triangle_height": 32.808,
   "length_on_deck": 35.42,
   "length_on_waterline": 28.501,
-  "length_overall": 35.4,
+  "length_over_all": 35.4,
   "main": Object {
     "foot": 22.966,
     "head": 16.404,

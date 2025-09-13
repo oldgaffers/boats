@@ -132,7 +132,7 @@ export const schema = (pickers, canBuySell, forSale) => {
           {
             name: "dimensions-step",
             component: 'sub-form',
-            nextStep: ({ values }) => (values.generic_type === 'Dinghy') ? 'dinghy-hull-step' : 'yacht-hull-step',
+            nextStep: ({ values }) => (values.generic_type[0] === 'Dinghy') ? 'dinghy-hull-step' : 'yacht-hull-step',
             fields: [dimensionsForm],
           },
           yachtHullStep("rig-step"),

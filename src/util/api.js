@@ -107,6 +107,9 @@ export async function getBoatData(ogaNo) {
   const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
   if (r.ok) {
     const data = await r.json();
+    if (!Array.isArray(data.result.pageContext.boat.generic)) {
+      data.result.pageContext.boat.generic_type = [data.result.pageContext.boat.generic_type];
+    }
     if (!Array.isArray(data.result.pageContext.boat.builder)) {
       data.result.pageContext.boat.builder = [data.result.pageContext.boat.builder];
     }

@@ -2,13 +2,13 @@ const OneFoot = 0.3048;
 
 const pounds = new Intl.NumberFormat('en-GB', { currency: 'GBP', style: 'currency' });
 
-export function formatDesignerBuilder(b, k) {
+export function formatList(b, k) {
   const data = b?.[k];
   if (data?.name) {
     return data.name;
   }
   if (Array.isArray(data)) {
-    return data.map((d) => d?.name).join(' / ');
+    return data.map((d) => d?.name || d).join(' / ');
   }
 }
 
@@ -87,7 +87,7 @@ const metreKeys = [
   'beam', 'draft', 'draft_keel_down', 'air_draft',
   'perpendicular', 'luff', 'head', 'leech', 'foot',
   'length_on_deck', 'length_on_waterline', 'length_over_all',
-  'length_over_spars', 'length_overall',
+  'length_over_spars',
   'fore_triangle_height', 'fore_triangle_base',
 ];
 const squareMetreKeys = ['sailarea'];

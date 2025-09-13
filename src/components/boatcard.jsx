@@ -13,7 +13,7 @@ import Badge from '@mui/material/Badge';
 import Checkbox from '@mui/material/Checkbox';
 import { boatUrl } from '../util/rr';
 import { getThumb, getBoatData } from '../util/api';
-import { m2f, price, formatDesignerBuilder } from '../util/format';
+import { m2f, price, formatList } from '../util/format';
 import Enquiry from './enquiry';
 import { MarkContext } from "./browseapp";
 import { currentSaleRecord } from '../util/sale_record';
@@ -191,9 +191,9 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
     home_port: { label: 'Home Port', access: (b, k) => b[k] },
     rig_type: { label: 'Rig Type', access: (b, k) => b[k] },
     length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
-    designer: { label: 'Designer', access: formatDesignerBuilder },
+    designer: { label: 'Designer', access: formatList },
     design_class: { label: 'Design Class', access: (b, k) => b[k]?.name || b[k] },
-    builder: { label: 'Builder', access: formatDesignerBuilder },
+    builder: { label: 'Builder', access: formatList },
     previous_names: { label: 'Was', access: (b, k) => makePreviousNamesField(b[k]) },
   };
 

@@ -39,7 +39,7 @@
                     }
                 ],
                 "full_description": "<p>New 28hp Beta engine in 2011. The cabin is deep and has two good berths and a\ngalley, folding table and small multi-fuel stove. The fore-cabin has a double\nbunk with a sea toilet under.</p>\n<p>She is well ballasted with lead keel making her very stable and comfortable for\npassage making.</p>",
-                "generic_type": "Yacht",
+                "generic_type": ["Yacht"],
                 "handicap_data": {
                     "beam": 2.438,
                     "draft": 1.372,

@@ -293,7 +293,7 @@ export default function SearchAndFilterBoats({
             value={() => {
               const f = currentFilters["generic_type"];
               if (Array.isArray(f)) {
-                return ""; // don't make a selection if multiple selected
+                return ""; // TODO support multiple
               }
               return f;
             }}

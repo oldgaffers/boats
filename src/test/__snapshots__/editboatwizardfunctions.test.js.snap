@@ -144,7 +144,10 @@ Topsail luff 13 ft.</p>
 <p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
 explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
 history of ownership and other exploits.</p>",
-  "generic_type": "Pocket Cruiser",
+  "generic_type": Array [
+    "Pocket Cruiser",
+    "Yacht",
+  ],
   "handicap_data": Object {
     "beam": 2.441,
     "displacement": 5000,
@@ -329,7 +332,10 @@ Topsail luff 13 ft.</p>
 <p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
 explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
 history of ownership and other exploits.</p>",
-  "generic_type": "Pocket Cruiser",
+  "generic_type": Array [
+    "Pocket Cruiser",
+    "Yacht",
+  ],
   "handicap_data": Object {
     "beam": 8.009,
     "displacement": 5000,
@@ -509,7 +515,10 @@ Topsail luff 13 ft.</p>
 <p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
 explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
 history of ownership and other exploits.</p>",
-  "generic_type": "Pocket Cruiser",
+  "generic_type": Array [
+    "Pocket Cruiser",
+    "Yacht",
+  ],
   "handicap_data": Object {
     "beam": 8.009,
     "displacement": 5000,
@@ -680,7 +689,10 @@ Topsail luff 13 ft.</p>
 <p>Read articles about <em>Robinetta</em> from the Royal Cruising Club Journal, 1938 and
 explore her <a href=\\"https://robinetta-log.blogspot.co.uk/\\">blog</a> with a detailed
 history of ownership and other exploits.</p>",
-    "generic_type": "Pocket Cruiser",
+    "generic_type": Array [
+      "Pocket Cruiser",
+      "Yacht",
+    ],
     "handicap_data": Object {
       "beam": 0.744,
       "displacement": 5000,

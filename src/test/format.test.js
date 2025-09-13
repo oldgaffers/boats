@@ -1,6 +1,6 @@
 
 import {
-  formatDesignerBuilder,
+  formatList,
 price,
 m2df,
 m2f,
@@ -16,14 +16,14 @@ m2fall } from '../util/format';
 
 const t = [undefined, 3.281, 4.921];
 
-test('formatDesignerBuilder', () => {
-  expect(formatDesignerBuilder({ }, 'builder')).toBeUndefined();
+test('formatList', () => {
+  expect(formatList({ }, 'builder')).toBeUndefined();
   let builder = { name: 'Tom' };
-  expect(formatDesignerBuilder({ builder }, 'builder')).toEqual(builder.name);
+  expect(formatList({ builder }, 'builder')).toEqual(builder.name);
   builder = [builder];
-  expect(formatDesignerBuilder({ builder }, 'builder')).toEqual(builder[0].name);
+  expect(formatList({ builder }, 'builder')).toEqual(builder[0].name);
   builder = [...builder, { name: 'Dick'}, { name: 'Harry'}]
-  expect(formatDesignerBuilder({ builder }, 'builder')).toEqual('Tom / Dick / Harry');
+  expect(formatList({ builder }, 'builder')).toEqual('Tom / Dick / Harry');
 });
 
 test('price', () => {

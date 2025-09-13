@@ -17,7 +17,7 @@ const Transcur = {
   },
   "for_sales": [],
   "full_description": 'x',
-  "generic_type": "Smack",
+  "generic_type": ["Smack"],
   "handicap_data": {
     "beam": 3.28,
     "draft": 1.396,
@@ -25,7 +25,7 @@ const Transcur = {
     "fore_triangle_height": 10,
     "length_on_deck": 10.796,
     "length_on_waterline": 8.687,
-    "length_overall": 10.79,
+    "length_over_all": 10.79,
     "main": {
       "foot": 7,
       "head": 5,
@@ -94,7 +94,7 @@ const Robinetta = {
   },
   "for_sales": [],
   "full_description": 'x',
-  "generic_type": "Yacht",
+  "generic_type": ["Yacht"],
   "handicap_data": {
     "beam": 2.441,
     "draft": 1.372,
@@ -102,7 +102,7 @@ const Robinetta = {
     "fore_triangle_height": 4.572,
     "length_on_deck": 6.858,
     "length_on_waterline": 6.096,
-    "length_overall": 6.858,
+    "length_over_all": 6.858,
     "main": {
       "foot": 4,
       "head": 4.267,
