@@ -49,6 +49,7 @@ function makePickers(filtered) {
     min: years[0] || 1800,
     max: years[years.length - 1] || new Date().getFullYear(),
   };
+  console.log('P', pickers);
   return pickers;
 }
 
