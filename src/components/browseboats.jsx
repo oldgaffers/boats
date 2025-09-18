@@ -19,6 +19,7 @@ import { useBoats } from '../util/boats';
 import Welcome from './Welcome';
 
 function makePickers(filtered) {
+  console.log('PB', filtererd');
   const pickers = {};
   [
     "name",
