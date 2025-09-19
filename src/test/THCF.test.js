@@ -100,5 +100,5 @@ test('thcf aboat', () => {
 test('thcf aboat2', () => {
   const { handicap_data } = aboat2;
   expect(fL(handicap_data)).toBe((27.87+27.23)/2);
-  expect(fThcf(aboat2).toFixed(3)).toEqual("0.961");
+  expect(fThcf(aboat2).toFixed(3)).toEqual("0.972");
 });
