@@ -256,7 +256,7 @@ test('Transcur fBD', () => {
 
 test('Transcur fSqrtS', () => {
   const b = boatm2f(Transcur);
-  expect(fSqrtS(0.96, sailArea(Transcur))).toFixed(2)).toMatchSnapshot();
+  expect(fSqrtS(0.96, sailArea(b).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur C', () => {
@@ -265,7 +265,7 @@ test('Transcur C', () => {
 
 test('Transcur fMR', () => {
   const b = boatm2f(Transcur);
-  expect().toFixed(2)).toMatchSnapshot();
+  expect(fMR(b)).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur T(H)CF', () => {
