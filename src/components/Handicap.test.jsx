@@ -1,5 +1,5 @@
 import { foretriangle_area, mainsail_area } from './Handicap';
-import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
 import { boatm2f, boatf2m } from "../util/format";
 
 const Transcur = {
@@ -230,8 +230,8 @@ test('Robinetta foretriangle_area', () => {
   expect(f).toMatchSnapshot();
 });
 
-test('Transcur fGaffSA', () => {
-  expect(fGaffSA(tcf.main).toFixed(2)).toMatchSnapshot();
+test('Transcur fMainSA', () => {
+  expect(fMainSA(tcf.main).toFixed(2)).toMatchSnapshot();
 });
 test('Transcur fTopSA', () => {
   expect(fTopSA(tcf.topsail).toFixed()).toMatchSnapshot();
@@ -242,11 +242,7 @@ test('Transcur fForeTriangle', () => {
 });
 
 test('Transcur fMSA', () => {
-  const sail_area = {
-    foretriangle: foretriangle_area(tcf),
-    main: mainsail_area(tcf.main),
-  }
-  expect(fMSA(sail_area).toFixed(1)).toMatchSnapshot();
+  expect(sailArea(Transcur).toFixed(1)).toMatchSnapshot();
 });
 
 test('Transcur fL', () => {
@@ -260,11 +256,7 @@ test('Transcur fBD', () => {
 
 test('Transcur fSqrtS', () => {
   const b = boatm2f(Transcur);
-  const sail_area = {
-    foretriangle: foretriangle_area(b.handicap_data),
-    main: mainsail_area(b.handicap_data.main),
-  }
-  expect(fSqrtS(0.96, fMSA(sail_area)).toFixed(2)).toMatchSnapshot();
+  expect(fSqrtS(0.96, sailArea(Transcur))).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur C', () => {
@@ -273,41 +265,12 @@ test('Transcur C', () => {
 
 test('Transcur fMR', () => {
   const b = boatm2f(Transcur);
-  const { handicap_data } = b;
-  const sail_area = {
-    foretriangle: foretriangle_area(handicap_data),
-    main: mainsail_area(handicap_data.main),
-  }
-  const ddf = {
-    root_s: fSqrtS(0.96, fMSA(sail_area)),
-  };
-  expect(fMR({ handicap_data, ddf }).toFixed(2)).toMatchSnapshot();
-});
-
-test('Transcur fR', () => {
-  const b = boatm2f(Transcur);
-  const { handicap_data } = b;
-  const sail_area = {
-    foretriangle: foretriangle_area(handicap_data),
-    main: mainsail_area(handicap_data.main),
-  }
-  const ddf = {
-    root_s: fSqrtS(0.96, fMSA(sail_area)),
-  };
-  expect(fR({ handicap_data, ddf }).toFixed(2)).toMatchSnapshot();
+  expect().toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur T(H)CF', () => {
   const b = boatm2f(Transcur);
-  const { handicap_data } = b;
-  const sail_area = {
-    foretriangle: foretriangle_area(handicap_data),
-    main: mainsail_area(handicap_data.main),
-  }
-  const ddf = {
-    root_s: fSqrtS(0.96, fMSA(sail_area)),
-  };
-  expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toMatchSnapshot();
+  expect(fThcf(b).toFixed(3)).toMatchSnapshot();
 });
 
 test('t1', () => {
@@ -316,13 +279,5 @@ test('t1', () => {
 
 test('Robinetta T(H)CF', () => {
   const b = boatm2f(Robinetta);
-  const { handicap_data } = b;
-  const sail_area = {
-    foretriangle: foretriangle_area(handicap_data),
-    main: mainsail_area(handicap_data.main),
-  }
-  const ddf = {
-    root_s: fSqrtS(0.96, fMSA(sail_area)),
-  };
-  expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toMatchSnapshot();
+  expect(fThcf(b).toFixed(3)).toMatchSnapshot();
 });
