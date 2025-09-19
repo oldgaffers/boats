@@ -265,7 +265,7 @@ test('Transcur C', () => {
 
 test('Transcur fMR', () => {
   const b = boatm2f(Transcur);
-  expect(fMR(b)).toFixed(2)).toMatchSnapshot();
+  expect(fMR(b).toFixed(2)).toMatchSnapshot();
 });
 
 test('Transcur T(H)CF', () => {
