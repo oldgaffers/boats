@@ -14,7 +14,7 @@ function rigAllowance(r) {
   }
 }
 
-function sails(r) {
+export function sails(r) {
   r = r.toLowerCase();
   if (['cutter', 'sloop'].includes(r)) {
     return ['fore_triangle', 'main', 'topsail'];
@@ -28,7 +28,7 @@ function sails(r) {
   return [];
 }
 
-function sailArea(boat) {
+export function sailArea(boat) {
   const s = sails(boat.rig_type || '');
   const sailAreas = {};
   const hd = boat.handicap_data || {};
@@ -49,7 +49,7 @@ function sailArea(boat) {
   return total || hd.sailarea || 0;
 }
 
-function fMainSA(sail) {
+export function fMainSA(sail) {
   if (!sail) return 0;
   const b = sail.foot || 0;
   const h = sail.luff || 0;
@@ -60,7 +60,7 @@ function fMainSA(sail) {
   return 0.5 * b * h + 0.5 * g * d;
 }
 
-function fTopSA(sail) {
+export function fTopSA(sail) {
   if (sail) {
     const i = sail.perpendicular || 0;
     const h = sail.luff || 0;
@@ -69,7 +69,7 @@ function fTopSA(sail) {
   return 0;
 }
 
-function fForeTriangle(data) {
+export function fForeTriangle(data) {
   if (data) {
     const i = parseFloat(data.fore_triangle_height || 0);
     const j = parseFloat(data.fore_triangle_base || 0);
@@ -78,24 +78,24 @@ function fForeTriangle(data) {
   return 0;
 }
 
-function fL(data) {
+export function fL(data) {
   if (data?.length_on_deck && data?.length_on_waterline) {
     return 0.5 * (data.length_on_deck + data.length_on_waterline);
   }
   return 0;
 }
 
-function fBD(boat) {
+export function fBD(boat) {
   const hd = boat?.handicap_data;
   if (hd?.beam) return 0.67 * hd.beam * hd.beam;
   return 0;
 }
 
-function fSqrtS(rigAllowanceVal, sailarea) {
+export function fSqrtS(rigAllowanceVal, sailarea) {
   return rigAllowanceVal * Math.sqrt(sailarea);
 }
 
-function fMR(boat) {
+export function fMR(boat) {
   const hd = boat.handicap_data;
   if (!boat.rig_type || !hd) return 0;
   const L = fL(hd);
@@ -110,14 +110,14 @@ function fMR(boat) {
   return 0;
 }
 
-function fPropellorBonus(data) {
+export function fPropellorBonus(data) {
   const propType = data?.propellor?.type || '';
   if (propType === 'fixed') return 0.03;
   if (['folding', 'feathering'].includes(propType)) return 0.015;
   return 0;
 }
 
-function fShoalBonus(R, boat) {
+export function fShoalBonus(R, boat) {
   const hd = boat?.handicap_data;
   if (!hd) return 0;
   const lwl = hd.length_on_waterline;
@@ -130,13 +130,13 @@ function fShoalBonus(R, boat) {
   return bonus;
 }
 
-function fR(boat) {
+export function fR(boat) {
   if (!boat) return 0;
   const MR = fMR(boat);
   return MR - MR * fPropellorBonus(boat.handicap_data);
 }
 
-function fThcf(boat) {
+export function fThcf(boat) {
   const r = fR(boat);
   if (r <= 0) return 0;
   return 0.125 * (Math.sqrt(r) + 3);
