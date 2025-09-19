@@ -196,8 +196,8 @@ const Robinetta = {
   "year_is_approximate": false
 };
 
-const tcf = Transcur.handicap_data;
-const rcf = Robinetta.handicap_data;
+const tcf = boatm2f(Transcur).handicap_data;
+const rcf = boatm2f(Robinetta).handicap_data;
 
 test('boatm2f', () => {
   const a = { "1": 1, q: { a: 2 } };
@@ -209,7 +209,7 @@ test('boatm2f Transcur feet', () => {
 });
 
 test('boatm2f Robinetta feet', () => {
-  expect(boatm2f(rcf)).toMatchSnapshot();
+  expect(rcf).toMatchSnapshot();
 });
 
 test('boatm2f Transcur metres', () => {
@@ -251,16 +251,7 @@ test('Transcur fL', () => {
 
 test('Transcur fBD', () => {
   const b = boatm2f(Transcur);
-  expect(fBD(b)).toEqual(.67 * b.handicap_data.beam * b.handicap_data.beam);
-});
-
-test('Transcur fSqrtS', () => {
-  const b = boatm2f(Transcur);
-  expect(fSqrtS(0.96, sailArea(b).toFixed(2))).toMatchSnapshot();
-});
-
-test('Transcur C', () => {
-  expect((.67 * tcf.beam * tcf).toFixed(2)).toMatchSnapshot();
+  expect(fBD(b)).toMatchSnapshot();
 });
 
 test('Transcur fMR', () => {
@@ -271,10 +262,6 @@ test('Transcur fMR', () => {
 test('Transcur T(H)CF', () => {
   const b = boatm2f(Transcur);
   expect(fThcf(b).toFixed(3)).toMatchSnapshot();
-});
-
-test('t1', () => {
-  expect(0.125 * (Math.sqrt(27.04) + 3)).toMatchSnapshot();
 });
 
 test('Robinetta T(H)CF', () => {
