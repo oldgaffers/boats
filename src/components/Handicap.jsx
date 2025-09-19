@@ -1,19 +1,24 @@
 import React from "react";
 import { Typography } from "@mui/material";
 import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
-import { f2m } from '../util/format';
+import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
-export function HandicapDisplay({handicapData}) {
-    const checked = true; // handicapData?.checked;
-	let thcf = handicapData.thcf?.toFixed(3);
-	if (handicapData.last_modified) {
+export function HandicapDisplay({boat}) {
+  const handicapData = boat.handicap_data || {};
+  const checked = !!(handicapData.checked);
+	const thcf = fThcf(boatm2f(boat)); // handicapData.thcf?.toFixed(3);
+  let handicapDisplay = thcf.toFixed(3);
+	if (thcf > 0 && handicapData.last_modified) {
         const lmd = new Date(handicapData.last_modified);
-        thcf = `${thcf} (last modified ${lmd.toLocaleDateString()})`;
+        handicapDisplay = `${thcf} (last modified ${lmd.toLocaleDateString()})`;
     }
-    if (checked) {
+    if (handicapData.thcf && Math.abs(thcf - handicapData.thcf) > 0.01) {
+      handicapDisplay = `${handicapDisplay} (stored THCF ${handicapData.thcf.toFixed(3)})`;
+    }
+    if (handicapData.checked) {
       return <>
-        <ConditionalText label='T(H)CF' value={thcf} />
+        <ConditionalText label='T(H)CF' value={handicapDisplay} />
         <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
       </>;
     }
