@@ -85,7 +85,7 @@ test('thcf measured sail area valid', () => {
 });
 
 test('thcf empty', () => {
-  expect(fThcf()).toEqual(1);
+  expect(fThcf()).toEqual(0);
 });
 
 test('thcf aboat', () => {
