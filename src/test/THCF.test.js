@@ -1,5 +1,5 @@
 import { foretriangle_area, mainsail_area } from '../components/Handicap';
-import { fMainSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, fThcf } from '../util/THCF';
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fR, fThcf } from '../util/THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};
@@ -81,11 +81,7 @@ test('thcf fore triangle valid', () => {
 });
 
 test('thcf measured sail area valid', () => {
-  const sail_area = {
-    foretriangle: foretriangle_area(aboat.handicap_data),
-    main: mainsail_area(aboat.handicap_data.main),
-  }
-  expect(fMSA(sail_area).toFixed(2)).toEqual('324.33');
+  expect(sailArea(aboat).toFixed(2)).toEqual('324.33');
 });
 
 test('thcf empty', () => {
@@ -94,26 +90,15 @@ test('thcf empty', () => {
 
 test('thcf aboat', () => {
   expect(fL(aboat.handicap_data)).toBe((21+17)/2);
-  const sail_area = {
-    foretriangle: foretriangle_area(aboat.handicap_data),
-    main: mainsail_area(aboat.handicap_data.main),
-  }
   const ddf = {
-    root_s: fSqrtS(0.96, fMSA(sail_area)),
+    root_s: fSqrtS(0.96, sailArea(aboat)),
   };
   expect(ddf.root_s.toFixed()).toEqual('17');
-  expect(fThcf(fR({...aboat, ddf})).toFixed(3)).toEqual('0.865');
+  expect(fThcf(aboat).toFixed(3)).toEqual('0.865');
 });
 
 test('thcf aboat2', () => {
   const { handicap_data } = aboat2;
   expect(fL(handicap_data)).toBe((27.87+27.23)/2);
-  const sail_area = {
-    foretriangle: foretriangle_area(handicap_data),
-    main: mainsail_area(handicap_data.main),
-  }
-  const ddf = {
-    root_s: fSqrtS(0.96, fMSA(sail_area)),
-  };
-  expect(fThcf(fR({ handicap_data, ddf })).toFixed(3)).toEqual("0.961");
+  expect(fThcf(aboat2).toFixed(3)).toEqual("0.961");
 });
