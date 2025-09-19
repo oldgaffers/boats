@@ -1,5 +1,5 @@
 import { foretriangle_area, mainsail_area } from '../components/Handicap';
-import { fGaffSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, fThcf } from '../util/THCF';
+import { fMainSA, fTopSA, fForeTriangle, fMSA, fL, fSqrtS, fR, fThcf } from '../util/THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};
@@ -57,11 +57,11 @@ const aboat = {
 };
 
 test('thcf gaff empty', () => {
-    expect(fGaffSA()).toEqual(0);
+    expect(fMainSA()).toEqual(0);
   });
 
 test('thcf gaff valid', () => {
-  expect(fGaffSA(agaff).toFixed(2)).toEqual("85.36");
+  expect(fMainSA(agaff).toFixed(2)).toEqual("85.36");
 });
 
 test('thcf topsail empty', () => {
