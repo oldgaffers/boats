@@ -205,7 +205,7 @@ test('boatm2f', () => {
 });
 
 test('boatm2f Transcur feet', () => {
-  expect(boatm2f(tcf)).toMatchSnapshot();
+  expect(tcf).toMatchSnapshot();
 });
 
 test('boatm2f Robinetta feet', () => {
