@@ -2,27 +2,23 @@
 
 exports[`Robinetta T(H)CF 1`] = `"0.850"`;
 
-exports[`Robinetta foretriangle_area 1`] = `2.961`;
+exports[`Robinetta foretriangle_area 1`] = `31.875`;
 
-exports[`Transcur C 1`] = `"NaN"`;
+exports[`Transcur T(H)CF 1`] = `"1.025"`;
 
-exports[`Transcur T(H)CF 1`] = `"1.012"`;
+exports[`Transcur fBD 1`] = `77.58541106999999`;
 
-exports[`Transcur fForeTriangle 1`] = `"31.09"`;
+exports[`Transcur fForeTriangle 1`] = `"334.63"`;
 
-exports[`Transcur fGaffSA 1`] = `"41.44"`;
+exports[`Transcur fMR 1`] = `"27.45"`;
 
-exports[`Transcur fMR 1`] = `"26.36"`;
+exports[`Transcur fMSA 1`] = `"80.7"`;
 
-exports[`Transcur fMSA 1`] = `"72.5"`;
+exports[`Transcur fMainSA 1`] = `"446.01"`;
 
-exports[`Transcur fR 1`] = `"25.96"`;
+exports[`Transcur fTopSA 1`] = `"88"`;
 
-exports[`Transcur fSqrtS 1`] = `"26.82"`;
-
-exports[`Transcur fTopSA 1`] = `"8"`;
-
-exports[`Transcur foretriangle_area 1`] = `"31.1"`;
+exports[`Transcur foretriangle_area 1`] = `"334.6"`;
 
 exports[`boatm2f Robinetta feet 1`] = `
 Object {
@@ -71,5 +67,3 @@ Object {
   },
 }
 `;
-
-exports[`t1 1`] = `1.025`;
