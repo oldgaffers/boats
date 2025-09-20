@@ -4,7 +4,8 @@ import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, fTop
 import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
-export function HandicapDisplay({boat}) {
+export function HandicapDisplay(props) {
+  const { boat } = props;
   if (!boat) return null;
   const handicapData = boat?.handicap_data || {};
 	const thcf = fThcf(boatm2f(boat)); // handicapData.thcf?.toFixed(3);
