@@ -21,6 +21,7 @@ export default function BoatDetail({ view, boat, user }) {
   const [value, setValue] = useState(0);
   const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];
+  const hd = boat.handicap_data || {};
 
   useEffect(() => {
     const getData = async () => {

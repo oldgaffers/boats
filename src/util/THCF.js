@@ -2,8 +2,7 @@ import { f2m } from "./format";
 // Constants
 const baseLengthInFeetForTHCF = 25;
 
-// Helper Functions
-function rigAllowance(r) {
+export function rigAllowance(r) {
   r = r.toLowerCase();
   switch (r) {
     case 'cutter': return 0.96;
@@ -26,6 +25,11 @@ export function sails(r) {
     return ['main'];
   }
   return [];
+}
+
+export function fMSA(sail_area) {
+    const vals = Object.keys(sail_area).map((k) => sail_area[k]);
+    return vals.reduce((p, v) => p + v, 0);
 }
 
 export function sailArea(boat) {

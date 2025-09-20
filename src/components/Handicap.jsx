@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "@mui/material";
-import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rig_allowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
+import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
@@ -827,7 +827,7 @@ export const steps = (firstStep, nextStep) => [
         description: "cutter: .96, yawl: .94, schooner: .92, ketch: .90",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const ra = rig_allowance(values.rig_type);
+          const ra = rigAllowance(values.rig_type);
           formOptions.change("ddf.rig_allowance", ra);
           return {
             value: ra.toFixed(2),
