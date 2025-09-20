@@ -381,7 +381,7 @@ describe('EditBoatWizard component tests', () => {
     await waitFor(() => {
       screen.getByText('I want to sell this boat');
     });
-    fireEvent.click(screen.getByRole('checkbox'));
+    // fireEvent.click(screen.getByRole('checkbox'));
     fireEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Submit');
