@@ -46,7 +46,7 @@ export function sailArea(boat) {
   }
 
   const total = Object.values(sailAreas).reduce((a, b) => a + b, 0);
-  return total || hd.sailarea || 0;
+  return total || 0;
 }
 
 export function fMainSA(sail) {
@@ -95,11 +95,14 @@ export function fSqrtS(rigAllowanceVal, sailarea) {
   return rigAllowanceVal * Math.sqrt(sailarea);
 }
 
-export function fMR(boat) {
-  const hd = boat.handicap_data;
+export function fMR(boat, useSailArea = false) {
+  const hd = boat?.handicap_data;
   if (!boat.rig_type || !hd) return 0;
   const L = fL(hd);
-  const sqrtS = fSqrtS(rigAllowance(boat.rig_type), sailArea(boat));
+  let sailAreaVal = sailArea(boat);
+  if (sailAreaVal === 0 && useSailArea && hd.sailarea) sailAreaVal = hd.sailarea;
+  if (sailAreaVal === 0) return 0;
+  const sqrtS = fSqrtS(rigAllowance(boat.rig_type), sailAreaVal);
   if (sqrtS === 0 || L === 0) return 0;
   const BD = fBD(boat);
   if (BD > 0) {
@@ -130,14 +133,14 @@ export function fShoalBonus(R, boat) {
   return bonus;
 }
 
-export function fR(boat) {
+export function fR(boat, useSailArea = false ) {
   if (!boat) return 0;
-  const MR = fMR(boat);
+  const MR = fMR(boat, useSailArea);
   return MR - MR * fPropellorBonus(boat.handicap_data);
 }
 
-export function fThcf(boat) {
-  const r = fR(boat);
+export function fThcf(boat, useSailArea = false) {
+  const r = fR(boat, useSailArea);
   if (r <= 0) return 0;
   return 0.125 * (Math.sqrt(r) + 3);
 }
