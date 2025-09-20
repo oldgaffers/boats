@@ -159,6 +159,31 @@ SF = Shape Factor above
 Disp = Displacement
 
 */
+const shapeFactorMap = {
+    'Long keel - High volume': 0.25,
+    'Long keel - Standard': 0.20,
+    'Long keel - Low volume': 0.15,
+    'Fin keel': 0.10,
+  };
+
+export function shapeFactors(sf) {
+    return shapeFactorMap?.[sf] || 0.2;
+}
+
+export function solentLength(data) {
+    const LOD = data.length_on_deck || baseLengthInFeetForTHCF;
+    const LWL = data.length_on_waterline || baseLengthInFeetForTHCF;
+    return f2m(0.5*(LOD+LWL));
+}
+
+// normalised to kg using 1000 kg per cubic metre for salt water
+export function solentEstimatedDisplacement(data) {
+    const L = solentLength(data);
+    const B = f2m(data.beam);
+    const D = f2m(data.draft);
+    const SF = shapeFactors(data.solent.hull_shape);
+    return Math.round(1000 * L * B * D * SF);
+}
 
 export function solentMR(boat) {
     const { ddf, handicap_data } = boat;
