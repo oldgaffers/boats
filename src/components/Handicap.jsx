@@ -4,11 +4,10 @@ import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, fTop
 import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
-export function HandicapDisplay(props) {
-  const { boat } = props;
+export function HandicapDisplay({ boat }) {
   if (!boat) return null;
   const handicapData = boat?.handicap_data || {};
-	const thcf = fThcf(boatm2f(boat)); // handicapData.thcf?.toFixed(3);
+	const thcf = fThcf(boatm2f(boat));
   let handicapDisplay = thcf.toFixed(3);
 	if (thcf > 0 && handicapData.last_modified) {
         const lmd = new Date(handicapData.last_modified);
@@ -714,9 +713,6 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
-          // const ddf = f.values.ddf;
-          // const vals = Object.keys(ddf.sail_area).map((k) => ddf.sail_area[k]);
-          // const sa = vals.reduce((p, v) => p + v);
           const sa = fMSA(f.values.ddf.sail_area);
           const rsa = Math.round(1000 * sa) / 1000;
           formOptions.change('ddf.total_sailarea', sa);
@@ -876,8 +872,10 @@ export const steps = (firstStep, nextStep) => [
         isReadOnly: true,
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const thcf = Math.round(1000 * fThcf(values.ddf.r)) / 1000;
-          console.log('HC from', values.handicap_data.thcf, 'to', thcf);
+          const { r } = values.ddf;
+          const thcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
+          const calc = fThcf(values);
+          console.log('HC from', values.handicap_data.thcf, 'to', thcf, 'calc', calc);
           if (thcf !== values.handicap_data.thcf) {
             formOptions.change("handicap_data.last_modified", new Date().toISOString());
           }
