@@ -1,11 +1,11 @@
 import React from "react";
 import { Typography } from "@mui/material";
-import { fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
+import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, fTopSA, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
 export function HandicapDisplay({boat}) {
-  const handicapData = boat.handicap_data || {};
+  const handicapData = boat?.handicap_data || {};
 	const thcf = fThcf(boatm2f(boat)); // handicapData.thcf?.toFixed(3);
   let handicapDisplay = thcf.toFixed(3);
 	if (thcf > 0 && handicapData.last_modified) {
@@ -318,56 +318,6 @@ export const solentSteps = (thisStep, nextStep) => {
   ];
 }
 
-export function foretriangle_area({
-  fore_triangle_height,
-  fore_triangle_base,
-}) {
-  if (fore_triangle_height && fore_triangle_base) {
-    return Math.round(1000 * 0.85 * 0.5 * fore_triangle_height * fore_triangle_base) / 1000;
-  }
-  return 0;
-}
-
-export function mainsail_area(sail) {
-  if (sail) {
-    if (sail.head) {
-      const { luff, head, foot } = sail;
-      if (luff && head && foot) {
-        return 0.5 * luff * foot + 0.5 * head * Math.sqrt(foot * foot + luff * luff);
-      }
-    } else {
-      if (sail.luff && sail.foot) {
-        return 0.5 * sail.luff * sail.foot;
-      }
-    }
-  }
-  return 0;
-}
-
-export function topsail_area(sail) {
-  if (sail) {
-    if (sail.luff && sail.perpendicular) {
-      return 0.5 * sail.luff * sail.perpendicular;
-    }
-  }
-  return 0;
-}
-
-export function sail_area({ values }) {
-  let total = foretriangle_area(values.handicap_data);
-  total += mainsail_area(values.mainsail_type, values.handicap_data.main);
-  total += topsail_area(values.handicap_data.topsail);
-  if (values.rig_type === "Schooner") {
-    total += mainsail_area(values.mainsail_type, values.handicap_data.fore);
-    total += topsail_area(values.handicap_data.fore_topsail);
-  }
-  if (["Ketch", "Yawl"].includes(values.rig_type)) {
-    total += mainsail_area(values.mainsail_type, values.handicap_data.mizzen);
-    total += topsail_area(values.handicap_data.mizzen_topsail);
-  }
-  return total;
-}
-
 const sailFields = (sides) => {
   return sides.map(({ name, label }) => ({
     component: 'text-field',
@@ -510,7 +460,7 @@ const mainsail_fields = (sail) => {
         if (hd) {
           const saildata = hd[sail];
           if (saildata) {
-            const sa = Math.round(1000 * mainsail_area(saildata)) / 1000;
+            const sa = Math.round(1000 * fMainSA(saildata)) / 1000;
             formOptions.change(`ddf.sail_area.${sail}`, sa);
             return {
               value: sa,
@@ -557,7 +507,7 @@ const topsail_fields = (sail) => [
       const s = formOptions.getState();
       const hd = s.values.handicap_data;
       if (hd) {
-        sa = Math.round(1000 * topsail_area(hd[sail])) / 1000;
+        sa = Math.round(1000 * fTopSA(hd[sail])) / 1000;
         formOptions.change(`ddf.sail_area.${sail}`, sa);
       }
       return {
@@ -570,7 +520,15 @@ const topsail_fields = (sail) => [
 export const steps = (firstStep, nextStep) => [
   {
     name: firstStep,
-    nextStep: ({ values }) => values.ddf.use_sailarea ? "handicap-hull-step" : "foretriangle-step",
+    nextStep: ({ values }) => {
+      if (values.ddf.use_sailarea) {
+        return "handicap-hull-step";
+      } 
+      if (['Single Sail', 'Cat Boat'].includes(values.rig_type)) {
+        return "mainsail-step";
+      }
+      return "foretriangle-step";
+    },
     fields: [
       {
         title: "Handicap Details",
@@ -664,7 +622,7 @@ export const steps = (firstStep, nextStep) => [
         resolveProps: (props, { meta, input }, formOptions) => {
           const f = formOptions.getState();
           const handicap_data = f.values.handicap_data;
-          const sa = foretriangle_area(handicap_data);
+          const sa = fForeTriangle(handicap_data);
           formOptions.change('ddf.sail_area.foretriangle', sa);
           if (handicap_data) {
             return {
