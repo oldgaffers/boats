@@ -5,6 +5,7 @@ import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
 export function HandicapDisplay({boat}) {
+  if (!boat) return null;
   const handicapData = boat?.handicap_data || {};
 	const thcf = fThcf(boatm2f(boat)); // handicapData.thcf?.toFixed(3);
   let handicapDisplay = thcf.toFixed(3);
