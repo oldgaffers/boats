@@ -874,7 +874,7 @@ export const steps = (firstStep, nextStep) => [
           const { values } = formOptions.getState();
           const { r } = values.ddf;
           const thcf = Math.round(1000 * 0.125 * (Math.sqrt(r) + 3)) / 1000;
-          const calc = fThcf(values);
+          const calc =  Math.round(1000 * fThcf(values)) / 1000;
           console.log('HC from', values.handicap_data.thcf, 'to', thcf, 'calc', calc);
           if (thcf !== values.handicap_data.thcf) {
             formOptions.change("handicap_data.last_modified", new Date().toISOString());

@@ -253,7 +253,7 @@ const defaultSchema = (pickers) => {
             resolveProps: (props, { meta, input }, formOptions) => {
               const { values } = formOptions.getState();
               return {
-                initialValue: !!values.ddf.current_sales_record,
+                initialValue: values.selling_status === 'for_sale',
                 isReadOnly: !(values.ddf.owner || values.ddf.editor)
               }
             },
