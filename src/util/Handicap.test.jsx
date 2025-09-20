@@ -1,4 +1,3 @@
-import { foretriangle_area, mainsail_area } from './Handicap';
 import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../util/THCF';
 import { boatm2f, boatf2m } from "../util/format";
 
@@ -221,12 +220,12 @@ test('boatm2f Robinetta metres', () => {
 });
 
 test('Transcur foretriangle_area', () => {
-  const f = foretriangle_area(tcf);
+  const f = fForeTriangle(tcf);
   expect(f.toFixed(1)).toMatchSnapshot();
 });
 
 test('Robinetta foretriangle_area', () => {
-  const f = foretriangle_area(rcf);
+  const f = fForeTriangle(rcf);
   expect(f).toMatchSnapshot();
 });
 
