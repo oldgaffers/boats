@@ -70,7 +70,7 @@ export default function BoatSummary({ boat, lastModified }) {
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
     </Box>
-    <HandicapDisplay handicapData={boat.handicap_data} />
+    <HandicapDisplay boat={boat} />
     <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
     <div>
