@@ -95,7 +95,7 @@ export default function BoatDetail({ view, boat, user }) {
           <ConditionalText label="Fore triangle base" value={m2f(hd.fore_triangle_base)} />
           <ConditionalText label="Fore triangle height" value={m2f(hd.fore_triangle_height)} />
           <ConditionalText label="Sail Area" value={m2f2(hd.sailarea)} />
-          <HandicapDisplay handicapData={boat} />
+          <HandicapDisplay boat={boat} />
           <SailTable handicapData={boat.handicap_data} />
         </Paper>
       )
