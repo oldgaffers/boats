@@ -7,11 +7,11 @@ import ConditionalText from './conditionaltext';
 export function HandicapDisplay({ boat }) {
   if (!boat) return null;
   const handicapData = boat?.handicap_data || {};
-	const thcf = fThcf(boatm2f(boat));
+  const thcf = fThcf(boatm2f(boat));
   let handicapDisplay = thcf.toFixed(3);
 	if (thcf > 0 && handicapData.last_modified) {
         const lmd = new Date(handicapData.last_modified);
-        handicapDisplay = `${thcf} (last modified ${lmd.toLocaleDateString()})`;
+        handicapDisplay = `${handicapDisplay} (last modified ${lmd.toLocaleDateString()})`;
     }
     if (handicapData.thcf && Math.abs(thcf - handicapData.thcf) > 0.01) {
       handicapDisplay = `${handicapDisplay} (stored THCF ${handicapData.thcf.toFixed(3)})`;
