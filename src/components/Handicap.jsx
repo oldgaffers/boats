@@ -13,7 +13,7 @@ export function HandicapDisplay({ boat }) {
         const lmd = new Date(handicapData.last_modified);
         handicapDisplay = `${handicapDisplay} (last modified ${lmd.toLocaleDateString()})`;
     }
-    if (handicapData.thcf && Math.abs(thcf - handicapData.thcf) > 0.01) {
+    if (Math.abs(thcf - (handicapData.thcf || 0)) > 0.01) {
       handicapDisplay = `${handicapDisplay} (stored THCF ${handicapData.thcf.toFixed(3)})`;
     }
     if (handicapData.checked) {
