@@ -4,6 +4,8 @@ import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, fTop
 import { boatm2f, f2m } from '../util/format';
 import ConditionalText from './conditionaltext';
 
+const hideUnlessChecked = false;
+
 export function HandicapDisplay({ boat }) {
   if (!boat) return null;
   const handicapData = boat?.handicap_data || {};
@@ -16,20 +18,20 @@ export function HandicapDisplay({ boat }) {
     if (Math.abs(thcf - (handicapData.thcf || 0)) > 0.01) {
       handicapDisplay = `${handicapDisplay} (stored THCF ${handicapData.thcf.toFixed(3)})`;
     }
-    if (handicapData.checked) {
+    if (hideUnlessChecked && (handicapData.checked === false)) {
       return <>
-        <ConditionalText label='T(H)CF' value={handicapDisplay} />
-        <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
-      </>;
-    }
-    return <>
-     <Typography variant='subtitle2' component='span'>T(H)CF: </Typography>
-     <Typography variant="body1" component='span'>
+       <Typography variant='subtitle2' component='span'>T(H)CF: </Typography>
+       <Typography variant="body1" component='span'>
         We are asking all boat owners to re-validate the data used to calculate handicaps.
         The best way to do this is to use the 'I have Edits' button and step through the choices,
         making any changes you want. If all is correct, just submit the form. Alternatively, email
         the boat register editors.
-      </Typography>
+       </Typography>
+      </>;
+    }
+    return <>
+      <ConditionalText label='T(H)CF' value={handicapDisplay} />
+      <ConditionalText label='Solent Rating' value={handicapData.solent?.thcf?.toFixed(3)} />
     </>;
 }
 
