@@ -31,22 +31,6 @@ const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
 */
 
-const tags = [
-  'app', 
-  'boat', 
-  'fleet', 
-  'sail', 
-  'sell', 
-  'small', 
-  'login', 
-  'pending',
-  'expressions', 
-  'add_boat', 
-  'pick_or_add_boat',
-  'my_fleets', 
-  'shared_fleets',
-];
-
 function getOgaNo() {
   const params = new URLSearchParams(window.location.search);
   const qp = params.get('oga_no');
@@ -139,31 +123,13 @@ for (let i = 0; i < allparas.length; i++) {
   if (q?.length === 3) {
     const [, component, arglist] = q;
     const args = arglist.split(':');
-    if (tags.includes(component)) {
-      createRoot(p).render(<BoatRegister id={component} args={args} />);
-    }
+    createRoot(p).render(<BoatRegister id={component} args={args} />);
   }
 }
-const alldivs = document.getElementsByTagName('div');
-for (let i = 0; i < alldivs.length; i++) {
-  const div = alldivs.item(i);
-  const attr = div.dataset;
-  // oga-component is converted to ogaComponent by the browser
-  if (attr.ogaComponent) {
-    createRoot(div).render(<BoatRegister id={attr.ogaComponent} {...attr} />);    
-  } else {
-    const attrKeys = Object.keys(attr);
-    const wanted = tags.find((tag) => attrKeys.includes(tag));
-    if (wanted) {
-      createRoot(div).render(<BoatRegister id={wanted} {...attr} />);
-    } else {
-      // legacy
-      const id = div.getAttribute('id');
-      if (tags.includes(id)) {
-        createRoot(div).render(<BoatRegister id={id} {...attr} />);
-      }
-    }  
-  }
-}
+const placeholders = document.querySelectorAll("[data-oga-component]");
+placeholders.forEach((ph) => {
+  const attr = ph.dataset;
+  createRoot(ph).render(<BoatRegister id={attr.ogaComponent} {...attr} />);
+});
 
 // serviceWorker.unregister();

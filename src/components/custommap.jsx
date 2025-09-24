@@ -115,6 +115,32 @@ function BoatMarkers({ entries }) {
     </MarkerClusterGroup>;
 }
 
+function PlaceInfo({ place }) {
+    return <div>
+        <h3>{place.place}</h3>
+        <p>Boats built here: {place.count}</p>
+        <h4>Builders</h4><table>
+        {Object.values(place.yards||{}).map(((y, i) => <tr key={i}>
+            <td>{y.name}</td>
+            <td>{y.count}</td></tr>)) }  </table>  
+    </div>;
+}
+
+function PlaceMarkers({ entries }) {
+    return <MarkerClusterGroup chunkedLoading>
+        {entries.map((place, index) => <Marker
+                    key={index}
+                    position={[place.latitude, place.longitude]}
+                    icon={customIcons[place.icon || 'gafferBlue']}
+                    title={place.name}
+                >
+                    <Popup maxWidth='200'>
+                        <PlaceInfo place={place} />
+                    </Popup>
+                </Marker>)}
+    </MarkerClusterGroup>;
+}
+
 export default function CustomMap(props) {
     const [data, setData] = useState();
     useEffect(() => {
@@ -126,6 +152,8 @@ export default function CustomMap(props) {
             getData();
         }
     }, [data, props.scope, props.table]);
+    const boats = (data || []).filter((b) => b.ogaNo);
+    const places = (data || []).filter((b) => b.place);
 
     return (
         <Stack>
@@ -142,7 +170,8 @@ export default function CustomMap(props) {
                     title={port.name}
                 ></Marker>)}
 
-                <BoatMarkers entries={data} />
+                <BoatMarkers entries={boats} />
+                <PlaceMarkers entries={places} />
 
             </MapContainer>
             <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>

@@ -1,3 +1,4 @@
+import boatsByPlaceBuilt from './boatsByPlaceBuilt';
 import { boatRegisterHome } from './constants';
 
 const mock = false; // true;
@@ -154,6 +155,10 @@ export async function getFilterable() {
   });
 }
 
+export async function getPlaces() {
+  return (await fetch(`${boatRegisterHome}/boatregister/places_enriched.json`)).json();
+}
+
 export async function getThumb(albumKey) {
   return (await fetch(`${api2}/${albumKey}`)).json();
 }
@@ -191,6 +196,9 @@ export async function getScopedData(scope, subject, filters, accessToken) {
   if (mock) {
     return {};
   }
+  if (subject === 'place_built') {
+    return boatsByPlaceBuilt(filters);
+  }
   const headers = {
     'content-type': 'application/json',
   };
@@ -216,4 +224,12 @@ export async function getBoatLastModified(oga_no) {
   const r = await fetch(`https://api.github.com/repos/oldgaffers/boatregister/commits?path=boat/${oga_no}/boat.yml&page=1&per_page=1`);
   const d = await r.json();
   return d[0].commit.author.date;
+}
+
+export async function geolocate(place) {
+  const r = await fetch(`${api1}/default/public/place?name=${place}`);
+  if (r.ok) {
+    return r.json()
+  }
+  return undefined;
 }
