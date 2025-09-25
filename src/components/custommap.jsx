@@ -115,12 +115,22 @@ function BoatMarkers({ entries }) {
     </MarkerClusterGroup>;
 }
 
+function yards(place) {
+    if (!place.yards) {
+        return [];
+    }
+    if (Array.isArray(place.yards)) {
+        return place.yards;
+    }
+    return Object.values(place.yards);
+}
+
 function PlaceInfo({ place }) {
     return <div>
         <h3>{place.place}</h3>
         <p>Boats built here: {place.count}</p>
         <h4>Builders</h4><table>
-        {Object.values(place.yards||{}).map(((y, i) => <tr key={i}>
+        {yards(place).map(((y, i) => <tr key={i}>
             <td>{y.name}</td>
             <td>{y.count}</td></tr>)) }  </table>  
     </div>;
