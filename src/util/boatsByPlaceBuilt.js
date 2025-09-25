@@ -1,4 +1,4 @@
-import { geolocate, getFilterable, getPlaces } from "./api";
+import { geolocate, getPlaces } from "./api";
 
 export default async function boatsByPlaceBuilt(filters = {}) {
     // const boats = await getFilterable();
