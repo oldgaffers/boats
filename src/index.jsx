@@ -18,6 +18,7 @@ import CreateBoatButton from './components/createboatbutton';
 import CustomMap from './components/custommap';
 
 import PickOrAddBoat from './components/pick_or_add_boat';
+import BuilderPage from './components/builderpage';
 
 /*
 import { lazy } from 'react';
@@ -81,6 +82,11 @@ function Wrapper({ redirectUri, scope, children }) {
 }
 
 const Pages = ({ id, ...props }) => {
+  const params = new URLSearchParams(window.location.search);
+  const kvp = {};
+  for (const [key, value] of params.entries()) {
+    kvp[key] = value;
+  }
   switch (id) {
     case 'app':
       if (window.location.pathname.includes('/boat/')) {
@@ -95,6 +101,7 @@ const Pages = ({ id, ...props }) => {
     case 'map': return <CustomMap {...props} />;
     case 'add_boat': return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
+    case 'builder': return <BuilderPage {...props} {...kvp} />;
     default:
       // sail, sell, small, ...
       return <BrowseApp view={id} {...props} />;
