@@ -43,7 +43,8 @@ function ContactDialog({
             <DialogTitle id="form-dialog-title">{title}</DialogTitle>
             <DialogContent>
                 <DialogContentText variant="subtitle2">
-                    We'll email them and ask them to contact you
+                    {member && "We'll email them and ask them to contact you"}
+                    {!member && "We'll get back to you as soon as we can"}
                 </DialogContentText>
                 <TextField
                     value={email}
