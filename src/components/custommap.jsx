@@ -131,7 +131,7 @@ function PlaceInfo({ place }) {
         <p>Boats built here: {place.count}</p>
         <h4>Builders</h4><table>
         {yards(place).map(((y, i) => <tr key={i}>
-            <td>{y.name}</td>
+            <td><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a></td>
             <td>{y.count}</td></tr>)) }  </table>  
     </div>;
 }
