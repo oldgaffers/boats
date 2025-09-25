@@ -57,7 +57,7 @@ export default function BuilderPage({ name }) {
         <BuilderSummary name={name} />
         <p></p>
         Boats built by {name} according to OGA Boat Register data:
-        <FleetDisplay filters={{ builder: name }} />
+        <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
         Other builders referenced in the OGA Boat Register in {place?.place}:
         <ul>
             {yards(place).filter((y) => y.name !== name).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
