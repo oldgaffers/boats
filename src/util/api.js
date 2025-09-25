@@ -156,7 +156,7 @@ export async function getFilterable() {
 }
 
 export async function getPlaces() {
-  return (await fetch(`${boatRegisterHome}/boatregister/places_enriched.json`)).json();
+  return (await fetch(`${boatRegisterHome}/boatregister/places.json`)).json();
 }
 
 export async function getThumb(albumKey) {
