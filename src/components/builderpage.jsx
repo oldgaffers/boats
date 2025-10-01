@@ -41,7 +41,8 @@ export function BuilderSummary({ name }) {
 
 export default function BuilderPage({ name }) {
         const [place, setPlace] = useState();
-        useEffect(() => {
+        const [filterable, setFilterable] = useState();
+       useEffect(() => {
             const getData = async () => {
                 const places = Object.values(await getPlaces());
                 const filtered = places.filter((p) => yards(p).filter((y) => y.name === name).length > 0);
@@ -51,8 +52,16 @@ export default function BuilderPage({ name }) {
                 getData();
             }
         }, [place, name]);
-
-    const nobuilder = getFilterable().filter((b) => b.builder.length === 0);
+        useEffect(() => {
+            const getData = async () => { 
+                const f = await getFilterable();
+                setFilterable(f);
+            }
+            if (!filterable) {
+                getData();
+            }
+        }, [filterable]);
+    const nobuilder = filterable.filter((b) => (b.builder || []).length === 0);
     console.log(nobuilder);
     return <div>
         <h3>Page for Boat Builder {name}</h3>
