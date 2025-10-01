@@ -61,7 +61,7 @@ export default function BuilderPage({ name }) {
                 getData();
             }
         }, [filterable]);
-    const nobuilder = filterable.filter((b) => (b.builder || []).length === 0);
+    const nobuilder = filterable?.filter((b) => (b.builder || []).length === 0);
     console.log(nobuilder);
     return <div>
         <h3>Page for Boat Builder {name}</h3>
