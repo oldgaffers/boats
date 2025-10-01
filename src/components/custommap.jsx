@@ -67,6 +67,16 @@ const customIcons = {
         shadowAnchor: [16, 34],  // the same for the shadow
         popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
     }),
+
+    yard: L.icon({
+        iconUrl: 'https://oldgaffers.github.io/boatregister//images/anchor.png',
+        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/anchor-shadow.png',
+        iconSize: [512, 512], // size of the icon
+        shadowSize: [769, 512], // size of the shadow
+        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
+        shadowAnchor: [16, 34],  // the same for the shadow
+        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
+    }),
 };
 
 function BoatMarker({ boat }) {
@@ -141,7 +151,7 @@ function PlaceMarkers({ entries }) {
         {entries.map((place, index) => <Marker
                     key={index}
                     position={[place.latitude, place.longitude]}
-                    icon={customIcons[place.icon || 'gafferBlue']}
+                    icon={customIcons[place.icon || 'yard']}
                     title={place.name}
                 >
                     <Popup maxWidth='200'>
@@ -184,7 +194,6 @@ export default function CustomMap(props) {
                 <PlaceMarkers entries={places} />
 
             </MapContainer>
-            <a href="https://www.flaticon.com/free-icons/diamond" title="diamond icons">Diamond icons created by prettycons - Flaticon</a>
         </Stack>
     );
 }
