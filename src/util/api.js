@@ -16,9 +16,9 @@ const mocks = {
   },
 };
 
-const api1 = 'https://14nggp589h.execute-api.eu-west-1.amazonaws.com';
+const api1 = 'https://2homjmdye9.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws';
-const stage = 'Prod'
+const stage = 'prod'
 
 export async function putGeneralEnquiry(scope, subject, data) {
   return (await fetch(
