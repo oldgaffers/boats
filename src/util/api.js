@@ -16,12 +16,13 @@ const mocks = {
   },
 };
 
-const api1 = 'https://5li1jytxma.execute-api.eu-west-1.amazonaws.com';
+const api1 = 'https://14nggp589h.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws';
+const stage = 'Prod'
 
 export async function putGeneralEnquiry(scope, subject, data) {
   return (await fetch(
-    `${api1}/default/${scope}/${subject}`,
+    `${api1}/$}{stage}/${scope}/${subject}`,
     {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -32,7 +33,7 @@ export async function putGeneralEnquiry(scope, subject, data) {
 
 export async function shuffleBoats() {
   return (await fetch(
-    `${api1}/default/shuffle`,
+    `${api1}/${stage}/shuffle`,
     {
       method: 'POST',
     }
@@ -60,7 +61,7 @@ export async function postScopedData(scope, subject, data, accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
   }
   return fetch(
-    `${api1}/default/${scope}/${subject}`,
+    `${api1}/{stage}/${scope}/${subject}`,
     {
       method: 'POST',
       body: JSON.stringify(data),
@@ -71,7 +72,7 @@ export async function postScopedData(scope, subject, data, accessToken) {
 
 export async function postGeneralEnquiry(scope, subject, data) {
   return fetch(
-    `${api1}/default/${scope}/${subject}`,
+    `${api1}/${stage}/${scope}/${subject}`,
     {
       method: 'POST',
       body: JSON.stringify(data),
@@ -206,7 +207,7 @@ export async function getScopedData(scope, subject, filters, accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
   }
   const r = await fetch(
-    `${api1}/default/${scope}/${subject}?${new URLSearchParams(filters)}`,
+    `${api1}/${stage}/${scope}/${subject}?${new URLSearchParams(filters)}`,
     {
       headers,
     });
@@ -227,7 +228,7 @@ export async function getBoatLastModified(oga_no) {
 }
 
 export async function geolocate(place) {
-  const r = await fetch(`${api1}/default/public/place?name=${place}`);
+  const r = await fetch(`${api1}/${stage}/public/place?name=${place}`);
   if (r.ok) {
     return r.json()
   }
