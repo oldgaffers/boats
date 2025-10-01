@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getPlaces, getScopedData } from '../util/api';
+import { getFilterable, getPlaces, getScopedData } from '../util/api';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
 
@@ -52,6 +52,8 @@ export default function BuilderPage({ name }) {
             }
         }, [place, name]);
 
+    const nobuilder = getFilterable().filter((b) => b.builder.length === 0);
+    console.log(nobuilder);
     return <div>
         <h3>Page for Boat Builder {name}</h3>
         <BuilderSummary name={name} />
