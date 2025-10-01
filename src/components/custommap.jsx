@@ -71,8 +71,8 @@ const customIcons = {
     yard: L.icon({
         iconUrl: 'https://oldgaffers.github.io/boatregister//images/anchor.png',
         shadowUrl: 'https://oldgaffers.github.io/boatregister//images/anchor-shadow.png',
-        iconSize: [512, 512], // size of the icon
-        shadowSize: [769, 512], // size of the shadow
+        iconSize: [32, 32], // size of the icon
+        shadowSize: [48, 512], // size of the shadow
         iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
         shadowAnchor: [16, 34],  // the same for the shadow
         popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
