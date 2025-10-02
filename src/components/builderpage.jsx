@@ -13,11 +13,12 @@ function yards(place) {
     return Object.values(place.yards);
 }
 
-export function BuilderSummary({ name }) {  
+export function BuilderSummary({ name, place }) {  
         const [summary, setSummary] = useState();
+        console.log('BS', name, place);
         useEffect(() => {
             const getData = async () => {
-                const data = await getScopedData('public', 'builder', { builder: name });
+                const data = await getScopedData('public', 'builder', { builder: name, place: place?.place });
                 setSummary(data);
             }
             if (!summary) {
@@ -65,7 +66,7 @@ export default function BuilderPage({ name }) {
     console.log(nobuilder);
     return <div>
         <h3>Page for Boat Builder {name}</h3>
-        <BuilderSummary name={name} />
+        <BuilderSummary name={name} place={place} />
         <p></p>
         Boats built by {name} according to OGA Boat Register data:
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
