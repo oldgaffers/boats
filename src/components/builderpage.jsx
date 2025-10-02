@@ -108,7 +108,7 @@ export default function BuilderPage({ name, place }) {
         }
     }, [builders, name, place]);
     console.log('NB', noBuilder);
-    const others = builders.filter((b) => b.name !== name);
+    const others = (builders||[]).filter((b) => b.name !== name);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
