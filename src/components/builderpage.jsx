@@ -49,7 +49,7 @@ export function BuilderSummary({ name, place }) {
         {extra.map((k) => <div key={k}><h2>{k}</h2>{summary[k]}</div>)}
         <h2>Sources</h2>
         {summary.sources}
-        The above is an AI generated summary of {name}. It may contain errors and should be checked against other sources.
+        The above is an AI generated summary of {name}. It could be a load of rubbish and should be checked against other sources.
         Please contact the Boat Register editors if you find any mistakes.
         
         <p></p>
