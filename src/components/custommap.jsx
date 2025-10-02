@@ -136,12 +136,13 @@ function yards(place) {
 }
 
 function PlaceInfo({ place }) {
+    const nb = (place.no_yard||[]).join(',');
     return <div>
         <h3>{place.place}</h3>
         <p>Boats built here: {place.count}</p>
         <h4>Builders</h4><table>
         {yards(place).map(((y, i) => <tr key={i}>
-            <td><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a></td>
+            <td><a href={`/boat_register/builder/?name=${y.name}&nb=${nb}`}>{y.name}</a></td>
             <td>{y.count}</td></tr>)) }  </table>  
     </div>;
 }

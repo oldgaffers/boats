@@ -61,7 +61,6 @@ export function BuilderSummary({ name, place }) {
         return <div>We don't have much information on this builder</div>;
     }
     const extra = headings.filter((h) => !['notable_vessels', 'origins', 'legacy', 'sources', 'early_work'].includes(h));
-    console.log('H', headings, 'E', extra);
     return <div>
         <h3>AI Generated Summary</h3>
         <h4>Origins</h4>
