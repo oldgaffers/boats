@@ -53,7 +53,7 @@ export function BuilderSummary({ name, place }) {
         {JSON.stringify(summary.notable_vessels)}
         <h2>Legacy</h2>
         {JSON.stringify(summary.legacy)}
-        {extra.map((k) => <div key={toTitleCase(k.replaceAll('_', ' '))}><h2>{k}</h2>{JSON.stringify(summary[k])}</div>)}
+        {extra.map((k) => <div key={k}><h2>{toTitleCase(k.replaceAll('_', ' '))}</h2>{JSON.stringify(summary[k])}</div>)}
         <h2>Sources</h2>
         {{JSON.stringify(summary.sources)}
         The above is an AI generated summary of {name}. It could be a load of rubbish and should be checked against other sources.
