@@ -45,22 +45,22 @@ export function BuilderSummary({ name, place }) {
     const extra = headings.filter((h) => !['notable_vessels', 'origins', 'legacy', 'sources', 'early_work'].includes(h));
     console.log('H', headings, 'E', extra);
     return <div>
-        <h3>Origins</h3>
+        <h3>AI Generated Summary</h3>
+        <h4>Origins</h4>
         {summary.origins}
-        <h3>Early Work</h3>
+        <h4>Early Work</h4>
         {summary.early_work}
-        <h3>Notable Vessels</h3>
+        <h4>Notable Vessels</h4>
         <table>
-            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th></tr>
+            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
             {summary.notable_vessels.map((v) => (
-                <tr><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td></tr>
+                <tr><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes||''}</td></tr>
             ))}
         </table>
-        {JSON.stringify(summary.notable_vessels)}
-        <h3>Legacy</h3>
+        <h4>Legacy</h4>
         {summary.legacy}
-        {extra.map((k) => <div key={k}><h3>{toTitleCase(k.replaceAll('_', ' '))}</h3>{JSON.stringify(summary[k])}</div>)}
-        <h3>Sources</h3>
+        {extra.map((k) => <div key={k}><h4>{toTitleCase(k.replaceAll('_', ' '))}</h4>{JSON.stringify(summary[k])}</div>)}
+        <h4>Sources</h4>
         <ul>
             {summary.sources.map((s) => (<li key={s}><a href={s}>{s}</a></li>))}
         </ul>
@@ -97,12 +97,12 @@ export default function BuilderPage({ name }) {
     const nobuilder = filterable?.filter((b) => (b.place_built === place?.place) && (b.builder || []).length === 0);
     console.log(nobuilder);
     return <div>
-        <h3>Page for Boat Builder {name}</h3>
+        <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
         <p></p>
-        Boats built by {name} according to OGA Boat Register data:
+        <h3>Boats built by {name} according to OGA Boat Register data></h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        Other builders referenced in the OGA Boat Register in {place?.place}:
+        <h3>Other builders referenced in the OGA Boat Register in {place?.place}</h3>
         <ul>
             {yards(place).filter((y) => y.name !== name).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
