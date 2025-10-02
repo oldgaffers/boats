@@ -102,18 +102,18 @@ export default function BuilderPage({ name, place }) {
             const p = (await getPlaces())[place];
             console.log('P', p);
             setBuilders(p.yards);
-            setNoBuilder(p.nobuilder)
+            setNoBuilder(p.no_yard)
         }
         if (!builders) {
             getData();
         }
     }, [builders, name, place]);
-    console.log('NB', noBuilder, builders);
     if (!builders)
         return '';
     if (!noBuilder)
         return '';
     const others = Object.values(builders).filter((b) => b.name !== name);
+    console.log('O', others, place, noBuilder);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
