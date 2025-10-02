@@ -47,9 +47,9 @@ export function BuilderSummary({ name, place }) {
     console.log('H', headings, 'E', extra);
     return <div>
         <h3>Origins</h3>
-        {JSON.stringify(summary.origins)}
+        {summary.origins}
         <h3>Early Work</h3>
-        {JSON.stringify(summary.early_work)}
+        {summary.early_work}
         <h3>Notable Vessels</h3>
         <table>
             <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th></tr>
@@ -59,7 +59,7 @@ export function BuilderSummary({ name, place }) {
         </table>
         {JSON.stringify(summary.notable_vessels)}
         <h3>Legacy</h3>
-        {JSON.stringify(summary.legacy)}
+        {summary.legacy}
         {extra.map((k) => <div key={k}><h3>{toTitleCase(k.replaceAll('_', ' '))}</h3>{JSON.stringify(summary[k])}</div>)}
         <h3>Sources</h3>
         <ul>
