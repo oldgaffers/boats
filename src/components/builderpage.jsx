@@ -113,7 +113,7 @@ export default function BuilderPage({ name, place }) {
         return '';
     if (!noBuilder)
         return '';
-    const others = builders.filter((b) => b.name !== name);
+    const others = Object.values(builders).filter((b) => b.name !== name);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
