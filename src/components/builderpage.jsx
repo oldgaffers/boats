@@ -100,6 +100,7 @@ export default function BuilderPage({ name, place }) {
     useEffect(() => {
         const getData = async () => {
             const p = (await getPlaces())[place];
+            console.log('P', p);
             setBuilders(p.yards);
             setNoBuilder(p.nobuilder)
         }
@@ -107,8 +108,12 @@ export default function BuilderPage({ name, place }) {
             getData();
         }
     }, [builders, name, place]);
-    console.log('NB', noBuilder);
-    const others = (builders||[]).filter((b) => b.name !== name);
+    console.log('NB', noBuilder, builders);
+    if (!builders)
+        return '';
+    if (!noBuilder)
+        return '';
+    const others = builders.filter((b) => b.name !== name);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
