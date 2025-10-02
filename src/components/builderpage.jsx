@@ -104,28 +104,29 @@ export function NoBuilder({ place, boats}) {
     return '';
 }
 
-export default function BuilderPage({ name, nb }) {
-    const [place, setPlace] = useState();
+export default function BuilderPage({ name, place }) {
+    const [builders, setBuilders] = useState();
+    const [noBuilder, setNoBuilder] = useState();
     useEffect(() => {
         const getData = async () => {
-            const places = Object.values(await getPlaces());
-            const filtered = places.filter((p) => yards(p).filter((y) => y.name === name).length > 0);
-            setPlace(filtered[0]);
+            const p = (await getPlaces())[place];
+            setBuilders(p.yards);
+            setNoBuilder(p.nobuilder)
         }
-        if (!place) {
+        if (!builders) {
             getData();
         }
-    }, [place, name]);
-    const nobuilder = (nb || '').split(',').map((o) => Number(o));
-    console.log('NB', nobuilder);
+    }, [builders, name]);
+    console.log('NB', noBuilder);
+    const others = builders.filter((b) => b.name !== name);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
         <p></p>
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        <OtherBuilders place={place?.place} yards={yards(place)} />
-        <NoBuilder place={place?.place} boats={nobuilder} />
+        <OtherBuilders place={place} yards={others} />
+        <NoBuilder place={place} boats={noBuilder} />
         If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
         <p></p>
         <Contact text={name} />
