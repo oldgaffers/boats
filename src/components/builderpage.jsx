@@ -24,7 +24,7 @@ export function BuilderSummary({ name, place }) {
             if (!summary) {
                 getData();
             }
-        }, [summary, name]);
+        }, [summary, name, place.place]);
 
     if (!summary) {
         return <div>Loading...</div>;
