@@ -107,12 +107,12 @@ export default function BuilderPage({ name }) {
             }
         }, [filterable]);
     const nobuilder = filterable?.filter((b) => (b.place_built === place?.place) && (b.builder || []).length === 0);
-    console.log(nobuilder);
+    console.log('NB', nobuilder, filterable);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
         <p></p>
-        <h3>Boats built by {name} according to OGA Boat Register data></h3>
+        <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
         <h3>Other builders referenced in the OGA Boat Register in {place?.place}</h3>
         <ul>
