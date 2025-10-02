@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getFilterable, getPlaces, getScopedData } from '../util/api';
+import { getPlaces, getScopedData } from '../util/api';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
 
