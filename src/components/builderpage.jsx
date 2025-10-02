@@ -24,7 +24,7 @@ export function NotableVessels({ notable_vessels }) {
     if (!notable_vessels) {
         return '';
     }
-    if (notable_vessels.length == 0) {
+    if (notable_vessels.length === 0) {
         return '';
     }
     return <>
