@@ -13,6 +13,13 @@ function yards(place) {
     return Object.values(place.yards);
 }
 
+function toTitleCase(str) {
+  return str.replace(
+    /\w\S*/g,
+    text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+  );
+}
+
 export function BuilderSummary({ name, place }) {  
         const [summary, setSummary] = useState();
         console.log('BS', name, place);
@@ -24,7 +31,7 @@ export function BuilderSummary({ name, place }) {
             if (!summary) {
                 getData();
             }
-        }, [summary, name, place.place]);
+        }, [summary, name, place]);
 
     if (!summary) {
         return <div>Loading...</div>;
@@ -46,7 +53,7 @@ export function BuilderSummary({ name, place }) {
         {summary.notable_vessels}
         <h2>Legacy</h2>
         {summary.legacy}
-        {extra.map((k) => <div key={k}><h2>{k}</h2>{summary[k]}</div>)}
+        {extra.map((k) => <div key={toTitleCase(k.replaceAll('_', ' '))}><h2>{k}</h2>{summary[k]}</div>)}
         <h2>Sources</h2>
         {summary.sources}
         The above is an AI generated summary of {name}. It could be a load of rubbish and should be checked against other sources.
