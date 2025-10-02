@@ -32,10 +32,26 @@ export function BuilderSummary({ name, place }) {
     if (typeof summary === 'string') {
         return <div>We don't have much information on this builder</div>;
     }
+    const headings = Object.keys(summary);
+    if (!headings.includes('origins')) {
+        return <div>We don't have much information on this builder</div>;
+    }
+    const extra = headings.filter((h) => !['notable_vessels', 'origins', 'legacy', 'sources', 'early_work'].includes(h));
     return <div>
-        {JSON.stringify(summary)}
+        <h2>Origins</h2>
+        {summary.origins}
+        <h2>Early Work</h2>
+        {summary.early_work}
+        <h2>Notable Vessels</h2>
+        {summary.notable_vessels}
+        <h2>Legacy</h2>
+        {summary.legacy}
+        {extra.map((k) => <div key={k}><h2>{k}</h2>{summary[k]}</div>)}
+        <h2>Sources</h2>
+        {summary.sources}
         The above is an AI generated summary of {name}. It may contain errors and should be checked against other sources.
         Please contact the Boat Register editors if you find any mistakes.
+        
         <p></p>
     </div>;
 }
