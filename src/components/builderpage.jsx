@@ -22,7 +22,6 @@ function toTitleCase(str) {
 
 export function BuilderSummary({ name, place }) {  
         const [summary, setSummary] = useState();
-        console.log('BS', name, place);
         useEffect(() => {
             const getData = async () => {
                 const data = await getScopedData('public', 'builder', { builder: name, place: place?.place });
@@ -44,18 +43,19 @@ export function BuilderSummary({ name, place }) {
         return <div>We don't have much information on this builder</div>;
     }
     const extra = headings.filter((h) => !['notable_vessels', 'origins', 'legacy', 'sources', 'early_work'].includes(h));
+    console.log('H', headings, 'E', extra);
     return <div>
         <h2>Origins</h2>
-        {summary.origins}
+        {JSON.stringify(summary.origins)}
         <h2>Early Work</h2>
-        {summary.early_work}
+        {JSON.stringify(summary.early_work)}
         <h2>Notable Vessels</h2>
-        {summary.notable_vessels}
+        {JSON.stringify(summary.notable_vessels)}
         <h2>Legacy</h2>
-        {summary.legacy}
-        {extra.map((k) => <div key={toTitleCase(k.replaceAll('_', ' '))}><h2>{k}</h2>{summary[k]}</div>)}
+        {JSON.stringify(summary.legacy)}
+        {extra.map((k) => <div key={toTitleCase(k.replaceAll('_', ' '))}><h2>{k}</h2>{JSON.stringify(summary[k])}</div>)}
         <h2>Sources</h2>
-        {summary.sources}
+        {{JSON.stringify(summary.sources)}
         The above is an AI generated summary of {name}. It could be a load of rubbish and should be checked against other sources.
         Please contact the Boat Register editors if you find any mistakes.
         
