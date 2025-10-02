@@ -42,7 +42,7 @@ export function BuilderSummary({ name, place }) {
     const [summary, setSummary] = useState();
     useEffect(() => {
         const getData = async () => {
-            const data = await getScopedData('public', 'builder', { builder: name, place: place?.place });
+            const data = await getScopedData('public', 'builder', { builder: name, place: place });
             setSummary(data);
         }
         if (!summary) {
@@ -82,6 +82,28 @@ export function BuilderSummary({ name, place }) {
     </div>;
 }
 
+export function OtherBuilders({ place, yards }) {
+    if (yards.length === 0) {
+        return '';
+    }
+    return <>
+        <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
+        <ul>
+            {yards.filter((y) => y.name !== name).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
+        </ul>
+    </>;
+}
+
+export function NoBuilder({ place, boats}) {
+    if (Array.isArray(boats) && boats.length > 0) {
+        return <>
+            <h3>Boats built in {place} with no builder recorded</h3>
+            <FleetDisplay filters={{ oga_nos: boats }} defaultExpanded={true} />
+        </>;
+    }
+    return '';
+}
+
 export default function BuilderPage({ name, nb }) {
     const [place, setPlace] = useState();
     useEffect(() => {
@@ -102,12 +124,8 @@ export default function BuilderPage({ name, nb }) {
         <p></p>
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        <h3>Other builders referenced in the OGA Boat Register in {place?.place}</h3>
-        <ul>
-            {yards(place).filter((y) => y.name !== name).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
-        </ul>
-        <h3>Boats built in {place?.place} with no builder recorded</h3>
-        <FleetDisplay filters={{ oga_nos: nobuilder }} defaultExpanded={true} />
+        <OtherBuilders place={place?.place} yards={yards(place)} />
+        <NoBuilder place={place?.place} boats={nobuilder} />
         If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
         <p></p>
         <Contact text={name} />
