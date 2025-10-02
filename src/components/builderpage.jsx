@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { getFilterable, getPlaces, getScopedData } from '../util/api';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
-import { siLK } from '@mui/material/locale';
 
 function yards(place) {
     if (!place || !place.yards) {
