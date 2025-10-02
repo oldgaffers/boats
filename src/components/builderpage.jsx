@@ -76,7 +76,6 @@ export function BuilderSummary({ name, place }) {
         <ul>
             {(summary.sources||[]).map((s) => (<li key={s}><a href={s}>{s}</a></li>))}
         </ul>
-        {JSON.stringify(summary.sources)}
         <div>
         The above is an AI generated summary of {name}. It could be a load of rubbish and should be checked against other sources.
         Please contact the Boat Register editors if you find any mistakes.
