@@ -20,6 +20,24 @@ function toTitleCase(str) {
   );
 }
 
+export function NotableVessels({ notable_vessels }) {
+    if (!notable_vessels) {
+        return '';
+    }
+    if (notable_vessels.length == 0) {
+        return '';
+    }
+    return <>
+        <h4>Notable Vessels</h4>
+        <table>
+            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
+            {notable_vessels.map((v) => (
+                <tr><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes||''}</td></tr>
+            ))}
+        </table>
+        </>;
+}
+
 export function BuilderSummary({ name, place }) {  
         const [summary, setSummary] = useState();
         useEffect(() => {
@@ -50,19 +68,13 @@ export function BuilderSummary({ name, place }) {
         {summary.origins}
         <h4>Early Work</h4>
         {summary.early_work}
-        <h4>Notable Vessels</h4>
-        <table>
-            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
-            {summary.notable_vessels.map((v) => (
-                <tr><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes||''}</td></tr>
-            ))}
-        </table>
+        <NotableVessels notable_vessels={summary.notable_vessels} />
         <h4>Legacy</h4>
         {summary.legacy}
         {extra.map((k) => <div key={k}><h4>{toTitleCase(k.replaceAll('_', ' '))}</h4>{JSON.stringify(summary[k])}</div>)}
         <h4>Sources</h4>
         <ul>
-            {summary.sources.map((s) => (<li key={s}><a href={s}>{s}</a></li>))}
+            {(summary.sources||[]).map((s) => (<li key={s}><a href={s}>{s}</a></li>))}
         </ul>
         {JSON.stringify(summary.sources)}
         <div>
