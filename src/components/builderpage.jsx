@@ -3,16 +3,6 @@ import { getPlaces, getScopedData } from '../util/api';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
 
-function yards(place) {
-    if (!place || !place.yards) {
-        return [];
-    }
-    if (Array.isArray(place.yards)) {
-        return place.yards;
-    }
-    return Object.values(place.yards);
-}
-
 function toTitleCase(str) {
     return str.replace(
         /\w\S*/g,
@@ -82,14 +72,14 @@ export function BuilderSummary({ name, place }) {
     </div>;
 }
 
-export function OtherBuilders({ place, yards }) {
+export function OtherBuilders({ place, yards, yard }) {
     if (yards.length === 0) {
         return '';
     }
     return <>
         <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
         <ul>
-            {yards.filter((y) => y.name !== name).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
+            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
     </>;
 }
@@ -116,7 +106,7 @@ export default function BuilderPage({ name, place }) {
         if (!builders) {
             getData();
         }
-    }, [builders, name]);
+    }, [builders, name, place]);
     console.log('NB', noBuilder);
     const others = builders.filter((b) => b.name !== name);
     return <div>
@@ -125,7 +115,7 @@ export default function BuilderPage({ name, place }) {
         <p></p>
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        <OtherBuilders place={place} yards={others} />
+        <OtherBuilders place={place} yard={name} yards={others} />
         <NoBuilder place={place} boats={noBuilder} />
         If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
         <p></p>
