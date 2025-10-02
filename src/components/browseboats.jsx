@@ -19,7 +19,7 @@ import { useBoats } from '../util/boats';
 import Welcome from './Welcome';
 
 function makePickers(filtered) {
-  console.log('PB', filtered);
+  // console.log('PB', filtered);
   const pickers = {};
   [
     "name",
@@ -50,7 +50,7 @@ function makePickers(filtered) {
     min: years[0] || 1800,
     max: years[years.length - 1] || new Date().getFullYear(),
   };
-  console.log('P', pickers);
+  // console.log('P', pickers);
   return pickers;
 }
 
