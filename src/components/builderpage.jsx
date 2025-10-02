@@ -94,7 +94,7 @@ export default function BuilderPage({ name, nb }) {
                 getData();
             }
         }, [place, name]);
-    const nobuilder = (nb||'').split(',');
+    const nobuilder = (nb||'').split(',').map((o) => Number(o));
     console.log('NB', nobuilder);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
@@ -107,7 +107,7 @@ export default function BuilderPage({ name, nb }) {
             {yards(place).filter((y) => y.name !== name).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
         <h3>Boats built in {place?.place} with no builder recorded</h3>
-        <FleetDisplay filters={{ ogaNo: nobuilder }} defaultExpanded={true} />
+        <FleetDisplay filters={{ oga_nos: nobuilder }} defaultExpanded={true} />
         If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
         <p></p>
         <Contact text={name}/>
