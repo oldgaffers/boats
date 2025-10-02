@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getFilterable, getPlaces, getScopedData } from '../util/api';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
+import { siLK } from '@mui/material/locale';
 
 function yards(place) {
     if (!place || !place.yards) {
@@ -45,16 +46,25 @@ export function BuilderSummary({ name, place }) {
     const extra = headings.filter((h) => !['notable_vessels', 'origins', 'legacy', 'sources', 'early_work'].includes(h));
     console.log('H', headings, 'E', extra);
     return <div>
-        <h2>Origins</h2>
+        <h3>Origins</h3>
         {JSON.stringify(summary.origins)}
-        <h2>Early Work</h2>
+        <h3>Early Work</h3>
         {JSON.stringify(summary.early_work)}
-        <h2>Notable Vessels</h2>
+        <h3>Notable Vessels</h3>
+        <table>
+            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th></tr>
+            {summary.notable_vessels.map((v) => (
+                <tr><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td></tr>
+            ))}
+        </table>
         {JSON.stringify(summary.notable_vessels)}
-        <h2>Legacy</h2>
+        <h3>Legacy</h3>
         {JSON.stringify(summary.legacy)}
-        {extra.map((k) => <div key={k}><h2>{toTitleCase(k.replaceAll('_', ' '))}</h2>{JSON.stringify(summary[k])}</div>)}
-        <h2>Sources</h2>
+        {extra.map((k) => <div key={k}><h3>{toTitleCase(k.replaceAll('_', ' '))}</h3>{JSON.stringify(summary[k])}</div>)}
+        <h3>Sources</h3>
+        <ul>
+            {summary.sources.map((s) => (<li key={s}><a href={s}>{s}</a></li>))}
+        </ul>
         {JSON.stringify(summary.sources)}
         <div>
         The above is an AI generated summary of {name}. It could be a load of rubbish and should be checked against other sources.
