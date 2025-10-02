@@ -8,10 +8,10 @@ export default async function boatsByPlaceBuilt(filters = {}) {
     const located = await Promise.all(filtered.map(async (p) => {
         let n = p.place;
         const g = await geolocate(n);
-        if (g.lat) {
+        if (g?.lat) {
             return { ...p, ...g, latitude: g.lat, longitude: g.lng };
         }
-        console.log(p.place, g);
+        // console.log(p, g);
         return null;
     }));
     const valid = (await located).filter((p) => p !== null);
