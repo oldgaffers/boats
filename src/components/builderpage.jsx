@@ -11,7 +11,6 @@ function toTitleCase(str) {
 }
 
 export function VesselTable({ heading, vessels }) {
-    console.log('V', vessels);
     const title = toTitleCase(heading.replaceAll('_', ' '));
     if (Array.isArray(vessels)) {
     return <>
@@ -112,46 +111,40 @@ export function NoBuilder({ place, boats }) {
 }
 
 export default function BuilderPage({ name, place }) {
-    const [builders, setBuilders] = useState();
-    const [noBuilder, setNoBuilder] = useState();
+    const [location, setLocation] = useState();
     useEffect(() => {
         const getData = async () => {
             const places = await getPlaces();
             if (place) {
-                const p = places[place];
-                setBuilders(p.yards);
-                setNoBuilder(p.no_yard)
+                setLocation(places[place]);
             } else {
                 const p = Object.values(places).find((p) => p.yards[name]);
                 if (p) {
-                    setBuilders(p.yards);
-                    setNoBuilder(p.no_yard)
+                    setLocation(p);
                 } else {
-                    setBuilders({});
-                    setNoBuilder([]);
+                    setLocation({ place: 'unspecified place', yards: []});
                 }
             }
         }
-        if (name && !builders) {
+        if (name && !location) {
             getData();
         }
-    }, [builders, name, place]);
+    }, [location, name, place]);
     if (!name) {
         return "This page expects the name of a boat builder as the value of a name query parameter."
     }
-    if (!builders)
-        return '';
-    if (!noBuilder)
-        return '';
-    const others = Object.values(builders).filter((b) => b.name !== name);
+    if (!location) {
+        return 'Loading';
+    }
+    const others = Object.values(location.yards).filter((b) => b.name !== name);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
         <p></p>
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        <OtherBuilders place={place} yard={name} yards={others} />
-        <NoBuilder place={place} boats={noBuilder} />
+        <OtherBuilders place={location.place} yard={name} yards={others} />
+        <NoBuilder place={location.place} boats={location.no_yard} />
         If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
         <p></p>
         <Contact text={name} />
