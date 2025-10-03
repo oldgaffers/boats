@@ -136,13 +136,15 @@ function yards(place) {
 }
 
 function PlaceInfo({ place }) {
+    const y = yards(place);
+    y.sort((a, b) => a.count - b.count);
     return <div>
         <h3>{place.place}</h3>
         <p>Boats built here: {place.count}</p>
-        <h4>Builders</h4><table>
-        {yards(place).map(((y, i) => <tr key={i}>
-            <td><a href={`/boat_register/builder/?name=${y.name}&place=${place.place}`}>{y.name}</a></td>
-            <td>{y.count}</td></tr>)) }  </table>  
+        <h4>Builders</h4>
+        {y.map(((y, i) => <div key={i}>
+            <a href={`/boat_register/builder/?name=${y.name}&place=${place.place}`}>{y.name}</a>
+           </div>)) }
     </div>;
 }
 
