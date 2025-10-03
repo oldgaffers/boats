@@ -252,7 +252,11 @@ describe('EditBoatWizard component tests', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
     await waitFor(() => {
-      screen.getByText('Basic Details');
+      screen.getAllByText('Rig');
+    });
+    fireEvent.click(screen.getByText('Continue'));
+    await waitFor(() => {
+      screen.getByText('Generic Type(s)');
     });
     fireEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
@@ -326,7 +330,11 @@ describe('EditBoatWizard component tests', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
     });
     await waitFor(() => {
-      screen.getByText('Basic Details');
+      screen.getAllByText('Rig');
+    });
+    fireEvent.click(screen.getByText('Continue'));
+    await waitFor(() => {
+      screen.getByText('Generic Type(s)');
     });
     fireEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
