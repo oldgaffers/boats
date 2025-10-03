@@ -95,7 +95,7 @@ export function OtherBuilders({ place, yards, yard }) {
     return <>
         <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
         <ul>
-            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}&place=place`}>{y.name}</a> ({y.count})</li>)}
+            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}&place={place}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
     </>;
 }
