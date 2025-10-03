@@ -79,7 +79,7 @@ export function OtherBuilders({ place, yards, yard }) {
     return <>
         <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
         <ul>
-            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}`}>{y.name}</a> ({y.count})</li>)}
+            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}&place=place`}>{y.name}</a> ({y.count})</li>)}
         </ul>
     </>;
 }
@@ -99,15 +99,29 @@ export default function BuilderPage({ name, place }) {
     const [noBuilder, setNoBuilder] = useState();
     useEffect(() => {
         const getData = async () => {
-            const p = (await getPlaces())[place];
-            console.log('P', p);
-            setBuilders(p.yards);
-            setNoBuilder(p.no_yard)
+            const places = await getPlaces();
+            if (place) {
+                const p = places[place];
+                setBuilders(p.yards);
+                setNoBuilder(p.no_yard)
+            } else {
+                const p = Object.values(places).find((p) => p.yards[name]);
+                if (p) {
+                    setBuilders(p.yards);
+                    setNoBuilder(p.no_yard)
+                } else {
+                    setBuilders({});
+                    setNoBuilder([]);
+                }
+            }
         }
-        if (!builders) {
+        if (name && !builders) {
             getData();
         }
     }, [builders, name, place]);
+    if (!name) {
+        return "This page expects the name of a boat builder as the value of a name query parameter."
+    }
     if (!builders)
         return '';
     if (!noBuilder)
