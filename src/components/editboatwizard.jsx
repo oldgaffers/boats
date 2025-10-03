@@ -77,7 +77,7 @@ const defaultSchema = (pickers) => {
               ...GenericTypeItems(pickers),
               {
                 component: 'plain-text',
-                name: 'gt-deec',
+                name: 'gt-desc',
                 label: 'Most boats will only have one, but a Nobby can be a yacht too, for example',
               },
             ],
