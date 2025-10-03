@@ -155,13 +155,25 @@ export const constructionItems = (pickers) => {
   ];
 };
 
+function optionlist(p) {
+  const l = [...new Set(p.filter((o) => o && o.trim() !== ''))];
+  return l.map((o) => ({ label: o, value: o }));
+}
+
 function optionsFromPicker(p) {
-  const l = [...new Set(p)];
-  return l.map((o) => ({ label: o.name, value: o.name }));
+  if (Array.isArray(p)) {
+    if (p.length === 0) {
+      return [];
+    }
+    if (typeof p[0] === 'string') {
+      return optionlist(p);
+    }
+    return optionlist(p.map((o) => o.name));
+  }
+  return [];
 }
 
 export const extendableList = ({ pickers, name, label }) => {
-  console.log('extendableList', name, label)
   return [
     {
       component: 'dual-list-select',
@@ -200,12 +212,13 @@ export const extendableItems = ({ pickers, name, label }) => {
         ]
       },
       name: `ddf.new_${name}`,
-      label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
+      label: `if you can't find anything suitable add a new one here`,
       isRequired: false,
     },
   ];
 };
 
+export const GenericTypeItems = (pickers) => extendableList({ pickers, name: 'generic_type', label: 'Generic Type' })
 export const builderItems = (pickers) => extendableList({ pickers, name: 'builder', label: 'Builder' })
 export const designerItems = (pickers) => extendableList({ pickers, name: 'designer', label: 'Designer' })
 export const designClassItems = (pickers) => extendableItems({ pickers, name: 'design_class', label: 'Design Class' })

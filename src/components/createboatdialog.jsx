@@ -14,6 +14,7 @@ import {
   builderItems,
   constructionItems,
   basicDimensionItems,
+  GenericTypeItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -23,7 +24,7 @@ import {
   descriptionsItems,
   referencesItems,
   hullFields,
-  basicFields,
+  rigFields,
 } from "./ddf/SubForms";
 import Typography from "@mui/material/Typography";
 import { getBoatData, getFilterable, getPicklists } from '../util/api';
@@ -253,14 +254,26 @@ const schema = (pickers) => {
             ],
           },
           {
-            name: "basic-step",
-            nextStep: "build-step",
+            name: "rig-step",
+            nextStep: "type-step",
             fields: [
               {
                 component: 'sub-form',
-                name: "basic.form",
-                title: "Basic Details",
-                fields: basicFields(pickers),
+                name: "rig.form",
+                title: "Rig",
+                fields: rigFields(pickers),
+              },
+            ],
+          },
+          {
+            name: "type-step",
+            nextStep: "build-step",
+            fields: [
+              ...GenericTypeItems(pickers),
+              {
+                component: 'plain-text',
+                name: 'gt-deec',
+                label: 'Most boats will only have one, but a Nobby can be a yacht too, for example',
               },
             ],
           },

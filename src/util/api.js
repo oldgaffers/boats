@@ -109,16 +109,13 @@ export async function getBoatData(ogaNo) {
   const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
   if (r.ok) {
     const data = await r.json();
-    if (!Array.isArray(data.result.pageContext.boat.generic)) {
-      data.result.pageContext.boat.generic_type = [data.result.pageContext.boat.generic_type];
-    }
-    if (!Array.isArray(data.result.pageContext.boat.builder)) {
-      data.result.pageContext.boat.builder = [data.result.pageContext.boat.builder];
-    }
-    if (!Array.isArray(data.result.pageContext.boat.designer)) {
-      data.result.pageContext.boat.designer = [data.result.pageContext.boat.designer];
-    }
     data.result.pageContext.boat?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+    ['generic_type', 'builder', 'designer'].forEach((key) => {
+      if (!Array.isArray(data.result.pageContext.boat[key])) {
+        data.result.pageContext.boat[key] = [data.result.pageContext.boat[key]];
+      }
+      data.result.pageContext.boat[key] = data.result.pageContext.boat[key].filter((v) => v);
+    });
     return data;  
   }
 }

@@ -16,6 +16,7 @@ import {
   constructionItems,
   designClassItems,
   basicDimensionItems,
+  GenericTypeItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -29,7 +30,7 @@ import {
   doneFields,
   hullFields,
   descriptionsItems,
-  basicFields,
+  rigFields,
 } from "./ddf/SubForms";
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
@@ -46,8 +47,8 @@ const defaultSchema = (pickers) => {
         name: "boat",
         fields: [
           {
-            name: "basic-step",
-            nextStep: "descriptions-step",
+            name: "rig-step",
+            nextStep: "type-step",
             fields: [
               {
                 component: 'text-field',
@@ -63,9 +64,21 @@ const defaultSchema = (pickers) => {
               },
               {
                 component: 'sub-form',
-                name: "basic.form",
-                title: "Basic Details",
-                fields: basicFields(pickers),
+                name: "rig.form",
+                title: "Rig",
+                fields: rigFields(pickers),
+              },
+            ],
+          },
+          {
+            name: "type-step",
+            nextStep: "descriptions-step",
+            fields: [
+              ...GenericTypeItems(pickers),
+              {
+                component: 'plain-text',
+                name: 'gt-deec',
+                label: 'Most boats will only have one, but a Nobby can be a yacht too, for example',
               },
             ],
           },
@@ -317,12 +330,11 @@ export function prepareInitialValues(boat, user) {
   ['builder', 'designer'].forEach((key) => {
     const val = initialValues[key];
     if (val) {
-      initialValues[key] = val.map((v) => v?.name);
+      initialValues[key] = val.filter((v) => v).map((v) => v?.name);
     } else {
       initialValues[key] = [];
     }
   });
-
   ['design_class'].forEach((key) => {
     initialValues[key] = initialValues[key]?.name;
   });
@@ -340,6 +352,7 @@ export function prepareInitialValues(boat, user) {
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
+console.log('IV', initialValues)
 
   return initialValues;
 

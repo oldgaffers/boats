@@ -8,7 +8,7 @@ import {
   constructionItems,
 } from "./util";
 
-export const basicFields = (pickers) => [
+export const rigFields = (pickers) => [
   {
     component: 'select',
     name: "mainsail_type",
@@ -34,17 +34,7 @@ export const basicFields = (pickers) => [
     ],
     options: mapPicker(pickers.rig_type),
     isOptionEqualToValue: (option, value) => option.value === value,
-  },
-  {
-    component: 'select',
-    name: "generic_type",
-    label: "Generic Type",
-    isReadOnly: false,
-    isSearchable: true,
-    isClearable: true,
-    isOptionEqualToValue: (option, value) => option.value === value,
-    options: mapPicker(pickers.generic_type),
-  },
+  }
 ];
 
 export const referencesItems = [
