@@ -10,22 +10,39 @@ function toTitleCase(str) {
     );
 }
 
+export function VesselTable({ heading, vessels }) {
+    console.log('V', vessels);
+    const title = toTitleCase(heading.replaceAll('_', ' '));
+    if (Array.isArray(vessels)) {
+    return <>
+        <h4>{title}</h4>
+        <table>
+            <thead>
+            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+            {vessels.map((v, index) => (
+                <tr key={index}><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes || ''}</td></tr>
+            ))}
+            </tbody>
+        </table>
+    </>;
+    }
+    return <div><h4>{title}</h4><div>{vessels}</div></div>
+}
+
 export function NotableVessels({ notable_vessels }) {
     if (Array.isArray(notable_vessels) && notable_vessels.length > 0) {
-        return <>
-            <h4>Notable Vessels</h4>
-            <table>
-                <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
-                {notable_vessels.map((v) => (
-                    <tr><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes || ''}</td></tr>
-                ))}
-            </table>
-        </>;
+        return <VesselTable heading='Notable Vesseles' vessels={notable_vessels}/>
     }
     if (!notable_vessels) {
         return '';
     }
-    return notable_vessels;
+    if (typeof notable_vessels === 'string') {
+        return notable_vessels;
+    }
+    const categories = Object.keys(notable_vessels);
+    return <>{categories.map((c) => <VesselTable key={c} heading={c} vessels={notable_vessels[c]}/>)}</>;
 }
 
 export function BuilderSummary({ name, place }) {
@@ -84,7 +101,7 @@ export function OtherBuilders({ place, yards, yard }) {
     </>;
 }
 
-export function NoBuilder({ place, boats}) {
+export function NoBuilder({ place, boats }) {
     if (Array.isArray(boats) && boats.length > 0) {
         return <>
             <h3>Boats built in {place} with no builder recorded</h3>
@@ -127,7 +144,6 @@ export default function BuilderPage({ name, place }) {
     if (!noBuilder)
         return '';
     const others = Object.values(builders).filter((b) => b.name !== name);
-    console.log('O', others, place, noBuilder);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
