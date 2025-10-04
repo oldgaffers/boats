@@ -1,4 +1,5 @@
 import boatsByPlaceBuilt from './boatsByPlaceBuilt';
+import boatsByHomePort from './boatsbyhomeport';
 import { boatRegisterHome } from './constants';
 
 const mock = false; // true;
@@ -190,9 +191,18 @@ export async function disposeOgaNo(oga_no) {
   return r.json();
 }
 
+const localTables = [
+  { subject: 'place_built', action: boatsByPlaceBuilt },
+  { subject: 'home_port', action: boatsByHomePort },
+];
+
 export async function getScopedData(scope, subject, filters, accessToken) {
   if (mock) {
     return {};
+  }
+  const local = localTables.find((l) => l.subject === subject);
+  if (local) {
+    return local.action(filters);
   }
   if (subject === 'place_built') {
     return boatsByPlaceBuilt(filters);
