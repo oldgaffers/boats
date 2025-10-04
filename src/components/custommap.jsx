@@ -9,6 +9,21 @@ import { CompactBoatCard } from './boatcard';
 import { getScopedData } from '../util/api';
 import { Stack } from '@mui/system';
 import humanizeDuration from 'humanize-duration';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+function SimpleBackdrop({open}) {
+  return (
+    <div>
+      <Backdrop
+        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    </div>
+  );
+}
 
 function gaffer(colour) {
     return L.icon({
@@ -196,6 +211,7 @@ export default function CustomMap(props) {
                 <PlaceMarkers entries={places} />
 
             </MapContainer>
+            <SimpleBackdrop open={!data}/>
         </Stack>
     );
 }
