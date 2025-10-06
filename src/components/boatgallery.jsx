@@ -66,7 +66,7 @@ export default function BoatGallery({ boats }) {
             lg={3}
             xl={3}
             >
-              <BoatImage boat={boat} />
+              <CompactBoatCard wanted={galleryWanted} oga_no={boat.oga_no} />
             </Grid>
             );
           }
