@@ -128,7 +128,7 @@ export function BoatCardImage({ albumKey, name }) {
   return (<AltForThumb />);
 }
 
-export function CompactBoatCard({ view = 'app', ogaNo }) {
+export function CompactBoatCard({ view = 'app', ogaNo, wanted=compactWanted}) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -146,7 +146,7 @@ export function CompactBoatCard({ view = 'app', ogaNo }) {
       <BoatCardImage albumKey={boat.image_key} name={boat.name} />
       <CardContent>
         <Typography variant='subtitle2'>{boat.name} ({boat.oga_no})</Typography>
-        <BoatCardWords boat={boat} wanted={compactWanted} variant='caption' />
+        <BoatCardWords boat={boat} wanted={wanted} variant='caption' />
       </CardContent>
       <CardActions>
         <Button
