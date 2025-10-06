@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import { Card, CardMedia, Skeleton } from '@mui/material';
 import { getBoatData, getThumb } from '../util/api';
 import {CompactBoatCard} from './boatcard';
+import { m2f } from '../util/format';
 
 const galleryWanted = {
   length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
