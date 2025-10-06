@@ -9,8 +9,8 @@ const galleryWanted = {
   length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
   year: { label: 'Year', access: (b, k) => b[k] },
 };
-/*
-function BoatCardImage({ albumKey, name }) {
+
+export function BoatCardImage({ albumKey, name }) {
   const [data, setData] = useState();
 
   const height = 220;
@@ -35,7 +35,7 @@ function BoatCardImage({ albumKey, name }) {
   return `picture of ${name}`;
 }
 
-function BoatImage({ boat }) {
+export function BoatImage({ boat }) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -53,7 +53,7 @@ function BoatImage({ boat }) {
   <p></p>
   </Card>
 }
-*/
+
 export default function BoatGallery({ boats }) {
 
   return (
