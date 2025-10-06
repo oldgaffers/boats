@@ -2,6 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Card, CardMedia, Skeleton } from '@mui/material';
 import { getBoatData, getThumb } from '../util/api';
+import {CompactBoatCard} from './boatcard';
+
+const galleryWanted = {
+  length_on_deck: { label: 'Length', access: (b, k) => m2f(b?.handicap_data?.[k]) },
+  year: { label: 'Year', access: (b, k) => b[k] },
+};
 
 function BoatCardImage({ albumKey, name }) {
   const [data, setData] = useState();
