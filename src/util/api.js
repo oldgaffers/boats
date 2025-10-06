@@ -23,7 +23,7 @@ const stage = 'default'
 
 export async function putGeneralEnquiry(scope, subject, data) {
   return (await fetch(
-    `${api1}/$}{stage}/${scope}/${subject}`,
+    `${api1}/${stage}/${scope}/${subject}`,
     {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -62,7 +62,7 @@ export async function postScopedData(scope, subject, data, accessToken) {
     headers.Authorization = `Bearer ${accessToken}`;
   }
   return fetch(
-    `${api1}/{stage}/${scope}/${subject}`,
+    `${api1}/${stage}/${scope}/${subject}`,
     {
       method: 'POST',
       body: JSON.stringify(data),
