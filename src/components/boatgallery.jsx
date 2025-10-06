@@ -55,7 +55,7 @@ export function BoatImage({ boat }) {
 }
 
 export default function BoatGallery({ boats }) {
-
+  console.log('BoatGallery', boats)
   return (
     <Grid container alignItems='stretch'>
       {boats.map((boat) => {
@@ -67,7 +67,7 @@ export default function BoatGallery({ boats }) {
             lg={3}
             xl={3}
             >
-              <CompactBoatCard wanted={galleryWanted} oga_no={boat.oga_no} />
+              <CompactBoatCard wanted={galleryWanted} ogaNo={boat.oga_no} />
             </Grid>
             );
           }

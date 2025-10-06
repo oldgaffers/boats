@@ -140,7 +140,7 @@ export function CompactBoatCard({ view = 'app', ogaNo, wanted=compactWanted}) {
   }, [data, ogaNo]);
 
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
-
+  console.log('CompactBoatCard', view, ogaNo);
   return (
     <Card sx={{ width: 200 }}>
       <BoatCardImage albumKey={boat.image_key} name={boat.name} />
