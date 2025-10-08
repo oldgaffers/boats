@@ -11,7 +11,7 @@ export function HandicapDisplay({ boat }) {
   const handicapData = boat?.handicap_data || {};
   const thcf = fThcf(boatm2f(boat));
   let handicapDisplay = thcf.toFixed(3);
-	if (thcf > 0 && handicapData.last_modified) {
+	if (thcf > 0.1 && handicapData.last_modified) {
         const lmd = new Date(handicapData.last_modified);
         handicapDisplay = `${handicapDisplay} (last modified ${lmd.toLocaleDateString()})`;
     }
