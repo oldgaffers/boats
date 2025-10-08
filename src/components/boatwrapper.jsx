@@ -1,15 +1,13 @@
 import React from 'react';
 import { useAsync } from 'react-async-hook';
 import { useAuth0 } from "@auth0/auth0-react";
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { gql } from '@apollo/client';
 import BoatDetail from './boatdetail';
 import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
+import { Grid, Stack } from '@mui/material';
 
 export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
   members(members: $members) {
@@ -61,29 +59,18 @@ export default function BoatWrapper({ client, boat, location, lastModified }) {
   const ownerships = result || boat.ownerships || [];
   ownerships.sort((a, b) => a.start > b.start);
   return (
-    <Paper sx={{paddingTop: '20px', paddingBottom: '20px'}}>
-      <Container maxWidth="lg">
-      <Grid container spacing={3}>
-      <Grid item xs={12} md={8} lg={9}>
-          <Typography variant="h3" component="h3">{boat.name}</Typography>
+    <Stack>
+      <Typography variant="h3" component="h3">{boat.name} ({boat.oga_no})</Typography>
+      <Grid container>
+        <Grid size={8}>
+          <SmugMugGallery albumKey={boat.image_key} ogaNo={boat.oga_no} name={boat.name} />
+        </Grid>
+        <Grid size={4}>
+          <BoatSummary boat={boat} location={location} lastModified={lastModified} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-          <Typography variant="h3" component="h3">{boat.year}</Typography>
-      </Grid>
-      <Grid item xs={12} md={8} lg={9}>
-        <Paper>
-          <SmugMugGallery albumKey={boat.image_key} />
-        </Paper>
-      </Grid>
-      <Grid item xs={12} md={4} lg={3}>
-        <BoatSummary boat={boat} location={location} lastModified={lastModified} />
-      </Grid>
-      <Grid item xs={12}>
-          <BoatDetail view={view} boat={{...boat, ownerships }} user={user}/>
-      </Grid>
-    </Grid>
-    <BoatButtons  boat={{ ...boat, ownerships }} location={location} user={user} />
-    </Container>
-    </Paper>
+      <BoatDetail view={view} boat={{ ...boat, ownerships }} user={user} />
+      <BoatButtons boat={{ ...boat, ownerships }} location={location} user={user} />
+    </Stack>
   );
 };

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -58,9 +57,11 @@ export default function BoatSummary({ boat, lastModified }) {
   }
 
   return (
-    <Paper sx={{height: "100%", paddingLeft: '0.5em', paddingRight: '0.5em'}}>
+    <Box
+      width={{xs: '100vw', sm: '25vw'}}
+    >
     <Typography variant="h4" component="h4">Summary</Typography>
-    <ConditionalText value={boat.oga_no} label="OGA no"/>
+    <ConditionalText value={boat.year} label="Year Built"/>
     <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
     <ConditionalText value={boat.rig_type} label="Rig"/>
     <ConditionalText value={boat.home_port} label="Home port or other location"/>
@@ -92,6 +93,6 @@ export default function BoatSummary({ boat, lastModified }) {
       <ReactFBLike href={'https://oga.org.uk'+href} appId="644249802921642" />
     </div>
     <ConditionalText value={new Date(lastModified).toLocaleDateString()} label="Last update"/>
-    </Paper>
+    </Box>
   );
 }
