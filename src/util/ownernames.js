@@ -1,6 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
 
-const MEMBER_QUERY = gql(`query members($members: [Int]!) {
+export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
   members(members: $members) {
     firstname
     lastname
@@ -37,6 +37,7 @@ function addNames(data, ownerships) {
 export function useGetOwnerNames(boat) {
     const rawMemberNumbers = boat.ownerships?.filter((o) => queryIf(o)).map((o) => o.member) || [];
     const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
+    console.log('M', memberNumbers);
     const { error, loading, data } = useQuery(MEMBER_QUERY, { variables: { members: memberNumbers }});
     if (error) {
         console.log(error)
