@@ -7,6 +7,12 @@ import '../util/api';
 import * as MockDate from 'mockdate';
 import { MockedProvider } from "@apollo/client/testing";
 import { MEMBER_QUERY } from "../util/ownernames";
+import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
+
+  // Adds messages only in a dev environment
+  loadDevMessages();
+  loadErrorMessages();
+
 
 const pickers = {
   boatNames: [],
@@ -243,7 +249,7 @@ const mocks = [
     request: {
       query: MEMBER_QUERY,
       variables: {
-        members: [1]
+        members: [6610]
       }
     },
     result: {
