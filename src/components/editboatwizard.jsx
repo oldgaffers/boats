@@ -37,6 +37,7 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
+import { useGetOwnerNames } from "../util/ownernames";
 
 const defaultSchema = (pickers) => {
   return {
@@ -297,8 +298,8 @@ export function boatdiff(before, after) {
   return cj.diff(before, after);
 }
 
-export function prepareInitialValues(boat, user) {
-  const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
+export function prepareInitialValues(boat, ownerships, user) {
+  const ownerids = ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
@@ -339,7 +340,7 @@ export function prepareInitialValues(boat, user) {
     initialValues[key] = initialValues[key]?.name;
   });
 
-  const ownersWithId = boat.ownerships
+  const ownersWithId = ownerships
   .filter((owner) => owner.name || owner.id) // remove note and text rows
   .map((owner, index) => {
     return {
@@ -352,7 +353,6 @@ export function prepareInitialValues(boat, user) {
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
-console.log('IV', initialValues)
 
   return initialValues;
 
@@ -479,6 +479,8 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
 
   const [pickers, setPickers] = useState();
 
+  const ownerships = useGetOwnerNames(boat);
+
   useEffect(() => {
     if (!pickers) {
       getPicklists().then((r) => {
@@ -506,7 +508,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
 
     const rounded = boatf2m(boatm2f(boat)); // to exclude changes due to rounding
     const fulldelta = formatters.jsonpatch.format(boatdiff(rounded, modifiedBoat));
-
+  
     onSubmit(
       fulldelta,
       newItems,
@@ -515,7 +517,6 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
     );
 
   }
-
 
   return (
     <Dialog
@@ -538,7 +539,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
           schema={activeSchema}
           onSubmit={handleSubmit}
           onCancel={onCancel}
-          initialValues={prepareInitialValues(boat, user)}
+          initialValues={prepareInitialValues(boat, ownerships, user)}
           subscription={{ values: true }}
         />
       </LocalizationProvider>

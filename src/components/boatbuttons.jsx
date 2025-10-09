@@ -7,9 +7,10 @@ import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
 import SetHandicapCheckedButton from './sethandicapchecked';
+import { useAuth0 } from '@auth0/auth0-react';
 
-export default function BoatButtons({ boat, user }) {
-
+export default function BoatButtons({ boat }) {
+  const { user } = useAuth0();
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
   const photoCancelled = () => {

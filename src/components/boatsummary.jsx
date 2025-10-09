@@ -61,16 +61,14 @@ export default function BoatSummary({ boat, lastModified }) {
       width={{xs: '100vw', sm: '25vw'}}
     >
     <Typography variant="h4" component="h4">Summary</Typography>
+    <Box dangerouslySetInnerHTML={{ __html: boat.short_description }} />
     <ConditionalText value={boat.year} label="Year Built"/>
     <ConditionalText value={boat.mainsail_type} label="Mainsail"/>
     <ConditionalText value={boat.rig_type} label="Rig"/>
     <ConditionalText value={boat.home_port} label="Home port or other location"/>
-    <ConditionalText label="Website">
+    {boat.website?<ConditionalText label="Website">
       <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>
-    </ConditionalText>
-    <Box className="MuiTypography-body1">
-      <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
-    </Box>
+    </ConditionalText>:''}
     <HandicapDisplay boat={boat} />
     <ConditionalText value={boat.previous_names} label="Previous name/s"/>
     <References boat={boat}/>
