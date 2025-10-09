@@ -60,8 +60,8 @@ test('prepareInitialValues', () => {
     'https://oga.org.uk/roles': ['editor', 'member'],
   };
 
-  expect(prepareInitialValues(robinetta, robinetta.ownerships)).toMatchSnapshot();
-  const iv = prepareInitialValues(robinetta, robinetta.ownerships, user);
+  expect(prepareInitialValues(robinetta)).toMatchSnapshot();
+  const iv = prepareInitialValues(robinetta, user);
   expect(iv).toMatchSnapshot();
   expect(iv.designer).toEqual(['D.A. Rayner']);
   expect(iv.builder).toEqual(['Enterprise Small Craft']);
@@ -85,12 +85,13 @@ test('no change', () => {
     'https://oga.org.uk/roles': ['editor', 'member'],
   };
   {
-    const iv = prepareInitialValues(robinetta, robinetta.ownerships, user);
+    const iv = prepareInitialValues(robinetta, user);
     const { boat, newItems, email } = prepareModifiedValues(iv, robinetta, pickers);
     expect(boat).toEqual(robinetta);
     expect(newItems).toEqual({});
     expect(email).toEqual(user.email);
   }
+
 
 });
 

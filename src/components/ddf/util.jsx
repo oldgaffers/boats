@@ -191,7 +191,7 @@ export const extendableList = ({ pickers, name, label }) => {
 };
 
 export const extendableItems = ({ pickers, name, label }) => {
-  // console.log('extendableItems', name, label)
+  console.log('extendableItems', name, label)
   return [
     {
       component: 'select',

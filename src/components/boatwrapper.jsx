@@ -1,179 +1,76 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useAsync } from 'react-async-hook';
+import { useAuth0 } from "@auth0/auth0-react";
 import Typography from '@mui/material/Typography';
-import { useBoatDetail } from './boatdetail';
-import { Box, Stack, Tab, Tabs, useMediaQuery } from '@mui/material';
-import AppBar from '@mui/material/AppBar';
-import CssBaseline from '@mui/material/CssBaseline';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import MenuIcon from '@mui/icons-material/Menu';
-import Toolbar from '@mui/material/Toolbar';
+import { gql } from '@apollo/client';
+import BoatDetail from './boatdetail';
+import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
+import SmugMugGallery from './smugmuggallery';
+import { Grid, Stack } from '@mui/material';
 
-function TabPanel({ children, value, index, ...other }) {
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
+export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
+  members(members: $members) {
+    firstname
+    lastname
+    member
+    id
+    GDPR
+    skipper { text }
+  }
+}`);
 
-const drawerWidth = 240;
+const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
-export function ResponsiveDrawer({ title, boat, panes }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const [selected, setSelected] = useState(0);
-
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
-
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
-  const handleDrawerToggle = () => {
-    if (!isClosing) {
-      setMobileOpen(!mobileOpen);
+const addNames = async (client, owners) => {
+  const rawMemberNumbers = owners?.filter((o) => queryIf(o)).map((o) => o.member) || [];
+  if (rawMemberNumbers.length === 0) {
+    return owners;
+  }
+  const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
+  const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
+  const members = r.data.members;
+  return owners.map((owner) => {
+    const r = { ...owner };
+    const m = members.filter((member) => member.id === owner.id);
+    if (m.length > 0) {
+      const { skipper, GDPR, firstname, lastname } = m[0];
+      if (GDPR) {
+        r.name = `${firstname} ${lastname}`;
+      }
+      if (skipper) {
+        r.skipper = skipper;
+      }
     }
-  };
-
-  const drawer = (
-    <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {panes.map((pane, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton  onClick={() => {setSelected(index); setMobileOpen(false)}}>
-              <ListItemText primary={pane.title} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
-  return (
-    <Box>
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar
-        position="static"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            {title}
-          </Typography>
-          <BoatButtons boat={boat} />
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="boat details"
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          slotProps={{
-            root: {
-              keepMounted: true, // Better open performance on mobile.
-            },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-        <Toolbar />
-    </Box>
-            <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, marginLeft: '5px', paddingLeft: { sm: `${drawerWidth}px` }, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-      >
-        {panes[selected].children}
-      </Box>
-    </Box>);
-}
-
-export function DetailTabs({ name, panes }) {
-  const [value, setValue] = useState(0);
-  const matches = useMediaQuery('(min-width:600px)');
-
-  const orientation = matches ? 'horizontal' : 'vertical';
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-  return (
-    <Box
-      sx={{ flexGrow: 1, display: 'flex', height: '60vh' }}
-    >
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        variant="scrollable"
-        scrollButtons="auto"
-        aria-label={`detail tabs for ${name}`}
-        orientation={orientation}
-      >
-        {panes.map((pane, i) => (<Tab key={i} label={pane.title} />))}
-      </Tabs>
-      {panes.map((pane, i) => (<TabPanel key={i} index={i} value={value} children={pane.children} />))}
-    </Box>
-  );
-}
+    return r;
+  });
+};
 
 export default function BoatWrapper({ client, boat, location, lastModified }) {
-  const panes = useBoatDetail(client, boat, location, lastModified);
+  const { error, result } = useAsync(addNames, [client, boat.ownerships]);
+  const { user } = useAuth0();
+  const view = sessionStorage.getItem('BOAT_CURRENT_VIEW');
+
+  // we don't bother with loading and let the owners fill in if they come
+
+  if (error) {
+    // console.log(`Error! ${error}`);
+  }
+  const ownerships = result || boat.ownerships || [];
+  ownerships.sort((a, b) => a.start > b.start);
   return (
     <Stack>
-    <ResponsiveDrawer panes={panes} boat={boat} title={`${boat.name} (${boat.oga_no})`}/>
-   </Stack>
+      <Typography variant="h3" component="h3">{boat.name} ({boat.oga_no})</Typography>
+      <Grid container>
+        <Grid size={8}>
+          <SmugMugGallery albumKey={boat.image_key} ogaNo={boat.oga_no} name={boat.name} />
+        </Grid>
+        <Grid size={4}>
+          <BoatSummary boat={boat} location={location} lastModified={lastModified} />
+        </Grid>
+      </Grid>
+      <BoatDetail view={view} boat={{ ...boat, ownerships }} user={user} />
+      <BoatButtons boat={{ ...boat, ownerships }} location={location} user={user} />
+    </Stack>
   );
 };

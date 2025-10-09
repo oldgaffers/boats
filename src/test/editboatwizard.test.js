@@ -5,14 +5,6 @@ import userEvent from '@testing-library/user-event';
 import EditBoatWizard from '../components/editboatwizard';
 import '../util/api';
 import * as MockDate from 'mockdate';
-import { MockedProvider } from "@apollo/client/testing";
-import { MEMBER_QUERY } from "../util/ownernames";
-import { loadErrorMessages, loadDevMessages } from "@apollo/client/dev";
-
-  // Adds messages only in a dev environment
-  loadDevMessages();
-  loadErrorMessages();
-
 
 const pickers = {
   boatNames: [],
@@ -244,22 +236,6 @@ const default_test_schema = (pickers) => {
   }
 };
 
-const mocks = [
-  {
-    request: {
-      query: MEMBER_QUERY,
-      variables: {
-        members: [6610]
-      }
-    },
-    result: {
-      data: {
-        member: { id: "1", name: "Buck" }
-      }
-    }
-  }
-];
-
 describe('EditBoatWizard component tests', () => {
   const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
   test('render form with no permission to sell', async () => {
@@ -267,13 +243,9 @@ describe('EditBoatWizard component tests', () => {
     expect(user).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
-    render(
-      <MockedProvider mocks={mocks}>
-        <EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 0 }} open={true} onSubmit={onSubmit}
+    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 0 }} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
-    />
-      </MockedProvider>
-    );
+    />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
     await waitFor(async () => {
       await screen.findByRole('dialog');
@@ -349,13 +321,9 @@ describe('EditBoatWizard component tests', () => {
     expect(user).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
-    render(
-      <MockedProvider mocks={mocks}>
-        <EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 35034 }} open={true} onSubmit={onSubmit}
+    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 35034 }} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
-    />
-      </MockedProvider>
-    );
+    />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
     await waitFor(async () => {
       await screen.findByRole('dialog');

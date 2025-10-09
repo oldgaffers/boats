@@ -99,7 +99,7 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
                     },
                     { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true, },
                     { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
-                    { field: 'start', headerName: 'Start', type: 'string', width: 70, editable: true, valueFormatter: yearFormatter },
+                    { field: 'start', headerName: 'Start', type: 'text', width: 70, editable: true, valueFormatter: yearFormatter },
                     { field: 'share', headerName: 'Share', width: 70, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
                     {
                         width: 60,

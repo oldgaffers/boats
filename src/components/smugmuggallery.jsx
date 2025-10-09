@@ -19,7 +19,7 @@ export default function SmugMugGallery({ albumKey, ogaNo, name }) {
         >
                 <iframe
                     src={`${url}?key=${albumKey}&${queryString}`}
-                    frameBorder="no"
+                    frameborder="no"
                     title={`Slide show for OGA boat number ${ogaNo} named ${name}`}
                     style={{
                         width: '100%',

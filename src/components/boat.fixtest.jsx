@@ -31,7 +31,7 @@ const mocks = [
 /*
 test('renders boat', async () => {
   render(
-    <MockedProvider mocks={mocks}>
+    <MockedProvider mocks={mocks} addTypename={false}>
       <Boat ogaNo={1}/>
     </MockedProvider>
   );
@@ -44,7 +44,7 @@ test('renders boat', async () => {
 */
 test('renders missing ogano', async () => {
   render(
-    <MockedProvider mocks={mocks}>
+    <MockedProvider mocks={mocks} addTypename={false}>
       <Boat ogaNo={0}/>
     </MockedProvider>
   );

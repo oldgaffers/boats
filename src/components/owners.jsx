@@ -6,7 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useGetOwnerNames } from '../util/ownernames';
 
 function Owner({ owner }) {
   // console.log(owner);
@@ -22,8 +21,7 @@ function Owner({ owner }) {
   );
 }
 
-export default function Owners({ boat }) {
-  const owners = useGetOwnerNames(boat);
+export default function Owners({ owners }) {
   if (owners?.length === 0) {
     return (<div />);
   }
