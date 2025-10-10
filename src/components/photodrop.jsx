@@ -34,13 +34,33 @@ const img = {
   height: '100%'
 };
 
+const maxMbyte = 10;
+const maxSize = maxMbyte * 1024 * 1024; // 5MB
+
 export default function Photodrop({ onDrop }) {
   const [files, setFiles] = useState([]);
   const {getRootProps, getInputProps} = useDropzone({
     accept: {
       'image/*': []
     },
-    maxSize: 5242880,
+    maxSize,
+    onDropRejected: files => {
+      files.forEach(file => {
+        if (file.errors) {  
+          file.errors.forEach(err => {
+            if (err.code === 'file-too-large') {
+              alert(`File ${file.file.name} is too large. Max size is ${maxMbyte} MB.`);
+            } else if (err.code === 'file-invalid-type') {
+              alert(`File ${file.file.name} is not an image.`);
+            } else {
+              alert(`File ${file.file.name} error: ${err.message}`);
+            }
+          });
+        }
+      });
+    },
+    multiple: true,
+    maxFiles: 10,
     onDrop: acceptedFiles => {
       setFiles(acceptedFiles.map(file => Object.assign(file, {
         preview: URL.createObjectURL(file)
@@ -72,7 +92,7 @@ export default function Photodrop({ onDrop }) {
     <Stack>
       <Box sx={{ padding: 1, borderRadius: 2, border: '1px dashed' }} {...getRootProps()}>
         <input {...getInputProps()} />
-        <p>Drag 'n' drop some pictures here, or click to select files</p>
+        <p>Drag 'n' drop some pictures here, or click to select files, max size is {maxMbyte} MB</p>
       </Box>
       <Box styleName={thumbsContainer}>
         {thumbs}
