@@ -27,7 +27,7 @@ export function useGetAlbumKey(boat) {
     if (albumKey === null && boat.oga_no) {
       get();
     }
-  }, [boat]);
+  }, [boat, albumKey]);
   return albumKey;
 }
 
