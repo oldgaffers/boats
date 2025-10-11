@@ -32,20 +32,6 @@ const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
 const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
 */
 
-function getOgaNo() {
-  const params = new URLSearchParams(window.location.search);
-  const qp = params.get('oga_no');
-  if (qp) {
-    return Number(qp);
-  }
-  const path = window.location.pathname?.split('/') || ['boat', ''];
-  const p = path.indexOf('boat') + 1;
-  if (Number(path[p]) !== 0) {
-    return Number(path[p]);
-  }
-  return 0;
-}
-
 const lightTheme = createTheme({
   palette: {
     mode: 'light',
@@ -90,12 +76,12 @@ const Pages = ({ id, ...props }) => {
   switch (id) {
     case 'app':
       if (window.location.pathname.includes('/boat/')) {
-        return <Boat ogaNo={getOgaNo()} />;
+        return <Boat {...props} location={window.location} />;
       }
       return <BrowseApp view='app' />;
     case 'login': return <LoginButton />;
-    case 'boat': return <Boat ogaNo={getOgaNo()} />;
-    case 'fleet': return <FleetView {...props} location={window.location} />;
+    case 'boat': return <Boat {...props} location={window.location} />;
+    case 'fleet': return <FleetView  />;
     case 'my_fleets': return <Fleets filter={{ owned: true }}/>;
     case 'shared_fleets': return <Fleets filter={{ public: true}}/>;
     case 'map': return <CustomMap {...props} />;
