@@ -12,20 +12,21 @@ import { createPhotoAlbum, getAlbumKey, postBoatData } from '../util/api';
 import Photodrop from "./photodrop";
 import { CircularProgress } from "@mui/material";
 
-function useGetAlbumKey(boat) {
-  const [albumKey, setAlbumKey] = useState(null);
+export function useGetAlbumKey(boat) {
+  const [albumKey, setAlbumKey] = useState(boat.image_key || null);
   useEffect(() => {
     const get = async () => {
       const r = await getAlbumKey(boat.name, boat.oga_no);
       if (r) {
-          console.log('Found existing album', r);
+          // console.log('Found existing album', r);
           setAlbumKey(r.albumKey);
       } else {
-          setAlbumKey(boat.image_key);
           console.log('No existing album');
       }
+    };
+    if (albumKey === null && boat.oga_no) {
+      get();
     }
-    get()
   }, [boat]);
   return albumKey;
 }
