@@ -18,7 +18,7 @@ const mocks = {
 };
 
 const api1 = 'https://3q9wa2j7s1.execute-api.eu-west-1.amazonaws.com';
-const api2 = 'https://7epryku6aipef3mzdoxtds3e5i0yfgwn.lambda-url.eu-west-1.on.aws';
+const api2 = 'https://v2z7n3g4mb5lfkbgeyln3ksjya0qsrpm.lambda-url.eu-west-1.on.aws';
 const stage = 'default'
 
 export async function putGeneralEnquiry(scope, subject, data) {
@@ -93,16 +93,6 @@ export async function postCrewEnquiry(data) {
   );
 }
 
-export async function createPhotoAlbum(name, ogaNo) {
-  return fetch(`${api2}/`,
-    {
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ name, oga_no: ogaNo }),
-      method: 'POST',
-    }
-  );
-}
-
 export async function getBoatData(ogaNo) {
   if (mock) {
     return mocks.boat;
@@ -158,20 +148,35 @@ export async function getPlaces() {
   return (await fetch(`${boatRegisterHome}/boatregister/places.json`)).json();
 }
 
-export async function getThumb(albumKey) {
-  return (await fetch(`${api2}/${albumKey}`)).json();
-}
-
 export async function getUploadCredentials() {
   return (await fetch('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/')).json();
 }
 
-export async function getAlbumKey(oga_no) {
-  return (await fetch(`${api2}/albumKey/${oga_no}`)).json();
+export async function createPhotoAlbum(name, ogaNo) {
+  return fetch(`${api2}/`,
+    {
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ name, oga_no: ogaNo }),
+      method: 'POST',
+    }
+  );
+}
+
+export async function getAlbumKey(name, oga_no) {
+  const r = await fetch(`${api2}/album?oga_no=${oga_no}&name=${encodeURIComponent(name)}`);
+  if (r.ok) {
+    return r.json();
+  }
+  console.log(r);
+  return undefined;
+}
+
+export async function getThumb(albumKey) {
+  return (await fetch(`${api2}/thumb?album_key=${albumKey}`)).json();
 }
 
 export async function getLargestImage(albumKey) {
-  return (await fetch(`${api2}/${albumKey}/li`)).json();
+  return (await fetch(`${api2}/li?album_key=${albumKey}`)).json();
 }
 
 export async function nextOgaNo() {

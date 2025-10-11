@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import Dialog from "@mui/material/Dialog";
 import Paper from "@mui/material/Paper";
@@ -8,33 +8,52 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { postPhotos } from "./postphotos";
-import { createPhotoAlbum, postBoatData } from '../util/api';
+import { createPhotoAlbum, getAlbumKey, postBoatData } from '../util/api';
 import Photodrop from "./photodrop";
 import { CircularProgress } from "@mui/material";
 
+function useGetAlbumKey(boat) {
+  const [albumKey, setAlbumKey] = useState(null);
+  useEffect(() => {
+    const get = async () => {
+      const r = await getAlbumKey(boat.name, boat.oga_no);
+      if (r) {
+          console.log('Found existing album', r);
+          setAlbumKey(r.albumKey);
+      } else {
+          setAlbumKey(boat.image_key);
+          console.log('No existing album');
+      }
+    }
+    get()
+  }, [boat]);
+  return albumKey;
+}
+
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
+  // console.log('AddPhotosDialog', boat, open, onClose, onCancel);
   const { user } = useAuth0();
   const [pictures, setPictures] = useState([]);
-  const [email, setEmail] = useState(user && user.email);
+  const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
+  const existingAlbumKey = useGetAlbumKey(boat);
 
   const onDrop = (p) => {
     setPictures(p);
   };
 
   const onUpload = async () => {
-    const { image_key, name, oga_no } = boat;
-    let albumKey;
-    if (image_key) {
-      albumKey = image_key;
+    let albumKey = null;
+    if (existingAlbumKey) {
+      albumKey = existingAlbumKey;
     } else {
-      const response = await createPhotoAlbum(name, oga_no);
-      if (response.ok) {
-        albumKey = (await response.json()).albumKey;
-      } else {
-        console.log(response.statusText);
-      }
+        const response = await createPhotoAlbum(boat.name, boat.oga_no);
+        if (response.ok) {
+          albumKey = (await response.json()).albumKey;
+        } else {
+          console.log(response.statusText);
+        }
     }
     await postPhotos(copyright, email, albumKey, pictures, setProgress);
     if (!boat.image_key) {
@@ -97,7 +116,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
             >
               Upload
             </Button>
-            <CircularProgress variant="determinate" value={progress}/>
+            <CircularProgress variant="determinate" value={progress} />
           </Stack>
         </Stack>
       </Paper>

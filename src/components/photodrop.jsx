@@ -69,8 +69,8 @@ export default function Photodrop({ onDrop }) {
   });
   
   const thumbs = files.map(file => (
-    <div style={thumb} key={file.name}>
-      <div style={thumbInner}>
+    <Box style={thumb} key={file.name}>
+      <Box style={thumbInner}>
         <img
           alt=''
           src={file.preview}
@@ -78,8 +78,8 @@ export default function Photodrop({ onDrop }) {
           // Revoke data uri after image is loaded
           onLoad={() => { URL.revokeObjectURL(file.preview) }}
         />
-      </div>
-    </div>
+      </Box>
+    </Box>
   ));
 
   useEffect(() => {
