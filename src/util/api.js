@@ -167,7 +167,6 @@ export async function getAlbumKey(name, oga_no) {
   if (r.ok) {
     return r.json();
   }
-  console.log(r);
   return undefined;
 }
 
