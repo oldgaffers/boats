@@ -1,7 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { ApolloConsumer } from '@apollo/client';
 import BoatWrapper from './boatwrapper';
+import BoatWrapperTest from './boatwrappertest';
 import { getBoatData, getBoatLastModified } from '../util/api';
+
+function getOgaNo(location) {
+  const params = new URLSearchParams(location.search);
+  const qp = params.get('oga_no');
+  if (qp) {
+    return Number(qp);
+  }
+  const path = location.pathname?.split('/') || ['boat', ''];
+  const p = path.indexOf('boat') + 1;
+  const n = Number(path[p]);
+  if (!Number.isNaN(n) && n !== 0) {
+    return n;
+  }
+  return 0;
+}
 
 export function MissingOGANumber() {
   const origin = '';
@@ -15,7 +31,9 @@ export function MissingOGANumber() {
   </div>);
 }
 
-export default function Boat({ ogaNo }) {
+export default function Boat(props) {
+  console.log('Boat props', props);
+  const ogaNo = getOgaNo(props.location)
   const [data, setData] = useState();
   const [lastModified, setLastModified] = useState();
 
@@ -58,6 +76,13 @@ export default function Boat({ ogaNo }) {
 
   document.title = `${boat.name} (${boat.oga_no})`;
 
+  if (props.test) {
+    return (
+      <ApolloConsumer>
+        {client => <BoatWrapperTest client={client} boat={boat} lastModified={lastModified} />}
+      </ApolloConsumer>
+    );  
+  }
   return (
     <ApolloConsumer>
       {client => <BoatWrapper client={client} boat={boat} lastModified={lastModified} />}
