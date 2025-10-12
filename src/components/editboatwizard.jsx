@@ -3,8 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
 import { v4 as uuidv4 } from 'uuid';
-import * as jsondiffpatch from 'jsondiffpatch';
-import * as jsonpatchFormatter from "jsondiffpatch/formatters/jsonpatch";
+import { create, formatters } from 'jsondiffpatch';
 import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
@@ -291,7 +290,7 @@ const defaultSchema = (pickers) => {
 };
 
 export function boatdiff(before, after) {
-  const cj = jsondiffpatch.create({
+  const cj = create({
     objectHash: (obj) => `${obj.id || obj.name}-${obj.start}`,
     textDiff: { minLength: 60000 }, // prevent textdiff not supported by the RFC formatter
   });
@@ -506,7 +505,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
     const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(state.values, boat, pickers);
 
     const rounded = boatf2m(boatm2f(boat)); // to exclude changes due to rounding
-    const fulldelta = jsonpatchFormatter.format(boatdiff(rounded, modifiedBoat));
+    const fulldelta = formatters.jsonpatch.format(boatdiff(rounded, modifiedBoat));
 
     onSubmit(
       fulldelta,

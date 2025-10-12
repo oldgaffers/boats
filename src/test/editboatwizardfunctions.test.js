@@ -1,6 +1,5 @@
 import fs from 'fs';
-import * as jsondiffpatch from 'jsondiffpatch';
-import * as jsonpatchFormatter from 'jsondiffpatch/formatters/jsonpatch';
+import { formatters } from 'jsondiffpatch';
 import {  boatdiff, prepareInitialValues, prepareModifiedValues } from '../components/editboatwizard';
 import { boatDefined } from '../util/format';
 import * as MockDate from 'mockdate';
@@ -126,9 +125,12 @@ test('Grosso', () => {
   };
   const delta = boatdiff(old, submitted);
   expect(delta).toMatchSnapshot();
+  // const jp = formatters.jsonpatch.format(delta);
+  // expect(jp).toMatchSnapshot();
+  // console.log(old.for_sales[0].sales_text.length, submitted.for_sales[0].sales_text.length);
   const fsd = boatdiff(old.for_sales[0].sales_text, submitted.for_sales[0].sales_text);
   expect(fsd).toMatchSnapshot();
-  expect(jsonpatchFormatter.format(fsd)).toMatchSnapshot();
+  expect(formatters.jsonpatch.format(fsd)).toMatchSnapshot();
 });
 
 test('Ro-an-mor', () => {

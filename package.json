@@ -9,7 +9,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build": "node scripts/build.js",
     "postbuild": "sed -i -e s/%%VERSION%%/v${npm_package_version}/ build/static/js/main.*.js",
-    "test": "node scripts/test.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "jest": {
     "roots": [
@@ -164,7 +164,7 @@
     "dayjs": "^1.11.10",
     "graphql": "^16.6.0",
     "humanize-duration": "^3.28.0",
-    "jsondiffpatch": "^0.7.3",
+    "jsondiffpatch": "^0.5.0",
     "leaflet": "^1.9.3",
     "little-state-machine": "^4.8.0",
     "react": "^18.2.0",
