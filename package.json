@@ -164,7 +164,7 @@
     "dayjs": "^1.11.10",
     "graphql": "^16.6.0",
     "humanize-duration": "^3.28.0",
-    "jsondiffpatch": "^0.7.2",
+    "jsondiffpatch": "^0.7.3",
     "leaflet": "^1.9.3",
     "little-state-machine": "^4.8.0",
     "react": "^18.2.0",
