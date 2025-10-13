@@ -123,7 +123,13 @@ export function BoatCardImage({ albumKey, name }) {
   }
 
   if (data.ThumbnailUrl) {
-    return (<CardMedia sx={{ height }} image={data.ThumbnailUrl} title={name} />);
+    return (<CardMedia
+      component="img"
+      height={height} 
+      sx={{ objectFit: "contain" }}
+      image={data.ThumbnailUrl}
+      title={name}
+    />);
   }
   return (<AltForThumb />);
 }
