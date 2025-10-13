@@ -47,7 +47,7 @@ export function FleetDisplay({ view, name, filters, tooltip = 'Click to expand',
       id="panel1a-header"
     >
       <FleetIcon />
-      <Typography>&nbsp;&nbsp;{name}</Typography>
+      <Typography component="span">&nbsp;&nbsp;{name}</Typography>
     </AccordionSummary>
     <AccordionDetails>
       {(view === 'gallery')
