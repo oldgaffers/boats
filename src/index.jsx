@@ -81,9 +81,9 @@ const Pages = ({ id, ...props }) => {
       return <BrowseApp view='app' />;
     case 'login': return <LoginButton />;
     case 'boat': return <Boat {...props} location={window.location} />;
-    case 'fleet': return <FleetView  />;
-    case 'my_fleets': return <Fleets filter={{ owned: true }}/>;
-    case 'shared_fleets': return <Fleets filter={{ public: true}}/>;
+    case 'fleet': return <FleetView {...props} />;
+    case 'my_fleets': return <Fleets filter={{ owned: true }} {...props} />;
+    case 'shared_fleets': return <Fleets filter={{ public: true}} {...props} />;
     case 'map': return <CustomMap {...props} />;
     case 'add_boat': return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
