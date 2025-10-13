@@ -119,7 +119,7 @@ function handleParagraphs() {
     if (q?.length === 3) {
       const [, component, arglist] = q;
       const args = arglist.split(':');
-      const al = args.map((a, index) => `data-oga-arg${index}=\"${a.trim()}\"`).join(' ');
+      const al = args.map((a, index) => `data-oga-arg${index}="${a.trim()}"`).join(' ');
       p.outerHTML = `<div data-oga-component=${component} ${al}></div>`;
       // createRoot(p).render(<BoatRegister ogaComponent={component} args={args} />);
     }
