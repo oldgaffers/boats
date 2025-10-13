@@ -67,13 +67,13 @@ function Wrapper({ redirectUri, scope, children }) {
   </PayPalScriptProvider>
 }
 
-const Pages = ({ id, ...props }) => {
+const Pages = (props) => {
   const params = new URLSearchParams(window.location.search);
   const kvp = {};
   for (const [key, value] of params.entries()) {
     kvp[key] = value;
   }
-  switch (id) {
+  switch (props.ogaComponent) {
     case 'app':
       if (window.location.pathname.includes('/boat/')) {
         return <Boat {...props} location={window.location} />;
@@ -90,7 +90,7 @@ const Pages = ({ id, ...props }) => {
     case 'builder': return <BuilderPage {...props} {...kvp} />;
     default:
       // sail, sell, small, ...
-      return <BrowseApp view={id} {...props} />;
+      return <BrowseApp view={props.ogaComponent} {...props} />;
   }
 };
 
@@ -116,13 +116,13 @@ for (let i = 0; i < allparas.length; i++) {
   if (q?.length === 3) {
     const [, component, arglist] = q;
     const args = arglist.split(':');
-    createRoot(p).render(<BoatRegister id={component} args={args} />);
+    createRoot(p).render(<BoatRegister ogaComponent={component} args={args} />);
   }
 }
 const placeholders = document.querySelectorAll("[data-oga-component]");
 placeholders.forEach((ph) => {
   const attr = ph.dataset;
-  createRoot(ph).render(<BoatRegister id={attr.ogaComponent} {...attr} />);
+  createRoot(ph).render(<BoatRegister {...attr} />);
 });
 
 // serviceWorker.unregister();
