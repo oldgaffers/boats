@@ -231,7 +231,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
     } : {}}>
       {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
-        <Typography gutterBottom variant="h5" component="span">
+        <Typography gutterBottom variant="h5">
           <HireBadge boat={boat}>
             <CrewingBadge boat={boat}>
               <SalesBadge view={state.view} boat={boat}>
