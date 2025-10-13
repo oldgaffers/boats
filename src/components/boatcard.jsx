@@ -80,8 +80,8 @@ function EllipsisText({ variant = 'body2', html = '' }) {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       lineClamp: '3',
-      '-webkit-line-clamp': '3',
-      '-webkit-box-orient': 'vertical',
+      WebkitLineClamp: '3',
+      WebkitBoxOrient: 'vertical',
     }}
   />
 }
@@ -109,12 +109,22 @@ export function BoatCardImage({ albumKey, name }) {
   const height = 220;
 
   useEffect(() => {
-    if (!data) {
-      getThumb(albumKey).then((r) => {
-        setData(r);
-      }).catch((e) => console.log(e));
+    const get = async () => {
+      const r = await getThumb(albumKey)
+      if (r) {
+          setData(r);
+      } else {
+          console.log('No existing album');
+      }
+    };
+    if (!data && albumKey) {
+      get();
     }
   }, [data, albumKey]);
+
+  if (!albumKey) {
+    return '';
+  }
 
   if (!data) {
     return <>
@@ -146,7 +156,6 @@ export function CompactBoatCard({ view = 'app', ogaNo, wanted=compactWanted}) {
   }, [data, ogaNo]);
 
   const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
-  console.log('CompactBoatCard', view, ogaNo);
   return (
     <Card sx={{ width: 200 }}>
       <BoatCardImage albumKey={boat.image_key} name={boat.name} />
@@ -222,7 +231,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
     } : {}}>
       {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
-        <Typography gutterBottom variant="h5" component="h2">
+        <Typography gutterBottom variant="h5" component="span">
           <HireBadge boat={boat}>
             <CrewingBadge boat={boat}>
               <SalesBadge view={state.view} boat={boat}>
