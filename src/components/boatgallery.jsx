@@ -11,6 +11,7 @@ const galleryWanted = {
 };
 
 export function BoatCardImage({ albumKey, name }) {
+  console.log('BoatCardImage', albumKey, name);
   const [data, setData] = useState();
 
   const height = 220;
@@ -47,7 +48,6 @@ export function BoatImage({ boat }) {
   }, [data, boat.oga_no]);
 
   const boatdata = data?.result?.pageContext || { boat: { oga_no: boat.oga_no, name: '', loading: true } };
-
   return <Card sx={{ width: 300 }}>
   <BoatCardImage albumKey={boatdata.boat.image_key} name={boat.name} />
   <p></p>
@@ -55,7 +55,6 @@ export function BoatImage({ boat }) {
 }
 
 export default function BoatGallery({ boats }) {
-  console.log('BoatGallery', boats)
   return (
     <Grid container alignItems='stretch'>
       {boats.map((boat) => {
