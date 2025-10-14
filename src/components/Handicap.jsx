@@ -545,7 +545,7 @@ export const steps = (firstStep, nextStep) => [
         name: 'ddf.hcd',
         component: 'sub-form',
         description: `The following steps collect the information needed to calculate a traditional T(H)CF
-        handicap and the extra data for experimental and area handicaps.`,
+        handicap and the extra data for experimental and area handicaps. Consult the handicap measurement tab for more information.`,
         fields: [
           {
             component: 'text-field',
@@ -599,7 +599,7 @@ export const steps = (firstStep, nextStep) => [
       {
         component: 'plain-text',
         name: "ddf.handicap_sails",
-        label: "Foretriangle",
+        label: "Foretriangle - the space available to fly jibs, etc.",
       },
       {
         component: 'text-field',
