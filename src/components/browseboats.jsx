@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
-import { Accordion, AccordionDetails, AccordionSummary, Paper, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Stack } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
