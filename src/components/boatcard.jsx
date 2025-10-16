@@ -36,6 +36,10 @@ const compactWanted = {
   year: { label: 'Year', access: (b, k) => b[k] },
 };
 
+const tl = { vertical : 'top', horizontal : 'left' };
+// const tr = { vertical : 'top', horizontal : 'right' };
+const bl = { vertical : 'bottom', horizontal : 'left' };
+
 function SalesBadge({ boat, view, children }) {
   switch (boat?.selling_status || '') {
     case 'for_sale':
@@ -52,7 +56,7 @@ function CrewingBadge({ boat, view, children }) {
     return children;
   }
   if (boat?.crewing) {
-    return (<Badge badgeContent="crew on her" color="info">{children}</Badge>);
+    return (<Badge anchorOrigin={tl} badgeContent="crew on her" color="info">{children}</Badge>);
   }
   return children;
 }
@@ -62,7 +66,7 @@ function HireBadge({ boat, view, children }) {
     return children;
   }
   if (boat?.hire) {
-    return (<Badge badgeContent="hire her" color="info">{children}</Badge>);
+    return (<Badge anchorOrigin={bl} badgeContent="hire her" color="info">{children}</Badge>);
   }
   return children;
 }
