@@ -149,7 +149,7 @@ export async function getPlaces() {
 }
 
 export async function getUploadCredentials() {
-  return (await fetch('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/')).json();
+  return (await fetch(`${api1}/${stage}/upload_credentials`)).json();
 }
 
 export async function createPhotoAlbum(name, ogaNo) {
