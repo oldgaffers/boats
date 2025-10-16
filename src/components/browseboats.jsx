@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Paper, Stack } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Paper, Stack } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
@@ -92,7 +92,7 @@ export default function BrowseBoats({
   const pickers = makePickers(filtered);
 
   return (
-    <Paper>
+   <Box>
       <Stack direction='row' spacing={2} margin={2}>
         <Welcome/>
         <Box maxHeight={200}>
@@ -142,7 +142,7 @@ export default function BrowseBoats({
       />
       <Divider />
       <BoatRegisterFooter />
-    </Paper>
+    </Box>
   );
 }
 
