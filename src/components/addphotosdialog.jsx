@@ -31,7 +31,7 @@ export function useGetAlbumKey(boat) {
   return albumKey;
 }
 
-export function useGetExistingOrNewAlbumKey(boat) {
+export function useGetExistingOrNewAlbumKey(boat, email) {
   const existingAlbumKey = useGetAlbumKey(boat);
   if (existingAlbumKey) {
     return existingAlbumKey;
@@ -56,7 +56,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
-  const albumKey = useGetExistingOrNewAlbumKey(boat);
+  const albumKey = useGetExistingOrNewAlbumKey(boat, email);
 
   if (open && !albumKey) {
     console.log("can't get album key...");
@@ -95,7 +95,6 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     setCopyright(e.target.value);
   };
   const percent = Math.round(progress);
-  console.log('U', uploads);
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
       <Paper sx={{ padding: '10px' }}  >
