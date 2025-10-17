@@ -32,7 +32,6 @@ export function MissingOGANumber() {
 }
 
 export default function Boat(props) {
-  console.log('Boat props', props);
   const ogaNo = getOgaNo(props.location)
   const [data, setData] = useState();
   const [lastModified, setLastModified] = useState();
