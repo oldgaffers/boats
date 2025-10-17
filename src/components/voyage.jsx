@@ -140,7 +140,7 @@ export default function Voyage({ voyage }) {
     return "nothing to see here";
 }
 
-function skipperIfDifferent(skipper: string, organiser: string) {
+function skipperIfDifferent(skipper, organiser) {
     if (skipper === organiser) {
         return 'I will be the skipper';
     }
@@ -148,7 +148,7 @@ function skipperIfDifferent(skipper: string, organiser: string) {
 The skipper will be ${skipper}.`;
 }
 
-export function voyageInvitationBody(voyage: Voyage, organiser: string, from: string) {
+export function voyageInvitationBody(voyage, organiser, from) {
     return `Hello,
 I am planning a trip on ${voyage.boat.name} (${voyage.boat.oga_no}) between the dates ${voyage.start} and ${voyage.end}.
 

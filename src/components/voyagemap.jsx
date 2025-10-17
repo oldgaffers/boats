@@ -34,7 +34,7 @@ function MapComponent({ data }) {
     </Marker>)}</>);
 }
 
-export default function VoyageMap({ places }: { places: LatLng[] }) {
+export default function VoyageMap({ places }) {
     return (
         <MapContainer
             style={{ height: 300 }}

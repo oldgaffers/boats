@@ -1,7 +1,6 @@
 /* eslint-disable react/jsx-no-target-blank */
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Stack, Typography } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { Box, Paper, Stack, Typography, Grid } from '@mui/material';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';

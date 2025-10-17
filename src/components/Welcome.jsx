@@ -64,7 +64,7 @@ function Contact() {
 
     const handleSend = () => {
         setOpen(false);
-        const data: any = {
+        const data = {
             subject: 'associate login with membership',
         };
         if (user) {

@@ -15,6 +15,7 @@ function handleParagraphs() {
       const args = arglist.split(':');
       const al = args.map((a, index) => `data-oga-arg${index}="${a.trim()}"`).join(' ');
       p.outerHTML = `<div data-oga-component=${component} ${al}></div>`;
+      // createRoot(p).render(<BoatRegister ogaComponent={component} args={args} />);
     }
   }
 }
@@ -23,5 +24,5 @@ handleParagraphs();
 const placeholders = document.querySelectorAll("[data-oga-component]");
 placeholders.forEach((ph) => {
   const attr = ph.dataset;
-  render(<BoatRegister {...attr} />, ph)
+  render(<BoatRegister {...attr} />, ph);
 });

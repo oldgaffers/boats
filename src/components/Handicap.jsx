@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Typography } from "@mui/material";
 import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, fTopSA, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
 import { boatm2f, f2m } from '../util/format';
