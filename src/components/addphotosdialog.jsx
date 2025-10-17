@@ -38,7 +38,6 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
-  const [uploads, setUploads] = useState([]);
   const existingAlbumKey = useGetAlbumKey(boat);
 
   const onDrop = (p) => {
@@ -53,7 +52,10 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
 
   const onUpload = async () => {
     if (existingAlbumKey) {
-      setUploads(postPhotos(copyright, email, existingAlbumKey, pictures, setProgress));
+      const r = await postPhotos(copyright, email, existingAlbumKey, pictures, setProgress);
+      r.forEach((res, idx) => {
+        console.log(res.status, 'Uploaded', pictures[idx].name);
+      });
     } else {
       const response = await createPhotoAlbum(boat.name, boat.oga_no);
       if (response.ok) {
@@ -62,7 +64,10 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
         if (!response2.ok) {
           console.log('problem updating boat register with new album key', response.statusText);
         }
-        setUploads(postPhotos(copyright, email, boat.image_key, pictures, setProgress));
+        const r = await postPhotos(copyright, email, boat.image_key, pictures, setProgress);
+        r.forEach((res, idx) => {
+          console.log(res.status, 'Uploaded', pictures[idx].name);
+        });
       } else {
         console.log('problem creating new photo album', response.statusText);
       }
