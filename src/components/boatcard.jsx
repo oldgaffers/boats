@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import Skeleton from '@mui/material/Skeleton';
 import Grid from '@mui/material/Grid';
@@ -250,7 +250,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
         <Grid container
           justifyContent="space-between"
         >
-          <Grid item>
+          <Grid>
             <Button
               padding='5px'
               size="small"
@@ -260,14 +260,14 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
               color="primary"
             >More..</Button>
           </Grid>
-          <Grid item>
+          <Grid>
             {owned ?
               <EndOwnership boat={{ ...boat }} owned={owned} user={user} />
               :
               <Enquiry boat={boat} text='Contact' />
             }
           </Grid>
-          <Grid item>
+          <Grid>
             <Checkbox sx={{ textAlign: 'right' }}
               checked={marked}
               color="success" onChange={(event, checked) => handleMarked(checked)}

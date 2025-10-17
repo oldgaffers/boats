@@ -1,4 +1,3 @@
-import React from 'react';
 import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import BoatRegisterIntro from "./boatregisterintro";

@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@apollo/client": "^4.0.7",
-    "@apollo/react-hooks": "^4.0.0",
     "@auth0/auth0-react": "^2.7.0",
     "@aws-sdk/client-s3": "^3.911.0",
     "@aws-sdk/credential-providers": "^3.911.0",
@@ -29,6 +28,7 @@
     "apollo-link-context": "^1.0.20",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.18",
+    "graphql": "^16.11.0",
     "humanize-duration": "^3.33.1",
     "jsondiffpatch": "^0.5.0",
     "leaflet": "^1.9.4",
@@ -37,14 +37,15 @@
     "react-cookie": "^8.0.1",
     "react-copy-to-clipboard": "^5.1.0",
     "react-csv": "^2.2.2",
-    "react-dom": "^19.2.0",
+    "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.8",
-    "react-leaflet": "^5.0.0",
+    "react-leaflet": "^4.2.1",
     "react-leaflet-cluster": "^3.1.1",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.2",
+    "rxjs": "^7.8.2",
     "vite": "npm:rolldown-vite@7.1.14"
   },
   "overrides": {

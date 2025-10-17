@@ -26,7 +26,7 @@ function Wrapper({ redirectUri, scope, children }) {
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
-    redirectUri: redirectUri,
+    authorizationParams: { redirect_uri: redirectUri },
     audience: "https://oga.org.uk/boatregister",
     useRefreshTokens: true,
     cacheLocation: 'localstorage',
@@ -67,7 +67,7 @@ const Pages = (props) => {
     case 'boat': return <Boat {...props} location={window.location} />;
     case 'fleet': return <FleetView {...props} />;
     case 'my_fleets': return <Fleets filter={{ owned: true }} {...props} />;
-    case 'shared_fleets': return <Fleets filter={{ public: true}} {...props} />;
+    case 'shared_fleets': return <Fleets filter={{ public: true }} {...props} />;
     case 'map': return <CustomMap {...props} />;
     case 'add_boat': return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
@@ -80,14 +80,12 @@ const Pages = (props) => {
 
 export function BoatRegister(props) {
   const red = window.location.origin + window.location.pathname;
-  return <React.StrictMode>
-    <CookiesProvider>
-      <ThemeProvider theme={lightTheme}>
-        <CssBaseline />
-        <Wrapper redirectUri={red} scope={props.scope || 'member'}>
-          <Pages {...props} />
-        </Wrapper>
-      </ThemeProvider>
-    </CookiesProvider>
-  </React.StrictMode>;
+  return <CookiesProvider>
+    <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
+      <Wrapper redirectUri={red} scope={props.scope || 'member'}>
+        <Pages {...props} />
+      </Wrapper>
+    </ThemeProvider>
+  </CookiesProvider>;
 };

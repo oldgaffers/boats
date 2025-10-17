@@ -1,4 +1,3 @@
-import React from 'react';
 import 'dayjs/locale/en-gb';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet'
 import L, { LatLng } from 'leaflet';

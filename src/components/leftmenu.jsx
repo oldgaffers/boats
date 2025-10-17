@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo, forwardRef } from 'react';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
@@ -44,9 +44,9 @@ function LeftMenu({ open, onClose, container }) {
   function ListItemLink(props) {
     const { icon, primary, to } = props;
 
-    const renderLink = React.useMemo(
+    const renderLink = useMemo(
       () =>
-        React.forwardRef((itemProps, ref) => (
+        forwardRef((itemProps, ref) => (
           <RouterLink to={to} ref={ref} {...itemProps} />
         )),
       [to],

@@ -34,7 +34,7 @@ export default function CountrySelect({ onChange, control }) {
           autoHighlight
           getOptionLabel={option => option.label}
           renderOption={(option, { selected }) => (
-            <React.Fragment>
+            <>
               <Checkbox
                 icon={icon}
                 checkedIcon={checkedIcon}
@@ -42,7 +42,7 @@ export default function CountrySelect({ onChange, control }) {
                 checked={selected}
               />
               {option.label} ({option.code}) +{option.phone}
-            </React.Fragment>
+            </>
           )}
           renderInput={params => (
             <TextField

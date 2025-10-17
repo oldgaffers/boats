@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import FormFieldGrid from '@data-driven-forms/mui-component-mapper/form-field-grid/form-field-grid';

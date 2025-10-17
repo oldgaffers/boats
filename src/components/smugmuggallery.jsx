@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react';
 
 const url = 'https://oga.smugmug.com/frame/slideshow'
 const queryString = 'autoStart=1&captions=1&navigation=1'

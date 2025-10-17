@@ -1,4 +1,3 @@
-import React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -36,13 +35,7 @@ export default function BoatCards({
           <Grid container spacing={4}>
           {boats.map((boat) => {
             return (
-            <Grid item key={boat.oga_no}
-            xs={12}
-            sm={6}
-            md={3}
-            lg={3}
-            xl={3}
-            >
+            <Grid key={boat.oga_no} size={{ xs: 12, sm: 6, md: 3, lg: 3, xl:3 }} >
               <BoatCard state={state} ogaNo={boat.oga_no} onMarkChange={handleMarkChange} />
             </Grid>
             );
@@ -118,11 +111,11 @@ export default function BoatCards({
 
   return (
     <Grid container alignItems='stretch'>
-    <Grid item xs={2}></Grid>
-      <Grid item>
+    <Grid xs={2}></Grid>
+      <Grid>
       <Typography variant='h6'>{message}.</Typography>
       <Typography variant='h6'>Try removing some filters.</Typography>
     </Grid>
-    <Grid item xs={2}></Grid>
+    <Grid xs={2}></Grid>
   </Grid>);
 }

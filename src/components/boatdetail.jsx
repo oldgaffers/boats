@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-target-blank */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Paper, Stack, Typography, Grid } from '@mui/material';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';

@@ -1,4 +1,3 @@
-import React from 'react';
 import queryString from 'query-string';
 import Button from '@mui/material/Button';
 import Icon from '@mui/material/Icon';

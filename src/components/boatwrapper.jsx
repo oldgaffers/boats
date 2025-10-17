@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAsync } from 'react-async-hook';
 import { useAuth0 } from "@auth0/auth0-react";
 import Typography from '@mui/material/Typography';

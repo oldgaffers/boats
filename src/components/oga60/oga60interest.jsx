@@ -172,7 +172,7 @@ export default function OGA60({ onClose, onCancel }) {
     return (
         <Paper>
             <Grid container spacing={2}>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
                         This form is for OGA members to express interest in attending the main OGA60 celebration at Ipswich & Levington.
@@ -188,7 +188,7 @@ export default function OGA60({ onClose, onCancel }) {
                         If you are interested in bringing a boat to one of the OGA60 small boat events, or if you want more information about OGA60 in general go to the main <a href='/oga60/oga60.html'>OGA60 page</a>.
                     </Typography>
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <FormRenderer
                         schema={schema()}
                         subscription={{ values: true }}

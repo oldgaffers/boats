@@ -1,4 +1,3 @@
-import React from 'react';
 import { screen, render } from '@testing-library/react';
 import BoatCard from './boatcard';
 import { BrowserRouter as Router } from "react-router-dom";

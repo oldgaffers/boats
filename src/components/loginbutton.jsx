@@ -1,10 +1,10 @@
-import React from 'react';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth0 } from "@auth0/auth0-react";
+import { memo } from 'react';
 
-export default function LoginButton({ label = 'Login/Sign-up', avatar = true }) {
+export default memo(function LoginButton({ label = 'Login/Sign-up', avatar = true }) {
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
     if (isAuthenticated) {
@@ -29,4 +29,4 @@ export default function LoginButton({ label = 'Login/Sign-up', avatar = true }) 
             {label}
         </Button>
     );
-}
+});

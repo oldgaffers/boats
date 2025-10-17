@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useApolloClient } from "@apollo/client/react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getLargestImage } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { ApolloConsumer, gql } from '@apollo/client';
+import { gql } from '@apollo/client';
 import { getBoatData } from '../util/api';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 
@@ -188,6 +189,7 @@ function ExportFleetOptions({ client, name, ogaNos }) {
 export function ExportFleet({ name, boats, filters }) {
   const [open, setOpen] = useState(false);
   const ogaNos = filters?.oga_nos || boats?.map((b) => b?.oga_no) || [];
+  const client = useApolloClient();
 
   if (ogaNos.length === 0) {
     return '';
@@ -203,9 +205,7 @@ export function ExportFleet({ name, boats, filters }) {
       <DialogTitle id="form-dialog-title">Export Fleet {name}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          <ApolloConsumer>
-            {client => <ExportFleetOptions client={client} name={name} ogaNos={ogaNos} />}
-          </ApolloConsumer>
+          <ExportFleetOptions client={client} name={name} ogaNos={ogaNos} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>

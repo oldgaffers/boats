@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Card, CardMedia, Skeleton } from '@mui/material';
 import { getBoatData, getThumb } from '../util/api';
@@ -59,13 +59,7 @@ export default function BoatGallery({ boats }) {
     <Grid container alignItems='stretch'>
       {boats.map((boat) => {
             return (
-            <Grid item key={boat.oga_no}
-            xs={12}
-            sm={6}
-            md={3}
-            lg={3}
-            xl={3}
-            >
+            <Grid key={boat.oga_no} size={{ xs: 12, sm: 6, md: 3, lg: 3, xl:3 }} >
               <CompactBoatCard wanted={galleryWanted} ogaNo={boat.oga_no} />
             </Grid>
             );

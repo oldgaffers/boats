@@ -1,4 +1,3 @@
-import React from 'react';
 
 export default function FBShare({link}) {
     const fbhref = `https://www.facebook.com/sharer/sharer.php?u=${link}&amp;src=sdkpreparse`;

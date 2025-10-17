@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { ApolloConsumer } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import { useApolloClient } from "@apollo/client/react";
 import BoatWrapper from './boatwrapper';
 import BoatWrapperTest from './boatwrappertest';
 import { getBoatData, getBoatLastModified } from '../util/api';
@@ -35,6 +35,7 @@ export default function Boat(props) {
   const ogaNo = getOgaNo(props.location)
   const [data, setData] = useState();
   const [lastModified, setLastModified] = useState();
+  const client = useApolloClient();
 
   useEffect(() => {
     const get = async () => {
@@ -77,15 +78,11 @@ export default function Boat(props) {
 
   if (props.test) {
     return (
-      <ApolloConsumer>
-        {client => <BoatWrapperTest client={client} boat={boat} lastModified={lastModified} />}
-      </ApolloConsumer>
+        <BoatWrapperTest client={client} boat={boat} lastModified={lastModified} />
     );  
   }
   return (
-    <ApolloConsumer>
-      {client => <BoatWrapper client={client} boat={boat} lastModified={lastModified} />}
-    </ApolloConsumer>
+      <BoatWrapper client={client} boat={boat} lastModified={lastModified} />
   );
 
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -497,7 +497,7 @@ export default function RBC60() {
     return (
         <Paper>
             <Grid container spacing={2}>
-                <Grid item xs={10}>
+                <Grid xs={10}>
                     <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
                         This form is for OGA members to sign up to sail their own boat for all or part of the OGA 60 Round Britain Cruise (RBC60).
@@ -517,10 +517,10 @@ export default function RBC60() {
                         The skipper is responsible for the safety of the boat and all the people on board, and is also responsible for complying with all the relevant rules and regulations.
                     </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid xs={2}>
                     <LoginButton label='Member Login' />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <FormRenderer
                         schema={schema(ports, user, data)}
                         initialValues={{ ddf: { oga_no: firstFreeOgaNo } }}

@@ -1,2 +1,2 @@
-exports.boatRegisterHome = "https://oldgaffers.github.io";
+export const boatRegisterHome = "https://oldgaffers.github.io";
 

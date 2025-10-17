@@ -1,4 +1,3 @@
-import React from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";

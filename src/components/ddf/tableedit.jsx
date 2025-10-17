@@ -1,4 +1,3 @@
-import React from 'react';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 
 export default function DataGridField(props) {

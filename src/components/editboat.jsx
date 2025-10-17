@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import WizardContext from '@data-driven-forms/react-form-renderer/wizard-context';
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';

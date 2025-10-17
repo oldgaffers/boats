@@ -1,4 +1,4 @@
-import React, { useState, memo, useRef, useEffect } from 'react';
+import { useState, memo, useRef, useEffect } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import Grid from "@mui/material/Grid";
 import Box from '@mui/material/Box';
@@ -101,7 +101,7 @@ const GridCellExpandStrings = memo(function GridCellExpand(props) {
                     >
                         <Grid container>
                             {value.map((s, index) => (
-                                <Grid key={index} item xs={12}>
+                                <Grid key={index} xs={12}>
                                     <Typography variant='body2'>{s}</Typography>
                                 </Grid>)
                             )}

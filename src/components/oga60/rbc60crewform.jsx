@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
@@ -227,7 +227,7 @@ export default function RBC60CrewForm() {
     return (
         <Paper>
             <Grid container spacing={2}>
-                <Grid item xs={10}>
+                <Grid xs={10}>
                     <Typography paragraph={true} variant='body1'>
                         {user ? `Hello ${user.given_name || user.name}. ` : ''}
                         This page is for OGA members (including members of the Dutch OGA) to register interest in joining all or part of the OGA 60 Round Britain Cruise (RBC60) as crew.
@@ -255,10 +255,10 @@ export default function RBC60CrewForm() {
                         Acceptance of crews is entirely up to the skipper.
                     </Typography>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid xs={2}>
                     <LoginButton label='Member Login' />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid xs={12}>
                     <FormRenderer
                         schema={schema(ports)}
                         subscription={{ values: true }}

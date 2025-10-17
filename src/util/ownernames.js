@@ -1,4 +1,5 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useQuery } from '@apollo/client/react';
 
 export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
   members(members: $members) {

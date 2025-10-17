@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Check, Bold, Italic, Link } from 'lucide-react';
 
 // Example JSON schema for demonstration

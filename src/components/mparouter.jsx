@@ -1,4 +1,4 @@
-import React from 'react';
+import { Children, cloneElement } from 'react';
 
 export const Link = ({ className, to, children }) => {
     return <a className={className} href={to}>{children}</a>;
@@ -6,10 +6,10 @@ export const Link = ({ className, to, children }) => {
 
 export const Router = ({children}) => {
     const { location } = window;
-    switch (React.Children.count(children)) {
+    switch (Children.count(children)) {
       case 0: return null;
       default:
-        return <>{React.Children.map(children, (child) => React.cloneElement(child, {location}, child.props.children))}</>;
+        return <>{Children.map(children, (child) => cloneElement(child, {location}, child.props.children))}</>;
     }
   }
   
@@ -20,7 +20,7 @@ export const Router = ({children}) => {
         state[key] = value;
       };
       const props = { location, state };
-      return <>{React.Children.map(children, (child) => React.cloneElement(child, props, child.props && child.props.children))}</>;
+      return <>{Children.map(children, (child) => cloneElement(child, props, child.props && child.props.children))}</>;
     }
     return '';
   }

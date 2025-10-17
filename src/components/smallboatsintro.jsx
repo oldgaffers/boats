@@ -1,11 +1,10 @@
-import React from 'react';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 
 export default function SmallBoatsIntro() {
   return (
     <Grid container direction="row" alignItems="flex-start">
-      <Grid item xs={8} >
+      <Grid xs={8} >
         <Typography variant="body1">
           Browse just the dayboats and dinghies.
           All are on the main register too.

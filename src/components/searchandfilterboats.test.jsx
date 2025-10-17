@@ -1,5 +1,4 @@
 import {jest} from '@jest/globals';
-import React from 'react';
 import { screen, render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/react-testing";
 import SearchAndFilterBoats from './searchandfilterboats';

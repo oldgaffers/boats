@@ -1,4 +1,3 @@
-import React from 'react';
 import Typography from '@mui/material/Typography';
 import List from '@mui/material/List';
 import Stack from '@mui/material/Stack';

@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import { postBoatData } from '../util/api';
 import EditBoatWizard from './editboatwizard';
-// const EditBoatWizard = React.lazy(()=> import("./editboatwizard"));
 
 export default function EditButton({ boat, user }) {
   const [open, setOpen] = useState(false);

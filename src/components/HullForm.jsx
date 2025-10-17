@@ -1,4 +1,3 @@
-import React from 'react';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
 import ButtonBase from '@mui/material/ButtonBase';
 import Typography from '@mui/material/Typography';

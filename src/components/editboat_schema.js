@@ -1,4 +1,3 @@
-import React from 'react';
 import validatorTypes from "@data-driven-forms/react-form-renderer/validator-types";
 import BoatIcon from "./boaticon";
 import BoatAnchoredIcon from "./boatanchoredicon";

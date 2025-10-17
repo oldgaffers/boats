@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 // import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
 import BrowseBoats from "./browseboats";
 import { getState, saveState, setView } from "../util/statemanagement";

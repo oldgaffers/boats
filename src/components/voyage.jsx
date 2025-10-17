@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Checkbox, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControlLabel, Snackbar, Stack, TextField, Typography } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';

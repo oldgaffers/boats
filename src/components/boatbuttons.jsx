@@ -1,4 +1,3 @@
-import React from 'react';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -23,7 +22,7 @@ export default function BoatButtons({ boat, user }) {
   return (
     <Paper>
         <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
-        <Grid item xs={'auto'}>
+        <Grid xs={'auto'}>
           <Button size="small"
               color='primary'
               variant="contained"
@@ -31,10 +30,10 @@ export default function BoatButtons({ boat, user }) {
             onClick={() => history.back()}
           >See more boats</Button>
         </Grid>
-        <Grid item xs={'auto'} >
+        <Grid xs={'auto'} >
             <Enquiry boat={boat} />
         </Grid>
-        <Grid item xs={'auto'} >
+        <Grid xs={'auto'} >
             <PhotoButton
               boat={boat} user={user}
               onCancel={photoCancelled}
@@ -42,11 +41,11 @@ export default function BoatButtons({ boat, user }) {
               color='secondary'
             />
         </Grid>
-        <Grid item xs={'auto'} >
+        <Grid xs={'auto'} >
             <EditButton boat={boat} user={user} color='secondary'/>
         </Grid>
         {roles.includes('editor')
-          ? (<Grid item xs={'auto'} ><AdminButton boat={boat} user={user} color='secondary'/></Grid>)
+          ? (<Grid xs={'auto'} ><AdminButton boat={boat} user={user} color='secondary'/></Grid>)
           : ''
         }
         <SetHandicapCheckedButton boat={boat} user={user} />

@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { InMemoryCache, ApolloClient, HttpLink } from '@apollo/client';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from "@apollo/client/react";
 import { setContext } from 'apollo-link-context'
 import { TokenContext } from '../components/TokenProvider';
 const httpLink = new HttpLink({

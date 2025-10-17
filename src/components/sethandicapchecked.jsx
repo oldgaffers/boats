@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Button from "@mui/material/Button";
 import { Box, Checkbox, Dialog, DialogActions, DialogContentText, DialogTitle, FormControlLabel, Snackbar } from "@mui/material";
 import { useAuth0 } from '@auth0/auth0-react';

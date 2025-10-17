@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import Snackbar from "@mui/material/Snackbar";
@@ -29,11 +29,11 @@ export default function OGA60Dialog({ onClose, open }) {
             onClose={onClose}
         >
         <Grid container spacing={1}>
-            <Grid item xs={12}>&nbsp;</Grid>
-                <Grid item xs={1}>&nbsp;</Grid>
-                <Grid item xs={10}><OGA60 onClose={handleClose} onCancel={handleCancel} /></Grid>
-                <Grid item xs={1}>&nbsp;</Grid>
-                <Grid item xs={12}>&nbsp;</Grid>
+            <Grid xs={12}>&nbsp;</Grid>
+                <Grid xs={1}>&nbsp;</Grid>
+                <Grid xs={10}><OGA60 onClose={handleClose} onCancel={handleCancel} /></Grid>
+                <Grid xs={1}>&nbsp;</Grid>
+                <Grid xs={12}>&nbsp;</Grid>
             </Grid>
         </Dialog>
         <Snackbar
