@@ -39,6 +39,7 @@ import HtmlEditor from './tinymce';
 import { boatm2f } from "../util/format";
 
 const schema = (pickers) => {
+  console.log('schema pickers', Object.keys(pickers||{}));
   return {
     fields: [
       {
@@ -622,18 +623,19 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
   const [filterable, setFilterable] = useState();
   const [pickers, setPickers] = useState();
-
   useEffect(() => {
     if (open && !filterable) {
+      console.log('get filterable');
       getFilterable().then((r) => setFilterable(r)).catch((e) => console.log(e));
     }
-  }, [filterable]);
+  }, [open, filterable]);
 
   useEffect(() => {
     if (open && !pickers) {
+      console.log('get pickers');
       getPicklists().then((r) => setPickers(r)).catch((e) => console.log(e));
     }
-  }, [pickers]);
+  }, [open, pickers]);
 
   const handleSubmit = (boat) => {
     if (boat.ddf.owned) {
@@ -650,6 +652,10 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
 
   if (!open) return '';
 
+  if (!filterable) return 'Loading...';
+
+  if (!pickers) return 'Loading...';  
+  
   console.log('OPEN');
 
   return (
@@ -660,7 +666,8 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
       <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
         <Typography variant="h5" >Add a boat to the Register</Typography>
       </Box>
-      <FormRenderer
+      <DialogContent dividers sx={{ width: '80vw', height: '80vh' }}>
+        <FormRenderer
         componentMapper={{
           ...componentMapper,
           html: HtmlEditor,
@@ -676,6 +683,7 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
         initialValues={{ user, filterable }}
         subscription={{ values: true }}
       />
+      </DialogContent>
 
     </Dialog>
   );
