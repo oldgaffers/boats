@@ -44,6 +44,8 @@ jobs:
         npm run build --if-present
         cp build/static/js/main.*.js.map build
         cp build/static/js/main.*.js build/main.js
+        cp build/static/js/*.*.chunk.js build
+        cp build/static/js/*.*.chunk.js.map build
         cp build/static/css/main.*.css.map build
         cp build/static/css/main.*.css build/main.css
         echo build complete

@@ -1,4 +1,7 @@
 module.exports = {
+  output: {
+    chunkFormat: false
+  },
   module: {
     rules: [
       {
