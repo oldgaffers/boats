@@ -31,6 +31,24 @@ export function useGetAlbumKey(boat) {
   return albumKey;
 }
 
+export function useGetExistingOrNewAlbumKey(boat) {
+  const existingAlbumKey = useGetAlbumKey(boat);
+  if (existingAlbumKey) {
+    return existingAlbumKey;
+  }
+  createPhotoAlbum(boat.name, boat.oga_no).then(async (response) => {
+    if (response.ok) {
+      boat.image_key = (await response.json()).albumKey;
+      const response2 = await postBoatData({ new: boat, email })
+      if (!response2.ok) {
+        console.log('problem updating boat register with new album key', response.statusText);
+      }
+      return boat.image_key;
+    }
+  });
+  return null;
+}
+
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   // console.log('AddPhotosDialog', boat, open, onClose, onCancel);
   const { user } = useAuth0();
@@ -38,7 +56,12 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
-  const existingAlbumKey = useGetAlbumKey(boat);
+  const albumKey = useGetExistingOrNewAlbumKey(boat);
+
+  if (open && !albumKey) {
+    console.log("can't get album key...");
+    return "No album to upload to.";
+  }
 
   const onDrop = (p) => {
     setPictures(p);
@@ -51,27 +74,10 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   }
 
   const onUpload = async () => {
-    if (existingAlbumKey) {
-      const r = await postPhotos(copyright, email, existingAlbumKey, pictures, setProgress);
+      const r = await postPhotos(copyright, email, albumKey, pictures, setProgress);
       r.forEach((res, idx) => {
         console.log(res.status, 'Uploaded', pictures[idx].name);
       });
-    } else {
-      const response = await createPhotoAlbum(boat.name, boat.oga_no);
-      if (response.ok) {
-        boat.image_key = (await response.json()).albumKey;
-        const response2 = await postBoatData({ new: boat, email })
-        if (!response2.ok) {
-          console.log('problem updating boat register with new album key', response.statusText);
-        }
-        const r = await postPhotos(copyright, email, boat.image_key, pictures, setProgress);
-        r.forEach((res, idx) => {
-          console.log(res.status, 'Uploaded', pictures[idx].name);
-        });
-      } else {
-        console.log('problem creating new photo album', response.statusText);
-      }
-    }
   };
 
   const ready = () => {
