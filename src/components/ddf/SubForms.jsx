@@ -19,7 +19,7 @@ export const rigFields = (pickers) => [
         type: 'required',
       },
     ],
-    options: mapPicker(pickers.sail_type),
+    options: mapPicker(pickers?.sail_type),
     isOptionEqualToValue: (option, value) => option.value === value,
   },
   {
@@ -32,7 +32,7 @@ export const rigFields = (pickers) => [
         type: 'required',
       },
     ],
-    options: mapPicker(pickers.rig_type),
+    options: mapPicker(pickers?.rig_type),
     isOptionEqualToValue: (option, value) => option.value === value,
   }
 ];

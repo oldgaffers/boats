@@ -124,7 +124,7 @@ export const constructionItems = (pickers) => {
       isReadOnly: false,
       isSearchable: true,
       isClearable: true,
-      options: mapPicker(pickers.construction_material),
+      options: mapPicker(pickers?.construction_material),
       isOptionEqualToValue: (option, value) => option.value === value,
     },
     {
@@ -134,7 +134,7 @@ export const constructionItems = (pickers) => {
       isReadOnly: false,
       isSearchable: true,
       isClearable: true,
-      options: mapPicker(pickers.construction_method),
+      options: mapPicker(pickers?.construction_method),
       isOptionEqualToValue: (option, value) => option.value === value,
     },
     {
@@ -144,7 +144,7 @@ export const constructionItems = (pickers) => {
       isReadOnly: false,
       isSearchable: true,
       isClearable: true,
-      options: mapPicker(pickers.spar_material),
+      options: mapPicker(pickers?.spar_material),
       isOptionEqualToValue: (option, value) => option.value === value,
     },
     {
@@ -179,7 +179,7 @@ export const extendableList = ({ pickers, name, label }) => {
       component: 'dual-list-select',
       name,
       label: `${label}(s)`,
-      options: optionsFromPicker(pickers[name]),
+      options: optionsFromPicker(pickers?.[name]),
     },
     {
       component: 'text-field',
@@ -200,7 +200,7 @@ export const extendableItems = ({ pickers, name, label }) => {
       isReadOnly: false,
       isSearchable: true,
       isClearable: true,
-      options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
+      options: (pickers?.[name]||[]).map((o) => ({ label: o.name, value: o.name })),
       noOptionsMessage: 'we don\'t have that one - you can add it below',
     },
     {

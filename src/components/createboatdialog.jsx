@@ -157,7 +157,7 @@ const schema = (pickers) => {
                     isSearchable: true,
                     isClearable: true,
                     noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
-                    options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
+                    options: (pickers?.design_class||[]).map((i) => ({ label: i.name, value: i.name })),
                   },
                 ]
               }
@@ -618,7 +618,7 @@ export function makeOwnerships({ owner, otherowners }) {
   }];
 }
 
-export function CreateBoatDialog({ open, onCancel, onSubmit }) {
+export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
   const [filterable, setFilterable] = useState();
   const [pickers, setPickers] = useState();
@@ -681,8 +681,8 @@ export function CreateBoatDialog({ open, onCancel, onSubmit }) {
   );
 }
 
-export default function FormDialog() {
-  const [open, setOpen] = React.useState(false);
+export function SimpleFormDialog() {
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -692,17 +692,17 @@ export default function FormDialog() {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries((formData as any).entries());
+    const formJson = Object.fromEntries((formData).entries());
     const email = formJson.email;
     console.log(email);
     handleClose();
   };
 
   return (
-    <React.Fragment>
+    <>
       <Button variant="outlined" onClick={handleClickOpen}>
         Open form dialog
       </Button>
@@ -734,6 +734,6 @@ export default function FormDialog() {
           </Button>
         </DialogActions>
       </Dialog>
-    </React.Fragment>
+    </>
   );
 }
