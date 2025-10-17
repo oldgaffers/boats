@@ -38,6 +38,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
+  const [uploads, setUploads] = useState([]);
   const existingAlbumKey = useGetAlbumKey(boat);
 
   const onDrop = (p) => {
@@ -52,7 +53,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
 
   const onUpload = async () => {
     if (existingAlbumKey) {
-      return postPhotos(copyright, email, existingAlbumKey, pictures, setProgress);
+      setUploads(postPhotos(copyright, email, existingAlbumKey, pictures, setProgress));
     } else {
       const response = await createPhotoAlbum(boat.name, boat.oga_no);
       if (response.ok) {
@@ -61,7 +62,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
         if (!response2.ok) {
           console.log('problem updating boat register with new album key', response.statusText);
         }
-        return postPhotos(copyright, email, boat.image_key, pictures, setProgress);
+        setUploads(postPhotos(copyright, email, boat.image_key, pictures, setProgress));
       } else {
         console.log('problem creating new photo album', response.statusText);
       }
@@ -83,6 +84,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     setCopyright(e.target.value);
   };
   const percent = Math.round(progress);
+  console.log('U', uploads);
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
       <Paper sx={{ padding: '10px' }}  >

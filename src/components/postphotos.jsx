@@ -9,7 +9,7 @@ export async function postPhotos(copyright, email, albumKey, fileList, onProgres
     const client = new S3Client({ region, credentials });
     const progress = fileList.reduce((acc, file) => ({ ...acc, [file.name]: { loaded: 0, total: file.size } }), {});
     const totalSize = fileList.reduce((acc, file) => acc + file.size, 0);
-    return Promise.all(fileList.map((file) => {
+    const uploaders = fileList.map((file) => {
         const upload = new Upload({
             client, params: {
                 Bucket: bucketName,
@@ -25,5 +25,9 @@ export async function postPhotos(copyright, email, albumKey, fileList, onProgres
             onProgress(Math.round((loaded / totalSize) * 100));
         });
         return upload.done();
-    }));
+    });
+    console.log('Uploading', uploaders);
+    const p = Promise.all(uploaders)
+    console.log('Upload promises', p);
+    return p;;
 }
