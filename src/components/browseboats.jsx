@@ -85,7 +85,7 @@ export default function BrowseBoats({
     onFilterChange(filters);
     setFleetName(name);
   }
-console.log('BF', boats);
+
   if (!boats) return <CircularProgress />;
 
   const filtered = applyFilters(boats, filters);
@@ -95,15 +95,12 @@ console.log('BF', boats);
    <Box>
       <Stack direction='row' spacing={2} margin={2}>
         <Welcome/>
-        <Box maxHeight={200}>
         <CreateBoatButton />
-        </Box>
-        <Box maxHeight={200}>
         <RoleRestricted role='editor'>
           <ShuffleBoatsButton />
         </RoleRestricted>
-        </Box>
       </Stack>
+      <Stack>
       <Intro view={state.view} />
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
@@ -142,6 +139,7 @@ console.log('BF', boats);
       />
       <Divider />
       <BoatRegisterFooter />
+      </Stack>
     </Box>
   );
 }

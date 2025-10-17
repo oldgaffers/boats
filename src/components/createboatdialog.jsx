@@ -1,3 +1,11 @@
+
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import FormSpy from '@data-driven-forms/react-form-renderer/form-spy';
@@ -7,8 +15,6 @@ import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import CircularProgress from '@mui/material/CircularProgress';
 import {
   designerItems,
   builderItems,
@@ -612,7 +618,7 @@ export function makeOwnerships({ owner, otherowners }) {
   }];
 }
 
-export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
+export function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const { user } = useAuth0();
   const [filterable, setFilterable] = useState();
   const [pickers, setPickers] = useState();
@@ -642,12 +648,9 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
     onSubmit(boat);
   }
 
-  console.log('CD', { open, pickers, filterable });
   if (!open) return '';
 
-  // if (!pickers) return <CircularProgress />;
-  // if (!filterable) return <CircularProgress />;
-  console.log('CD2');
+  console.log('OPEN');
 
   return (
     <Dialog
@@ -657,11 +660,6 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
       <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
         <Typography variant="h5" >Add a boat to the Register</Typography>
       </Box>
-
-    </Dialog>
-  );
-}
-      /*
       <FormRenderer
         componentMapper={{
           ...componentMapper,
@@ -678,4 +676,64 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
         initialValues={{ user, filterable }}
         subscription={{ values: true }}
       />
-*/
+
+    </Dialog>
+  );
+}
+
+export default function FormDialog() {
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const formJson = Object.fromEntries((formData as any).entries());
+    const email = formJson.email;
+    console.log(email);
+    handleClose();
+  };
+
+  return (
+    <React.Fragment>
+      <Button variant="outlined" onClick={handleClickOpen}>
+        Open form dialog
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here. We
+            will send updates occasionally.
+          </DialogContentText>
+          <form onSubmit={handleSubmit} id="subscription-form">
+            <TextField
+              autoFocus
+              required
+              margin="dense"
+              id="name"
+              name="email"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+          </form>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" form="subscription-form">
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+}
