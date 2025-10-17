@@ -10,7 +10,6 @@ import Tooltip from '@mui/material/Tooltip';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import BoatGallery from './boatgallery';
-import { TokenContext } from './TokenProvider';
 import { getFleets, } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { getFilterable } from '../util/api';
@@ -52,12 +51,12 @@ export function FleetDisplay({ view, name, filters, tooltip = 'Click to expand',
     <AccordionDetails>
       {(view === 'gallery')
         ?
-          <BoatGallery boats={sortAndPaginate(filtered, state)} />
+        <BoatGallery boats={sortAndPaginate(filtered, state)} />
         :
-          <BoatCards
-            state={state} onChangePage={onPageChange} totalCount={filtered.length}
-            boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
-          />
+        <BoatCards
+          state={state} onChangePage={onPageChange} totalCount={filtered.length}
+          boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
+        />
       }
     </AccordionDetails>
   </Accordion>);
@@ -74,7 +73,7 @@ export function Fleets({ filter }) {
         if (filter.owned) {
           const { owned, ...f } = filter;
           const owner_gold_id = user?.["https://oga.org.uk/id"];
-          const p = await getFleets('member', {...f, owner_gold_id}, token);
+          const p = await getFleets('member', { ...f, owner_gold_id }, token);
           setData(p);
         } else {
           const p = await getFleets('member', filter, token);
@@ -100,18 +99,21 @@ export function Fleets({ filter }) {
 
 export function RoleRestrictedFleetView({ view, filter, role, defaultExpanded = false }) {
   const [data, setData] = useState();
-  const accessToken = useContext(TokenContext);
   console.log('RoleRestrictedFleetView', filter, role, defaultExpanded);
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 
   useEffect(() => {
     const getData = async () => {
-      const p = await getFleets(role, filter, accessToken);
-      setData(p);
+      if (isAuthenticated) {
+        const accessToken = await getAccessTokenSilently();
+        const p = await getFleets(role, filter, accessToken);
+        setData(p);
+      }
     }
-    if (accessToken) {
+    if (isAuthenticated && !data) {
       getData();
     }
-  }, [accessToken, filter, role])
+  }, [isAuthenticated, filter, role])
 
   if (!data) {
     return <CircularProgress />;

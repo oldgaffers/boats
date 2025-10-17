@@ -85,7 +85,7 @@ export default function BrowseBoats({
     onFilterChange(filters);
     setFleetName(name);
   }
-
+console.log('BF', boats);
   if (!boats) return <CircularProgress />;
 
   const filtered = applyFilters(boats, filters);

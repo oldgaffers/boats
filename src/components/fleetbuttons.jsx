@@ -7,7 +7,6 @@ import { getFleets } from '../util/api';
 import Picker from './picker';
 import NewFleet from './newfleet';
 import UpdateFleet from './updatefleet';
-import { TokenContext } from './TokenProvider';
 import { MarkContext } from "./browseapp";
 
 export default function FleetButtons({
@@ -18,22 +17,24 @@ export default function FleetButtons({
     const [items, setItems] = useState();
     const [selected, setSelected] = useState();
     const markList = useContext(MarkContext);
-    const accessToken = useContext(TokenContext);
-    const { user } = useAuth0()
+    const { user, isAuthenticated, getAccessTokenSilently } = useAuth0()
     const id = user?.["https://oga.org.uk/id"];
 
     useEffect(() => {
         const getData = async () => {
-            const p = await getFleets('public', {public: true}, accessToken);
-            const q = await getFleets('member', {owner_gold_id: id}, accessToken);
-            setItems([...p, ...q]);
+            if (isAuthenticated) {
+                const accessToken = await getAccessTokenSilently();
+                const p = await getFleets('public', { public: true }, accessToken);
+                const q = await getFleets('member', { owner_gold_id: id }, accessToken);
+                setItems([...p, ...q]);
+            }
         }
-        if (accessToken && !items) {
+        if (isAuthenticated && !items) {
             getData();
         }
-    }, [accessToken, items, id])
+    }, [isAuthenticated, items, id])
 
-    if (accessToken && !items) {
+    if (isAuthenticated && !items) {
         return <CircularProgress />;
     }
 

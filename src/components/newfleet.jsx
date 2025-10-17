@@ -11,14 +11,13 @@ import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FormControl, Popover, Radio, RadioGroup, Typography } from "@mui/material";
 import { postScopedData } from '../util/api';
-import { TokenContext } from './TokenProvider';
 
 function CreateFleetDialog({
     onCancel, onClose, open, filterCount, markedBoatCount,
 }) {
     const [name, setName] = useState('');
     const [pub, setPub] = useState(false);
-    const [type, setType] = useState((markedBoatCount===0)?"static":"marked");
+    const [type, setType] = useState((markedBoatCount === 0) ? "static" : "marked");
 
     const handleCancel = () => {
         onCancel();
@@ -39,9 +38,9 @@ function CreateFleetDialog({
                         name="radio-buttons-group"
                         onChange={(event) => setType(event.target.value)}
                     >
-                        <FormControlLabel value="dynamic" control={<Radio disabled={filterCount===0}/>} label="New Fleet from filter - new matching boats are automatically added" />
-                        <FormControlLabel value="static" control={<Radio disabled={filterCount===0}/>} label="New Fleet from the boats currently visible" />
-                        <FormControlLabel value="marked" control={<Radio disabled={markedBoatCount===0}/>} label={`New Fleet from ${markedBoatCount} marked boats`} />
+                        <FormControlLabel value="dynamic" control={<Radio disabled={filterCount === 0} />} label="New Fleet from filter - new matching boats are automatically added" />
+                        <FormControlLabel value="static" control={<Radio disabled={filterCount === 0} />} label="New Fleet from the boats currently visible" />
+                        <FormControlLabel value="marked" control={<Radio disabled={markedBoatCount === 0} />} label={`New Fleet from ${markedBoatCount} marked boats`} />
                     </RadioGroup>
                 </FormControl>
                 <Stack spacing={2} direction="row">
@@ -64,52 +63,57 @@ export default function NewFleet({
     updated = () => console.log('updated'),
     filtered,
 }) {
-    const { user } = useAuth0();
+    const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
     const id = user?.["https://oga.org.uk/id"];
-    const accessToken = useContext(TokenContext);
     const [popoverOpen, setPopoverOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState();
     const [open, setOpen] = useState(false);
     const buttonRef = useRef();
 
-    const addFleet = (name, isPublic, type) => {
-        console.log('addFleet', name, isPublic, markList, filters);
-        const data = {
-            name,
-            owner_gold_id: id,
-            public: isPublic,
-            created_at: (new Date()).toISOString(),
-        };
-        switch (type) {
-            case 'dynamic':
-                console.log('D', filters);
-                data.filters = filters;
-                break;
-            case 'static':
-                {
-                    const ogaNos = filtered.map((boat) => boat.oga_no);
-                    data.filters = { oga_nos: ogaNos };
-                }
-                break;
-            default:
-                data.filters = { oga_nos: markList };
-        }
-        const scope = (isPublic) ? 'public' : 'member';
-        postScopedData(scope, 'fleets', data, accessToken)
-            .then((response) => {
-                if (response.ok) {
-                    setPopoverOpen(false);
-                    updated();    
-                } else {
-                    console.log(response.statusText);
-                    setPopoverOpen(false);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-                setPopoverOpen(false);
-            });
+    if (!isAuthenticated) {
+        return '';
     }
+
+    const addFleet = (name, isPublic, type) => {
+        getAccessTokenSilently().then((accessToken) => {
+            const data = {
+                name,
+                owner_gold_id: id,
+                public: isPublic,
+                created_at: (new Date()).toISOString(),
+            };
+            switch (type) {
+                case 'dynamic':
+                    data.filters = filters;
+                    break;
+                case 'static':
+                    {
+                        const ogaNos = filtered.map((boat) => boat.oga_no);
+                        data.filters = { oga_nos: ogaNos };
+                    }
+                    break;
+                default:
+                    data.filters = { oga_nos: markList };
+            }
+            const scope = (isPublic) ? 'public' : 'member';
+            postScopedData(scope, 'fleets', data, accessToken)
+                .then((response) => {
+                    if (response.ok) {
+                        setPopoverOpen(false);
+                        updated();
+                    } else {
+                        console.log(response.statusText);
+                        setPopoverOpen(false);
+                    }
+                })
+                .catch((e) => {
+                    console.log(e);
+                    setPopoverOpen(false);
+                });
+        }).catch((e) => {
+            console.log(e);
+        });
+    };
 
     const handleClose = (value) => {
         setOpen(false);
@@ -125,7 +129,7 @@ export default function NewFleet({
     const markedBoatCount = markList?.length || 0;
     const filterCount = Object.keys(filters).length;
 
-    if (( markedBoatCount === 0) && (filterCount === 0)) {
+    if ((markedBoatCount === 0) && (filterCount === 0)) {
         return '';
     }
 

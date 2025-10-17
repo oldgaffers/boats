@@ -42,11 +42,7 @@ function Wrapper({ redirectUri, scope, children }) {
 
   return <PayPalScriptProvider options={paypalOptions}>
     <Auth0Provider {...auth} scope={scope}>
-      <TokenProvider>
-        <OGAProvider>
-          {children}
-        </OGAProvider>
-      </TokenProvider>
+      {children}
     </Auth0Provider>
   </PayPalScriptProvider>
 }

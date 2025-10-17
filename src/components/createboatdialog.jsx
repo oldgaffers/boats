@@ -618,31 +618,36 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
   const [pickers, setPickers] = useState();
 
   useEffect(() => {
-    if (!filterable) {
+    if (open && !filterable) {
       getFilterable().then((r) => setFilterable(r)).catch((e) => console.log(e));
     }
   }, [filterable]);
 
   useEffect(() => {
-    if (!pickers) {
+    if (open && !pickers) {
       getPicklists().then((r) => setPickers(r)).catch((e) => console.log(e));
     }
   }, [pickers]);
-
-  if (!pickers) return <CircularProgress />;
-  if (!filterable) return <CircularProgress />;
-
-  if (!open) return '';
 
   const handleSubmit = (boat) => {
     if (boat.ddf.owned) {
       boat.ownerships = makeOwnerships(boat.ddf);
     }
-    boat.design_class = pickers.design_class.find((item) => item.name === boat.design_class);
+    if (!pickers) {
+      console.log('no pickers');
+    }
+    boat.design_class = pickers?.design_class.find((item) => item.name === boat.design_class);
     boat.designer = pickers.designer.find((item) => item.id === boat.designer);
     boat.builder = pickers.builder.find((item) => item.id === boat.builder);
     onSubmit(boat);
   }
+
+  console.log('CD', { open, pickers, filterable });
+  if (!open) return '';
+
+  // if (!pickers) return <CircularProgress />;
+  // if (!filterable) return <CircularProgress />;
+  console.log('CD2');
 
   return (
     <Dialog
@@ -652,6 +657,11 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
       <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
         <Typography variant="h5" >Add a boat to the Register</Typography>
       </Box>
+
+    </Dialog>
+  );
+}
+      /*
       <FormRenderer
         componentMapper={{
           ...componentMapper,
@@ -668,7 +678,4 @@ export default function CreateBoatDialog({ open, onCancel, onSubmit }) {
         initialValues={{ user, filterable }}
         subscription={{ values: true }}
       />
-
-    </Dialog>
-  );
-}
+*/
