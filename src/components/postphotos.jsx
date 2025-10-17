@@ -27,7 +27,7 @@ export async function postPhotos(copyright, email, albumKey, fileList, onProgres
         return upload.done();
     });
     console.log('Uploading', uploaders);
-    const p = Promise.all(uploaders)
+    const p = Promise.allSettled(uploaders)
     console.log('Upload promises', p);
     return p;;
 }
