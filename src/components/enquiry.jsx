@@ -128,7 +128,7 @@ export default function Enquiry({ boat, text }) {
 
   const handleSend = ({ id, boat_name, oga_no, type, email, text, owners }) => {
     setOpen(false);
-    const data = { type, id, boat_name, oga_no, email, text, owners, member };
+    const data = { type, id, boat_name, oga_no, email, text, owners, member: isMember };
     if (user?.name) {
       data.name = user.name;
     }
