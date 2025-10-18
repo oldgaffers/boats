@@ -297,6 +297,12 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      splitChunks: {
+        // Force all code into the main bundle
+        cacheGroups: {
+          defaultVendors: false,
+        },
+      },
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
