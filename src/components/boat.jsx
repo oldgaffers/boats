@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { ApolloConsumer } from '@apollo/client';
 import BoatWrapper from './boatwrapper';
 import BoatWrapperTest from './boatwrappertest';
 import { getBoatData, getBoatLastModified } from '../util/api';
@@ -77,15 +76,11 @@ export default function Boat(props) {
 
   if (props.test) {
     return (
-      <ApolloConsumer>
-        {client => <BoatWrapperTest client={client} boat={boat} lastModified={lastModified} />}
-      </ApolloConsumer>
+        <BoatWrapperTest boat={boat} lastModified={lastModified} />
     );  
   }
   return (
-    <ApolloConsumer>
-      {client => <BoatWrapper client={client} boat={boat} lastModified={lastModified} />}
-    </ApolloConsumer>
+      <BoatWrapper boat={boat} lastModified={lastModified} />
   );
 
 };

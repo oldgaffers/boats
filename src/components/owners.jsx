@@ -21,6 +21,49 @@ function Owner({ owner }) {
   );
 }
 
+/*
+
+export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
+  members(members: $members) {
+    firstname
+    lastname
+    member
+    id
+    GDPR
+    skipper { text }
+  }
+}`);
+
+const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
+
+const addNames = async (client, owners) => {
+  const rawMemberNumbers = owners?.filter((o) => queryIf(o)).map((o) => o.member) || [];
+  if (rawMemberNumbers.length === 0) {
+    return owners;
+  }
+  const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
+  const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
+  const members = r.data.members;
+  return owners.map((owner) => {
+    const r = { ...owner };
+    const m = members.filter((member) => member.id === owner.id);
+    if (m.length > 0) {
+      const { skipper, GDPR, firstname, lastname } = m[0];
+      if (GDPR) {
+        r.name = `${firstname} ${lastname}`;
+      }
+      if (skipper) {
+        r.skipper = skipper;
+      }
+    }
+    return r;
+  });
+};
+
+  const ownerships = result || boat.ownerships || [];
+  ownerships.sort((a, b) => a.start > b.start);
+*/
+
 export default function Owners({ owners }) {
   if (owners?.length === 0) {
     return (<div />);

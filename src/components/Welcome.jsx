@@ -64,7 +64,7 @@ function Contact() {
 
     const handleSend = () => {
         setOpen(false);
-        const data: any = {
+        const data = {
             subject: 'associate login with membership',
         };
         if (user) {
@@ -121,7 +121,7 @@ export default function Welcome() {
     if (!user) {
         return (
             <Tooltip title='If you are a member then please log-in to enable extra members only features.'>
-                <LoginButton />
+                <Box><LoginButton /></Box>
             </Tooltip>
         );
     }

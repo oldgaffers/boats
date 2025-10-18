@@ -16,8 +16,8 @@ import Voyage from './voyage';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
-export default function BoatDetail({ view, boat, user }) {
-  const { getAccessTokenSilently } = useAuth0();
+export default function BoatDetail({ view, boat }) {
+  const { user, getAccessTokenSilently } = useAuth0();
   const [value, setValue] = useState(0);
   const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];

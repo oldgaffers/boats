@@ -10,7 +10,6 @@ import DialogContentText from "@mui/material/DialogContentText";
 import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
 import { useAuth0 } from "@auth0/auth0-react";
-import { gql, useLazyQuery } from "@apollo/client";
 import { postGeneralEnquiry } from '../util/api';
 
 function ContactDialog({
@@ -113,24 +112,9 @@ export default function Enquiry({ boat, text }) {
   const { user } = useAuth0();
   const userRoles = (user && user['https://oga.org.uk/roles']) || [];
 
-  const [getOwners, { loading, error, data }] = useLazyQuery(gql(`query members($members: [Int]) {
-    members(members: $members) { GDPR }
-  }`));
-  if (loading) return <p>Loading ...</p>;
-  if (error) return `Error! ${error}`;
-
-  const member = userRoles?.includes('member') || false;
+  const isMember = userRoles?.includes('member') || false;
 
   const handleClickOpen = () => {
-    if (member) {
-      const current = boat?.ownerships?.filter((o) => o.current) || [];
-      if (current.length > 0) {
-        const memberNumbers = [...new Set(current.map((owner) => owner.member))];
-        getOwners({ variables: { members: memberNumbers } })
-      }
-    } else {
-      // console.log('not member - userRoles', userRoles);
-    }
     setOpen(true);
   };
 
@@ -165,7 +149,6 @@ export default function Enquiry({ boat, text }) {
 
   const current = boat.ownerships?.filter((o) => o.current) || [];
 
-  const isMember = userRoles.includes('member');
   let enquireText = text;
   if (!text) {
     if (current) {
@@ -197,7 +180,6 @@ export default function Enquiry({ boat, text }) {
         user={user}
         owners={current}
         isMember={isMember}
-        members={data?.members}
         onCancel={handleCancel}
         onSend={handleSend}
         title={enquireText}

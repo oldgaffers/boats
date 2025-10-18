@@ -36,9 +36,9 @@ const compactWanted = {
   year: { label: 'Year', access: (b, k) => b[k] },
 };
 
-const tl = { vertical : 'top', horizontal : 'left' };
+const tl = { vertical: 'top', horizontal: 'left' };
 // const tr = { vertical : 'top', horizontal : 'right' };
-const bl = { vertical : 'bottom', horizontal : 'left' };
+const bl = { vertical: 'bottom', horizontal: 'left' };
 
 function SalesBadge({ boat, view, children }) {
   switch (boat?.selling_status || '') {
@@ -113,16 +113,15 @@ export function BoatCardImage({ albumKey, name }) {
   const height = 220;
 
   useEffect(() => {
-    const get = async () => {
-      const r = await getThumb(albumKey)
-      if (r) {
-          setData(r);
-      } else {
-          console.log('No existing album');
-      }
-    };
     if (!data && albumKey) {
-      get();
+      getThumb(albumKey).then((r) => {
+        if (r) {
+          setData(r);
+        } else {
+          setData({});
+          console.log('failed to get thumb for albumKey', albumKey);
+        }
+      }).catch((e) => console.log(e));
     }
   }, [data, albumKey]);
 
@@ -135,11 +134,11 @@ export function BoatCardImage({ albumKey, name }) {
       <Skeleton variant='rounded' animation='wave' height={height} />
     </>
   }
-
+  console.log('BoatCardImage data', data);
   if (data.ThumbnailUrl) {
     return (<CardMedia
       component="img"
-      height={height} 
+      height={height}
       sx={{ objectFit: "contain" }}
       image={data.ThumbnailUrl}
       title={name}
@@ -148,7 +147,7 @@ export function BoatCardImage({ albumKey, name }) {
   return (<AltForThumb />);
 }
 
-export function CompactBoatCard({ view = 'app', ogaNo, wanted=compactWanted}) {
+export function CompactBoatCard({ view = 'app', ogaNo, wanted = compactWanted }) {
   const [data, setData] = useState();
 
   useEffect(() => {
