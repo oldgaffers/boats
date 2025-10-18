@@ -300,9 +300,15 @@ module.exports = function (webpackEnv) {
       splitChunks: {
         // Force all code into the main bundle
         cacheGroups: {
-          defaultVendors: false,
-        },
+          defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'main',
+            chunks: 'all',
+            enforce: true
+          }
+        }
       },
+      runtimeChunk: false,
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode
