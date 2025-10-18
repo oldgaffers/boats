@@ -15,4 +15,5 @@ export default defineConfig({
     },
   },
   output: { inlineDynamicImports: true, },
+  base: 'https://oldgaffers.github.io/boats/',
 })

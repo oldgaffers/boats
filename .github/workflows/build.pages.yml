@@ -49,9 +49,8 @@ jobs:
         echo build complete
     - name: add test
       run: |
-        mkdir -p build/test
-        cp dist/index.html build/test
-        cp -r dist/assets build/test
+        cp dist/index.html build
+        cp -r dist/assets build
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
