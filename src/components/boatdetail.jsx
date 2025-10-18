@@ -104,7 +104,7 @@ export default function BoatDetail({ view, boat }) {
   if (roles.includes('member')) {
     panes.push({
       title: 'Owners', children: (
-        <Owners owners={boat.ownerships} email={user.email} />
+        <Owners boat={boat} />
       )
     });
     const skippers = boat.ownerships.filter((o) => o.skipper);

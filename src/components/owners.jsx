@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useGetOwnerNames } from '../util/ownernames.js';
 
 function Owner({ owner }) {
   // console.log(owner);
@@ -21,51 +22,10 @@ function Owner({ owner }) {
   );
 }
 
-/*
-
-export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
-  members(members: $members) {
-    firstname
-    lastname
-    member
-    id
-    GDPR
-    skipper { text }
-  }
-}`);
-
-const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
-
-const addNames = async (client, owners) => {
-  const rawMemberNumbers = owners?.filter((o) => queryIf(o)).map((o) => o.member) || [];
-  if (rawMemberNumbers.length === 0) {
-    return owners;
-  }
-  const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
-  const r = await client.query({ query: MEMBER_QUERY, variables: { members: memberNumbers } });
-  const members = r.data.members;
-  return owners.map((owner) => {
-    const r = { ...owner };
-    const m = members.filter((member) => member.id === owner.id);
-    if (m.length > 0) {
-      const { skipper, GDPR, firstname, lastname } = m[0];
-      if (GDPR) {
-        r.name = `${firstname} ${lastname}`;
-      }
-      if (skipper) {
-        r.skipper = skipper;
-      }
-    }
-    return r;
-  });
-};
-
-  const ownerships = result || boat.ownerships || [];
+export default function Owners({ boat }) {
+  const ownerships = useGetOwnerNames(boat);
   ownerships.sort((a, b) => a.start > b.start);
-*/
-
-export default function Owners({ owners }) {
-  if (owners?.length === 0) {
+  if (ownerships.length === 0) {
     return (<div />);
   }
   return (
@@ -80,7 +40,7 @@ export default function Owners({ owners }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {owners.map((owner, index) => <Owner key={index} owner={owner} />)}
+          {ownerships.map((owner, index) => <Owner key={index} owner={owner} />)}
         </TableBody>
       </Table>
     </TableContainer>

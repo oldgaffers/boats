@@ -2,7 +2,7 @@ import React from 'react';
 import { screen, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from "@apollo/client/testing";
 import Boat from './boat';
-import { MEMBER_QUERY } from './boatwrapper';
+import { MEMBER_QUERY } from '.,/util/ownernames';
 import * as api from '../util/api';
 
 jest.mock("../util/api", () => {
