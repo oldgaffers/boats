@@ -19,8 +19,6 @@ export async function postPhotos(copyright, email, albumKey, fileList, onProgres
                     Metadata: { albumKey, copyright },
                 }
             });
-            console.log('Starting upload for', file.name);
-            console.log('Upload object', upload);
             upload.on("httpUploadProgress", (p) => {
                 progress[file.name].loaded = p.loaded;
                 const loaded = Object.values(progress).reduce((acc, v) => acc + v.loaded, 0);
