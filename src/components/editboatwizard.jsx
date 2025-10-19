@@ -37,7 +37,7 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
-import { useAuth0 } from 'auth0/react';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const defaultSchema = (pickers) => {
   return {
