@@ -37,6 +37,7 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
+import { useAuth0 } from 'auth0/react';
 
 const defaultSchema = (pickers) => {
   return {
@@ -475,10 +476,11 @@ export function oldvalue(path, boat) {
   return p.reduce((prev, current) => prev[current], boat[root]);
 }
 
-export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
+export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
-
+  const user = useAuth0();
+  
   useEffect(() => {
     if (!pickers) {
       getPicklists().then((r) => {
