@@ -478,7 +478,7 @@ export function oldvalue(path, boat) {
 export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
-  const user = useAuth0();
+  const { user } = useAuth0();
   
   useEffect(() => {
     if (!pickers) {
