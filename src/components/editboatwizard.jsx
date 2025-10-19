@@ -304,7 +304,7 @@ export function prepareInitialValues(boat, user) {
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
-  
+  console .log('O', ownerids, goldId, owner);
   const email = user?.email || '';
 
   const ddf = { name, oga_no, id, image_key, owner, editor };
@@ -479,7 +479,7 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
 
   const [pickers, setPickers] = useState();
   const { user } = useAuth0();
-  
+  console.log('U', JSON.stringify(user));
   useEffect(() => {
     if (!pickers) {
       getPicklists().then((r) => {
