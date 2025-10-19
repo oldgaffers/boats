@@ -242,8 +242,8 @@ const default_test_schema = (pickers) => {
 describe('EditBoatWizard component tests', () => {
   const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
   test('render form with no permission to sell', async () => {
-    const user = userEvent.setup();
-    expect(user).toBeDefined();
+    const ue = userEvent.setup();
+    expect(ue).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
     render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
@@ -329,11 +329,11 @@ describe('EditBoatWizard component tests', () => {
       logout: jest.fn(),
       loginWithRedirect: jest.fn(),
     });
-    const user = userEvent.setup();
-    expect(user).toBeDefined();
+    const ue = userEvent.setup();
+    expect(ue).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 35034 }} open={true} onSubmit={onSubmit}
+    render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
     />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
