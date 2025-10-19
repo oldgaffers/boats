@@ -5,14 +5,14 @@ import userEvent from '@testing-library/user-event';
 import EditBoatWizard from '../components/editboatwizard';
 import '../util/api';
 import * as MockDate from 'mockdate';
+import { useAuth0 } from '@auth0/auth0-react';
 
-const mockAuthorize = jest.fn();
-
-jest.mock('react-native-auth0', () => ({
+jest.mock('@auth0/auth0-react', () => ({
   useAuth0: () => ({
-    authorize: mockAuthorize,
+    user: { email: 'a@b.com', 'https://oga.org.uk/id': 0 },
   }),
 }));
+
 const pickers = {
   boatNames: [],
   designer: [],
@@ -250,7 +250,7 @@ describe('EditBoatWizard component tests', () => {
     expect(user).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 0 }} open={true} onSubmit={onSubmit}
+    render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
     />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
