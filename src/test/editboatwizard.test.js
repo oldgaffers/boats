@@ -6,6 +6,13 @@ import EditBoatWizard from '../components/editboatwizard';
 import '../util/api';
 import * as MockDate from 'mockdate';
 
+const mockAuthorize = jest.fn();
+
+jest.mock('react-native-auth0', () => ({
+  useAuth0: () => ({
+    authorize: mockAuthorize,
+  }),
+}));
 const pickers = {
   boatNames: [],
   designer: [],
