@@ -304,8 +304,10 @@ export function prepareInitialValues(boat, user) {
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
+  
+  const email = user?.email || '';
 
-  const ddf = { name, oga_no, id, image_key, owner, editor };
+  const ddf = { name, oga_no, id, image_key, owner, editor, email };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
