@@ -7,11 +7,7 @@ import '../util/api';
 import * as MockDate from 'mockdate';
 import { useAuth0 } from '@auth0/auth0-react';
 
-jest.mock('@auth0/auth0-react', () => ({
-  useAuth0: () => ({
-    user: { email: 'a@b.com', 'https://oga.org.uk/id': 0 },
-  }),
-}));
+jest.mock('@auth0/auth0-react');
 
 const pickers = {
   boatNames: [],
@@ -324,6 +320,15 @@ describe('EditBoatWizard component tests', () => {
   });
 
     test('render form with permission to sell', async () => {
+
+// Mock the Auth0 hook and make it return a logged in state
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 0 };
+    useAuth0.mockReturnValue({
+      isAuthenticated: true,
+      user,
+      logout: jest.fn(),
+      loginWithRedirect: jest.fn(),
+    });
     const user = userEvent.setup();
     expect(user).toBeDefined();
     expect(default_test_schema).toBeDefined();
