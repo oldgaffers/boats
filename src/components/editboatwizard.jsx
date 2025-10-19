@@ -307,7 +307,7 @@ export function prepareInitialValues(boat, user) {
   
   const email = user?.email || '';
 
-  const ddf = { name, oga_no, id, image_key, owner, editor, email };
+  const ddf = { name, oga_no, id, image_key, owner, editor };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
@@ -323,11 +323,8 @@ export function prepareInitialValues(boat, user) {
   } else {
     ddf.current_sales_record = defaultSalesRecord;
   }
-  const initialValues = {
-    email: user?.email || '',
-    ...boatm2f(rest),
-    ddf,
-  };
+  
+  const initialValues = { ddf, email, ...boatm2f(rest) };
 
   // prepare for dual-list
   ['builder', 'designer'].forEach((key) => {
@@ -355,7 +352,7 @@ export function prepareInitialValues(boat, user) {
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
-console.log('IV', initialValues)
+// console.log('IV', initialValues)
 
   return initialValues;
 
