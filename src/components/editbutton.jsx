@@ -4,9 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import { postBoatData } from '../util/api';
 import EditBoatWizard from './editboatwizard';
-// const EditBoatWizard = React.lazy(()=> import("./editboatwizard"));
 
-export default function EditButton({ boat, user }) {
+export default function EditButton({ boat }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
@@ -50,7 +49,7 @@ export default function EditButton({ boat, user }) {
         color="primary" onClick={handleClickOpen}>
         I have edits for this boat
       </Button>
-      <EditBoatWizard boat={boat} user={user} open={open} onCancel={handleCancel} onSubmit={handleSubmit} />
+      <EditBoatWizard boat={boat} open={open} onCancel={handleCancel} onSubmit={handleSubmit} />
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackBarOpen}
