@@ -242,7 +242,7 @@ const default_test_schema = (pickers) => {
 describe('EditBoatWizard component tests', () => {
   const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
   test('render form with no permission to sell', async () => {
-    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 1 };
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 0 };
     useAuth0.mockReturnValue({
       isAuthenticated: true,
       user,
@@ -329,7 +329,7 @@ describe('EditBoatWizard component tests', () => {
     test('render form with permission to sell', async () => {
 
 // Mock the Auth0 hook and make it return a logged in state
-    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 0};
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 35034 };
     useAuth0.mockReturnValue({
       isAuthenticated: true,
       user,
