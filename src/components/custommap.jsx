@@ -196,7 +196,7 @@ export default function CustomMap(props) {
     return (
         <Stack>
             <Box height={800} zIndex={0} >
-              <MapContainer center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
+              <MapContainer style={{ height: '800px' }} center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
