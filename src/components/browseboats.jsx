@@ -96,15 +96,15 @@ export default function BrowseBoats({
       <Stack direction='row' spacing={2} margin={2}>
         <Welcome/>
         <Box maxHeight={200}>
-        <CreateBoatButton />
-        </Box>
-        <Box maxHeight={200}>
-        <RoleRestricted role='editor'>
-          <ShuffleBoatsButton />
-        </RoleRestricted>
+          <RoleRestricted role='editor'>
+            <ShuffleBoatsButton />
+          </RoleRestricted>
         </Box>
       </Stack>
       <Intro view={state.view} />
+      <Box maxHeight={200}>
+        <CreateBoatButton />
+      </Box>
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
           <Typography>Sort and Filter</Typography>
