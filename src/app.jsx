@@ -3,8 +3,6 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { CookiesProvider } from "react-cookie";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import OGAProvider from "./util/gql";
-import TokenProvider from './components/TokenProvider';
 
 import BrowseApp from './components/browseapp';
 import Boat from './components/boat';
