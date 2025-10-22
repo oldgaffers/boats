@@ -414,7 +414,7 @@ export function updateOwnerships(old = [], updated = []) {
 
 export function prepareModifiedValues(values, boat, pickers) {
   const { name, oga_no, image_key, selling_status, for_sales } = boat
-  const { ddf, email, ownerships, ...submitted } = values;
+  const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
 
   const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
@@ -464,15 +464,16 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   const builder = listMapper(values, newItems, 'builder');
   const designer = listMapper(values, newItems, 'designer');
+  
+  if (ddf.new_name) {
+    previous_names.unshift([name]);
+  }
 
   const modifiedBoat = {
     ...boatf2m(submitted),
     ownerships: updateOwnerships(boat.ownerships, ownerships),
-    name: ddf.new_name || name,
-    previous_names: [
-      ...((ddf.new_name && [name]) || []),
-      ...(submitted.previous_names || []),
-    ],
+    name: ddf.new_name || name || submitted.name,
+    previous_names,
     oga_no, image_key,
     ...salesChanges(ddf, sales_records),
     builder,
