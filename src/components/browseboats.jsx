@@ -11,7 +11,7 @@ import ShuffleBoatsButton from './shuffleboats';
 import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import IntroText from "./Intro";
+import { IntroText } from "./Intro";
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 import BoatRegisterFooter from './BoatRegisterFooter';
