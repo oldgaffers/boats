@@ -298,15 +298,15 @@ export function boatdiff(before, after) {
   return cj.diff(before, after);
 }
 
-export function prepareInitialValues(boat, user) {
+export function prepareInitialValues(boat, ogaNo, user) {
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
-  const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
+  const { name='New Boat', oga_no=ogaNo, image_key, for_sales, for_sale_state, ...rest } = boat;
   const email = user?.email || '';
 
-  const ddf = { name, oga_no, id, image_key, owner, editor };
+  const ddf = { name, oga_no, image_key, owner, editor };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
@@ -399,7 +399,7 @@ export function updateOwnerships(old = [], updated = []) {
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
-  const { name, oga_no, id, image_key, selling_status, for_sales } = boat
+  const { name, oga_no, image_key, selling_status, for_sales } = boat
   const { ddf, email, ownerships, ...submitted } = values;
 
   const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
@@ -480,13 +480,14 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
   const [ogaNo, setOgaNo] = useState(boat.oga_no);
 
   const { user } = useAuth0();
+
   useEffect(() => {
     if (!ogaNo) {
       nextOgaNo().then((no) => {
         setOgaNo(no);
       }).catch((e) => console.log(e));
     }
-  }, [boat]);
+  }, [ogaNo, boat]);
 
   useEffect(() => {
     if (!pickers) {
@@ -547,7 +548,7 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
           schema={activeSchema}
           onSubmit={handleSubmit}
           onCancel={onCancel}
-          initialValues={prepareInitialValues(boat, user)}
+          initialValues={prepareInitialValues({ boat, ogaNo, user)}
           subscription={{ values: true }}
         />
       </LocalizationProvider>
