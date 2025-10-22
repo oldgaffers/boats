@@ -13,7 +13,7 @@ export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
-function addNames(data, ownerships) {
+function addNames(data, ownerships = []) {
     const members = data?.members;
     if (!members) {
         return ownerships;
@@ -47,7 +47,7 @@ export function useGetOwnerNames(boat) {
         return boat.ownerships;
     }
     if (data) {
-        const ownerships = addNames(data, boat.ownerships);
+        const ownerships = addNames(data, boat.ownerships || []);
         ownerships.sort((a, b) => a.start > b.start);
         return ownerships;
     }
