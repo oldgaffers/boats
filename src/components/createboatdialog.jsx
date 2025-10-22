@@ -150,6 +150,7 @@ const schema = (pickers) => {
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
+                    isOptionEqualToValue: (option, value) => option.value === value,
                     noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
                     options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
                   },
@@ -508,7 +509,7 @@ export function flattenToForm(example, prefix) {
   Object.keys(example).forEach((key) => {
     const value = example[key];
     if (ignoredKeys.includes(key)) {
-      console.log('omit', key, value);
+      // console.log('omit', key, value);
     } else {
       const flatfield = `${prefix || ''}${(prefix && '.') || ''}${key}`;
       switch (typeof value) {
