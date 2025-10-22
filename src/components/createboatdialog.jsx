@@ -111,7 +111,7 @@ const schema = (pickers) => {
                   return 'owner-step';
                 }
               }
-              return 'basic-step';
+              return 'rig-step';
             },
             fields: [
               {
@@ -166,7 +166,7 @@ const schema = (pickers) => {
                   return 'owner-step';
                 }
               }
-              return 'basic-step';
+              return 'rig-step';
             },
             fields: [
               {
@@ -203,7 +203,7 @@ const schema = (pickers) => {
           },
           {
             name: "owner-step",
-            nextStep: "basic-step",
+            nextStep: "rig-step",
             fields: [
               {
                 component: 'sub-form',
