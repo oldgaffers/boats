@@ -526,9 +526,11 @@ export function flattenToForm(example, prefix) {
           flat[flatfield] = value;
           break;
         case 'object':
-          if (['designer', 'builder'].includes(key)) {
+          if (['generic_type'].includes(key)) { // fields that are arrays of strings
+            flat[flatfield] = Array.isArray(value) ? value : [value];
+          } else if (['designer', 'builder'].includes(key)) {
             let val;
-            if (Array.isArray(value)) {
+            if (Array.isArray(value)) { // fields that are arrays of objects with a name property
               val = value.map((m) => m?.name);
             } else {
               val = [value?.name];
@@ -555,7 +557,7 @@ export function flattenToForm(example, prefix) {
       }
     }
   });
-  // console.log(flat);
+  // console.log(JSON.stringify(flat));
   return flat;
 }
 
