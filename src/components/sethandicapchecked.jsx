@@ -40,7 +40,7 @@ function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
   }
 
   const id = user?.['https://oga.org.uk/id'];
-  const owned = boat.ownerships.find((o) => o.id === id && o.current);
+  const owned = boat.ownerships?.find((o) => o.id === id && o.current);
 
   if (owned === undefined && ! (user['https://oga.org.uk/roles'] ||[]).includes('editor')) {
     return <Dialog

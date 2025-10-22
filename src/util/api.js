@@ -19,6 +19,8 @@ const mocks = {
 
 const api1 = 'https://3q9wa2j7s1.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://v2z7n3g4mb5lfkbgeyln3ksjya0qsrpm.lambda-url.eu-west-1.on.aws';
+const api3 = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws';
+
 const stage = 'default'
 
 export async function putGeneralEnquiry(scope, subject, data) {
@@ -179,16 +181,14 @@ export async function getLargestImage(albumKey) {
 }
 
 export async function nextOgaNo() {
-  const url = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws';
-  return (await fetch(`${url}/`)).json();
+  return (await fetch(api3)).json();
 }
 
 export async function disposeOgaNo(oga_no) {
-  const r = await fetch(
-    'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/',
+  const r = await fetch(api3,
     {
       method: 'POST',
-      body: `${oga_no}`,
+      body: oga_no,
       headers: { 'content-type': 'application/json' }
     }
   );
