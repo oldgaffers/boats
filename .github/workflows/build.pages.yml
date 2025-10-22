@@ -48,7 +48,10 @@ jobs:
         cp build/static/css/main.*.css build/main.css
         echo build complete
     - name: add test
-      run: cp test.js build
+      run: |
+        cp dist/index.html build
+        cp -r dist/assets build
+        echo '/* /index.html 200' > build/_redirects
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact

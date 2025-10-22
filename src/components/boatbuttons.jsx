@@ -44,7 +44,7 @@ export default function BoatButtons({ boat }) {
             />
         </Grid>
         <Grid item xs={'auto'} >
-            <EditButton boat={boat} user={user} color='secondary'/>
+            <EditButton boat={boat} color='secondary'/>
         </Grid>
         {roles.includes('editor')
           ? (<Grid item xs={'auto'} ><AdminButton boat={boat} user={user} color='secondary'/></Grid>)

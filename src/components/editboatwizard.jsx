@@ -37,6 +37,7 @@ import Typography from "@mui/material/Typography";
 import { getPicklists } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
+import { useAuth0 } from '@auth0/auth0-react';
 
 const defaultSchema = (pickers) => {
   return {
@@ -303,6 +304,7 @@ export function prepareInitialValues(boat, user) {
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
   const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
+  const email = user?.email || '';
 
   const ddf = { name, oga_no, id, image_key, owner, editor };
 
@@ -320,11 +322,8 @@ export function prepareInitialValues(boat, user) {
   } else {
     ddf.current_sales_record = defaultSalesRecord;
   }
-  const initialValues = {
-    email: user?.email || '',
-    ...boatm2f(rest),
-    ddf,
-  };
+  
+  const initialValues = { ddf, email, ...boatm2f(rest) };
 
   // prepare for dual-list
   ['builder', 'designer'].forEach((key) => {
@@ -352,7 +351,7 @@ export function prepareInitialValues(boat, user) {
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
-console.log('IV', initialValues)
+// console.log('IV', initialValues)
 
   return initialValues;
 
@@ -475,9 +474,10 @@ export function oldvalue(path, boat) {
   return p.reduce((prev, current) => prev[current], boat[root]);
 }
 
-export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
+export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
+  const { user } = useAuth0();
 
   useEffect(() => {
     if (!pickers) {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import BoatWrapper from './boatwrapper';
-import BoatWrapperTest from './boatwrappertest';
 import { getBoatData, getBoatLastModified } from '../util/api';
 
 function getOgaNo(location) {
@@ -74,11 +73,6 @@ export default function Boat(props) {
 
   document.title = `${boat.name} (${boat.oga_no})`;
 
-  if (props.test) {
-    return (
-        <BoatWrapperTest boat={boat} lastModified={lastModified} />
-    );  
-  }
   return (
       <BoatWrapper boat={boat} lastModified={lastModified} />
   );

@@ -7,4 +7,13 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: () => 'main.js',
+      },
+    },
+  },
+  output: { inlineDynamicImports: true, },
+  base: 'https://oldgaffers.github.io/boats/',
 })

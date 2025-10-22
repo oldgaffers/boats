@@ -5,12 +5,13 @@ import { MapContainer } from 'react-leaflet/MapContainer';
 import { TileLayer } from 'react-leaflet/TileLayer';
 import { Marker } from 'react-leaflet/Marker';
 import { Popup } from 'react-leaflet/Popup';
-import { CompactBoatCard } from './boatcard';
-import { getScopedData } from '../util/api';
-import { Stack } from '@mui/system';
 import humanizeDuration from 'humanize-duration';
 import Backdrop from '@mui/material/Backdrop';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import { CompactBoatCard } from './boatcard';
+import { getScopedData } from '../util/api';
 
 function SimpleBackdrop({open}) {
   return (
@@ -191,10 +192,11 @@ export default function CustomMap(props) {
     }, [data, props.scope, props.table]);
     const boats = (data || []).filter((b) => b.ogaNo);
     const places = (data || []).filter((b) => b.place);
-
+    // But there's a super simple fix. Just add .leaflet-container {z-index:0}
     return (
         <Stack>
-            <MapContainer style={{ height: '800px' }} center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
+            <Box height={800} zIndex={0} >
+              <MapContainer style={{ height: '800px' }} center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -210,7 +212,8 @@ export default function CustomMap(props) {
                 <BoatMarkers entries={boats} />
                 <PlaceMarkers entries={places} />
 
-            </MapContainer>
+              </MapContainer>
+            </Box>
             <SimpleBackdrop open={!data}/>
         </Stack>
     );

@@ -1,10 +1,13 @@
- import fs from "fs";
+import fs from "fs";
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import EditBoatWizard from '../components/editboatwizard';
 import '../util/api';
 import * as MockDate from 'mockdate';
+import { useAuth0 } from '@auth0/auth0-react';
+
+jest.mock('@auth0/auth0-react');
 
 const pickers = {
   boatNames: [],
@@ -239,11 +242,18 @@ const default_test_schema = (pickers) => {
 describe('EditBoatWizard component tests', () => {
   const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
   test('render form with no permission to sell', async () => {
-    const user = userEvent.setup();
-    expect(user).toBeDefined();
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 0 };
+    useAuth0.mockReturnValue({
+      isAuthenticated: true,
+      user,
+      logout: jest.fn(),
+      loginWithRedirect: jest.fn(),
+    });
+    const ue = userEvent.setup();
+    expect(ue).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 0 }} open={true} onSubmit={onSubmit}
+    render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
     />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -317,11 +327,20 @@ describe('EditBoatWizard component tests', () => {
   });
 
     test('render form with permission to sell', async () => {
-    const user = userEvent.setup();
-    expect(user).toBeDefined();
+
+// Mock the Auth0 hook and make it return a logged in state
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 35034 };
+    useAuth0.mockReturnValue({
+      isAuthenticated: true,
+      user,
+      logout: jest.fn(),
+      loginWithRedirect: jest.fn(),
+    });
+    const ue = userEvent.setup();
+    expect(ue).toBeDefined();
     expect(default_test_schema).toBeDefined();
     const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 35034 }} open={true} onSubmit={onSubmit}
+    render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
     />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
