@@ -97,7 +97,7 @@ const FormTemplateCb = (props) => <FormTemplate {...props} showFormControls={fal
 function owns(boat, user) {
   const id = user?.['https://oga.org.uk/id'];
   if (id) {
-    return boat.ownerships.filter((o) => o?.id === id).length > 0;
+    return boat.ownerships?.filter((o) => o?.id === id).length > 0;
   }
   return false;
 }
@@ -157,7 +157,7 @@ export default function EditBoat({ onCancel, onSave, boat, user }) {
       }
     }
     if (ddf.confirm_for_sale) {
-      const current = boat.ownerships.find((o) => o.current);
+      const current = boat.ownerships?.find((o) => o.current);
       const fs = new SaleRecord(ddf.price, ddf.sales_text, current);
       const pfs = boat.for_sales || [];
       const for_sales = [{ ...fs }, ...pfs];

@@ -107,7 +107,7 @@ export default function BoatDetail({ view, boat }) {
         <Owners boat={boat} />
       )
     });
-    const skippers = boat.ownerships.filter((o) => o.skipper);
+    const skippers = boat.ownerships?.filter((o) => o.skipper);
     if (skippers.length > 0) {
       panes.push({
         title: 'About the Skippers', children: (
