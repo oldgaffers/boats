@@ -11,7 +11,7 @@ import ShuffleBoatsButton from './shuffleboats';
 import RoleRestricted from './rolerestrictedcomponent';
 import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
-import BoatRegisterIntro from "./boatregisterintro";
+import IntroText from "./Intro";
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 import BoatRegisterFooter from './BoatRegisterFooter';
@@ -106,7 +106,7 @@ export default function BrowseBoats({
           <Typography>About the boat Register</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <BoatRegisterIntro/>
+          <IntroText view={state.view}/>
           <Box maxHeight={200}>
             <CreateBoatButton />
           </Box>
