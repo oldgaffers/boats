@@ -548,7 +548,7 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
           schema={activeSchema}
           onSubmit={handleSubmit}
           onCancel={onCancel}
-          initialValues={prepareInitialValues({ boat, ogaNo, user)}
+          initialValues={prepareInitialValues(boat, ogaNo, user)}
           subscription={{ values: true }}
         />
       </LocalizationProvider>
