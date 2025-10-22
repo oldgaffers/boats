@@ -298,12 +298,12 @@ export function boatdiff(before, after) {
   return cj.diff(before, after);
 }
 
-export function prepareInitialValues(boat, ogaNo, user) {
+export function prepareInitialValues(boat, user) {
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
-  const { name='New Boat', oga_no=ogaNo, image_key, for_sales, for_sale_state, ...rest } = boat;
+  const { name, oga_no, image_key, for_sales, for_sale_state, ...rest } = boat;
   const email = user?.email || '';
 
   const ddf = { name, oga_no, image_key, owner, editor };
@@ -459,7 +459,7 @@ export function prepareModifiedValues(values, boat, pickers) {
       ...((ddf.new_name && [name]) || []),
       ...(submitted.previous_names || []),
     ],
-    oga_no, id, image_key,
+    oga_no, image_key,
     ...salesChanges(ddf, sales_records),
     builder,
     designer,
@@ -477,17 +477,17 @@ export function oldvalue(path, boat) {
 export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
-  const [ogaNo, setOgaNo] = useState(boat.oga_no);
+  const [data, setData] = useState(boat);
 
   const { user } = useAuth0();
 
   useEffect(() => {
-    if (!ogaNo) {
+    if (!data.oga_no) {
       nextOgaNo().then((no) => {
-        setOgaNo(no);
+        setData({ ...data, oga_no: no });
       }).catch((e) => console.log(e));
     }
-  }, [ogaNo, boat]);
+  }, [data, boat]);
 
   useEffect(() => {
     if (!pickers) {
@@ -548,7 +548,7 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
           schema={activeSchema}
           onSubmit={handleSubmit}
           onCancel={onCancel}
-          initialValues={prepareInitialValues(boat, ogaNo, user)}
+          initialValues={prepareInitialValues(data, user)}
           subscription={{ values: true }}
         />
       </LocalizationProvider>
