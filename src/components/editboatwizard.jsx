@@ -338,7 +338,7 @@ export function prepareInitialValues(boat, user) {
     initialValues[key] = initialValues[key]?.name;
   });
 
-  const ownersWithId = boat.ownerships
+  const ownersWithId = (boat.ownerships || [])
   .filter((owner) => owner.name || owner.id) // remove note and text rows
   .map((owner, index) => {
     return {
