@@ -13,7 +13,6 @@ import SearchAndFilterBoats from './searchandfilterboats';
 import BoatCards from './boatcards';
 import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
-import Intro from './Intro';
 import BoatRegisterFooter from './BoatRegisterFooter';
 import { useBoats } from '../util/boats';
 import Welcome from './Welcome';
@@ -101,10 +100,17 @@ export default function BrowseBoats({
           </RoleRestricted>
         </Box>
       </Stack>
-      <Intro view={state.view} />
-      <Box maxHeight={200}>
-        <CreateBoatButton />
-      </Box>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
+          <Typography>About the boat Register</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <IntroText view={state.view}/>
+          <Box maxHeight={200}>
+            <CreateBoatButton />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
           <Typography>Sort and Filter</Typography>
