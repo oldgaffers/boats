@@ -385,7 +385,7 @@ export function salesChanges(ddf, for_sales) {
   return { for_sales };
 }
 
-export function updateOwnerships(old, updated) {
+export function updateOwnerships(old = [], updated = []) {
   const notes = old.filter((o) => !(o.name || o.id))
   // console.log(notes, updated);
   const withoutRowIds = updated.map((o) => {
