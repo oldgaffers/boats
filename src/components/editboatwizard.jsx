@@ -34,7 +34,7 @@ import {
 } from "./ddf/SubForms";
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { getPicklists } from '../util/api';
+import { getPicklists, nextOgaNo } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
@@ -477,7 +477,16 @@ export function oldvalue(path, boat) {
 export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
   const [pickers, setPickers] = useState();
+  const [ogaNo, setOgaNo] = useState(boat.oga_no);
+
   const { user } = useAuth0();
+  useEffect(() => {
+    if (!ogaNo) {
+      nextOgaNo().then((no) => {
+        setOgaNo(no);
+      }).catch((e) => console.log(e));
+    }
+  }, [boat]);
 
   useEffect(() => {
     if (!pickers) {
