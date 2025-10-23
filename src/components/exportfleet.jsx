@@ -3,31 +3,14 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { getLargestImage } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { ApolloConsumer, gql } from '@apollo/client';
 import { getBoatData } from '../util/api';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
+import { useGetOwnerNames } from '../util/ownernames.js';
 
 async function getBoats(ogaNos) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
   const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.result?.pageContext?.boat);
   return pages.map((p) => p);
-}
-
-const MEMBER_QUERY = gql(`query members($ids: [Int]!) {
-  members(ids: $ids) {
-    firstname
-    lastname
-    member
-    id
-    GDPR
-  }
-}`);
-
-function id2name(id, members) {
-  const m = members.find((m) => m.id === id);
-  if (m) {
-    return `${m.firstname} ${m.lastname}`;
-  }
 }
 
 function fieldDisplayValue(item) {
@@ -109,7 +92,7 @@ function boatForLeaflet(boat) {
   </table>`;
 }
 
-function ExportFleetOptions({ client, name, ogaNos }) {
+function ExportFleetOptions({ name, ogaNos }) {
   const [data, setData] = useState();
 
   useEffect(() => {
@@ -130,19 +113,10 @@ function ExportFleetOptions({ client, name, ogaNos }) {
             b.copyright = images[i].value.caption;
           }
         });
-        const ids = [...new Set(
-          r.map((b) => (b?.ownerships?.filter((o) => o.current)) || []).flat().map((o) => o?.id)
-        )].filter((id) => id);
-        const membersResult = await client.query({ query: MEMBER_QUERY, variables: { ids } });
-        const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
-        r.forEach((b) => {
-          const o = b.ownerships?.filter((o) => o.current)?.map((o) => id2name(o.id, members)) || [];
-          b.owners = o.join(', ');
-        });
         setData(r);
       });
     }
-  }, [data, ogaNos, client]);
+  }, [data, ogaNos]);
 
   if (!data) {
     return <CircularProgress />
@@ -203,9 +177,7 @@ export function ExportFleet({ name, boats, filters }) {
       <DialogTitle id="form-dialog-title">Export Fleet {name}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          <ApolloConsumer>
-            {client => <ExportFleetOptions client={client} name={name} ogaNos={ogaNos} />}
-          </ApolloConsumer>
+          <ExportFleetOptions name={name} ogaNos={ogaNos} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>
