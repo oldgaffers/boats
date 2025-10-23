@@ -13,8 +13,7 @@ export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
-function addNames(data, ownerships = []) {
-    const members = data?.members;
+export function addNames(members, ownerships = []) {
     if (!members) {
         return ownerships;
     }
@@ -37,7 +36,6 @@ function addNames(data, ownerships = []) {
 export function useGetOwnerNames(boat) {
     const rawMemberNumbers = boat.ownerships?.filter((o) => queryIf(o)).map((o) => o.member) || [];
     const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
-    console.log('M', memberNumbers);
     const { error, loading, data } = useQuery(MEMBER_QUERY, { variables: { members: memberNumbers }});
     if (error) {
         console.log(error)
@@ -47,7 +45,7 @@ export function useGetOwnerNames(boat) {
         return boat.ownerships;
     }
     if (data) {
-        const ownerships = addNames(data, boat.ownerships || []);
+        const ownerships = addNames(data.members, boat.ownerships || []);
         ownerships.sort((a, b) => a.start > b.start);
         return ownerships;
     }
