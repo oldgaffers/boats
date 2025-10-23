@@ -33,9 +33,19 @@ export function addNames(members, ownerships = []) {
     });
 };
 
-export function useGetOwnerNames(boat) {
+export function ownerMembershipNumbers(boat) {
     const rawMemberNumbers = boat.ownerships?.filter((o) => queryIf(o)).map((o) => o.member) || [];
-    const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
+    return [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
+}
+
+export function ownershipsWithNames(boat, members) {
+    const ownerships = addNames(members, boat.ownerships || []);
+    ownerships.sort((a, b) => a.start > b.start);
+    return ownerships;
+}
+
+export function useGetOwnerNames(boat) {
+    const memberNumbers = ownerMembershipNumbers(boat);
     const { error, loading, data } = useQuery(MEMBER_QUERY, { variables: { members: memberNumbers }});
     if (error) {
         console.log(error)
@@ -45,9 +55,7 @@ export function useGetOwnerNames(boat) {
         return boat.ownerships;
     }
     if (data) {
-        const ownerships = addNames(data.members, boat.ownerships || []);
-        ownerships.sort((a, b) => a.start > b.start);
-        return ownerships;
+        return ownershipsWithNames(boat, data.members);
     }
     return boat.ownerships;
 }
