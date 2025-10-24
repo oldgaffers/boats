@@ -1,6 +1,5 @@
 import React from 'react';
 import { screen, render } from '@testing-library/react';
-import { MockedProvider } from "@apollo/client/testing";
 import Boat from './boat';
 import * as api from '../util/api';
 
@@ -10,10 +9,6 @@ jest.mock("../util/api", () => {
     getPicklists: () => Promise.resolve({}),
   };
 });
-
-const mocks = [
-
-];
 
 /*
 test('renders boat', async () => {
@@ -30,11 +25,7 @@ test('renders boat', async () => {
 });
 */
 test('renders missing ogano', async () => {
-  render(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <Boat ogaNo={0}/>
-    </MockedProvider>
-  );
+  render(<Boat ogaNo={0}/>);
   expect(screen.getAllByRole('link').length).toBe(4);
 
 });
