@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useComtext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
 import { getLargestImage, getBoatData, getScopedData } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
