@@ -1,4 +1,7 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { getScopedData } from './api';
+import { useContext, useEffect, useState } from 'react';
+import { TokenContext } from '../components/TokenProvider';
 
 export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
   members(members: $members) {
@@ -44,18 +47,27 @@ export function ownershipsWithNames(boat, members) {
     return ownerships;
 }
 
+export async function getOwnerNames(memberNumbers, accessToken) {
+    const f = {
+        fields: 'id,membership,firstname,lastname,GDPR',
+        member: memberNumbers,
+    };
+    const d = await getScopedData('member', 'members', f, accessToken);
+    return d?.Items ?? [];
+}
+
 export function useGetOwnerNames(boat) {
-    const memberNumbers = ownerMembershipNumbers(boat);
-    const { error, loading, data } = useQuery(MEMBER_QUERY, { variables: { members: memberNumbers }});
-    if (error) {
-        console.log(error)
-        return boat.ownerships;
-    }
-    if (loading) {
-        return boat.ownerships;
-    }
-    if (data) {
-        return ownershipsWithNames(boat, data.members);
-    }
-    return boat.ownerships;
+    const [data, setData] = useState();
+    const accessToken = useContext(TokenContext);
+
+    useEffect(() => {
+        if (!data) {
+            const memberNumbers = ownerMembershipNumbers(boat);
+            getOwnerNames(memberNumbers, accessToken).then((d) => {
+                setData(ownershipsWithNames(boat, d));
+            });
+        }
+    }, [boat, data, accessToken]);
+
+    return data || boat.ownerships;
 }
