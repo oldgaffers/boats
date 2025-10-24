@@ -165,7 +165,7 @@ function ExportFleetOptions({ name, ogaNos }) {
   );
 
   const html = `<div>${leaflet.map((boat) => boatForLeaflet(boat))}</div>`;
-  const doc = new Blob([html], { type: 'text/html' });
+  const doc = new Blob([html.encode()], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
 
   return <Stack alignContent='end' spacing='1em'>
