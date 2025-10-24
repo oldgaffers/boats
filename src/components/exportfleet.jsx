@@ -103,7 +103,7 @@ function vm(v) {
 
 function boatForLeaflet(boat) {
   const { name, oga_no, ownerships, short_description = '', image, ...text } = boat;
-  const owner = ownerships.filter((o) => o.current).map((o) => o.name).join('/');
+  const owner = (ownerships||[]).filter((o) => o.current).map((o) => o.name).join('/');
   return `
   <table border="1">
   <tbody>
