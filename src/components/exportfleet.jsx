@@ -15,7 +15,7 @@ async function getBoats(ogaNos, accessToken) {
       if (b.image_key) {
           return getLargestImage(b.image_key);
       } else {
-            console.log('no image', b);
+            // console.log('no image', b);
             return undefined;
       }
   }));
@@ -89,11 +89,16 @@ function selectFieldsForExport(data, fields, handicapFields) {
 }
 
 function km(k) {
-  return k.replace('_', ' ');
+  switch (k) {
+    case 'copyright':
+      return 'photo copyright';
+    default:
+      return k.replace('_', ' ');
+  }
 }
 
 function vm(v) {
-  return v; // ?.replace('© ', '') || '';
+  return v || '';
 }
 
 function boatForLeaflet(boat) {
@@ -108,7 +113,7 @@ function boatForLeaflet(boat) {
   ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
   </td>
   <td style="width: 50%;">
-  <img width="600" src="${image}"/>
+  <img width="600" src="${image}" alt="No Image"/>
   </td>
   </tr>
   </tbody>
