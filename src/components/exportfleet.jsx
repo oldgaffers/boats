@@ -1,16 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
-import { getLargestImage } from '../util/api';
+import { getLargestImage, getBoatData } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { getBoatData } from '../util/api';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
-import { useGetOwnerNames } from '../util/ownernames.js';
 
 async function getBoats(ogaNos) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
   const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.result?.pageContext?.boat);
-  return pages.map((p) => p);
+  const boats = pages.map((p) => p);
+  const images = await Promise.allSettled(boats.map((b) => {
+      if (b.image_key) {
+          return getLargestImage(b.image_key);
+      } else {
+            console.log('no image', b);
+            return undefined;
+      }
+  }));
+  #
+  boats.forEach((b, i) => {
+    if (images[i].value) {
+        b.image = images[i].value.url;
+        b.copyright = images[i].value.caption;
+    }
+  });
+  return boats;
 }
 
 function fieldDisplayValue(item) {
@@ -97,24 +111,7 @@ function ExportFleetOptions({ name, ogaNos }) {
 
   useEffect(() => {
     if (!data) {
-      // const oganos = boats?.map((b) => b?.oga_no);
-      getBoats(ogaNos).then(async (r) => {
-        const images = await Promise.allSettled(r.map((b) => {
-          if (b.image_key) {
-            return getLargestImage(b.image_key);
-          } else {
-            console.log('no image', b);
-            return undefined;
-          }
-        }));
-        r.forEach((b, i) => {
-          if (images[i].value) {
-            b.image = images[i].value.url;
-            b.copyright = images[i].value.caption;
-          }
-        });
-        setData(r);
-      });
+      getBoats(ogaNos).then((r) => setData(r));
     }
   }, [data, ogaNos]);
 
