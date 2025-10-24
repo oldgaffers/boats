@@ -102,7 +102,8 @@ function vm(v) {
 }
 
 function boatForLeaflet(boat) {
-  const { name, oga_no, short_description = '', image, ...text } = boat;
+  const { name, oga_no, ownerships, short_description = '', image, ...text } = boat;
+  const owner = ownerships.filter((o) => o.current).map((o) => o.name).join('/');
   return `
   <table border="1">
   <tbody>
@@ -110,6 +111,7 @@ function boatForLeaflet(boat) {
   <td style="width: 50%;">
   <div>${name.toUpperCase()} (${oga_no})<div>
   <div>${short_description}</div>
+  <div>${owner}</div>
   ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
   </td>
   <td style="width: 50%;">
@@ -135,7 +137,7 @@ function ExportFleetOptions({ name, ogaNos }) {
   }
 
   const leaflet = selectFieldsForExport(data, [
-    'name', 'oga_no', 'place_built', 'owners',
+    'name', 'oga_no', 'place_built', 'ownerships',
     'construction_material', 'construction_method',
     'builder', 'designer', 'design_class',
     'mainsail_type', 'rig_type',
@@ -149,7 +151,7 @@ function ExportFleetOptions({ name, ogaNos }) {
   );
 
   const race = selectFieldsForExport(data, [
-    'name', 'oga_no', 'owners',
+    'name', 'oga_no', 'ownerships',
     'short_description', 'hull_form',
   ],
     'all'
