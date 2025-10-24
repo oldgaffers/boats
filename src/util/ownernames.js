@@ -20,7 +20,6 @@ export function addNames(members, ownerships = []) {
                 r.skipper = skipper;
             }
         }
-        console.log('O', r);
         return r;
     });
 };

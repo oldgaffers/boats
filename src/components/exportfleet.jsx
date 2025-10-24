@@ -20,7 +20,6 @@ async function getBoats(ogaNos, accessToken) {
       }
   }));
   const member = [...new Set(boats.map((b) => ownerMembershipNumbers(b)).flat())];
-  console.log('M', member);
   const f = {
     fields: 'id,membership,firstname,lastname,GDPR',
     member,
@@ -28,15 +27,16 @@ async function getBoats(ogaNos, accessToken) {
   const d = await getScopedData('member', 'members', f, accessToken);
   console.log('D', d);
   const names = d?.Items ?? [];
-  boats.forEach((b, i) => {
+  return boats.map((b, i) => {
+    const aug = {};
     if (images[i].value) {
-        b.image = images[i].value.url;
-        b.copyright = images[i].value.caption;
+        aug.image = images[i].value.url;
+        aug.copyright = images[i].value.caption;
     }
-    b.ownerships = ownershipsWithNames(b, names);
-    console.log('Q', b.name, b.ownerships);
+    aug.ownerships = ownershipsWithNames(b, names);
+    console.log('Q', b.name, aug);
+    return { ...b, ...aug };
   });
-  return boats;
 }
 
 function fieldDisplayValue(item) {
