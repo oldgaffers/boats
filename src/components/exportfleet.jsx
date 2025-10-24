@@ -31,7 +31,7 @@ async function getBoats(ogaNos, accessToken) {
         b.image = images[i].value.url;
         b.copyright = images[i].value.caption;
     }
-    b.ownerships = ownershipsWithNames(b, names);
+    b.ownerships = ownershipsWithNames(b, names) || [];
   });
   return boats;
 }
