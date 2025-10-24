@@ -24,7 +24,8 @@ async function getBoats(ogaNos, accessToken) {
     fields: 'id,membership,firstname,lastname,GDPR',
     member,
   };
-  const names = await getScopedData('member', 'members', f, accessToken);
+  const d = await getScopedData('member', 'members', f, accessToken);
+  const names = d?.Items ?? [];
   boats.forEach((b, i) => {
     if (images[i].value) {
         b.image = images[i].value.url;
