@@ -122,7 +122,7 @@ function ExportFleetOptions({ name, ogaNos }) {
     if (!data) {
       getBoats(ogaNos, accessToken).then((r) => setData(r));
     }
-  }, [data, ogaNos]);
+  }, [data, ogaNos, accessToken]);
 
   if (!data) {
     return <CircularProgress />
