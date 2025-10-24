@@ -107,7 +107,10 @@ function vm(v) {
 function boatForLeaflet(boat) {
   const { name, oga_no, ownerships = [], short_description = '', image, ...text } = boat;
   console.log('P', ownerships);
-  const owner = ownerships.filter((o) => o.current);
+  let owner = [];
+  if (Array.isArray(ownerships)) {
+      owner = ownerships.filter((o) => o.current);
+  }
   return `
   <table border="1">
   <tbody>
