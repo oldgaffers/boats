@@ -102,7 +102,7 @@ function vm(v) {
 }
 
 function boatForLeaflet(boat) {
-  const { name, oga_no, short_description, image, ...text } = boat;
+  const { name, oga_no, short_description = '', image, ...text } = boat;
   return `
   <table border="1">
   <tbody>
