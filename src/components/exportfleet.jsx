@@ -33,9 +33,8 @@ async function getBoats(ogaNos, accessToken) {
         b.image = images[i].value.url;
         b.copyright = images[i].value.caption;
     }
-    console.log('Q', names);
-    b.ownerships = ownershipsWithNames(b, names) || [];
-    console.log('Q1', b.ownerships);
+    b.ownerships = ownershipsWithNames(b, names);
+    console.log('Q', b.name, b.ownerships);
   });
   return boats;
 }

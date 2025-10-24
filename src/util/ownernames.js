@@ -11,6 +11,7 @@ export function addNames(members, ownerships = []) {
     return ownerships.map((ownership) => {
         const r = { ...ownership };
         const m = members.filter((member) => member.id === ownership.id);
+        console.log('O', m);
         if (m.length > 0) {
             const { skipper, GDPR, firstname, lastname } = m[0];
             if (GDPR) {
