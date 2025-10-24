@@ -107,7 +107,7 @@ function vm(v) {
 function boatForLeaflet(boat) {
   const { name, oga_no, ownerships = [], short_description = '', image, ...text } = boat;
   console.log('P', ownerships);
-  let owner = [];
+  let owner = ownerships;
   if (Array.isArray(ownerships)) {
       owner = ownerships.filter((o) => o.current);
   }
@@ -118,7 +118,7 @@ function boatForLeaflet(boat) {
   <td style="width: 50%;">
   <div>${name.toUpperCase()} (${oga_no})<div>
   <div>${short_description}</div>
-  <div>${owner}</div>
+  <div>${JSON.stringify(owner)}</div>
   ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
   </td>
   <td style="width: 50%;">
