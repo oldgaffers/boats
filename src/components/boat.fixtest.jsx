@@ -1,8 +1,7 @@
 import React from 'react';
-import { screen, render, waitFor } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import { MockedProvider } from "@apollo/client/testing";
 import Boat from './boat';
-import { MEMBER_QUERY } from '.,/util/ownernames';
 import * as api from '../util/api';
 
 jest.mock("../util/api", () => {
@@ -13,19 +12,7 @@ jest.mock("../util/api", () => {
 });
 
 const mocks = [
-  {
-    request: {
-      query: MEMBER_QUERY,
-      variables: {
-        name: "Buck"
-      }
-    },
-    result: {
-      data: {
-        dog: { id: "1", name: "Buck", breed: "bulldog" }
-      }
-    }
-  }
+
 ];
 
 /*

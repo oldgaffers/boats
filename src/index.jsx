@@ -7,7 +7,6 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { CookiesProvider } from "react-cookie";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import OGAProvider from "./util/gql";
 import TokenProvider from './components/TokenProvider';
 
 import BrowseApp from './components/browseapp';
@@ -19,18 +18,6 @@ import CustomMap from './components/custommap';
 
 import PickOrAddBoat from './components/pick_or_add_boat';
 import BuilderPage from './components/builderpage';
-
-/*
-import { lazy } from 'react';
-const RCBEntryMap = lazy(()=> import('./components/rbc60map'));
-const RBC60 = lazy(()=> import('./components/rbc60'));
-const RBC60Entries = lazy(()=> import('./components/rbc60entries'));
-const RBC60CrewForm = lazy(()=> import('./components/rbc60crewform'));
-const OGA60Button = lazy(()=> import('./components/oga60button'));
-const OGA60Form = lazy(()=> import('./components/oga60form'));
-const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
-const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
-*/
 
 const lightTheme = createTheme({
   palette: {
@@ -59,9 +46,7 @@ function Wrapper({ redirectUri, scope, children }) {
   return <PayPalScriptProvider options={paypalOptions}>
     <Auth0Provider {...auth} scope={scope}>
       <TokenProvider>
-        <OGAProvider>
-          {children}
-        </OGAProvider>
+        {children}
       </TokenProvider>
     </Auth0Provider>
   </PayPalScriptProvider>

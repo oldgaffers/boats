@@ -1,18 +1,6 @@
-import { gql } from '@apollo/client';
 import { getScopedData } from './api';
 import { useContext, useEffect, useState } from 'react';
 import { TokenContext } from '../components/TokenProvider';
-
-export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
-  members(members: $members) {
-    firstname
-    lastname
-    member
-    id
-    GDPR
-    skipper { text }
-  }
-}`);
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
