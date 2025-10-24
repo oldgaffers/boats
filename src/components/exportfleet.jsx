@@ -20,18 +20,20 @@ async function getBoats(ogaNos, accessToken) {
       }
   }));
   const member = [...new Set(boats.map((b) => ownerMembershipNumbers(b)).flat())];
+  console.log('M', member);
   const f = {
     fields: 'id,membership,firstname,lastname,GDPR',
     member,
   };
   const d = await getScopedData('member', 'members', f, accessToken);
+  console.log('D', d);
   const names = d?.Items ?? [];
   boats.forEach((b, i) => {
     if (images[i].value) {
         b.image = images[i].value.url;
         b.copyright = images[i].value.caption;
     }
-    console.log('Q', b.ownerships, names);
+    console.log('Q', names);
     b.ownerships = ownershipsWithNames(b, names) || [];
     console.log('Q1', b.ownerships);
   });
@@ -104,9 +106,9 @@ function vm(v) {
 }
 
 function boatForLeaflet(boat) {
-  const { name, oga_no, ownerships, short_description = '', image, ...text } = boat;
+  const { name, oga_no, ownerships = [], short_description = '', image, ...text } = boat;
   console.log('P', ownerships);
-  const owner = (ownerships||[]).filter((o) => o.current).map((o) => o.name).join('/');
+  const owner = ownerships.filter((o) => o.current);
   return `
   <table border="1">
   <tbody>
