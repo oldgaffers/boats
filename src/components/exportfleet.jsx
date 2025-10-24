@@ -5,8 +5,9 @@ import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
 import { ownerMembershipNumbers, ownershipsWithNames } from '../util/ownernames';
-
-async function getBoats(ogaNos) {
+import { TokenContext } from './TokenProvider';
+ 
+async function getBoats(ogaNos, accessToken) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
   const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.result?.pageContext?.boat);
   const boats = pages.map((p) => p);
@@ -115,10 +116,11 @@ function boatForLeaflet(boat) {
 
 function ExportFleetOptions({ name, ogaNos }) {
   const [data, setData] = useState();
+  const accessToken = useContext(TokenContext);
 
   useEffect(() => {
     if (!data) {
-      getBoats(ogaNos).then((r) => setData(r));
+      getBoats(ogaNos, accessToken).then((r) => setData(r));
     }
   }, [data, ogaNos]);
 
