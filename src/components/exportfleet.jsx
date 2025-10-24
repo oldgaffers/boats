@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
-import { getLargestImage, getBoatData } from '../util/api';
+import { getLargestImage, getBoatData, getScopedData } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
+import { ownerMembershipNumbers, ownershipsWithNames } from '../util/ownernames';
 
 async function getBoats(ogaNos) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
@@ -17,12 +18,18 @@ async function getBoats(ogaNos) {
             return undefined;
       }
   }));
-  #
+  const member = [...new Set(boats.map((b) => ownerMembershipNumbers(b)).flat())];
+  const f = {
+    fields: 'id,membership,firstname,lastname,GDPR',
+    member,
+  };
+  const names = await getScopedData('member', 'members', f, accessToken);
   boats.forEach((b, i) => {
     if (images[i].value) {
         b.image = images[i].value.url;
         b.copyright = images[i].value.caption;
     }
+    b.ownerships = ownershipsWithNames(b, names);
   });
   return boats;
 }
