@@ -172,7 +172,11 @@ function ExportFleetOptions({ name, ogaNos }) {
       target='_self'
       download={`${name}.html`}
       href={uRL}
-    >HTML  for boats attending leaflet</a>
+    >Download HTML for boats attending leaflet</a>
+        <a
+      target='_blank'
+      href={uRL}
+    >HTML for boats attending leaflet, opens in new tab for printing</a>
     <CSVLink filename={`${name}.csv`} data={race}>Spreadsheet for Race Officers</CSVLink>
     N.B. all dimensions in metres
   </Stack>;
