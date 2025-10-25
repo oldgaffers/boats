@@ -24,10 +24,6 @@ export default function FleetButtons({
         }
     };
 
-    function fleetsUpdated() {
-        setItems(undefined);
-    }
-
     return (
         <Stack direction='row' spacing={3}>
             <Box width={'10em'}>
@@ -39,7 +35,7 @@ export default function FleetButtons({
                     value={fleetName}
                 />
             </Box>
-            <NewFleet markList={markList} filters={filters} selected={fleetName} updated={fleetsUpdated} filtered={filtered} />
+            <NewFleet markList={markList} filters={filters} selected={fleetName} updated={onFleetsUpdated} filtered={filtered} />
             <UpdateFleet
                 markList={markList}
                 fleet={fleets.find((f) => f.name === fleetName)}
