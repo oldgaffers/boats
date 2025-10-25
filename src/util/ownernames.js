@@ -48,7 +48,7 @@ export function useGetMemberData(subject, filter) {
               })
             );
         }
-    }, [subject, filter, data]);
+    }, [subject, filter, data, getAccessTokenSilently]);
 
     return data;
 }
