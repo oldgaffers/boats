@@ -38,7 +38,7 @@ export default function FleetButtons({
             <NewFleet markList={markList} filters={filters} selected={fleetName} updated={onFleetsUpdated} filtered={filtered} />
             <UpdateFleet
                 markList={markList}
-                fleet={fleets.find((f) => f.name === fleetName)}
+                fleet={fleets?.find((f) => f.name === fleetName)}
                 updated={onFleetsUpdated}
             />
         </Stack>
