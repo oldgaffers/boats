@@ -59,7 +59,7 @@ export function useGetOwnerNamesNew(boat) {
         member: ownerMembershipNumbers(boat),
     };
     const members = useGetMemberData('members', f);
-    return ownershipsWithName(boat, members);
+    return ownershipsWithNames(boat, members);
 }
 
 export async function getOwnerNames(memberNumbers, accessToken) {
