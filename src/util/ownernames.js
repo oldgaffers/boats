@@ -1,6 +1,7 @@
 import { getScopedData } from './api';
 import { useContext, useEffect, useState } from 'react';
 import { TokenContext } from '../components/TokenProvider';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
@@ -37,16 +38,28 @@ export function ownershipsWithNames(boat, members) {
 
 export function useGetMemberData(subject, filter) {
     const [data, setData] = useState();
-    const accessToken = useContext(TokenContext);
+    const { getAccessTokenSilently } = useAuth0();
+
     useEffect(() => {
         if (!data) {
-            getScopedData('member', subject, filter, accessToken).then((d) => {
-                setData(d);
-            });
+            getAccessTokenSilently().then((accessToken) =>
+              getScopedData('member', subject, filter, accessToken).then((d) => {
+                setData(d?.Items ?? []);
+              });
+            );
         }
-    }, [subject, filter, data, accessToken]);
+    }, [subject, filter, data]);
 
     return data;
+}
+
+export function useGetOwnerNamesNew(boat) {
+    const f = {
+        fields: 'id,membership,firstname,lastname,GDPR',
+        member: ownerMembershipNumbers(boat),
+    };
+    const members = useGetMemberData('members', f);
+    return ownershipsWithName(boat, members);
 }
 
 export async function getOwnerNames(memberNumbers, accessToken) {
