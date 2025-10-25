@@ -159,7 +159,7 @@ export default function SearchAndFilterBoats({
       onFilterChange({});
     }
   }
-  console.log('Search & Filter', filters);
+  console.log('Search & Filter', filtered, filters);
   return (
     <form>
       <FormHelperText sx={{ marginLeft: "1em", marginBottom: "3px" }}>
