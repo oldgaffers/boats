@@ -25,7 +25,6 @@ async function getBoats(ogaNos, accessToken) {
     member,
   };
   const d = await getScopedData('member', 'members', f, accessToken);
-  console.log('D', d);
   const names = d?.Items ?? [];
   return boats.map((b, i) => {
     const aug = {};
@@ -33,8 +32,9 @@ async function getBoats(ogaNos, accessToken) {
         aug.image = images[i].value.url;
         aug.copyright = images[i].value.caption;
     }
-    aug.ownerships = ownershipsWithNames(b, names);
-    console.log('Q', b.name, aug);
+    const ownerships = ownershipsWithNames(b, names);
+    aug.owners =  ownerships.filter((o) => o.current);
+    aug.historicOwners = ownerships.filter((o) => !o.current);
     return { ...b, ...aug };
   });
 }
@@ -105,20 +105,15 @@ function vm(v) {
 }
 
 function boatForLeaflet(boat) {
-  const { name, oga_no, ownerships = [], short_description = '', image, ...text } = boat;
-  console.log('P', ownerships);
-  let owner = ownerships;
-  if (Array.isArray(ownerships)) {
-      owner = ownerships.filter((o) => o.current);
-  }
+  const { name, oga_no, owners, short_description = '', image, ...text } = boat;
   return `
   <table border="1">
   <tbody>
   <tr>
   <td style="width: 50%;">
   <div>${name.toUpperCase()} (${oga_no})<div>
+  <div>${owners ? `Owned by: ${owners}`:''}</div>
   <div>${short_description}</div>
-  <div>${JSON.stringify(owner)}</div>
   ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
   </td>
   <td style="width: 50%;">
@@ -144,7 +139,7 @@ function ExportFleetOptions({ name, ogaNos }) {
   }
 
   const leaflet = selectFieldsForExport(data, [
-    'name', 'oga_no', 'place_built', 'ownerships',
+    'name', 'oga_no', 'place_built', 'owners',
     'construction_material', 'construction_method',
     'builder', 'designer', 'design_class',
     'mainsail_type', 'rig_type',
