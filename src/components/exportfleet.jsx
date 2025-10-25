@@ -116,7 +116,7 @@ function boatForLeaflet(boat) {
       ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
     </div>
     <div class="photo">
-      <img width="600" src="${image.url}" alt="No Image"/>
+      <img height="600" src="${image.url}" alt="No Image"/>
       <div>${image.copyright}</div>
     </div>
     <div class="footer">${short_description}</div>
@@ -163,7 +163,7 @@ function ExportFleetOptions({ name, ogaNos }) {
     .container {
       display: grid;
       width: 100%;
-      height: 1vh;
+      height: 800px;
       grid-template-columns: 200px 1fr;
       grid-template-rows: 80px 1fr 100px;
       grid-gap: 1rem;
