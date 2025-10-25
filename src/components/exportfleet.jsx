@@ -27,15 +27,17 @@ async function getBoats(ogaNos, accessToken) {
   const d = await getScopedData('member', 'members', f, accessToken);
   const names = d?.Items ?? [];
   return boats.map((b, i) => {
-    const aug = {};
-    if (images[i].value) {
-        aug.image = images[i].value.url;
-        aug.copyright = images[i].value.caption;
+    const image = {};
+    const img = images[i].value;
+    if (img) {
+        const { url, caption } = img;
+        image.url = url;
+        image.copyright = caption;
     }
     const ownerships = ownershipsWithNames(b, names);
-    aug.owners =  ownerships.filter((o) => o.current);
-    aug.historicOwners = ownerships.filter((o) => !o.current);
-    return { ...b, ...aug };
+    const owners =  ownerships.filter((o) => o.current);
+    const historicOwners = ownerships.filter((o) => !o.current);
+    return { ...b, owners, historicOwners, image };
   });
 }
 
@@ -108,15 +110,16 @@ function boatForLeaflet(boat) {
   const { name, oga_no, owners, short_description = '', image, ...text } = boat;
   return `
   <div class="container">
-  <div>
-  <div>${name.toUpperCase()} (${oga_no})<div>
-  <div>${owners ? `Owned by: ${owners}`:''}</div>
-  <div>${short_description}</div>
-  ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
-  </div>
-  <div>
-  <img width="600" src="${image}" alt="No Image"/>
-  </div>
+    <div class="header">${name.toUpperCase()} (${oga_no})<div>
+    <div class="sidebar">
+      <div>${owners ? `Owned by: ${owners}`:''}</div>
+      ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
+    </div>
+    <div class="photo">
+      <img width="600" src="${image.url}" alt="No Image"/>
+      <div>${image.copyright}</div>
+    </div>
+    <div class="footer">${short_description}</div>
   </div>`;
 }
 
@@ -159,14 +162,23 @@ function ExportFleetOptions({ name, ogaNos }) {
     @media print {.page-break { break-after: page; }}
     .container {
       display: grid;
-      width: 100vw;
-      grid-template-columns: 1fr 2fr;
-      grid-template-rows: 800px;
+      width: 100%;
+      height: 600px;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: 80px 1fr 100px;
       grid-gap: 1rem;
+      grid-template-areas:
+          "header header"
+          "sidebar photo"
+          "footer footer";
     }
+    .header { grid-area: header; }
+    .sidebar { grid-area: sidebar; }
+    .photo { grid-area: photo; }
+    .footer { grid-area: footer; }
   </style>`;
   const head = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${name}</title>${style}</head>`;
-  const boats = leaflet.map((boat) => `${boatForLeaflet(boat)}<div class="page-break"></div>`);
+  const boats = leaflet.map((boat) => boatForLeaflet(boat));
   const html = `${head}<body>${boats}</body></html>`;
   const doc = new Blob([html], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
