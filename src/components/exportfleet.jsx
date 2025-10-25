@@ -159,8 +159,9 @@ function ExportFleetOptions({ name, ogaNos }) {
     'all'
   );
 
-  const boats = leaflet.map((boat) => boatForLeaflet(boat));
-  const head = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${name}</title></head>`;
+  const style = '<style>@media print {.page-break { break-after: page; }}</style>';
+  const head = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${name}</title>${style}</head>`;
+  const boats = leaflet.map((boat) => `${boatForLeaflet(boat)}<div class="page-break"></div>`;
   const html = `${head}<body>${boats}</body></html>`;
   const doc = new Blob([html], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
