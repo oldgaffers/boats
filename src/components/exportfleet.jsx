@@ -107,21 +107,17 @@ function vm(v) {
 function boatForLeaflet(boat) {
   const { name, oga_no, owners, short_description = '', image, ...text } = boat;
   return `
-  <table border="1">
-  <tbody>
-  <tr>
-  <td style="width: 50%;">
+  <div class="container">
+  <div>
   <div>${name.toUpperCase()} (${oga_no})<div>
   <div>${owners ? `Owned by: ${owners}`:''}</div>
   <div>${short_description}</div>
   ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
-  </td>
-  <td style="width: 50%;">
+  </div>
+  <div>
   <img width="600" src="${image}" alt="No Image"/>
-  </td>
-  </tr>
-  </tbody>
-  </table>`;
+  </div>
+  </div>`;
 }
 
 function ExportFleetOptions({ name, ogaNos }) {
@@ -159,7 +155,16 @@ function ExportFleetOptions({ name, ogaNos }) {
     'all'
   );
 
-  const style = '<style>@media print {.page-break { break-after: page; }}</style>';
+  const style = `<style>
+    @media print {.page-break { break-after: page; }}
+    .container {
+      display: grid;
+      width: 100vw;
+      grid-template-columns: 1fr 2fr;
+      grid-template-rows: 800px;
+      grid-gap: 1rem;
+    }
+  </style>`;
   const head = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${name}</title>${style}</head>`;
   const boats = leaflet.map((boat) => `${boatForLeaflet(boat)}<div class="page-break"></div>`;
   const html = `${head}<body>${boats}</body></html>`;
