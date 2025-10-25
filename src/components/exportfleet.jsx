@@ -179,7 +179,7 @@ function ExportFleetOptions({ name, ogaNos }) {
       href={uRL}
     >Download HTML for boats attending leaflet</a>
         <a
-      target='_blank'
+      target="_blank" rel="noreferrer"
       href={uRL}
     >HTML for boats attending leaflet, opens in new tab for printing</a>
     <CSVLink filename={`${name}.csv`} data={race}>Spreadsheet for Race Officers</CSVLink>
