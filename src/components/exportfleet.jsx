@@ -159,9 +159,9 @@ function ExportFleetOptions({ name, ogaNos }) {
     'all'
   );
 
-  const encoder = new TextEncoder();
+  // const encoder = new TextEncoder();
   const html = `<div>${leaflet.map((boat) => boatForLeaflet(boat))}</div>`;
-  const doc = new Blob(encoder.encode(html), { type: 'text/html' });
+  const doc = new Blob([html], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
 
   return <Stack alignContent='end' spacing='1em'>
