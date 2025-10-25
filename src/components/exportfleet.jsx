@@ -110,7 +110,7 @@ function boatForLeaflet(boat) {
   const { name, oga_no, owners, short_description = '', image, ...text } = boat;
   return `
   <div class="container">
-    <div class="header">${name.toUpperCase()} (${oga_no})<div>
+    <div class="header">${name.toUpperCase()} (${oga_no})</div>
     <div class="sidebar">
       <div>${owners ? `Owned by: ${owners}`:''}</div>
       ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
