@@ -78,10 +78,10 @@ function CreateFleetDialog({
 }
 
 export default function NewFleet({
+    updated = () => console.log('updated'),
     markList = [],
     selected,
-    filters,
-    updated = () => console.log('updated'),
+    filters={},
     filtered,
 }) {
     const { user } = useAuth0();
