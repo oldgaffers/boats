@@ -134,6 +134,7 @@ export default function BrowseBoats({
             isOwnedOnly={ownedOnly}
             enableOwnersOnly={!!id}
             filtered={filtered}
+            fleetName={fleetName}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
         </AccordionDetails>

@@ -50,6 +50,7 @@ export default function SearchAndFilterBoats({
   isOwnedOnly,
   enableOwnersOnly = false,
   filtered,
+  fleetName,
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
@@ -159,7 +160,7 @@ export default function SearchAndFilterBoats({
       onFilterChange({});
     }
   }
-  console.log('Search & Filter', filtered, filters);
+  console.log('Search & Filter', fleetName, filters);
   return (
     <form>
       <FormHelperText sx={{ marginLeft: "1em", marginBottom: "3px" }}>
@@ -347,7 +348,7 @@ export default function SearchAndFilterBoats({
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>
-            <FleetButtons filters={filters} onChange={filterByFleet} filtered={filtered} />
+            <FleetButtons filters={filters} onChange={filterByFleet} filtered={filtered} fleetName={fleetName}/>
           </RoleRestricted>
         </Grid>
         <RoleRestricted role='member'>

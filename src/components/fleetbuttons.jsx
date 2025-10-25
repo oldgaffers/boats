@@ -14,9 +14,9 @@ export default function FleetButtons({
     onChange = () => console.log('fleet change'),
     filters,
     filtered,
+    fleetName,
 }) {
     const [items, setItems] = useState();
-    const [selected, setSelected] = useState();
     const markList = useContext(MarkContext);
     const accessToken = useContext(TokenContext);
     const { user } = useAuth0()
@@ -41,16 +41,15 @@ export default function FleetButtons({
         if (value) {
             onChange(value, items.find((item) => item.name === value).filters);
         } else {
-            onChange(undefined, items?.find((item) => item?.name === selected)?.filters);
+            onChange(undefined, items?.find((item) => item?.name === fleetName)?.filters);
         }
-        setSelected(value);
     };
 
     function fleetsUpdated() {
         setItems(undefined);
     }
 
-    const fleet = items?.find((f) => f.name === selected);
+    const fleet = items?.find((f) => f.name === fleetName);
 
     return (
         <Stack direction='row' spacing={3}>
@@ -60,10 +59,10 @@ export default function FleetButtons({
                     id="fleet"
                     options={items}
                     label="Fleet"
-                    value={selected}
+                    value={fleetName}
                 />
             </Box>
-            <NewFleet markList={markList} filters={filters} selected={selected} updated={fleetsUpdated} filtered={filtered} />
+            <NewFleet markList={markList} filters={filters} selected={fleetName} updated={fleetsUpdated} filtered={filtered} />
             <UpdateFleet
                 markList={markList}
                 fleet={fleet}
