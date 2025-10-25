@@ -10,8 +10,28 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import { useAuth0 } from "@auth0/auth0-react";
 import { FormControl, Popover, Radio, RadioGroup, Typography } from "@mui/material";
-import { postScopedData } from '../util/api';
+import { getFleets, postScopedData } from '../util/api';
 import { TokenContext } from './TokenProvider';
+
+export function useGetFleets() {
+    const [items, setItems] = useState();
+    const accessToken = useContext(TokenContext);
+    const { user } = useAuth0()
+    const id = user?.["https://oga.org.uk/id"];
+
+    useEffect(() => {
+        const getData = async () => {
+            const p = await getFleets('public', {public: true}, accessToken);
+            const q = await getFleets('member', {owner_gold_id: id}, accessToken);
+            setItems([...p, ...q]);
+        }
+        if (accessToken && !items) {
+            getData();
+        }
+    }, [accessToken, items, id])
+    if (items) return items;
+    return [];
+}
 
 function CreateFleetDialog({
     onCancel, onClose, open, filterCount, markedBoatCount,

@@ -50,6 +50,7 @@ export default function SearchAndFilterBoats({
   isOwnedOnly,
   enableOwnersOnly = false,
   filtered,
+  fleets,
   fleetName,
 }) {
   const currentFilters = filters || {};
@@ -148,6 +149,10 @@ export default function SearchAndFilterBoats({
     if (dir !== sortDirection) {
       onSortChange(sortField, dir);
     }
+  }
+
+  function fleetsUpdated() {
+    console.log('fleets updated');
   }
 
   function filterByFleet(name, filters) {
@@ -348,7 +353,14 @@ export default function SearchAndFilterBoats({
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>
-            <FleetButtons filters={filters} onChange={filterByFleet} filtered={filtered} fleetName={fleetName}/>
+            <FleetButtons
+              onSelectionChange={filterByFleet}
+              onFleetsUpdated={fleetsUpdated}
+              filters={filters}
+              filtered={filtered}
+              fleets={fleets}
+              fleetName={fleetName}
+            />
           </RoleRestricted>
         </Grid>
         <RoleRestricted role='member'>

@@ -75,11 +75,12 @@ export default function BrowseBoats({
 }) {
   const { bpp, sort, sortDirection, filters } = state;
   const [ownedOnly, setOwnedOnly] = useState();
-  const { user } = useAuth0();
   const [fleetName, setFleetName] = useState();
+  const { user } = useAuth0();
   const id = user?.["https://oga.org.uk/id"];
 
   const boats = useBoats(id, ownedOnly);
+  const fleets = useGetFleets();
 
   const handleFilterChange = (filters, name) => {
     onFilterChange(filters);
@@ -134,6 +135,7 @@ export default function BrowseBoats({
             isOwnedOnly={ownedOnly}
             enableOwnersOnly={!!id}
             filtered={filtered}
+            fleets={fleets}
             fleetName={fleetName}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
