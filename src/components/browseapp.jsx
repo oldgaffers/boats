@@ -18,19 +18,21 @@ export default function BrowseApp({ view = 'app' }) {
 
   const accessToken = useContext(TokenContext);
   const { user } = useAuth0()
-  const id = user?.["https://oga.org.uk/id"];
 
   useEffect(() => {
     const getData = async () => {
+      const id = user?.["https://oga.org.uk/id"];
       const p = await getFleets('public', { public: true }, accessToken);
       const q = await getFleets('member', { owner_gold_id: id }, accessToken);
-      setFleets([...p, ...q]);
+      return [...p, ...q];
     }
     if (accessToken && !fleets) {
-      getData();
+      getData().then((data) => {
+        console.log('got fleets');
+        setFleets(data);
+      });
     }
-  }, [accessToken, fleets, id])
-
+  }, [accessToken, fleets, user])
 
   useEffect(() => { saveState(state, view); }, [state, view]);
 
@@ -51,7 +53,10 @@ export default function BrowseApp({ view = 'app' }) {
   }, [state]);
 
   const handleFleetChange = () => {
+    console.log('fleet change, refetching and clearing marks');
     setFleets(undefined);
+    setMarkList([]);
+    setMarkedOnly(false);
   };
 
   const updateOgaNosFilter = useCallback((l, mo) => {
