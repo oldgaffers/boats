@@ -110,7 +110,7 @@ function boatForLeaflet(boat) {
   const { name, oga_no, owners, short_description = '', image, ...text } = boat;
   return `
   <div class="container">
-    <div class="header">${name.toUpperCase()} (${oga_no})</div>
+    <div class="header">${name} (${oga_no})</div>
     <div class="sidebar">
       <div>${owners ? `Owned by: ${owners}`:''}</div>
       ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
@@ -178,7 +178,7 @@ function ExportFleetOptions({ name, ogaNos }) {
     .footer { grid-area: footer; }
   </style>`;
   const head = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${name}</title>${style}</head>`;
-  const boats = leaflet.map((boat) => boatForLeaflet(boat));
+  const boats = leaflet.map((boat) => boatForLeaflet(boat)).join('');
   const html = `${head}<body>${boats}</body></html>`;
   const doc = new Blob([html], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
