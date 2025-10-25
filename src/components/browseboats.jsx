@@ -16,7 +16,6 @@ import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 import BoatRegisterFooter from './BoatRegisterFooter';
 import { useBoats } from '../util/boats';
-import { useGetFleets } from './newfleet';
 import Welcome from './Welcome';
 
 function makePickers(filtered) {
@@ -63,7 +62,6 @@ function ExportOptions({ name, boats, filters }) {
 }
 
 export default function BrowseBoats({
-  state,
   onPageChange,
   onPageSizeChange,
   onSortChange,
@@ -73,6 +71,9 @@ export default function BrowseBoats({
   isMarkedOnly,
   onBoatMarked,
   onBoatUnMarked,
+  onFleetChange,
+  state,
+  fleets,
 }) {
   const { bpp, sort, sortDirection, filters } = state;
   const [ownedOnly, setOwnedOnly] = useState();
@@ -81,7 +82,6 @@ export default function BrowseBoats({
   const id = user?.["https://oga.org.uk/id"];
 
   const boats = useBoats(id, ownedOnly);
-  const fleets = useGetFleets();
 
   const handleFilterChange = (filters, name) => {
     onFilterChange(filters);
@@ -131,6 +131,7 @@ export default function BrowseBoats({
             onFilterChange={handleFilterChange}
             onMarkedOnlyChange={onMarkedOnlyChange}
             onClearAllMarks={onClearAllMarks}
+            onFleetChange={onFleetChange}
             isMarkedOnly={isMarkedOnly}
             onOwnedOnlyChange={(v) => setOwnedOnly(v)}
             isOwnedOnly={ownedOnly}
