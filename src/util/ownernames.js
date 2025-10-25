@@ -45,7 +45,7 @@ export function useGetMemberData(subject, filter) {
             getAccessTokenSilently().then((accessToken) =>
               getScopedData('member', subject, filter, accessToken).then((d) => {
                 setData(d?.Items ?? []);
-              });
+              })
             );
         }
     }, [subject, filter, data]);
