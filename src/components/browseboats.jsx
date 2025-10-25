@@ -16,6 +16,7 @@ import { applyFilters, sortAndPaginate } from '../util/oganoutils';
 import { ExportFleet } from './exportfleet';
 import BoatRegisterFooter from './BoatRegisterFooter';
 import { useBoats } from '../util/boats';
+import { useGetFleets } from './newfleet';
 import Welcome from './Welcome';
 
 function makePickers(filtered) {
