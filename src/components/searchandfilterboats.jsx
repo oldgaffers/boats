@@ -157,13 +157,12 @@ export default function SearchAndFilterBoats({
 
   function filterByFleet(name) {
     if (name) {
-      onFilterChange(currentFilters, name);
+      onFilterChange(fleets.find((f) => f.name === name).filters, name);
     } else {
       onFilterChange({});
     }
   }
 
-  console.log('Search & Filter', fleetName, currentFilters);
   return (
     <form>
       <FormHelperText sx={{ marginLeft: "1em", marginBottom: "3px" }}>
