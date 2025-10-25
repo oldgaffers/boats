@@ -35,6 +35,20 @@ export function ownershipsWithNames(boat, members) {
     return ownerships;
 }
 
+export function useGetMemberData(subject, filter) {
+    const [data, setData] = useState();
+    const accessToken = useContext(TokenContext);
+    useEffect(() => {
+        if (!data) {
+            getScopedData('member', subject, filter, accessToken).then((d) => {
+                setData(d);
+            });
+        }
+    }, [subject, filter, data, accessToken]);
+
+    return data;
+}
+
 export async function getOwnerNames(memberNumbers, accessToken) {
     const f = {
         fields: 'id,membership,firstname,lastname,GDPR',
