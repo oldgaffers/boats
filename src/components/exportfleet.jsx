@@ -163,7 +163,7 @@ function ExportFleetOptions({ name, ogaNos }) {
     .container {
       display: grid;
       width: 100%;
-      height: 600px;
+      height: 1vh;
       grid-template-columns: 200px 1fr;
       grid-template-rows: 80px 1fr 100px;
       grid-gap: 1rem;
