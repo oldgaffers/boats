@@ -155,17 +155,15 @@ export default function SearchAndFilterBoats({
     console.log('fleets updated');
   }
 
-  function filterByFleet(name, filters) {
-    // filters always contains the filters in case we need to do
-    // clever stuff if other filters are set as well as fleet
-    // but name is cleared if we need to clear the fleet filter
+  function filterByFleet(name) {
     if (name) {
-      onFilterChange(filters, name);
+      onFilterChange(currentFilters, name);
     } else {
       onFilterChange({});
     }
   }
-  console.log('Search & Filter', fleetName, filters);
+
+  console.log('Search & Filter', fleetName, currentFilters);
   return (
     <form>
       <FormHelperText sx={{ marginLeft: "1em", marginBottom: "3px" }}>
