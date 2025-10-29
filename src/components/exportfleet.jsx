@@ -66,7 +66,7 @@ function selectFieldsForExport(data, fields, handicapFields) {
     fields.forEach((key) => {
       const val = b[key];
       if (val) {
-        if (Object.isObject(val)) {
+        if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
           Object.keys(val).forEach((k) => {
             boat[k] = fieldDisplayValue(val[k]);
           });
