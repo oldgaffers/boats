@@ -68,7 +68,7 @@ function selectFieldsForExport(data, fields, handicapFields) {
       if (val) {
         if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
           Object.keys(val).forEach((k) => {
-            boat[k] = fieldDisplayValue(val[k]);
+            boat[`${key}_${k}`] = fieldDisplayValue(val[k]);
           });
         } else {
           boat[key] = fieldDisplayValue(val);
@@ -114,7 +114,7 @@ function vm(v) {
 }
 
 function boatForLeaflet(boat) {
-  const { name, oga_no, owners, short_description = '', image, ...text } = boat;
+  const { name, oga_no, owners, short_description = '', image_url, image_copyright, ...text } = boat;
   return `
   <div class="container">
     <div class="header">${name} (${oga_no})</div>
@@ -123,8 +123,8 @@ function boatForLeaflet(boat) {
       ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
     </div>
     <div class="photo">
-      <img height="600" src="${image.url}" alt="No Image"/>
-      <div>${image.copyright}</div>
+      <img height="600" src="${image_url}" alt="No Image"/>
+      <div>${image_copyright}</div>
     </div>
     <div class="footer">${short_description}</div>
   </div>`;
