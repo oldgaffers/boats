@@ -148,7 +148,7 @@ function ExportFleetOptions({ name, ogaNos }) {
     'name', 'oga_no', 'place_built', 
     'owners', 'home_port',
     'construction_material', 'construction_method',
-    'builder', 'designer', 'design_class',
+    'builder', 'designer', 'design_class', "year",
     'mainsail_type', 'rig_type',
     'short_description', 'hull_form',
     'construction_details', 'spar_material',
