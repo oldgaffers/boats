@@ -64,8 +64,15 @@ function selectFieldsForExport(data, fields, handicapFields) {
   return data.map((b) => {
     const boat = {};
     fields.forEach((key) => {
-      if (b[key]) {
-        boat[key] = fieldDisplayValue(b[key]);
+      const val = b[key];
+      if (val) {
+        if (Object.isObject(val)) {
+          Object.keys(val).forEach((k) => {
+            boat[k] = fieldDisplayValue(val[k]);
+          });
+        } else {
+          boat[key] = fieldDisplayValue(val);
+        }
       }
     });
     const handicap_data = b.handicap_data || {};
@@ -138,13 +145,14 @@ function ExportFleetOptions({ name, ogaNos }) {
   }
 
   const leaflet = selectFieldsForExport(data, [
-    'name', 'oga_no', 'place_built', 'owners',
+    'name', 'oga_no', 'place_built', 
+    'owners', 'home_port',
     'construction_material', 'construction_method',
     'builder', 'designer', 'design_class',
     'mainsail_type', 'rig_type',
-    'short_description', 'hull_form', 'place_built',
+    'short_description', 'hull_form',
     'construction_details', 'spar_material',
-    'image', 'copyright',
+    'image'],
   ],
     [
       'beam', 'draft', 'length_on_deck', 'length_over_all', 'length_on_waterline', 'thcf',
