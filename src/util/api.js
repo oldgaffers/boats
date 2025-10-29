@@ -245,3 +245,8 @@ export async function geolocate(place) {
   }
   return undefined;
 }
+
+export async function checkPending(oga_no) {
+  const url = `https://boatregister-public.s3.eu-west-1.amazonaws.com/pending/${oga_no}.json`;
+  const r = await fetch(url)
+}
