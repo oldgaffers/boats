@@ -152,7 +152,7 @@ function ExportFleetOptions({ name, ogaNos }) {
     'mainsail_type', 'rig_type',
     'short_description', 'hull_form',
     'construction_details', 'spar_material',
-    'image'],
+    'image',
   ],
     [
       'beam', 'draft', 'length_on_deck', 'length_over_all', 'length_on_waterline', 'thcf',
