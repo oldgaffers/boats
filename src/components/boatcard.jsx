@@ -148,22 +148,21 @@ export function BoatCardImage({ albumKey, name }) {
 }
 
 export function CompactBoatCard({ view = 'app', ogaNo, wanted = compactWanted }) {
-  const [data, setData] = useState();
+  const [boat, setBoat] = useState();
 
   useEffect(() => {
-    if (!data) {
+    if (!boat) {
       getBoatData(ogaNo).then((r) => {
-        setData(r);
+        setBoat(r);
       }).catch((e) => console.log(e));
     }
-  }, [data, ogaNo]);
+  }, [boat, ogaNo]);
 
-  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
   return (
     <Card sx={{ width: 200 }}>
-      <BoatCardImage albumKey={boat.image_key} name={boat.name} />
+      <BoatCardImage albumKey={boat?.image_key} name={boat.name} />
       <CardContent>
-        <Typography variant='subtitle2'>{boat.name} ({boat.oga_no})</Typography>
+        <Typography variant='subtitle2'>{boat?.name||'?'} ({ogaNo})</Typography>
         <BoatCardWords boat={boat} wanted={wanted} variant='caption' />
       </CardContent>
       <CardActions>
@@ -179,27 +178,25 @@ export function CompactBoatCard({ view = 'app', ogaNo, wanted = compactWanted })
 
 export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const markList = useContext(MarkContext);
-  const [data, setData] = useState();
+  const [boat, setBoat] = useState();
   const { user } = useAuth0();
   const marked = markList.includes(ogaNo);
 
   useEffect(() => {
-    if (!data) {
+    if (!boat) {
       getBoatData(ogaNo).then((r) => {
-        setData(r);
+        setBoat(r);
       }).catch((e) => console.log(e));
     }
-  }, [data, ogaNo]);
+  }, [boat, ogaNo]);
 
   const handleMarked = (checked) => {
     onMarkChange(checked, ogaNo);
   }
 
-  if (!data) {
+  if (!boat) {
     return <CircularProgress />;
   }
-
-  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
   const currentSR = currentSaleRecord(boat);
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import BoatWrapper from './boatwrapper';
 import { getBoatData, getBoatLastModified } from '../util/api';
+import { languages } from 'humanize-duration';
 
 function getOgaNo(location) {
   const params = new URLSearchParams(location.search);
@@ -39,8 +40,7 @@ export default function Boat(props) {
       if (ogaNo && !data) {
         const extra = undefined; // await getScopedData('public', 'crewing', { oga_no: ogaNo });
         const e = extra?.Items?.[0] || {};
-        const r = await getBoatData(ogaNo);
-        const d = r?.result?.pageContext?.boat;
+        const d = await getBoatData(ogaNo);
         setData({ ...d, ...e });
       }  
     };
@@ -50,8 +50,7 @@ export default function Boat(props) {
   useEffect(() => {
     const get = async () => {
       if (ogaNo && !lastModified) {
-        const lmd = await getBoatLastModified(ogaNo);
-        setLastModified(lmd);
+        setLastModified(await getBoatLastModified(ogaNo));
       }  
     };
     get();
@@ -74,7 +73,7 @@ export default function Boat(props) {
   document.title = `${boat.name} (${boat.oga_no})`;
 
   return (
-      <BoatWrapper boat={{...boat, lmd: lastModified}} />
+      <BoatWrapper boat={{ ...boat, lastModified }} />
   );
 
 };

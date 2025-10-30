@@ -579,8 +579,8 @@ const FieldListener = () => {
       const smallest = Math.min(...instances.map((boat) => boat.oga_no));
       // console.log('smallest', smallest);
       getBoatData(smallest)
-        .then((result) => {
-          initialiseFromExampleFlat(change, result.result.pageContext.boat);
+        .then((boat) => {
+          initialiseFromExampleFlat(change, boat);
         });
     }
   }, [change, design_class, filterable]);

@@ -37,19 +37,18 @@ export function BoatCardImage({ albumKey, name }) {
 }
 
 export function BoatImage({ boat }) {
-  const [data, setData] = useState();
+  const [boat, setBoat] = useState();
 
   useEffect(() => {
-    if (!data) {
+    if (!boat) {
       getBoatData(boat.oga_no).then((r) => {
-        setData(r);
+        setBoat(r);
       }).catch((e) => console.log(e));
     }
   }, [data, boat.oga_no]);
 
-  const boatdata = data?.result?.pageContext || { boat: { oga_no: boat.oga_no, name: '', loading: true } };
   return <Card sx={{ width: 300 }}>
-  <BoatCardImage albumKey={boatdata.boat.image_key} name={boat.name} />
+  <BoatCardImage albumKey={boat.image_key} name={boat.name} />
   <p></p>
   </Card>
 }

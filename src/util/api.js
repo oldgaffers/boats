@@ -1,6 +1,3 @@
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { fromCognitoIdentity } from "@aws-sdk/credential-providers";
-import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import boatsByHomePort from './boatsbyhomeport';
 import boatsByPlaceBuilt from './boatsByPlaceBuilt';
 import { boatRegisterHome } from './constants';
@@ -100,15 +97,14 @@ export async function postCrewEnquiry(data) {
   );
 }
 
-function processBoatData(data, lmd) {
-  data.result.pageContext.boat?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+function processBoatData(data) {
+  data?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
   ['generic_type', 'builder', 'designer'].forEach((key) => {
-    if (!Array.isArray(data.result.pageContext.boat[key])) {
-      data.result.pageContext.boat[key] = [data.result.pageContext.boat[key]];
+    if (!Array.isArray(data[key])) {
+      data[key] = [data[key]];
     }
-    data.result.pageContext.boat[key] = data.result.pageContext.boat[key].filter((v) => v);
+    data[key] = data[key].filter((v) => v);
   });
-  data.result.pageContext.boat.lmd = new Date(lmd).toISOString();
   return data;
 }
 
@@ -120,8 +116,8 @@ export async function getBoatData(ogaNo) {
   if (!r.ok) {
     return undefined;
   }
-  const lmd = r.headers.get('Last-Modified');
-  return processBoatData(await r.json(), lmd);
+  const data = await r.json();
+  return processBoatData(data?.result?.pageContext?.boat);
 }
 
 export async function getPicklists() {
@@ -254,29 +250,6 @@ export async function geolocate(place) {
   if (r.ok) {
     return r.json()
   }
-  return undefined;
-}
-
-export async function getPrivateImage(url) {
-  const { region, identityId } = await getUploadCredentials();
-  const credentials = fromCognitoIdentity({ identityId, clientConfig: { region } });
-  const client = new S3Client({ region, credentials });
-  const { hostname, pathname } = new URL(url);
-  const command = new GetObjectCommand({
-    Bucket: hostname.replace(/\..*/, ''),
-    Key: pathname.slice(1),
-  });
-  return getSignedUrl(client, command, { expiresIn: 3600 });
-}
-
-export async function getPendingBoatData(oga_no) {
-  const url = `https://boatregister-public.s3.eu-west-1.amazonaws.com/pending/${oga_no}.json`;
-  const p = await fetch(await getPrivateImage(url));
-  if (p.ok) {
-    const lmd = p.headers.get('Last-Modified');
-    return processBoatData(await p.json(), lmd);
-  }
-  console.log('no pending file for boat', oga_no);
   return undefined;
 }
 

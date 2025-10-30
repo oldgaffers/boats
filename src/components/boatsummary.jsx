@@ -92,7 +92,7 @@ export default function BoatSummary({ boat }) {
     <div>
       <ReactFBLike href={'https://oga.org.uk'+href} appId="644249802921642" />
     </div>
-    <ConditionalText value={new Date(boat.lmd).toLocaleDateString()} label="Last update"/>
+    <ConditionalText value={new Date(boat.lastModified).toLocaleDateString()} label="Last update"/>
     </Box>
   );
 }

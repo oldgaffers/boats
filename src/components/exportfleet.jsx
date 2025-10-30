@@ -9,7 +9,7 @@ import { TokenContext } from './TokenProvider';
  
 async function getBoats(ogaNos, accessToken) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
-  const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.result?.pageContext?.boat);
+  const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.boat);
   const boats = pages.map((p) => p);
   const images = await Promise.allSettled(boats.map((b) => {
       if (b.image_key) {
