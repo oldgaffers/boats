@@ -37,8 +37,8 @@ jobs:
         cache: 'npm'
     - name: test
       run: |
-        npx playwright install --with-deps chromium
         npm ci
+        npx playwright install --with-deps chromium
         npm test
     - name: build
       run: |
