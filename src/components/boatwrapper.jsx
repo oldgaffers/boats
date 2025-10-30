@@ -6,7 +6,7 @@ import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
 import { Grid, Stack } from '@mui/material';
 
-export default function BoatWrapper({ view='app', boat, location=null, lastModified }) {
+export default function BoatWrapper({ view='app', boat, location=null }) {
   return (
     <Stack>
       <Typography variant="h3" component="h3">{boat.name} ({boat.oga_no})</Typography>
@@ -15,7 +15,7 @@ export default function BoatWrapper({ view='app', boat, location=null, lastModif
           <SmugMugGallery albumKey={boat.image_key} ogaNo={boat.oga_no} name={boat.name} />
         </Grid>
         <Grid size={4}>
-          <BoatSummary boat={boat} location={location} lastModified={lastModified} />
+          <BoatSummary boat={boat} location={location} />
         </Grid>
       </Grid>
       <BoatDetail view={view} boat={boat} />

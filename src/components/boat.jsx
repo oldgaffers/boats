@@ -74,7 +74,7 @@ export default function Boat(props) {
   document.title = `${boat.name} (${boat.oga_no})`;
 
   return (
-      <BoatWrapper boat={boat} lastModified={lastModified} />
+      <BoatWrapper boat={{...boat, lmd: lastModified}} />
   );
 
 };

@@ -34,7 +34,7 @@ import {
 } from "./ddf/SubForms";
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { getPicklists, nextOgaNo } from '../util/api';
+import { getPendingBoatData, getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
@@ -464,7 +464,7 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   const builder = listMapper(values, newItems, 'builder');
   const designer = listMapper(values, newItems, 'designer');
-  
+
   if (ddf.new_name) {
     previous_names.unshift([name]);
   }
@@ -552,9 +552,36 @@ function EditWiz({ boat, onCancel, onSubmit, schema }) {
   />;
 }
 
+async function gpr(boat) {
+  const modified = await openPr(boat.oga_no);
+  if (modified) {
+      console.log('PR is open');
+      return modified;
+  }
+  return boat;
+}
+
 export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
-  if (!open) return '';
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    if (!open) {
+      setData(undefined);
+    } else if (!data) {
+      gpr(boat).then((b) => { 
+        console.log('P', b);
+        setData(b);
+      });
+    }
+    }, [open, data, boat]);
+  if (data) {
+    return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} />;
+  }
+  return '';
+}
+
+function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema }) {
 
   const title = boat.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
 
