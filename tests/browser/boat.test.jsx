@@ -17,6 +17,8 @@ vi.mock("../../src/util/api", () => {
     postBoatData: () => Promise.resolve(vi.fn()),
     getBoatLastModified: () => Promise.resolve(vi.fn()),
     nextOgaNo: () => Promise.resolve(vi.fn()),
+    getPendingBoatData: () => Promise.resolve(vi.fn()),
+    openPr: () => Promise.resolve(undefined),
   };
 });
 
