@@ -43,16 +43,9 @@ jobs:
     - name: build
       run: |
         npm run build --if-present
-        cp build/static/js/main.*.js.map build
-        cp build/static/js/main.*.js build/main.js
-        cp build/static/css/main.*.css.map build
-        cp build/static/css/main.*.css build/main.css
-        echo build complete
-    - name: add test
-      run: |
-        cp dist/index.html build
-        cp -r dist/assets build
-        echo '/* /index.html 200' > build/_redirects
+        cp dist/assets/index-*.js build/main.js
+        cp dist/assets/index-*.css build/main.css
+        cp -r dist/* build
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
