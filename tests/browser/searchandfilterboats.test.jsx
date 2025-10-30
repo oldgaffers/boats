@@ -2,7 +2,7 @@ import React from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import SearchAndFilterBoats from '../../src/components/searchandfilterboats';
-import { mockPicks } from '../../src/mock/sampledata';
+import { mockPicks } from '../mock/sampledata';
 
 vi.useFakeTimers();
 

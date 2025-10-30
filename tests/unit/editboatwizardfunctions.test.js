@@ -4,8 +4,8 @@ import { formatters } from 'jsondiffpatch';
 import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizard';
 import { boatDefined } from '../../src/util/format';
 
-const robinetta = JSON.parse(fs.readFileSync('tests/unit/robinetta.json'));
-const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./tests/unit/843.json', 'utf-8'));
+const robinetta = JSON.parse(fs.readFileSync('tests/mock/robinetta.json'));
+const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./tests/mock/843.json', 'utf-8'));
 
 const pickers = {
   boatNames: [],

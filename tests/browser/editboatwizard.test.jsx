@@ -5,7 +5,7 @@ import { userEvent } from 'vitest/browser'
 import { useAuth0 } from '@auth0/auth0-react';
 import '../../src/util/api';
 import EditBoatWizard from '../../src/components/editboatwizard';
-import { result } from '../unit/843.json';
+import { result } from '../mock/843.json';
 
 vi.mock('@auth0/auth0-react');
 
