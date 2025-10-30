@@ -255,10 +255,7 @@ describe('EditBoatWizard component tests', async () => {
     const onSubmit = vi.fn();
     const screen = await render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit} />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    await waitFor(() => {
-      screen.getByRole('dialog');
-    });
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await expect.element(screen.getByRole('dialog')).toBeInTheDocument();
     await waitFor(() => {
       screen.getByText('Rig');
     });
@@ -340,8 +337,7 @@ describe('EditBoatWizard component tests', async () => {
     // schema={default_test_schema(pickers)} 
     />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    await waitFor(() => { screen.getByRole('dialog');});
-    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await expect.element(screen.getByRole('dialog')).toBeInTheDocument();
     await waitFor(() => {
       screen.getByText('Rig');
     });

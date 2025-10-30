@@ -570,7 +570,6 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
       setData(undefined);
     } else if (!data) {
       gpr(boat).then((b) => { 
-        console.log('P', b);
         setData(b);
       });
     }
@@ -578,13 +577,13 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
   if (data) {
     return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} />;
   }
-  return '';
+  return <CircularProgress />;
 }
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema }) {
 
   const title = boat.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
-
+  console.log('D', title);
   return (
     <Dialog
       open={open}
