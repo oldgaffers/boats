@@ -577,7 +577,10 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
   if (data) {
     return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} />;
   }
-  return <CircularProgress />;
+  if (open) {
+    return <CircularProgress />;
+  }
+  return '';
 }
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema }) {
