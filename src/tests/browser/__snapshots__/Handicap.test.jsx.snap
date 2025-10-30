@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Robinetta T(H)CF 1`] = `"0.850"`;
 
@@ -21,7 +21,7 @@ exports[`Transcur fTopSA 1`] = `"88"`;
 exports[`Transcur foretriangle_area 1`] = `"334.6"`;
 
 exports[`boatm2f Robinetta feet 1`] = `
-Object {
+{
   "beam": 8.009,
   "draft": 4.501,
   "fore_triangle_base": 5,
@@ -29,12 +29,12 @@ Object {
   "length_on_deck": 22.5,
   "length_on_waterline": 20,
   "length_over_all": 22.5,
-  "main": Object {
+  "main": {
     "foot": 13.123,
     "head": 13.999,
     "luff": 14.17,
   },
-  "propellor": Object {
+  "propellor": {
     "type": "fixed",
   },
   "sailarea": 260.013,
@@ -43,7 +43,7 @@ Object {
 `;
 
 exports[`boatm2f Transcur feet 1`] = `
-Object {
+{
   "beam": 10.761,
   "draft": 4.58,
   "fore_triangle_base": 23.999,
@@ -51,17 +51,17 @@ Object {
   "length_on_deck": 35.42,
   "length_on_waterline": 28.501,
   "length_over_all": 35.4,
-  "main": Object {
+  "main": {
     "foot": 22.966,
     "head": 16.404,
     "luff": 17.999,
   },
-  "propellor": Object {
+  "propellor": {
     "type": "folding",
   },
   "sailarea": 871.877,
   "thcf": 1.025,
-  "topsail": Object {
+  "topsail": {
     "luff": 22.001,
     "perpendicular": 7.999,
   },

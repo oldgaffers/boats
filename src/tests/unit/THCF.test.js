@@ -1,5 +1,5 @@
-import { foretriangle_area, mainsail_area } from '../components/Handicap';
-import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fR, fThcf } from '../util/THCF';
+import { test, expect } from 'vitest';
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fR, fThcf } from '../../util/THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};

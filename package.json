@@ -8,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "test": "vitest",
+    "preview": "vite preview",
+    "test:browser": "vitest --config=vitest.browser.config.js"
   },
   "dependencies": {
     "@auth0/auth0-react": "^1.12.0",
@@ -27,11 +29,9 @@
     "@mui/x-data-grid": "^5.17.16",
     "@paypal/react-paypal-js": "^7.8.2",
     "@tinymce/tinymce-react": "^6.3.0",
-    "apollo-link-context": "^1.0.20",
     "awesome-phonenumber": "^4.1.0",
     "camelcase": "^6.2.1",
     "dayjs": "^1.11.10",
-    "graphql": "^16.6.0",
     "humanize-duration": "^3.28.0",
     "jsondiffpatch": "^0.5.0",
     "leaflet": "^1.9.3",
@@ -57,10 +57,14 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/browser-playwright": "^4.0.5",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
-    "vite": "^7.1.7"
+    "jsdom": "^27.0.1",
+    "vite": "^7.1.7",
+    "vitest": "^4.0.5",
+    "vitest-browser-react": "^2.0.2"
   }
 }

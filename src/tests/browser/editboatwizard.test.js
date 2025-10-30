@@ -1,13 +1,11 @@
 import fs from "fs";
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import userEvent from '@testing-library/user-event';
+import { test, expect, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor, userEvent } from "vitest-browser-react";
 import EditBoatWizard from '../components/editboatwizard';
 import '../util/api';
-import * as MockDate from 'mockdate';
 import { useAuth0 } from '@auth0/auth0-react';
 
-jest.mock('@auth0/auth0-react');
+vi.mock('@auth0/auth0-react');
 
 const pickers = {
   boatNames: [],
@@ -23,9 +21,9 @@ const pickers = {
   spar_material: [],
 };
 
-MockDate.set(1434319925275);
+vi.setSystemTime(1434319925275);
 
-jest.mock('../util/api', () => {
+vi.mock('../util/api', () => {
   return {
     getPicklists: async () => pickers,
   };
@@ -246,16 +244,14 @@ describe('EditBoatWizard component tests', () => {
     useAuth0.mockReturnValue({
       isAuthenticated: true,
       user,
-      logout: jest.fn(),
-      loginWithRedirect: jest.fn(),
+      logout: vi.fn(),
+      loginWithRedirect: vi.fn(),
     });
     const ue = userEvent.setup();
     expect(ue).toBeDefined();
     expect(default_test_schema).toBeDefined();
-    const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
-    // schema={default_test_schema(pickers)} 
-    />);
+    const onSubmit = vi.fn();
+    render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit} />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
     await waitFor(async () => {
       await screen.findByRole('dialog');
@@ -333,13 +329,13 @@ describe('EditBoatWizard component tests', () => {
     useAuth0.mockReturnValue({
       isAuthenticated: true,
       user,
-      logout: jest.fn(),
-      loginWithRedirect: jest.fn(),
+      logout: vi.fn(),
+      loginWithRedirect: vi.fn(),
     });
     const ue = userEvent.setup();
     expect(ue).toBeDefined();
     expect(default_test_schema).toBeDefined();
-    const onSubmit = jest.fn();
+    const onSubmit = vi.fn();
     render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
     />);

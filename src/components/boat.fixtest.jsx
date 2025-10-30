@@ -1,9 +1,9 @@
-import React from 'react';
-import { screen, render } from '@testing-library/react';
+import { test, expect, vi } from 'vitest';
+import { screen, render } from 'vitest-browser-react';
 import Boat from './boat';
 import * as api from '../util/api';
 
-jest.mock("../util/api", () => {
+vi.mock("../util/api", () => {
   return {
     getBoatData: () => Promise.resolve({ name: 'x' }),
     getPicklists: () => Promise.resolve({}),

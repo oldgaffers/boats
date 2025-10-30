@@ -1,6 +1,6 @@
-import React from 'react';
-import { screen, render } from '@testing-library/react';
-import BoatCard from './boatcard';
+import { expect, test } from 'vitest';
+import { screen, render } from 'vitest-browser-react';
+import BoatCard from '../../components/boatcard';
 import { BrowserRouter as Router } from "react-router-dom";
 
 test('renders learn react link', () => {

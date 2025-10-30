@@ -1,11 +1,11 @@
 import fs from 'fs';
+import { expect, test, vi } from 'vitest';
 import { formatters } from 'jsondiffpatch';
-import {  boatdiff, prepareInitialValues, prepareModifiedValues } from '../components/editboatwizard';
-import { boatDefined } from '../util/format';
-import * as MockDate from 'mockdate';
+import {  boatdiff, prepareInitialValues, prepareModifiedValues } from '../../components/editboatwizard';
+import { boatDefined } from '../../util/format';
 
-const robinetta = JSON.parse(fs.readFileSync('src/test/robinetta.json'));
-const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
+const robinetta = JSON.parse(fs.readFileSync('src/tests/unit/robinetta.json'));
+const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./src/tests/unit/843.json', 'utf-8'));
 
 const pickers = {
   boatNames: [],
@@ -31,7 +31,7 @@ const pickers = {
   spar_material: [],
 };
 
-MockDate.set(1699091602308);
+vi.setSystemTime(1699091602308);
 
 test('boat defined', () => {
   const defined = boatDefined(robinetta);

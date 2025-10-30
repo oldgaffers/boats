@@ -1,7 +1,7 @@
-import React from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
-import { screen, render } from '@testing-library/react';
-import BrowseBoats from './browseboats';
+import * as React from 'react';
+import { screen, render } from 'vitest-browser-react';
+import BrowseBoats from '../../components/browseboats';
+import { test, expect } from 'vitest';
 
 test('renders learn react link', () => {
   render(
