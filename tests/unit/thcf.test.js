@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
-import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../../util/THCF';
-import { boatm2f, boatf2m } from "../../util/format";
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fMR, fBD, fSqrtS, fR, fThcf } from '../../src/util/THCF';
+import { boatm2f, boatf2m } from "../../src/util/format";
 
 const Transcur = {
   "builder": {

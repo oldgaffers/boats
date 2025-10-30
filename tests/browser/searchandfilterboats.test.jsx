@@ -1,12 +1,12 @@
 import { expect, test, vi } from 'vitest';
-import { screen, render } from 'vitest-browser-react';
-import SearchAndFilterBoats from '../../components/searchandfilterboats';
-import { mockPicks } from '../../../mock/sampledata';
+import { render } from 'vitest-browser-react';
+import SearchAndFilterBoats from '../../src/components/searchandfilterboats';
+import { mockPicks } from '../../src/mock/sampledata';
 
 vi.useFakeTimers();
 
-test('renders learn react link', () => {
-  render(
+test('renders learn react link', async () => {
+  const { getByText } = await render(
       <SearchAndFilterBoats 
       sortDirection="asc"
       sortField="rank"
@@ -17,6 +17,6 @@ test('renders learn react link', () => {
       onSortChange={(x,y)=> console.log(x,y)}      
       />
   );
-  const wanted = screen.getAllByText(/sort the list/);
-  expect(wanted[0]).toBeInTheDocument();
+  const wanted = getByText(/sort the list/);
+  expect(wanted).toBeInTheDocument();
 });

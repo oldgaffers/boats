@@ -1,10 +1,11 @@
 import React from 'react';
-import { test, expect } from 'vitest';
+import { describe, test, expect, vi } from 'vitest';
 import FormRenderer from '@data-driven-forms/react-form-renderer/form-renderer';
 import componentTypes from '@data-driven-forms/react-form-renderer/component-types';
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
-import { render, screen, fireEvent } from 'vitest-browser-react';
+import { render } from 'vitest-browser-react';
+import { userEvent } from 'vitest/browser';
 import { Button, Dialog } from "@mui/material";
 
 function sleep(ms) {
@@ -14,10 +15,10 @@ function sleep(ms) {
 describe('dummy component test', () => {
   test('dummy test rendering', async () => {
     const onSubmit = vi.fn();
-    render(<Dialog open={true}>
+    const screen = await render(<Dialog open={true}>
       <Button onClick={onSubmit} >Submit</Button>
     </Dialog>);
-    fireEvent.click(screen.getByText('Submit'));
+    await userEvent.click(screen.getByText('Submit'));
     await sleep(10);
     expect(onSubmit).toBeCalled();
   });
@@ -70,8 +71,8 @@ const Form = ({ onSubmit }) => (
 describe('ddf component test', () => {
   test('dummy test rendering', async () => {
     const onSubmit = vi.fn();
-      render(<Form onSubmit={onSubmit} />);
-      fireEvent.click(screen.getByText('Submit'));
+      const screen = await render(<Form onSubmit={onSubmit} />);
+      await userEvent.click(screen.getByText('Submit'));
     await sleep(10);
     expect(onSubmit).toBeCalled();
   });
@@ -132,9 +133,9 @@ const WizardForm = ({ onSubmit }) => {
 describe('ddf wizard component test', () => {
   test('dummy test rendering', async () => {
     const onSubmit = vi.fn();
-      render(<WizardForm onSubmit={onSubmit} />);
-      fireEvent.click(screen.getByText('Continue'));
-      fireEvent.click(screen.getByText('Submit'));
+      const screen = await render(<WizardForm onSubmit={onSubmit} />);
+      await userEvent.click(screen.getByText('Continue'));
+      await userEvent.click(screen.getByText('Submit'));
     await sleep(10);
     expect(onSubmit).toBeCalled();
   });

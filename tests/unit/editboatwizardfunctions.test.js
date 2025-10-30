@@ -1,11 +1,11 @@
 import fs from 'fs';
 import { expect, test, vi } from 'vitest';
 import { formatters } from 'jsondiffpatch';
-import {  boatdiff, prepareInitialValues, prepareModifiedValues } from '../../components/editboatwizard';
-import { boatDefined } from '../../util/format';
+import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizard';
+import { boatDefined } from '../../src/util/format';
 
-const robinetta = JSON.parse(fs.readFileSync('src/tests/unit/robinetta.json'));
-const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./src/tests/unit/843.json', 'utf-8'));
+const robinetta = JSON.parse(fs.readFileSync('tests/unit/robinetta.json'));
+const { result: { pageContext: { boat: roanmor } } } = JSON.parse(fs.readFileSync('./tests/unit/843.json', 'utf-8'));
 
 const pickers = {
   boatNames: [],

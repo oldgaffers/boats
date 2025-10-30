@@ -5,28 +5,21 @@ import { playwright } from '@vitest/browser-playwright'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  projects: [
-    {
-      name: 'browser',
-      test: {
-        include: ['*.test.jsx'],
-        browser: {
-          provider: playwright(),
-          enabled: true,
-          instances: [
-            { browser: 'chromium' },
-          ],
-        },
-      },
+  test: {
+    name: 'browser',
+    include: [
+      'tests/browser/**/*.{test,spec}.{js,jsx}',
+      'tests/**/*.browser.{test,spec}.{js,jsx}',
+    ],
+    browser: {
+      provider: playwright(),
+      enabled: true,
+      headless: true,
+      instances: [
+        { browser: 'chromium' },
+      ],
     },
-    {
-      name: 'unit',
-      test: {
-        environment: 'node',
-        include: ['*.test.js'],
-      },
-    },
-  ],
+  },
   server: {
     port: 3000,
   },
