@@ -1,3 +1,4 @@
+import React from 'react';
 import { describe, test, expect, vi } from 'vitest';
 import { render } from "vitest-browser-react";
 import { userEvent } from 'vitest/browser'

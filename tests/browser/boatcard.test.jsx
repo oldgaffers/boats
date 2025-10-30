@@ -1,3 +1,4 @@
+	import React from 'react';
 	import { expect, test } from 'vitest';
 	import { render } from 'vitest-browser-react';
 	import { BrowserRouter as Router } from "react-router-dom";

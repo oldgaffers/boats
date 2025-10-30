@@ -6,19 +6,34 @@ import { playwright } from '@vitest/browser-playwright'
 export default defineConfig({
   plugins: [react()],
   test: {
-    name: 'browser',
-    include: [
-      'tests/browser/**/*.{test,spec}.{js,jsx}',
-      'tests/**/*.browser.{test,spec}.{js,jsx}',
+    projects: [
+      {
+        test: {
+          name: 'unit',
+          include: [
+            'tests/unit/**/*.{test,spec}.{js,jsx}',
+            'tests/**/*.unit.{test,spec}.{js,jsx}',
+          ],
+        },
+      },
+      {
+        test: {
+          name: 'browser',
+          include: [
+            'tests/browser/**/*.{test,spec}.{js,jsx}',
+            'tests/**/*.browser.{test,spec}.{js,jsx}',
+          ],
+          browser: {
+            provider: playwright(),
+            enabled: true,
+            headless: true,
+            instances: [
+              { browser: 'chromium' },
+            ],
+          },
+        },
+      },
     ],
-    browser: {
-      provider: playwright(),
-      enabled: true,
-      headless: true,
-      instances: [
-        { browser: 'chromium' },
-      ],
-    },
   },
   server: {
     port: 3000,

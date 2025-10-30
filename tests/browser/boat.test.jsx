@@ -1,3 +1,4 @@
+import React from 'react';
 import { test, expect, vi } from 'vitest';
 import { screen, render } from 'vitest-browser-react';
 import Boat from './boat';
