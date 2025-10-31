@@ -1,7 +1,10 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
 // import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
 import BrowseBoats from "./browseboats";
 import { getState, saveState, setView } from "../util/statemanagement";
+import { useAuth0 } from "@auth0/auth0-react";
+import { getFleets } from "../util/api";
+import { TokenContext } from "./TokenProvider";
 
 export const MarkContext = createContext([]);
 export const OwnedContext = createContext([]);
@@ -11,6 +14,25 @@ export default function BrowseApp({ view = 'app' }) {
   const [state, setState] = useState(getState(view));
   const [markList, setMarkList] = useState([]);
   const [markedOnly, setMarkedOnly] = useState(false);
+  const [fleets, setFleets] = useState();
+
+  const accessToken = useContext(TokenContext);
+  const { user } = useAuth0()
+
+  useEffect(() => {
+    const getData = async () => {
+      const id = user?.["https://oga.org.uk/id"];
+      const p = await getFleets('public', { public: true }, accessToken);
+      const q = await getFleets('member', { owner_gold_id: id }, accessToken);
+      return [...p, ...q];
+    }
+    if (accessToken && !fleets) {
+      getData().then((data) => {
+        console.log('got fleets');
+        setFleets(data);
+      });
+    }
+  }, [accessToken, fleets, user])
 
   useEffect(() => { saveState(state, view); }, [state, view]);
 
@@ -29,6 +51,13 @@ export default function BrowseApp({ view = 'app' }) {
   const handleFilterChange = useCallback((filters) => {
     setState({ ...state, page: 1, filters });
   }, [state]);
+
+  const handleFleetChange = () => {
+    console.log('fleet change, refetching and clearing marks');
+    setFleets(undefined);
+    setMarkList([]);
+    setMarkedOnly(false);
+  };
 
   const updateOgaNosFilter = useCallback((l, mo) => {
     if (l.length === 0) {
@@ -79,16 +108,18 @@ export default function BrowseApp({ view = 'app' }) {
   return (
     <MarkContext.Provider value={markList}>
       <BrowseBoats
-        state={state}
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
         onPageChange={handlePageChange}
         onMarkedOnlyChange={handleMarkedOnlyChange}
         onClearAllMarks={handleClearAllMarks}
-        isMarkedOnly={markedOnly}
+        onFleetChange={handleFleetChange}
         onBoatMarked={handleBoatMarked}
         onBoatUnMarked={handleBoatUnMarked}
+        isMarkedOnly={markedOnly}
+        state={state}
+        fleets={fleets}
       />
     </MarkContext.Provider>
   );

@@ -50,6 +50,8 @@ export default function SearchAndFilterBoats({
   isOwnedOnly,
   enableOwnersOnly = false,
   filtered,
+  fleets,
+  fleetName,
 }) {
   const currentFilters = filters || {};
   const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
@@ -149,12 +151,13 @@ export default function SearchAndFilterBoats({
     }
   }
 
-  function filterByFleet(name, filters) {
-    // filters always contains the filters in case we need to do
-    // clever stuff if other filters are set as well as fleet
-    // but name is cleared if we need to clear the fleet filter
+  function fleetsUpdated() {
+    console.log('fleets updated');
+  }
+
+  function filterByFleet(name) {
     if (name) {
-      onFilterChange(filters, name);
+      onFilterChange(fleets.find((f) => f.name === name).filters, name);
     } else {
       onFilterChange({});
     }
@@ -347,7 +350,14 @@ export default function SearchAndFilterBoats({
         </Grid>
         <Grid item>
           <RoleRestricted role='member'>
-            <FleetButtons filters={filters} onChange={filterByFleet} filtered={filtered} />
+            <FleetButtons
+              onSelectionChange={filterByFleet}
+              onFleetsUpdated={fleetsUpdated}
+              filters={filters}
+              filtered={filtered}
+              fleets={fleets}
+              fleetName={fleetName}
+            />
           </RoleRestricted>
         </Grid>
         <RoleRestricted role='member'>

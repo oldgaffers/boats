@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext,  useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -58,10 +58,10 @@ function CreateFleetDialog({
 }
 
 export default function NewFleet({
+    updated = () => console.log('updated'),
     markList = [],
     selected,
-    filters,
-    updated = () => console.log('updated'),
+    filters={},
     filtered,
 }) {
     const { user } = useAuth0();

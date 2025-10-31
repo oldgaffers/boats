@@ -8,9 +8,11 @@ import { FormRenderer } from '@data-driven-forms/react-form-renderer';
 import { Stack } from '@mui/system';
 import { m2df } from '../util/format';
 import { disposeOgaNo, getFilterable, nextOgaNo } from '../util/api';
-import { createBoat } from './createboatbutton';
 
 // useful for custom forms, e.g. for what boat you will bring to an event.
+
+function createBoat(boatData, email) {
+}
 
 const FormTemplate = ({ formFields, schema }) => {
     const { handleSubmit, onCancel, getState } = useFormApi();

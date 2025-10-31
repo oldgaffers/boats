@@ -11,13 +11,13 @@ export default function OGA60Form() {
     }
  
     const handleCancel = () => {
-        // eslint-disable-next-line no-restricted-globals
+         
         history.go(0);
     }
 
     const handleSnackBarClose = () => {
         setSnackBarOpen(false);
-        // eslint-disable-next-line no-restricted-globals
+         
         history.go(0);
     }
 

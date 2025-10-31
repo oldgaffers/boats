@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
@@ -48,7 +48,7 @@ function ContactDialog({
 function Contact() {
     const [open, setOpen] = useState(false);
     const [snackBarOpen, setSnackBarOpen] = useState(false);
-    const { user } = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -64,7 +64,7 @@ function Contact() {
 
     const handleSend = () => {
         setOpen(false);
-        const data: any = {
+        const data = {
             subject: 'associate login with membership',
         };
         if (user) {
@@ -76,15 +76,17 @@ function Contact() {
             If this was you, you should get an email from an OGA officer.
         ${Object.entries(user).map(([k, v]) => `${k}: ${v}`).join('\n')}`;
         }
-        postGeneralEnquiry('public', 'associate', data)
-            .then((response) => {
-                console.log(response)
-                setSnackBarOpen(true);
-            })
-            .catch((error) => {
-                console.log("post", error);
-                // TODO snackbar from response.data
-            });
+        getAccessTokenSilently().then((token) => {
+            postGeneralEnquiry('public', 'associate', data, token)
+                .then((response) => {
+                    console.log(response)
+                    setSnackBarOpen(true);
+                })
+                .catch((error) => {
+                    console.log("post", error);
+                    // TODO snackbar from response.data
+                });
+        });
     };
 
     return (
@@ -121,7 +123,7 @@ export default function Welcome() {
     if (!user) {
         return (
             <Tooltip title='If you are a member then please log-in to enable extra members only features.'>
-                <LoginButton />
+                <Box><LoginButton /></Box>
             </Tooltip>
         );
     }

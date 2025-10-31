@@ -1,10 +1,16 @@
- import fs from "fs";
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import userEvent from '@testing-library/user-event';
-import EditBoatWizard from '../components/editboatwizard';
-import '../util/api';
-import * as MockDate from 'mockdate';
+import React from 'react';
+import { describe, test, expect, vi } from 'vitest';
+import { render } from "vitest-browser-react";
+import { userEvent } from 'vitest/browser'
+import { useAuth0 } from '@auth0/auth0-react';
+import '../../src/util/api';
+import EditBoatWizard from '../../src/components/editboatwizard';
+import { result } from '../mock/843.json';
+
+vi.mock('@auth0/auth0-react');
+
+const { boat } = result.pageContext;
+const { waitFor } = vi;
 
 const pickers = {
   boatNames: [],
@@ -20,9 +26,9 @@ const pickers = {
   spar_material: [],
 };
 
-MockDate.set(1434319925275);
+vi.setSystemTime(1434319925275);
 
-jest.mock('../util/api', () => {
+vi.mock('../util/api', () => {
   return {
     getPicklists: async () => pickers,
   };
@@ -236,165 +242,168 @@ const default_test_schema = (pickers) => {
   }
 };
 
-describe('EditBoatWizard component tests', () => {
-  const { result: { pageContext: { boat } } } = JSON.parse(fs.readFileSync('./src/test/843.json', 'utf-8'));
+describe('EditBoatWizard component tests', async () => {
   test('render form with no permission to sell', async () => {
-    const user = userEvent.setup();
-    expect(user).toBeDefined();
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 0 };
+    useAuth0.mockReturnValue({
+      isAuthenticated: true,
+      user,
+      logout: vi.fn(),
+      loginWithRedirect: vi.fn(),
+    });
     expect(default_test_schema).toBeDefined();
-    const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 0 }} open={true} onSubmit={onSubmit}
-    // schema={default_test_schema(pickers)} 
-    />);
+    const onSubmit = vi.fn();
+    const screen = await render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit} />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    await waitFor(async () => {
-      await screen.findByRole('dialog');
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
+    await expect.element(screen.getByRole('dialog')).toBeInTheDocument();
     await waitFor(() => {
-      screen.getAllByText('Rig');
+      screen.getByText('Rig');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Generic Type(s)');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
-      screen.getAllByText(/full description/i);
+      screen.getByText(/full description/i);
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Build');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Design');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Basic Dimensions');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('References');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Previous names');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Locations');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Registrations');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Construction');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Hull Form');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Handicaps');
     });
-    fireEvent.click(screen.getByText('I\'ll leave it for now'));
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('I\'ll leave it for now'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Known Owners');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Submit');
     });
-    userEvent.click(screen.getByText('Submit'), { pointerEventsCheck: 0 });
+    await userEvent.click(screen.getByText('Submit'), { pointerEventsCheck: 0 });
     await sleep(400);
     expect(onSubmit).toBeCalled();
   });
 
     test('render form with permission to sell', async () => {
-    const user = userEvent.setup();
-    expect(user).toBeDefined();
+
+// Mock the Auth0 hook and make it return a logged in state
+    const user = { email: 'a@b.com', 'https://oga.org.uk/id': 35034 };
+    useAuth0.mockReturnValue({
+      isAuthenticated: true,
+      user,
+      logout: vi.fn(),
+      loginWithRedirect: vi.fn(),
+    });
     expect(default_test_schema).toBeDefined();
-    const onSubmit = jest.fn();
-    render(<EditBoatWizard boat={boat} user={{ email: 'a@b.com', 'https://oga.org.uk/id': 35034 }} open={true} onSubmit={onSubmit}
+    const onSubmit = vi.fn();
+    const screen = await render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit}
     // schema={default_test_schema(pickers)} 
     />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
-    await waitFor(async () => {
-      await screen.findByRole('dialog');
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
+    await expect.element(screen.getByRole('dialog')).toBeInTheDocument();
     await waitFor(() => {
-      screen.getAllByText('Rig');
+      screen.getByText('Rig');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Generic Type(s)');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
-      screen.getAllByText(/full description/i);
+      screen.getByText(/full description/i);
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Build');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Design');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Basic Dimensions');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('References');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Previous names');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Locations');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Registrations');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Construction');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Hull Form');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Handicaps');
     });
-    fireEvent.click(screen.getByText('I\'ll leave it for now'));
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('I\'ll leave it for now'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Known Owners');
     });
-    fireEvent.click(screen.getByText('Continue'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('I want to sell this boat');
     });
-    // fireEvent.click(screen.getByRole('checkbox'));
-    fireEvent.click(screen.getByText('Continue'));
+    // await userEvent.click(screen.getByRole('checkbox'));
+    await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Submit');
     });
-    userEvent.click(screen.getByText('Submit'), { pointerEventsCheck: 0 });
+    await userEvent.click(screen.getByText('Submit'), { pointerEventsCheck: 0 });
     await sleep(400);
     expect(onSubmit).toBeCalled();
   })

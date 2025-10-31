@@ -1,5 +1,6 @@
 import React from 'react';
 import { List, ListItem, Typography } from '@mui/material';
+import pkg from '../../package.json';
 
 export default function BoatRegisterFooter() {
     return <>
@@ -22,6 +23,6 @@ export default function BoatRegisterFooter() {
           </Typography>
         </ListItem>
       </List>
-      <Typography variant='body2'>OGA Boat Register %%VERSION%%</Typography>
+      <Typography variant='body2'>OGA Boat Register {pkg.version}</Typography>
     </>;
 }

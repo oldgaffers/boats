@@ -148,21 +148,25 @@ export function PublicFleetView({ view, filter, defaultExpanded = false }) {
   return <Typography>No boats to show for fleet defined by {JSON.stringify(filter)}</Typography>;
 }
 
+function convertArgs(args) {
+  const defaultExpanded = args.includes('open');
+  const view = args.includes('gallery') ? 'gallery' : 'cards';
+  const role = args.includes('member') ? 'member' : 'public';
+  return { role, defaultExpanded, view };
+}
+
 function parseprops(props) {
-  if (props.args) {
-    const name = props.args[0];
-    const filter = props.filter || { name };
-    const defaultExpanded = props.args.includes('open');
-    const view = props.args.includes('gallery') ? 'gallery' : 'cards';
-    return { role: 'public', filter, defaultExpanded, view };
-  }
-  const role = props.role || 'public';
   const searchParams = new URLSearchParams(props?.location?.search);
   const name = props.topic || props.fleet || searchParams.get('name');
   const filter = props.filter || { name };
-  const defaultExpanded = Object.keys(props).includes('defaultexpanded');
-  const view = props.view ?? 'cards';
-  return { role, filter, defaultExpanded, view };
+  const r = { filter };
+  const args = props.args || Object.keys(props).filter((k) => k.startsWith('ogaArg')).map((k) => props[k]);
+  if (args?.length) {
+    Object.assign(r, convertArgs(args));
+    const name = args.find((a) => !['public', 'private', 'closed', 'open', 'gallery', 'cards'].includes(a));
+    if (name) r.filter = { name };
+  }
+  return r;
 }
 
 export default function FleetView(props) {

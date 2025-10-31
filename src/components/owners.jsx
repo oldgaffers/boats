@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useGetOwnerNames } from '../util/ownernames.js';
 
 function Owner({ owner }) {
   // console.log(owner);
@@ -21,8 +22,10 @@ function Owner({ owner }) {
   );
 }
 
-export default function Owners({ owners }) {
-  if (owners?.length === 0) {
+export default function Owners({ boat }) {
+  const ownerships = useGetOwnerNames(boat) || [];
+  ownerships.sort((a, b) => a.start > b.start);
+  if (ownerships.length === 0) {
     return (<div />);
   }
   return (
@@ -37,7 +40,7 @@ export default function Owners({ owners }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {owners.map((owner, index) => <Owner key={index} owner={owner} />)}
+          {ownerships.map((owner, index) => <Owner key={index} owner={owner} />)}
         </TableBody>
       </Table>
     </TableContainer>

@@ -49,7 +49,7 @@ function ReactFBLike({
     );
 }
 
-export default function BoatSummary({ boat, lastModified }) {
+export default function BoatSummary({ boat }) {
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const href = boatUrl(boat.oga_no);
   function handleSnackBarClose() {
@@ -92,7 +92,7 @@ export default function BoatSummary({ boat, lastModified }) {
     <div>
       <ReactFBLike href={'https://oga.org.uk'+href} appId="644249802921642" />
     </div>
-    <ConditionalText value={new Date(lastModified).toLocaleDateString()} label="Last update"/>
+    <ConditionalText value={new Date(boat.lastModified).toLocaleDateString()} label="Last update"/>
     </Box>
   );
 }

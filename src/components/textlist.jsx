@@ -1,5 +1,6 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import { Box } from '@mui/material';
 
 export default function TextList({ variant='body2', fields, data }) {
     const r = [];
@@ -9,7 +10,7 @@ export default function TextList({ variant='body2', fields, data }) {
             r.push({ key, label: fields[key].label, text: val });
         }
     });
-    return (<div>{r.map(n => (<Typography variant={variant}
+    return (<Box>{r.map(n => (<Typography variant={variant} component="div"
         sx={{margin:0}}
-        key={n.key}>{`${n.label}: ${n.text}`}</Typography>))}</div>);
+        key={n.key}>{`${n.label}: ${n.text}`}</Typography>))}</Box>);
 }

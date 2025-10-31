@@ -297,6 +297,18 @@ module.exports = function (webpackEnv) {
       level: 'none',
     },
     optimization: {
+      splitChunks: {
+        // Force all code into the main bundle
+        cacheGroups: {
+          defaultVendors: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'main',
+            chunks: 'all',
+            enforce: true
+          }
+        }
+      },
+      runtimeChunk: false,
       minimize: isEnvProduction,
       minimizer: [
         // This is only used in production mode

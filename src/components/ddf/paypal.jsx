@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import useFormApi from '@data-driven-forms/react-form-renderer/use-form-api';

@@ -1,20 +1,11 @@
-import { gql, useQuery } from '@apollo/client';
-
-export const MEMBER_QUERY = gql(`query members($members: [Int]!) {
-  members(members: $members) {
-    firstname
-    lastname
-    member
-    id
-    GDPR
-    skipper { text }
-  }
-}`);
+import { getScopedData } from './api';
+import { useContext, useEffect, useState } from 'react';
+import { TokenContext } from '../components/TokenProvider';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
-function addNames(data, ownerships) {
-    const members = data?.members;
+export function addNames(members, ownerships = []) {
     if (!members) {
         return ownerships;
     }
@@ -34,22 +25,64 @@ function addNames(data, ownerships) {
     });
 };
 
-export function useGetOwnerNames(boat) {
+export function ownerMembershipNumbers(boat) {
     const rawMemberNumbers = boat.ownerships?.filter((o) => queryIf(o)).map((o) => o.member) || [];
-    const memberNumbers = [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
-    console.log('M', memberNumbers);
-    const { error, loading, data } = useQuery(MEMBER_QUERY, { variables: { members: memberNumbers }});
-    if (error) {
-        console.log(error)
-        return boat.ownerships;
-    }
-    if (loading) {
-        return boat.ownerships;
-    }
-    if (data) {
-        const ownerships = addNames(data, boat.ownerships);
-        ownerships.sort((a, b) => a.start > b.start);
-        return ownerships;
-    }
-    return boat.ownerships;
+    return [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
+}
+
+export function ownershipsWithNames(boat, members) {
+    const ownerships = addNames(members, boat.ownerships || []);
+    ownerships.sort((a, b) => a.start > b.start);
+    return ownerships;
+}
+
+export function useGetMemberData(subject, filter) {
+    const [data, setData] = useState();
+    const { getAccessTokenSilently } = useAuth0();
+
+    useEffect(() => {
+        if (!data) {
+            getAccessTokenSilently().then((accessToken) =>
+              getScopedData('member', subject, filter, accessToken).then((d) => {
+                setData(d?.Items ?? []);
+              })
+            );
+        }
+    }, [subject, filter, data, getAccessTokenSilently]);
+
+    return data;
+}
+
+export function useGetOwnerNamesNew(boat) {
+    const f = {
+        fields: 'id,membership,firstname,lastname,GDPR',
+        member: ownerMembershipNumbers(boat),
+    };
+    const members = useGetMemberData('members', f);
+    return ownershipsWithNames(boat, members);
+}
+
+export async function getOwnerNames(memberNumbers, accessToken) {
+    const f = {
+        fields: 'id,membership,firstname,lastname,GDPR',
+        member: memberNumbers,
+    };
+    const d = await getScopedData('member', 'members', f, accessToken);
+    return d?.Items ?? [];
+}
+
+export function useGetOwnerNames(boat) {
+    const [data, setData] = useState();
+    const accessToken = useContext(TokenContext);
+
+    useEffect(() => {
+        if (!data) {
+            const memberNumbers = ownerMembershipNumbers(boat);
+            getOwnerNames(memberNumbers, accessToken).then((d) => {
+                setData(ownershipsWithNames(boat, d));
+            });
+        }
+    }, [boat, data, accessToken]);
+
+    return data || boat.ownerships;
 }

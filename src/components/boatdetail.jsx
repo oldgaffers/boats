@@ -16,8 +16,8 @@ import Voyage from './voyage';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
-export default function BoatDetail({ view, boat, user }) {
-  const { getAccessTokenSilently } = useAuth0();
+export default function BoatDetail({ view, boat }) {
+  const { user, getAccessTokenSilently } = useAuth0();
   const [value, setValue] = useState(0);
   const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];
@@ -100,51 +100,14 @@ export default function BoatDetail({ view, boat, user }) {
         </Paper>
       )
     });
-    panes.push({
-      title: 'Handicap Measurements', children: (
-        <Paper>
-          <Typography>To assist with keeping the boat register up to date and accurate members have been asked
-to remeasure their boats hull and sail plan. Many boats have been re rigged over the years
-and it is correct to update the national OGA boat register data base with accurate figures.
-Standard production boats with the builders / designers sail plan should not need to
-remeasure as their measurements will be readily available. If however, you have a more
-modern gaffer with a custom sail plan then we need to know the new sail details.
-</Typography>
-<Typography>Please complete the form by clicking on the 'I have edits for this boat' button below.</Typography>
-<Typography>You can also email your data to the boat register editors.</Typography>
-          <Stack direction='row'>
-            <img width='80%' src='https://oldgaffers.github.io/boatregister/handicapmeasurements.svg' alt='boat measurement diagram' />
-            <Stack width='20%'>
-              <Typography variant='h6'>Sail Dimensions</Typography>
-              <Typography>Mainsail, mizzen and main and mizzen
-topsails, and schooners’ foresails and
-fore-topsails, are measured as the
-actual sail dimensions, not the spar
-lengths. Headsails - it is the size of the
-foretriangle that is measured.</Typography>
-              <Typography variant='h6'>Foretriangle</Typography>
-              <Typography>I is measured from deck to the top of
-the highest headsail halyard sheave
-(for jib topsail if one can be flown). J is
-measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
-the jib outhaul at the end of the bowsprit.</Typography>
-<Typography variant='h6'>Hull</Typography>
-<Typography>
-  LOA is hull length excluding spars and rudder, LWL excludes the rudder and Beam is the widest part of the hull (outside
-measurement) excluding rubbing strakes and other appendages.</Typography>
-            </Stack>
-          </Stack>
-        </Paper>
-      )
-    });
   }
   if (roles.includes('member')) {
     panes.push({
       title: 'Owners', children: (
-        <Owners owners={boat.ownerships} email={user.email} />
+        <Owners boat={boat} />
       )
     });
-    const skippers = boat.ownerships.filter((o) => o.skipper);
+    const skippers = (boat.ownerships || []).filter((o) => o.skipper);
     if (skippers.length > 0) {
       panes.push({
         title: 'About the Skippers', children: (
@@ -222,6 +185,44 @@ measurement) excluding rubbing strakes and other appendages.</Typography>
       );
     }
   }
+  
+  panes.push({
+      title: 'Handicap Measurements', children: (
+        <Paper>
+          <Typography>To assist with keeping the boat register up to date and accurate members have been asked
+to remeasure their boats hull and sail plan. Many boats have been re rigged over the years
+and it is correct to update the national OGA boat register data base with accurate figures.
+Standard production boats with the builders / designers sail plan should not need to
+remeasure as their measurements will be readily available. If however, you have a more
+modern gaffer with a custom sail plan then we need to know the new sail details.
+</Typography>
+<Typography>Please complete the form by clicking on the 'I have edits for this boat' button below.</Typography>
+<Typography>You can also email your data to the boat register editors.</Typography>
+          <Stack direction='row'>
+            <img width='80%' src='https://oldgaffers.github.io/boatregister/handicapmeasurements.svg' alt='boat measurement diagram' />
+            <Stack width='20%'>
+              <Typography variant='h6'>Sail Dimensions</Typography>
+              <Typography>Mainsail, mizzen and main and mizzen
+topsails, and schooners’ foresails and
+fore-topsails, are measured as the
+actual sail dimensions, not the spar
+lengths. Headsails - it is the size of the
+foretriangle that is measured.</Typography>
+              <Typography variant='h6'>Foretriangle</Typography>
+              <Typography>I is measured from deck to the top of
+the highest headsail halyard sheave
+(for jib topsail if one can be flown). J is
+measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
+the jib outhaul at the end of the bowsprit.</Typography>
+<Typography variant='h6'>Hull</Typography>
+<Typography>
+  LOA is hull length excluding spars and rudder, LWL excludes the rudder and Beam is the widest part of the hull (outside
+measurement) excluding rubbing strakes and other appendages.</Typography>
+            </Stack>
+          </Stack>
+        </Paper>
+      )
+  });
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

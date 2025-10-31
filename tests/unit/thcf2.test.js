@@ -1,5 +1,5 @@
-import { foretriangle_area, mainsail_area } from '../components/Handicap';
-import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fR, fThcf } from '../util/THCF';
+import { test, expect } from 'vitest';
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fR, fThcf } from '../../src/util/THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};
@@ -102,3 +102,4 @@ test('thcf aboat2', () => {
   expect(fL(handicap_data)).toBe((27.87+27.23)/2);
   expect(fThcf(aboat2).toFixed(3)).toEqual("0.972");
 });
+

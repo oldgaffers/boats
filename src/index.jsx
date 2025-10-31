@@ -7,7 +7,6 @@ import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { CookiesProvider } from "react-cookie";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import OGAProvider from "./util/gql";
 import TokenProvider from './components/TokenProvider';
 
 import BrowseApp from './components/browseapp';
@@ -19,18 +18,6 @@ import CustomMap from './components/custommap';
 
 import PickOrAddBoat from './components/pick_or_add_boat';
 import BuilderPage from './components/builderpage';
-
-/*
-import { lazy } from 'react';
-const RCBEntryMap = lazy(()=> import('./components/rbc60map'));
-const RBC60 = lazy(()=> import('./components/rbc60'));
-const RBC60Entries = lazy(()=> import('./components/rbc60entries'));
-const RBC60CrewForm = lazy(()=> import('./components/rbc60crewform'));
-const OGA60Button = lazy(()=> import('./components/oga60button'));
-const OGA60Form = lazy(()=> import('./components/oga60form'));
-const CreateBoatButton = lazy(()=> import('./components/createboatbutton'));
-const PickOrAddBoat = lazy(()=> import('./components/pick_or_add_boat'));
-*/
 
 const lightTheme = createTheme({
   palette: {
@@ -59,21 +46,19 @@ function Wrapper({ redirectUri, scope, children }) {
   return <PayPalScriptProvider options={paypalOptions}>
     <Auth0Provider {...auth} scope={scope}>
       <TokenProvider>
-        <OGAProvider>
-          {children}
-        </OGAProvider>
+        {children}
       </TokenProvider>
     </Auth0Provider>
   </PayPalScriptProvider>
 }
 
-const Pages = ({ id, ...props }) => {
+const Pages = (props) => {
   const params = new URLSearchParams(window.location.search);
   const kvp = {};
   for (const [key, value] of params.entries()) {
     kvp[key] = value;
   }
-  switch (id) {
+  switch (props.ogaComponent) {
     case 'app':
       if (window.location.pathname.includes('/boat/')) {
         return <Boat {...props} location={window.location} />;
@@ -81,16 +66,16 @@ const Pages = ({ id, ...props }) => {
       return <BrowseApp view='app' />;
     case 'login': return <LoginButton />;
     case 'boat': return <Boat {...props} location={window.location} />;
-    case 'fleet': return <FleetView  />;
-    case 'my_fleets': return <Fleets filter={{ owned: true }}/>;
-    case 'shared_fleets': return <Fleets filter={{ public: true}}/>;
+    case 'fleet': return <FleetView {...props} />;
+    case 'my_fleets': return <Fleets filter={{ owned: true }} {...props} />;
+    case 'shared_fleets': return <Fleets filter={{ public: true}} {...props} />;
     case 'map': return <CustomMap {...props} />;
     case 'add_boat': return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
     case 'builder': return <BuilderPage {...props} {...kvp} />;
     default:
       // sail, sell, small, ...
-      return <BrowseApp view={id} {...props} />;
+      return <BrowseApp view={props.ogaComponent} {...props} />;
   }
 };
 
@@ -108,21 +93,29 @@ const BoatRegister = (props) => {
   </React.StrictMode>;
 };
 
-const allparas = document.getElementsByTagName('p');
-for (let i = 0; i < allparas.length; i++) {
-  const p = allparas.item(i);
-  const text = p.innerText;
-  const q = text.match(/^<<(.*?):(.*)>>$/);
-  if (q?.length === 3) {
-    const [, component, arglist] = q;
-    const args = arglist.split(':');
-    createRoot(p).render(<BoatRegister id={component} args={args} />);
+// convert paragraph elements with <<xxxx>> to divs so that we can nest p and divs inside them
+// we need this because most editors don't have html access.
+function handleParagraphs() {
+  const allparas = document.getElementsByTagName('p');
+  for (let i = 0; i < allparas.length; i++) {
+    const p = allparas.item(i);
+    const text = p.innerText;
+    const q = text.match(/^<<(.*?):(.*)>>$/);
+    if (q?.length === 3) {
+      const [, component, arglist] = q;
+      const args = arglist.split(':');
+      const al = args.map((a, index) => `data-oga-arg${index}="${a.trim()}"`).join(' ');
+      p.outerHTML = `<div data-oga-component=${component} ${al}></div>`;
+      // createRoot(p).render(<BoatRegister ogaComponent={component} args={args} />);
+    }
   }
 }
+
+handleParagraphs();
 const placeholders = document.querySelectorAll("[data-oga-component]");
 placeholders.forEach((ph) => {
   const attr = ph.dataset;
-  createRoot(ph).render(<BoatRegister id={attr.ogaComponent} {...attr} />);
+  createRoot(ph).render(<BoatRegister {...attr} />);
 });
 
 // serviceWorker.unregister();

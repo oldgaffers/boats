@@ -1,7 +1,7 @@
 import React from 'react';
 import 'dayjs/locale/en-gb';
 import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet'
-import L, { LatLng } from 'leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 export const defaultIcon = L.icon({
@@ -34,7 +34,7 @@ function MapComponent({ data }) {
     </Marker>)}</>);
 }
 
-export default function VoyageMap({ places }: { places: LatLng[] }) {
+export default function VoyageMap({ places }) {
     return (
         <MapContainer
             style={{ height: 300 }}

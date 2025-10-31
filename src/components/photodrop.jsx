@@ -1,52 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import {useDropzone} from 'react-dropzone';
-
-const thumbsContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  flexWrap: 'wrap',
-  marginTop: 16
-};
-
-const thumb = {
-  display: 'inline-flex',
-  borderRadius: 2,
-  border: '1px solid #eaeaea',
-  marginBottom: 8,
-  marginRight: 8,
-  width: 100,
-  height: 100,
-  padding: 4,
-  boxSizing: 'border-box'
-};
-
-const thumbInner = {
-  display: 'flex',
-  minWidth: 0,
-  overflow: 'hidden'
-};
-
-const img = {
-  display: 'block',
-  width: 'auto',
-  height: '100%'
-};
+import { useDropzone } from 'react-dropzone';
 
 const maxMbyte = 10;
 const maxSize = maxMbyte * 1024 * 1024; // 5MB
 
 export default function Photodrop({ onDrop }) {
   const [files, setFiles] = useState([]);
-  const {getRootProps, getInputProps} = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     accept: {
       'image/*': []
     },
     maxSize,
     onDropRejected: files => {
       files.forEach(file => {
-        if (file.errors) {  
+        if (file.errors) {
           file.errors.forEach(err => {
             if (err.code === 'file-too-large') {
               alert(`File ${file.file.name} is too large. Max size is ${maxMbyte} MB.`);
@@ -67,14 +36,32 @@ export default function Photodrop({ onDrop }) {
       })));
     }
   });
-  
+
   const thumbs = files.map(file => (
-    <Box style={thumb} key={file.name}>
-      <Box style={thumbInner}>
+    <Box sx={{
+      display: 'inline-flex',
+      borderRadius: '2px',
+      border: '1px solid #eaeaea',
+      marginBottom: '8px',
+      marginRight: '8px',
+      width: '100px',
+      height: '100px',
+      padding: '4px',
+      boxSizing: 'border-box'
+    }} key={file.name}>
+      <Box sx={{
+        display: 'flex',
+        minWidth: 0,
+        overflow: 'hidden'
+      }}>
         <img
           alt=''
           src={file.preview}
-          style={img}
+          style={{
+            display: 'block',
+            width: 'auto',
+            height: '100%'
+          }}
           // Revoke data uri after image is loaded
           onLoad={() => { URL.revokeObjectURL(file.preview) }}
         />
@@ -94,7 +81,13 @@ export default function Photodrop({ onDrop }) {
         <input {...getInputProps()} />
         <p>Drag 'n' drop some pictures here, or click to select files, max size is {maxMbyte} MB</p>
       </Box>
-      <Box styleName={thumbsContainer}>
+      <Box sx={{
+        display: 'flex',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        marginTop: '8px',
+        marginBottom: '8px'
+      }}>
         {thumbs}
       </Box>
     </Stack>

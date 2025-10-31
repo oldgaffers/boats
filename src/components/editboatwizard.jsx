@@ -34,257 +34,285 @@ import {
 } from "./ddf/SubForms";
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { getPicklists } from '../util/api';
+import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
+import { useAuth0 } from '@auth0/auth0-react';
 
-const defaultSchema = (pickers) => {
+const defaultSchema = (pickers, isNew = false) => {
+  const fields = [
+    {
+      name: "rig-step",
+      nextStep: "type-step",
+      fields: [
+        {
+          component: 'text-field',
+          name: "ddf.owner",
+          label: "is current owner",
+          hideField: true,
+        },
+        {
+          component: 'text-field',
+          name: "ddf.editor",
+          label: "is editor",
+          hideField: true,
+        },
+        {
+          component: 'checkbox',
+          name: 'ddf.pr',
+          hideField: true,
+        },
+        {
+          component: 'plain-text',
+          name: 'ddf.pr.label',
+          label: <Typography>
+                  You are editing the latest proposed values, so some fields will
+                  already be different from the currently published ones.</Typography>,
+          condition: { when: 'ddf.pr', is: true },
+        },
+        {
+          component: 'sub-form',
+          name: "rig.form",
+          title: "Rig",
+          fields: rigFields(pickers),
+        },
+      ],
+    },
+    {
+      name: "type-step",
+      nextStep: "descriptions-step",
+      fields: [
+        ...GenericTypeItems(pickers),
+        {
+          component: 'plain-text',
+          name: 'gt-desc',
+          label: 'Most boats will only have one, but a Nobby can be a yacht too, for example',
+        },
+      ],
+    },
+    {
+      name: "descriptions-step",
+      nextStep: 'build-step',
+      fields: descriptionsItems,
+    },
+    {
+      name: "build-step",
+      nextStep: "design-step",
+      fields: [
+        {
+          title: "Build",
+          name: "build",
+          component: 'sub-form',
+          fields: [
+            ...yearItems,
+            {
+              component: 'text-field',
+              name: "place_built",
+              label: "Place Built",
+            },
+            ...builderItems(pickers),
+            {
+              component: 'text-field',
+              name: "hin",
+              label: "Hull Identification Number (HIN)",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      name: "design-step",
+      nextStep: "basic-dimensions-step",
+      fields: [
+        {
+          title: "Design",
+          name: "design",
+          component: 'sub-form',
+          fields: [
+            ...designerItems(pickers),
+            ...designClassItems(pickers),
+          ],
+        },
+      ],
+    },
+    {
+      name: "basic-dimensions-step",
+      nextStep: "references-step",
+      fields: [
+        {
+          title: "Basic Dimensions",
+          name: "basic-dimensions",
+          component: 'sub-form',
+          fields: basicDimensionItems,
+        },
+      ],
+    },
+    {
+      name: "references-step",
+      nextStep: "previousnames-step",
+      fields: [
+        {
+          name: "references",
+          title: "References",
+          component: 'sub-form',
+          fields: referencesItems,
+        },
+      ],
+    },
+    {
+      name: "previousnames-step",
+      nextStep: "locations-step",
+      fields: [
+        {
+          label: "New name",
+          component: 'text-field',
+          name: "ddf.new_name",
+          description: 'if you have changed the name, enter the new name here.'
+        },
+        {
+          label: "Previous names",
+          component: 'field-array',
+          name: "previous_names",
+          fields: [{ component: "text-field" }],
+        },
+      ],
+    },
+    {
+      name: "locations-step",
+      nextStep: "registrations-step",
+      fields: [
+        {
+          title: "Locations",
+          name: "locations",
+          component: 'sub-form',
+          fields: homeItems,
+        },
+      ],
+    },
+    {
+      name: "registrations-step",
+      nextStep: "construction-step",
+      fields: [registrationForm],
+    },
+    {
+      name: "construction-step",
+      nextStep: 'hull-step',
+      fields: [
+        {
+          name: "construction",
+          title: "Construction",
+          component: 'sub-form',
+          fields: constructionItems(pickers),
+        },
+      ],
+    },
+    {
+      name: "hull-step",
+      nextStep: 'skip-handicap-step',
+      fields: hullFields,
+    },
+    {
+      name: "skip-handicap-step",
+      nextStep: {
+        when: "ddf.skip-handicap",
+        stepMapper: {
+          1: "handicap-step",
+          2: "own-step",
+        },
+      },
+      fields: [
+        {
+          name: "skip-handicap",
+          title: "Handicaps",
+          component: 'sub-form',
+          fields: [
+            {
+              component: 'radio',
+              name: "ddf.skip-handicap",
+              initialValue: "1",
+              label: 'Do you want to create or update a handicap?',
+              helperText: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
+              validate: [{ type: 'required' }],
+              options: [
+                { label: "I want to add or check handicap data", value: "1" },
+                { label: "I'll leave it for now", value: "2" }
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    ...handicap_steps('handicap-step', 'own-step'),
+    {
+      name: 'own-step',
+      nextStep: ({ values }) => {
+        if (values.ddf.owner || values.ddf.editor) {
+          if (values.selling_status === 'for_sale') {
+            return 'update-sell-step';
+          }
+          return 'query-sell-step';
+        }
+        return 'done-step';
+      },
+      fields: ownershipUpdateFields,
+    },
+    {
+      name: 'query-sell-step',
+      nextStep: {
+        when: "ddf.confirm_for_sale",
+        stepMapper: {
+          true: 'sell-step',
+          false: 'done-step',
+        },
+      },
+      fields: [
+        {
+          component: 'checkbox',
+          label: 'I want to sell this boat',
+          name: 'ddf.confirm_for_sale',
+          helperText: 'check if you want to put this boat up for sale',
+          resolveProps: (props, { meta, input }, formOptions) => {
+            const { values } = formOptions.getState();
+            return {
+              initialValue: values.selling_status === 'for_sale',
+              isReadOnly: !(values.ddf.owner || values.ddf.editor)
+            }
+          },
+        },
+      ],
+    },
+    {
+      name: 'sell-step',
+      nextStep: 'done-step',
+      fields: sellingDataFields,
+    },
+    ...salesSteps('update-sell-step', 'done-step'),
+    {
+      name: "done-step",
+      fields: doneFields,
+    },
+  ];
+  if (isNew) {
+    fields.unshift({
+      name: "name-step",
+      nextStep: "rig-step",
+      fields: [
+        {
+          component: 'text-field',
+          name: 'name',
+          label: 'Boat Name',
+          validate: [{ type: 'required' }],
+        }]
+    });
+  }
   return {
     fields: [
       {
         title: "Update Boat Record",
         component: 'wizard',
         name: "boat",
-        fields: [
-          {
-            name: "rig-step",
-            nextStep: "type-step",
-            fields: [
-              {
-                component: 'text-field',
-                name: "ddf.owner",
-                label: "is current owner",
-                hideField: true,
-              },
-              {
-                component: 'text-field',
-                name: "ddf.editor",
-                label: "is editor",
-                hideField: true,
-              },
-              {
-                component: 'sub-form',
-                name: "rig.form",
-                title: "Rig",
-                fields: rigFields(pickers),
-              },
-            ],
-          },
-          {
-            name: "type-step",
-            nextStep: "descriptions-step",
-            fields: [
-              ...GenericTypeItems(pickers),
-              {
-                component: 'plain-text',
-                name: 'gt-desc',
-                label: 'Most boats will only have one, but a Nobby can be a yacht too, for example',
-              },
-            ],
-          },
-          {
-            name: "descriptions-step",
-            nextStep: 'build-step',
-            fields: descriptionsItems,
-          },
-          {
-            name: "build-step",
-            nextStep: "design-step",
-            fields: [
-              {
-                title: "Build",
-                name: "build",
-                component: 'sub-form',
-                fields: [
-                  ...yearItems,
-                  {
-                    component: 'text-field',
-                    name: "place_built",
-                    label: "Place Built",
-                  },
-                  ...builderItems(pickers),
-                  {
-                    component: 'text-field',
-                    name: "hin",
-                    label: "Hull Identification Number (HIN)",
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: "design-step",
-            nextStep: "basic-dimensions-step",
-            fields: [
-              {
-                title: "Design",
-                name: "design",
-                component: 'sub-form',
-                fields: [
-                  ...designerItems(pickers),
-                  ...designClassItems(pickers),
-                ],
-              },
-            ],
-          },
-          {
-            name: "basic-dimensions-step",
-            nextStep: "references-step",
-            fields: [
-              {
-                title: "Basic Dimensions",
-                name: "basic-dimensions",
-                component: 'sub-form',
-                fields: basicDimensionItems,
-              },
-            ],
-          },
-          {
-            name: "references-step",
-            nextStep: "previousnames-step",
-            fields: [
-              {
-                name: "references",
-                title: "References",
-                component: 'sub-form',
-                fields: referencesItems,
-              },
-            ],
-          },
-          {
-            name: "previousnames-step",
-            nextStep: "locations-step",
-            fields: [
-              {
-                label: "New name",
-                component: 'text-field',
-                name: "ddf.new_name",
-                description: 'if you have changed the name, enter the new name here.'
-              },
-              {
-                label: "Previous names",
-                component: 'field-array',
-                name: "previous_names",
-                fields: [{ component: "text-field" }],
-              },
-            ],
-          },
-          {
-            name: "locations-step",
-            nextStep: "registrations-step",
-            fields: [
-              {
-                title: "Locations",
-                name: "locations",
-                component: 'sub-form',
-                fields: homeItems,
-              },
-            ],
-          },
-          {
-            name: "registrations-step",
-            nextStep: "construction-step",
-            fields: [registrationForm],
-          },
-          {
-            name: "construction-step",
-            nextStep: 'hull-step',
-            fields: [
-              {
-                name: "construction",
-                title: "Construction",
-                component: 'sub-form',
-                fields: constructionItems(pickers),
-              },
-            ],
-          },
-          {
-            name: "hull-step",
-            nextStep: 'skip-handicap-step',
-            fields: hullFields,
-          },
-          {
-            name: "skip-handicap-step",
-            nextStep: {
-              when: "ddf.skip-handicap",
-              stepMapper: {
-                1: "handicap-step",
-                2: "own-step",
-              },
-            },
-            fields: [
-              {
-                name: "skip-handicap",
-                title: "Handicaps",
-                component: 'sub-form',
-                fields: [
-                  {
-                    component: 'radio',
-                    name: "ddf.skip-handicap",
-                    initialValue: "1",
-                    label: 'Do you want to create or update a handicap?',
-                    helperText: "There are some mandatory fields in the handicap section. If you don't need a handicap right now, you can skip this part.",
-                    validate: [{ type: 'required' }],
-                    options: [
-                      { label: "I want to add or check handicap data", value: "1" },
-                      { label: "I'll leave it for now", value: "2" }
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          ...handicap_steps('handicap-step', 'own-step'),
-          {
-            name: 'own-step',
-            nextStep: ({ values }) => {
-              if (values.ddf.owner || values.ddf.editor) {
-                if (values.selling_status === 'for_sale') {
-                  return 'update-sell-step';
-                }
-                return 'query-sell-step';
-              }
-              return 'done-step';
-            },
-            fields: ownershipUpdateFields,         
-          },
-      {
-        name: 'query-sell-step',
-        nextStep: {
-          when: "ddf.confirm_for_sale",
-          stepMapper: {
-            true: 'sell-step',
-            false: 'done-step',
-          },
-        },
-        fields: [
-          {
-            component: 'checkbox',
-            label: 'I want to sell this boat',
-            name: 'ddf.confirm_for_sale',
-            helperText: 'check if you want to put this boat up for sale',
-            resolveProps: (props, { meta, input }, formOptions) => {
-              const { values } = formOptions.getState();
-              return {
-                initialValue: values.selling_status === 'for_sale',
-                isReadOnly: !(values.ddf.owner || values.ddf.editor)
-              }
-            },
-          },
-        ],
+        fields,
       },
-      {
-        name: 'sell-step',
-        nextStep: 'done-step',
-        fields: sellingDataFields,
-      },
-      ...salesSteps('update-sell-step', 'done-step'),
-      {
-        name: "done-step",
-        fields: doneFields,
-      },
-    ],
-  },
     ],
   };
 };
@@ -297,14 +325,14 @@ export function boatdiff(before, after) {
   return cj.diff(before, after);
 }
 
-export function prepareInitialValues(boat, user) {
+export function prepareInitialValues(boat, user, pr) {
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
-  const { name, oga_no, id, image_key, for_sales, for_sale_state, ...rest } = boat;
-
-  const ddf = { name, oga_no, id, image_key, owner, editor };
+  const { name, oga_no, image_key, for_sales, for_sale_state, ...rest } = boat;
+  const email = user?.email || '';
+  const ddf = { name, oga_no, image_key, owner, editor, pr };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
@@ -320,11 +348,8 @@ export function prepareInitialValues(boat, user) {
   } else {
     ddf.current_sales_record = defaultSalesRecord;
   }
-  const initialValues = {
-    email: user?.email || '',
-    ...boatm2f(rest),
-    ddf,
-  };
+
+  const initialValues = { ddf, email, ...boatm2f(rest) };
 
   // prepare for dual-list
   ['builder', 'designer'].forEach((key) => {
@@ -339,20 +364,20 @@ export function prepareInitialValues(boat, user) {
     initialValues[key] = initialValues[key]?.name;
   });
 
-  const ownersWithId = boat.ownerships
-  .filter((owner) => owner.name || owner.id) // remove note and text rows
-  .map((owner, index) => {
-    return {
+  const ownersWithId = (boat.ownerships || [])
+    .filter((owner) => owner.name || owner.id) // remove note and text rows
+    .map((owner, index) => {
+      return {
         ...owner,
         id: index,
         goldId: owner.id, // needed for ownerName? name has already been merged in!!!
-    };
-  });
+      };
+    });
 
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
-console.log('IV', initialValues)
+  // console.log('IV', initialValues)
 
   return initialValues;
 
@@ -381,12 +406,12 @@ export function salesChanges(ddf, for_sales) {
     return {
       selling_status: 'for_sale',
       for_sales: [ddf.current_sales_record, ...for_sales],
-    }    
+    }
   }
   return { for_sales };
 }
 
-export function updateOwnerships(old, updated) {
+export function updateOwnerships(old = [], updated = []) {
   const notes = old.filter((o) => !(o.name || o.id))
   // console.log(notes, updated);
   const withoutRowIds = updated.map((o) => {
@@ -400,8 +425,8 @@ export function updateOwnerships(old, updated) {
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
-  const { name, oga_no, id, image_key, selling_status, for_sales } = boat
-  const { ddf, email, ownerships, ...submitted } = values;
+  const { name, oga_no, image_key, selling_status, for_sales } = boat
+  const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
 
   const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
 
@@ -418,7 +443,7 @@ export function prepareModifiedValues(values, boat, pickers) {
   );
 
   function name2object(value, picker, newItem) {
-    console.log('name2object', value, newItem);
+    // console.log('name2object', value, newItem);
     if (newItem) {
       return newItem;
     }
@@ -452,15 +477,16 @@ export function prepareModifiedValues(values, boat, pickers) {
   const builder = listMapper(values, newItems, 'builder');
   const designer = listMapper(values, newItems, 'designer');
 
+  if (ddf.new_name) {
+    previous_names.unshift([name]);
+  }
+
   const modifiedBoat = {
     ...boatf2m(submitted),
     ownerships: updateOwnerships(boat.ownerships, ownerships),
-    name: ddf.new_name || name,
-    previous_names: [
-      ...((ddf.new_name && [name]) || []),
-      ...(submitted.previous_names || []),
-    ],
-    oga_no, id, image_key,
+    name: ddf.new_name || name || submitted.name,
+    previous_names,
+    oga_no, image_key,
     ...salesChanges(ddf, sales_records),
     builder,
     designer,
@@ -475,9 +501,18 @@ export function oldvalue(path, boat) {
   return p.reduce((prev, current) => prev[current], boat[root]);
 }
 
-export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
-
+function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
   const [pickers, setPickers] = useState();
+  const [data, setData] = useState(boat);
+  const { user } = useAuth0();
+
+  useEffect(() => {
+    if (!data.oga_no) {
+      nextOgaNo().then((no) => {
+        setData({ ...data, oga_no: no });
+      }).catch((e) => console.log(e));
+    }
+  }, [data, boat]);
 
   useEffect(() => {
     if (!pickers) {
@@ -489,20 +524,16 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
 
   if (!pickers) return <CircularProgress />;
 
-  if (!open) return '';
+  const activeSchema = schema || defaultSchema(pickers, !data.name);
 
-  const activeSchema = schema || defaultSchema(pickers);
+  const handleSubmit = (_, formApi) => {
 
-  const handleSubmit = (values, formApi) => {
-
-    // console.log('handleSubmit handicap data', values.handicap_data);
     const state = formApi.getState()
-    // console.log('handleSubmit handicap data from state', state.values.handicap_data);
 
     // N.B. the values from the values parameter can be incomplete.
     // the values in the state seem correct
 
-    const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(state.values, boat, pickers);
+    const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(state.values, data, pickers);
 
     const rounded = boatf2m(boatm2f(boat)); // to exclude changes due to rounding
     const fulldelta = formatters.jsonpatch.format(boatdiff(rounded, modifiedBoat));
@@ -515,31 +546,70 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
     );
 
   }
+  
+  return <FormRenderer
+    componentMapper={{
+      ...componentMapper,
+      html: HtmlEditor,
+      'ownership-form': OwnershipForm,
+    }}
+    FormTemplate={(props) => (
+      <FormTemplate {...props} showFormControls={false} />
+    )}
+    schema={activeSchema}
+    onSubmit={handleSubmit}
+    onCancel={onCancel}
+    initialValues={prepareInitialValues(data, user, pr)}
+    subscription={{ values: true }}
+  />;
+}
 
+export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
+  const [data, setData] = useState();
+  const [pr, setPr] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setData(undefined);
+    } else if (!data) {
+      openPr(boat.oga_no).then((modified) => { 
+        if (modified) {
+          setData(modified);
+          setPr(true);
+        } else {
+          setData(boat);
+        }
+      });
+    }
+    }, [open, data, boat]);
+  if (data) {
+    return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} pr={pr} />;
+  }
+  if (open) {
+    return <CircularProgress />;
+  }
+  return '';
+}
+
+function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
+
+  const title = boat.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
   return (
     <Dialog
       open={open}
       aria-labelledby="form-dialog-title"
     >
       <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
-        <Typography variant="h5" >Update {boat.name} ({boat.oga_no})</Typography>
+        <Typography variant="h5" >{title}</Typography>
       </Box>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
-        <FormRenderer
-          componentMapper={{
-            ...componentMapper,
-            html: HtmlEditor,
-            'ownership-form': OwnershipForm,
-          }}
-          FormTemplate={(props) => (
-            <FormTemplate {...props} showFormControls={false} />
-          )}
-          schema={activeSchema}
-          onSubmit={handleSubmit}
+        <EditWiz
           onCancel={onCancel}
-          initialValues={prepareInitialValues(boat, user)}
-          subscription={{ values: true }}
+          onSubmit={onSubmit}
+          boat={boat}
+          schema={schema}
+          pr={pr}
         />
       </LocalizationProvider>
 

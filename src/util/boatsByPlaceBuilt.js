@@ -1,7 +1,6 @@
 import { geolocate, getPlaces } from "./api";
 
-export default async function boatsByPlaceBuilt(filters = {}) {
-    // const boats = await getFilterable();
+export default async function boatsByPlaceBuilt() {
     const places = Object.values(await getPlaces());
     const filtered = places.filter((p) => p.count > 1);
     filtered.sort((a, b) => b.count - a.count);

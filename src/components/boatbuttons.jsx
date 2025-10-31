@@ -7,9 +7,10 @@ import EditButton from './editbutton';
 import AdminButton from './adminbutton';
 import Enquiry from './enquiry';
 import SetHandicapCheckedButton from './sethandicapchecked';
+import { useAuth0 } from '@auth0/auth0-react';
 
-export default function BoatButtons({ boat, user }) {
-
+export default function BoatButtons({ boat }) {
+  const user = useAuth0();
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
   const photoCancelled = () => {
@@ -27,7 +28,7 @@ export default function BoatButtons({ boat, user }) {
           <Button size="small"
               color='primary'
               variant="contained"
-            // eslint-disable-next-line no-restricted-globals
+             
             onClick={() => history.back()}
           >See more boats</Button>
         </Grid>
@@ -43,7 +44,7 @@ export default function BoatButtons({ boat, user }) {
             />
         </Grid>
         <Grid item xs={'auto'} >
-            <EditButton boat={boat} user={user} color='secondary'/>
+            <EditButton boat={boat} color='secondary'/>
         </Grid>
         {roles.includes('editor')
           ? (<Grid item xs={'auto'} ><AdminButton boat={boat} user={user} color='secondary'/></Grid>)

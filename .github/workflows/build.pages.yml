@@ -38,24 +38,20 @@ jobs:
     - name: test
       run: |
         npm ci
+        npx playwright install --with-deps chromium
         npm test
     - name: build
       run: |
         npm run build --if-present
-        cp build/static/js/main.*.js.map build
-        cp build/static/js/main.*.js build/main.js
-        cp build/static/css/main.*.css.map build
-        cp build/static/css/main.*.css build/main.css
-        echo build complete
-    - name: add test
-      run: cp test.js build
+        cp dist/assets/index-*.js dist/main.js
+        cp dist/assets/index-*.css dist/main.css
     - name: Setup Pages
       uses: actions/configure-pages@v2
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        # Upload build folder made by npm
-        path: build
+        # Upload dist folder made by vite
+        path: dist
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4

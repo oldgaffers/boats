@@ -1,33 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
-import { getLargestImage } from '../util/api';
+import { getLargestImage, getBoatData, getScopedData } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { ApolloConsumer, gql } from '@apollo/client';
-import { getBoatData } from '../util/api';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
-
-async function getBoats(ogaNos) {
+import { ownerMembershipNumbers, ownershipsWithNames } from '../util/ownernames';
+import { TokenContext } from './TokenProvider';
+ 
+async function getBoats(ogaNos, accessToken) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
-  const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.result?.pageContext?.boat);
-  return pages.map((p) => p);
-}
-
-const MEMBER_QUERY = gql(`query members($ids: [Int]!) {
-  members(ids: $ids) {
-    firstname
-    lastname
-    member
-    id
-    GDPR
-  }
-}`);
-
-function id2name(id, members) {
-  const m = members.find((m) => m.id === id);
-  if (m) {
-    return `${m.firstname} ${m.lastname}`;
-  }
+  const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.boat);
+  const boats = pages.map((p) => p);
+  const images = await Promise.allSettled(boats.map((b) => {
+      if (b.image_key) {
+          return getLargestImage(b.image_key);
+      } else {
+            // console.log('no image', b);
+            return undefined;
+      }
+  }));
+  const member = [...new Set(boats.map((b) => ownerMembershipNumbers(b)).flat())];
+  const f = {
+    fields: 'id,membership,firstname,lastname,GDPR',
+    member,
+  };
+  const d = await getScopedData('member', 'members', f, accessToken);
+  const names = d?.Items ?? [];
+  return boats.map((b, i) => {
+    const image = {};
+    const img = images[i].value;
+    if (img) {
+        const { url, caption } = img;
+        image.url = url;
+        image.copyright = caption;
+    }
+    const ownerships = ownershipsWithNames(b, names);
+    const owners =  ownerships.filter((o) => o.current);
+    const historicOwners = ownerships.filter((o) => !o.current);
+    return { ...b, owners, historicOwners, image };
+  });
 }
 
 function fieldDisplayValue(item) {
@@ -53,8 +64,15 @@ function selectFieldsForExport(data, fields, handicapFields) {
   return data.map((b) => {
     const boat = {};
     fields.forEach((key) => {
-      if (b[key]) {
-        boat[key] = fieldDisplayValue(b[key]);
+      const val = b[key];
+      if (val) {
+        if (typeof val === 'object' && !Array.isArray(val) && val !== null) {
+          Object.keys(val).forEach((k) => {
+            boat[`${key}_${k}`] = fieldDisplayValue(val[k]);
+          });
+        } else {
+          boat[key] = fieldDisplayValue(val);
+        }
       }
     });
     const handicap_data = b.handicap_data || {};
@@ -83,79 +101,58 @@ function selectFieldsForExport(data, fields, handicapFields) {
 }
 
 function km(k) {
-  return k.replace('_', ' ');
+  switch (k) {
+    case 'copyright':
+      return 'photo copyright';
+    default:
+      return k.replace('_', ' ');
+  }
 }
 
 function vm(v) {
-  return v; // ?.replace('© ', '') || '';
+  return v || '';
 }
 
 function boatForLeaflet(boat) {
-  const { name, oga_no, short_description, image, ...text } = boat;
+  const { name, oga_no, owners, short_description = '', image_url, image_copyright, ...text } = boat;
   return `
-  <table border="1">
-  <tbody>
-  <tr>
-  <td style="width: 50%;">
-  <div>${name.toUpperCase()} (${oga_no})<div>
-  <div>${short_description}</div>
-  ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
-  </td>
-  <td style="width: 50%;">
-  <img width="600" src="${image}"/>
-  </td>
-  </tr>
-  </tbody>
-  </table>`;
+  <div class="container">
+    <div class="header">${name} (${oga_no})</div>
+    <div class="sidebar">
+      <div>${owners ? `Owned by: ${owners}`:''}</div>
+      ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
+    </div>
+    <div class="photo">
+      <img height="600" src="${image_url}" alt="No Image"/>
+      <div>${image_copyright}</div>
+    </div>
+    <div class="footer">${short_description}</div>
+  </div>`;
 }
 
-function ExportFleetOptions({ client, name, ogaNos }) {
+function ExportFleetOptions({ name, ogaNos }) {
   const [data, setData] = useState();
+  const accessToken = useContext(TokenContext);
 
   useEffect(() => {
     if (!data) {
-      // const oganos = boats?.map((b) => b?.oga_no);
-      getBoats(ogaNos).then(async (r) => {
-        const images = await Promise.allSettled(r.map((b) => {
-          if (b.image_key) {
-            return getLargestImage(b.image_key);
-          } else {
-            console.log('no image', b);
-            return undefined;
-          }
-        }));
-        r.forEach((b, i) => {
-          if (images[i].value) {
-            b.image = images[i].value.url;
-            b.copyright = images[i].value.caption;
-          }
-        });
-        const ids = [...new Set(
-          r.map((b) => (b?.ownerships?.filter((o) => o.current)) || []).flat().map((o) => o?.id)
-        )].filter((id) => id);
-        const membersResult = await client.query({ query: MEMBER_QUERY, variables: { ids } });
-        const members = membersResult?.data?.members?.filter((m) => m?.GDPR) || [];
-        r.forEach((b) => {
-          const o = b.ownerships?.filter((o) => o.current)?.map((o) => id2name(o.id, members)) || [];
-          b.owners = o.join(', ');
-        });
-        setData(r);
-      });
+      getBoats(ogaNos, accessToken).then((r) => setData(r));
     }
-  }, [data, ogaNos, client]);
+  }, [data, ogaNos, accessToken]);
 
   if (!data) {
     return <CircularProgress />
   }
 
   const leaflet = selectFieldsForExport(data, [
-    'name', 'oga_no', 'place_built', 'owners',
+    'name', 'oga_no', 'place_built', 
+    'owners', 'home_port',
     'construction_material', 'construction_method',
-    'builder', 'designer', 'design_class',
+    'builder', 'designer', 'design_class', "year",
     'mainsail_type', 'rig_type',
-    'short_description', 'hull_form', 'place_built',
+    'short_description', 'hull_form',
     'construction_details', 'spar_material',
-    'image', 'copyright',
+    'image',
   ],
     [
       'beam', 'draft', 'length_on_deck', 'length_over_all', 'length_on_waterline', 'thcf',
@@ -163,13 +160,34 @@ function ExportFleetOptions({ client, name, ogaNos }) {
   );
 
   const race = selectFieldsForExport(data, [
-    'name', 'oga_no', 'owners',
+    'name', 'oga_no', 'ownerships',
     'short_description', 'hull_form',
   ],
     'all'
   );
 
-  const html = `<div>${leaflet.map((boat) => boatForLeaflet(boat))}</div>`;
+  const style = `<style>
+    @media print {.page-break { break-after: page; }}
+    .container {
+      display: grid;
+      width: 100%;
+      height: 800px;
+      grid-template-columns: 200px 1fr;
+      grid-template-rows: 80px 1fr 100px;
+      grid-gap: 1rem;
+      grid-template-areas:
+          "header header"
+          "sidebar photo"
+          "footer footer";
+    }
+    .header { grid-area: header; }
+    .sidebar { grid-area: sidebar; }
+    .photo { grid-area: photo; }
+    .footer { grid-area: footer; }
+  </style>`;
+  const head = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>${name}</title>${style}</head>`;
+  const boats = leaflet.map((boat) => boatForLeaflet(boat)).join('');
+  const html = `${head}<body>${boats}</body></html>`;
   const doc = new Blob([html], { type: 'text/html' });
   const uRL = window.URL.createObjectURL(doc);
 
@@ -179,7 +197,11 @@ function ExportFleetOptions({ client, name, ogaNos }) {
       target='_self'
       download={`${name}.html`}
       href={uRL}
-    >HTML  for boats attending leaflet</a>
+    >Download HTML for boats attending leaflet</a>
+        <a
+      target="_blank" rel="noreferrer"
+      href={uRL}
+    >HTML for boats attending leaflet, opens in new tab for printing</a>
     <CSVLink filename={`${name}.csv`} data={race}>Spreadsheet for Race Officers</CSVLink>
     N.B. all dimensions in metres
   </Stack>;
@@ -203,9 +225,7 @@ export function ExportFleet({ name, boats, filters }) {
       <DialogTitle id="form-dialog-title">Export Fleet {name}</DialogTitle>
       <DialogContent>
         <DialogContentText variant="subtitle2">
-          <ApolloConsumer>
-            {client => <ExportFleetOptions client={client} name={name} ogaNos={ogaNos} />}
-          </ApolloConsumer>
+          <ExportFleetOptions name={name} ogaNos={ogaNos} />
         </DialogContentText>
       </DialogContent>
       <DialogActions>

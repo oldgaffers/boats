@@ -111,7 +111,7 @@ const schema = (pickers) => {
                   return 'owner-step';
                 }
               }
-              return 'basic-step';
+              return 'rig-step';
             },
             fields: [
               {
@@ -150,6 +150,7 @@ const schema = (pickers) => {
                     isReadOnly: false,
                     isSearchable: true,
                     isClearable: true,
+                    isOptionEqualToValue: (option, value) => option.value === value,
                     noOptionsMessage: 'we don\'t have that class - you can add it as a new one below',
                     options: pickers['design_class'].map((i) => ({ label: i.name, value: i.name })),
                   },
@@ -165,7 +166,7 @@ const schema = (pickers) => {
                   return 'owner-step';
                 }
               }
-              return 'basic-step';
+              return 'rig-step';
             },
             fields: [
               {
@@ -202,7 +203,7 @@ const schema = (pickers) => {
           },
           {
             name: "owner-step",
-            nextStep: "basic-step",
+            nextStep: "rig-step",
             fields: [
               {
                 component: 'sub-form',
@@ -508,7 +509,7 @@ export function flattenToForm(example, prefix) {
   Object.keys(example).forEach((key) => {
     const value = example[key];
     if (ignoredKeys.includes(key)) {
-      console.log('omit', key, value);
+      // console.log('omit', key, value);
     } else {
       const flatfield = `${prefix || ''}${(prefix && '.') || ''}${key}`;
       switch (typeof value) {
@@ -525,9 +526,11 @@ export function flattenToForm(example, prefix) {
           flat[flatfield] = value;
           break;
         case 'object':
-          if (['designer', 'builder'].includes(key)) {
+          if (['generic_type'].includes(key)) { // fields that are arrays of strings
+            flat[flatfield] = Array.isArray(value) ? value : [value];
+          } else if (['designer', 'builder'].includes(key)) {
             let val;
-            if (Array.isArray(value)) {
+            if (Array.isArray(value)) { // fields that are arrays of objects with a name property
               val = value.map((m) => m?.name);
             } else {
               val = [value?.name];
@@ -554,7 +557,7 @@ export function flattenToForm(example, prefix) {
       }
     }
   });
-  // console.log(flat);
+  // console.log(JSON.stringify(flat));
   return flat;
 }
 
@@ -576,8 +579,8 @@ const FieldListener = () => {
       const smallest = Math.min(...instances.map((boat) => boat.oga_no));
       // console.log('smallest', smallest);
       getBoatData(smallest)
-        .then((result) => {
-          initialiseFromExampleFlat(change, result.result.pageContext.boat);
+        .then((boat) => {
+          initialiseFromExampleFlat(change, boat);
         });
     }
   }, [change, design_class, filterable]);

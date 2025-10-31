@@ -6,7 +6,7 @@ import BoatsForSaleIntro from "./boatsforsaleintro";
 import BoatsToSailIntro from "./boatstosailintro";
 import SmallBoatsIntro from "./smallboatsintro";
 
-function IntroText({ view }) {
+export function IntroText({ view }) {
     if (view === 'sell') {
         return <BoatsForSaleIntro />;
       }

@@ -1,6 +1,8 @@
-import boatsByPlaceBuilt from './boatsByPlaceBuilt';
 import boatsByHomePort from './boatsbyhomeport';
+import boatsByPlaceBuilt from './boatsByPlaceBuilt';
 import { boatRegisterHome } from './constants';
+import { parse } from 'yaml';
+import Showdown from "showdown";
 
 const mock = false; // true;
 
@@ -19,6 +21,8 @@ const mocks = {
 
 const api1 = 'https://3q9wa2j7s1.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://v2z7n3g4mb5lfkbgeyln3ksjya0qsrpm.lambda-url.eu-west-1.on.aws';
+const api3 = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws';
+
 const stage = 'default'
 
 export async function putGeneralEnquiry(scope, subject, data) {
@@ -93,22 +97,27 @@ export async function postCrewEnquiry(data) {
   );
 }
 
+function processBoatData(data) {
+  data?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+  ['generic_type', 'builder', 'designer'].forEach((key) => {
+    if (!Array.isArray(data[key])) {
+      data[key] = [data[key]];
+    }
+    data[key] = data[key].filter((v) => v);
+  });
+  return data;
+}
+
 export async function getBoatData(ogaNo) {
   if (mock) {
     return mocks.boat;
   }
   const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
-  if (r.ok) {
-    const data = await r.json();
-    data.result.pageContext.boat?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-    ['generic_type', 'builder', 'designer'].forEach((key) => {
-      if (!Array.isArray(data.result.pageContext.boat[key])) {
-        data.result.pageContext.boat[key] = [data.result.pageContext.boat[key]];
-      }
-      data.result.pageContext.boat[key] = data.result.pageContext.boat[key].filter((v) => v);
-    });
-    return data;  
+  if (!r.ok) {
+    return undefined;
   }
+  const data = await r.json();
+  return processBoatData(data?.result?.pageContext?.boat);
 }
 
 export async function getPicklists() {
@@ -138,7 +147,7 @@ export async function getFilterable() {
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
   return filterable.map((b) => {
     if (ex[b.oga_no]) {
-      return { ...b, ...ex[b.oga_no]};
+      return { ...b, ...ex[b.oga_no] };
     }
     return b;
   });
@@ -149,7 +158,7 @@ export async function getPlaces() {
 }
 
 export async function getUploadCredentials() {
-  return (await fetch('https://n5sfnt3ewfaq3lp4wqg64lzen40gzpdq.lambda-url.eu-west-1.on.aws/')).json();
+  return (await fetch(`${api1}/${stage}/upload_credentials`)).json();
 }
 
 export async function createPhotoAlbum(name, ogaNo) {
@@ -179,16 +188,14 @@ export async function getLargestImage(albumKey) {
 }
 
 export async function nextOgaNo() {
-  const url = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws';
-  return (await fetch(`${url}/`)).json();
+  return (await fetch(api3)).json();
 }
 
 export async function disposeOgaNo(oga_no) {
-  const r = await fetch(
-    'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws/',
+  const r = await fetch(api3,
     {
       method: 'POST',
-      body: `${oga_no}`,
+      body: oga_no,
       headers: { 'content-type': 'application/json' }
     }
   );
@@ -228,7 +235,7 @@ export async function getScopedData(scope, subject, filters, accessToken) {
 export async function getFleets(scope, filter, accessToken) {
   const r = await getScopedData(scope, 'fleets', filter, accessToken);
   const f = r?.Items || [];
-  f.sort((a,b) => a.name.localeCompare(b.name))
+  f.sort((a, b) => a.name.localeCompare(b.name))
   return f;
 }
 
@@ -242,6 +249,58 @@ export async function geolocate(place) {
   const r = await fetch(`${api1}/${stage}/public/place?name=${place}`);
   if (r.ok) {
     return r.json()
+  }
+  return undefined;
+}
+
+export async function getYAML(path, branch) {
+  const api = 'https://api.github.com/repos/oldgaffers/boatregister';
+  const url = `${api}/contents/${path}?ref=${branch}`;
+  const r = await fetch(url);
+  if (r.ok) {
+    return r.json();
+  } else {
+    console.log('failure getting yaml file');
+  }
+}
+
+export async function openPr(oga_no) {
+  const branch = `up${oga_no}`;
+  const api = 'https://api.github.com/repos/oldgaffers/boatregister';
+  const url = `${api}/pulls?state=open&base=main&head=oldgaffers:${branch}`;
+  const r = await fetch(url);
+  if (!r.ok) {
+    return undefined;
+  }
+  const list = await r.json();
+  if (list.length === 0) {
+    return undefined;
+  }
+  const curl = list[0].commits_url;
+  const c = await fetch(curl);
+  if (!c.ok) {
+    console.log('Bad commits for PR', list);
+  }
+  const commits = await c.json();
+  const files = await Promise.all(commits.map(async (c) => {
+    const r = await fetch(c.url);
+    if (!r.ok) { return undefined; }
+    const commit = await r.json();
+    return commit.files.map((f) => f.filename);
+  }));
+  const b = `boat/${oga_no}/boat.yml`;
+  if (files.flat().filter((f) => f?.includes(b))) {
+    console.log('Open PR includes changes to boat');
+    const yaml = await getYAML(b, branch);
+    const p = parse(atob(yaml.content));
+    const converter = new Showdown.Converter();
+    p.short_description = converter.makeHtml(p.short_description);
+    p.full_description = converter.makeHtml(p.full_description);
+    (p?.for_sales||[]).forEach((s) => {
+      s.sales_text = converter(s.sales_text);
+      console.log(s);
+    });
+    return p;
   }
   return undefined;
 }

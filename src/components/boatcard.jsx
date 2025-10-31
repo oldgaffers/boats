@@ -36,6 +36,10 @@ const compactWanted = {
   year: { label: 'Year', access: (b, k) => b[k] },
 };
 
+const tl = { vertical: 'top', horizontal: 'left' };
+// const tr = { vertical : 'top', horizontal : 'right' };
+const bl = { vertical: 'bottom', horizontal: 'left' };
+
 function SalesBadge({ boat, view, children }) {
   switch (boat?.selling_status || '') {
     case 'for_sale':
@@ -52,7 +56,7 @@ function CrewingBadge({ boat, view, children }) {
     return children;
   }
   if (boat?.crewing) {
-    return (<Badge badgeContent="crew on her" color="info">{children}</Badge>);
+    return (<Badge anchorOrigin={tl} badgeContent="crew on her" color="info">{children}</Badge>);
   }
   return children;
 }
@@ -62,7 +66,7 @@ function HireBadge({ boat, view, children }) {
     return children;
   }
   if (boat?.hire) {
-    return (<Badge badgeContent="hire her" color="info">{children}</Badge>);
+    return (<Badge anchorOrigin={bl} badgeContent="hire her" color="info">{children}</Badge>);
   }
   return children;
 }
@@ -80,8 +84,8 @@ function EllipsisText({ variant = 'body2', html = '' }) {
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       lineClamp: '3',
-      '-webkit-line-clamp': '3',
-      '-webkit-box-orient': 'vertical',
+      WebkitLineClamp: '3',
+      WebkitBoxOrient: 'vertical',
     }}
   />
 }
@@ -109,43 +113,56 @@ export function BoatCardImage({ albumKey, name }) {
   const height = 220;
 
   useEffect(() => {
-    if (!data) {
+    if (!data && albumKey) {
       getThumb(albumKey).then((r) => {
-        setData(r);
+        if (r) {
+          setData(r);
+        } else {
+          setData({});
+          console.log('failed to get thumb for albumKey', albumKey);
+        }
       }).catch((e) => console.log(e));
     }
   }, [data, albumKey]);
+
+  if (!albumKey) {
+    return '';
+  }
 
   if (!data) {
     return <>
       <Skeleton variant='rounded' animation='wave' height={height} />
     </>
   }
-
+  // console.log('BoatCardImage data', data);
   if (data.ThumbnailUrl) {
-    return (<CardMedia sx={{ height }} image={data.ThumbnailUrl} title={name} />);
+    return (<CardMedia
+      component="img"
+      height={height}
+      sx={{ objectFit: "contain" }}
+      image={data.ThumbnailUrl}
+      title={name}
+    />);
   }
   return (<AltForThumb />);
 }
 
-export function CompactBoatCard({ view = 'app', ogaNo, wanted=compactWanted}) {
-  const [data, setData] = useState();
+export function CompactBoatCard({ view = 'app', ogaNo, wanted = compactWanted }) {
+  const [boat, setBoat] = useState();
 
   useEffect(() => {
-    if (!data) {
+    if (!boat) {
       getBoatData(ogaNo).then((r) => {
-        setData(r);
+        setBoat(r);
       }).catch((e) => console.log(e));
     }
-  }, [data, ogaNo]);
+  }, [boat, ogaNo]);
 
-  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
-  console.log('CompactBoatCard', view, ogaNo);
   return (
     <Card sx={{ width: 200 }}>
-      <BoatCardImage albumKey={boat.image_key} name={boat.name} />
+      <BoatCardImage albumKey={boat?.image_key} name={boat.name} />
       <CardContent>
-        <Typography variant='subtitle2'>{boat.name} ({boat.oga_no})</Typography>
+        <Typography variant='subtitle2'>{boat?.name||'?'} ({ogaNo})</Typography>
         <BoatCardWords boat={boat} wanted={wanted} variant='caption' />
       </CardContent>
       <CardActions>
@@ -161,27 +178,25 @@ export function CompactBoatCard({ view = 'app', ogaNo, wanted=compactWanted}) {
 
 export default function BoatCard({ state, onMarkChange, ogaNo }) {
   const markList = useContext(MarkContext);
-  const [data, setData] = useState();
+  const [boat, setBoat] = useState();
   const { user } = useAuth0();
   const marked = markList.includes(ogaNo);
 
   useEffect(() => {
-    if (!data) {
+    if (!boat) {
       getBoatData(ogaNo).then((r) => {
-        setData(r);
+        setBoat(r);
       }).catch((e) => console.log(e));
     }
-  }, [data, ogaNo]);
+  }, [boat, ogaNo]);
 
   const handleMarked = (checked) => {
     onMarkChange(checked, ogaNo);
   }
 
-  if (!data) {
+  if (!boat) {
     return <CircularProgress />;
   }
-
-  const { boat } = data?.result?.pageContext || { boat: { oga_no: ogaNo, name: '', loading: true } };
 
   const currentSR = currentSaleRecord(boat);
 
@@ -216,7 +231,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
     } : {}}>
       {albumKey ? <BoatCardImage albumKey={albumKey} name={boat?.name} /> : ''}
       <CardContent sx={{ flexGrow: 1 }} >
-        <Typography gutterBottom variant="h5" component="h2">
+        <Typography gutterBottom variant="h5">
           <HireBadge boat={boat}>
             <CrewingBadge boat={boat}>
               <SalesBadge view={state.view} boat={boat}>

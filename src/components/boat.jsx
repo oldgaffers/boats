@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { ApolloConsumer } from '@apollo/client';
 import BoatWrapper from './boatwrapper';
 import BoatWrapperTest from './boatwrappertest';
 import { getBoatData, getBoatLastModified } from '../util/api';
@@ -32,7 +31,6 @@ export function MissingOGANumber() {
 }
 
 export default function Boat(props) {
-  console.log('Boat props', props);
   const ogaNo = getOgaNo(props.location)
   const [data, setData] = useState();
   const [lastModified, setLastModified] = useState();
@@ -42,8 +40,7 @@ export default function Boat(props) {
       if (ogaNo && !data) {
         const extra = undefined; // await getScopedData('public', 'crewing', { oga_no: ogaNo });
         const e = extra?.Items?.[0] || {};
-        const r = await getBoatData(ogaNo);
-        const d = r?.result?.pageContext?.boat;
+        const d = await getBoatData(ogaNo);
         setData({ ...d, ...e });
       }  
     };
@@ -53,8 +50,7 @@ export default function Boat(props) {
   useEffect(() => {
     const get = async () => {
       if (ogaNo && !lastModified) {
-        const lmd = await getBoatLastModified(ogaNo);
-        setLastModified(lmd);
+        setLastModified(await getBoatLastModified(ogaNo));
       }  
     };
     get();
@@ -76,17 +72,8 @@ export default function Boat(props) {
 
   document.title = `${boat.name} (${boat.oga_no})`;
 
-  if (props.test) {
-    return (
-      <ApolloConsumer>
-        {client => <BoatWrapperTest client={client} boat={boat} lastModified={lastModified} />}
-      </ApolloConsumer>
-    );  
-  }
   return (
-    <ApolloConsumer>
-      {client => <BoatWrapper client={client} boat={boat} lastModified={lastModified} />}
-    </ApolloConsumer>
+      <BoatWrapper boat={{ ...boat, lastModified }} />
   );
 
 };

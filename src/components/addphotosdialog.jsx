@@ -4,13 +4,13 @@ import Dialog from "@mui/material/Dialog";
 import Paper from "@mui/material/Paper";
 import Stack from '@mui/material/Stack';
 import Button from "@mui/material/Button";
+import Box from '@mui/material/Box';
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, getAlbumKey, postBoatData } from '../util/api';
 import Photodrop from "./photodrop";
-import { CircularProgress } from "@mui/material";
 
 export function useGetAlbumKey(boat) {
   const [albumKey, setAlbumKey] = useState(boat.image_key || null);
@@ -18,10 +18,10 @@ export function useGetAlbumKey(boat) {
     const get = async () => {
       const r = await getAlbumKey(boat.name, boat.oga_no);
       if (r) {
-          // console.log('Found existing album', r);
-          setAlbumKey(r.albumKey);
+        // console.log('Found existing album', r);
+        setAlbumKey(r.albumKey);
       } else {
-          console.log('No existing album');
+        console.log('No existing album');
       }
     };
     if (albumKey === null && boat.oga_no) {
@@ -31,6 +31,24 @@ export function useGetAlbumKey(boat) {
   return albumKey;
 }
 
+export function useGetExistingOrNewAlbumKey(boat, email) {
+  const existingAlbumKey = useGetAlbumKey(boat);
+  if (existingAlbumKey) {
+    return existingAlbumKey;
+  }
+  createPhotoAlbum(boat.name, boat.oga_no).then(async (response) => {
+    if (response.ok) {
+      boat.image_key = (await response.json()).albumKey;
+      const response2 = await postBoatData({ new: boat, email })
+      if (!response2.ok) {
+        console.log('problem updating boat register with new album key', response.statusText);
+      }
+      return boat.image_key;
+    }
+  });
+  return null;
+}
+
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   // console.log('AddPhotosDialog', boat, open, onClose, onCancel);
   const { user } = useAuth0();
@@ -38,33 +56,28 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
-  const existingAlbumKey = useGetAlbumKey(boat);
+  const albumKey = useGetExistingOrNewAlbumKey(boat, email);
+
+  if (open && !albumKey) {
+    console.log("can't get album key...");
+    return "No album to upload to.";
+  }
 
   const onDrop = (p) => {
     setPictures(p);
   };
 
-  const onUpload = async () => {
-    let albumKey = null;
-    if (existingAlbumKey) {
-      albumKey = existingAlbumKey;
-    } else {
-        const response = await createPhotoAlbum(boat.name, boat.oga_no);
-        if (response.ok) {
-          albumKey = (await response.json()).albumKey;
-        } else {
-          console.log(response.statusText);
-        }
-    }
-    await postPhotos(copyright, email, albumKey, pictures, setProgress);
-    if (!boat.image_key) {
-      boat.image_key = albumKey;
-      const response = await postBoatData({ new: boat, email })
-      if (!response.ok) {
-        console.log(response.statusText);
-      }
-    }
+  const handleClose = () => {
+    setPictures([]);
+    setProgress(0);
     onClose();
+  }
+
+  const onUpload = async () => {
+      const r = await postPhotos(copyright, email, albumKey, pictures, setProgress);
+      r.forEach((res, idx) => {
+        console.log(res.status, 'Uploaded', pictures[idx].name);
+      });
   };
 
   const ready = () => {
@@ -81,7 +94,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const onCopyright = (e) => {
     setCopyright(e.target.value);
   };
-
+  const percent = Math.round(progress);
   return (
     <Dialog aria-labelledby="updateboat-dialog-title" open={open}>
       <Paper sx={{ padding: '10px' }}  >
@@ -105,9 +118,6 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
             onChange={onEmail}
           />
           <Stack direction='row' justifyContent='space-evenly'>
-            <Button size="small" variant="outlined" onClick={onCancel}>
-              Cancel
-            </Button>
             <Button
               disabled={!ready()}
               size="small"
@@ -117,7 +127,17 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
             >
               Upload
             </Button>
-            <CircularProgress variant="determinate" value={progress} />
+            <Box sx={{ width: '4em', textAlign: 'right' }}>
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>{percent}%</Typography>
+            </Box>
+            {(progress < 100) ?
+              <Button size="small" variant="outlined" onClick={onCancel}>
+                Cancel
+              </Button> :
+              <Button size="small" variant="outlined" onClick={handleClose}>
+                Close
+              </Button>
+            }
           </Stack>
         </Stack>
       </Paper>
