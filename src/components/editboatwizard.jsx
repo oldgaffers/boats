@@ -58,9 +58,10 @@ const defaultSchema = (pickers, isNew = false) => {
           hideField: true,
         },
         {
-          component: 'plain-text',
+          component: 'text-field',
           name: 'ddf.pr',
-          label: (values) => values.ddf.pr ? 'There are pending changes to this boat. You are editing the latest proposed values, which will differ from the current published ones.' : '',
+          label: 'Version',
+          isReadOnly: true,
         },
         {
           component: 'sub-form',
@@ -324,8 +325,8 @@ export function prepareInitialValues(boat, user, pr) {
   const owner = (!!goldId) && ownerids.includes(goldId);
   const { name, oga_no, image_key, for_sales, for_sale_state, ...rest } = boat;
   const email = user?.email || '';
-
-  const ddf = { name, oga_no, image_key, owner, editor, pr };
+  // label: (values) => values.ddf.pr ? 'There are pending changes to this boat. You are editing the latest proposed values, which will differ from the current published ones.' : '',
+  const ddf = { name, oga_no, image_key, owner, editor, pr: pr ? 'un-published updates' : 'published version' };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
