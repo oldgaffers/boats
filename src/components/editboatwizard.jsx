@@ -58,10 +58,17 @@ const defaultSchema = (pickers, isNew = false) => {
           hideField: true,
         },
         {
-          component: 'text-field',
+          component: 'checkbox',
           name: 'ddf.pr',
-          label: 'Version',
-          isReadOnly: true,
+          hideField: true,
+        },
+        {
+          component: 'plain-text',
+          name: 'ddf.pr.label',
+          label: <Typography>
+                  You are editing the latest proposed values, so some fields will
+                  already be different from the currently published ones.</Typography>,
+          condition: { when: 'ddf.pr', is: true },
         },
         {
           component: 'sub-form',
@@ -325,8 +332,7 @@ export function prepareInitialValues(boat, user, pr) {
   const owner = (!!goldId) && ownerids.includes(goldId);
   const { name, oga_no, image_key, for_sales, for_sale_state, ...rest } = boat;
   const email = user?.email || '';
-  // label: (values) => values.ddf.pr ? 'There are pending changes to this boat. You are editing the latest proposed values, which will differ from the current published ones.' : '',
-  const ddf = { name, oga_no, image_key, owner, editor, pr: pr ? 'un-published updates' : 'published version' };
+  const ddf = { name, oga_no, image_key, owner, editor, pr };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
