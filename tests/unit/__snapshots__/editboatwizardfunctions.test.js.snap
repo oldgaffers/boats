@@ -292,7 +292,7 @@ exports[`prepareInitialValues 1`] = `
     "name": "Robinetta",
     "oga_no": 315,
     "owner": false,
-    "pr": undefined,
+    "pr": "published version",
   },
   "design_class": undefined,
   "designer": [
@@ -475,7 +475,7 @@ exports[`prepareInitialValues 2`] = `
     "name": "Robinetta",
     "oga_no": 315,
     "owner": true,
-    "pr": undefined,
+    "pr": "published version",
   },
   "design_class": undefined,
   "designer": [
