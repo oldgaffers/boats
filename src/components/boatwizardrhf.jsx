@@ -117,7 +117,7 @@ const router = createMemoryRouter([
   },
 ]);
 
-export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, schema }) {
+export default function EditBoatWizard({ boat, onCancel, onSubmit, pr, title }) {
 
   const [pickers, setPickers] = useState();
   createStore({ data: {} });
@@ -126,7 +126,7 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
     if (!pickers) {
       getPicklists().then((r) => {
         setPickers(r)
-      }).catch((e) => // console.log(e));
+      }).catch((e) => console.log(e));
     }
   }, [pickers]);
 
@@ -135,19 +135,15 @@ export default function EditBoatWizard({ boat, user, open, onCancel, onSubmit, s
   if (!open) return '';
 
   return (
-    <Dialog
-      open={open}
-      aria-labelledby="form-dialog-title"
-    >
-      <Box sx={{ marginLeft: '1.5rem', marginTop: '1rem' }}>
-        <Typography variant="h5" >Update {boat.name} ({boat.oga_no})</Typography>
+    <Box>
+      <Box sx={{ marginLeft: '1.5em', marginTop: '1em' }}>
+        <Typography variant="h5" >{title}</Typography>
       </Box>
       <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={enGB}>
         <StateMachineProvider>
           <RouterProvider router={router} />
         </StateMachineProvider>
       </LocalizationProvider>
-
-    </Dialog>
+    </Box>
   );
 }
