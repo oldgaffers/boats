@@ -58,6 +58,11 @@ const defaultSchema = (pickers, isNew = false) => {
           hideField: true,
         },
         {
+          component: 'plain-text',
+          name: 'ddf.pr',
+          label: (values) => values.ddf.pr ? 'There are pending changes to this boat. You are editing the latest proposed values, which will differ from the current published ones.' : '',
+        },
+        {
           component: 'sub-form',
           name: "rig.form",
           title: "Rig",
@@ -312,7 +317,7 @@ export function boatdiff(before, after) {
   return cj.diff(before, after);
 }
 
-export function prepareInitialValues(boat, user) {
+export function prepareInitialValues(boat, user, pr) {
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
@@ -320,7 +325,7 @@ export function prepareInitialValues(boat, user) {
   const { name, oga_no, image_key, for_sales, for_sale_state, ...rest } = boat;
   const email = user?.email || '';
 
-  const ddf = { name, oga_no, image_key, owner, editor };
+  const ddf = { name, oga_no, image_key, owner, editor, pr };
 
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
@@ -534,7 +539,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     );
 
   }
-  console.log(pr);
+  
   return <FormRenderer
     componentMapper={{
       ...componentMapper,
@@ -547,7 +552,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     schema={activeSchema}
     onSubmit={handleSubmit}
     onCancel={onCancel}
-    initialValues={prepareInitialValues(data, user)}
+    initialValues={prepareInitialValues(data, user, pr)}
     subscription={{ values: true }}
   />;
 }
