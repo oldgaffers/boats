@@ -489,7 +489,7 @@ export function oldvalue(path, boat) {
   return p.reduce((prev, current) => prev[current], boat[root]);
 }
 
-function EditWiz({ boat, onCancel, onSubmit, schema }) {
+function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
   const [pickers, setPickers] = useState();
   const [data, setData] = useState(boat);
   const { user } = useAuth0();
@@ -534,7 +534,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema }) {
     );
 
   }
-
+  console.log(pr);
   return <FormRenderer
     componentMapper={{
       ...componentMapper,
@@ -552,30 +552,27 @@ function EditWiz({ boat, onCancel, onSubmit, schema }) {
   />;
 }
 
-async function gpr(boat) {
-  const modified = await openPr(boat.oga_no);
-  if (modified) {
-      console.log('PR is open');
-      return modified;
-  }
-  return boat;
-}
-
 export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
 
   const [data, setData] = useState();
+  const [pr, setPr] = useState(false);
 
   useEffect(() => {
     if (!open) {
       setData(undefined);
     } else if (!data) {
-      gpr(boat).then((b) => { 
-        setData(b);
+      openPr(boat.oga_no).then((modified) => { 
+        if (modified) {
+          setData(modified);
+          setPr(true);
+        } else {
+          setData(boat);
+        }
       });
     }
     }, [open, data, boat]);
   if (data) {
-    return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} />;
+    return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} pr={pr} />;
   }
   if (open) {
     return <CircularProgress />;
@@ -583,7 +580,7 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
   return '';
 }
 
-function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema }) {
+function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
 
   const title = boat.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
   return (
@@ -600,6 +597,7 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema }) {
           onSubmit={onSubmit}
           boat={boat}
           schema={schema}
+          pr={pr}
         />
       </LocalizationProvider>
 
