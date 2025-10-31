@@ -36,23 +36,6 @@ export function BoatCardImage({ albumKey, name }) {
   return `picture of ${name}`;
 }
 
-export function BoatImage({ boat }) {
-  const [boat, setBoat] = useState();
-
-  useEffect(() => {
-    if (!boat) {
-      getBoatData(boat.oga_no).then((r) => {
-        setBoat(r);
-      }).catch((e) => console.log(e));
-    }
-  }, [data, boat.oga_no]);
-
-  return <Card sx={{ width: 300 }}>
-  <BoatCardImage albumKey={boat.image_key} name={boat.name} />
-  <p></p>
-  </Card>
-}
-
 export default function BoatGallery({ boats }) {
   return (
     <Grid container alignItems='stretch'>
