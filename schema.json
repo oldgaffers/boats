@@ -1,0 +1,286 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "properties": {
+        "builder": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "name"
+                    ]
+                }
+            ]
+        },
+        "callsign": {
+            "type": "string"
+        },
+        "construction_details": {
+            "type": "string"
+        },
+        "construction_material": {
+            "type": "string"
+        },
+        "construction_method": {
+            "type": "string"
+        },
+        "designer": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "id",
+                        "name"
+                    ]
+                }
+            ]
+        },
+        "full_description": {
+            "type": "string"
+        },
+        "generic_type": {
+            "type": "string"
+        },
+        "handicap_data": {
+            "type": "object",
+            "properties": {
+                "beam": {
+                    "type": "number"
+                },
+                "checked": {
+                    "type": "boolean"
+                },
+                "displacement": {
+                    "type": "integer"
+                },
+                "draft": {
+                    "type": "number"
+                },
+                "fore_triangle_base": {
+                    "type": "number"
+                },
+                "fore_triangle_height": {
+                    "type": "number"
+                },
+                "length_on_deck": {
+                    "type": "number"
+                },
+                "length_on_waterline": {
+                    "type": "number"
+                },
+                "length_over_all": {
+                    "type": "number"
+                },
+                "main": {
+                    "type": "object",
+                    "properties": {
+                        "foot": {
+                            "type": "integer"
+                        },
+                        "head": {
+                            "type": "number"
+                        },
+                        "luff": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "foot",
+                        "head",
+                        "luff"
+                    ]
+                },
+                "mizzen": {
+                    "type": "object",
+                    "properties": {
+                        "foot": {
+                            "type": "integer"
+                        },
+                        "head": {
+                            "type": "number"
+                        },
+                        "luff": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "foot",
+                        "head",
+                        "luff"
+                    ]
+                },
+                "propellor": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ]
+                },
+                "sailarea": {
+                    "type": "number"
+                },
+                "solent": {
+                    "type": "object",
+                    "properties": {
+                        "hull_shape": {
+                            "type": "string"
+                        },
+                        "measured_rating": {
+                            "type": "number"
+                        },
+                        "thcf": {
+                            "type": "number"
+                        }
+                    },
+                    "required": [
+                        "hull_shape",
+                        "measured_rating"
+                    ]
+                },
+                "thcf": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "beam",
+                "draft",
+                "length_over_all",
+                "main",
+                "propellor"
+            ]
+        },
+        "home_country": {
+            "type": "string"
+        },
+        "home_port": {
+            "type": "string"
+        },
+        "hull_form": {
+            "type": "string"
+        },
+        "image_key": {
+            "type": "string"
+        },
+        "mainsail_type": {
+            "type": "string"
+        },
+        "mmsi": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "nsbr": {
+            "type": "string"
+        },
+        "oga_no": {
+            "type": "integer"
+        },
+        "ownerships": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "current": {
+                            "type": "boolean"
+                        },
+                        "id": {
+                            "type": "integer"
+                        },
+                        "member": {
+                            "type": "integer"
+                        },
+                        "end": {
+                            "type": "integer"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "share": {
+                            "type": "integer"
+                        },
+                        "start": {
+                            "type": "integer"
+                        }
+                    },
+                    "required": [
+                        "share",
+                        "start"
+                    ]
+                }
+            ]
+        },
+        "place_built": {
+            "type": "string"
+        },
+        "reference": {
+            "type": "array",
+            "items": [
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "rig_type": {
+            "type": "string"
+        },
+        "sail_number": {
+            "type": "string"
+        },
+        "selling_status": {
+            "type": "string"
+        },
+        "short_description": {
+            "type": "string"
+        },
+        "spar_material": {
+            "type": "string"
+        },
+        "ssr": {
+            "type": "string"
+        },
+        "uk_part1": {
+            "type": "string"
+        },
+        "updated_at": {
+            "type": "string"
+        },
+        "website": {
+            "type": "string"
+        },
+        "year": {
+            "type": "integer"
+        },
+        "year_is_approximate": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "name",
+        "oga_no"
+    ]
+}
