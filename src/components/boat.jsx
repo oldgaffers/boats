@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import BoatWrapper from './boatwrapper';
-import BoatWrapperTest from './boatwrappertest';
 import { getBoatData, getBoatLastModified } from '../util/api';
 
 function getOgaNo(location) {
