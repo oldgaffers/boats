@@ -114,7 +114,7 @@ export default function RBC60CrewForm() {
 
     const handleSnackBarClose = () => {
         setSnackBarOpen(false);
-        // eslint-disable-next-line no-restricted-globals
+         
         history.go(0);
     }
 

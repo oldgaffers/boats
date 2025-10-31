@@ -1,6 +1,6 @@
 import { geolocate, getFilterable } from "./api";
 
-export default async function boatsByHomePort(filters = {}) {
+export default async function boatsByHomePort() {
     const boats = await getFilterable()
     const filtered = boats.filter((b) =>(b.home_port||'') !== '');
     const located = await Promise.all(filtered.map(async (b) => {

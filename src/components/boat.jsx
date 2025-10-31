@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import BoatWrapper from './boatwrapper';
 import { getBoatData, getBoatLastModified } from '../util/api';
-import { languages } from 'humanize-duration';
 
 function getOgaNo(location) {
   const params = new URLSearchParams(location.search);

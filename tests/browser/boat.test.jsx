@@ -2,7 +2,6 @@ import React from 'react';
 import { test, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import Boat from '../../src/components/boat';
-import * as api from '../../src/util/api';
 
 vi.mock("../../src/util/api", () => {
   return {
@@ -17,7 +16,6 @@ vi.mock("../../src/util/api", () => {
     postBoatData: () => Promise.resolve(vi.fn()),
     getBoatLastModified: () => Promise.resolve(vi.fn()),
     nextOgaNo: () => Promise.resolve(vi.fn()),
-    getPendingBoatData: () => Promise.resolve(vi.fn()),
     openPr: () => Promise.resolve(undefined),
   };
 });

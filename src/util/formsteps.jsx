@@ -9,8 +9,6 @@ export function Step({
   onNext,
   onPrev,
   children,
-  disabled,
-  onSubmit,
   onCancel
 }) {
   if (currentStep !== step) {

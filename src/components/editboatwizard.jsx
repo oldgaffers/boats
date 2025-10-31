@@ -34,7 +34,7 @@ import {
 } from "./ddf/SubForms";
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { getPendingBoatData, getPicklists, nextOgaNo, openPr } from '../util/api';
+import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './tinymce';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
@@ -586,7 +586,6 @@ export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema }) {
 
   const title = boat.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
-  console.log('D', title);
   return (
     <Dialog
       open={open}

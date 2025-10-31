@@ -28,7 +28,7 @@ export default function BoatButtons({ boat }) {
           <Button size="small"
               color='primary'
               variant="contained"
-            // eslint-disable-next-line no-restricted-globals
+             
             onClick={() => history.back()}
           >See more boats</Button>
         </Grid>
