@@ -14,6 +14,18 @@ export default defineConfig({
             'tests/unit/**/*.{test,spec}.{js,jsx}',
             'tests/**/*.unit.{test,spec}.{js,jsx}',
           ],
+          coverage: {
+            provider: 'v8',
+            include: ['src/**/*.js'],
+            enabled: true,
+            thresholds: {
+              // Requires 90% function coverage
+              functions: 90,
+              lines: 0,
+              branches: 0,
+              statements: 0,
+            }
+          },
         },
       },
       {
@@ -30,6 +42,11 @@ export default defineConfig({
             instances: [
               { browser: 'chromium' },
             ],
+          },
+          coverage: {
+            provider: 'v8',
+            include: ['src/**/*.jsx'],
+            enabled: true
           },
         },
       },

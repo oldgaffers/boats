@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "preview": "vite preview",
+    "coverage": "vitest run --coverage",
     "test:browser": "vitest --config=vitest.browser.config.js"
   },
   "dependencies": {
@@ -60,14 +61,15 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^5.0.4",
-    "@vitest/browser-playwright": "^4.0.5",
+    "@vitest/browser-playwright": "^4.0.6",
+    "@vitest/coverage-v8": "^4.0.6",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
     "globals": "^16.4.0",
     "jsdom": "^27.0.1",
     "vite": "^7.1.7",
-    "vitest": "^4.0.5",
+    "vitest": "^4.0.6",
     "vitest-browser-react": "^2.0.2"
   }
 }
