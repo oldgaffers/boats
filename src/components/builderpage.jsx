@@ -13,6 +13,8 @@ function toTitleCase(str) {
 export function VesselTable({ heading, vessels }) {
     const title = toTitleCase(heading.replaceAll('_', ' '));
     if (Array.isArray(vessels)) {
+        if (vessels.length === 0)
+            return '';
     return <>
         <h4>{title}</h4>
         <table>
@@ -32,7 +34,7 @@ export function VesselTable({ heading, vessels }) {
 
 export function NotableVessels({ notable_vessels }) {
     if (Array.isArray(notable_vessels) && notable_vessels.length > 0) {
-        return <VesselTable heading='Notable Vesseles' vessels={notable_vessels}/>
+        return <VesselTable heading='Notable Vessels' vessels={notable_vessels}/>
     }
     if (!notable_vessels) {
         return '';
