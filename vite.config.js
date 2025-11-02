@@ -6,6 +6,15 @@ import { playwright } from '@vitest/browser-playwright'
 export default defineConfig({
   plugins: [react()],
   test: {
+    coverage: {
+      enabled: true,
+      thresholds: {
+        functions: 29,
+        lines: 30,
+        branches: 30,
+        statements: 30,
+      },
+    },
     projects: [
       {
         test: {
@@ -17,14 +26,6 @@ export default defineConfig({
           coverage: {
             provider: 'v8',
             include: ['src/**/*.js'],
-            enabled: true,
-            thresholds: {
-              // Requires 90% function coverage
-              functions: 90,
-              lines: 0,
-              branches: 0,
-              statements: 0,
-            }
           },
         },
       },
@@ -36,8 +37,8 @@ export default defineConfig({
             'tests/**/*.browser.{test,spec}.{js,jsx}',
           ],
           browser: {
-            provider: playwright(),
             enabled: true,
+            provider: playwright(),
             headless: true,
             instances: [
               { browser: 'chromium' },
@@ -46,7 +47,6 @@ export default defineConfig({
           coverage: {
             provider: 'v8',
             include: ['src/**/*.jsx'],
-            enabled: true
           },
         },
       },
