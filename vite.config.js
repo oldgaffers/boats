@@ -9,11 +9,10 @@ export default defineConfig({
     coverage: {
       enabled: true,
       thresholds: {
-        // Requires 90% function coverage
-        functions: 90,
-        lines: 0,
-        branches: 0,
-        statements: 0,
+        functions: 29,
+        lines: 30,
+        branches: 30,
+        statements: 30,
       },
     },
     projects: [
