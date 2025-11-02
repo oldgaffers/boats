@@ -38,6 +38,7 @@ export default defineConfig({
             'tests/**/*.browser.{test,spec}.{js,jsx}',
           ],
           browser: {
+            enabled: true,
             provider: playwright(),
             headless: true,
             instances: [
