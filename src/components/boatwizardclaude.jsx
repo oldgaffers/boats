@@ -5,9 +5,88 @@ import FormatBoldIcon from '@mui/icons-material/FormatBold';
 import FormatItalicIcon from '@mui/icons-material/FormatItalic';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CheckIcon from '@mui/icons-material/Check';
+import boatschema from '../../schema.json';
 
-// Example JSON schema for demonstration
 const schema = {
+  steps: [
+    {
+      title: 'Rig',
+      fields: ['rig_type', 'mainsail_type'],
+    },
+    {
+      title: 'Generic Type',
+      fields: ['generic_type'],
+    },
+    {
+      title: 'Build',
+      fields: ['year', 'year_is_approximate', 'place_built', 'builder', 'hin'],
+    },
+    {
+      title: 'Design',
+      fields: ['designer', 'design_class', 'hull_form'],
+    },
+    {
+      title: 'Basic Dimensions',
+      fields: ['length_on_deck', 'length_on_waterline', 'beam', 'draft', 'air_draft'],
+    },
+    {
+      title: 'References',
+      fields: ['reference', 'website'],
+    },
+    {
+      title: 'Change Name',
+      fields: ['name', 'previous_names']
+    },
+    {
+      title: 'Locations',
+      fields: ['home_country', 'home_port'],
+    },
+    {
+      title: 'Registration',
+      fields: ['sail_number', 'ssr', 'nhrv', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1']
+    },
+    {
+      title: 'Construction',
+      fields: ['construction_material', 'construction_method', 'spar_material', 'construction_details']
+    },
+    {
+      title: 'Fore-triangle',
+      skip_group: 'handicap',
+      fields: ['foretriangle_height', 'foretriangle_base'],
+    },
+    {
+      title: 'Main sail',
+      skip_group: 'handicap',
+      fields: ['luff', 'foot', 'head'],
+    },
+    {
+      title: 'Topsail',
+      skip_group: 'handicap',
+      fields: ['luff', 'perpendicular'],
+    },
+    {
+      title: 'Mizzen sail',
+      skip_group: 'handicap',
+      fields: ['luff', 'foot', 'head'],
+    },
+    {
+      title: 'Mizzen Topsail',
+      skip_group: 'handicap',
+      fields: ['luff', 'perpendicular'],
+    },
+    {
+      title: 'Propellor',
+      skip_group: 'handicap',
+      fields: ['blades', 'type'],
+    },
+    {
+      title: 'Ownerships',
+      fields: ['owners']
+    },
+  ],
+};
+// Example JSON schema for demonstration
+const example_schema = {
   title: "User Registration Wizard",
   steps: [
     {
@@ -406,6 +485,33 @@ const FormField = ({ field, value, onChange, error }) => {
   }
 };
 
+function json2form(field, schema) {
+  console.log(field);
+  const s = schema.properties[field];
+  if (s) {
+    console.log(s);
+    const r = { name: field, label: field.replace('_', ' '), required: schema.required.includes(field) };
+    switch (s.type) {
+      case 'string':
+      case 'integer':
+      case 'number':
+        if ((s.minLength||0) > 10) {
+          r.type = 'textarea';
+        } else {
+          r.type = 'text';
+        }
+        break;
+      case 'boolean':
+        r.type = 'checkbox'
+        break;
+      default:
+        r.type = 'text';
+    }
+    return r;
+  }
+  return { name: field, type: 'text', label: field };
+}
+
 export default function BoatWizard({ boat, onCancel, onSubmit, pr, title }) {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
@@ -576,7 +682,7 @@ export default function BoatWizard({ boat, onCancel, onSubmit, pr, title }) {
             const isCurrent = index === currentStep;
            
             return (
-              <div key={step.id} className="flex flex-col items-center">
+              <div key={step.title} className="flex flex-col items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mb-2 ${
                   isSkipped
                     ? 'bg-gray-300 text-gray-500 line-through'
@@ -609,7 +715,7 @@ export default function BoatWizard({ boat, onCancel, onSubmit, pr, title }) {
         )}
 
         <div className="space-y-6">
-          {currentStepData.fields.map(field => (
+          {currentStepData.fields.map((f) => json2form(f, boatschema)).map(field => (
             <div key={field.name}>
               {!field.single && (
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -660,7 +766,7 @@ export default function BoatWizard({ boat, onCancel, onSubmit, pr, title }) {
               onClick={handleSubmit}
               className="flex items-center px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
-              <Check className="w-4 h-4 mr-1" />
+              <CheckIcon className="w-4 h-4 mr-1" />
               Submit
             </button>
           ) : (

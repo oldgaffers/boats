@@ -13,7 +13,7 @@
     "test:browser": "vitest --config=vitest.browser.config.js"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^1.12.0",
+    "@auth0/auth0-react": "^2.8.0",
     "@aws-sdk/client-s3": "^3.344.0",
     "@aws-sdk/credential-providers": "^3.344.0",
     "@aws-sdk/lib-storage": "^3.344.0",

@@ -55,10 +55,14 @@
             ]
         },
         "full_description": {
-            "type": "string"
+            "type": "string",
+            "minLength": 100
         },
         "generic_type": {
             "type": "string"
+        },
+        "air_draft": {
+            "type": "number"
         },
         "handicap_data": {
             "type": "object",
@@ -196,6 +200,12 @@
         "nsbr": {
             "type": "string"
         },
+        "him": {
+            "type": "string"
+        },
+        "design_class": {
+            "type": "integer"
+        },
         "oga_no": {
             "type": "integer"
         },
@@ -255,7 +265,8 @@
             "type": "string"
         },
         "short_description": {
-            "type": "string"
+            "type": "string",
+            "minLength": 21
         },
         "spar_material": {
             "type": "string"
