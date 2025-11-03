@@ -31,7 +31,6 @@
     "@mui/x-data-grid": "^5.17.26",
     "@paypal/react-paypal-js": "^7.8.2",
     "@tinymce/tinymce-react": "^6.3.0",
-    "awesome-phonenumber": "^4.1.0",
     "camelcase": "^6.2.1",
     "dayjs": "^1.11.10",
     "humanize-duration": "^3.28.0",
