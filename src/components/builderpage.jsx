@@ -90,6 +90,51 @@ export function BuilderSummary({ name, place }) {
     </div>;
 }
 
+export function AllBuilders({ place, yards, yard }) {
+    const [merge, setMerge] = useState([]);
+    const [keep, setKeep] = useState();
+
+    const handleKeep = (ev) => {
+        setKeep(ev.target.value);
+    }
+    const handleMerge = (yard, checked) => {
+        const n = []
+        if (checked) {
+            if (!merge.includes(yard)) n.push(yard);
+            merge.forEach(v => n.push(v));
+        } else {
+            merge.filter((v) => v !== yard).forEach(v => n.push(v));
+        }
+        setMerge(n);
+    }
+    if (yards.length < 2) {
+        return '';
+    }
+    return <>
+        <h3>All builders referenced in the OGA Boat Register in {place}</h3>
+        <FormControl>
+            <RadioGroup defaultValue={yard} onChange={handleKeep}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr'}}>
+                <Box></Box><Box>Merge</Box><Box>Keep</Box>
+                    {yards.map(({name, count}) =>
+                        <>
+                                {
+                                    (name === yard)
+                                        ?
+                                        <span>{name} {count}</span>
+                                        :
+                                        <a href={`/boat_register/builder/?name=${name}&place=${place}`}>{name} {count}</a>
+                                }
+                                <Checkbox value={name} onChange={(ev) => handleMerge(name, ev.target.checked)}/>
+                                <Radio value={name}/>
+                        </>
+                    )}
+                </Box>
+            </RadioGroup>
+        </FormControl>
+    </>;
+}
+
 export function OtherBuilders({ place, yards, yard }) {
     if (yards.length === 0) {
         return '';
@@ -138,14 +183,14 @@ export default function BuilderPage({ name, place }) {
     if (!location) {
         return 'Loading';
     }
-    const others = Object.values(location.yards).filter((b) => b.name !== name);
+    const yards = Object.values(location.yards);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
         <p></p>
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        <OtherBuilders place={location.place} yard={name} yards={others} />
+        <OtherBuilders place={location.place} yard={name} yards={yards} />
         <NoBuilder place={location.place} boats={location.no_yard} />
         If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
         <p></p>
