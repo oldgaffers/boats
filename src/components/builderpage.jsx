@@ -95,7 +95,7 @@ export function BuilderSummary({ name, place }) {
 
 export function AllBuilders({ email, place, yards, yard }) {
     const [merge, setMerge] = useState([]);
-    const [keep, setKeep] = useState();
+    const [keep, setKeep] = useState(keep);
 
     const handleKeep = (ev) => {
         setKeep(ev.target.value);
