@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
@@ -11,7 +11,6 @@ export default function MergeButton({ update, label = 'Merge builders' }) {
   let errorText = '';
 
   const handleClickOpen = () => {
-    setOpen(false);
     postBoatData(update)
       .then((response) => {
         if (response.ok) {
