@@ -141,14 +141,14 @@ export default function ownersTable({ owners, onUpdate }) {
                         field: 'actions',
                         type: 'actions',
                         getActions: ({ row }) => [
-                            <Tooltip title="Make current">
+                            <Tooltip key={0} title="Make current">
                                 <GridActionsCellItem
                                     icon={<EventIcon />}
                                     label="End"
                                     onClick={() => makeCurrent(row)}
                                 />
                             </Tooltip>,
-                            <Tooltip title="Delete record">
+                            <Tooltip key={1} title="Delete record">
                                 <GridActionsCellItem
                                     icon={<DeleteIcon />}
                                     label="Delete"

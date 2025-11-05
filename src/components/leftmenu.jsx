@@ -46,9 +46,9 @@ function LeftMenu({ open, onClose, container }) {
 
     const renderLink = React.useMemo(
       () =>
-        React.forwardRef((itemProps, ref) => (
+        React.forwardRef(function f(itemProps, ref) { return (
           <RouterLink to={to} ref={ref} {...itemProps} />
-        )),
+        )}),
       [to],
     );
 
@@ -73,13 +73,13 @@ function LeftMenu({ open, onClose, container }) {
       <div className={classes.toolbar} />
       <List>
         {['Boats', 'Designers', 'Builders', 'Fleets'].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem key={text}>
             <ListItemLink
               icon={[
-                  <BoatIcon />,
-                  <Icon>person</Icon>,
-                  <Icon>build</Icon>,
-                  <FleetIcon />,
+                  <BoatIcon key={0} />,
+                  <Icon key={1} >person</Icon>,
+                  <Icon key={2} >build</Icon>,
+                  <FleetIcon key={3} />,
                 ][index]}
               to={['/', '/designers', '/builders', '/fleets'][index]}
               primary={text}
@@ -90,14 +90,14 @@ function LeftMenu({ open, onClose, container }) {
       <Divider />
       <List>
         {['About', 'Your Editors', 'Support', 'Tech'].map((text, index) => (
-          <ListItem button key={text}>
+          <ListItem key={text}>
             <ListItemLink 
               icon={
                 [
-                  <AboutIcon />,
-                  <Icon>people_alt</Icon>,
-                  <Icon>bug_report</Icon>,
-                  <Icon>code</Icon>,
+                  <AboutIcon key={0}  />,
+                  <Icon key={1} >people_alt</Icon>,
+                  <Icon key={2} >bug_report</Icon>,
+                  <Icon key={3} >code</Icon>,
                 ][index]
               }
               to={['about', 'editors', 'support', 'tech'][index]}

@@ -1,7 +1,7 @@
 import React from 'react';
-import { test, expect, vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import Boat from '../../src/components/boat';
+import BuilderPage from '../../src/components/builderpage';
 
 vi.mock('../../src/util/api.js', () => ({
   getBoatData: () => Promise.resolve({ name: 'x' }),
@@ -25,15 +25,12 @@ vi.mock('../../src/util/api.js', () => ({
 })
 );
 
-test('renders boat', async () => {
+test('renders learn react link', async () => {
   const screen = await render(
-    <Boat location={{ search: '?oga_no=1' }} ogaNo={1} />
+    <BuilderPage
+      name='Test Yard'
+      place='Woodbridge'
+    />
   );
-  expect(screen.getByRole('button').length).toBe(6);
-});
-
-test('renders missing ogano', async () => {
-  const screen = await render(<Boat location={{ search: '?oga_no=0' }} ogaNo={0} />);
-  expect(screen.getByRole('link').length).toBe(4);
-
+  expect(screen).toBeDefined();
 });

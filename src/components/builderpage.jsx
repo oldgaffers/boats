@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
 import { getPlaces, getScopedData } from '../util/api';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
+import MergeButton from './mergebutton';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function toTitleCase(str) {
     return str.replace(
@@ -10,29 +17,35 @@ function toTitleCase(str) {
     );
 }
 
+function toBranchName(place, yard) {
+    return `${place}_${yard}`.replace(/\W/g, '');
+}
+
 export function VesselTable({ heading, vessels }) {
     const title = toTitleCase(heading.replaceAll('_', ' '));
     if (Array.isArray(vessels)) {
-    return <>
-        <h4>{title}</h4>
-        <table>
-            <thead>
-            <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-            {vessels.map((v, index) => (
-                <tr key={index}><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes || ''}</td></tr>
-            ))}
-            </tbody>
-        </table>
-    </>;
+        if (vessels.length === 0)
+            return '';
+        return <>
+            <h4>{title}</h4>
+            <table>
+                <thead>
+                    <tr><th>Name</th><th>Type</th><th>Period</th><th>Associated With</th><th>Notes</th></tr>
+                </thead>
+                <tbody>
+                    {vessels.map((v, index) => (
+                        <tr key={index}><td>{v.name}</td><td>{v.type}</td><td>{v.period}</td><td>{v.associated_with}</td><td>{v.notes || ''}</td></tr>
+                    ))}
+                </tbody>
+            </table>
+        </>;
     }
     return <div><h4>{title}</h4><div>{vessels}</div></div>
 }
 
 export function NotableVessels({ notable_vessels }) {
     if (Array.isArray(notable_vessels) && notable_vessels.length > 0) {
-        return <VesselTable heading='Notable Vesseles' vessels={notable_vessels}/>
+        return <VesselTable heading='Notable Vessels' vessels={notable_vessels} />
     }
     if (!notable_vessels) {
         return '';
@@ -41,7 +54,7 @@ export function NotableVessels({ notable_vessels }) {
         return notable_vessels;
     }
     const categories = Object.keys(notable_vessels);
-    return <>{categories.map((c) => <VesselTable key={c} heading={c} vessels={notable_vessels[c]}/>)}</>;
+    return <>{categories.map((c) => <VesselTable key={c} heading={c} vessels={notable_vessels[c]} />)}</>;
 }
 
 export function BuilderSummary({ name, place }) {
@@ -88,15 +101,76 @@ export function BuilderSummary({ name, place }) {
     </div>;
 }
 
+export function AllBuilders({ email, place, yards, yard }) {
+    const [merge, setMerge] = useState([yard]);
+    const [keep, setKeep] = useState(yard);
+
+    const handleKeep = (ev) => {
+        setKeep(ev.target.value);
+        handleMerge(ev.target.value, true);
+    }
+    const handleMerge = (yard, checked) => {
+        const s = new Set(merge);
+        if (checked) {
+            s.add(yard);
+        } else {
+            s.delete(yard);
+        }
+        setMerge([...s]);
+    }
+    if (yards.length < 2) {
+        return '';
+    }
+    return <>
+        <h3>All builders referenced in the OGA Boat Register in {place}</h3>
+        If you know some of these builders are alternative names for the same yard,
+        you can pick the one to keep using the round buttons and check all the ones that should be merged using the square ones.
+        Clicking the button will create that change for approval by the editors.
+        <p></p>
+        <FormControl>
+            <RadioGroup defaultValue={yard} onChange={handleKeep}>
+                <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr' }}>
+                    {yards.map(({ name, count }) =>
+                        <>
+                            {
+                                (name === yard)
+                                    ?
+                                    <span>{name} {count}</span>
+                                    :
+                                    <a href={`/boat_register/builder/?name=${name}&place=${place}`}>{name} {count}</a>
+                            }
+                            <Checkbox
+                                value={name}
+                                checked={merge.includes(name)}
+                                disabled={name === keep}
+                                onChange={(ev) => handleMerge(name, ev.target.checked)}
+                            />
+                            <Radio value={name} />
+                        </>
+                    )}
+                </Box>
+            </RadioGroup>
+            <MergeButton
+              label={`Merge ${merge.length-1} yards to ${keep}`}
+              update={{ email, keep, merge, field: 'builder', id: toBranchName(place, yard) }}
+            />
+        </FormControl>
+    </>;
+}
+
 export function OtherBuilders({ place, yards, yard }) {
     if (yards.length === 0) {
         return '';
     }
     return <>
         <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
+        If you see an error or if you know two or more entries refer to
+        the same builder, please let us know and we will fix / merge them.
+        <p></p>
         <ul>
             {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}&place=${place}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
+        <Contact text={yard} />
     </>;
 }
 
@@ -112,17 +186,18 @@ export function NoBuilder({ place, boats }) {
 
 export default function BuilderPage({ name, place }) {
     const [location, setLocation] = useState();
+    const { user, isAuthenticated } = useAuth0();
     useEffect(() => {
         const getData = async () => {
             const places = await getPlaces();
             if (place) {
-                setLocation(places[place]);
+                setLocation(places?.[place]||{ place, yards: []});
             } else {
                 const p = Object.values(places).find((p) => p.yards[name]);
                 if (p) {
                     setLocation(p);
                 } else {
-                    setLocation({ place: 'unspecified place', yards: []});
+                    setLocation({ place: 'unspecified place', yards: [] });
                 }
             }
         }
@@ -136,17 +211,20 @@ export default function BuilderPage({ name, place }) {
     if (!location) {
         return 'Loading';
     }
-    const others = Object.values(location.yards).filter((b) => b.name !== name);
+    const yards = Object.values(location.yards);
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
         <p></p>
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
-        <OtherBuilders place={location.place} yard={name} yards={others} />
+        {
+            (isAuthenticated)
+            ?
+                <AllBuilders email={user?.email} place={location.place} yard={name} yards={yards} />
+            :      
+                <OtherBuilders place={location.place} yard={name} yards={yards} />
+        }
         <NoBuilder place={location.place} boats={location.no_yard} />
-        If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
-        <p></p>
-        <Contact text={name} />
     </div>;
 }

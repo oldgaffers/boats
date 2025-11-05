@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "/boat_register/",
-  "version": "3.10.2",
+  "version": "3.10.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "preview": "vite preview",
+    "coverage": "vitest run --coverage",
     "test:browser": "vitest --config=vitest.browser.config.js"
   },
   "dependencies": {
@@ -20,18 +21,17 @@
     "@aws-sdk/s3-request-presigner": "^3.920.0",
     "@ckeditor/ckeditor5-build-classic": "^39.0.1",
     "@ckeditor/ckeditor5-react": "^6.1.0",
-    "@data-driven-forms/mui-component-mapper": "^3.19.0",
-    "@data-driven-forms/react-form-renderer": "^3.19.0",
+    "@data-driven-forms/mui-component-mapper": "^4.1.1",
+    "@data-driven-forms/react-form-renderer": "^4.1.1",
     "@dropzone-ui/react": "^7.0.4",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.0",
-    "@mui/x-data-grid": "^5.17.16",
+    "@mui/icons-material": "^5.18.0",
+    "@mui/material": "^5.18.0",
+    "@mui/x-data-grid": "^5.17.26",
     "@paypal/react-paypal-js": "^7.8.2",
     "@tailwindcss/vite": "^4.1.16",
     "@tinymce/tinymce-react": "^6.3.0",
-    "awesome-phonenumber": "^4.1.0",
     "camelcase": "^6.2.1",
     "dayjs": "^1.11.10",
     "humanize-duration": "^3.28.0",
@@ -58,18 +58,19 @@
     "yaml": "^2.8.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.36.0",
+    "@eslint/js": "^9.39.1",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^5.0.4",
-    "@vitest/browser-playwright": "^4.0.5",
-    "eslint": "^9.36.0",
+    "@vitest/browser-playwright": "^4.0.6",
+    "@vitest/coverage-v8": "^4.0.6",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
-    "globals": "^16.4.0",
-    "jsdom": "^27.0.1",
+    "globals": "^16.5.0",
     "vite": "^7.1.7",
-    "vitest": "^4.0.5",
+    "vitest": "^4.0.6",
     "vitest-browser-react": "^2.0.2"
   }
 }

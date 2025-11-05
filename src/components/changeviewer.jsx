@@ -15,7 +15,7 @@ const renderCell = (value) => {
     if (Array.isArray(value)) {
         return JSON.stringify(value);
     } else if (typeof value === 'object') {
-        return (<pre align="left">{YAML.stringify(value)}</pre>);
+        return (<pre>{YAML.stringify(value)}</pre>);
     }
     return value;
 };

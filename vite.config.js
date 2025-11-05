@@ -7,6 +7,17 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss(),],
   test: {
+    coverage: {
+      enabled: true,
+      thresholds: {
+        functions: 15,
+        lines: 20,
+        branches: 20,
+        statements: 20,
+      },            
+      provider: 'v8',
+      include: ['src/**/*.{js,jsx}'],
+    },
     projects: [
       {
         test: {
@@ -25,8 +36,8 @@ export default defineConfig({
             'tests/**/*.browser.{test,spec}.{js,jsx}',
           ],
           browser: {
-            provider: playwright(),
             enabled: true,
+            provider: playwright(),
             headless: true,
             instances: [
               { browser: 'chromium' },
