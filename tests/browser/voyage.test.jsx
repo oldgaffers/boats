@@ -1,7 +1,7 @@
 import React from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import BuilderPage from '../../src/components/builderpage';
+import Voyage from '../../src/components/voyage';
 
 vi.stubGlobal('fetch', vi.fn(() =>
   Promise.resolve({
@@ -11,10 +11,7 @@ vi.stubGlobal('fetch', vi.fn(() =>
 
 test('renders learn react link', async () => {
   const screen = await render(
-    <BuilderPage
-      name='Test Yard'
-      place='Woodbridge'
-    />
+    <Voyage voyage={{ title: '', boat: { name: '', oga_no: 1 } }} />
   );
   expect(screen).toBeDefined();
 });
