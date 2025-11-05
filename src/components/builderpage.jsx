@@ -125,7 +125,7 @@ export function AllBuilders({ email, place, yards, yard }) {
         <h3>All builders referenced in the OGA Boat Register in {place}</h3>
         If you know some of these builders are alternative names for the same yard,
         you can pick the one to keep using the round buttons and check all the ones that should be merged using the square ones.
-        Clicking the button will create that change for approval by the editors.
+        Clicking the blue merge button will create that change for approval by the editors.
         <p></p>
         <FormControl>
             <RadioGroup defaultValue={yard} onChange={handleKeep}>
