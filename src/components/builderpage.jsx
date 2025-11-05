@@ -103,16 +103,16 @@ export function AllBuilders({ email, place, yards, yard }) {
 
     const handleKeep = (ev) => {
         setKeep(ev.target.value);
+        handleMerge(ev.target.value, true);
     }
     const handleMerge = (yard, checked) => {
-        const n = []
+        const s = new Set(merge);
         if (checked) {
-            if (!merge.includes(yard)) n.push(yard);
-            merge.forEach(v => n.push(v));
+            s.add(yard);
         } else {
-            merge.filter((v) => v !== yard).forEach(v => n.push(v));
+            s.delete(yard);
         }
-        setMerge(n);
+        setMerge([...s]);
     }
     if (yards.length < 2) {
         return '';
@@ -120,7 +120,7 @@ export function AllBuilders({ email, place, yards, yard }) {
     return <>
         <h3>All builders referenced in the OGA Boat Register in {place}</h3>
         If you know some of these builders are alternative names for the same yard,
-        you can pick the one to keep and check all the ones that should be merged.
+        you can pick the one to keep using the round buttons and check all the ones that should be merged using the square ones.
         Clicking the button will create that change for approval by the editors.
         <p></p>
         <FormControl>
@@ -135,7 +135,12 @@ export function AllBuilders({ email, place, yards, yard }) {
                                     :
                                     <a href={`/boat_register/builder/?name=${name}&place=${place}`}>{name} {count}</a>
                             }
-                            <Checkbox value={name} onChange={(ev) => handleMerge(name, ev.target.checked)} />
+                            <Checkbox
+                                value={name}
+                                checked={merge.includes(name)}
+                                disabled={name === keep}
+                                onChange={(ev) => handleMerge(name, ev.target.checked)}
+                            />
                             <Radio value={name} />
                         </>
                     )}
