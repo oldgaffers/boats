@@ -122,6 +122,7 @@ export function AllBuilders({ email, place, yards, yard }) {
         If you know some of these builders are alternative names for the same yard,
         you can pick the one to keep and check all the ones that should be merged.
         Clicking the button will create that change for approval by the editors.
+        <p></p>
         <FormControl>
             <RadioGroup defaultValue={yard} onChange={handleKeep}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr' }}>
@@ -141,7 +142,7 @@ export function AllBuilders({ email, place, yards, yard }) {
                 </Box>
             </RadioGroup>
             <MergeButton
-              label={`Merge to ${keep}`}
+              label={`Merge ${merge.length} yards to ${keep}`}
               update={{ email, keep, merge, field: 'builder', id: toBranchName(place, yard) }}
             />
         </FormControl>
