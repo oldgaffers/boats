@@ -2,9 +2,28 @@ import React from 'react';
 import { test, expect, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import Boat from '../../src/components/boat';
-import { api_mocks } from '../mock/api';
 
-vi.doMock("../../src/util/api", () => api_mocks);
+vi.mock('../../src/util/api.js', () => ({
+  getBoatData: () => Promise.resolve({ name: 'x' }),
+  getPicklists: () => Promise.resolve({}),
+  getScopedData: () => Promise.resolve(vi.fn()),
+  postScopedData: () => Promise.resolve(vi.fn()),
+  postGeneralEnquiry: () => Promise.resolve(vi.fn()),
+  getUploadCredentials: () => Promise.resolve(vi.fn()),
+  createPhotoAlbum: () => Promise.resolve(vi.fn()),
+  getAlbumKey: () => Promise.resolve(vi.fn()),
+  postBoatData: () => Promise.resolve(vi.fn()),
+  getBoatLastModified: () => Promise.resolve(vi.fn()),
+  nextOgaNo: () => Promise.resolve(vi.fn()),
+  openPr: () => Promise.resolve(undefined),
+  shuffleBoats: () => Promise.resolve(undefined),
+  getLargestImage: () => Promise.resolve(undefined),
+  getFilterable: () => Promise.resolve(undefined),
+  getFleets: () => Promise.resolve(undefined),
+  getThumb: () => Promise.resolve(undefined),
+  getPlaces: () => Promise.resolve(undefined),
+})
+);
 
 test('renders boat', async () => {
   const screen = await render(

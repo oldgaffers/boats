@@ -1,5 +1,5 @@
 import { test, expect } from 'vitest';
-import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fR, fThcf } from '../../src/util/THCF';
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fSqrtS, fThcf } from '../../src/util/THCF';
 
 const agaff = {foot: 10, luff: 10, head: 5};
 const atopsl = {perpendicular: 10, luff: 10};

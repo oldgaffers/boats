@@ -181,9 +181,8 @@ const RichTextEditor = ({ name, value, onChange, placeholder, error }) => {
         <button
           type="button"
           onClick={() => execCommand('bold')}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-            isCommandActive('bold') ? 'bg-gray-300' : ''
-          }`}
+          className={`p-2 rounded hover:bg-gray-200 transition-colors ${isCommandActive('bold') ? 'bg-gray-300' : ''
+            }`}
           title="Bold"
         >
           <Bold className="w-4 h-4" />
@@ -191,9 +190,8 @@ const RichTextEditor = ({ name, value, onChange, placeholder, error }) => {
         <button
           type="button"
           onClick={() => execCommand('italic')}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-            isCommandActive('italic') ? 'bg-gray-300' : ''
-          }`}
+          className={`p-2 rounded hover:bg-gray-200 transition-colors ${isCommandActive('italic') ? 'bg-gray-300' : ''
+            }`}
           title="Italic"
         >
           <Italic className="w-4 h-4" />
@@ -215,7 +213,7 @@ const RichTextEditor = ({ name, value, onChange, placeholder, error }) => {
         onInput={handleInput}
         onKeyDown={handleKeyDown}
         className={`w-full min-h-[100px] px-3 py-2 border border-t-0 rounded-b-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${errorClasses}`}
-        style={{ 
+        style={{
           wordWrap: 'break-word',
           overflowWrap: 'break-word'
         }}
@@ -459,7 +457,7 @@ const WizardForm = ({ schema }) => {
 
   const handleFieldChange = (fieldName, value) => {
     setFormData(prev => ({ ...prev, [fieldName]: value }));
-    
+
     // Clear error for this field if it exists
     if (errors[fieldName]) {
       setErrors(prev => ({ ...prev, [fieldName]: null }));
@@ -554,10 +552,10 @@ const WizardForm = ({ schema }) => {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">{schema.title}</h1>
-        
+
         {/* Progress Bar */}
         <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-          <div 
+          <div
             className="bg-blue-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
@@ -569,25 +567,23 @@ const WizardForm = ({ schema }) => {
             const isSkipped = skippedSteps.has(index);
             const isCompleted = index < currentStep || (index < currentStep && !isSkipped);
             const isCurrent = index === currentStep;
-            
+
             return (
               <div key={step.id} className="flex flex-col items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mb-2 ${
-                  isSkipped 
-                    ? 'bg-gray-300 text-gray-500 line-through' 
-                    : isCurrent || isCompleted 
-                    ? 'bg-blue-600 text-white' 
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold mb-2 ${isSkipped
+                  ? 'bg-gray-300 text-gray-500 line-through'
+                  : isCurrent || isCompleted
+                    ? 'bg-blue-600 text-white'
                     : 'bg-gray-200 text-gray-500'
-                }`}>
+                  }`}>
                   {isSkipped ? '×' : index + 1}
                 </div>
-                <span className={`text-xs text-center ${
-                  isSkipped 
-                    ? 'text-gray-400 line-through'
-                    : isCurrent || isCompleted 
-                    ? 'text-blue-600' 
+                <span className={`text-xs text-center ${isSkipped
+                  ? 'text-gray-400 line-through'
+                  : isCurrent || isCompleted
+                    ? 'text-blue-600'
                     : 'text-gray-500'
-                }`}>
+                  }`}>
                   {step.title}
                 </span>
               </div>
@@ -612,11 +608,16 @@ const WizardForm = ({ schema }) => {
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </label>
               )}
-              
+
               <FormField
                 field={field}
                 value={formData[field.name]}
                 onChange={handleFieldChange}
                 error={errors[field.name]}
               />
-    
+            </div>))}
+        </div>
+      </div>
+    </div>
+  );
+}
