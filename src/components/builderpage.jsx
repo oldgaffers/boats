@@ -102,7 +102,7 @@ export function BuilderSummary({ name, place }) {
 }
 
 export function AllBuilders({ email, place, yards, yard }) {
-    const [merge, setMerge] = useState([]);
+    const [merge, setMerge] = useState([yard]);
     const [keep, setKeep] = useState(yard);
 
     const handleKeep = (ev) => {
@@ -151,7 +151,7 @@ export function AllBuilders({ email, place, yards, yard }) {
                 </Box>
             </RadioGroup>
             <MergeButton
-              label={`Merge ${merge.length} yards to ${keep}`}
+              label={`Merge ${merge.length-1} yards to ${keep}`}
               update={{ email, keep, merge, field: 'builder', id: toBranchName(place, yard) }}
             />
         </FormControl>

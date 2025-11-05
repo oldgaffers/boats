@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "/boat_register/",
-  "version": "3.10.5",
+  "version": "3.10.0",
   "private": true,
   "type": "module",
   "scripts": {
