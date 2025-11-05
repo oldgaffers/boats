@@ -1,10 +1,6 @@
-import React from 'react';
-import { expect, test, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
-import BuilderPage from '../../src/components/builderpage';
+import { vi } from "vitest";
 
-vi.mock("../../src/util/api", () => {
-  return {
+export const api_mocks = {
     getBoatData: () => Promise.resolve({ name: 'x' }),
     getPicklists: () => Promise.resolve({}),
     getScopedData: () => Promise.resolve(vi.fn()),
@@ -23,15 +19,4 @@ vi.mock("../../src/util/api", () => {
     getFleets: () => Promise.resolve(undefined),
     getThumb: () => Promise.resolve(undefined),
     getPlaces: () => Promise.resolve(undefined),
-  };
-});
-
-test('renders learn react link', async () => {
-	const screen = await render(
-		<BuilderPage
-            name='Test Yard'
-            place='Woodbridge'
-		/>
-	);
-	expect(screen).toBeDefined();
-});
+};
