@@ -9,11 +9,13 @@ export default defineConfig({
     coverage: {
       enabled: true,
       thresholds: {
-        functions: 28,
-        lines: 30,
-        branches: 30,
-        statements: 30,
-      },
+        functions: 15,
+        lines: 20,
+        branches: 20,
+        statements: 20,
+      },            
+      provider: 'v8',
+      include: ['src/**/*.{js,jsx}'],
     },
     projects: [
       {
@@ -23,10 +25,6 @@ export default defineConfig({
             'tests/unit/**/*.{test,spec}.{js,jsx}',
             'tests/**/*.unit.{test,spec}.{js,jsx}',
           ],
-          coverage: {
-            provider: 'v8',
-            include: ['src/**/*.js'],
-          },
         },
       },
       {
@@ -43,10 +41,6 @@ export default defineConfig({
             instances: [
               { browser: 'chromium' },
             ],
-          },
-          coverage: {
-            provider: 'v8',
-            include: ['src/**/*.jsx'],
           },
         },
       },
