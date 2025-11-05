@@ -116,7 +116,7 @@ export default function Voyage({ voyage }) {
                 <Typography>Covering around {voyage.distance} nm</Typography>
                 <Typography
                     component='div'
-                    dangerouslySetInnerHTML={{ __html: voyage.specifics.trim() }}
+                    dangerouslySetInnerHTML={{ __html: voyage?.specifics?.trim()  }}
                 ></Typography>
             </CardContent>
             <CardActions>
