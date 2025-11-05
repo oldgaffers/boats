@@ -209,7 +209,7 @@ export default function BuilderPage({ name, place }) {
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
         {
-            (isAuthenticated)
+            (false)
             ?
                 <AllBuilders email={user?.email} place={location.place} yard={name} yards={yards} />
             :      
