@@ -181,7 +181,7 @@ export default function BuilderPage({ name, place }) {
         const getData = async () => {
             const places = await getPlaces();
             if (place) {
-                setLocation(places[place]);
+                setLocation(places?.[place]||{ place, yards: []});
             } else {
                 const p = Object.values(places).find((p) => p.yards[name]);
                 if (p) {

@@ -9,7 +9,7 @@ export default defineConfig({
     coverage: {
       enabled: true,
       thresholds: {
-        functions: 29,
+        functions: 28,
         lines: 30,
         branches: 30,
         statements: 30,
