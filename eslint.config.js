@@ -10,12 +10,7 @@ export default defineConfig([
     rules: {
       'react/prop-types': 'off',
       'react/no-unescaped-entities': 'off',
-      'no-unused-vars': 'off',
-      'react/jsx-key': 'off',
-      'no-empty': 'off',
-      'react/display-name': 'off',
-      'react/no-unknown-property': 'off',
-      'react/react-in-jsx-scope': 'off',
+      'no-unused-vars': 'warn',
     }
   }
 ]);

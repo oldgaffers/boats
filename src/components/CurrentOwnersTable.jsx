@@ -106,14 +106,14 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
                         field: 'actions',
                         type: 'actions',
                         getActions: ({ row }) => [
-                            <Tooltip title="End ownership">
+                            <Tooltip key={0} title="End ownership">
                                 <GridActionsCellItem
                                     icon={<EventBusyIcon />}
                                     label="End"
                                     onClick={() => endOwnership(row)}
                                 />
                             </Tooltip>,
-                            <Tooltip title="Delete record">
+                            <Tooltip key={1} title="Delete record">
                                 <GridActionsCellItem
                                     icon={<DeleteIcon />}
                                     label="Delete"
