@@ -99,7 +99,7 @@ export function BuilderSummary({ name, place }) {
 
 export function AllBuilders({ email, place, yards, yard }) {
     const [merge, setMerge] = useState([]);
-    const [keep, setKeep] = useState(keep);
+    const [keep, setKeep] = useState(yard);
 
     const handleKeep = (ev) => {
         setKeep(ev.target.value);
@@ -209,7 +209,7 @@ export default function BuilderPage({ name, place }) {
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
         {
-            (false)
+            (isAuthenticated)
             ?
                 <AllBuilders email={user?.email} place={location.place} yard={name} yards={yards} />
             :      
