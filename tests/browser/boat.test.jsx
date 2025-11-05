@@ -4,7 +4,7 @@ import { render } from 'vitest-browser-react';
 import Boat from '../../src/components/boat';
 import { api_mocks } from '../mock/api';
 
-vi.mock("../../src/util/api", () => api_mocks);
+vi.doMock("../../src/util/api", () => api_mocks);
 
 test('renders boat', async () => {
   const screen = await render(
