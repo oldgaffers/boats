@@ -66,7 +66,7 @@ export default function BoatSummary({ boat }) {
     <ConditionalText value={boat.rig_type} label="Rig"/>
     <ConditionalText value={boat.home_port} label="Home port or other location"/>
     <ConditionalText label="Website">
-      <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a>
+      {boat.website ? <a href={boat.website} rel='noopenner noreferrer' target='_blank'>click here</a> : ''}
     </ConditionalText>
     <Box className="MuiTypography-body1">
       <div dangerouslySetInnerHTML={{ __html: boat.short_description }}></div>
