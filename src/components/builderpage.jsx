@@ -13,6 +13,10 @@ function toTitleCase(str) {
     );
 }
 
+function toBranchName(place, yard) {
+    return `${place}_${yard}`.replace(/\W/g, '');
+}
+
 export function VesselTable({ heading, vessels }) {
     const title = toTitleCase(heading.replaceAll('_', ' '));
     if (Array.isArray(vessels)) {
@@ -115,10 +119,12 @@ export function AllBuilders({ email, place, yards, yard }) {
     }
     return <>
         <h3>All builders referenced in the OGA Boat Register in {place}</h3>
+        If you know some of these builders are alternative names for the same yard,
+        you can pick the one to keep and check all the ones that should be merged.
+        Clicking the button will create that change for approval by the editors.
         <FormControl>
             <RadioGroup defaultValue={yard} onChange={handleKeep}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr' }}>
-                    <Box></Box><Box>Merge</Box><Box>Keep</Box>
                     {yards.map(({ name, count }) =>
                         <>
                             {
@@ -134,7 +140,10 @@ export function AllBuilders({ email, place, yards, yard }) {
                     )}
                 </Box>
             </RadioGroup>
-            <MergeButton update={{ email, keep, merge, field: 'builder', id: `${place}_${new Date().toISOString()}` }} />
+            <MergeButton
+              label={`Merge to ${keep}`}
+              update={{ email, keep, merge, field: 'builder', id: toBranchName(place, yard) }}
+            />
         </FormControl>
     </>;
 }
@@ -145,9 +154,13 @@ export function OtherBuilders({ place, yards, yard }) {
     }
     return <>
         <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
+        If you see an error or if you know two or more entries refer to
+        the same builder, please let us know and we will fix / merge them.
+        <p></p>
         <ul>
             {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}&place=${place}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
+        <Contact text={yard} />
     </>;
 }
 
@@ -203,8 +216,5 @@ export default function BuilderPage({ name, place }) {
                 <OtherBuilders place={location.place} yard={name} yards={yards} />
         }
         <NoBuilder place={location.place} boats={location.no_yard} />
-        If see an error or if you know two or more entries refer to the same builder, please let us know and we will fix / merge them.
-        <p></p>
-        <Contact text={name} />
     </div>;
 }
