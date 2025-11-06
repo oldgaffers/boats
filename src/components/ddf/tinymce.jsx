@@ -2,7 +2,7 @@ import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useFieldApi } from "@data-driven-forms/react-form-renderer";
 import Typography from '@mui/material/Typography';
-import { Stack } from '@mui/material';
+import Stack from '@mui/material/Stack';
 
 const apiKey = 'qz08zjvk6zkns9zh9akpuiq1w53sajkkok2ody3sjslag0f9';
 
