@@ -9,6 +9,7 @@ import { FleetDisplay } from './fleetview';
 import Contact from './contact';
 import MergeButton from './mergebutton';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Button } from '@mui/material';
 
 function toTitleCase(str) {
     return str.replace(
@@ -102,8 +103,9 @@ export function BuilderSummary({ name, place }) {
 }
 
 export function AllBuilders({ email, place, yards, yard }) {
-    const [merge, setMerge] = useState([yard]);
-    const [keep, setKeep] = useState(yard);
+    const initialYard = yard || yards?.[0];
+    const [merge, setMerge] = useState([initialYard]);
+    const [keep, setKeep] = useState(initialYard);
 
     const handleKeep = (ev) => {
         setKeep(ev.target.value);
@@ -118,7 +120,10 @@ export function AllBuilders({ email, place, yards, yard }) {
         }
         setMerge([...s]);
     }
-    if (yards.length < 2) {
+    if (yard && yards.length < 2) {
+        return '';
+    }
+    if (yards.length === 0) {
         return '';
     }
     return <>
@@ -128,7 +133,7 @@ export function AllBuilders({ email, place, yards, yard }) {
         Clicking the blue merge button will create that change for approval by the editors.
         <p></p>
         <FormControl>
-            <RadioGroup defaultValue={yard} onChange={handleKeep}>
+            <RadioGroup defaultValue={initialYard} onChange={handleKeep}>
                 <Box sx={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr' }}>
                     {yards.map(({ name, count }) =>
                         <>
@@ -151,8 +156,8 @@ export function AllBuilders({ email, place, yards, yard }) {
                 </Box>
             </RadioGroup>
             <MergeButton
-              label={`Merge ${merge.length-1} yards to ${keep}`}
-              update={{ email, keep, merge, field: 'builder', id: toBranchName(place, yard) }}
+                label={`Merge ${merge.length - 1} yards to ${keep}`}
+                update={{ email, keep, merge, field: 'builder', id: toBranchName(place, yard) }}
             />
         </FormControl>
     </>;
@@ -163,14 +168,14 @@ export function OtherBuilders({ place, yards, yard }) {
         return '';
     }
     return <>
-        <h3>Other builders referenced in the OGA Boat Register in {place}</h3>
+        <h3>{yard ? 'Other builders' : 'Builders'} referenced in the OGA Boat Register in {place}</h3>
         If you see an error or if you know two or more entries refer to
         the same builder, please let us know and we will fix / merge them.
         <p></p>
         <ul>
-            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${y.name}&place=${place}`}>{y.name}</a> ({y.count})</li>)}
+            {yards.filter((y) => y.name !== yard).map((y) => <li key={y.name}><a href={`/boat_register/builder/?name=${encodeURIComponent(y.name)}&place=${encodeURIComponent(place)}`}>{y.name}</a> ({y.count})</li>)}
         </ul>
-        <Contact text={yard} />
+        <Contact text={yard || 'Contact The Editors'} />
     </>;
 }
 
@@ -184,34 +189,8 @@ export function NoBuilder({ place, boats }) {
     return '';
 }
 
-export default function BuilderPage({ name, place }) {
-    const [location, setLocation] = useState();
-    const { user, isAuthenticated } = useAuth0();
-    useEffect(() => {
-        const getData = async () => {
-            const places = await getPlaces();
-            if (place) {
-                setLocation(places?.[place]||{ place, yards: []});
-            } else {
-                const p = Object.values(places).find((p) => p.yards[name]);
-                if (p) {
-                    setLocation(p);
-                } else {
-                    setLocation({ place: 'unspecified place', yards: [] });
-                }
-            }
-        }
-        if (name && !location) {
-            getData();
-        }
-    }, [location, name, place]);
-    if (!name) {
-        return "This page expects the name of a boat builder as the value of a name query parameter."
-    }
-    if (!location) {
-        return 'Loading';
-    }
-    const yards = Object.values(location.yards);
+export function BuilderPageWithBuilder({ name, place, yards }) {
+    const { user } = useAuth0();
     return <div>
         <h2>Page for Boat Builder {name}</h2>
         <BuilderSummary name={name} place={place} />
@@ -219,12 +198,64 @@ export default function BuilderPage({ name, place }) {
         <h3>Boats built by {name} according to OGA Boat Register data</h3>
         <FleetDisplay filters={{ builder: name }} defaultExpanded={true} />
         {
-            (isAuthenticated)
-            ?
-                <AllBuilders email={user?.email} place={location.place} yard={name} yards={yards} />
-            :      
-                <OtherBuilders place={location.place} yard={name} yards={yards} />
+            (user?.email)
+                ?
+                <AllBuilders email={user.email} place={place} yard={name} yards={yards} />
+                :
+                <OtherBuilders place={place} yard={name} yards={yards} />
         }
-        <NoBuilder place={location.place} boats={location.no_yard} />
     </div>;
+}
+
+export function BuilderPageNoBuilder({ place, yards }) {
+    const { user } = useAuth0();
+    return <div>
+        <h2>Page for Boat Builders in {place}</h2>
+        {
+            (user?.email)
+                ?
+                <AllBuilders email={user.email} place={location.place} yards={yards} />
+                :
+                <OtherBuilders place={place} yards={yards} />
+        }
+    </div>;
+}
+
+export default function BuilderPage({ name, place }) {
+    const [location, setLocation] = useState();
+    useEffect(() => {
+        const getData = async () => {
+            const places = await getPlaces();
+            if (place) {
+                setLocation(places?.[place] || { place, yards: [] });
+            } else if (name) {
+                const p = Object.values(places).find((p) => p.yards[name]);
+                if (p) {
+                    setLocation(p);
+                } else {
+                    setLocation({ place: 'unspecified place', yards: [] });
+                }
+            } else {
+                setLocation({ place: 'unspecified place', yards: [] });
+            }
+        }
+        if (!location) {
+            getData();
+        }
+    }, [location, name, place]);
+    if (!location) {
+        return 'Loading';
+    }
+    const yards = Object.values(location.yards);
+    return <>
+        {
+            (name)
+                ?
+                <BuilderPageWithBuilder name={name} place={place} yards={yards} />
+                :
+                <BuilderPageNoBuilder place={place} yards={yards} />
+        }
+        <NoBuilder place={place} boats={location.no_yard} />
+        <Button size="small" color='primary' variant="contained" onClick={() => history.back()}>Back</Button>
+    </>;
 }
