@@ -8,7 +8,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from "@mui/material/Typography";
 import { StateMachineProvider, createStore, useStateMachine } from "little-state-machine";

@@ -5,7 +5,7 @@ import enGB from "date-fns/locale/en-GB";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import { openPr } from '../util/api';
-import BoatWizard from "./boatwizardclaude";
+import BoatWizard from "./boatwizardddf";
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, pr }) {
 

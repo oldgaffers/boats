@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useAuth0 } from '@auth0/auth0-react';
 import { formatters } from 'jsondiffpatch';
 import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
 import CircularProgress from '@mui/material/CircularProgress';
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import HtmlEditor from "./ddf/ddfrte";
+import { getPicklists, nextOgaNo } from '../util/api';
+import { boatm2f, boatf2m } from "../util/format";
+import { boatdiff, prepareInitialValues, prepareModifiedValues } from "../util/editboatfunctions";
 import {
   designerItems,
   builderItems,
@@ -27,13 +34,7 @@ import {
   rigFields,
 } from "./ddf/SubForms";
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
-import Typography from "@mui/material/Typography";
-import { getPicklists, nextOgaNo } from '../util/api';
-import HtmlEditor from './tinymce';
-import { boatm2f, boatf2m } from "../util/format";
-import { useAuth0 } from '@auth0/auth0-react';
-import { boatdiff, prepareInitialValues, prepareModifiedValues } from "../util/editboatfunctions";
-import { Box } from "@mui/material";
+
 
 const defaultSchema = (pickers, isNew = false) => {
   const fields = [
