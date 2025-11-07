@@ -38,7 +38,7 @@ export function prepareInitialValues(boat, user, pr) {
   const initialValues = { ddf, email, ...boatm2f(rest) };
 
   // prepare for dual-list
-  ['builder', 'designer'].forEach((key) => {
+  ['generic_type', 'builder', 'designer'].forEach((key) => {
     const val = initialValues[key];
     if (val) {
       initialValues[key] = val.filter((v) => v).map((v) => v?.name);
