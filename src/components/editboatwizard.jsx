@@ -35,6 +35,7 @@ import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
+import TextFieldWithButton from "./ddf/textwithbutton";
 import { boatm2f, boatf2m } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
 import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
@@ -368,6 +369,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     componentMapper={{
       ...componentMapper,
       html: HtmlEditor,
+      'text-with-button': TextFieldWithButton,
       'ownership-form': OwnershipForm,
     }}
     FormTemplate={(props) => (

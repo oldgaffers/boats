@@ -190,6 +190,34 @@ export const extendableList = ({ pickers, name, label }) => {
   ];
 };
 
+export const extendableList2 = ({ pickers, name, label }) => {
+  return [
+    {
+      component: 'text-with-button',
+      name: `ddf.new_${name}`,
+      label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
+      isRequired: false,
+      addsTo: `ddf.list_of_${name}`,
+    },
+    {
+      component: 'field-array',
+      name:  `ddf.list_of_${name}`,
+      label: `All the ${label}(s)`,
+      minItems: 1,
+      defaultItem: { name: 'Yacht', label: 'Yacht' },
+      fields: [
+        { component: 'select',
+          name: 'name',
+          label: `${label}(s)`,
+          options: optionsFromPicker(pickers[name]),
+          isOptionEqualToValue: (option, value) => option.value === value,
+          isSearchable: true,
+         },
+      ],
+    },
+  ];
+};
+
 export const extendableItems = ({ pickers, name, label }) => {
   // console.log('extendableItems', name, label)
   return [
