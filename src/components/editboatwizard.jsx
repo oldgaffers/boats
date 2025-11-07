@@ -35,7 +35,7 @@ import {
 import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists, nextOgaNo, openPr } from '../util/api';
-import HtmlEditor from './ddf/tinymce';
+import HtmlEditor from './ddf/trix';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
 

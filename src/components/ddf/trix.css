@@ -1,8 +1,9 @@
-.trix-content {
-  max-height: 100px !important;
+trix-editor.trix-user-text-full {
+  max-height: 100px;
   overflow-y: auto;
-  line-height: 1.5;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+}
 
+trix-editor.trix-user-text-short {
+  max-height: 40px;
+  overflow-y: auto;
 }
