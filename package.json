@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "/boat_register/",
-  "version": "3.10.1",
+  "version": "3.10.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,6 @@
     "@aws-sdk/credential-providers": "^3.344.0",
     "@aws-sdk/lib-storage": "^3.344.0",
     "@aws-sdk/s3-request-presigner": "^3.920.0",
-    "@ckeditor/ckeditor5-react": "^6.1.0",
     "@data-driven-forms/mui-component-mapper": "^4.1.1",
     "@data-driven-forms/react-form-renderer": "^4.1.1",
     "@dropzone-ui/react": "^7.0.4",
@@ -51,8 +50,10 @@
     "react-leaflet-cluster": "^2.1.0",
     "react-refresh": "^0.11.0",
     "react-router-dom": "^6.20.0",
+    "react-trix": "^0.10.2",
     "showdown": "^2.1.0",
     "tailwindcss": "^4.1.16",
+    "trix": "^2.1.15",
     "uuid": "^13.0.0",
     "yaml": "^2.8.1"
   },

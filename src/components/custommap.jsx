@@ -142,13 +142,14 @@ function BoatMarkers({ entries }) {
 }
 
 function yards(place) {
-    if (!place.yards) {
-        return [];
+    const yards = (Array.isArray(place.yards) ? place.yards : Object.values(place.yards)) || [];
+    if (yards.length > 0) {
+        return yards;
     }
-    if (Array.isArray(place.yards)) {
-        return place.yards;
+    if (place.no_yard?.length > 0) {
+        return [{ name: 'Yard Unknown', count: place.no_yard.length }];
     }
-    return Object.values(place.yards);
+    return [];
 }
 
 function PlaceInfo({ place }) {

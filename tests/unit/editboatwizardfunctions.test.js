@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { expect, test, vi } from 'vitest';
 import { formatters } from 'jsondiffpatch';
-import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/util/editboatfunctions';
+import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
 import { boatDefined } from '../../src/util/format';
 
 const robinetta = JSON.parse(fs.readFileSync('tests/mock/robinetta.json'));
