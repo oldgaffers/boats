@@ -197,11 +197,11 @@ export const extendableList2 = ({ pickers, name, label }) => {
       name: `ddf.new_${name}`,
       label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
       isRequired: false,
-      addsTo: `ddf.list_of_${name}`,
+      addsTo: name,
     },
     {
       component: 'field-array',
-      name:  `ddf.list_of_${name}`,
+      name,
       label: `All the ${label}(s)`,
       minItems: 1,
       defaultItem: { name: 'Yacht', label: 'Yacht' },
@@ -249,4 +249,4 @@ export const extendableItems = ({ pickers, name, label }) => {
 export const GenericTypeItems = (pickers) => extendableList({ pickers, name: 'generic_type', label: 'Generic Type' })
 export const builderItems = (pickers) => extendableList({ pickers, name: 'builder', label: 'Builder' })
 export const designerItems = (pickers) => extendableList({ pickers, name: 'designer', label: 'Designer' })
-export const designClassItems = (pickers) => extendableItems({ pickers, name: 'design_class', label: 'Design Class' })
+export const designClassItems = (pickers) => extendableItems2({ pickers, name: 'design_class', label: 'Design Class' })
