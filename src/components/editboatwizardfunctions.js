@@ -37,8 +37,8 @@ export function prepareInitialValues(boat, user, pr) {
 
   const initialValues = { ddf, email, ...boatm2f(rest) };
 
-  // prepare for dual-list
-  ['generic_type', 'builder', 'designer'].forEach((key) => {
+  // prepare for dual-list note, generic type is already ok
+  ['builder', 'designer'].forEach((key) => {
     const val = initialValues[key];
     if (val) {
       initialValues[key] = val.filter((v) => v).map((v) => v?.name);
