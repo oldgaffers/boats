@@ -207,8 +207,8 @@ export const extendableList2 = ({ pickers, name, label }) => {
       defaultItem: { name: 'Yacht', label: 'Yacht' },
       fields: [
         { component: 'select',
-          name: 'name',
-          label: `${label}(s)`,
+          // name: 'name',
+          // label: `${label}(s)`,
           options: optionsFromPicker(pickers[name]),
           isOptionEqualToValue: (option, value) => option.value === value,
           isSearchable: true,
