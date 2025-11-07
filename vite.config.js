@@ -21,7 +21,6 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          globals: true,
           include: [
             'tests/unit/**/*.{test,spec}.{js,jsx}',
             'tests/**/*.unit.{test,spec}.{js,jsx}',
