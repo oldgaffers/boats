@@ -30,6 +30,7 @@ export default defineConfig({
       {
         test: {
           name: 'browser',
+          globals: true,
           include: [
             'tests/browser/**/*.{test,spec}.{js,jsx}',
             'tests/**/*.browser.{test,spec}.{js,jsx}',
