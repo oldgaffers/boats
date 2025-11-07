@@ -55,6 +55,8 @@
     "react-router-dom": "^6.20.0",
     "react-trix": "^0.10.2",
     "showdown": "^2.1.0",
+    "slate": "^0.118.1",
+    "slate-react": "^0.118.2",
     "trix": "^2.1.15",
     "uuid": "^13.0.0",
     "yaml": "^2.8.1"

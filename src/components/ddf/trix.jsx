@@ -137,14 +137,10 @@ export default function HtmlEditor({ component, name, title = '', helperText = '
                         onChange={handleChange}
                         onEditorReady={handleEditorReady}
                         toolbar={toolbarId}
-                           onKeyDown={(e) => { e.key === 'Enter' && e.preventDefault() }}
-
                     />
                 </Box>
                 <Typography variant='caption'>{helperText}</Typography>
             </Stack>
         </>
     );
-
 }
-

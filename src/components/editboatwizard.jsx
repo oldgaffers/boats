@@ -301,6 +301,7 @@ const defaultSchema = (pickers, isNew = false) => {
           component: 'text-field',
           name: 'name',
           label: 'Boat Name',
+          isRequired: true,
           validate: [{ type: 'required' }],
         }]
     });
