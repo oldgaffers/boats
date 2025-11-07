@@ -5,7 +5,7 @@ import enGB from "date-fns/locale/en-GB";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import { openPr } from '../util/api';
-import BoatWizard from "./boatwizardddf";
+import BoatWizard from "./ddf/boatwizard";
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, pr }) {
 
@@ -27,43 +27,6 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, pr }) {
     </Dialog>
   );
 }
-export default function EditBoatWizard({ boat, open, onCancel, onSubmit }) {
-import { formatters } from 'jsondiffpatch';
-import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
-import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
-import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
-import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import CircularProgress from '@mui/material/CircularProgress';
-import {
-  designerItems,
-  builderItems,
-  constructionItems,
-  designClassItems,
-  basicDimensionItems,
-  GenericTypeItems,
-} from "./ddf/util";
-import { steps as handicap_steps } from "./Handicap";
-import {
-  yearItems,
-  homeItems,
-  registrationForm,
-  referencesItems,
-  salesSteps,
-  // ownershipUpdateFields,
-  sellingDataFields,
-  doneFields,
-  hullFields,
-  descriptionsItems,
-  rigFields,
-} from "./ddf/SubForms";
-import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
-import Typography from "@mui/material/Typography";
-import { getPicklists, nextOgaNo, openPr } from '../util/api';
-import HtmlEditor from './ddf/trix';
-import { boatm2f, boatf2m } from "../util/format";
-import { useAuth0 } from '@auth0/auth0-react';
-import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
 
 const defaultSchema = (pickers, isNew = false) => {
   const fields = [

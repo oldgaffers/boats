@@ -72,7 +72,6 @@ export const descriptionsItems = [
     title: "Short description",
     name: "short_description",
     controls: ["bold", "italic"], // for ckeditor
-    toolbar: 'undo redo | bold italic removeformat | help', // for tinymce
     maxLength: 100,
     height: 2,
     helperText: `The short description appears on the boat's card and should be one or two lines long.
@@ -652,7 +651,6 @@ export const salesSteps = (firstStep, nextStep) => [
               Gaffer's Log helped with the sale.</Typography>,
             name: "ddf.current_sales_record.summary",
             controls: ["bold", "italic"],
-            toolbar: 'undo redo | bold italic removeformat | help', // for tinymce
             maxLength: 500,
             isRequired: true,
             validate: [{ type: 'required' }],

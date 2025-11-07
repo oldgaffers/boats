@@ -7,10 +7,10 @@ import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template"
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import HtmlEditor from "./ddf/ddfrte";
-import { getPicklists, nextOgaNo } from '../util/api';
-import { boatm2f, boatf2m } from "../util/format";
-import { boatdiff, prepareInitialValues, prepareModifiedValues } from "../util/editboatfunctions";
+import HtmlEditor from "./trix";
+import { getPicklists, nextOgaNo } from '../../util/api';
+import { boatm2f, boatf2m } from "../../util/format";
+import { boatdiff, prepareInitialValues, prepareModifiedValues } from "../../util/editboatfunctions";
 import {
   designerItems,
   builderItems,
@@ -18,8 +18,8 @@ import {
   designClassItems,
   basicDimensionItems,
   GenericTypeItems,
-} from "./ddf/util";
-import { steps as handicap_steps } from "./Handicap";
+} from "./util";
+import { steps as handicap_steps } from "../Handicap";
 import {
   yearItems,
   homeItems,
@@ -32,8 +32,8 @@ import {
   hullFields,
   descriptionsItems,
   rigFields,
-} from "./ddf/SubForms";
-import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
+} from "./SubForms";
+import OwnershipForm, { ownershipUpdateFields } from "../ownershipupdateform";
 
 
 const defaultSchema = (pickers, isNew = false) => {
@@ -298,6 +298,7 @@ const defaultSchema = (pickers, isNew = false) => {
           component: 'text-field',
           name: 'name',
           label: 'Boat Name',
+          isRequired: true,
           validate: [{ type: 'required' }],
         }]
     });
