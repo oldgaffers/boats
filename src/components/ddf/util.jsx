@@ -204,8 +204,19 @@ export const extendableList3 = ({ pickers, name, label }) => {
       clearOnBlur: true,
       handleHomeEndKeys: true,
     },
+    {
+      component: 'text-field',
+      name: 'XX',
+      resolveProps: (props, { meta, input }, formOptions) => {
+        const { values } = formOptions.getState();
+        return {
+            initialValue: JSON.stringify(values.name),
+        };
+      },
+    },
   ];
 };
+
 export const extendableList2 = ({ pickers, name, label }) => {
   return [
     {
