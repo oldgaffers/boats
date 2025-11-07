@@ -190,6 +190,18 @@ export const extendableList = ({ pickers, name, label }) => {
   ];
 };
 
+export const extendableList3 = ({ pickers, name, label }) => {
+  return [
+    {
+      component: 'select',
+      name,
+      label: `${label}(s)`,
+      options: optionsFromPicker(pickers[name]),
+      freeSolo: true,
+      multiple: true,
+    },
+  ];
+};
 export const extendableList2 = ({ pickers, name, label }) => {
   return [
     {
