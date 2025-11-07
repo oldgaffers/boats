@@ -148,7 +148,7 @@ export default function HtmlEditor({ component, name, title = '', helperText = '
             <Stack direction='column'>
                 <Typography sx={{ paddingTop: "1em" }}>{title}</Typography>
                 <Toolbar ref={tb} id={toolbarId} toolbar={(name === 'short_description') ? 'small' : 'medium'} />
-                <Box MaxHeight='20vh'>
+                <Box maxHeight='20vh'>
                     <TrixEditor
                         value={input.value || initialValue}
                         onChange={handleChange}
