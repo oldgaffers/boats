@@ -1,0 +1,8 @@
+.trix-content {
+  max-height: 100px !important;
+  overflow-y: auto;
+  line-height: 1.5;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+}

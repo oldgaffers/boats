@@ -5,9 +5,8 @@ import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 // eslint-disable-next-line no-unused-vars
 import Trix from 'trix';
-import 'trix/dist/trix.css'
 import { TrixEditor } from "react-trix";
-import { PropaneSharp } from '@mui/icons-material';
+import './trix2.css';
 
 function DefaultToolbar({ id }) {
     return (
