@@ -197,12 +197,9 @@ export const extendableList4 = ({ pickers, name, label }) => {
       name,
       label: `${label}(s)`,
       options: optionsFromPicker(pickers[name]),
-      freeSolo: true,
       isMulti: true,
       isSearchable: true,
-      selectOnFocus: true,
-      clearOnBlur: true,
-      handleHomeEndKeys: true,
+      isClearable: true,
     },
   ];
 };
