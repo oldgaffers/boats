@@ -118,7 +118,7 @@ export function getNewItems(field, picker) {
 }
 
 export function getAllNewItems(boat, pickers) {
-  return Object.fromEntries(['builder', 'designer'].map(key => [key, getNewItems(boat[key], pickers[key])]);
+  return Object.fromEntries(['builder', 'designer'].map(key => [key, getNewItems(boat[key], pickers[key])]));
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
