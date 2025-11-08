@@ -114,8 +114,8 @@ export function getNewItems(boat, pickers) {
   return Object.fromEntries(
     ['builder', 'designer', 'design_class']
       .map((key) => [key, boat[key]?.filter((name) => !pickers[key].includes(name))])
-      .filter([key, name] => name)
-      .map([key, name] => [key, { name, id: uuidv4() }])
+      .filter(([key, name]) => name)
+      .map(([key, name]) => [key, { name, id: uuidv4() }])
   );
 }
 
