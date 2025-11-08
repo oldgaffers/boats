@@ -110,6 +110,15 @@ export function updateOwnerships(old = [], updated = []) {
   return [...withoutRowIds, ...notes];
 }
 
+export function getNewItems(boat, pickers) {
+  return Object.fromEntries(
+    ['builder', 'designer', 'design_class']
+      .map((key) => [key, boat[key].filter((name) => !pickers[key].includes(name))])
+      .filter((key, name) => name)
+      .map((key, name) => [key, { name, id: uuidv4() }])
+  );
+}
+
 export function prepareModifiedValues(values, boat, pickers) {
   const { name, oga_no, image_key, selling_status, for_sales } = boat
   const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
@@ -120,12 +129,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     sales_records.shift();
   }
 
-  const newItems = Object.fromEntries(
-    ['builder', 'designer', 'design_class']
-      .map((key) => [key, submitted[key].filter((name) => !pickers[key].includes(name))])
-      .filter((key, name) => name)
-      .map((key, name) => [key, { name, id: uuidv4() }])
-  );
+  
 
   function name2object(value, picker, newItem) {
     // console.log('name2object', value, newItem);
@@ -156,6 +160,8 @@ export function prepareModifiedValues(values, boat, pickers) {
     }
     return undefined;
   }
+  
+  const newItems = getNewItems(boat, pickers);
 
   const design_class = name2object(values.design_class, pickers.design_class, newItems.design_class);
 
