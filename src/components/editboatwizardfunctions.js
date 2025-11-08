@@ -122,10 +122,9 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   const newItems = Object.fromEntries(
     ['builder', 'designer', 'design_class']
-      .filter((key) => ddf[`new_${key}`])
-      .map((key) => {
-        return [key, { name: ddf[`new_${key}`], id: uuidv4() }];
-      })
+      .map((key) => [key, submitted[key].filter((name) => !pickers[key].includes(name))])
+      .filter((key, name) => name)
+      .map((key, name) => [key, { name, id: uuidv4() }])
   );
 
   function name2object(value, picker, newItem) {
