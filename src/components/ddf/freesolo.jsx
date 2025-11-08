@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import FormFieldGrid from '@data-driven-forms/mui-component-mapper/form-field-grid/form-field-grid';
 import { validationError } from '@data-driven-forms/mui-component-mapper/validation-error/validation-error';
@@ -185,10 +185,10 @@ const Freesolo = (props) => {
     ...rest
   } = useFieldApi(props);
   
-  const [open, toggleOpen] = React.useState(false);
-  const [selectValue, setSelectValue] = React.useState(value);
-  const [dialogValue, setDialogValue] = React.useState('');
-  const [selectOptions, setSelectOptions] = React.useStatr(options);
+  const [open, toggleOpen] = useState(false);
+  const [selectValue, setSelectValue] = useState(value);
+  const [dialogValue, setDialogValue] = useState('');
+  const [selectOptions, setSelectOptions] = useState(options);
   
   const handleDialogClose = () => {
     setDialogValue('');
