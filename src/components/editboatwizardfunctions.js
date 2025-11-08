@@ -110,15 +110,15 @@ export function updateOwnerships(old = [], updated = []) {
   return [...withoutRowIds, ...notes];
 }
 
-export function getNewItems(boat, pickers) {
-  return Object.fromEntries(
-    ['builder', 'designer', 'design_class']
-      .map((key) => { console.log('Q1', key, JSON.stringify(boat[key])); return key;})
-      .map((key) => [key, boat[key]?.filter((v) => !pickers[key].includes(v?.name))])
-      .map((v) => { console.log('Q2', v[0], JSON.stringify(v)); return v;})
-      .filter(([key, name]) => name)
-      .map(([key, name]) => [key, { name, id: uuidv4() }])
-  );
+export function getNewItems(field, picker) {
+  const pn = picker.map(p => p.name);
+  return field
+    .filter(f => !(pn.includes(f) || pn.includes(f?.name)))
+    .map(f => ({ name: f.name || f, id: uuidv4() }));
+}
+
+export function getAllNewItems(boat, pickers) {
+  return Object.fromEntries(['builder', 'designer'].map(key => [key, getNewItems(boat[key], pickers[key])]);
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
@@ -161,7 +161,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     return undefined;
   }
   
-  const newItems = getNewItems(submitted, pickers);
+  const newItems = getAllNewItems(submitted, pickers);
 
   const design_class = name2object(values.design_class, pickers.design_class, newItems.design_class);
 
