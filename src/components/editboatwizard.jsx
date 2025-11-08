@@ -35,6 +35,7 @@ import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
+import Freesolo from './ddf/freesolo';
 import TextFieldWithButton from "./ddf/textwithbutton";
 import { boatm2f, boatf2m } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
@@ -371,6 +372,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
       html: HtmlEditor,
       'text-with-button': TextFieldWithButton,
       'ownership-form': OwnershipForm,
+      freesolo: Freesolo,
     }}
     FormTemplate={(props) => (
       <FormTemplate {...props} showFormControls={false} />
