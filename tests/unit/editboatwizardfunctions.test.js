@@ -69,22 +69,26 @@
   
   test('getNewItems 1', () => {
     const t0 = getNewItems(['Noah'], [{ name: 'Noah' }]);
-    expect(t0).toStrictEqual({});
+    expect(t0).toStrictEqual([]);
   });
   
   test('getNewItems 2', () => {
     const t0 = getNewItems([{ name: 'Noah' }], [{ name: 'Noah' }]);
-    expect(t0).toStrictEqual({});
+    expect(t0).toStrictEqual([]);
   });
   
   test('getNewItems with new item', () => {
     const t0 = getNewItems(['Pooh'], [{ name: 'Noah' }]);
-    expect(t0[0].name).toStrictEqual('Pooh');
+    expect(t0[0].name).toStrictEqual('Pooh')
+    expect(t0[0].id).toBeDefined();
   });
   
   test('getAllNewItems 1', () => {
     const t0 = getAllNewItems(prepareInitialValues(robinetta), pickers);
-    expect(t0).toStrictEqual({});
+    expect(t0).toStrictEqual({
+      builder: [],
+      designer: [],
+    });
   });
   
   test('getAllNewItems 2', () => {
