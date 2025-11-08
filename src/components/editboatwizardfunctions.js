@@ -113,7 +113,7 @@ export function updateOwnerships(old = [], updated = []) {
 export function getNewItems(boat, pickers) {
   return Object.fromEntries(
     ['builder', 'designer', 'design_class']
-      .map((key) => [key, boat[key]?.filter((name) => !pickers[key].includes(name))])
+      .map((key) => [key, boat[key]?.filter((v) => !pickers[key].includes(v?.name))])
       .map((v) => { console.log(JSON.stringify(v)); return v;})
       .filter(([key, name]) => name)
       .map(([key, name]) => [key, { name, id: uuidv4() }])
