@@ -113,8 +113,9 @@ export function updateOwnerships(old = [], updated = []) {
 export function getNewItems(boat, pickers) {
   return Object.fromEntries(
     ['builder', 'designer', 'design_class']
+      .map((key) => { console.log('Q1', key, JSON.stringify(boat[key])); return key;})
       .map((key) => [key, boat[key]?.filter((v) => !pickers[key].includes(v?.name))])
-      .map((v) => { console.log('QQ', v[0], JSON.stringify(v)); return v;})
+      .map((v) => { console.log('Q2', v[0], JSON.stringify(v)); return v;})
       .filter(([key, name]) => name)
       .map(([key, name]) => [key, { name, id: uuidv4() }])
   );
@@ -160,7 +161,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     return undefined;
   }
   
-  const newItems = getNewItems(boat, pickers);
+  const newItems = getNewItems(submitted, pickers);
 
   const design_class = name2object(values.design_class, pickers.design_class, newItems.design_class);
 
