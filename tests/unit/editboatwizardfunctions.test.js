@@ -68,7 +68,7 @@
   });
   
   test('getNewItems 1', () => {
-    const t0 = getNewItems(robinetta, pickers);
+    const t0 = getNewItems(prepareInitialValues(robinetta), pickers);
     expect(t0).toStrictEqual({});
   });
   
