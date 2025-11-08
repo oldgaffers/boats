@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enGB from "date-fns/locale/en-GB";
-import { formatters } from 'jsondiffpatch';
 import FormRenderer from "@data-driven-forms/react-form-renderer/form-renderer";
 import componentMapper from "@data-driven-forms/mui-component-mapper/component-mapper";
 import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template";
@@ -35,11 +34,8 @@ import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
-import Freesolo from './ddf/freesolo';
-import TextFieldWithButton from "./ddf/textwithbutton";
-import { boatm2f, boatf2m } from "../util/format";
 import { useAuth0 } from '@auth0/auth0-react';
-import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
+import { prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
 
 const defaultSchema = (pickers, isNew = false) => {
   const fields = [
@@ -68,8 +64,8 @@ const defaultSchema = (pickers, isNew = false) => {
           component: 'plain-text',
           name: 'ddf.pr.label',
           label: <Typography>
-                  You are editing the latest proposed values, so some fields will
-                  already be different from the currently published ones.</Typography>,
+            You are editing the latest proposed values, so some fields will
+            already be different from the currently published ones.</Typography>,
           condition: { when: 'ddf.pr', is: true },
         },
         {
@@ -88,7 +84,12 @@ const defaultSchema = (pickers, isNew = false) => {
         {
           component: 'plain-text',
           name: 'gt-desc',
-          label: 'Most boats will only have one, but a Nobby can be a yacht too, for example',
+          label: <Typography>Most boats will only have one,
+            but a Nobby can be a yacht too, for example.
+            Pick one, and you can pick more if you need to.
+            Type to filter the options. If you type something that doesn't exist,
+            you can add it as a new generic type.
+          </Typography>
         },
       ],
     },
@@ -114,6 +115,16 @@ const defaultSchema = (pickers, isNew = false) => {
             },
             ...builderItems(pickers),
             {
+              component: 'plain-text',
+              name: 'b-desc',
+              label: <Typography>Most boats will only have one,
+                but a boat could be home finished from a production hull, for example.
+                Pick one, and you can pick more if you need to.
+                Type to filter the options. If you type something that doesn't exist,
+                you can add them as a new builder.
+              </Typography>
+            },
+            {
               component: 'text-field',
               name: "hin",
               label: "Hull Identification Number (HIN)",
@@ -132,6 +143,16 @@ const defaultSchema = (pickers, isNew = false) => {
           component: 'sub-form',
           fields: [
             ...designerItems(pickers),
+            {
+              component: 'plain-text',
+              name: 'd-desc',
+              label: <Typography>Most boats will only have one,
+                but a boat could be based on another design, for example.
+                Pick one, and you can pick more if you need to.
+                Type to filter the options. If you type something that doesn't exist,
+                you can add them as a new designer.
+              </Typography>
+            },
             ...designClassItems(pickers),
           ],
         },
@@ -352,27 +373,21 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     // N.B. the values from the values parameter can be incomplete.
     // the values in the state seem correct
 
-    const { newItems, email, boat: modifiedBoat } = prepareModifiedValues(state.values, data, pickers);
-
-    const rounded = boatf2m(boatm2f(boat)); // to exclude changes due to rounding
-    const fulldelta = formatters.jsonpatch.format(boatdiff(rounded, modifiedBoat));
+    const { newItems, email, boat } = prepareModifiedValues(state.values, data, pickers);
 
     onSubmit(
-      fulldelta,
       newItems,
-      modifiedBoat,
+      boat,
       email,
     );
 
   }
-  
+
   return <FormRenderer
     componentMapper={{
       ...componentMapper,
       html: HtmlEditor,
-      'text-with-button': TextFieldWithButton,
       'ownership-form': OwnershipForm,
-      freesolo: Freesolo,
     }}
     FormTemplate={(props) => (
       <FormTemplate {...props} showFormControls={false} />
@@ -383,34 +398,6 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     initialValues={prepareInitialValues(data, user, pr)}
     subscription={{ values: true }}
   />;
-}
-
-export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
-
-  const [data, setData] = useState();
-  const [pr, setPr] = useState(false);
-
-  useEffect(() => {
-    if (!open) {
-      setData(undefined);
-    } else if (!data) {
-      openPr(boat.oga_no).then((modified) => { 
-        if (modified) {
-          setData(modified);
-          setPr(true);
-        } else {
-          setData(boat);
-        }
-      });
-    }
-    }, [open, data, boat]);
-  if (data) {
-    return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} pr={pr} />;
-  }
-  if (open) {
-    return <CircularProgress />;
-  }
-  return '';
 }
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
@@ -436,4 +423,32 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
 
     </Dialog>
   );
+}
+
+export default function EditBoatWizard({ boat, open, onCancel, onSubmit, schema }) {
+
+  const [data, setData] = useState();
+  const [pr, setPr] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setData(undefined);
+    } else if (!data) {
+      openPr(boat.oga_no).then((modified) => {
+        if (modified) {
+          setData(modified);
+          setPr(true);
+        } else {
+          setData(boat);
+        }
+      });
+    }
+  }, [open, data, boat]);
+  if (data) {
+    return <EditBoatWizardDialog boat={data} open={open} onCancel={onCancel} onSubmit={onSubmit} schema={schema} pr={pr} />;
+  }
+  if (open) {
+    return <CircularProgress />;
+  }
+  return '';
 }

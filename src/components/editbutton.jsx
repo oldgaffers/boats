@@ -4,6 +4,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
 import { postBoatData } from '../util/api';
 import EditBoatWizard from './editboatwizard';
+import { boatf2m, boatm2f } from '../util/format';
+import { boatdiff } from './editboatwizardfunctions';
+import { formatters } from 'jsondiffpatch';
 
 export default function EditButton({ boat, label = 'I have edits for this boat' }) {
   const [open, setOpen] = useState(false);
@@ -20,9 +23,12 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
     setOpen(false);
   };
 
-  const handleSubmit = (changes, newItems, updated, email) => {
+  const handleSubmit = (newItems, updated, email) => {
     setOpen(false);
     // console.log('SUBMIT', changes, newItems, updated);
+    const rounded = boatf2m(boatm2f(boat)); // to exclude changes due to rounding
+    const changes = formatters.jsonpatch.format(boatdiff(rounded, updated));
+
     postBoatData({ email, changes, newItems, new: updated })
       .then((response) => {
         if (response.ok) {
