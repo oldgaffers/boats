@@ -190,6 +190,23 @@ export const extendableList = ({ pickers, name, label }) => {
   ];
 };
 
+export const extendableList4 = ({ pickers, name, label }) => {
+  return [
+    {
+      component: 'freesolo',
+      name,
+      label: `${label}(s)`,
+      options: optionsFromPicker(pickers[name]),
+      freeSolo: true,
+      isMulti: true,
+      isSearchable: true,
+      selectOnFocus: true,
+      clearOnBlur: true,
+      handleHomeEndKeys: true,
+    },
+  ];
+};
+
 export const extendableList3 = ({ pickers, name, label }) => {
   return [
     {
@@ -198,7 +215,7 @@ export const extendableList3 = ({ pickers, name, label }) => {
       label: `${label}(s)`,
       options: optionsFromPicker(pickers[name]),
       freeSolo: true,
-      multiple: true,
+      isMulti: true,
       isSearchable: true,
       selectOnFocus: true,
       clearOnBlur: true,
@@ -273,7 +290,7 @@ export const extendableItems = ({ pickers, name, label }) => {
   ];
 };
 
-export const GenericTypeItems = (pickers) => extendableList3({ pickers, name: 'generic_type', label: 'Generic Type' })
+export const GenericTypeItems = (pickers) => extendableList4({ pickers, name: 'generic_type', label: 'Generic Type' })
 export const builderItems = (pickers) => extendableList({ pickers, name: 'builder', label: 'Builder' })
 export const designerItems = (pickers) => extendableList({ pickers, name: 'designer', label: 'Designer' })
 export const designClassItems = (pickers) => extendableItems({ pickers, name: 'design_class', label: 'Design Class' })
