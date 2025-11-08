@@ -5,7 +5,14 @@ import { validationError } from '../validation-error/validation-error';
 import DDFSelect from '@data-driven-forms/common/select';
 import parseInternalValue from '@data-driven-forms/common/select/parse-internal-value';
 import { useFieldApi } from '@data-driven-forms/react-form-renderer';
-import { TextField, CircularProgress } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Autocomplete } from '@mui/material';
 
@@ -48,6 +55,54 @@ export const createValue = (option, isMulti) => {
   }
 
   return option;
+};
+
+const NewItemDialog = (props) => {
+  return (
+        <Dialog open={open} onClose={handleClose}>
+        <form onSubmit={handleSubmit}>
+          <DialogTitle>Add a new film</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Did you miss any film in our list? Please, add it!
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              value={dialogValue.title}
+              onChange={(event) =>
+                setDialogValue({
+                  ...dialogValue,
+                  title: event.target.value,
+                })
+              }
+              label="title"
+              type="text"
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              id="name"
+              value={dialogValue.year}
+              onChange={(event) =>
+                setDialogValue({
+                  ...dialogValue,
+                  year: event.target.value,
+                })
+              }
+              label="year"
+              type="number"
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button type="submit">Add</Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+    );
 };
 
 const InternalSelect = ({
