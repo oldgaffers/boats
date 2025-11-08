@@ -114,7 +114,7 @@ export function getNewItems(boat, pickers) {
   return Object.fromEntries(
     ['builder', 'designer', 'design_class']
       .map((key) => [key, boat[key]?.filter((v) => !pickers[key].includes(v?.name))])
-      .map((v) => { console.log(JSON.stringify(v)); return v;})
+      .map((v) => { console.log('QQ', key, JSON.stringify(v)); return v;})
       .filter(([key, name]) => name)
       .map(([key, name]) => [key, { name, id: uuidv4() }])
   );
@@ -131,7 +131,7 @@ export function prepareModifiedValues(values, boat, pickers) {
   }
 
   function name2object(value, picker, newItem) {
-    // console.log('name2object', value, newItem);
+    console.log('name2object', value, newItem);
     if (newItem) {
       return newItem;
     }
