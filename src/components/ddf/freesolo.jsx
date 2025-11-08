@@ -59,45 +59,26 @@ export const createValue = (option, isMulti) => {
 
 const NewItemDialog = (props) => {
   return (
-        <Dialog open={open} onClose={handleClose}>
-        <form onSubmit={handleSubmit}>
-          <DialogTitle>Add a new film</DialogTitle>
+        <Dialog open={props.open} onClose={props.onClose}>
+        <form onSubmit={props.onSubmit}>
+          <DialogTitle>Add a new item</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Did you miss any film in our list? Please, add it!
+              Did you miss any item in our list? Please, add it!
             </DialogContentText>
             <TextField
               autoFocus
               margin="dense"
               id="name"
-              value={dialogValue.title}
-              onChange={(event) =>
-                setDialogValue({
-                  ...dialogValue,
-                  title: event.target.value,
-                })
-              }
-              label="title"
+              value={props.value}
+              onChange={props.onChange}
+              label={props.label}
               type="text"
-              variant="standard"
-            />
-            <TextField
-              margin="dense"
-              id="name"
-              value={dialogValue.year}
-              onChange={(event) =>
-                setDialogValue({
-                  ...dialogValue,
-                  year: event.target.value,
-                })
-              }
-              label="year"
-              type="number"
               variant="standard"
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={props.onCancel}>Cancel</Button>
             <Button type="submit">Add</Button>
           </DialogActions>
         </form>
@@ -200,7 +181,29 @@ const Freesolo = (props) => {
     closeMenuOnSelect,
     ...rest
   } = useFieldApi(props);
+  
+  const [open, toggleOpen] = React.useState();
+  const [dialogValue, setDialogValue] = React.useState();
+  
+  const handleSelectChange = (event, newValue) => {
+          if (typeof newValue === 'string') {
+            // timeout to avoid instant validation of the dialog's form.
+            setTimeout(() => {
+              toggleOpen(true);
+              setDialogValue(newValue);
+            });
+          } else if (newValue && newValue.inputValue) {
+            toggleOpen(true);
+            setDialogValue(newValue);
+          } else {
+            setValue(newValue);
+          }
+        };
+  
+  
+  
   return (
+    <>
     <DDFSelect
       {...input}
       isMulti={multiple || isMulti}
@@ -211,7 +214,10 @@ const Freesolo = (props) => {
       noOptionsMessage={noOptionsMessage || noOptionsText}
       {...rest}
       SelectComponent={InternalSelect}
+      onChange={handleSelectChange}
     />
+    <NewItemDialog open={open} value label onClose onCancel onSubmit/>
+    </>
   );
 };
 
