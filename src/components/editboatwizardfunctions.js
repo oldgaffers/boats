@@ -113,7 +113,7 @@ export function updateOwnerships(old = [], updated = []) {
 export function getNewItems(boat, pickers) {
   return Object.fromEntries(
     ['builder', 'designer', 'design_class']
-      .map((key) => [key, boat[key].filter((name) => !pickers[key].includes(name))])
+      .map((key) => [key, boat[key]?.filter((name) => !pickers[key].includes(name))])
       .filter((key, name) => name)
       .map((key, name) => [key, { name, id: uuidv4() }])
   );
@@ -128,8 +128,6 @@ export function prepareModifiedValues(values, boat, pickers) {
   if (selling_status === 'for_sale') {
     sales_records.shift();
   }
-
-  
 
   function name2object(value, picker, newItem) {
     // console.log('name2object', value, newItem);
