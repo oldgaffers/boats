@@ -113,12 +113,16 @@ export function updateOwnerships(old = [], updated = []) {
 export function getNewItems(field, picker) {
   const pn = picker.map(p => p.name);
   return field
-    .filter(f => !(pn.includes(f) || pn.includes(f?.name)))
-    .map(f => ({ name: f.name || f, id: uuidv4() }));
+    ?.filter(f => !(pn.includes(f) || pn.includes(f?.name)))
+    ?.map(f => ({ name: f.name || f, id: uuidv4() }));
 }
 
 export function getAllNewItems(boat, pickers) {
-  return Object.fromEntries(['builder', 'designer'].map(key => [key, getNewItems(boat[key], pickers[key])]));
+  return Object.fromEntries(
+    ['builder', 'designer']
+    .map(key => [key, getNewItems(boat[key], pickers[key])])
+    .filter(([k, v]) => v?.length>0)
+  );
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
