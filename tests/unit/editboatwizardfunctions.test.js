@@ -1,7 +1,7 @@
   import fs from 'fs';
   import { expect, test, vi } from 'vitest';
   import { formatters } from 'jsondiffpatch';
-  import { boatdiff, getNewItems, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
+  import { boatdiff, getNewItems, getAllNewItems, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
   import { boatDefined } from '../../src/util/format';
   
   const robinetta = JSON.parse(fs.readFileSync('tests/mock/robinetta.json'));
@@ -68,12 +68,22 @@
   });
   
   test('getNewItems 1', () => {
-    const t0 = getNewItems(prepareInitialValues(robinetta), pickers);
+    const t0 = getNewItems(['Noah'], [{ name: 'Noah' }]);
     expect(t0).toStrictEqual({});
   });
   
   test('getNewItems 2', () => {
-    const t1 = getNewItems({ builder: ['Noah'] }, pickers);
+    const t0 = getNewItems([{ name: 'Noah' }], [{ name: 'Noah' }]);
+    expect(t0).toStrictEqual({});
+  });
+  
+  test('getAllNewItems 1', () => {
+    const t0 = getAllNewItems(prepareInitialValues(robinetta), pickers);
+    expect(t0).toStrictEqual({});
+  });
+  
+  test('getAllNewItems 2', () => {
+    const t1 = getAllNewItems({ builder: ['Noah'] }, pickers);
     expect(t1.builder[0].name).toEqual('Noah');
   });
   
