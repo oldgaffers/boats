@@ -77,6 +77,11 @@
     expect(t0).toStrictEqual({});
   });
   
+  test('getNewItems with new item', () => {
+    const t0 = getNewItems(['Pooh'], [{ name: 'Noah' }]);
+    expect(t0[0].name).toStrictEqual('Pooh');
+  });
+  
   test('getAllNewItems 1', () => {
     const t0 = getAllNewItems(prepareInitialValues(robinetta), pickers);
     expect(t0).toStrictEqual({});
