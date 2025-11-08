@@ -158,6 +158,10 @@ const InternalSelect = ({
         value={typeof internalValue === 'undefined' ? null : internalValue}
         onChange={(_event, option) => onChange(createValue(option, isMulti))}
         loading={isFetching}
+        freesolo
+        selectOnFocus
+        clearOnBlur
+        handleHomeEndKeys
       />
     </FormFieldGrid>
   );
