@@ -214,6 +214,7 @@ export const extendableList3 = ({ pickers, name, label }) => {
       freeSolo: true,
       isMulti: true,
       isSearchable: true,
+      isClearable: true,
       selectOnFocus: true,
       clearOnBlur: true,
       handleHomeEndKeys: true,
@@ -224,7 +225,7 @@ export const extendableList3 = ({ pickers, name, label }) => {
       resolveProps: (props, { meta, input }, formOptions) => {
         const { values } = formOptions.getState();
         return {
-            initialValue: JSON.stringify(values.name),
+            initialValue: JSON.stringify(values[name]),
         };
       },
     },
@@ -287,7 +288,7 @@ export const extendableItems = ({ pickers, name, label }) => {
   ];
 };
 
-export const GenericTypeItems = (pickers) => extendableList4({ pickers, name: 'generic_type', label: 'Generic Type' })
+export const GenericTypeItems = (pickers) => extendableList3({ pickers, name: 'generic_type', label: 'Generic Type' })
 export const builderItems = (pickers) => extendableList({ pickers, name: 'builder', label: 'Builder' })
 export const designerItems = (pickers) => extendableList({ pickers, name: 'designer', label: 'Designer' })
 export const designClassItems = (pickers) => extendableItems({ pickers, name: 'design_class', label: 'Design Class' })
