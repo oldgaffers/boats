@@ -176,87 +176,38 @@ function optionsFromPicker(p) {
 export const extendableList = ({ pickers, name, label }) => {
   return [
     {
-      component: 'dual-list-select',
-      name,
-      label: `${label}(s)`,
-      options: optionsFromPicker(pickers[name]),
-    },
-    {
-      component: 'text-field',
-      name: `ddf.new_${name}`,
-      label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
-      isRequired: false,
-    },
-  ];
-};
-
-export const extendableList4 = ({ pickers, name, label }) => {
-  return [
-    {
-      component: 'freesolo',
-      name,
-      label: `${label}(s)`,
-      options: optionsFromPicker(pickers[name]),
-      isMulti: true,
-      isSearchable: true,
-      isClearable: true,
-    },
-  ];
-};
-
-export const extendableList3 = ({ pickers, name, label }) => {
-  return [
-    {
       component: 'select',
       name,
       label: `${label}(s)`,
       options: optionsFromPicker(pickers[name]),
-      freeSolo: true,
       isMulti: true,
       isSearchable: true,
       isClearable: true,
       selectOnFocus: true,
       clearOnBlur: true,
       handleHomeEndKeys: true,
-    },
-    {
-      component: 'text-field',
-      name: 'XX',
-      resolveProps: (props, { meta, input }, formOptions) => {
-        const { values } = formOptions.getState();
-        return {
-            initialValue: JSON.stringify(values[name]),
-        };
+      loadOptions: async (currentSearchValue) => {
+        const options = optionsFromPicker(pickers[name]);
+        if (!currentSearchValue) {
+          return options;
+        }
+        if (options.includes(currentSearchValue)) {
+          return options;
+        }
+        const r = [...options, { label: currentSearchValue, value: currentSearchValue }];
+        return r;
       },
     },
-  ];
-};
-
-export const extendableList2 = ({ pickers, name, label }) => {
-  return [
-    {
-      component: 'text-with-button',
-      name: `ddf.new_${name}`,
-      label: `if the ${label.toLowerCase()} is not listed and you know the name add it here`,
-      isRequired: false,
-      addsTo: name,
-    },
-    {
-      component: 'field-array',
-      name,
-      label: `All the ${label}(s)`,
-      minItems: 1,
-      defaultItem: { name: 'Yacht', label: 'Yacht' },
-      fields: [
-        { component: 'select',
-          // name: 'name',
-          // label: `${label}(s)`,
-          options: optionsFromPicker(pickers[name]),
-          isOptionEqualToValue: (option, value) => option.value === value,
-          isSearchable: true,
-         },
-      ],
-    },
+    // {
+    //   component: 'text-field',
+    //   name: 'XX',
+    //   resolveProps: (props, { meta, input }, formOptions) => {
+    //     const { values } = formOptions.getState();
+    //     return {
+    //       initialValue: JSON.stringify(values[name]),
+    //     };
+    //   },
+    // },
   ];
 };
 
@@ -288,7 +239,7 @@ export const extendableItems = ({ pickers, name, label }) => {
   ];
 };
 
-export const GenericTypeItems = (pickers) => extendableList3({ pickers, name: 'generic_type', label: 'Generic Type' })
+export const GenericTypeItems = (pickers) => extendableList({ pickers, name: 'generic_type', label: 'Generic Type' })
 export const builderItems = (pickers) => extendableList({ pickers, name: 'builder', label: 'Builder' })
 export const designerItems = (pickers) => extendableList({ pickers, name: 'designer', label: 'Designer' })
 export const designClassItems = (pickers) => extendableItems({ pickers, name: 'design_class', label: 'Design Class' })
