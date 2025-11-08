@@ -200,7 +200,9 @@ const Freesolo = (props) => {
           }
         };
   
-  
+  const handleDialogSubmit = (e) => {
+    console.log("handleDialogSubmit", e);
+    };
   
   return (
     <>
@@ -216,7 +218,14 @@ const Freesolo = (props) => {
       SelectComponent={InternalSelect}
       onChange={handleSelectChange}
     />
-    <NewItemDialog open={open} value label onClose onCancel onSubmit/>
+    <NewItemDialog
+      open={open}
+      value={dialogValue}
+      label="item TODO"
+      onClose={() => console.log("dialog close")}
+      onCancel={() => console.log("dialog cancel")}
+      onSubmit={handleDialogSubmit}
+      />
     </>
   );
 };
