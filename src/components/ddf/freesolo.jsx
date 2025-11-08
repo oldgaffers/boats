@@ -179,11 +179,28 @@ const Freesolo = (props) => {
     noOptionsMessage,
     noOptionsText,
     closeMenuOnSelect,
+    onChange,
+    options,
+    value,
     ...rest
   } = useFieldApi(props);
   
-  const [open, toggleOpen] = React.useState();
-  const [dialogValue, setDialogValue] = React.useState();
+  const [open, toggleOpen] = React.useState(false);
+  const [selectValue, setSelectValue] = React.useState(value);
+  const [dialogValue, setDialogValue] = React.useState('');
+  const [selectOptions, setSelectOptions] = React.useStatr(options);
+  
+  const handleDialogClose = () => {
+    setDialogValue('');
+    toggleOpen(false);
+  };
+
+  const handleDialogSubmit = (event) => {
+    event.preventDefault();
+    setSelectOptions([...selectOptions, dialogValue]);
+    setSelectValue(dialogValue);
+    handleClose();
+  };
   
   const handleSelectChange = (event, newValue) => {
           if (typeof newValue === 'string') {
@@ -196,13 +213,10 @@ const Freesolo = (props) => {
             toggleOpen(true);
             setDialogValue(newValue);
           } else {
-            setValue(newValue);
+            setSelectValue(newValue);
           }
-        };
-  
-  const handleDialogSubmit = (e) => {
-    console.log("handleDialogSubmit", e);
-    };
+          onChange && onChange(event, newValue);
+  };
   
   return (
     <>
@@ -217,12 +231,13 @@ const Freesolo = (props) => {
       {...rest}
       SelectComponent={InternalSelect}
       onChange={handleSelectChange}
+      options={selectOptions}
     />
     <NewItemDialog
       open={open}
       value={dialogValue}
       label="item TODO"
-      onClose={() => console.log("dialog close")}
+      onClose={handleDialogClose}
       onCancel={() => console.log("dialog cancel")}
       onSubmit={handleDialogSubmit}
       />
