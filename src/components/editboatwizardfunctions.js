@@ -114,7 +114,7 @@ export function getNewItems(boat, pickers) {
   return Object.fromEntries(
     ['builder', 'designer', 'design_class']
       .map((key) => [key, boat[key]?.filter((v) => !pickers[key].includes(v?.name))])
-      .map((v) => { console.log('QQ', key, JSON.stringify(v)); return v;})
+      .map((v) => { console.log('QQ', v[0], JSON.stringify(v)); return v;})
       .filter(([key, name]) => name)
       .map(([key, name]) => [key, { name, id: uuidv4() }])
   );
