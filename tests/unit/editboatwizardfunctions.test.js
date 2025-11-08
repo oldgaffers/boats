@@ -142,5 +142,8 @@ test('Ro-an-mor', () => {
 });
 
 test('getNewItems', () => {
-  expect(getNewItems({ builder: ['Noah'] }, { builder: [] })).toMatchSnapshot();
+  const t0 = getNewItems(robinetta, pickers);
+  expect(t0).toStrictEqual({});
+  const t1 = getNewItems({ builder: ['Noah'] }, pickers);
+  expect(t1.builder[0].name).toEqual('Noah');
 });
