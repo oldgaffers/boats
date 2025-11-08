@@ -85,10 +85,7 @@
   
   test('getAllNewItems 1', () => {
     const t0 = getAllNewItems(prepareInitialValues(robinetta), pickers);
-    expect(t0).toStrictEqual({
-      builder: [],
-      designer: [],
-    });
+    expect(t0).toStrictEqual({});
   });
   
   test('getAllNewItems 2', () => {
