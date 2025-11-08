@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import FormFieldGrid from 'from '@data-driven-forms/mui-component-mapper/form-field-grid/form-field-grid';
+import FormFieldGrid from '@data-driven-forms/mui-component-mapper/form-field-grid/form-field-grid';
 import { validationError } from '@data-driven-forms/mui-component-mapper/validation-error/validation-error';
 import DDFSelect from '@data-driven-forms/common/select';
 import parseInternalValue from '@data-driven-forms/common/select/parse-internal-value';
