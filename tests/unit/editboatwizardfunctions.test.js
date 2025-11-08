@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { expect, test, vi } from 'vitest';
 import { formatters } from 'jsondiffpatch';
-import { boatdiff, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
+import { boatdiff, getNewItems, prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
 import { boatDefined } from '../../src/util/format';
 
 const robinetta = JSON.parse(fs.readFileSync('tests/mock/robinetta.json'));
@@ -139,4 +139,8 @@ test('Ro-an-mor', () => {
   expect(boatdiff(roanmor, roanmor)).toBeUndefined();
   const { ownerships, ...boatNoOwnerships } = roanmor;
   expect(boatdiff(roanmor, boatNoOwnerships)).toEqual(boatdiff({ ownerships }, {}));
+});
+
+test('getNewItems', () => {
+  expect(getNewItems({ builder: ['Noah'] }, { builder: [] })).toMatchSnapshot();
 });
