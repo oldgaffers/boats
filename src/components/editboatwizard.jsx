@@ -14,7 +14,7 @@ import {
   constructionItems,
   designClassItems,
   basicDimensionItems,
-  GenericTypeItems,
+  genericTypeItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -80,7 +80,7 @@ const defaultSchema = (pickers, isNew = false) => {
       name: "type-step",
       nextStep: "descriptions-step",
       fields: [
-        ...GenericTypeItems(pickers),
+        ...genericTypeItems(pickers),
         {
           component: 'plain-text',
           name: 'gt-desc',
