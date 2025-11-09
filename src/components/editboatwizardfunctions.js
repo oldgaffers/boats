@@ -111,7 +111,7 @@ export function updateOwnerships(old = [], updated = []) {
 }
 
 export function getNewItems(field, picker) {
-  const pn = picker.map(p => p.name);
+  const pn = picker.map(p => p.name || p);
   return field
     ?.filter(f => f && !(pn.includes(f) || pn.includes(f?.name)))
     ?.map(f => ({ name: f.name || f, id: uuidv4() }));
