@@ -173,7 +173,7 @@ function optionsFromPicker(p) {
   return [];
 }
 
-export const extendableList = (pickers, name, label, isMulti=false) => {
+export const extendableList = (pickers, name, label, isMulti) => {
   return [
     {
       component: 'select',
@@ -242,4 +242,4 @@ export const extendableItems = ({ pickers, name, label }) => {
 export const genericTypeItems = (pickers) => extendableList(pickers, 'generic_type', 'Generic Type', true);
 export const builderItems = (pickers) => extendableList(pickers, 'builder', 'Builder', true)
 export const designerItems = (pickers) => extendableList(pickers, 'designer', 'Designer', true)
-export const designClassItems = (pickers) => extendableList({ pickers, 'design_class', 'Design Class', false)
+export const designClassItems = (pickers) => extendableList(pickers, 'design_class', 'Design Class', false)
