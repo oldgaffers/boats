@@ -196,7 +196,8 @@ export const extendableList = (pickers, name, label, isMulti) => {
         if (options.includes(currentSearchValue)) {
           return options;
         }
-        const r = [...options, { label: currentSearchValue, value: currentSearchValue }];
+        const v = toTitleCase(currentSearchValue.trim());
+        const r = [...options, { label: v, value: v }];
         return r;
       },
     },
