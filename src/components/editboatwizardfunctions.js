@@ -139,13 +139,11 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   function name2object(value, picker, newItem) {
     console.log('name2object', value, newItem);
-    if (newItem) {
-      return newItem;
-    }
     if (value?.name) {
       return value;
     }
-    const r = picker.find((p) => p.name === value);
+    const choices = [...(newItem||[]), ...picker];
+    const r = choices.find((p) => p.name === value);
     if (r) {
       return r;
     }
@@ -154,15 +152,7 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   function listMapper(values, newItems, field) {
     if (values[field]) {
-      const r = values[field].map((v) => name2object(v, pickers[field]));
-      if (newItems[field]) {
-        r.push(newItems[field]);
-      }
-      return r;
-    } else {
-      if (newItems[field]) {
-        return [newItems[field]];
-      }
+      return values[field].map((v) => name2object(v, pickers[field], newItems[field]));
     }
     return undefined;
   }
