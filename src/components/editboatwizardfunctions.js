@@ -113,7 +113,7 @@ export function updateOwnerships(old = [], updated = []) {
 export function getNewItems(field, picker) {
   const pn = picker.map(p => p.name);
   return field
-    ?.filter(f => !(pn.includes(f) || pn.includes(f?.name)))
+    ?.filter(f => f && !(pn.includes(f) || pn.includes(f?.name)))
     ?.map(f => ({ name: f.name || f, id: uuidv4() }));
 }
 
