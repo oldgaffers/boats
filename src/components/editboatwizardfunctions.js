@@ -118,11 +118,13 @@ export function getNewItems(field, picker) {
 }
 
 export function getAllNewItems(boat, pickers) {
-  return Object.fromEntries(
-    ['builder', 'designer']
+  const multi = ['builder', 'designer', 'generic_type']
     .map(key => [key, getNewItems(boat[key], pickers[key])])
-    .filter(([k, v]) => v?.length>0)
-  );
+    .filter(([k, v]) => v?.length>0);
+  const single = ['design_class']
+    .map(key => [key, getNewItems([boat[key]], pickers[key])])
+    .filter(([k, v]) => v?.length>0);
+  return Object.fromEntries([...single, ...multi]);
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
