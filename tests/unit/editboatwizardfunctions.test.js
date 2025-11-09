@@ -24,7 +24,7 @@
     rig_type: [],
     sail_type: [],
     design_class: [],
-    generic_type: [],
+    generic_type: ['Pocket Cruiser', 'Yacht'],
     construction_material: [],
     construction_method: [],
     hull_form: [],
