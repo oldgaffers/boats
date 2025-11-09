@@ -1,4 +1,4 @@
-import { toTitlecase } from '../../util/text_util';
+import { toTitleCase } from '../../text_util';
 
 export const mapPicker = (m) => {
   return m?.map((i) => {
