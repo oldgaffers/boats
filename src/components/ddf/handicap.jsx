@@ -1,6 +1,6 @@
 import React from "react";
-import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fTopSA, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
-import { f2m } from '../util/format';
+import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fTopSA, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../../util/THCF";
+import { f2m } from '../../util/format';
 
 const solentSteps = (thisStep, nextStep) => {
   return [

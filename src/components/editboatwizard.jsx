@@ -8,7 +8,7 @@ import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template"
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
-import OwnershipForm from "./ownershipupdateform";
+import OwnershipForm from "./ddf/ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
