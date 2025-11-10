@@ -30,6 +30,7 @@ vi.setSystemTime(1434319925275);
 
 vi.mock('../util/api', () => {
   return {
+    getPicklist: async (name) => pickers[name] || [],
     getPicklists: async () => pickers,
   };
 });
@@ -38,7 +39,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const default_test_schema = (pickers) => {
+const default_test_schema = () => {
   return {
     "fields": [
       {

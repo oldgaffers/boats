@@ -10,6 +10,12 @@ const api3 = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.a
 
 const stage = 'default'
 
+const newValues = {};
+
+export async function postNewValues(field, values) {
+  newValues[field] = [...new Set(newValues[field] || [], ...values)];
+}
+
 export async function putGeneralEnquiry(scope, subject, data) {
   return (await fetch(
     `${api1}/${stage}/${scope}/${subject}`,
@@ -107,7 +113,9 @@ export async function getPicklists() {
 }
 
 export async function getPicklist(name) {
-  return (await fetch(`${boatRegisterHome}/boatregister/${name}.json`)).json();
+  const existing = (await fetch(`${boatRegisterHome}/boatregister/${name}.json`)).json();
+  const nv = newValues[name] || [];
+  return [...new Set([...(existing || []), ...nv])].sort();
 }
 
 export async function getExtra() {
