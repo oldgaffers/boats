@@ -1,13 +1,148 @@
 import React from 'react';
 import { Typography } from "@mui/material";
 import { mapPicker } from "./util";
-import {
-  intField,
-  designerItems,
-  builderItems,
-  designClassItems,
-  constructionItems,
-} from "./util";
+import { intField, mapPicker } from "./util";
+
+export const basicDimensionItems = [
+  {
+    component: 'text-field',
+    name: "handicap_data.length_on_deck",
+    label: "Length on deck (LOD) (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.length_on_deck === undefined) {
+        return {
+          initialValue: 30,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "handicap_data.length_on_waterline",
+    label: "Waterline Length {LWL) (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.length_on_waterline === undefined) {
+        return {
+          initialValue: 28,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "handicap_data.beam",
+    label: "Beam (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.beam === undefined) {
+        return {
+          initialValue: 8,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "handicap_data.draft",
+    label: "Minumum Draft (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    resolveProps: (props, { meta, input }, formOptions) => {
+      const { values } = formOptions.getState();
+      if (values.handicap_data?.draft === undefined) {
+        return {
+          initialValue: 4.5,
+        };
+      }
+    },
+  },
+  {
+    component: 'text-field',
+    name: "air_draft",
+    label: "Air Draft (decimal feet)",
+    type: "number",
+    dataType: 'float',
+    validate: [
+    ],
+  },
+  {
+    component: 'plain-text',
+    name: "ddf.h1",
+    label: "LOD, LWL, beam and draft affect handicaps",
+  },
+];
+
+export const constructionItems = (pickers) => {
+  return [
+    {
+      component: 'select',
+      name: "construction_material",
+      label: "Construction material",
+      isReadOnly: false,
+      isSearchable: true,
+      isClearable: true,
+      options: mapPicker(pickers.construction_material),
+      isOptionEqualToValue: (option, value) => option.value === value,
+    },
+    {
+      component: 'select',
+      name: "construction_method",
+      label: "Construction method",
+      isReadOnly: false,
+      isSearchable: true,
+      isClearable: true,
+      options: mapPicker(pickers.construction_method),
+      isOptionEqualToValue: (option, value) => option.value === value,
+    },
+    {
+      component: 'select',
+      name: "spar_material",
+      label: "Spar material",
+      isReadOnly: false,
+      isSearchable: true,
+      isClearable: true,
+      options: mapPicker(pickers.spar_material),
+      isOptionEqualToValue: (option, value) => option.value === value,
+    },
+    {
+      component: 'text-field',
+      name: "construction_details",
+      label: "Construction details",
+    },
+  ];
+};
 
 export const rigFields = (pickers) => [
   {
@@ -133,75 +268,6 @@ export const homeItems = [
   },
 ];
 
-export const ownershipUpdateFields = [
-  {
-    component: 'plain-text',
-    name: 'ddf.ownerships_label',
-    label: 'You can add, remove and edit ownership records on this page.'
-      + ' If you are listed as a current owner and this is no-longer true add an end year and uncheck the box.'
-      + ' Your changes will be send to the editors who will update the boat\'s record'
-  },
-  {
-    component: 'field-array',
-    name: "ownerships",
-    label: "Known Owners",
-    defaultItem: {
-      name: ' ',
-    },
-    fields: [
-      {
-        name: 'name',
-        label: 'Name',
-        component: 'text-field',
-        resolveProps: (props, { input }) => {
-          // console.log('O', props);
-          // if no GDPR undefined -> not required
-          // if empty string -> new row - required
-          if (typeof input.value === 'string') {
-            return {
-              isRequired: true,
-              validate: [{ type: 'required' }],
-            };
-          }
-          return {
-            isRequired: false,
-            helperText: 'name on record but withheld',
-          }
-        },
-      },
-      {
-        ...intField('start', 'First Possible Start Year'),
-        isRequired: true,
-        validate: [{ type: 'required' }],
-        FormFieldGridProps: { xs: 6 },
-      },
-      {
-        name: 'start_is_approximate',
-        label: 'approximate',
-        component: 'checkbox',
-        FormFieldGridProps: { xs: 6 },
-      },
-      {
-        ...intField('end', 'Last Possible End Year'),
-        FormFieldGridProps: { xs: 6 },
-      },
-      {
-        name: 'end_is_approximate',
-        label: 'approximate',
-        component: 'checkbox',
-        FormFieldGridProps: { xs: 6 },
-      },
-      {
-        ...intField('share', 'Share (64ths)'),
-        initialValue: 64,
-        isRequired: true,
-        validate: [{ type: 'required' }],
-      },
-      { name: 'current', label: 'Current', component: 'checkbox' },
-    ],
-  },
-];
-
 export const registrationForm = {
   title: "Registrations",
   name: "registrations",
@@ -248,35 +314,6 @@ export const registrationForm = {
       label: "Official Registration",
     },
   ],
-};
-
-export const constructionForm = (pickers) => {
-  return {
-    title: "Design & Build",
-    name: "construction",
-    component: 'sub-form',
-    fields: [
-      {
-        component: 'select',
-        name: "generic_type",
-        label: "Generic Type",
-        isReadOnly: false,
-        isSearchable: true,
-        isClearable: true,
-        options: mapPicker(pickers.generic_type),
-      },
-      ...designerItems(pickers),
-      ...designClassItems(pickers),
-      ...yearItems,
-      {
-        component: 'text-field',
-        name: "place_built",
-        label: "Place built",
-      },
-      ...builderItems(pickers),
-      ...constructionItems(pickers),
-    ],
-  };
 };
 
 export const hullFields = [
