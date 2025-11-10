@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import componentTypes from "@data-driven-forms/react-form-renderer/component-types";
 import useFieldApi from '@data-driven-forms/react-form-renderer/use-field-api';
 import Box from '@mui/material/Box';
-import HistoricalOwnersTable from './HistoricalOwnersTable';
-import CurrentOwnersTable from './CurrentOwnersTable';
+import HistoricalOwnersTable from '../HistoricalOwnersTable';
+import CurrentOwnersTable from '../CurrentOwnersTable';
 import { Typography } from '@mui/material';
-import RoleRestricted from './rolerestrictedcomponent';
+import RoleRestricted from '../rolerestrictedcomponent';
 
 export const ownershipUpdateFields = [
     {

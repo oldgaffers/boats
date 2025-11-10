@@ -1,6 +1,7 @@
 import React from 'react';
 import { Typography } from "@mui/material";
 import { mapPicker } from "./util";
+import { getPicklist } from '../../util/api';
 
 export const basicDimensionItems = [
   {
@@ -103,47 +104,54 @@ export const basicDimensionItems = [
   },
 ];
 
-export const constructionItems = (pickers) => {
-  return [
-    {
-      component: 'select',
-      name: "construction_material",
-      label: "Construction material",
-      isReadOnly: false,
-      isSearchable: true,
-      isClearable: true,
-      options: mapPicker(pickers.construction_material),
-      isOptionEqualToValue: (option, value) => option.value === value,
+export const constructionItems = [
+  {
+    component: 'select',
+    name: "construction_material",
+    label: "Construction material",
+    isReadOnly: false,
+    isSearchable: true,
+    isClearable: true,
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('construction_material');
+      return mapPicker(picklist);
     },
-    {
-      component: 'select',
-      name: "construction_method",
-      label: "Construction method",
-      isReadOnly: false,
-      isSearchable: true,
-      isClearable: true,
-      options: mapPicker(pickers.construction_method),
-      isOptionEqualToValue: (option, value) => option.value === value,
+  },
+  {
+    component: 'select',
+    name: "construction_method",
+    label: "Construction method",
+    isReadOnly: false,
+    isSearchable: true,
+    isClearable: true,
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('construction_method');
+      return mapPicker(picklist);
     },
-    {
-      component: 'select',
-      name: "spar_material",
-      label: "Spar material",
-      isReadOnly: false,
-      isSearchable: true,
-      isClearable: true,
-      options: mapPicker(pickers.spar_material),
-      isOptionEqualToValue: (option, value) => option.value === value,
+  },
+  {
+    component: 'select',
+    name: "spar_material",
+    label: "Spar material",
+    isReadOnly: false,
+    isSearchable: true,
+    isClearable: true,
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('spar_material');
+      return mapPicker(picklist);
     },
-    {
-      component: 'text-field',
-      name: "construction_details",
-      label: "Construction details",
-    },
-  ];
-};
+  },
+  {
+    component: 'text-field',
+    name: "construction_details",
+    label: "Construction details",
+  },
+];
 
-export const rigFields = (pickers) => [
+export const rigFields = [
   {
     component: 'select',
     name: "mainsail_type",
@@ -154,8 +162,11 @@ export const rigFields = (pickers) => [
         type: 'required',
       },
     ],
-    options: mapPicker(pickers.sail_type),
     isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('sail_type');
+      return mapPicker(picklist);
+    },
   },
   {
     component: 'select',
@@ -167,8 +178,11 @@ export const rigFields = (pickers) => [
         type: 'required',
       },
     ],
-    options: mapPicker(pickers.rig_type),
     isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('rig_type');
+      return mapPicker(picklist);
+    },
   }
 ];
 
@@ -232,7 +246,7 @@ export const descriptionsItems = [
     label: <Typography variant="caption" sx={{ paddingTop: "1em" }}>
       If you want to sell this boat, there is a separate place for the sales, text,
       so don't put things like inventory in the descriptions.
-      </Typography>
+    </Typography>
   }
 ];
 
@@ -493,7 +507,7 @@ export const sellingDataFields = [
     component: "text-field",
     name: 'ddf.current_sales_record.flexibility',
     label: 'Price flexibility',
-    hideField: false ,
+    hideField: false,
   },
   {
     component: "text-field",
@@ -603,7 +617,7 @@ export const salesSteps = (firstStep, nextStep) => [
             component: "text-field",
             name: 'ddf.current_sales_record.flexibility',
             label: 'Price flexibility',
-            hideField: false ,
+            hideField: false,
           },
           {
             component: 'html',

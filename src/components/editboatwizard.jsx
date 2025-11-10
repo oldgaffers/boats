@@ -39,7 +39,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
 
   if (!pickers) return <CircularProgress />;
 
-  const activeSchema = schema || defaultSchema(pickers, !data.name);
+  const activeSchema = schema || defaultSchema(!data.name);
 
   const handleSubmit = (_, formApi) => {
 

@@ -1,6 +1,8 @@
 import React from "react";
+import Typography from "@mui/material/Typography";
 import { extendableList } from "./util";
-import { steps as handicap_steps } from "../Handicap";
+import { ownershipUpdateFields } from "./ownershipupdateform";
+import { steps as handicap_steps } from "./handicap";
 import {
   yearItems,
   homeItems,
@@ -15,10 +17,8 @@ import {
   constructionItems,
   basicDimensionItems,
 } from "./SubForms";
-import { ownershipUpdateFields } from "../ownershipupdateform";
-import Typography from "@mui/material/Typography";
 
-export default function schema(pickers, isNew = false) {
+export default function schema(isNew = false) {
   const fields = [
     {
       name: "rig-step",
@@ -53,7 +53,7 @@ export default function schema(pickers, isNew = false) {
           component: 'sub-form',
           name: "rig.form",
           title: "Rig",
-          fields: rigFields(pickers),
+          fields: rigFields,
         },
       ],
     },
@@ -206,7 +206,7 @@ export default function schema(pickers, isNew = false) {
           name: "construction",
           title: "Construction",
           component: 'sub-form',
-          fields: constructionItems(pickers),
+          fields: constructionItems,
         },
       ],
     },
