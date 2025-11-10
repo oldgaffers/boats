@@ -1,8 +1,7 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Box, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Button, Stack, Tooltip, Typography } from "@mui/material";
 import LoginButton from './loginbutton';
-import CheckMembership from "./checkmembership";
 
 export default function Welcome() {
     const { user } = useAuth0();
@@ -31,7 +30,10 @@ export default function Welcome() {
                 If you used the same one, the second time you log in, it almost always just works.
                 If you use a different one we need to make the association for you.
             </Typography>
-            <CheckMembership/>
+            <Typography>
+               Head over to the members area to check your membership and link your account.
+            </Typography>
+            <Button variant="contained" href="/members_area/my_details/my_details.html">Check Membership</Button>
         </Stack>
     );
 }

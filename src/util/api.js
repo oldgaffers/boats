@@ -25,18 +25,6 @@ const api3 = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.a
 
 const stage = 'default'
 
-export async function getIsMember(email, accessToken) {
-  return (await fetch(
-    `https://5swyv5ett6lo7zhnimjxb4bzru0ssrdt.lambda-url.eu-west-1.on.aws/?email=${email}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      }
-    }
-  )).json();
-}
-
 export async function putGeneralEnquiry(scope, subject, data) {
   return (await fetch(
     `${api1}/${stage}/${scope}/${subject}`,
