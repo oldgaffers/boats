@@ -30,6 +30,8 @@ vi.setSystemTime(1434319925275);
 
 vi.mock('../util/api', () => {
   return {
+    clearNewValues: () => Promise.resolve(vi.fn()),
+    postNewValues: () => Promise.resolve(vi.fn()),
     getPicklist: async (name) => pickers[name] || [],
     getPicklists: async () => pickers,
   };
