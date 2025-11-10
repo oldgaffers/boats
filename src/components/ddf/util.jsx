@@ -9,13 +9,6 @@ export const mapPicker = (m) => {
   }) || [];
 }
 
-export function intField(name, label) {
-  return {
-    name, label,
-    component: "text-field", type: "number", dataType: 'integer',
-  };
-}
-
 function optionlist(p) {
   const l = [...new Set(p.filter((o) => o && o.trim() !== ''))];
   return l.map((o) => ({ label: o, value: o }));
@@ -40,7 +33,7 @@ export const extendableList = (pickers, name, label, isMulti) => {
       component: 'select',
       name,
       label: isMulti ? `${label}(s)` : label,
-      options: optionsFromPicker(pickers[name]),
+      // options: optionsFromPicker(pickers[name]),
       isMulti,
       isSearchable: true,
       isClearable: true,
