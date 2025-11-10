@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import Boat from '../../src/components/boat';
 
 vi.mock('../../src/util/api.js', () => ({
+  clearNewValues: () => Promise.resolve(vi.fn()),
   postNewValues: () => Promise.resolve(vi.fn()),
   getBoatData: () => Promise.resolve({ name: 'x' }),
   getPicklist: () => Promise.resolve([]),
