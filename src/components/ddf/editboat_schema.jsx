@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "@mui/material/Typography";
-import { extendableList } from "./util";
+import { extendableList, newItemMonitor } from "./util";
 import { ownershipUpdateFields } from "./ownershipupdateform";
 import { steps as handicap_steps } from "./handicap";
 import {
@@ -17,6 +17,7 @@ import {
   constructionItems,
   basicDimensionItems,
 } from "./SubForms";
+import { getPicklist, postNewValues } from "../../util/api";
 
 export default function schema(isNew = false) {
   const fields = [
@@ -65,13 +66,14 @@ export default function schema(isNew = false) {
         {
           component: 'plain-text',
           name: 'gt-desc',
-          label: <Typography>Most boats will only have one,
+          label: <Typography component='span'>Most boats will only have one,
             but a Nobby can be a yacht too, for example.
             Pick one, and you can pick more if you need to.
             Type to filter the options. If you type something that doesn't exist,
             you can add it as a new generic type.
           </Typography>
         },
+        newItemMonitor('generic_type'),
       ],
     },
     {
@@ -98,7 +100,7 @@ export default function schema(isNew = false) {
             {
               component: 'plain-text',
               name: 'b-desc',
-              label: <Typography>Most boats will only have one,
+              label: <Typography component='span'>Most boats will only have one,
                 but a boat could be home finished from a production hull, for example.
                 Pick one, and you can pick more if you need to.
                 Type to filter the options. If you type something that doesn't exist,
@@ -110,6 +112,7 @@ export default function schema(isNew = false) {
               name: "hin",
               label: "Hull Identification Number (HIN)",
             },
+            newItemMonitor('builder')
           ],
         },
       ],
@@ -127,7 +130,7 @@ export default function schema(isNew = false) {
             {
               component: 'plain-text',
               name: 'd-desc',
-              label: <Typography>Most boats will only have one,
+              label: <Typography component='span'>Most boats will only have one,
                 but a boat could be based on another design, for example.
                 Pick one, and you can pick more if you need to.
                 Type to filter the options. If you type something that doesn't exist,
@@ -135,6 +138,8 @@ export default function schema(isNew = false) {
               </Typography>
             },
             ...extendableList('design_class', false),
+            newItemMonitor('designer'),
+            newItemMonitor('design_class'),
           ],
         },
       ],

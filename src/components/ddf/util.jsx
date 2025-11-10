@@ -1,5 +1,5 @@
 import { toTitleCase } from '../../util/text_utils';
-import { getPicklist } from '../../util/api';
+import { getPicklist, postNewValues } from '../../util/api';
 
 export const mapPicker = (m) => {
   return m?.map((i) => {
@@ -44,6 +44,7 @@ export const extendableList = (name, isMulti) => {
       handleHomeEndKeys: true,
       loadOptions: async (currentSearchValue) => {
         const picklist = await getPicklist(name);
+        // console.log('extendableList', name, picklist);
         const options = optionsFromPicker(picklist);
         if (!currentSearchValue) {
           return options;
@@ -68,3 +69,23 @@ export const extendableList = (name, isMulti) => {
     // },
   ];
 };
+
+export const newItemMonitor = (name) => ({
+  component: 'text-field',
+  name: `ddf.new_${name}_monitor`,
+  label: name,
+  hideField: false,
+  resolveProps: (props, { meta, input }, formOptions) => {
+    const { values } = formOptions.getState();
+    const selected = Array.isArray(values[name]) ? values[name] : (values[name] ? [values[name]] : []);
+    getPicklist(name).then((picklist) => {
+      const newValues = selected.filter((v) => !picklist.includes(v));
+      if (newValues.length > 0) {
+        postNewValues(name, newValues).then(() => {
+          console.log(`posted new ${name}`, newValues);
+        });
+      }
+    });
+    return { value: JSON.stringify(selected) };
+  },
+});

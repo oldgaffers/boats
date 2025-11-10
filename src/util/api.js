@@ -13,8 +13,8 @@ const stage = 'default'
 const newValues = {};
 
 export async function postNewValues(field, values) {
-  newValues[field] = [...new Set(newValues[field] || [], ...values)];
-  console.log('newValues', newValues);
+  newValues[field] = [...new Set([...newValues[field] || [], ...values])];
+  // console.log('API newValues', values, newValues);
 }
 
 export async function putGeneralEnquiry(scope, subject, data) {
@@ -115,7 +115,11 @@ export async function getPicklists() {
 
 export async function getPicklist(name) {
   const existing = await (await fetch(`${boatRegisterHome}/boatregister/${name}.json`)).json();
-  const nv = newValues[name] || [];
+  if (typeof existing[0] === 'string') {
+    const nv = newValues[name] || [];
+    return [...new Set([...(existing || []), ...nv])].sort();
+  }
+  const nv = (newValues[name] || []).map((v) => ({ name: v }));
   return [...new Set([...(existing || []), ...nv])].sort();
 }
 
