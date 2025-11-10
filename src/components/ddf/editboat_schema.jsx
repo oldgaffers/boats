@@ -24,7 +24,7 @@ import {
 import OwnershipForm, { ownershipUpdateFields } from "../ownershipupdateform";
 import Typography from "@mui/material/Typography";
 
-export const defaultSchema = (pickers, isNew = false) => {
+export default function schema(pickers, isNew = false) {
   const fields = [
     {
       name: "rig-step",
