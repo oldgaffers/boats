@@ -1,4 +1,5 @@
 import { toTitleCase } from '../../util/text_utils';
+import { getPicklists } from '../../util/api';
 
 export const mapPicker = (m) => {
   return m?.map((i) => {
@@ -33,7 +34,6 @@ export const extendableList = (pickers, name, label, isMulti) => {
       component: 'select',
       name,
       label: isMulti ? `${label}(s)` : label,
-      // options: optionsFromPicker(pickers[name]),
       isMulti,
       isSearchable: true,
       isClearable: true,
@@ -42,7 +42,8 @@ export const extendableList = (pickers, name, label, isMulti) => {
       clearOnBlur: true,
       handleHomeEndKeys: true,
       loadOptions: async (currentSearchValue) => {
-        const options = optionsFromPicker(pickers[name]);
+        const p = await getPicklists();
+        const options = optionsFromPicker(p[name]);
         if (!currentSearchValue) {
           return options;
         }
