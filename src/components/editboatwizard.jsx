@@ -10,7 +10,7 @@ import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import OwnershipForm from "./ddf/ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { getPicklists, nextOgaNo, openPr } from '../util/api';
+import { clearNewValues, getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
 import { useAuth0 } from '@auth0/auth0-react';
 import { prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
@@ -50,6 +50,10 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
 
     const { newItems, email, boat } = prepareModifiedValues(state.values, data, pickers);
 
+    clearNewValues().then(() => {
+      console.log('Cleared new picklist values');
+    }).catch((e) => console.log(e));
+  
     onSubmit(
       newItems,
       boat,

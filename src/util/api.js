@@ -17,6 +17,10 @@ export async function postNewValues(field, values) {
   // console.log('API newValues', values, newValues);
 }
 
+export async function clearNewValues() {
+  Object.keys(newValues).forEach((k) => { delete newValues[k]; }
+}
+
 export async function putGeneralEnquiry(scope, subject, data) {
   return (await fetch(
     `${api1}/${stage}/${scope}/${subject}`,
