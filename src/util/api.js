@@ -14,6 +14,7 @@ const newValues = {};
 
 export async function postNewValues(field, values) {
   newValues[field] = [...new Set(newValues[field] || [], ...values)];
+  console.log('newValues', newValues);
 }
 
 export async function putGeneralEnquiry(scope, subject, data) {
@@ -113,7 +114,7 @@ export async function getPicklists() {
 }
 
 export async function getPicklist(name) {
-  const existing = (await fetch(`${boatRegisterHome}/boatregister/${name}.json`)).json();
+  const existing = await (await fetch(`${boatRegisterHome}/boatregister/${name}.json`)).json();
   const nv = newValues[name] || [];
   return [...new Set([...(existing || []), ...nv])].sort();
 }
