@@ -214,8 +214,3 @@ export const extendableList = (pickers, name, label, isMulti) => {
     // },
   ];
 };
-
-export const genericTypeItems = (pickers) => extendableList(pickers, 'generic_type', 'Generic Type', true);
-export const builderItems = (pickers) => extendableList(pickers, 'builder', 'Builder', true)
-export const designerItems = (pickers) => extendableList(pickers, 'designer', 'Designer', true)
-export const designClassItems = (pickers) => extendableList(pickers, 'design_class', 'Design Class', false)
