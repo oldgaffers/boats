@@ -185,6 +185,7 @@ export const extendableList = (pickers, name, label, isMulti) => {
       isMulti,
       isSearchable: true,
       isClearable: true,
+      freeSolo: true,
       selectOnFocus: true,
       clearOnBlur: true,
       handleHomeEndKeys: true,
@@ -211,34 +212,6 @@ export const extendableList = (pickers, name, label, isMulti) => {
     //     };
     //   },
     // },
-  ];
-};
-
-export const extendableItems = ({ pickers, name, label }) => {
-  // console.log('extendableItems', name, label)
-  return [
-    {
-      component: 'select',
-      name,
-      label,
-      isReadOnly: false,
-      isSearchable: true,
-      isClearable: true,
-      options: pickers[name].map((o) => ({ label: o.name, value: o.name })),
-      noOptionsMessage: 'we don\'t have that one - you can add it below',
-    },
-    {
-      component: 'text-field',
-      condition: {
-        or: [
-          { when: name, isEmpty: true },
-          { when: name, is: ' ' }
-        ]
-      },
-      name: `ddf.new_${name}`,
-      label: `if you can't find anything suitable add a new one here`,
-      isRequired: false,
-    },
   ];
 };
 
