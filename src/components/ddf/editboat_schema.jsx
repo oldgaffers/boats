@@ -1,10 +1,7 @@
 import React from "react";
 import {
   extendableList,
-  designerItems,
-  builderItems,
   constructionItems,
-  designClassItems,
   basicDimensionItems,
 } from "./util";
 import { steps as handicap_steps } from "../Handicap";
@@ -99,7 +96,7 @@ export default function schema(pickers, isNew = false) {
               name: "place_built",
               label: "Place Built",
             },
-            ...builderItems(pickers),
+            ...extendableList(pickers, 'builder', 'Builder', true),
             {
               component: 'plain-text',
               name: 'b-desc',
@@ -128,7 +125,7 @@ export default function schema(pickers, isNew = false) {
           name: "design",
           component: 'sub-form',
           fields: [
-            ...designerItems(pickers),
+            ...extendableList(pickers, 'designer', 'Designer', true),
             {
               component: 'plain-text',
               name: 'd-desc',
@@ -139,7 +136,7 @@ export default function schema(pickers, isNew = false) {
                 you can add them as a new designer.
               </Typography>
             },
-            ...designClassItems(pickers),
+            ...extendableList(pickers, 'design_class', 'Design Class', false),
           ],
         },
       ],
