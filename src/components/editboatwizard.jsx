@@ -9,12 +9,12 @@ import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import {
+  extendableList,
   designerItems,
   builderItems,
   constructionItems,
   designClassItems,
   basicDimensionItems,
-  genericTypeItems,
 } from "./ddf/util";
 import { steps as handicap_steps } from "./Handicap";
 import {
@@ -80,7 +80,7 @@ const defaultSchema = (pickers, isNew = false) => {
       name: "type-step",
       nextStep: "descriptions-step",
       fields: [
-        ...genericTypeItems(pickers),
+        ...extendableList(pickers, 'generic_type', 'Generic Type', true),
         {
           component: 'plain-text',
           name: 'gt-desc',
