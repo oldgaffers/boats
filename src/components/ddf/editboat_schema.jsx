@@ -61,7 +61,7 @@ export default function schema(pickers, isNew = false) {
       name: "type-step",
       nextStep: "descriptions-step",
       fields: [
-        ...extendableList(pickers, 'generic_type', 'Generic Type', true),
+        ...extendableList('generic_type', true),
         {
           component: 'plain-text',
           name: 'gt-desc',
@@ -94,7 +94,7 @@ export default function schema(pickers, isNew = false) {
               name: "place_built",
               label: "Place Built",
             },
-            ...extendableList(pickers, 'builder', 'Builder', true),
+            ...extendableList('builder', true),
             {
               component: 'plain-text',
               name: 'b-desc',
@@ -123,7 +123,7 @@ export default function schema(pickers, isNew = false) {
           name: "design",
           component: 'sub-form',
           fields: [
-            ...extendableList(pickers, 'designer', 'Designer', true),
+            ...extendableList('designer', true),
             {
               component: 'plain-text',
               name: 'd-desc',
@@ -134,7 +134,7 @@ export default function schema(pickers, isNew = false) {
                 you can add them as a new designer.
               </Typography>
             },
-            ...extendableList(pickers, 'design_class', 'Design Class', false),
+            ...extendableList('design_class', false),
           ],
         },
       ],
