@@ -5,6 +5,7 @@ import Boat from '../../src/components/boat';
 
 vi.mock('../../src/util/api.js', () => ({
   getBoatData: () => Promise.resolve({ name: 'x' }),
+  getPicklist: () => Promise.resolve([]),
   getPicklists: () => Promise.resolve({}),
   getScopedData: () => Promise.resolve(vi.fn()),
   postScopedData: () => Promise.resolve(vi.fn()),
