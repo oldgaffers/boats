@@ -74,7 +74,7 @@ export const newItemMonitor = (name) => ({
   component: 'text-field',
   name: `ddf.new_${name}_monitor`,
   label: name,
-  hideField: false,
+  hideField: true,
   resolveProps: (props, { meta, input }, formOptions) => {
     const { values } = formOptions.getState();
     const selected = Array.isArray(values[name]) ? values[name] : (values[name] ? [values[name]] : []);
