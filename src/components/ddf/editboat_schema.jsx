@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  extendableList,
-  constructionItems,
-  basicDimensionItems,
-} from "./util";
+import { extendableList } from "./util";
 import { steps as handicap_steps } from "../Handicap";
 import {
   yearItems,
@@ -16,6 +12,8 @@ import {
   hullFields,
   descriptionsItems,
   rigFields,
+  constructionItems,
+  basicDimensionItems,
 } from "./SubForms";
 import { ownershipUpdateFields } from "../ownershipupdateform";
 import Typography from "@mui/material/Typography";
