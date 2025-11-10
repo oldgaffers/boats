@@ -8,35 +8,13 @@ import FormTemplate from "@data-driven-forms/mui-component-mapper/form-template"
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
-import {
-  extendableList,
-  designerItems,
-  builderItems,
-  constructionItems,
-  designClassItems,
-  basicDimensionItems,
-} from "./ddf/util";
-import { steps as handicap_steps } from "./Handicap";
-import {
-  yearItems,
-  homeItems,
-  registrationForm,
-  referencesItems,
-  salesSteps,
-  // ownershipUpdateFields,
-  sellingDataFields,
-  doneFields,
-  hullFields,
-  descriptionsItems,
-  rigFields,
-} from "./ddf/SubForms";
-import OwnershipForm, { ownershipUpdateFields } from "./ownershipupdateform";
+import OwnershipForm from "./ownershipupdateform";
 import Typography from "@mui/material/Typography";
 import { getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
 import { useAuth0 } from '@auth0/auth0-react';
 import { prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
-import defaultSchema from './ddf/edit_schema';
+import defaultSchema from './ddf/editboat_schema';
 
 function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
   const [pickers, setPickers] = useState();

@@ -14,14 +14,13 @@ import {
   registrationForm,
   referencesItems,
   salesSteps,
-  // ownershipUpdateFields,
   sellingDataFields,
   doneFields,
   hullFields,
   descriptionsItems,
   rigFields,
 } from "./SubForms";
-import OwnershipForm, { ownershipUpdateFields } from "../ownershipupdateform";
+import { ownershipUpdateFields } from "../ownershipupdateform";
 import Typography from "@mui/material/Typography";
 
 export default function schema(pickers, isNew = false) {
