@@ -127,6 +127,10 @@ export async function getPicklists() {
   return (await fetch(`${boatRegisterHome}/boatregister/pickers.json`)).json();
 }
 
+export async function getPicklist(name) {
+  return (await fetch(`${boatRegisterHome}/boatregister/${name}.json`)).json();
+}
+
 export async function getExtra() {
   /* try {
     return getScopedData('public', 'crewing');
