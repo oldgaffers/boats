@@ -4,21 +4,6 @@ import { boatRegisterHome } from './constants';
 import { parse } from 'yaml';
 import Showdown from "showdown";
 
-const mock = false; // true;
-
-const mocks = {
-  filterable: [
-    {
-      oga_no: 315,
-      name: 'Robinetta',
-    },
-  ],
-  boat: {
-    oga_no: 315,
-    name: 'Robinetta',
-  },
-};
-
 const api1 = 'https://3q9wa2j7s1.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://v2z7n3g4mb5lfkbgeyln3ksjya0qsrpm.lambda-url.eu-west-1.on.aws';
 const api3 = 'https://fxaj7udnm64v43j6fjo4zqer5u0xmhra.lambda-url.eu-west-1.on.aws';
@@ -109,9 +94,6 @@ function processBoatData(data) {
 }
 
 export async function getBoatData(ogaNo) {
-  if (mock) {
-    return mocks.boat;
-  }
   const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
   if (!r.ok) {
     return undefined;
@@ -121,9 +103,6 @@ export async function getBoatData(ogaNo) {
 }
 
 export async function getPicklists() {
-  if (mock) {
-    return {};
-  }
   return (await fetch(`${boatRegisterHome}/boatregister/pickers.json`)).json();
 }
 
@@ -142,9 +121,6 @@ export async function getExtra() {
 }
 
 export async function getFilterable() {
-  if (mock) {
-    return mocks.filterable;
-  }
   const extra = await getExtra();
   // console.log('crewing', extra);
   const ex = Object.fromEntries((extra?.Items || []).map((item) => [item.oga_no, item]));
@@ -212,9 +188,6 @@ const localTables = [
 ];
 
 export async function getScopedData(scope, subject, filters, accessToken) {
-  if (mock) {
-    return {};
-  }
   const local = localTables.find((l) => l.subject === subject);
   if (local) {
     return local.action(filters);
