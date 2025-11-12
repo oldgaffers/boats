@@ -12,40 +12,21 @@ import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, getAlbumKey, postBoatData } from '../util/api';
 import Photodrop from "./photodrop";
 
-export function useGetAlbumKey(boat) {
-  const [albumKey, setAlbumKey] = useState(boat.image_key || null);
-  useEffect(() => {
-    const get = async () => {
-      const r = await getAlbumKey(boat.name, boat.oga_no);
-      if (r) {
-        // console.log('Found existing album', r);
-        setAlbumKey(r.albumKey);
-      } else {
-        console.log('No existing album');
-      }
-    };
-    if (albumKey === null && boat.oga_no) {
-      get();
-    }
-  }, [boat, albumKey]);
-  return albumKey;
-}
-
-export function useGetExistingOrNewAlbumKey(boat, email) {
-  const existingAlbumKey = useGetAlbumKey(boat);
-  if (existingAlbumKey) {
-    return existingAlbumKey;
+async function getExistingOrNewAlbumKey(boat, email) {
+  const rak = await getAlbumKey(boat.name, boat.oga_no);
+  if (rak) {
+    return rak.albumKey;
   }
-  createPhotoAlbum(boat.name, boat.oga_no).then(async (response) => {
-    if (response.ok) {
-      boat.image_key = (await response.json()).albumKey;
-      const response2 = await postBoatData({ new: boat, email })
-      if (!response2.ok) {
-        console.log('problem updating boat register with new album key', response.statusText);
-      }
-      return boat.image_key;
+  console.log('No existing album');
+  const rcpa = await createPhotoAlbum(boat.name, boat.oga_no);
+  if (rcpa.ok) {
+    boat.image_key = (await rcpa.json()).albumKey;
+    const response = await postBoatData({ new: boat, email })
+    if (!response.ok) {
+      console.log('problem updating boat register with new album key', response.statusText);
     }
-  });
+    return boat.image_key;
+  }
   return null;
 }
 
@@ -56,12 +37,6 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
   const [progress, setProgress] = useState(0);
-  const albumKey = useGetExistingOrNewAlbumKey(boat, email);
-
-  if (open && !albumKey) {
-    console.log("can't get album key...");
-    return "No album to upload to.";
-  }
 
   const onDrop = (p) => {
     setPictures(p);
@@ -74,10 +49,16 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   }
 
   const onUpload = async () => {
-      const r = await postPhotos(copyright, email, albumKey, pictures, setProgress);
-      r.forEach((res, idx) => {
-        console.log(res.status, 'Uploaded', pictures[idx].name);
-      });
+    const albumKey = await getExistingOrNewAlbumKey(boat, email);
+    if (!albumKey) {
+      alert('Could not get or create photo folder, aborting upload');
+      return;
+    }
+    console.log('Uploading to album key', albumKey);
+    const r = await postPhotos(copyright, email, albumKey, pictures, setProgress);
+    r.forEach((res, idx) => {
+      console.log(res.status, 'Uploaded', pictures[idx].name);
+    });
   };
 
   const ready = () => {
