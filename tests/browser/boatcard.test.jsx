@@ -101,12 +101,9 @@ describe('BoatCard component tests', () => {
   });
 
   test('BoatCardImage renders skeleton when loading', async () => {
-    let container;
-     await React.act(async () => {
-      container = await render(
+      const container = await render(
       <BoatCardImage albumKey="test-key" name="Test Boat" />
      );
-    });
     // The skeleton appears while loading - just verify the component renders without crashing
     expect(container.container).toBeTruthy();
   });
