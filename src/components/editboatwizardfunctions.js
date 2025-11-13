@@ -144,6 +144,9 @@ export function prepareModifiedValues(values, boat, pickers) {
     if (value?.name) {
       return value;
     }
+    if (!picker) {
+      return undefined;
+    }
     const choices = [...(newItem || []), ...picker];
     const r = choices.find((p) => p.name === value);
     if (r) {
