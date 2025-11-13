@@ -55,7 +55,9 @@ export function unflatten(o) {
 }
 
 export function drop_ddf(values) {
-    return Object.keys(values).filter((k) => !k.startsWith('ddf_')).reduce((a,c)=>{return {...a,...c}});;
+    return Object.keys(values)
+        .filter((k) => !k.startsWith('ddf_'))
+        .reduce((acc, key) => ({ ...acc, [key]: values[key] }), {});
 }
 
    
