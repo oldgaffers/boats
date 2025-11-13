@@ -1,6 +1,9 @@
  
 import React, { useEffect, useState } from 'react';
-import { Box, Paper, Stack, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
