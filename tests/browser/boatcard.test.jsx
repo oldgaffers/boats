@@ -102,7 +102,7 @@ describe('BoatCard component tests', () => {
 
   test('BoatCardImage renders skeleton when loading', async () => {
     let container;
-     React.act(() => {
+     React.act(async () => {
       container = await render(
       <BoatCardImage albumKey="test-key" name="Test Boat" />
      );
