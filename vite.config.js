@@ -6,6 +6,10 @@ import { playwright } from '@vitest/browser-playwright'
 export default defineConfig({
   plugins: [react()],
   test: {
+    // common setup file for both unit and browser tests to filter/handle
+    // non-fatal console warnings emitted by third-party libs (MUI, React)
+    // and to provide any small global shims needed for tests.
+    setupFiles: ['./tests/setupTests.js'],
     coverage: {
       enabled: true,
       thresholds: {
