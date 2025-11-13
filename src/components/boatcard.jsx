@@ -158,6 +158,10 @@ export function CompactBoatCard({ view = 'app', ogaNo, wanted = compactWanted })
     }
   }, [boat, ogaNo]);
 
+  if (!boat) {
+    return <CircularProgress />;
+  }
+
   return (
     <Card sx={{ width: 200 }}>
       <BoatCardImage albumKey={boat?.image_key} name={boat.name} />
