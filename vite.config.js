@@ -13,10 +13,10 @@ export default defineConfig({
     coverage: {
       enabled: true,
       thresholds: {
-        functions: 15,
-        lines: 20,
-        branches: 20,
-        statements: 20,
+        functions: 27,
+        lines: 33,
+        branches: 29,
+        statements: 33,
       },            
       provider: 'v8',
       include: ['src/**/*.{js,jsx}'],
