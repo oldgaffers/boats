@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'jsondiffpatch';
-
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 
 export function boatdiff(before, after) {
@@ -111,6 +110,9 @@ export function updateOwnerships(old = [], updated = []) {
 }
 
 export function getNewItems(field, picker) {
+  if (!picker?.[field]) {
+    return [];
+  }
   const pn = picker.map(p => p.name || p);
   return field
     ?.filter(f => f && !(pn.includes(f) || pn.includes(f?.name)))
@@ -120,10 +122,10 @@ export function getNewItems(field, picker) {
 export function getAllNewItems(boat, pickers) {
   const multi = ['builder', 'designer', 'generic_type']
     .map(key => [key, getNewItems(boat[key], pickers[key])])
-    .filter(([k, v]) => v?.length>0);
+    .filter(([k, v]) => v?.length > 0);
   const single = ['design_class']
     .map(key => [key, getNewItems([boat[key]], pickers[key])])
-    .filter(([k, v]) => v?.length>0);
+    .filter(([k, v]) => v?.length > 0);
   return Object.fromEntries([...single, ...multi]);
 }
 
@@ -142,7 +144,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     if (value?.name) {
       return value;
     }
-    const choices = [...(newItem||[]), ...picker];
+    const choices = [...(newItem || []), ...picker];
     const r = choices.find((p) => p.name === value);
     if (r) {
       return r;
@@ -156,7 +158,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     }
     return undefined;
   }
-  
+
   const newItems = getAllNewItems(submitted, pickers);
 
   const design_class = name2object(values.design_class, pickers.design_class, newItems.design_class);
