@@ -106,7 +106,7 @@ describe('BoatCard component tests', () => {
       container = await render(
       <BoatCardImage albumKey="test-key" name="Test Boat" />
      );
-    }
+    });
     // The skeleton appears while loading - just verify the component renders without crashing
     expect(container.container).toBeTruthy();
   });
