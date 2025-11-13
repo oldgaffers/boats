@@ -3,7 +3,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EventIcon from '@mui/icons-material/Event';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { DataGrid, GridActionsCellItem, GridArrowDownwardIcon, GridArrowUpwardIcon } from '@mui/x-data-grid';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Button, Tooltip } from '@mui/material';
+import Accordion from '@mui/material/Accordion';
+import AccordionActions from '@mui/material/AccordionActions';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
 
 export function yearFormatter({ value }) {
     if (isNaN(value)) {
