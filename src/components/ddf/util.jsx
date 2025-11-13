@@ -79,7 +79,8 @@ export const newItemMonitor = (name) => ({
     const { values } = formOptions.getState();
     const selected = Array.isArray(values[name]) ? values[name] : (values[name] ? [values[name]] : []);
     getPicklist(name).then((picklist) => {
-      const newValues = selected.filter((v) => !picklist.includes(v));
+      const picklistNames = picklist.map((p) => (p.name || p));
+      const newValues = selected.filter((v) => !picklistNames.includes(v));
       if (newValues.length > 0) {
         postNewValues(name, newValues).then(() => {
           console.log(`posted new ${name}`, newValues);
