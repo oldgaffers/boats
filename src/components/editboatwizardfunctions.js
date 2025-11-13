@@ -109,10 +109,7 @@ export function updateOwnerships(old = [], updated = []) {
   return [...withoutRowIds, ...notes];
 }
 
-export function getNewItems(field, picker) {
-  if (!picker?.[field]) {
-    return [];
-  }
+export function getNewItems(field=[], picker=[]) {
   const pn = picker.map(p => p.name || p);
   return field
     ?.filter(f => f && !(pn.includes(f) || pn.includes(f?.name)))
