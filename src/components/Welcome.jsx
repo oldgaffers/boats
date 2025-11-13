@@ -1,6 +1,10 @@
 import React from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Box, Button, Stack, Tooltip, Typography } from "@mui/material";
+import Box from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import LoginButton from './loginbutton';
 
 export default function Welcome() {
