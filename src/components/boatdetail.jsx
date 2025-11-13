@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
+import { useAuth0 } from '@auth0/auth0-react';
 import ConditionalText from './conditionaltext';
 import TabPanel from './tabpanel';
 import SailTable from './sailtable';
@@ -14,7 +15,6 @@ import DetailBar from './detailbar';
 import Owners from './owners';
 import Skippers from './skippers';
 import { getScopedData } from '../util/api';
-import { useAuth0 } from '@auth0/auth0-react';
 import Voyage from './voyage';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
