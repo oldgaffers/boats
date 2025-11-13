@@ -129,6 +129,25 @@ export function getAllNewItems(boat, pickers) {
   return Object.fromEntries([...single, ...multi]);
 }
 
+function name2object(value, picker=[], newItem=[]) {
+    if (value?.name) {
+      return value;
+    }
+    const choices = [...newItem, ...picker];
+    const r = choices.find((p) => p.name === value);
+    if (r) {
+      return r;
+    }
+    return undefined; // not possible to specify a value we don't have
+  }
+
+  function listMapper(values, newItems, field, pickers) {
+    if (values[field]) {
+      return values[field].map((v) => name2object(v, pickers[field], newItems[field]));
+    }
+    return undefined;
+  }
+
 export function prepareModifiedValues(values, boat, pickers) {
   const { name, oga_no, image_key, selling_status, for_sales } = boat
   const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
@@ -139,35 +158,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     sales_records.shift();
   }
 
-  function name2object(value, picker, newItem) {
-    console.log('name2object', value, newItem);
-    if (value?.name) {
-      return value;
-    }
-    if (!picker) {
-      return undefined;
-    }
-    const choices = [...(newItem || []), ...picker];
-    const r = choices.find((p) => p.name === value);
-    if (r) {
-      return r;
-    }
-    return undefined; // not possible to specify a value we don't have
-  }
-
-  function listMapper(values, newItems, field) {
-    if (values[field]) {
-      return values[field].map((v) => name2object(v, pickers[field], newItems[field]));
-    }
-    return undefined;
-  }
-
   const newItems = getAllNewItems(submitted, pickers);
-
-  const design_class = name2object(values.design_class, pickers.design_class, newItems.design_class);
-
-  const builder = listMapper(values, newItems, 'builder');
-  const designer = listMapper(values, newItems, 'designer');
 
   if (ddf.new_name) {
     previous_names.unshift([name]);
@@ -180,9 +171,9 @@ export function prepareModifiedValues(values, boat, pickers) {
     previous_names,
     oga_no, image_key,
     ...salesChanges(ddf, sales_records),
-    builder,
-    designer,
-    design_class,
+    builder: listMapper(values, newItems, 'builder', pickers),
+    designer: listMapper(values, newItems, 'designer', pickers),
+    design_class: name2object(values.design_class, pickers.design_class, newItems.design_class),
   };
 
   return { boat: boatDefined(modifiedBoat), newItems, email };
