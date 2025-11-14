@@ -16,14 +16,14 @@ const pickers = {
   boatNames: [],
   designer: [],
   builder: [],
-  rig_type: [],
-  sail_type: [],
+  rig_type: ['Cutter'],
+  sail_type: ['gaff'],
   design_class: [],
-  generic_type: [],
-  construction_material: [],
-  construction_method: [],
+  generic_type: [{name:'Yacht'}],
+  construction_material: ['wood'],
+  construction_method: ['carvel'],
   hull_form: [],
-  spar_material: [],
+  spar_material: ['wood'],
 };
 
 vi.setSystemTime(1434319925275);
