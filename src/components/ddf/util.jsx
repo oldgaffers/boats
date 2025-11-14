@@ -44,8 +44,8 @@ export const extendableList = (name, isMulti) => {
       handleHomeEndKeys: true,
       loadOptions: async (currentSearchValue) => {
         const picklist = await getPicklist(name);
-        // console.log('extendableList', name, picklist);
         const options = optionsFromPicker(picklist);
+        console.log('extendableList', name, currentSearchValue, options);
         if (!currentSearchValue) {
           return options;
         }
