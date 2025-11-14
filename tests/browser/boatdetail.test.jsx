@@ -102,15 +102,17 @@ describe('BoatDetail component tests', () => {
   });
 
   test('renders basic boat detail with design and build pane', async () => {
+React.act(() => {
     const page = await render(
       <BoatDetail view="detail" boat={mockBoat} />
     );
 
     // Check that detail bar is rendered
     expect(page.getByTestId('detail-bar')).toBeTruthy();
-  });
+ });
+ });
 
-  test('includes registration pane when boat has registration fields', async () => {
+  test('includes registration pane when boat has regglobal.IS_REACT_ACT_ENVIRONMENT=trueistration fields', async () => {
     const boatWithReg = {
       ...mockBoat,
       sail_number: 'SA001',
