@@ -16,6 +16,7 @@
                     "id": "3a457a8b-d19d-4843-8c97-937489f0635f",
                     "name": "Frank Argall"
                 }],
+                "design_class": { "name": "X", "id": "0" },
                 "for_sales": [
                     {
                         "asking_price": 15000,
