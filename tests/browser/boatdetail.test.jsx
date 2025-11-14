@@ -56,8 +56,6 @@ vi.mock('../../src/components/voyage', () => ({
   default: ({ voyage }) => <div data-testid="voyage">{voyage.start}</div>,
 }));
 
-globalThis.IS_REACT_ACT_ENVIRONMENT=true;
-
 describe('BoatDetail component tests', () => {
   const mockUser = {
     email: 'test@example.com',
@@ -102,7 +100,6 @@ describe('BoatDetail component tests', () => {
   });
 
   test('renders basic boat detail with design and build pane', async () => {
-React.act(async () => {
     const page = await render(
       <BoatDetail view="detail" boat={mockBoat} />
     );
@@ -110,9 +107,8 @@ React.act(async () => {
     // Check that detail bar is rendered
     expect(page.getByTestId('detail-bar')).toBeTruthy();
  });
- });
 
-  test('includes registration pane when boat has regglobal.IS_REACT_ACT_ENVIRONMENT=trueistration fields', async () => {
+  test('includes registration pane when boat has registration fields', async () => {
     const boatWithReg = {
       ...mockBoat,
       sail_number: 'SA001',
