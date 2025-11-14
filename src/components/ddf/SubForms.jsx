@@ -167,11 +167,6 @@ export const rigFields = [
       const picklist = await getPicklist('sail_type');
       return mapPicker(picklist);
     },
-    resolveProps: (props, { meta, input }, formOptions) => {
-      const { values } = formOptions.getState();
-      console.log(props, values[props.name], input);
-      return {};
-    },
   },
   {
     component: 'select',
@@ -187,11 +182,6 @@ export const rigFields = [
     loadOptions: async () => {
       const picklist = await getPicklist('rig_type');
       return mapPicker(picklist);
-    },    
-    resolveProps: (props, { meta, input }, formOptions) => {
-      const { values } = formOptions.getState();
-      console.log(props, values[props.name], input);
-      return {};
     },
   }
 ];
