@@ -3,20 +3,14 @@ import FormControl from '@mui/material/FormControl';
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import { getPlaces, getScopedData } from '../util/api';
+import { toTitleCase } from '../util/text_utils';
 import { FleetDisplay } from './fleetview';
 import Contact from './contact';
 import MergeButton from './mergebutton';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Button } from '@mui/material';
-
-function toTitleCase(str) {
-    return str.replace(
-        /\w\S*/g,
-        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
-    );
-}
 
 function toBranchName(place, yard) {
     return `${place}_${yard}`.replace(/\W/g, '');
