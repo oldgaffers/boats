@@ -34,6 +34,7 @@ vi.mock('../../src/util/api', () => {
     postNewValues: () => Promise.resolve(vi.fn()),
     getPicklist: async (name) => pickers[name] || [],
     getPicklists: async () => pickers,
+    nextOgaNo: async () => Promise.resolve(vi.fn()),
   };
 });
 
