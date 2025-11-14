@@ -9,22 +9,6 @@ import { result } from '../mock/843.json';
 
 vi.mock('@auth0/auth0-react');
 
-// Mock Autocomplete to reduce MUI warnings during tests. The real Autocomplete
-// does runtime prop checks and logs warnings in the test environment; a
-// lightweight mock keeps the form behavior stable for our interaction tests.
-vi.mock('@mui/material/Autocomplete', () => ({ default: (props) => {
-  const React = require('react');
-  // render children or a simple input if renderInput is provided
-  if (props && typeof props.renderInput === 'function') {
-    try {
-      return props.renderInput({ inputProps: {}, InputProps: {}, ref: null });
-    } catch (e) {
-      return React.createElement('div', null);
-    }
-  }
-  return React.createElement('div', props, props.children);
-}}));
-
 const { boat } = result.pageContext;
 const { waitFor } = vi;
 
