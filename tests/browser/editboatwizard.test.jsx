@@ -35,6 +35,7 @@ vi.mock('../../src/util/api', () => {
     getPicklist: async (name) => pickers[name] || [],
     getPicklists: async () => pickers,
     nextOgaNo: async () => Promise.resolve(vi.fn()),
+    openPr: async () => Promise.resolve(vi.fn()),
   };
 });
 
