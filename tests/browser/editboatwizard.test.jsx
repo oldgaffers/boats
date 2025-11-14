@@ -14,11 +14,18 @@ const { waitFor } = vi;
 
 const pickers = {
   boatNames: [],
-  designer: [],
-  builder: [],
+  designer: [                {
+                    "id": "3a457a8b-d19d-4843-8c97-937489f0635f",
+                    "name": "Frank Argall"
+                }],
+  builder: [{"id": "bf86c19b-e994-4b0e-839a-f9b04d952f7b",  "name": "Treve Marine Ltd"
+                }],
   rig_type: ['Cutter'],
   sail_type: ['gaff'],
-  design_class: [],
+  design_class: [{
+                    "name": "Clyde 17/19",
+                    "id": "d32a0831-cc8c-4b2b-aa9e-245ca324cf8c"
+                 }],
   generic_type: [{name:'Yacht'}],
   construction_material: ['wood'],
   construction_method: ['carvel'],
