@@ -1,12 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { SaleRecord, currentSaleRecord } from '../../src/util/sale_record.js';
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 describe('SaleRecord', () => {
-  it('constructs and exposes asking_price with getter/setter', () => {
+  it('constructs and exposes asking_price with getter/setter', async () => {
     const seller = { id: 'g1', member: 'm1' };
     const sr = new SaleRecord(1000, 'nice boat', seller);
     expect(sr.asking_price).toBe(1000);
     const created = sr.created_at;
+    await sleep(100);
     sr.asking_price = 1500;
     expect(sr.asking_price).toBe(1500);
     expect(sr.updated_at).not.toBe(created);
