@@ -25,10 +25,9 @@ function MapComponent({ data }) {
         bounds.extend({ lat: c.lat - MINXY, lng: c.lng - MINXY });
     }
 
-    const map = useMapEvents({
-    })
+    const map = useMapEvents({});
 
-    map.fitBounds(bounds);
+    map?.fitBounds(bounds);
 
     return (<>{data?.map((m) => <Marker key={JSON.stringify(m)} position={m} icon={defaultIcon}>
     </Marker>)}</>);
