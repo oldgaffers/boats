@@ -102,7 +102,7 @@ describe('BoatDetail component tests', () => {
   });
 
   test('renders basic boat detail with design and build pane', async () => {
-React.act(() => {
+React.act(async () => {
     const page = await render(
       <BoatDetail view="detail" boat={mockBoat} />
     );
