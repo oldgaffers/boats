@@ -62,7 +62,7 @@ export function prepareInitialValues(boat, user, pr) {
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
-  // console.log('IV', initialValues)
+  console.log('IV', initialValues)
 
   return initialValues;
 
