@@ -28,6 +28,10 @@ const pickers = {
 
 vi.setSystemTime(1434319925275);
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 vi.mock('../../src/util/api', () => {
   return {
     clearNewValues: () => Promise.resolve(vi.fn()),
@@ -35,13 +39,12 @@ vi.mock('../../src/util/api', () => {
     getPicklist: async (name) => pickers[name] || [],
     getPicklists: async () => pickers,
     nextOgaNo: async () => Promise.resolve(vi.fn()),
-    openPr: async () => Promise.resolve(false),
+    openPr: async () => {
+      await sleep(50); // give time for progress bar to render
+      return Promise.resolve(false);
+    },
   };
 });
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 describe('EditBoatWizard component tests', async () => {
   test('render form with no permission to sell', async () => {
