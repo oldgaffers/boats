@@ -56,6 +56,8 @@ vi.mock('../../src/components/voyage', () => ({
   default: ({ voyage }) => <div data-testid="voyage">{voyage.start}</div>,
 }));
 
+globalThis.IS_REACT_ACT_ENVIRONMENT=true;
+
 describe('BoatDetail component tests', () => {
   const mockUser = {
     email: 'test@example.com',
