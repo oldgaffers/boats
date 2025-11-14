@@ -28,7 +28,7 @@ const pickers = {
 
 vi.setSystemTime(1434319925275);
 
-vi.mock('../src/util/api', () => {
+vi.mock('../../src/util/api', () => {
   return {
     clearNewValues: () => Promise.resolve(vi.fn()),
     postNewValues: () => Promise.resolve(vi.fn()),
