@@ -6,16 +6,16 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useAuth0 } from '@auth0/auth0-react';
-import ConditionalText from './conditionaltext';
-import TabPanel from './tabpanel';
-import SailTable from './sailtable';
-import { HandicapDisplay } from './Handicap';
+import { getScopedData } from '../util/api';
 import { m2f, price, formatList, kg, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
+import TabPanel from './tabpanel';
+import ConditionalText from './conditionaltext';
 import Owners from './owners';
 import Skippers from './skippers';
-import { getScopedData } from '../util/api';
 import Voyage from './voyage';
+import SailTable from './sailtable';
+import { HandicapDisplay } from './Handicap';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
