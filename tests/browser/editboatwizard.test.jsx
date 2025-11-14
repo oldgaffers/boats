@@ -59,9 +59,8 @@ describe('EditBoatWizard component tests', async () => {
     const screen = await render(<EditBoatWizard boat={boat} open={true} onSubmit={onSubmit} />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
     await expect.element(screen.getByRole('dialog')).toBeInTheDocument();
-    await waitFor(() => {
-      screen.getByText('Rig');
-    });
+    await waitFor(() => screen.getByText('Rig'));
+    await waitFor(() => screen.getByText('Continue'));
     await userEvent.click(screen.getByText('Continue'));
     await waitFor(() => {
       screen.getByText('Generic Type(s)');
