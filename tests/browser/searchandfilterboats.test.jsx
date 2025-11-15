@@ -19,5 +19,5 @@ test('renders learn react link', async () => {
       />
   );
   const wanted = getByText(/Boat Name/);
-  expect(wanted.items().length).toBeGreaterThanOrEqual();
+  expect(wanted.items().length).toBeGreaterThanOrEqual(1);
 });
