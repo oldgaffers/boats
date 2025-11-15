@@ -118,7 +118,14 @@ export default function BrowseBoats({
       </Accordion>
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
-          <Typography>Sort and Filter</Typography>
+          <Typography>Sort and Paginate</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion defaultExpanded={true}>
+        <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
+          <Typography>Filter</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <SearchAndFilterBoats
