@@ -147,7 +147,7 @@ export default function BrowseBoats({
             onClearAllMarks={onClearAllMarks}
             onOwnedOnlyChange={(val) => setOwnedOnly(val)}
             isOwnedOnly={ownedOnly}
-            enableOwnersOnly={enableOwnersOnly}
+            enableOwnersOnly={true}
             filtered={filtered}
             fleets={fleets}
             fleetName={fleetName}
