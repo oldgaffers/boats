@@ -7,7 +7,7 @@ import { mockPicks } from '../mock/sampledata';
 vi.useFakeTimers();
 
 test('renders learn react link', async () => {
-  const { getByText } = await render(
+  const page = await render(
       <SearchAndFilterBoats 
       sortDirection="asc"
       sortField="rank"
@@ -18,6 +18,6 @@ test('renders learn react link', async () => {
       onSortChange={(x,y)=> console.log(x,y)}      
       />
   );
-  const wanted = getByLabelText('Boat Name');
+  const wanted = page.getByLabelText('Boat Name');
   expect(wanted).toBeInTheDocument();
 });
