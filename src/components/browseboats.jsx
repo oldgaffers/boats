@@ -25,7 +25,7 @@ function makePickers(filtered) {
   [
     "name",
     "designer",
-    "builder", 
+    "builder",
     "rig_type",
     "mainsail_type",
     "generic_type",
@@ -59,7 +59,7 @@ function makePickers(filtered) {
 
 function ExportOptions({ name, boats, filters }) {
   if (name) {
-    return  <ExportFleet name={name} boats={boats} filters={filters} />
+    return <ExportFleet name={name} boats={boats} filters={filters} />
   }
   return '';
 }
@@ -97,9 +97,9 @@ export default function BrowseBoats({
   const pickers = makePickers(filtered);
 
   return (
-   <Box>
+    <Box>
       <Stack direction='row' spacing={2} margin={2}>
-        <Welcome/>
+        <Welcome />
         <Box maxHeight={200}>
           <RoleRestricted role='editor'>
             <ShuffleBoatsButton />
@@ -111,7 +111,7 @@ export default function BrowseBoats({
           <Typography>About the boat Register</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <IntroText view={state.view}/>
+          <IntroText view={state.view} />
           <Box maxHeight={200}>
             <CreateBoatButton />
           </Box>
@@ -123,34 +123,34 @@ export default function BrowseBoats({
         </AccordionSummary>
         <AccordionDetails>
           <SortingAndPagination
-        sortDirection={sortDirection}
-        sortField={sortField}
-        boatsPerPage={boatsPerPage}
-        view={view}
-        onSortChange={onSortChange}
-        onPageSizeChange={onPageSizeChange}
+            sortDirection={sortDirection}
+            sortField={sort}
+            boatsPerPage={bpp}
+            view={state.view}
+            onSortChange={onSortChange}
+            onPageSizeChange={onPageSizeChange}
           />
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded={true}>
         <AccordionSummary expandIcon={<ExpandCircleDownIcon />}>
-          <Typography>Filter</Typography>
+          <Typography>Filter boats by attribute</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <FilterBoats
-        filters={filters}
-        view={view}
-        pickers={pickers}
-        onFilterChange={onFilterChange}
-        onMarkedOnlyChange={onMarkedOnlyChange}
-        isMarkedOnly={isMarkedOnly}
-        onClearAllMarks={onClearAllMarks}
-        onOwnedOnlyChange={onOwnedOnlyChange}
-        isOwnedOnly={isOwnedOnly}
-        enableOwnersOnly={enableOwnersOnly}
-        filtered={filtered}
-        fleets={fleets}
-        fleetName={fleetName}
+            filters={filters}
+            view={state.view}
+            pickers={pickers}
+            onFilterChange={handleFilterChange}
+            onMarkedOnlyChange={onMarkedOnlyChange}
+            isMarkedOnly={isMarkedOnly}
+            onClearAllMarks={onClearAllMarks}
+            onOwnedOnlyChange={onOwnedOnlyChange}
+            isOwnedOnly={isOwnedOnly}
+            enableOwnersOnly={enableOwnersOnly}
+            filtered={filtered}
+            fleets={fleets}
+            fleetName={fleetName}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
         </AccordionDetails>

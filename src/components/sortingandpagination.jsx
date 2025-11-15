@@ -66,65 +66,59 @@ export default function SortingAndPagination({
   }
 
   return (
-    <>
-      <FormHelperText sx={{ marginLeft: "1em", marginBottom: "3px" }}>
-        Use these controls to sort the list by name, price, etc. and to choose
-        how much you want to see
-      </FormHelperText>
-      <Grid
-        container
-        direction="row"
-        justify="space-evenly"
-        alignItems="flex-end"
-      >
-        <Grid item>
-          <Picker
-            clearable={false}
-            value={`${boatsPerPage}`}
-            id="page-size"
-            onChange={handlePageSizeChange}
-            options={pageSize}
-            label="Boats Per Page"
-          />
-        </Grid>
-        <Grid item>
-          <FormControl sx={{ marginLeft: "1.5em" }}>
-            <FormLabel>Sort By</FormLabel>
-            <RadioGroup
-              row
-              aria-label="sorting"
-              name="sorting"
-              value={sortLabelByField[sortField]}
-              onChange={handleSortFieldChange}
-            >
-              {sortOptions.map((option) => (
-                <FormControlLabel
-                  key={option.name}
-                  value={option.field}
-                  sx={{ marginRight: "1em", borderRightWidth: "1vw" }}
-                  control={<Radio checked={sortField === option.field} />}
-                  label={option.name}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-        </Grid>
-        <Grid item>
-          <FormControl sx={{ marginLeft: "1.5em" }}>
-            <FormLabel>Sort Direction</FormLabel>
-            <FormControlLabel
-              id="sort-direction"
-              onChange={handleSortDirectionChange}
-              control={
-                <Switch
-                  checked={sortDirection !== sortDirectionByField[sortField]}
-                />
-              }
-              label="reversed"
-            />
-          </FormControl>
-        </Grid>
+    <Grid
+      container
+      direction="row"
+      justify="space-evenly"
+      alignItems="flex-end"
+    >
+      <Grid item>
+        <Picker
+          clearable={false}
+          value={`${boatsPerPage}`}
+          id="page-size"
+          onChange={handlePageSizeChange}
+          options={pageSize}
+          label="Boats Per Page"
+        />
       </Grid>
-    </>
+      <Grid item>
+        <FormControl sx={{ marginLeft: "1.5em" }}>
+          <FormLabel>Sort By</FormLabel>
+          <RadioGroup
+            row
+            aria-label="sorting"
+            name="sorting"
+            value={sortLabelByField[sortField]}
+            onChange={handleSortFieldChange}
+          >
+            {sortOptions.map((option) => (
+              <FormControlLabel
+                key={option.name}
+                value={option.field}
+                sx={{ marginRight: "1em", borderRightWidth: "1vw" }}
+                control={<Radio checked={sortField === option.field} />}
+                label={option.name}
+              />
+            ))}
+          </RadioGroup>
+        </FormControl>
+      </Grid>
+      <Grid item>
+        <FormControl sx={{ marginLeft: "1.5em" }}>
+          <FormLabel>Sort Direction</FormLabel>
+          <FormControlLabel
+            id="sort-direction"
+            onChange={handleSortDirectionChange}
+            control={
+              <Switch
+                checked={sortDirection !== sortDirectionByField[sortField]}
+              />
+            }
+            label="reversed"
+          />
+        </FormControl>
+      </Grid>
+    </Grid>
   );
 }
