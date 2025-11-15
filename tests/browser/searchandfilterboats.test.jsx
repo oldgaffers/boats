@@ -18,6 +18,6 @@ test('renders learn react link', async () => {
       onSortChange={(x,y)=> console.log(x,y)}      
       />
   );
-  const wanted = getByRole('label', { name: 'Boat Name' })
+  const wanted = getByLabelText('Boat Name');
   expect(wanted).toBeInTheDocument();
 });
