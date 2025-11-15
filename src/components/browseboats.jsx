@@ -30,6 +30,8 @@ function makePickers(filtered) {
     "generic_type",
     "design_class",
     "construction_material",
+    "place_built",
+    "home_port",
   ].forEach((key) => {
     const l = new Set();
     filtered.forEach((boat) => {
