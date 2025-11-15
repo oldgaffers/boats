@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
-import Divider from "@mui/material/Divider";
+import React from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Switch from "@mui/material/Switch";
@@ -8,29 +7,13 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Button, Typography } from "@mui/material";
 import Picker from "./picker";
-import NumberEntry from "./numberentry";
-import DateRangePicker from "./daterangepicker";
-import useDebounce from "../util/debounce";
-import FleetButtons from "./fleetbuttons";
-import { MarkContext } from "./browseapp";
-import RoleRestricted from './rolerestrictedcomponent';
 
 const opposite = { asc: "desc", desc: "asc" };
 
 const pageSize = [];
 for (let i = 1; i <= 8; i++) {
   pageSize.push({ name: `${6 * i}` });
-}
-
-function makePicklist(view, pickers, field) {
-  if (pickers[field] && pickers[field].length > 0) {
-    const p = pickers[field]
-    const pl = [...new Set(p)].map((item) => ({ name: item }));
-    return pl;
-  }
-  return [];
 }
 
 export default function SortingAndPagination({
@@ -41,8 +24,6 @@ export default function SortingAndPagination({
   onPageSizeChange = () => console.log('onPageSizeChange'),
   onSortChange = () => console.log('onSortChange'),
 }) {
-
-  const debouncedOgaNo = useDebounce(ogaNo, 1000);
 
   const handlePageSizeChange = (_, bpp) => {
     onPageSizeChange(parseInt(bpp, 10));
