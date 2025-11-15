@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2/Grid2";
 import Switch from "@mui/material/Switch";
 import FormHelperText from "@mui/material/FormHelperText";
 import Button from "@mui/material/Button";
@@ -123,7 +123,7 @@ export default function FilterBoats({
                 justify="space-evenly"
                 alignItems="center"
             >
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="name"
@@ -132,7 +132,7 @@ export default function FilterBoats({
                         value={currentFilters["name"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <NumberEntry
                         id="oga_no"
                         label="OGA Boat No."
@@ -141,7 +141,7 @@ export default function FilterBoats({
                         onClear={() => { setOgaNo(''); }}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="designer"
@@ -150,7 +150,7 @@ export default function FilterBoats({
                         value={currentFilters["designer"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="builder"
@@ -159,7 +159,7 @@ export default function FilterBoats({
                         value={currentFilters["builder"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="rig_type"
@@ -168,7 +168,7 @@ export default function FilterBoats({
                         value={currentFilters["rig_type"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="mainsail_type"
@@ -177,7 +177,7 @@ export default function FilterBoats({
                         value={currentFilters["mainsail_type"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="generic_type"
@@ -192,7 +192,7 @@ export default function FilterBoats({
                         }}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="design_class"
@@ -201,7 +201,7 @@ export default function FilterBoats({
                         value={currentFilters["design_class"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <Picker
                         onChange={pl}
                         id="construction_material"
@@ -210,7 +210,9 @@ export default function FilterBoats({
                         value={currentFilters["construction_material"]}
                     />
                 </Grid>
-                <Grid item>
+                <Grid><Picker /></Grid>
+                <Grid><Picker /></Grid>
+                <Grid>
                     <DateRangePicker
                         value={dr}
                         yearProps={pickers.year}
@@ -222,7 +224,7 @@ export default function FilterBoats({
                         step={pickers.year.step}
                     />
                 </Grid>
-                <Grid item>
+                <Grid>
                     <FormControlLabel
                         disabled={markList.length === 0}
                         id="marked"
@@ -236,10 +238,8 @@ export default function FilterBoats({
                     onClick={onClearAllMarks}
                     variant='contained' size='small' color='secondary'
                 >Clear Marks</Button>
-                <Grid item>
-                </Grid>
-                <Grid item>
-                    <RoleRestricted role='member'>
+                <RoleRestricted role='member'>
+                    <Grid>
                         <FleetButtons
                             onSelectionChange={filterByFleet}
                             onFleetsUpdated={fleetsUpdated}
@@ -248,10 +248,8 @@ export default function FilterBoats({
                             fleets={fleets}
                             fleetName={fleetName}
                         />
-                    </RoleRestricted>
-                </Grid>
-                <RoleRestricted role='member'>
-                    <Grid item>
+                    </Grid>
+                    <Grid>
                         <FormControlLabel
                             disabled={!enableOwnersOnly}
                             id="owned"
