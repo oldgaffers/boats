@@ -210,8 +210,24 @@ export default function FilterBoats({
                         value={currentFilters["construction_material"]}
                     />
                 </Grid>
-                <Grid><Picker /></Grid>
-                <Grid><Picker /></Grid>
+                <Grid>
+                    <Picker
+                        onChange={pl}
+                        id="place_built"
+                        options={makePicklist(view, pickers, "place_built")}
+                        label="Place Built"
+                        value={currentFilters["place_built"]}
+                    />
+                </Grid>
+                <Grid>
+                    <Picker
+                        onChange={pl}
+                        id="home_port"
+                        options={makePicklist(view, pickers, "home_port")}
+                        label="Home Port"
+                        value={currentFilters["home_port"]}
+                    />
+                </Grid>
                 <Grid>
                     <DateRangePicker
                         value={dr}
