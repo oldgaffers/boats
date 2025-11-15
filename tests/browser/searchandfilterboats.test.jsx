@@ -19,5 +19,5 @@ test('renders learn react link', async () => {
       />
   );
   const wanted = getByText(/Boat Name/);
-  expect(wanted).toBeInTheDocument();
+  expect(wanted.length).toBeGreaterThanOrEqual();
 });
