@@ -121,6 +121,14 @@ export default function BrowseBoats({
           <Typography>Sort and Paginate</Typography>
         </AccordionSummary>
         <AccordionDetails>
+          <SortingAndPagination
+        sortDirection={sortDirection}
+        sortField={sortField}
+        boatsPerPage={boatsPerPage}
+        view={view}
+        onSortChange={onSortChange}
+        onPageSizeChange={onPageSizeChange}
+          />
         </AccordionDetails>
       </Accordion>
       <Accordion defaultExpanded={true}>
@@ -128,26 +136,20 @@ export default function BrowseBoats({
           <Typography>Filter</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <SearchAndFilterBoats
-            sortField={sort}
-            sortDirection={sortDirection}
-            boatsPerPage={bpp}
-            filters={filters}
-            view={state.view}
-            pickers={pickers}
-            onPageSizeChange={onPageSizeChange}
-            onSortChange={onSortChange}
-            onFilterChange={handleFilterChange}
-            onMarkedOnlyChange={onMarkedOnlyChange}
-            onClearAllMarks={onClearAllMarks}
-            onFleetChange={onFleetChange}
-            isMarkedOnly={isMarkedOnly}
-            onOwnedOnlyChange={(v) => setOwnedOnly(v)}
-            isOwnedOnly={ownedOnly}
-            enableOwnersOnly={!!id}
-            filtered={filtered}
-            fleets={fleets}
-            fleetName={fleetName}
+          <FilterBoats
+        filters={filters}
+        view={view}
+        pickers={pickers}
+        onFilterChange={onFilterChange}
+        onMarkedOnlyChange={onMarkedOnlyChange}
+        isMarkedOnly={isMarkedOnly}
+        onClearAllMarks={onClearAllMarks}
+        onOwnedOnlyChange={onOwnedOnlyChange}
+        isOwnedOnly={isOwnedOnly}
+        enableOwnersOnly={enableOwnersOnly}
+        filtered={filtered}
+        fleets={fleets}
+        fleetName={fleetName}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
         </AccordionDetails>
