@@ -18,6 +18,6 @@ test('renders learn react link', async () => {
       onSortChange={(x,y)=> console.log(x,y)}      
       />
   );
-  const wanted = getByText(/sort the list/);
+  const wanted = getByText(/Boat Name/);
   expect(wanted).toBeInTheDocument();
 });
