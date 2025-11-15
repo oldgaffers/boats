@@ -3,7 +3,8 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Grid from "@mui/material/Grid";
 import Switch from "@mui/material/Switch";
 import FormHelperText from "@mui/material/FormHelperText";
-import { Button, Typography } from "@mui/material";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import Picker from "./picker";
 import NumberEntry from "./numberentry";
 import DateRangePicker from "./daterangepicker";
@@ -11,8 +12,6 @@ import useDebounce from "../util/debounce";
 import FleetButtons from "./fleetbuttons";
 import { MarkContext } from "./browseapp";
 import RoleRestricted from './rolerestrictedcomponent';
-
-const opposite = { asc: "desc", desc: "asc" };
 
 const pageSize = [];
 for (let i = 1; i <= 8; i++) {
