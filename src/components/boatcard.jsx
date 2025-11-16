@@ -134,7 +134,6 @@ export function BoatCardImage({ albumKey, name }) {
       <Skeleton variant='rounded' animation='wave' height={height} />
     </>
   }
-  console.log('BoatCardImage data', data);
   if (data.ThumbnailUrl) {
     return (<CardMedia
       component="img"

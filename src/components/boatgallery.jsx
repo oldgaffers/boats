@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { Card, CardMedia, Skeleton } from '@mui/material';
-import { getBoatData, getThumb } from '../util/api';
+import { CardMedia, Skeleton } from '@mui/material';
+import { getThumb } from '../util/api';
 import {CompactBoatCard} from './boatcard';
 import { m2f } from '../util/format';
 
@@ -11,7 +11,6 @@ const galleryWanted = {
 };
 
 export function BoatCardImage({ albumKey, name }) {
-  console.log('BoatCardImage', albumKey, name);
   const [data, setData] = useState();
 
   const height = 220;
