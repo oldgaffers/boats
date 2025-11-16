@@ -158,7 +158,7 @@ export default function HtmlEditor({ component, name, title = '', helperText = '
                         onKeyDown={(e) => console.log(e.key)}
                     />
                 </Box>
-                <Typography variant='body2'>{words||'uncounted'} words. {(words && words < 5) && 'A few more would be good'}{(words && words > maxLength) && 'That might be too many'}</Typography>
+                <Typography variant='caption'>{words||'uncounted'} words. {(words && words < 5) && 'A few more would be good'}{(words && words > maxLength) && 'That might be too many'}</Typography>
                 <Typography variant='caption'>{helperText}</Typography>
             </Stack>
         </>

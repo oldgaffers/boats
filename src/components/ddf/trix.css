@@ -1,9 +1,9 @@
 trix-editor.trix-user-text-full {
-  max-height: 100px;
+  max-height: 120px;
   overflow-y: auto;
 }
 
 trix-editor.trix-user-text-short {
-  max-height: 40px;
+  max-height: 24px;
   overflow-y: auto;
 }

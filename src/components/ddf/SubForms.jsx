@@ -219,8 +219,6 @@ export const descriptionsItems = [
     component: "html",
     title: "Short description",
     name: "short_description",
-    controls: ["bold", "italic"], // for ckeditor
-    toolbar: 'undo redo | bold italic removeformat | help', // for tinymce
     maxLength: 100,
     height: 2,
     helperText: `The short description appears on the boat's card and should be one or two lines long.
@@ -229,25 +227,12 @@ export const descriptionsItems = [
   },
   {
     component: "html",
-    title: "Full description",
+    title: "Full description (not the sales text)",
     name: "full_description",
-    controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
-    toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
-    height: 3,
-    helperText: `The full description appears on the boat's detail page and can be as long as you like.
-
-        It shouldn't replicate the short description. Do include historical details, significant voyages,
-      rebuilds and links to external videos, etc.
-    `,
+    height: 6,
+    helperText: `The full description can be as long as you like. Include historical details, significant voyages,
+      rebuilds and links to external videos, etc.`,
   },
-  {
-    component: 'plain-text',
-    name: 'ddf.explain_descriptions',
-    label: <Typography variant="caption" sx={{ paddingTop: "1em" }}>
-      If you want to sell this boat, there is a separate place for the sales, text,
-      so don't put things like inventory in the descriptions.
-    </Typography>
-  }
 ];
 
 export const yearItems = [
