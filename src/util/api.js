@@ -246,10 +246,15 @@ export async function geolocate(place) {
   return undefined;
 }
 
-export async function getYAML(path, branch) {
+export async function getGithubFile(path, branch) {
   const api = 'https://api.github.com/repos/oldgaffers/boatregister';
   const url = `${api}/contents/${path}?ref=${branch}`;
-  const r = await fetch(url);
+  const r = await fetch(url, {
+    headers: {
+      'Accept': 'application/vnd.github.raw+json',
+    }
+  }
+  );
   if (r.ok) {
     return r.text();
   } else {
@@ -283,9 +288,9 @@ export async function openPr(oga_no) {
   }));
   const b = `boat/${oga_no}/boat.yml`;
   if (files.flat().filter((f) => f?.includes(b))) {
-    console.log('Open PR includes changes to boat');
-    const yaml = await getYAML(b, branch);
-    return getBoatFromYAML(atob(yaml.content));
+    // console.log('Open PR includes changes to boat');
+    const yaml = await getGithubFile(b, branch);
+    return getBoatFromYAML(yaml);
   }
   return undefined;
 }
