@@ -1,6 +1,7 @@
 import React from "react";
 import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fTopSA, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../../util/THCF";
 import { f2m } from '../../util/format';
+import { Typography } from "@mui/material";
 
 const solentSteps = (thisStep, nextStep) => {
   return [
@@ -491,9 +492,6 @@ export const steps = (firstStep, nextStep) => [
   {
     name: firstStep,
     nextStep: ({ values }) => {
-      if (values.ddf.use_sailarea) {
-        return "handicap-hull-step";
-      }
       if (['Single Sail', 'Cat Boat'].includes(values.rig_type)) {
         return "mainsail-step";
       }
@@ -511,29 +509,23 @@ export const steps = (firstStep, nextStep) => [
             component: 'text-field',
             name: "handicap_data.thcf",
             readOnly: true,
+            isDisabled: true,
             label: "stored T(H)CF",
           },
           {
             component: 'text-field',
-            name: "handicap_data.sailarea",
-            label: "Sail Area (decimal square feet)",
-            description: "If you know the sail area you can enter it here",
-            type: "number",
-            dataType: 'float',
+            name: "ddf.thcf",
+            readOnly: true,
+            isDisabled: true,
+            label: "calculated T(H)CF",
           },
           {
-            component: 'checkbox',
-            name: "ddf.use_sailarea",
-            label: "Use the sail area",
-            description: "skip entering fore-triangle and sail measurements",
-            initialValue: false,
-            resolveProps: (props, { meta, input }, formOptions) => {
-              const f = formOptions.getState();
-              const handicap_data = f.values.handicap_data;
-              return {
-                isDisabled: !handicap_data.sailarea,
-              };
-            },
+            component: 'plain-text',
+            name: "ddf.thcf-note",
+            label: <Typography component='span'>The calculated T(H)CF is based on the data
+              currently stored for the boat. If it is zero, we don't have enough data to calculate a handicap.
+              Please add the required data in the following steps.
+            </Typography>
           },
         ],
       },
@@ -765,10 +757,9 @@ export const steps = (firstStep, nextStep) => [
         label: "Square root of corrected sail area",
         resolveProps: (props, { meta, input }, formOptions) => {
           const { values } = formOptions.getState();
-          const { ddf, handicap_data } = values;
           const crsa = fSqrtS(
-            ddf.rig_allowance,
-            ddf.use_sailarea ? handicap_data.sailarea : ddf.total_sailarea,
+            values.ddf.rig_allowance,
+            values.ddf.total_sailarea,
           );
           formOptions.change("ddf.root_s", crsa);
           return {
