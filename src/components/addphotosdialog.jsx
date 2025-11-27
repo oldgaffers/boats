@@ -40,7 +40,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
       const rak = await getAlbumKey(boat.name, boat.oga_no);
       if (rak) {
         console.log('got album key', JSON.stringify(rak));
-        albumKey = rak.album_key;
+        albumKey = rak.albumKey;
       } else {
         // console.log('No existing album found');
         const rcpa = await createPhotoAlbum(boat.name, boat.oga_no);
