@@ -47,12 +47,12 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
         // console.log('create new album', rcpa.status, rcpa.statusText);
         const j = await rcpa.json();
         if (rcpa.ok) {
-          boat.image_key = j.album_key;
+          boat.image_key = j.albumKey;
           const response = await postBoatData({ new: boat, email })
           if (!response.ok) {
             console.log('problem updating boat register with new album key', response.statusText);
           }
-          albumKey = j.album_key;
+          albumKey = j.albumKey;
         } else {
           console.log('Problem creating album, upload photos to pending area');
           const r = await getAlbumKey('uploaded', '-');
