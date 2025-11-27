@@ -170,6 +170,10 @@ export function prepareModifiedValues(values, boat, pickers) {
     previous_names.unshift([name]);
   }
 
+  if (!submitted.handicap_data.thcf === '-') {
+    submitted.handicap_data.thcf = undefined
+  }
+
   const modifiedBoat = {
     ...boatf2m(submitted),
     ownerships: updateOwnerships(boat.ownerships, ownerships),
