@@ -1,8 +1,7 @@
 import boatsByHomePort from './boatsbyhomeport';
 import boatsByPlaceBuilt from './boatsByPlaceBuilt';
 import { boatRegisterHome } from './constants';
-import { parse } from 'yaml';
-import Showdown from "showdown";
+import { getBoatFromYAML } from './yaml_utils';
 
 const api1 = 'https://3q9wa2j7s1.execute-api.eu-west-1.amazonaws.com';
 const api2 = 'https://v2z7n3g4mb5lfkbgeyln3ksjya0qsrpm.lambda-url.eu-west-1.on.aws';
@@ -247,12 +246,17 @@ export async function geolocate(place) {
   return undefined;
 }
 
-export async function getYAML(path, branch) {
+export async function getGithubFile(path, branch) {
   const api = 'https://api.github.com/repos/oldgaffers/boatregister';
   const url = `${api}/contents/${path}?ref=${branch}`;
-  const r = await fetch(url);
+  const r = await fetch(url, {
+    headers: {
+      'Accept': 'application/vnd.github.raw+json',
+    }
+  }
+  );
   if (r.ok) {
-    return r.json();
+    return r.text();
   } else {
     console.log('failure getting yaml file');
   }
@@ -284,17 +288,9 @@ export async function openPr(oga_no) {
   }));
   const b = `boat/${oga_no}/boat.yml`;
   if (files.flat().filter((f) => f?.includes(b))) {
-    console.log('Open PR includes changes to boat');
-    const yaml = await getYAML(b, branch);
-    const p = parse(atob(yaml.content));
-    const converter = new Showdown.Converter();
-    p.short_description = converter.makeHtml(p.short_description);
-    p.full_description = converter.makeHtml(p.full_description);
-    (p?.for_sales || []).forEach((s) => {
-      s.sales_text = converter(s.sales_text);
-      console.log(s);
-    });
-    return p;
+    // console.log('Open PR includes changes to boat');
+    const yaml = await getGithubFile(b, branch);
+    return getBoatFromYAML(yaml);
   }
   return undefined;
 }

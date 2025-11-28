@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'jsondiffpatch';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
+import { fThcf } from '../util/THCF';
 
 export function boatdiff(before, after) {
   const cj = create({
@@ -35,6 +36,14 @@ export function prepareInitialValues(boat, user, pr) {
   }
 
   const initialValues = { ddf, email, ...boatm2f(rest) };
+
+  ddf.thcf = fThcf(initialValues);
+  if (!initialValues.handicap_data) {
+    initialValues.handicap_data = {};
+  }
+  if (initialValues.handicap_data.thcf === undefined) {
+    initialValues.handicap_data.thcf = '-';
+  }
 
   // prepare for dual-list note, generic type is already ok
   ['builder', 'designer'].forEach((key) => {
@@ -159,6 +168,10 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   if (ddf.new_name) {
     previous_names.unshift([name]);
+  }
+
+  if (!submitted.handicap_data.thcf === '-') {
+    submitted.handicap_data.thcf = undefined
   }
 
   const modifiedBoat = {

@@ -45,7 +45,7 @@ export default function schema(isNew = false) {
         {
           component: 'plain-text',
           name: 'ddf.pr.label',
-          label: <Typography>
+          label: <Typography component='span'>
             You are editing the latest proposed values, so some fields will
             already be different from the currently published ones.</Typography>,
           condition: { when: 'ddf.pr', is: true },

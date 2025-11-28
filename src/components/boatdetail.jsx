@@ -15,6 +15,7 @@ import Skippers from './skippers';
 import Voyage from './voyage';
 import SailTable from './sailtable';
 import { HandicapDisplay } from './Handicap';
+import { TextPane } from './boatpane';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
@@ -42,34 +43,27 @@ export default function BoatDetail({ view, boat }) {
     getData();
   }, [user, getAccessTokenSilently, boat.oga_no]);
 
+  const pane_data = [
+    { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },
+    { title: 'Dimensions', fields: [
+      { field: 'length_on_deck', df: m2f, abbr: 'LOD' },
+      { field: 'length_on_waterline', df: m2f, abbr: 'LWL' },
+      { field: 'beam', df: m2f },
+      { field: 'draft', df: m2f },
+      { field: 'displacement', df: m2f },
+      { field: 'solent', df: m2f },
+    ] },
+  ];
+
+
+  boat.year_of_build = { approx: boat.year_is_approximate, value: boat.year };
+
   const panes = [
     {
-      title: 'Design & Build', children: (
-        <Paper>
-          <ConditionalText value={formatList(boat, 'generic_type')} label="Generic type" />
-          <ConditionalText value={boat.design_class?.name} label="Design class" />
-          <ConditionalText label="Designer" value={formatList(boat, 'designer')} />
-          <ConditionalText value={boat.hull_form} label="Hull form" />
-          <ConditionalText label="Builder" value={formatList(boat, 'builder')} />
-          <ConditionalText value={boat.place_built} label="Place built" />
-          <ConditionalText value={(boat.year_is_approximate ? 'around ' : '') + boat.year} label="Year of Build" />
-          <ConditionalText value={boat.construction_material} label="Construction material" />
-          <ConditionalText value={boat.construction_method} label="Construction method" />
-          <ConditionalText value={boat.spar_material} label="Spar material" />
-          <ConditionalText value={boat.construction_details} label="Construction details" />
-        </Paper>
-      )
+      title: pane_data[0].title, children: <TextPane data={boat} fields={pane_data[0].fields} />
     },
     {
-      title: 'Dimensions', children: (
-        <Paper>
-          <ConditionalText value={m2f(hd.length_on_deck)} label="Length on deck (LOD)" />
-          <ConditionalText label="Waterline Length (LWL)" value={m2f(hd.length_on_waterline)} />
-          <ConditionalText value={m2f(hd.beam)} label="Beam" />
-          <ConditionalText value={m2f(hd.draft)} label="Draft" />
-          <ConditionalText value={kg(hd.displacement)} label="Displacement" />
-          <ConditionalText value={hd.solent?.hull_shape} label="Solent Rating Hull Shape" />
-        </Paper>)
+      title: pane_data[1].title, children: <TextPane data={hd} fields={pane_data[1].fields} />
     },
   ];
   const registration_fields_for_boat = Object.keys(boat).filter(value => registration_fields.includes(value));

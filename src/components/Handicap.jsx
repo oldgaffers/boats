@@ -1,7 +1,7 @@
-import React from "react";
+import  React from "react";
 import Typography from "@mui/material/Typography";
-import { fForeTriangle, fMainSA, fMR, fMSA, fPropellorBonus, fSqrtS, fThcf, fTopSA, rigAllowance, solentEstimatedDisplacement, solentMR, solentRating } from "../util/THCF";
-import { boatm2f, f2m } from '../util/format';
+import { fThcf } from "../util/THCF";
+import { boatm2f } from '../util/format';
 import ConditionalText from './conditionaltext';
 
 const hideUnlessChecked = false;
