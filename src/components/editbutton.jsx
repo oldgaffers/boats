@@ -11,9 +11,8 @@ import { formatters } from 'jsondiffpatch';
 export default function EditButton({ boat, label = 'I have edits for this boat' }) {
   const [open, setOpen] = useState(false);
   const [snackBarOpen, setSnackBarOpen] = useState(false);
-  const [errorSnackBarOpen, setErrorSnackBarOpen] = useState(false);
-
-  let errorText = '';
+  const [snackBarText, setSnackBarText] = useState("Thanks, we'll get back to you.");
+  const [snackBarSeverity, setSnackBarSeverity] = useState('success');
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -36,14 +35,16 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
           setSnackBarOpen(true);
         } else {
           // console.log("post", response.statusText);
-          errorText = response.statusText;
-          setErrorSnackBarOpen(true);
+          setSnackBarText(response.statusText);
+          setSnackBarSeverity('error');
+          setSnackBarOpen(true);
         }
       })
       .catch((error) => {
         // console.log("post", error);
-        errorText = error.message;
-        setErrorSnackBarOpen(true);
+        setSnackBarText(error.message);
+        setSnackBarSeverity('error');
+        setSnackBarOpen(true);
       });
   };
 
@@ -61,16 +62,8 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
         open={snackBarOpen}
         autoHideDuration={2000}
         onClose={() => { console.log('ok'); setSnackBarOpen(false) }}
-        message={"Thanks, we'll get back to you."}
-        severity="success"
-      />
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={errorSnackBarOpen}
-        autoHideDuration={2000}
-        onClose={() => { console.log('bad'); setErrorSnackBarOpen(false) }}
-        message={errorText}
-        severity="error"
+        message={snackBarText}
+        severity={snackBarSeverity}
       />
     </div>
   );
