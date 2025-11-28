@@ -13,6 +13,17 @@ import EventBusyIcon from '@mui/icons-material/EventBusy';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { yearFormatter } from './HistoricalOwnersTable';
 
+function goldIdValueGetter(params) {
+    console.log('goldIdValueGetter', params);
+    if (params.row.name) {
+        return params.row.name;
+    }
+    if (typeof params.value === 'string' ) {
+        return params.value; // local editing - needs changing later
+    }
+    return 'TBD';
+}
+
 export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
     const { user } = useAuth0();
 
@@ -30,7 +41,7 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
         // use negative ids to not clash with provided ids
         const r = {
             id: -owners.length,
-            name: 'An Owner',
+            goldId: -1,
             start: new Date().getFullYear(),
             share: 64,
             current: true,
@@ -51,15 +62,20 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
     };
 
     const processRowUpdate = (updatedRow, originalRow) => {
-        // console.log('processRowUpdate', updatedRow, originalRow);
+        console.log('processRowUpdate', updatedRow, originalRow);
+        const r = { ...updatedRow };
+        if (typeof r.goldId === 'string') {
+            r.goldId = undefined; // new entry
+            r.name = updatedRow.goldId;
+        }
         const updated = owners.map((o) => {
-            if (o.id === updatedRow.id) {
-                return updatedRow;
+            if (o.id === r.id) {
+                return r;
             }
             return o;
         });
         onUpdate(updated);
-        return updatedRow;
+        return r;
     };
 
     const handleClaim = () => {
@@ -78,8 +94,10 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
 
     const endOwnership = (p) => {
         // console.log('endOwnership', p);
-        const { current, ...rest } = p;
-        onMakeHistorical({ ...rest, end: new Date().getFullYear() });
+        const m = { ...p };
+        delete m.current;
+        m.end = new Date().getFullYear();
+        onMakeHistorical(m);
     };
 
     if (!user) {
@@ -96,14 +114,7 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
                 onProcessRowUpdateError={(error) => console.log(error)}
                 onCellEditStop={handleCellEditStop}
                 columns={[
-                    {
-                        field: 'name',
-                        headerName: 'Name',
-                        flex: 1,
-                        editable: true,
-                        valueFormatter: ({ value }) => value ?? 'N/A',
-                    },
-                    { field: 'goldId', headerName: 'goldId', width: 0, editable: true, hide: true, },
+                    { field: 'goldId', headerName: 'Name', flex: 1, editable: true, valueGetter: goldIdValueGetter, },
                     { field: 'member', headerName: 'Member', width: 0, editable: true, hide: true, },
                     { field: 'start', headerName: 'Start', type: 'text', width: 70, editable: true, valueFormatter: yearFormatter },
                     { field: 'share', headerName: 'Share', width: 70, type: 'number', editable: true, valueFormatter: ({ value }) => value ? `${value}/64` : '' },
@@ -130,11 +141,11 @@ export default function OwnersTable({ owners, onMakeHistorical, onUpdate }) {
                     }
                 ]}
                 autoPageSize={true}
-                isCellEditable={(params) => true}
+                isCellEditable={() => true}
                 initialState={{
                     columns: {
                         columnVisibilityModel: {
-                            goldId: false,
+                            // goldId: false,
                             member: false,
                         },
                     },
