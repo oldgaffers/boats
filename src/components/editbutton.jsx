@@ -34,10 +34,12 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
           // console.log('submitted');
           setSnackBarOpen(true);
         } else {
-          // console.log("post", response.statusText);
-          setSnackBarText(response.statusText);
-          setSnackBarSeverity('error');
-          setSnackBarOpen(true);
+          console.log("post", response.status, response.statusText);
+          response.text.then(text => {
+            setSnackBarText(text);
+            setSnackBarSeverity('error');
+            setSnackBarOpen(true);
+          });
         }
       })
       .catch((error) => {
