@@ -49,7 +49,7 @@ export function useGetMemberData(subject, filter) {
     return data;
 }
 
-export function useGetOwnerNames(ownerships) {
+export function useGetOwnerNamesNew(ownerships) {
     const f = {
         fields: 'id,membership,firstname,lastname,GDPR',
         member: ownerMembershipNumbers(ownerships),
@@ -67,7 +67,7 @@ export async function getOwnerNames(memberNumbers, accessToken) {
     return d?.Items ?? [];
 }
 
-export function useGetOwnerNamesOld(ownerships) {
+export function useGetOwnerNames(ownerships) {
     const [data, setData] = useState();
     const accessToken = useContext(TokenContext);
 
