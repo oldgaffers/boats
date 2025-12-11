@@ -10,7 +10,7 @@ export function ownershipsWithNames(ownerships = [], members) {
         return ownerships;
     }
     return ownerships.map((ownership) => {
-        const r = { };
+        const r = { note: 'problem identifying owner' };
         const m = members.filter((member) => member.id === ownership.id);
         if (m.length > 0) {
             const { skipper, GDPR, firstname, lastname } = m[0];
