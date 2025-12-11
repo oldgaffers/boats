@@ -5,7 +5,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
-export function addNames(ownerships = [], members) {
+export function ownershipsWithNames(ownerships = [], members) {
     if (!members) {
         return ownerships;
     }
@@ -30,11 +30,6 @@ export function addNames(ownerships = [], members) {
 export function ownerMembershipNumbers(ownerships=[]) {
     const rawMemberNumbers = ownerships.filter((o) => queryIf(o)).map((o) => o.member) || [];
     return [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
-}
-
-export function ownershipsWithNames(ownerships=[], members) {
-    const ownerships = addNames(ownerships, members);
-    return ownerships;
 }
 
 export function useGetMemberData(subject, filter) {

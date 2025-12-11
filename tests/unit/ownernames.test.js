@@ -1,23 +1,22 @@
 import { test, expect, vi } from 'vitest';
 import {
-  addNames,
   ownerMembershipNumbers,
   ownershipsWithNames,
   getOwnerNames,
 } from '../../src/util/ownernames';
 import * as api from '../../src/util/api';
 
-test('addNames returns ownerships unchanged when no members passed', () => {
+test('ownershipsWithNames returns ownerships unchanged when no members passed', () => {
   const ownerships = [{ id: 1, start: '2020' }];
-  expect(addNames(null, ownerships)).toBe(ownerships);
+  expect(ownershipsWithNames(ownerships)).toBe(ownerships);
 });
 
-test('addNames attaches name and skipper when member found and GDPR true', () => {
+test('ownershipsWithNames attaches name and skipper when member found and GDPR true', () => {
   const members = [
     { id: 1, skipper: true, GDPR: true, firstname: 'John', lastname: 'Doe' },
   ];
   const ownerships = [{ id: 1, start: '2020' }];
-  const r = addNames(members, ownerships);
+  const r = ownershipsWithNames(ownerships, members);
   expect(r[0].name).toBe('John Doe');
   expect(r[0].skipper).toBe(true);
 });
@@ -31,25 +30,28 @@ test('ownerMembershipNumbers returns unique membership numbers where name is mis
       { member: 7 },
     ],
   };
-  const nums = ownerMembershipNumbers(boat);
+  const nums = ownerMembershipNumbers(boat.ownerships);
   expect(nums.sort()).toEqual([5, 7]);
 });
 
-test('ownershipsWithNames sorts ownerships by start and adds names', () => {
+test('ownershipsWithNames adds names', () => {
   const boat = {
     ownerships: [
-      { id: 2, start: '2021' },
       { id: 1, start: '2019' },
+      { id: 2, start: '2021' },
+      { id: 3, start: '2022' },
     ],
   };
   const members = [
     { id: 1, GDPR: true, firstname: 'A', lastname: 'One' },
     { id: 2, GDPR: true, firstname: 'B', lastname: 'Two' },
+    { id: 3, GDPR: false, firstname: 'C', lastname: 'Three' },
   ];
-  const out = ownershipsWithNames(boat, members);
+  const out = ownershipsWithNames(boat.ownerships, members);
   // ensure both ownerships are present and names were attached
-  expect(out.map((o) => o.id).sort()).toEqual([1, 2]);
+  expect(out.map((o) => o.id).sort()).toEqual([1, 2, 3]);
   expect(out.find((o) => o.id === 1).name).toBe('A One');
+  expect(out.find((o) => o.id === 3).note).toBe('name on record but withheld');
 });
 
 test('getOwnerNames calls getScopedData and returns Items', async () => {
