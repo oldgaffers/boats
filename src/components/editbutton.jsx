@@ -32,6 +32,8 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
       .then((response) => {
         if (response.ok) {
           // console.log('submitted');
+          setSnackBarText("Thanks, we'll get back to you.");
+          setSnackBarSeverity('success');
           setSnackBarOpen(true);
         } else {
           console.log("post", response.status, response.statusText);

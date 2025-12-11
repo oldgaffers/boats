@@ -16,7 +16,7 @@ export function prepareInitialValues(boat, user, pr) {
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
   const owner = (!!goldId) && ownerids.includes(goldId);
-  const { name, oga_no, image_key, for_sales, for_sale_state, ...rest } = boat;
+  const { name, oga_no, image_key, for_sales, ...rest } = boat;
   const email = user?.email || '';
   const ddf = { name, oga_no, image_key, owner, editor, pr };
 
@@ -170,7 +170,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     previous_names.unshift([name]);
   }
 
-  if (!submitted.handicap_data.thcf === '-') {
+  if (submitted.handicap_data.thcf === '-') {
     submitted.handicap_data.thcf = undefined
   }
 
