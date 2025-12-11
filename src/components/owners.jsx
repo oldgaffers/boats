@@ -12,6 +12,7 @@ function formatName({ firstname, lastname, GDPR, name, text, note }) {
   if (name) return name;
   if (text) return text;
   if (note) return note;
+  return `${JSON.stringify(GDPR)} ${firstname} ${lastname}`;
   if (!GDPR) {
     return 'name on record but withheld';
   }
