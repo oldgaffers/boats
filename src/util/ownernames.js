@@ -78,7 +78,7 @@ export function useGetOwnerNames(ownerships) {
                 setData(ownershipsWithNames(ownerships, d));
             });
         }
-    }, [boat, data, accessToken]);
+    }, [ownerships, data, accessToken]);
 
     return data || ownerships;
 }
