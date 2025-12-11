@@ -8,7 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useGetOwnerNames } from '../util/ownernames.js';
 
-function formatName({ firstname, lastname, GDPR }) {
+function formatName({ firstname, lastname, GDPR, name, text, note }) {
+  if (name) return name;
+  if (text) return text;
+  if (note) return note;
   if (!GDPR) {
     return 'name on record but withheld';
   }
