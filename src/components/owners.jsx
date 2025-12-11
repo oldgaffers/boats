@@ -8,15 +8,11 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useGetOwnerNames } from '../util/ownernames.js';
 
-function formatName({ firstname, lastname, GDPR, name, text, note }) {
+function formatName({ name, text, note }) {
   if (name) return name;
   if (text) return text;
   if (note) return note;
-  return `${JSON.stringify(GDPR)} ${firstname} ${lastname}`;
-  if (!GDPR) {
-    return 'name on record but withheld';
-  }
-  return `${firstname} ${lastname}`;
+  return '?'
 }
 
 function Owner({ owner }) {
@@ -34,7 +30,7 @@ function Owner({ owner }) {
 }
 
 export default function Owners({ boat }) {
-  const ownerships = useGetOwnerNames(boat) || [];
+  const ownerships = useGetOwnerNames(boat.ownerships);
   ownerships.sort((a, b) => a.start > b.start);
   if (ownerships.length === 0) {
     return (<div />);

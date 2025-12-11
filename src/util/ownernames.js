@@ -5,34 +5,35 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
 
-export function addNames(members, ownerships = []) {
+export function addNames(ownerships = [], members) {
     if (!members) {
         return ownerships;
     }
     return ownerships.map((ownership) => {
-        const r = { ...ownership };
+        const r = { };
         const m = members.filter((member) => member.id === ownership.id);
         if (m.length > 0) {
             const { skipper, GDPR, firstname, lastname } = m[0];
             if (GDPR) {
                 r.name = `${firstname} ${lastname}`;
+            } else {
+                r.note = 'name on record but withheld';
             }
             if (skipper) {
                 r.skipper = skipper;
             }
         }
-        return r;
+        return { ...ownership, ...r }
     });
 };
 
-export function ownerMembershipNumbers(boat) {
-    const rawMemberNumbers = boat.ownerships?.filter((o) => queryIf(o)).map((o) => o.member) || [];
+export function ownerMembershipNumbers(ownerships=[]) {
+    const rawMemberNumbers = ownerships.filter((o) => queryIf(o)).map((o) => o.member) || [];
     return [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
 }
 
-export function ownershipsWithNames(boat, members) {
-    const ownerships = addNames(members, boat.ownerships || []);
-    ownerships.sort((a, b) => a.start > b.start);
+export function ownershipsWithNames(ownerships=[], members) {
+    const ownerships = addNames(ownerships, members);
     return ownerships;
 }
 
@@ -53,13 +54,13 @@ export function useGetMemberData(subject, filter) {
     return data;
 }
 
-export function useGetOwnerNamesNew(boat) {
+export function useGetOwnerNames(ownerships) {
     const f = {
         fields: 'id,membership,firstname,lastname,GDPR',
-        member: ownerMembershipNumbers(boat),
+        member: ownerMembershipNumbers(ownerships),
     };
     const members = useGetMemberData('members', f);
-    return ownershipsWithNames(boat, members);
+    return ownershipsWithNames(ownerships, members);
 }
 
 export async function getOwnerNames(memberNumbers, accessToken) {
@@ -71,18 +72,18 @@ export async function getOwnerNames(memberNumbers, accessToken) {
     return d?.Items ?? [];
 }
 
-export function useGetOwnerNames(boat) {
+export function useGetOwnerNamesOld(ownerships) {
     const [data, setData] = useState();
     const accessToken = useContext(TokenContext);
 
     useEffect(() => {
         if (!data) {
-            const memberNumbers = ownerMembershipNumbers(boat);
+            const memberNumbers = ownerMembershipNumbers(ownerships);
             getOwnerNames(memberNumbers, accessToken).then((d) => {
-                setData(ownershipsWithNames(boat, d));
+                setData(ownershipsWithNames(ownerships, d));
             });
         }
     }, [boat, data, accessToken]);
 
-    return data || boat.ownerships;
+    return data || ownerships;
 }
