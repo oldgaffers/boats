@@ -8,9 +8,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useGetOwnerNames } from '../util/ownernames.js';
 
+function formatName({ firstname, lastname, GDPR }) {
+  if (!GDPR) {
+    return 'name on record but withheld';
+  }
+  return `${firstname} ${lastname}`;
+}
+
 function Owner({ owner }) {
   // console.log(owner);
-  const name = owner.name || owner.text || owner.note || 'name on record but withheld';
+  const name = formatName(owner);
   const share = owner.share ? `${owner.share}/64` : '';
   return (
     <TableRow>
