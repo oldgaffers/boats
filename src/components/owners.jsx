@@ -31,7 +31,6 @@ function Owner({ owner }) {
 
 export default function Owners({ boat }) {
   const ownerships = useGetOwnerNames(boat.ownerships);
-  ownerships.sort((a, b) => a.start > b.start);
   if (ownerships.length === 0) {
     return (<div />);
   }

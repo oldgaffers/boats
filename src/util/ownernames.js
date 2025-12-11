@@ -9,7 +9,7 @@ export function ownershipsWithNames(ownerships = [], members) {
     if (!members) {
         return ownerships;
     }
-    return ownerships.map((ownership) => {
+    const r = ownerships.map((ownership) => {
         const r = { note: 'problem identifying owner' };
         const m = members.filter((member) => member.id === ownership.id);
         if (m.length > 0) {
@@ -25,6 +25,8 @@ export function ownershipsWithNames(ownerships = [], members) {
         }
         return { ...ownership, ...r }
     });
+    r.sort((a, b) => a.start > b.start);
+    return r;
 };
 
 export function ownerMembershipNumbers(ownerships=[]) {
@@ -44,18 +46,20 @@ export function useGetMemberData(subject, filter) {
               })
             );
         }
-    }, [subject, filter, data, getAccessTokenSilently]);
+    }, [subject, filter, getAccessTokenSilently]);
 
     return data;
 }
 
-export function useGetOwnerNamesNew(ownerships) {
+export function useGetOwnerNames(ownerships) {
+    const m = ownerMembershipNumbers(ownerships);
+    const defaultMembers = ownerships.map((r) => ({ member: r.member, id: r.id, GDPR: true, firstname: 'not', lastname: 'fetched'}));
     const f = {
         fields: 'id,membership,firstname,lastname,GDPR',
-        member: ownerMembershipNumbers(ownerships),
+        member: m,
     };
     const members = useGetMemberData('members', f);
-    return ownershipsWithNames(ownerships, members);
+    return ownershipsWithNames(ownerships, members || defaultMembers);
 }
 
 export async function getOwnerNames(memberNumbers, accessToken) {
@@ -67,7 +71,7 @@ export async function getOwnerNames(memberNumbers, accessToken) {
     return d?.Items ?? [];
 }
 
-export function useGetOwnerNames(ownerships) {
+export function useGetOwnerNamesOld(ownerships) {
     const [data, setData] = useState();
     const accessToken = useContext(TokenContext);
 
