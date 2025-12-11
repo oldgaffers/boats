@@ -38,15 +38,15 @@ export function useGetMemberData(subject, filter) {
     const [data, setData] = useState();
     const { getAccessTokenSilently } = useAuth0();
 
-    useEffect(() => {
-        if (!data) {
-            getAccessTokenSilently().then((accessToken) =>
-              getScopedData('member', subject, filter, accessToken).then((d) => {
-                setData(d?.Items ?? []);
-              })
-            );
-        }
-    }, [subject, filter, getAccessTokenSilently]);
+    // useEffect(() => {
+    //     if (!data) {
+    //         getAccessTokenSilently().then((accessToken) =>
+    //           getScopedData('member', subject, filter, accessToken).then((d) => {
+    //             setData(d?.Items ?? []);
+    //           })
+    //         );
+    //     }
+    // }, [subject, filter, getAccessTokenSilently]);
 
     return data;
 }
