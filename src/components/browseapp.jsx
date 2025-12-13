@@ -21,16 +21,30 @@ export default function BrowseApp({ view = 'app' }) {
   useEffect(() => {
     const getData = async (accessToken) => {
       const id = user?.["https://oga.org.uk/id"];
-      const p = await getFleets('public', { public: true }, accessToken);
-      const q = await getFleets('member', { owner_gold_id: id }, accessToken);
-      return [...p, ...q];
+      const f = await getFleets('public', { public: true }, accessToken);
+      if (id) {
+        const q = await getFleets('member', { owner_gold_id: id }, accessToken);
+        f.push(...q);
+      }
+      return f;
     }
     if (!fleets) {
-      getAccessTokenSilently().then((accessToken) => {
+      getAccessTokenSilently(
+        // {
+        //   authorizationParams: {
+        //     audience: 'https://oga.org.uk/boatregister', 
+        //     scope: 'email',
+        // }}
+      )
+        .then((accessToken) => {
         getData(accessToken).then((data) => {
           console.log('got fleets');
           setFleets(data);
+        }).catch((e) => {
+          console.error('Error fetching fleets:', e);
         });
+      }).catch((e) => {
+        console.error('Error getting access token for fleets:', e);
       });
     }
   }, [getAccessTokenSilently, fleets, user])

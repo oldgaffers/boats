@@ -25,8 +25,10 @@ function Wrapper({ redirectUri, scope, children }) {
   const auth = {
     domain: "dev-uf87e942.eu.auth0.com",
     clientId: "Mlm45jI7zvoQXbLSYSNV8F1qI1iTEnce",
-    authorizationParams: { redirect_uri: redirectUri },
-    audience: "https://oga.org.uk/boatregister",
+    authorizationParams: { 
+      redirect_uri: redirectUri,
+      audience: "https://oga.org.uk/boatregister",
+    },
     useRefreshTokens: true,
     cacheLocation: 'localstorage',
   }
@@ -38,9 +40,10 @@ function Wrapper({ redirectUri, scope, children }) {
   if (window.location.pathname.includes('beta') || window.location.hostname === 'localhost') {
     paypalOptions['client-id'] = 'AZg2v5veSxPSlZ-Zw2SVKJfls-cKCtIDxvFBpTQ3Bfz-jRXG_iIlO6fXnLIuXV158pWfcbgxgDhdH3wT';
   }
-
+ // scope={scope}>
+ console.log('Wrapper scope:', scope);
   return <PayPalScriptProvider options={paypalOptions}>
-    <Auth0Provider {...auth} scope={scope}>
+    <Auth0Provider {...auth} >
       {children}
     </Auth0Provider>
   </PayPalScriptProvider>
