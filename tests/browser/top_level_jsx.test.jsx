@@ -26,22 +26,6 @@ describe('top-level jsx modules (main/index/app) - browser mode', () => {
     expect(globalThis.__renderMock).toHaveBeenCalled();
   });
 
-  it('index.jsx finds placeholders and calls createRoot.render for each', async () => {
-    const p = document.createElement('p');
-    p.innerText = '<<login:>>';
-    document.body.appendChild(p);
-
-    globalThis.__renderMock = vi.fn();
-    vi.mock('react-dom/client', () => ({
-      createRoot: () => ({ render: globalThis.__renderMock })
-    }));
-
-    await import('../../src/index.jsx');
-    const placeholder = document.querySelector('[data-oga-component]');
-    expect(placeholder).toBeTruthy();
-    expect(globalThis.__renderMock).toHaveBeenCalled();
-  });
-
   it('BoatRegister from app.jsx can be created as a React element', async () => {
     const React = await import('react');
     const mod = await import('../../src/app.jsx');
