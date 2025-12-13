@@ -29,7 +29,7 @@ export function ownershipsWithNames(ownerships = [], members) {
     return r;
 };
 
-export function ownerMembershipNumbers(ownerships=[]) {
+export function ownerMembershipNumbers(ownerships = []) {
     const rawMemberNumbers = ownerships.filter((o) => queryIf(o)).map((o) => o.member) || [];
     return [...new Set(rawMemberNumbers)]; // e.g. husband and wife owners
 }
@@ -38,22 +38,31 @@ export function useGetMemberData(subject, filter) {
     const [data, setData] = useState();
     const { getAccessTokenSilently } = useAuth0();
 
-    // useEffect(() => {
-    //     if (!data) {
-    //         getAccessTokenSilently().then((accessToken) =>
-    //           getScopedData('member', subject, filter, accessToken).then((d) => {
-    //             setData(d?.Items ?? []);
-    //           })
-    //         );
-    //     }
-    // }, [subject, filter, getAccessTokenSilently]);
+    useEffect(() => {
+        if (!data) {
+            getAccessTokenSilently()
+                .then((accessToken) =>
+                    getScopedData('member', subject, filter, accessToken)
+                        .then((d) => {
+                            setData(d?.Items ?? []);
+                        })
+                        .catch((e) => {
+                            console.error('Error fetching member data:', e);
+                            // setData([]);
+                        }
+                        )
+                ).catch((e) => {
+                    console.error('Error getting access token:', e);
+                });
+        }
+    }, [subject, filter, getAccessTokenSilently]);
 
     return data;
 }
 
 export function useGetOwnerNames(ownerships) {
     const m = ownerMembershipNumbers(ownerships);
-    const defaultMembers = ownerships.map((r) => ({ member: r.member, id: r.id, GDPR: true, firstname: 'not', lastname: 'fetched'}));
+    const defaultMembers = ownerships.map((r) => ({ member: r.member, id: r.id, GDPR: true, firstname: 'not', lastname: 'fetched' }));
     const f = {
         fields: 'id,membership,firstname,lastname,GDPR',
         member: m,
