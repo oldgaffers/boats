@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useAuth0 } from '@auth0/auth0-react';
 import { getScopedData } from '../util/api';
-import { m2f, price, formatList, kg, m2f2, newestForSaleRecord } from '../util/format';
+import { m2f, price, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';

@@ -23,7 +23,7 @@ export function ownershipsWithNames(ownerships = [], members) {
                 r.skipper = skipper;
             }
         }
-        return { ...ownership, ...r }
+        return { ...r, ...ownership }
     });
     r.sort((a, b) => a.start > b.start);
     return r;
