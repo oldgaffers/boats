@@ -31,7 +31,7 @@
     "camelcase": "^6.2.1",
     "dayjs": "^1.11.10",
     "humanize-duration": "^3.28.0",
-    "jsondiffpatch": "^0.5.0",
+    "jsondiffpatch": "^0.7.2",
     "leaflet": "^1.9.3",
     "little-state-machine": "^4.8.0",
     "react": "^18.2.0",
