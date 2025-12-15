@@ -40,6 +40,7 @@ function Wrapper({ redirectUri, scope, children }) {
       authorizationParams={{
         redirect_uri: redirectUri,
         audience: "https://oga.org.uk/boatregister",
+        scope: "openid profile email offline_access",
       }}
       useRefreshTokens={true}
       cacheLocation='localstorage'
