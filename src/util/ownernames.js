@@ -36,7 +36,7 @@ export function ownerMembershipNumbers(ownerships = []) {
 
 export function useGetMemberData(subject, filter) {
     const [data, setData] = useState();
-    const { getAccessTokenSilently } = useAuth0();
+    const { getAccessTokenSilently, logout } = useAuth0();
 
     useEffect(() => {
         if (!data) {
@@ -53,6 +53,8 @@ export function useGetMemberData(subject, filter) {
                         )
                 ).catch((e) => {
                     console.error('Error getting access token:', e);
+                    logout({ returnTo: window.location.origin + window.location.pathname });
+                    alert('Please log in again');
                 });
         }
     }, [subject, filter, getAccessTokenSilently]);
