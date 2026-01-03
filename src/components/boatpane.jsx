@@ -21,6 +21,9 @@ function textvalue(data, key) {
         }
         return val;
     }
+    if (data[key]?.name) {
+        return data[key].name;
+    }
     return data[key];
 }
 
