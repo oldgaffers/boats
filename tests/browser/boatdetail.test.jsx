@@ -276,4 +276,20 @@ describe('BoatDetail component tests', () => {
     // Should render without errors
     expect(page.getByTestId('detail-bar')).toBeTruthy();
   });
+
+  
+   test('includes design class when boat has design_class', async () => {
+
+    const page = await render(
+      <BoatDetail view="detail" boat={mockBoat} />
+    );
+    
+    const designButton = page.getByTestId('tab-0');
+    expect(designButton).toBeTruthy();
+
+    // Click design tab
+    await designButton.click();
+    await expect(page.getByText('Design Class: Gaff Cutter', { exact: true })).toBeVisible();
+  });
+
 });
