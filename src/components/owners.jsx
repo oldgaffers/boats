@@ -15,15 +15,22 @@ function formatName({ name, text, note }) {
   return '?'
 }
 
+function formatEnd(owner) {
+  if (owner.end) return owner.end;
+  if (!owner.current) return '-';
+  if (!owner.id) return 'Present';
+  return 'Present member';
+}
+
 function Owner({ owner }) {
-  // console.log(owner);
+  console.log(owner);
   const name = formatName(owner);
   const share = owner.share ? `${owner.share}/64` : '';
   return (
     <TableRow>
       <TableCell align="left">{name}</TableCell>
       <TableCell align="left">{owner.start || '?'}</TableCell>
-      <TableCell align="left">{owner.end || '-'}</TableCell>
+      <TableCell align="left">{formatEnd(owner)}</TableCell>
       <TableCell align="left">{share}</TableCell>
     </TableRow>
   );

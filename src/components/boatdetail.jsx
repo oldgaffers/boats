@@ -19,6 +19,12 @@ import { TextPane } from './boatpane';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
+function is_oga(boat) {
+  return (boat.ownerships || []).some((o) => {
+    return o.current && o.id;
+  });
+}
+
 export default function BoatDetail({ view, boat }) {
   const { user, getAccessTokenSilently } = useAuth0();
   const [value, setValue] = useState(0);
@@ -99,7 +105,7 @@ export default function BoatDetail({ view, boat }) {
   }
   if (roles.includes('member')) {
     panes.push({
-      title: 'Owners', children: (
+      title: `Owners${is_oga(boat) ? '*' : ''}`, children: (
         <Owners boat={boat} />
       )
     });
@@ -151,7 +157,7 @@ export default function BoatDetail({ view, boat }) {
 
     panes.unshift({
       title: 'Voyages', children: <Stack>
-        <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
+        <Box verflow='auto' minWidth='50vw' maxWidth='85vw'>
           <Typography>{introText}</Typography>
           <Grid container spacing={2}>
             {sortedVoyages.map((voyage, index) =>
