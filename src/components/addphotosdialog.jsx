@@ -12,6 +12,37 @@ import { postPhotos } from "./postphotos";
 import { createPhotoAlbum, getAlbumKey, postBoatData } from '../util/api';
 import Photodrop from "./photodrop";
 
+async function sortOutMissingAlbum(boat, email) {
+  // console.log('No existing album key for boat', boat.oga_no);
+  let albumKey = null;
+  const rak = await getAlbumKey(boat.name, boat.oga_no);
+  if (rak) {
+    console.log('got album key from SmugMug, not in github', JSON.stringify(rak));
+    albumKey = rak.albumKey;
+  } else {
+    // console.log('No existing album found');
+    const rcpa = await createPhotoAlbum(boat.name, boat.oga_no);
+    // console.log('create new album', rcpa.status, rcpa.statusText);
+    const j = await rcpa.json();
+    if (rcpa.ok) {
+      albumKey = j.albumKey;
+    }
+  }
+  if (albumKey) {
+    boat.image_key = albumKey;
+  } else {
+    console.log('Problem creating album, upload photos to pending area');
+    const r = await getAlbumKey('uploaded', '-');
+    albumKey = r.albumKey;
+    // console.log('got pending album key', JSON.stringify(r));
+    boat.note = 'Photos pending assignment to album by OGA admin';
+  }
+  const response = await postBoatData({ new: boat, email })
+  if (!response.ok) {
+    console.log('problem updating boat register with new album key', response.statusText);
+  }
+  return albumKey;
+}
 
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   // console.log('AddPhotosDialog', boat, open, onClose, onCancel);
@@ -36,35 +67,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     if (albumKey) {
       // console.log('Using existing album key', albumKey);
     } else {
-      // console.log('No existing album key for boat', boat.oga_no);
-      const rak = await getAlbumKey(boat.name, boat.oga_no);
-      if (rak) {
-        console.log('got album key', JSON.stringify(rak));
-        albumKey = rak.albumKey;
-      } else {
-        // console.log('No existing album found');
-        const rcpa = await createPhotoAlbum(boat.name, boat.oga_no);
-        // console.log('create new album', rcpa.status, rcpa.statusText);
-        const j = await rcpa.json();
-        if (rcpa.ok) {
-          boat.image_key = j.albumKey;
-          const response = await postBoatData({ new: boat, email })
-          if (!response.ok) {
-            console.log('problem updating boat register with new album key', response.statusText);
-          }
-          albumKey = j.albumKey;
-        } else {
-          console.log('Problem creating album, upload photos to pending area');
-          const r = await getAlbumKey('uploaded', '-');
-          // console.log('got pending album key', JSON.stringify(r));
-          boat.note = 'Photos pending assignment to album by OGA admin';
-          const response = await postBoatData({ new: boat, email })
-          if (!response.ok) {
-            console.log('problem updating boat register with new album key', response.statusText);
-          }
-          albumKey = r.albumKey;
-        }
-      }
+      albumKey = await sortOutMissingAlbum(boat, email);
     }
     console.log('Uploading to album key', albumKey);
     if (albumKey) {
