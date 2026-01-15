@@ -103,13 +103,13 @@ export default function BoatDetail({ view, boat }) {
       )
     });
   }
-  if (roles.includes('member')) {
+  if (roles.includes('member') && boat.ownerships?.length > 0 ) {
     panes.push({
       title: `Owners${is_oga(boat) ? '*' : ''}`, children: (
         <Owners boat={boat} />
       )
     });
-    const skippers = (boat.ownerships || []).filter((o) => o.skipper);
+    const skippers = (boat.ownerships).filter((o) => o.skipper);
     if (skippers.length > 0) {
       panes.push({
         title: 'About the Skippers', children: (
