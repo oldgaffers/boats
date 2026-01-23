@@ -23,9 +23,16 @@ async function sortOutMissingAlbum(boat, email) {
     // console.log('No existing album found');
     const rcpa = await createPhotoAlbum(boat.name, boat.oga_no);
     // console.log('create new album', rcpa.status, rcpa.statusText);
-    const j = await rcpa.json();
     if (rcpa.ok) {
+      const j = await rcpa.json();
       albumKey = j.albumKey;
+    } else {
+      console.log('problem creating album', rcpa.status, rcpa.statusText);
+      const c = await rcpa.json();
+      console.log('Response text:', JSON.stringify(c));
+      alert("A photo album for this OGA number exists but boat name is different.\n\nThis shouldn't happen.\n\nWe will upload your pictures and the editors will sort it out.");
+      albumKey = c.albumKey;
+      boat.note = 'Photos uploaded to existing album with different boat name ${c.name}; please check';
     }
   }
   if (albumKey) {
@@ -78,12 +85,13 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     }
   };
 
-  const ready = () => {
-    if (pictures.length === 0) return false;
-    if (!email) return false;
-    if (!copyright) return false;
-    return true;
-  };
+  const disableUpload = () => {
+    if (pictures.length === 0) return true;
+    if (!email) return true;
+    if (!copyright) return true;
+    if (progress > 0) return true;  
+    return false;
+  }
 
   const onEmail = (e) => {
     setEmail(e.target.value);
@@ -117,7 +125,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
           />
           <Stack direction='row' justifyContent='space-evenly'>
             <Button
-              disabled={!ready()}
+              disabled={disableUpload()}
               size="small"
               color="primary"
               variant="contained"
@@ -132,7 +140,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
               <Button size="small" variant="outlined" onClick={onCancel}>
                 Cancel
               </Button> :
-              <Button size="small" variant="outlined" onClick={handleClose}>
+              <Button size="small" variant="contained" onClick={handleClose}>
                 Close
               </Button>
             }

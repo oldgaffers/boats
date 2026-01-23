@@ -157,11 +157,11 @@ export async function getUploadCredentials() {
   return (await fetch(`${api1}/${stage}/upload_credentials`)).json();
 }
 
-export async function createPhotoAlbum(name, ogaNo) {
+export async function createPhotoAlbum(name, oga_no) {
   return fetch(`${api2}/`,
     {
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ name, oga_no: ogaNo }),
+      body: JSON.stringify({ name, oga_no }),
       method: 'POST',
     }
   );
