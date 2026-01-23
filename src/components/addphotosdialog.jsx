@@ -30,9 +30,11 @@ async function sortOutMissingAlbum(boat, email) {
       console.log('problem creating album', rcpa.status, rcpa.statusText);
       const c = await rcpa.json();
       console.log('Response text:', JSON.stringify(c));
-      alert("A photo album for this OGA number exists but boat name is different.\n\nThis shouldn't happen.\n\nWe will upload your pictures and the editors will sort it out.");
-      albumKey = c.albumKey;
-      boat.note = 'Photos uploaded to existing album with different boat name ${c.name}; please check';
+      if (c.albumKey) {
+        alert("A photo album for this OGA number exists but boat name is different.\n\nThis shouldn't happen.\n\nWe will upload your pictures and the editors will sort it out.");
+        albumKey = c.albumKey;
+        boat.note = 'Photos uploaded to existing album with different boat name ${c.name}; please check';
+      }
     }
   }
   if (albumKey) {
@@ -89,7 +91,7 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     if (pictures.length === 0) return true;
     if (!email) return true;
     if (!copyright) return true;
-    if (progress > 0) return true;  
+    if (progress > 0) return true;
     return false;
   }
 
