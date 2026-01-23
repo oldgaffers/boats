@@ -10,7 +10,7 @@ import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import OwnershipForm from "./ddf/ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { clearNewValues, getPicklists, nextOgaNo, openPr } from '../util/api';
+import { clearNewValues, createPhotoAlbum, getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
 import { useAuth0 } from '@auth0/auth0-react';
 import { prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
@@ -23,8 +23,21 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
 
   useEffect(() => {
     if (!data.oga_no) {
-      nextOgaNo().then((no) => {
-        setData({ ...data, oga_no: no });
+      nextOgaNo().then(async (no) => {
+        const r = await createPhotoAlbum(boat.name, no);
+        if (r.ok) {
+          const j = await r.json();
+          setData({ ...data, oga_no: no, image_key: j.albumKey });
+        } else {
+          console.log('problem creating album for new boat', r.status, r.statusText);
+          const j = await r.json();
+          if (j.albumKey) {
+            setData({ ...data, oga_no: no, image_key: j.albumKey });
+          }
+          else {
+            setData({ ...data, oga_no: no });
+          }
+        }
       }).catch((e) => console.log(e));
     }
   }, [data, boat]);
