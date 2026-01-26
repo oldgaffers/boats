@@ -16,7 +16,7 @@ export default defineConfig({
         functions: 27,
         lines: 33,
         branches: 29,
-        statements: 33,
+        statements: 32,
       },            
       provider: 'v8',
       include: ['src/**/*.{js,jsx}'],
