@@ -59,7 +59,6 @@ export default function PrivateDocument({ name }) {
       <RoleRestricted role="member">
       <RenderToElement doc={doc} />
       </RoleRestricted>
-      <LoginButton />
     </>
   );
 }
