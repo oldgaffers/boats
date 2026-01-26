@@ -6,6 +6,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import '../../src/util/api';
 import EditBoatWizard from '../../src/components/editboatwizard';
 import { result } from '../mock/843.json';
+import { createPhotoAlbum } from '../../src/util/api';
 
 vi.mock('@auth0/auth0-react');
 
@@ -46,6 +47,7 @@ vi.mock('../../src/util/api', () => {
     getPicklist: async (name) => pickers[name] || [],
     getPicklists: async () => pickers,
     nextOgaNo: async () => Promise.resolve(vi.fn()),
+    createPhotoAlbum: async () => Promise.resolve(vi.fn()),
     openPr: async () => {
       await sleep(50); // give time for progress bar to render
       return Promise.resolve(false);
