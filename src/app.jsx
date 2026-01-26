@@ -14,6 +14,7 @@ import CustomMap from './components/custommap';
 
 import PickOrAddBoat from './components/pick_or_add_boat';
 import BuilderPage from './components/builderpage';
+import PrivateDocument from "./components/PrivateDocument";
 
 const lightTheme = createTheme({
   palette: {
@@ -71,6 +72,7 @@ const Pages = (props) => {
     case 'add_boat': return <CreateBoatButton {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
     case 'builder': return <BuilderPage {...props} {...kvp} />;
+    case 'doc': return <PrivateDocument {...props} />;
     default:
       // sail, sell, small, ...
       return <BrowseApp view={props.ogaComponent} {...props} />;
