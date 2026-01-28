@@ -63,6 +63,7 @@
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/browser-playwright": "^4.0.6",
     "@vitest/coverage-v8": "^4.0.6",
+    "baseline-browser-mapping": "^2.9.19",
     "eslint": "^9.39.1",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",

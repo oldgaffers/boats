@@ -37,6 +37,8 @@ export default function FilterBoats({
     onOwnedOnlyChange = (v) => console.log('onOwnedOnly', v),
     isOwnedOnly,
     enableOwnersOnly = false,
+    onIsMemberBoatChange = (v) => console.log('onIsMemberBoat', v),
+    isMemberBoat,
     filtered,
     fleets,
     fleetName,
@@ -284,6 +286,15 @@ export default function FilterBoats({
                             </Typography>
                         </Grid>
                 }
+                <Grid>
+                                        <FormControlLabel
+                                            disabled={false}
+                                            id="membersBoats"
+                                            onChange={(event) => onIsMemberBoatChange(event.target.checked)}
+                                            control={<Switch sx={{ marginLeft: '30px' }} checked={!!isMemberBoat} />}
+                                            label="Members Boats Only"
+                                        />
+                                    </Grid>
             </RoleRestricted>
         </Grid>
     );
