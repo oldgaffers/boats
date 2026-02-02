@@ -33,7 +33,7 @@ async function sortOutMissingAlbum(boat, email) {
       if (c.albumKey) {
         alert("A photo album for this OGA number exists but boat name is different.\n\nThis shouldn't happen.\n\nWe will upload your pictures and the editors will sort it out.");
         albumKey = c.albumKey;
-        boat.note = 'Photos uploaded to existing album with different boat name ${c.name}; please check';
+        boat.note = `Photos uploaded to existing album with different boat name ${c.name}; please check`;
       }
     }
   }
