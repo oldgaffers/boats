@@ -74,23 +74,19 @@ export default function BrowseBoats({
   isMarkedOnly,
   onBoatMarked,
   onBoatUnMarked,
-  onFleetChange,
+  onFleetChanges,
   state,
   fleets,
+  fleetName,
+  onFleetSelected,
 }) {
   const { bpp, sort, sortDirection, filters } = state;
   const [ownedOnly, setOwnedOnly] = useState();
   const [membersBoatsOnly, setMembersBoatsOnly] = useState(false);
-  const [fleetName, setFleetName] = useState();
   const { user } = useAuth0();
   const id = user?.["https://oga.org.uk/id"];
 
   const boats = useBoats(id, ownedOnly, membersBoatsOnly);
-
-  const handleFilterChange = (filters, name) => {
-    onFilterChange(filters);
-    setFleetName(name);
-  }
 
   if (!boats) return <CircularProgress />;
 
@@ -142,7 +138,7 @@ export default function BrowseBoats({
             filters={filters}
             view={state.view}
             pickers={pickers}
-            onFilterChange={handleFilterChange}
+            onFilterChange={onFilterChange}
             onMarkedOnlyChange={onMarkedOnlyChange}
             isMarkedOnly={isMarkedOnly}
             onClearAllMarks={onClearAllMarks}
@@ -154,6 +150,8 @@ export default function BrowseBoats({
             filtered={filtered}
             fleets={fleets}
             fleetName={fleetName}
+            onFleetSelected={onFleetSelected}
+            onFleetChange={onFleetChanges}
           />
           <ExportOptions boats={filtered} filters={filters} name={fleetName} />
         </AccordionDetails>

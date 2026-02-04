@@ -42,6 +42,8 @@ export default function FilterBoats({
     filtered,
     fleets,
     fleetName,
+    onFleetSelected,
+    onFleetChange,
 }) {
     const currentFilters = filters || {};
     const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
@@ -52,6 +54,7 @@ export default function FilterBoats({
         if (debouncedOgaNo !== '') {
             // console.log("use effect ogaNo, debounced oga no", ogaNo, debouncedOgaNo);
             if (ogaNo === "") {
+                // eslint-disable-next-line no-unused-vars
                 const { oga_no, ...f } = filters;
                 onFilterChange(f);
             } else if (filters?.oga_no) {
@@ -99,18 +102,6 @@ export default function FilterBoats({
             f.lastYear = max;
         }
         onFilterChange(f);
-    }
-
-    function fleetsUpdated() {
-        console.log('fleets updated');
-    }
-
-    function filterByFleet(name) {
-        if (name) {
-            onFilterChange(fleets.find((f) => f.name === name).filters, name);
-        } else {
-            onFilterChange({});
-        }
     }
 
     return (
@@ -254,8 +245,8 @@ export default function FilterBoats({
             <RoleRestricted role='member'>
                 <Grid>
                     <FleetButtons
-                        onSelectionChange={filterByFleet}
-                        onFleetsUpdated={fleetsUpdated}
+                        onSelectionChange={onFleetSelected}
+                        onFleetsUpdated={onFleetChange}
                         filters={filters}
                         filtered={filtered}
                         fleets={fleets}
