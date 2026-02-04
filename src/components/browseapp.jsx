@@ -78,9 +78,7 @@ export default function BrowseApp({ view = 'app' }) {
     updateOgaNosFilter([], false);
   }
 
-  const handleFleetSelected = (name) => {
-    setFleetName(name);
-    console.log('Fleet selected:', name);
+  const updateFleetFilter() {
     if (name) {
       const fleet = fleets?.find((f) => f.name === name);
       if (fleet) {
@@ -91,6 +89,16 @@ export default function BrowseApp({ view = 'app' }) {
     } else {
       handleFilterChange({});
     }
+  }
+
+  const handleFleetSelected = (name) => {
+    setFleetName(name);
+    updateFleetFilter();
+  }
+
+  const handleFleetChanges(fleets) {
+    setFleets(fleets);
+    updateFleetFilter();
   }
 
   return (
@@ -106,7 +114,7 @@ export default function BrowseApp({ view = 'app' }) {
         onBoatUnMarked={handleBoatUnMarked}
         isMarkedOnly={markedOnly}
         state={state}
-        onFleetChanges={setFleets}
+        onFleetChanges={handleFleetChanges}
         fleets={fleets}
         fleetName={fleetName}
         onFleetSelected={handleFleetSelected}
