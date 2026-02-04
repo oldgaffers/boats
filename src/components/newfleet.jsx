@@ -74,7 +74,6 @@ export default function NewFleet({
         };
         switch (value.type) {
             case 'dynamic':
-                console.log('D', filters);
                 data.filters = filters;
                 break;
             case 'static':
@@ -86,7 +85,7 @@ export default function NewFleet({
             default:
                 data.filters = { oga_nos: markList };
         }
-        onSubmit(data);
+        onSubmit(data, value.type);
     };
 
     if (selected) {

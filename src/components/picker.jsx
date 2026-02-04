@@ -6,7 +6,7 @@ export default function Picker({ options, id, label, onChange, value, clearable=
 
   const [value0, setValue0] = useState(value || '');
 
-  const opt = options?.map(o => o.name) || [];
+  const opt = options?.map(o => o?.name) || [];
   opt.push(''); // not set is an allowed value
 
   return (<Autocomplete  

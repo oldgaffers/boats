@@ -56,7 +56,7 @@ export default function FleetButtons({
         }
     }, [getAccessTokenSilently, fleets, user])
 
-    const addOrUpdateFleet = (fleet) => {
+    const addOrUpdateFleet = (fleet, type) => {
         setAnchorEl(buttonRef.current);
         setPopoverOpen(true);
         getAccessTokenSilently()
@@ -66,7 +66,7 @@ export default function FleetButtons({
                 .then((response) => {
                     if (response.ok) {
                         setPopoverOpen(false);
-                        onFleetsUpdated([... (fleets || []), response.data]);
+                        onFleetsUpdated([... (fleets || []), response.data], type);
                     }
                     console.log('Fleets updated successfully:', response);
                 })
@@ -79,7 +79,6 @@ export default function FleetButtons({
                 setPopoverOpen(false);
             });
     }
-
     return (
         <Stack direction='row' spacing={3}>
             <Typography ref={buttonRef} variant='h6' align='center' sx={{ pt: 1 }}> </Typography>

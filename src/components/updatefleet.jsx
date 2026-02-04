@@ -40,7 +40,7 @@ export default function UpdateFleet({
             filters: { oga_nos: wanted },
             updated_at: (new Date()).toISOString(),
         };
-        onSubmit(data);
+        onSubmit(data, 'static');
     };
 
     return (

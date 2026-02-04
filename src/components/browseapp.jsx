@@ -78,7 +78,7 @@ export default function BrowseApp({ view = 'app' }) {
     updateOgaNosFilter([], false);
   }
 
-  const updateFleetFilter() {
+  const updateFleetFilter = (name) => {
     if (name) {
       const fleet = fleets?.find((f) => f.name === name);
       if (fleet) {
@@ -93,12 +93,16 @@ export default function BrowseApp({ view = 'app' }) {
 
   const handleFleetSelected = (name) => {
     setFleetName(name);
-    updateFleetFilter();
+    updateFleetFilter(name);
   }
 
-  const handleFleetChanges(fleets) {
+  const handleFleetChanges = (fleets, type) => {
+    console.log('handleFleetChanges', fleets, type);
     setFleets(fleets);
-    updateFleetFilter();
+    updateFleetFilter(fleetName);
+    if (type === 'static') {
+      handleClearAllMarks();
+    }
   }
 
   return (
