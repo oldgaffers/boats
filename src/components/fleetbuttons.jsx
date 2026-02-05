@@ -22,7 +22,7 @@ export default function FleetButtons({
     const buttonRef = useRef();
     const [anchorEl, setAnchorEl] = useState();
     const markList = useContext(MarkContext);
-    const { getAccessTokenSilently, user } = useAuth0();
+    const { getAccessTokenSilently, user, logout } = useAuth0();
     const id = user?.["https://oga.org.uk/id"];
 
     function onFleetChange(id, value) {
@@ -34,50 +34,45 @@ export default function FleetButtons({
     };
 
     useEffect(() => {
-        const getData = async (accessToken) => {
-            const f = await getFleets('public', { public: true }, accessToken);
-            if (id) {
-                const q = await getFleets('member', { owner_gold_id: id }, accessToken);
-                f.push(...q);
-            }
-            return f;
-        }
         if (!fleets) {
-            getAccessTokenSilently()
-                .then((accessToken) => {
-                    getData(accessToken).then((data) => {
-                        console.log('got fleets');
-                        onFleetsUpdated(data);
-                    }).catch((e) => {
-                        console.error('Error fetching fleets:', e);
-                    });
-                }).catch((e) => {
-                    console.error('Error getting access token for fleets:', e);
-                });
+            getAccessTokenSilently().then(async (accessToken) => {
+                const f = await getFleets('public', { public: true }, accessToken);
+                if (id) {
+                    const q = await getFleets('member', { owner_gold_id: id }, accessToken);
+                    f.push(...q);
+                }
+                onFleetsUpdated(f);
+            }).catch((e) => {
+                console.error('Error fetching fleets:', e);
+                const returnTo = window.location.origin + window.location.pathname;
+                logout({ returnTo });
+                alert('Error fetching fleets, please log in again');
+            });
         }
-    }, [getAccessTokenSilently, fleets, user])
+    }, [fleets, id])
 
     const addOrUpdateFleet = (fleet, type) => {
         setAnchorEl(buttonRef.current);
-        setPopoverOpen(true);
         getAccessTokenSilently()
-        .then(async (accessToken) => {
-            const scope = fleet.public ? 'public' : 'member';
-            const response = await postScopedData(scope, 'fleets', fleet, accessToken);
-            if (response.ok) {
+            .then(async (accessToken) => {
+                setPopoverOpen(true);
+                const scope = fleet.public ? 'public' : 'member';
+                const response = await postScopedData(scope, 'fleets', fleet, accessToken);
+                if (response.ok) {
+                    // add or update the fleet in the list using the owner_gold_id and name as the key
+                    const of = Object.fromEntries(fleets.map(f => [`${f.owner_gold_id}:${f.name}`, f]));
+                    of[`${fleet.owner_gold_id}:${fleet.name}`] = fleet;
+                    onFleetsUpdated(Object.values(of), type);
+                } else {
+                    console.error('Error updating fleet:', response);
+                }
                 setPopoverOpen(false);
-                // add or update the fleet in the list using the owner_gold_id and name as the key
-                const of = Object.fromEntries(fleets.map(f => [`${f.owner_gold_id}:${f.name}`, f]));
-                of[`${fleet.owner_gold_id}:${fleet.name}`] = fleet;
-                onFleetsUpdated(Object.values(of), type);
-            } else {
-                console.error('Error updating fleet:', response);
-                setPopoverOpen(false);
-            }
-        }).catch((e) => {
-            console.error('Error getting access token for fleet update:', e);
-            setPopoverOpen(false);
-        });
+            }).catch((e) => {
+                console.error('Error getting access token for fleet update:', e);
+                const returnTo = window.location.origin + window.location.pathname;
+                logout({ returnTo });
+                alert('Error updating fleet, please log in again');
+            });
     }
     return (
         <Stack direction='row' spacing={3}>
@@ -88,7 +83,7 @@ export default function FleetButtons({
                     id="fleet"
                     options={fleets}
                     label="Fleet"
-                    value={fleetName||''}
+                    value={fleetName || ''}
                 />
             </Box>
             <NewFleet

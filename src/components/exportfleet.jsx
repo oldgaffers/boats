@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import CircularProgress from "@mui/material/CircularProgress";
 import { getLargestImage, getBoatData, getScopedData } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, getAccordionActionsUtilityClass, Stack } from '@mui/material';
 import { ownerMembershipNumbers, ownershipsWithNames } from '../util/ownernames';
-import { TokenContext } from './TokenProvider';
  
 async function getBoats(ogaNos, accessToken) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
@@ -132,13 +132,21 @@ function boatForLeaflet(boat) {
 
 function ExportFleetOptions({ name, ogaNos }) {
   const [data, setData] = useState();
-  const accessToken = useContext(TokenContext);
+  const { getAccessTokenSilently, logout } = useAuth0();
 
   useEffect(() => {
     if (!data) {
-      getBoats(ogaNos, accessToken).then((r) => setData(r));
+      getAccessTokenSilently()
+        .then((accessToken) => {
+          getBoats(ogaNos, accessToken).then((r) => setData(r));
+        }).catch((e) => {
+          console.error('Error getting access token:', e);
+          const returnTo = window.location.origin + window.location.pathname;
+          logout({ returnTo });
+          alert('Please log in again');
+        });
     }
-  }, [data, ogaNos, accessToken]);
+  }, [data, ogaNos]);
 
   if (!data) {
     return <CircularProgress />

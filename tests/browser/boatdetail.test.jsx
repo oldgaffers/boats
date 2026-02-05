@@ -96,6 +96,7 @@ describe('BoatDetail component tests', () => {
     useAuth0.mockReturnValue({
       user: mockUser,
       getAccessTokenSilently: vi.fn(() => Promise.resolve('token')),
+      logout: vi.fn(),
     });
   });
 

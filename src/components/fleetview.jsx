@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -10,7 +10,6 @@ import Tooltip from '@mui/material/Tooltip';
 import FleetIcon from "./fleeticon";
 import BoatCards from './boatcards';
 import BoatGallery from './boatgallery';
-import { TokenContext } from './TokenProvider';
 import { getFleets, } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { getFilterable } from '../util/api';
@@ -52,12 +51,12 @@ export function FleetDisplay({ view, name, filters, tooltip = 'Click to expand',
     <AccordionDetails>
       {(view === 'gallery')
         ?
-          <BoatGallery boats={sortAndPaginate(filtered, state)} />
+        <BoatGallery boats={sortAndPaginate(filtered, state)} />
         :
-          <BoatCards
-            state={state} onChangePage={onPageChange} totalCount={filtered.length}
-            boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
-          />
+        <BoatCards
+          state={state} onChangePage={onPageChange} totalCount={filtered.length}
+          boats={sortAndPaginate(filtered, state)} otherNav={<ExportFleet name={name} boats={filtered} />}
+        />
       }
     </AccordionDetails>
   </Accordion>);
@@ -65,24 +64,28 @@ export function FleetDisplay({ view, name, filters, tooltip = 'Click to expand',
 
 export function Fleets({ filter }) {
   const [data, setData] = useState();
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently, logout } = useAuth0();
 
   useEffect(() => {
-    const getData = async () => {
-      if (isAuthenticated) {
-        const token = await getAccessTokenSilently();
+    if (isAuthenticated) {
+      getAccessTokenSilently().then(async (token) => {
         if (filter.owned) {
+          // eslint-disable-next-line no-unused-vars
           const { owned, ...f } = filter;
           const owner_gold_id = user?.["https://oga.org.uk/id"];
-          const p = await getFleets('member', {...f, owner_gold_id}, token);
+          const p = await getFleets('member', { ...f, owner_gold_id }, token);
           setData(p);
         } else {
           const p = await getFleets('member', filter, token);
           setData(p);
         }
-      }
-    };
-    getData();
+      }).catch((e) => {
+        console.error('Error getting access token:', e);
+        const returnTo = window.location.origin + window.location.pathname;
+        logout({ returnTo });
+        alert('Please log in again');
+      });
+    }
   }, [filter, isAuthenticated, getAccessTokenSilently, user]);
 
   if (!data) {
@@ -100,18 +103,21 @@ export function Fleets({ filter }) {
 
 export function RoleRestrictedFleetView({ view, filter, role, defaultExpanded = false }) {
   const [data, setData] = useState();
-  const accessToken = useContext(TokenContext);
+  const { getAccessTokenSilently, logout } = useAuth0();
   console.log('RoleRestrictedFleetView', filter, role, defaultExpanded);
 
   useEffect(() => {
-    const getData = async () => {
+    getAccessTokenSilently().then(async (accessToken) => {
       const p = await getFleets(role, filter, accessToken);
       setData(p);
     }
-    if (accessToken) {
-      getData();
-    }
-  }, [accessToken, filter, role])
+    ).catch((e) => {
+      console.error('Error getting access token:', e);
+      const returnTo = window.location.origin + window.location.pathname;
+      logout({ returnTo });
+      alert('Please log in again');
+    });
+  }, [filter, role])
 
   if (!data) {
     return <CircularProgress />;

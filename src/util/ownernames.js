@@ -1,6 +1,5 @@
 import { getScopedData } from './api';
-import { useContext, useEffect, useState } from 'react';
-import { TokenContext } from '../components/TokenProvider';
+import { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 
 const queryIf = (o) => o.member && (o.name === undefined || o.name.trim() === '');
@@ -41,19 +40,13 @@ export function useGetMemberData(subject, filter) {
     useEffect(() => {
         if (!data) {
             getAccessTokenSilently()
-                .then((accessToken) =>
-                    getScopedData('member', subject, filter, accessToken)
-                        .then((d) => {
-                            setData(d?.Items ?? []);
-                        })
-                        .catch((e) => {
-                            console.error('Error fetching member data:', e);
-                            // setData([]);
-                        }
-                        )
-                ).catch((e) => {
+                .then(async (accessToken) => {
+                    const d = await getScopedData('member', subject, filter, accessToken);
+                    setData(d?.Items ?? []);
+                }).catch((e) => {
                     console.error('Error getting access token:', e);
-                    logout({ returnTo: window.location.origin + window.location.pathname });
+                    const returnTo = window.location.origin + window.location.pathname;
+                    logout({ returnTo });
                     alert('Please log in again');
                 });
         }
@@ -80,20 +73,4 @@ export async function getOwnerNames(memberNumbers, accessToken) {
     };
     const d = await getScopedData('member', 'members', f, accessToken);
     return d?.Items ?? [];
-}
-
-export function useGetOwnerNamesOld(ownerships) {
-    const [data, setData] = useState();
-    const accessToken = useContext(TokenContext);
-
-    useEffect(() => {
-        if (!data) {
-            const memberNumbers = ownerMembershipNumbers(ownerships);
-            getOwnerNames(memberNumbers, accessToken).then((d) => {
-                setData(ownershipsWithNames(ownerships, d));
-            });
-        }
-    }, [ownerships, data, accessToken]);
-
-    return data || ownerships;
 }

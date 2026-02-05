@@ -1,7 +1,6 @@
-import { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import RoleRestricted from "./rolerestrictedcomponent";
-import LoginButton from './loginbutton';
 
 import { toJsxRuntime } from 'hast-util-to-jsx-runtime';
 import { Fragment, jsx, jsxs } from 'react/jsx-runtime';
@@ -30,29 +29,21 @@ function RenderToElement({ doc }) {
 
 export default function PrivateDocument({ name }) {
   const [doc, setDoc] = useState();
-  const { getAccessTokenSilently } = useAuth0();
-  const [token, setToken] = useState();
+  const { getAccessTokenSilently, logout } = useAuth0();
 
   useEffect(() => {
-    async function getToken() {
-      if (!token) {
-        const tok = await getAccessTokenSilently();
-        setToken(tok);
+      if (name && !doc) {
+        getAccessTokenSilently().then(async (accessToken) => {
+            const d = await getApiWeb(name, accessToken);
+            setDoc(d);
+        }).catch((e) => {
+          console.error('Error getting access token:', e);
+          const returnTo = window.location.origin + window.location.pathname;
+          logout({ returnTo });
+          alert('Error getting access token, please log in again');
+        }); 
       }
-    }
-    getToken();
-  }, [token]);
-
-  useEffect(() => {
-    const getData = async () => {
-      if (name && token) {
-        setDoc(await getApiWeb(name, token))
-      }
-    }
-    if (!doc) {
-      getData();
-    }
-  }, [doc, name, token]);
+  }, [doc, name]);
 
   return (
     <>
