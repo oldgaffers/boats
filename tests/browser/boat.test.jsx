@@ -1,7 +1,13 @@
 import React from 'react';
-import { test, expect, vi } from 'vitest';
+import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import Boat from '../../src/components/boat';
+
+// Mock Auth0
+vi.mock('@auth0/auth0-react', () => ({
+  useAuth0: vi.fn(),
+}));
 
 vi.mock('../../src/util/api.js', () => ({
   clearNewValues: () => Promise.resolve(vi.fn()),
@@ -28,47 +34,63 @@ vi.mock('../../src/util/api.js', () => ({
 })
 );
 
-test('renders boat', async () => {
-  const screen = await render(
-    <Boat location={{ search: '?oga_no=1' }} ogaNo={1} />
-  );
-  // simple polling helper that retries until the assertion passes or times out
-  const waitFor = async (fn, timeout = 2000) => {
-    const start = Date.now();
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      try {
-        return fn();
-      } catch (err) {
-        if (Date.now() - start > timeout) throw err;
-        // small backoff
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, 40));
-      }
-    }
+describe('Boat component tests', () => {
+  const mockUser = {
+    email: 'test@example.com',
+    'https://oga.org.uk/roles': [],
   };
 
-  const buttons = await waitFor(() => screen.container.querySelectorAll('button'));
-  // exact counts can vary in test environment; assert we at least have the main controls
-  expect(buttons.length).toBeGreaterThanOrEqual(1);
-});
+  beforeEach(() => {
+    useAuth0.mockReturnValue({
+      user: mockUser,
+      getAccessTokenSilently: vi.fn(() => Promise.resolve('token')),
+      logout: vi.fn(),
+    });
+  });
 
-test('renders missing ogano', async () => {
-  const screen = await render(<Boat location={{ search: '?oga_no=0' }} ogaNo={0} />);
-  const waitFor = async (fn, timeout = 2000) => {
-    const start = Date.now();
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      try {
-        return fn();
-      } catch (err) {
-        if (Date.now() - start > timeout) throw err;
-        // eslint-disable-next-line no-await-in-loop
-        await new Promise((r) => setTimeout(r, 40));
+  test('renders boat', async () => {
+    const screen = await render(
+      <Boat location={{ search: '?oga_no=1' }} ogaNo={1} />
+    );
+    // simple polling helper that retries until the assertion passes or times out
+    const waitFor = async (fn, timeout = 2000) => {
+      const start = Date.now();
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        try {
+          return fn();
+        } catch (err) {
+          if (Date.now() - start > timeout) throw err;
+          // small backoff
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise((r) => setTimeout(r, 40));
+        }
       }
-    }
-  };
-  const links = await waitFor(() => screen.container.querySelectorAll('a'));
-  expect(links.length).toBeGreaterThanOrEqual(1);
+    };
+
+    const buttons = await waitFor(() => screen.container.querySelectorAll('button'));
+    // exact counts can vary in test environment; assert we at least have the main controls
+    expect(buttons.length).toBeGreaterThanOrEqual(1);
+  });
+
+  test('renders missing ogano', async () => {
+    const screen = await render(<Boat location={{ search: '?oga_no=0' }} ogaNo={0} />);
+    const waitFor = async (fn, timeout = 2000) => {
+      const start = Date.now();
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        try {
+          return fn();
+        } catch (err) {
+          if (Date.now() - start > timeout) throw err;
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise((r) => setTimeout(r, 40));
+        }
+      }
+    };
+    const links = await waitFor(() => screen.container.querySelectorAll('a'));
+    expect(links.length).toBeGreaterThanOrEqual(1);
+
+  });
 
 });

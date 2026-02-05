@@ -1,4 +1,4 @@
- 
+
 import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -26,39 +26,46 @@ function is_oga(boat) {
 }
 
 export default function BoatDetail({ view, boat }) {
-  const { user, getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently, logout } = useAuth0();
   const [value, setValue] = useState(0);
   const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];
   const hd = boat.handicap_data || {};
 
   useEffect(() => {
-    const getData = async () => {
-      // TODO filter by boat in the query
-      const d = await getScopedData('public', 'voyage');
-      const p = d?.Items ?? [];
-      if ((user?.['https://oga.org.uk/roles'] || []).includes('member')) {
-        const token = await getAccessTokenSilently();
-        const q = await getScopedData('member', 'voyage', undefined, token);
-        if (q?.Items) {
-          p.push(...q.Items);
+    if (!voyages) {
+      getAccessTokenSilently().then(async (token) => {
+        // TODO filter by boat in the query
+        const d = await getScopedData('public', 'voyage');
+        const p = d?.Items ?? [];
+        if ((user?.['https://oga.org.uk/roles'] || []).includes('member')) {
+          const q = await getScopedData('member', 'voyage', undefined, token);
+          if (q?.Items) {
+            p.push(...q.Items);
+          }
         }
-      }
-      setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
+        setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
+      }).catch((e) => {
+        console.error('Error fetching voyages', e);
+        const returnTo = window.location.origin + window.location.pathname;
+        logout({ returnTo });
+        alert('Error fetching voyages, please log in again');
+      });
     }
-    getData();
-  }, [user, getAccessTokenSilently, boat.oga_no]);
+  }, [voyages, user, boat.oga_no]);
 
   const pane_data = [
     { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },
-    { title: 'Dimensions', fields: [
-      { field: 'length_on_deck', df: m2f, abbr: 'LOD' },
-      { field: 'length_on_waterline', df: m2f, abbr: 'LWL' },
-      { field: 'beam', df: m2f },
-      { field: 'draft', df: m2f },
-      { field: 'displacement', df: m2f },
-      { field: 'solent', df: m2f },
-    ] },
+    {
+      title: 'Dimensions', fields: [
+        { field: 'length_on_deck', df: m2f, abbr: 'LOD' },
+        { field: 'length_on_waterline', df: m2f, abbr: 'LWL' },
+        { field: 'beam', df: m2f },
+        { field: 'draft', df: m2f },
+        { field: 'displacement', df: m2f },
+        { field: 'solent', df: m2f },
+      ]
+    },
   ];
 
 
@@ -103,7 +110,7 @@ export default function BoatDetail({ view, boat }) {
       )
     });
   }
-  if (roles.includes('member') && boat.ownerships?.length > 0 ) {
+  if (roles.includes('member') && boat.ownerships?.length > 0) {
     panes.push({
       title: `Owners${is_oga(boat) ? '*' : ''}`, children: (
         <Owners boat={boat} />
@@ -187,43 +194,43 @@ export default function BoatDetail({ view, boat }) {
       );
     }
   }
-  
+
   panes.push({
-      title: 'Handicap Measurements', children: (
-        <Paper>
-          <Typography>To assist with keeping the boat register up to date and accurate members have been asked
-to remeasure their boats hull and sail plan. Many boats have been re rigged over the years
-and it is correct to update the national OGA boat register data base with accurate figures.
-Standard production boats with the builders / designers sail plan should not need to
-remeasure as their measurements will be readily available. If however, you have a more
-modern gaffer with a custom sail plan then we need to know the new sail details.
-</Typography>
-<Typography>Please complete the form by clicking on the 'I have edits for this boat' button below.</Typography>
-<Typography>You can also email your data to the boat register editors.</Typography>
-          <Stack direction='row'>
-            <img width='80%' src='https://oldgaffers.github.io/boatregister/handicapmeasurements.svg' alt='boat measurement diagram' />
-            <Stack width='20%'>
-              <Typography variant='h6'>Sail Dimensions</Typography>
-              <Typography>Mainsail, mizzen and main and mizzen
-topsails, and schooners’ foresails and
-fore-topsails, are measured as the
-actual sail dimensions, not the spar
-lengths. Headsails - it is the size of the
-foretriangle that is measured.</Typography>
-              <Typography variant='h6'>Foretriangle</Typography>
-              <Typography>I is measured from deck to the top of
-the highest headsail halyard sheave
-(for jib topsail if one can be flown). J is
-measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
-the jib outhaul at the end of the bowsprit.</Typography>
-<Typography variant='h6'>Hull</Typography>
-<Typography>
-  LOA is hull length excluding spars and rudder, LWL excludes the rudder and Beam is the widest part of the hull (outside
-measurement) excluding rubbing strakes and other appendages.</Typography>
-            </Stack>
+    title: 'Handicap Measurements', children: (
+      <Paper>
+        <Typography>To assist with keeping the boat register up to date and accurate members have been asked
+          to remeasure their boats hull and sail plan. Many boats have been re rigged over the years
+          and it is correct to update the national OGA boat register data base with accurate figures.
+          Standard production boats with the builders / designers sail plan should not need to
+          remeasure as their measurements will be readily available. If however, you have a more
+          modern gaffer with a custom sail plan then we need to know the new sail details.
+        </Typography>
+        <Typography>Please complete the form by clicking on the 'I have edits for this boat' button below.</Typography>
+        <Typography>You can also email your data to the boat register editors.</Typography>
+        <Stack direction='row'>
+          <img width='80%' src='https://oldgaffers.github.io/boatregister/handicapmeasurements.svg' alt='boat measurement diagram' />
+          <Stack width='20%'>
+            <Typography variant='h6'>Sail Dimensions</Typography>
+            <Typography>Mainsail, mizzen and main and mizzen
+              topsails, and schooners’ foresails and
+              fore-topsails, are measured as the
+              actual sail dimensions, not the spar
+              lengths. Headsails - it is the size of the
+              foretriangle that is measured.</Typography>
+            <Typography variant='h6'>Foretriangle</Typography>
+            <Typography>I is measured from deck to the top of
+              the highest headsail halyard sheave
+              (for jib topsail if one can be flown). J is
+              measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of
+              the jib outhaul at the end of the bowsprit.</Typography>
+            <Typography variant='h6'>Hull</Typography>
+            <Typography>
+              LOA is hull length excluding spars and rudder, LWL excludes the rudder and Beam is the widest part of the hull (outside
+              measurement) excluding rubbing strakes and other appendages.</Typography>
           </Stack>
-        </Paper>
-      )
+        </Stack>
+      </Paper>
+    )
   });
 
   const handleChange = (event, newValue) => {

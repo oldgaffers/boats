@@ -1,48 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import { Box, Checkbox, Dialog, DialogActions, DialogContentText, DialogTitle, FormControlLabel, Snackbar } from "@mui/material";
 import { useAuth0 } from '@auth0/auth0-react';
 import { postScopedData } from '../util/api';
 
-function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
+function SetHandicapCheckedDialog({ boat, onClose, open }) {
   const [popoverText, setPopoverText] = useState('');
   const [dimensions, setDimensions] = useState(false);
   const [sails, setSails] = useState(false);
   const [measurements, setMeasurements] = useState(false);
   const [updated, setUpdated] = useState(false);
-  const { getAccessTokenSilently } = useAuth0();
-
-  const postBoatExtraData = async (cd) => {
-    const token = await getAccessTokenSilently();
-    const response = await postScopedData('public', 'crewing', cd, token);
-    if (response.ok) {
-      return true;
-    }
-    throw response;
-  };
-
-  function setchecked() {
-    postBoatExtraData({ key: { oga_no: boat.oga_no }, show_handicap: true })
-      .then((response) => {
-        if (response.ok) {
-          setPopoverText("OK, that should happen soon");
-          onClose();
-        } else {
-          setPopoverText(response.statusText);
-          onClose();
-        }
-      })
-      .catch((error) => {
-        // console.log("post", error);
-        setPopoverText(error.message);
-        onClose();
-      });
-  }
-
+  const [checked, setChecked] = useState(false);
+  const { user, getAccessTokenSilently, logout } = useAuth0();
   const id = user?.['https://oga.org.uk/id'];
+  const roles = user?.['https://oga.org.uk/roles'] || [];
   const owned = boat.ownerships?.find((o) => o.id === id && o.current);
 
-  if (owned === undefined && ! (user['https://oga.org.uk/roles'] ||[]).includes('editor')) {
+  useEffect(() => {
+    if (checked) {
+      getAccessTokenSilently().then(async (token) => {
+        const response = await postScopedData('public', 'crewing', {
+          key: { oga_no: boat.oga_no }, show_handicap: true,
+        }, token);
+        if (response.ok) {
+          setPopoverText("OK, that should happen soon");
+        } else {
+          setPopoverText(response.statusText);
+        }
+        onClose();
+      }).catch((e) => {
+        console.error('Error getting access token for fleet update:', e);
+        const returnTo = window.location.origin + window.location.pathname;
+        logout({ returnTo });
+        alert('Error updating boat, please log in again');
+      });
+    }
+  }, [checked]);
+
+
+  if (owned === undefined && !roles.includes('editor')) {
     return <Dialog
       open={open}
       aria-labelledby="form-dialog-title"
@@ -99,7 +95,7 @@ function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
         </DialogContentText>
         <DialogActions>
           <Button
-            onClick={setchecked} color="primary"
+            onClick={setChecked} color="primary"
             disabled={!(measurements && sails && dimensions && updated)}
           >
             I confirm the boat register data are correct
@@ -123,7 +119,7 @@ function SetHandicapCheckedDialog({ boat, user={}, onClose, open }) {
   </>;
 }
 
-export default function SetHandicapCheckedButton({ boat, user }) {
+export default function SetHandicapCheckedButton({ boat }) {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -132,10 +128,6 @@ export default function SetHandicapCheckedButton({ boat, user }) {
 
   const handleClose = () => {
     setOpen(false);
-  }
-
-  if (!user) {
-    return '';
   }
 
   return (
@@ -148,7 +140,7 @@ export default function SetHandicapCheckedButton({ boat, user }) {
       >
         Check Handicap
       </Button>
-      <SetHandicapCheckedDialog boat={boat} user={user}
+      <SetHandicapCheckedDialog boat={boat}
         onClose={handleClose} onCancel={() => setOpen(false)} open={open}
       />
     </>
