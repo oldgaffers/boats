@@ -1,9 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box, Tab, Tabs } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { TokenContext } from './TokenProvider';
 import { PublicFleetView } from './fleetview';
 import { getScopedData } from '../util/api';
 import EntryTable from './rbc60entrytable';
@@ -11,23 +10,21 @@ import RCBEntryMap from './rbc60map';
 
 function RBCEntryTable() {
     const name = 'RBC 60';
-    const accessToken = useContext(TokenContext);
-    const { user } = useAuth0();
+    const { user, getAccessTokenSilently, logout } = useAuth0();
     const [data, setData] = useState();
 
     useEffect(() => {
-        const getData = async () => {
+        getAccessTokenSilently().then(async (accessToken) => {
             const p = await getScopedData('member', 'entries', { topic: name }, accessToken);
             setData(p.data);
-        }
-        if (accessToken) {
-            getData();
-        }
-    }, [accessToken, user]);
+        }).catch((e) => {
+            console.error('Error getting access token:', e);
+            const returnTo = window.location.origin + window.location.pathname;
+            logout({ returnTo });
+            alert('Please log in again');
+        });
+    }, [user]);
 
-    if (!accessToken) {
-        return <Typography>Please Login to see this content</Typography>;
-    }
     if (!data) {
         return <CircularProgress />;
     }
