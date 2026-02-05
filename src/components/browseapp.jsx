@@ -32,10 +32,7 @@ export default function BrowseApp({ view = 'app' }) {
         console.warn(`Selected fleet "${fleetName}" not found in fleets list.`);
       }
     } else {
-      const { oga_nos, ...filters } = state.filters;
-      if(oga_nos && !markedOnly) { // static fleet, remove oga_no filter when unselecting fleet
-        setState({ ...state, page: 1, filters });
-      }
+      setState({ ...state, page: 1, filters: {} });
     }
   }, [fleets, fleetName, markedOnly, state.filters.oga_nos]);
 
@@ -66,7 +63,6 @@ export default function BrowseApp({ view = 'app' }) {
   };
 
   const handleFleetChanges = (fleets, type) => {
-    console.log('handleFleetChanges', fleets, type);
     setFleets(fleets);
     if (type === 'static') {
       setMarkList([]);
