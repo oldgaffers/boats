@@ -8,6 +8,7 @@ import { MarkContext } from "./browseapp";
 import { Popover, Typography } from '@mui/material';
 import { getFleets, postScopedData } from '../util/api';
 import { useAuth0 } from '@auth0/auth0-react';
+import { fL } from '../util/THCF';
 
 export default function FleetButtons({
     onSelectionChange = () => console.log('fleet selection change'),
@@ -60,24 +61,23 @@ export default function FleetButtons({
         setAnchorEl(buttonRef.current);
         setPopoverOpen(true);
         getAccessTokenSilently()
-        .then((accessToken) => {
+        .then(async (accessToken) => {
             const scope = fleet.public ? 'public' : 'member';
-            postScopedData(scope, 'fleets', fleet, accessToken)
-                .then((response) => {
-                    if (response.ok) {
-                        setPopoverOpen(false);
-                        onFleetsUpdated([... (fleets || []), response.data], type);
-                    }
-                    console.log('Fleets updated successfully:', response);
-                })
-                .catch((error) => {
-                    setPopoverOpen(false);
-                    console.error('Error updating fleets:', error);
-                });
-            }).catch((e) => {
-                console.error('Error getting access token for creating fleet:', e);
+            const response = await postScopedData(scope, 'fleets', fleet, accessToken);
+            if (response.ok) {
                 setPopoverOpen(false);
-            });
+                // add or update the fleet in the list using the owner_gold_id and name as the key
+                const of = Object.fromEntries(fleets.map(f => [`${f.owner_gold_id}:${f.name}`, f]));
+                of[`${fleet.owner_gold_id}:${fleet.name}`] = fleet;
+                onFleetsUpdated(Object.values(of), type);
+            } else {
+                console.error('Error updating fleet:', response);
+                setPopoverOpen(false);
+            }
+        }).catch((e) => {
+            console.error('Error getting access token for fleet update:', e);
+            setPopoverOpen(false);
+        });
     }
     return (
         <Stack direction='row' spacing={3}>
@@ -101,7 +101,7 @@ export default function FleetButtons({
             />
             <UpdateFleet
                 markList={markList}
-                fleet={fleets?.find((f) => f.name === fleetName)}
+                fleet={fleets?.find((f) => f?.name === fleetName)}
                 onSubmit={addOrUpdateFleet}
                 id={id}
             />

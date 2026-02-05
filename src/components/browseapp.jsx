@@ -16,6 +16,29 @@ export default function BrowseApp({ view = 'app' }) {
 
   useEffect(() => { saveState(state, view); }, [state, view]);
 
+  useEffect(() => {
+    if (markList.length === 0) {
+      setMarkedOnly(false);
+    }
+  }, [markList]);
+
+  useEffect(() => {
+    if (fleetName) {
+      const fleet = fleets?.find((f) => f.name === fleetName);
+      if (fleet) {
+        console.log(`Applying filters from fleet "${fleetName}":`, fleet.filters);
+        setState({ ...state, page: 1, filters: fleet.filters });
+      } else {
+        console.warn(`Selected fleet "${fleetName}" not found in fleets list.`);
+      }
+    } else {
+      const { oga_nos, ...filters } = state.filters;
+      if(oga_nos && !markedOnly) { // static fleet, remove oga_no filter when unselecting fleet
+        setState({ ...state, page: 1, filters });
+      }
+    }
+  }, [fleets, fleetName, markedOnly, state.filters.oga_nos]);
+
   const handlePageSizeChange = (bpp) => {
     setState({ ...state, page: 1, bpp });
   };
@@ -32,76 +55,21 @@ export default function BrowseApp({ view = 'app' }) {
     setState({ ...state, page: 1, filters });
   }, [state]);
 
-  const updateOgaNosFilter = useCallback((l, mo) => {
-    if (l.length === 0) {
-      const { oga_nos, ...f } = state.filters;
-      if (oga_nos) {
-        handleFilterChange(f);
-      }
-      setMarkedOnly(false); // need to turn off the switch if nothing marked
-    } else if (mo) {
-      handleFilterChange({ ...state.filters, oga_nos: l });
-    } else {
-      // should be nothing to do
-    }
-  }, [handleFilterChange, state.filters]);
-
-  const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
-    if (isMarkedOnly) {
-      updateOgaNosFilter(markList, true);
-    } else {
-      updateOgaNosFilter([], false);
-    }
-    setMarkedOnly(isMarkedOnly);
-  }, [updateOgaNosFilter, markList]);
-
   const handleBoatMarked = (ogaNo) => {
     if (!markList.includes(ogaNo)) {
-      const newMarkList = [...markList, ogaNo];
-      setMarkList(newMarkList);
-      updateOgaNosFilter(newMarkList, markedOnly);
+      setMarkList([...markList, ogaNo]);
     }
   };
 
   const handleBoatUnMarked = (ogaNo) => {
-    const newMarkList = markList.filter((n) => n !== ogaNo);
-    if (markedOnly) {
-      updateOgaNosFilter(newMarkList, true);
-    }
-    setMarkList(newMarkList);
+    setMarkList(markList.filter((n) => n !== ogaNo));
   };
-
-  const handleClearAllMarks = () => {
-    // console.log('handle clear all marks');
-    setMarkList([]);
-    setMarkedOnly(false);
-    updateOgaNosFilter([], false);
-  }
-
-  const updateFleetFilter = (name) => {
-    if (name) {
-      const fleet = fleets?.find((f) => f.name === name);
-      if (fleet) {
-        handleFilterChange(fleet.filters);
-      } else {
-        handleFilterChange({});
-      }
-    } else {
-      handleFilterChange({});
-    }
-  }
-
-  const handleFleetSelected = (name) => {
-    setFleetName(name);
-    updateFleetFilter(name);
-  }
 
   const handleFleetChanges = (fleets, type) => {
     console.log('handleFleetChanges', fleets, type);
     setFleets(fleets);
-    updateFleetFilter(fleetName);
     if (type === 'static') {
-      handleClearAllMarks();
+      setMarkList([]);
     }
   }
 
@@ -112,8 +80,8 @@ export default function BrowseApp({ view = 'app' }) {
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
         onPageChange={handlePageChange}
-        onMarkedOnlyChange={handleMarkedOnlyChange}
-        onClearAllMarks={handleClearAllMarks}
+        onMarkedOnlyChange={(isMarkedOnly) => setMarkedOnly(isMarkedOnly)}
+        onClearAllMarks={() => setMarkList([])}
         onBoatMarked={handleBoatMarked}
         onBoatUnMarked={handleBoatUnMarked}
         isMarkedOnly={markedOnly}
@@ -121,7 +89,7 @@ export default function BrowseApp({ view = 'app' }) {
         onFleetChanges={handleFleetChanges}
         fleets={fleets}
         fleetName={fleetName}
-        onFleetSelected={handleFleetSelected}
+        onFleetSelected={(name) => setFleetName(name)}
       />
     </MarkContext.Provider>
   );
