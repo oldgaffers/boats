@@ -2,8 +2,6 @@ import React, { createContext, useState, useEffect, useCallback } from "react";
 // import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
 import BrowseBoats from "./browseboats";
 import { getState, saveState, setView } from "../util/statemanagement";
-import { useAuth0 } from "@auth0/auth0-react";
-import { getFleets } from "../util/api";
 
 export const MarkContext = createContext([]);
 export const OwnedContext = createContext([]);
@@ -14,42 +12,32 @@ export default function BrowseApp({ view = 'app' }) {
   const [markList, setMarkList] = useState([]);
   const [markedOnly, setMarkedOnly] = useState(false);
   const [fleets, setFleets] = useState();
-
-  // const accessToken = useContext(TokenContext);
-  const { user, getAccessTokenSilently } = useAuth0()
-
-  useEffect(() => {
-    const getData = async (accessToken) => {
-      const id = user?.["https://oga.org.uk/id"];
-      const f = await getFleets('public', { public: true }, accessToken);
-      if (id) {
-        const q = await getFleets('member', { owner_gold_id: id }, accessToken);
-        f.push(...q);
-      }
-      return f;
-    }
-    if (!fleets) {
-      getAccessTokenSilently(
-        // {
-        //   authorizationParams: {
-        //     audience: 'https://oga.org.uk/boatregister', 
-        //     scope: 'email',
-        // }}
-      )
-        .then((accessToken) => {
-        getData(accessToken).then((data) => {
-          console.log('got fleets');
-          setFleets(data);
-        }).catch((e) => {
-          console.error('Error fetching fleets:', e);
-        });
-      }).catch((e) => {
-        console.error('Error getting access token for fleets:', e);
-      });
-    }
-  }, [getAccessTokenSilently, fleets, user])
+  const [fleetName, setFleetName] = useState();
 
   useEffect(() => { saveState(state, view); }, [state, view]);
+
+  useEffect(() => {
+    if (markList.length === 0) {
+      setMarkedOnly(false);
+    }
+  }, [markList]);
+
+  useEffect(() => {
+    if (fleetName) {
+      const fleet = fleets?.find((f) => f.name === fleetName);
+      if (fleet) {
+        console.log(`Applying filters from fleet "${fleetName}":`, fleet.filters);
+        setState({ ...state, page: 1, filters: fleet.filters });
+      } else {
+        console.warn(`Selected fleet "${fleetName}" not found in fleets list.`);
+      }
+    } else {
+      const { oga_nos, ...filters } = state.filters;
+      if(oga_nos && !markedOnly) { // static fleet, remove oga_no filter when unselecting fleet
+        setState({ ...state, page: 1, filters });
+      }
+    }
+  }, [fleets, fleetName, markedOnly, state.filters.oga_nos]);
 
   const handlePageSizeChange = (bpp) => {
     setState({ ...state, page: 1, bpp });
@@ -67,57 +55,22 @@ export default function BrowseApp({ view = 'app' }) {
     setState({ ...state, page: 1, filters });
   }, [state]);
 
-  const handleFleetChange = () => {
-    console.log('fleet change, refetching and clearing marks');
-    setFleets(undefined);
-    setMarkList([]);
-    setMarkedOnly(false);
-  };
-
-  const updateOgaNosFilter = useCallback((l, mo) => {
-    if (l.length === 0) {
-      const { oga_nos, ...f } = state.filters;
-      if (oga_nos) {
-        handleFilterChange(f);
-      }
-      setMarkedOnly(false); // need to turn off the switch if nothing marked
-    } else if (mo) {
-      handleFilterChange({ ...state.filters, oga_nos: l });
-    } else {
-      // should be nothing to do
-    }
-  }, [handleFilterChange, state.filters]);
-
-  const handleMarkedOnlyChange = useCallback((isMarkedOnly) => {
-    if (isMarkedOnly) {
-      updateOgaNosFilter(markList, true);
-    } else {
-      updateOgaNosFilter([], false);
-    }
-    setMarkedOnly(isMarkedOnly);
-  }, [updateOgaNosFilter, markList]);
-
   const handleBoatMarked = (ogaNo) => {
     if (!markList.includes(ogaNo)) {
-      const newMarkList = [...markList, ogaNo];
-      setMarkList(newMarkList);
-      updateOgaNosFilter(newMarkList, markedOnly);
+      setMarkList([...markList, ogaNo]);
     }
   };
 
   const handleBoatUnMarked = (ogaNo) => {
-    const newMarkList = markList.filter((n) => n !== ogaNo);
-    if (markedOnly) {
-      updateOgaNosFilter(newMarkList, true);
-    }
-    setMarkList(newMarkList);
+    setMarkList(markList.filter((n) => n !== ogaNo));
   };
 
-  const handleClearAllMarks = () => {
-    // console.log('handle clear all marks');
-    setMarkList([]);
-    setMarkedOnly(false);
-    updateOgaNosFilter([], false);
+  const handleFleetChanges = (fleets, type) => {
+    console.log('handleFleetChanges', fleets, type);
+    setFleets(fleets);
+    if (type === 'static') {
+      setMarkList([]);
+    }
   }
 
   return (
@@ -127,14 +80,16 @@ export default function BrowseApp({ view = 'app' }) {
         onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
         onPageChange={handlePageChange}
-        onMarkedOnlyChange={handleMarkedOnlyChange}
-        onClearAllMarks={handleClearAllMarks}
-        onFleetChange={handleFleetChange}
+        onMarkedOnlyChange={(isMarkedOnly) => setMarkedOnly(isMarkedOnly)}
+        onClearAllMarks={() => setMarkList([])}
         onBoatMarked={handleBoatMarked}
         onBoatUnMarked={handleBoatUnMarked}
         isMarkedOnly={markedOnly}
         state={state}
+        onFleetChanges={handleFleetChanges}
         fleets={fleets}
+        fleetName={fleetName}
+        onFleetSelected={(name) => setFleetName(name)}
       />
     </MarkContext.Provider>
   );

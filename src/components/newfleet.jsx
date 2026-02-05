@@ -1,4 +1,4 @@
-import React, { useContext,  useRef, useState } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -8,10 +8,7 @@ import DialogActions from "@mui/material/DialogActions";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import { useAuth0 } from "@auth0/auth0-react";
-import { FormControl, Popover, Radio, RadioGroup, Typography } from "@mui/material";
-import { postScopedData } from '../util/api';
-import { TokenContext } from './TokenProvider';
+import { FormControl, Radio, RadioGroup } from "@mui/material";
 
 function CreateFleetDialog({
     onCancel, onClose, open, filterCount, markedBoatCount,
@@ -58,31 +55,25 @@ function CreateFleetDialog({
 }
 
 export default function NewFleet({
-    updated = () => console.log('updated'),
+    onSubmit,
     markList = [],
     selected,
     filters={},
     filtered,
+    id,
 }) {
-    const { user } = useAuth0();
-    const id = user?.["https://oga.org.uk/id"];
-    const accessToken = useContext(TokenContext);
-    const [popoverOpen, setPopoverOpen] = useState(false);
-    const [anchorEl, setAnchorEl] = useState();
     const [open, setOpen] = useState(false);
-    const buttonRef = useRef();
 
-    const addFleet = (name, isPublic, type) => {
-        console.log('addFleet', name, isPublic, markList, filters);
+    const handleClose = (value) => {
+        setOpen(false);
         const data = {
-            name,
+            name: value.name,
             owner_gold_id: id,
-            public: isPublic,
+            public: value.public,
             created_at: (new Date()).toISOString(),
         };
-        switch (type) {
+        switch (value.type) {
             case 'dynamic':
-                console.log('D', filters);
                 data.filters = filters;
                 break;
             case 'static':
@@ -94,28 +85,7 @@ export default function NewFleet({
             default:
                 data.filters = { oga_nos: markList };
         }
-        const scope = (isPublic) ? 'public' : 'member';
-        postScopedData(scope, 'fleets', data, accessToken)
-            .then((response) => {
-                if (response.ok) {
-                    setPopoverOpen(false);
-                    updated();    
-                } else {
-                    console.log(response.statusText);
-                    setPopoverOpen(false);
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-                setPopoverOpen(false);
-            });
-    }
-
-    const handleClose = (value) => {
-        setOpen(false);
-        setAnchorEl(buttonRef.current);
-        setPopoverOpen(true);
-        addFleet(value.name, value.public, value.type);
+        onSubmit(data, value.type);
     };
 
     if (selected) {
@@ -132,7 +102,6 @@ export default function NewFleet({
     return (
         <>
             <Button
-                ref={buttonRef}
                 size="small"
                 variant="contained"
                 color='primary'
@@ -145,17 +114,6 @@ export default function NewFleet({
                 onCancel={() => setOpen(false)}
                 onClose={handleClose}
             />
-            <Popover
-                open={popoverOpen}
-                anchorEl={anchorEl}
-                onClose={() => setAnchorEl(undefined)}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                }}
-            >
-                <Typography sx={{ p: 2 }}>posting request</Typography>
-            </Popover>
         </>
     );
 }
