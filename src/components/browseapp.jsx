@@ -48,8 +48,10 @@ export default function BrowseApp({ view = 'app' }) {
     setState({ ...state, page });
   };
 
-  const handleFilterChange = useCallback((filters) => {
-    setState({ ...state, page: 1, filters });
+  const handleFilterChange = useCallback((newFilters) => {
+    const { filters } = getState(view);
+    const f = { ...newFilters, ...filters };
+    setState({ ...state, page: 1, filters: f });
   }, [state]);
 
   const handleBoatMarked = (ogaNo) => {
