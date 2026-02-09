@@ -50,9 +50,7 @@ export default function BrowseApp({ view = 'app' }) {
   const handleFilterChange = (newFilters) => {
     const { filters } = getState(view);
     const f = { ...newFilters, ...filters };
-    if (view === 'sale') {
-      alert('change filters to', JSON.stringify(f));
-    }
+    alert('change filters to', JSON.stringify(f));
     setState({ ...state, page: 1, filters: f });
   };
 
