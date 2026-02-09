@@ -11,6 +11,7 @@ import useDebounce from "../util/debounce";
 import FleetButtons from "./fleetbuttons";
 import { MarkContext } from "./browseapp";
 import RoleRestricted from './rolerestrictedcomponent';
+import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
 
 const pageSize = [];
 for (let i = 1; i <= 8; i++) {
@@ -45,7 +46,7 @@ export default function FilterBoats({
     onFleetSelected,
     onFleetChange,
 }) {
-    const currentFilters = filters || {};
+    const currentFilters = filters || DEFAULT_BROWSE_STATE[view];
     const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
     const debouncedOgaNo = useDebounce(ogaNo, 1000);
     const markList = useContext(MarkContext);
