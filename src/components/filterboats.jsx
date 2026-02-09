@@ -11,7 +11,6 @@ import useDebounce from "../util/debounce";
 import FleetButtons from "./fleetbuttons";
 import { MarkContext } from "./browseapp";
 import RoleRestricted from './rolerestrictedcomponent';
-import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
 
 const pageSize = [];
 for (let i = 1; i <= 8; i++) {
@@ -46,8 +45,7 @@ export default function FilterBoats({
     onFleetSelected,
     onFleetChange,
 }) {
-    const currentFilters = filters || DEFAULT_BROWSE_STATE[view];
-    const [ogaNo, setOgaNo] = useState(currentFilters.oga_no || '');
+    const [ogaNo, setOgaNo] = useState(filters.oga_no || '');
     const debouncedOgaNo = useDebounce(ogaNo, 1000);
     const markList = useContext(MarkContext);
 
@@ -71,16 +69,16 @@ export default function FilterBoats({
     }, [debouncedOgaNo, filters, onFilterChange, ogaNo]);
 
     const dateRange = [
-        currentFilters.firstYear || pickers.year.min,
-        currentFilters.lastYear || pickers.year.max,
+        filters.firstYear || pickers.year.min,
+        filters.lastYear || pickers.year.max,
     ];
     const [dr, setDr] = useState(dateRange);
 
     function pl(id, value) {
         if (value) {
-            onFilterChange({ ...currentFilters, [id]: value });
+            onFilterChange({ ...filters, [id]: value });
         } else {
-            const f = { ...currentFilters };
+            const f = { ...filters };
             delete f[id];
             onFilterChange(f);
         }
@@ -91,7 +89,7 @@ export default function FilterBoats({
     }
 
     function handleDateRangeCommitted(event, [min, max]) {
-        const f = { ...currentFilters };
+        const f = { ...filters };
         if (min === pickers.year.min) {
             delete f.firstYear;
         } else {
@@ -118,7 +116,7 @@ export default function FilterBoats({
                     id="name"
                     options={makePicklist(view, pickers, "name")}
                     label="Boat Name"
-                    value={currentFilters["name"]}
+                    value={filters["name"]}
                 />
             </Grid>
             <Grid>
@@ -136,7 +134,7 @@ export default function FilterBoats({
                     id="designer"
                     options={makePicklist(view, pickers, "designer")}
                     label="Designer"
-                    value={currentFilters["designer"]}
+                    value={filters["designer"]}
                 />
             </Grid>
             <Grid>
@@ -145,7 +143,7 @@ export default function FilterBoats({
                     id="builder"
                     options={makePicklist(view, pickers, "builder")}
                     label="Builder"
-                    value={currentFilters["builder"]}
+                    value={filters["builder"]}
                 />
             </Grid>
             <Grid>
@@ -154,7 +152,7 @@ export default function FilterBoats({
                     id="rig_type"
                     options={makePicklist(view, pickers, "rig_type")}
                     label="Rig Type"
-                    value={currentFilters["rig_type"]}
+                    value={filters["rig_type"]}
                 />
             </Grid>
             <Grid>
@@ -163,7 +161,7 @@ export default function FilterBoats({
                     id="mainsail_type"
                     options={makePicklist(view, pickers, "mainsail_type")}
                     label="Mainsail Type"
-                    value={currentFilters["mainsail_type"]}
+                    value={filters["mainsail_type"]}
                 />
             </Grid>
             <Grid>
@@ -173,7 +171,7 @@ export default function FilterBoats({
                     options={makePicklist(view, pickers, "generic_type")}
                     label="Generic Type"
                     value={() => {
-                        const f = currentFilters["generic_type"];
+                        const f = filters["generic_type"];
                         if (Array.isArray(f)) {
                             return ""; // TODO support multiple
                         }
@@ -187,7 +185,7 @@ export default function FilterBoats({
                     id="design_class"
                     options={makePicklist(view, pickers, "design_class")}
                     label="Design Class"
-                    value={currentFilters["design_class"]}
+                    value={filters["design_class"]}
                 />
             </Grid>
             <Grid>
@@ -196,7 +194,7 @@ export default function FilterBoats({
                     id="construction_material"
                     options={makePicklist(view, pickers, "construction_material")}
                     label="Construction Material"
-                    value={currentFilters["construction_material"]}
+                    value={filters["construction_material"]}
                 />
             </Grid>
             <Grid>
@@ -205,7 +203,7 @@ export default function FilterBoats({
                     id="place_built"
                     options={makePicklist(view, pickers, "place_built")}
                     label="Place Built"
-                    value={currentFilters["place_built"]}
+                    value={filters["place_built"]}
                 />
             </Grid>
             <Grid>
@@ -214,7 +212,7 @@ export default function FilterBoats({
                     id="home_port"
                     options={makePicklist(view, pickers, "home_port")}
                     label="Home Port"
-                    value={currentFilters["home_port"]}
+                    value={filters["home_port"]}
                 />
             </Grid>
             <Grid>
