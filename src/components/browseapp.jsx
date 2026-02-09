@@ -1,5 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from "react";
-// import StaticPickerBoatBrowser from "./components/StaticPickerBoatBrowser";
+import React, { createContext, useState, useEffect } from "react";
 import BrowseBoats from "./browseboats";
 import { getState, saveState, setView } from "../util/statemanagement";
 
@@ -48,11 +47,11 @@ export default function BrowseApp({ view = 'app' }) {
     setState({ ...state, page });
   };
 
-  const handleFilterChange = useCallback((newFilters) => {
+  const handleFilterChange = (newFilters) => {
     const { filters } = getState(view);
     const f = { ...newFilters, ...filters };
     setState({ ...state, page: 1, filters: f });
-  }, [state]);
+  };
 
   const handleBoatMarked = (ogaNo) => {
     if (!markList.includes(ogaNo)) {
