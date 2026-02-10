@@ -49,7 +49,7 @@ export default function BrowseApp({ view = 'app' }) {
 
   const handleFilterChange = (newFilters) => {
     const { filters } = getState(view);
-    alert(`view filters for ${view} are ${JSON.stringify(filters)}`);
+    // alert(`view filters for ${view} are ${JSON.stringify(filters)}`);
     const f = { ...newFilters, ...filters };
     setState({ ...state, page: 1, filters: f });
   };
