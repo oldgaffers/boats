@@ -1,4 +1,4 @@
-++import React from 'react';
+import React from 'react';
 import { render } from 'vitest-browser-react';
 import { test, expect, vi } from 'vitest';
 import BrowseApp from '../../src/components/browseapp';
