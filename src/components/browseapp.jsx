@@ -1,7 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import BrowseBoats from "./browseboats";
 import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
-import { Stack } from "@mui/material";
 
 export const MarkContext = createContext([]);
 export const OwnedContext = createContext([]);
@@ -73,7 +72,7 @@ export default function BrowseApp({ view = 'app' }) {
 
   return (
     <MarkContext.Provider value={markList}>
-    <Stack>
+    <div>
       <BrowseBoats
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
@@ -91,7 +90,7 @@ export default function BrowseApp({ view = 'app' }) {
         onFleetSelected={(name) => setFleetName(name)}
       />
       <pre>{JSON.stringify(state, null, 2)}</pre>
-      </Stack>
+      </div>
     </MarkContext.Provider>
   );
 }
