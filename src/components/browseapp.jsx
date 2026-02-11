@@ -1,13 +1,12 @@
 import React, { createContext, useState, useEffect } from "react";
 import BrowseBoats from "./browseboats";
-import { getState, saveState, setView, DEFAULT_BROWSE_STATE } from "../util/statemanagement";
+import { saveState, DEFAULT_BROWSE_STATE } from "../util/statemanagement";
 
 export const MarkContext = createContext([]);
 export const OwnedContext = createContext([]);
 
 export default function BrowseApp({ view = 'app' }) {
-  setView(view);
-  const [state, setState] = useState(getState(view));
+  const [state, setState] = useState(DEFAULT_BROWSE_STATE[view]);
   const [markList, setMarkList] = useState([]);
   const [markedOnly, setMarkedOnly] = useState(false);
   const [fleets, setFleets] = useState();
@@ -49,7 +48,7 @@ export default function BrowseApp({ view = 'app' }) {
 
   const handleFilterChange = (newFilters) => {
     const { filters } = DEFAULT_BROWSE_STATE[view];
-    alert(`view filters for ${view} are ${JSON.stringify(filters)}`);
+    // alert(`view filters for ${view} are ${JSON.stringify(filters)}`);
     const f = { ...newFilters, ...filters };
     setState({ ...state, page: 1, filters: f });
   };
