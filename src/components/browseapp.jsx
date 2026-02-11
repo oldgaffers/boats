@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import BrowseBoats from "./browseboats";
-import { saveState, DEFAULT_BROWSE_STATE } from "../util/statemanagement";
+import { DEFAULT_BROWSE_STATE } from "../util/statemanagement";
 
 export const MarkContext = createContext([]);
 export const OwnedContext = createContext([]);
@@ -12,7 +12,7 @@ export default function BrowseApp({ view = 'app' }) {
   const [fleets, setFleets] = useState();
   const [fleetName, setFleetName] = useState();
 
-  useEffect(() => { saveState(state, view); }, [state, view]);
+  // useEffect(() => { saveState(state, view); }, [state, view]);
 
   useEffect(() => {
     if (markList.length === 0) {
