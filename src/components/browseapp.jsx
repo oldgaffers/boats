@@ -69,7 +69,6 @@ export default function BrowseApp({ view = 'app' }) {
 
   return (
     <MarkContext.Provider value={markList}>
-    <div>
       <BrowseBoats
         onPageSizeChange={handlePageSizeChange}
         onSortChange={handleSortChange}
@@ -86,8 +85,6 @@ export default function BrowseApp({ view = 'app' }) {
         fleetName={fleetName}
         onFleetSelected={(name) => setFleetName(name)}
       />
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-      </div>
     </MarkContext.Provider>
   );
 }
