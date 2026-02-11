@@ -21,17 +21,14 @@ export default function BrowseApp({ view = 'app' }) {
   }, [markList]);
 
   useEffect(() => {
+    let filters = DEFAULT_BROWSE_STATE[view].filters;
     if (fleetName) {
       const fleet = fleets?.find((f) => f.name === fleetName);
       if (fleet) {
-        console.log(`Applying filters from fleet "${fleetName}":`, fleet.filters);
-        setState({ ...state, page: 1, filters: fleet.filters });
-      } else {
-        console.warn(`Selected fleet "${fleetName}" not found in fleets list.`);
+        filters = { ...filters, ...fleet.filters };  
       }
-    } else {
-      setState({ ...state, page: 1, filters: {} });
     }
+    setState({ ...state, page: 1, filter });
   }, [fleets, fleetName, markedOnly, state.filters.oga_nos]);
 
   const handlePageSizeChange = (bpp) => {
