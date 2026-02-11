@@ -28,7 +28,7 @@ export default function BrowseApp({ view = 'app' }) {
         filters = { ...filters, ...fleet.filters };  
       }
     }
-    setState({ ...state, page: 1, filter });
+    setState({ ...state, page: 1, filters });
   }, [fleets, fleetName, markedOnly, state.filters.oga_nos]);
 
   const handlePageSizeChange = (bpp) => {
