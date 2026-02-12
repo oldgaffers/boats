@@ -8,8 +8,6 @@ import { boatf2m, boatm2f } from '../util/format';
 import { boatdiff } from './editboatwizardfunctions';
 import { formatters } from 'jsondiffpatch';
 
-
-  
 async function checkAlbum(boat) {
    if (boat.image_key) {
      return boat;
@@ -85,7 +83,7 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         open={snackBarOpen}
-        autoHideDuration={2000}
+        autoHideDuration={7000}
         onClose={() => { console.log('ok'); setSnackBarOpen(false) }}
         message={snackBarText}
         severity={snackBarSeverity}

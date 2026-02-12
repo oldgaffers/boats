@@ -16,7 +16,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
 import defaultSchema from './ddf/editboat_schema';
 
-function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
+function EditWiz({ boat, onCancel, onSubmit, schema=defaultSchema(!boat.name), pr }) {
   const [pickers, setPickers] = useState();
   const { user } = useAuth0();
 
@@ -29,8 +29,6 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
   }, [pickers]);
 
   if (!pickers) return <CircularProgress />;
-
-  const activeSchema = schema || defaultSchema(!boat.name);
 
   const handleSubmit = (_, formApi) => {
 
@@ -58,7 +56,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     FormTemplate={(props) => (
       <FormTemplate {...props} showFormControls={false} />
     )}
-    schema={activeSchema}
+    schema={schema}
     onSubmit={handleSubmit}
     onCancel={onCancel}
     initialValues={prepareInitialValues(boat, user, pr)}
