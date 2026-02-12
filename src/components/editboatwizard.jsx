@@ -68,26 +68,14 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
   const [ogaNo, setOgaNo] = useState(boat.oga_no);
-  const [imageKey, setImageKey] = useState(boat.image_key);
 
   useEffect(() => {
     if (!ogaNo) {
       nextOgaNo().then(async (no) => {
         setOgaNo(no);
-        const r = await createPhotoAlbum(boat.name, no);
-        if (r.ok) {
-          const j = await r.json();
-          setImageKey(j.albumKey );
-        } else {
-          console.log('problem creating album for new boat', r.status, r.statusText);
-          const j = await r.json();
-          if (j.albumKey) {
-            setImageKey(j.albumKey);
-          }
-        }
       }).catch((e) => console.log(e));
     }
-  }, [ogaNo, imageKey, boat.name]);
+  }, [ogaNo]);
 
   if (!ogaNo) {return <CircularProgress />; }
 
