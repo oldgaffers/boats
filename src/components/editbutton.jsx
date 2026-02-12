@@ -12,7 +12,7 @@ async function checkAlbum(boat) {
    if (boat.image_key) {
      return boat;
    }
-   const r = await createPhotoAlbum(boat.name, no);
+   const r = await createPhotoAlbum(boat.name, boat.oga_no);
    if (r.ok) {
       const j = await r.json();
       return {...boat, image_key: j.albumKey };
