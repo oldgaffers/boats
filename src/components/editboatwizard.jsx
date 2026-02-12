@@ -70,7 +70,7 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
   useEffect(() => {
     if (!ogaNo) {
       nextOgaNo()
-      .then(n) => setOgaNo(n))
+      .then((n) => setOgaNo(n))
       .catch((e) => console.log(e));
     }
   }, [ogaNo]);
