@@ -10,7 +10,7 @@ import Dialog from "@mui/material/Dialog";
 import CircularProgress from '@mui/material/CircularProgress';
 import OwnershipForm from "./ddf/ownershipupdateform";
 import Typography from "@mui/material/Typography";
-import { clearNewValues, createPhotoAlbum, getPicklists, nextOgaNo, openPr } from '../util/api';
+import { clearNewValues, getPicklists, nextOgaNo, openPr } from '../util/api';
 import HtmlEditor from './ddf/trix';
 import { useAuth0 } from '@auth0/auth0-react';
 import { prepareInitialValues, prepareModifiedValues } from '../../src/components/editboatwizardfunctions';
