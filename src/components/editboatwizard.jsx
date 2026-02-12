@@ -92,7 +92,7 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
         <EditWiz
           onCancel={onCancel}
           onSubmit={onSubmit}
-          boat={{...boat, oga_no: ogaNo, image_key: imageKey} }
+          boat={{...boat, oga_no: ogaNo}}
           schema={schema}
           pr={pr}
         />
