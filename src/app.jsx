@@ -9,9 +9,8 @@ import BrowseApp from './components/browseapp';
 import Boat from './components/boat';
 import FleetView, { Fleets } from './components/fleetview';
 import LoginButton from './components/loginbutton';
-import CreateBoatButton from './components/createboatbutton';
 import CustomMap from './components/custommap';
-
+import EditButton from './components/editbutton';
 import PickOrAddBoat from './components/pick_or_add_boat';
 import BuilderPage from './components/builderpage';
 import PrivateDocument from "./components/PrivateDocument";
@@ -69,7 +68,7 @@ const Pages = (props) => {
     case 'my_fleets': return <Fleets filter={{ owned: true }} {...props} />;
     case 'shared_fleets': return <Fleets filter={{ public: true }} {...props} />;
     case 'map': return <CustomMap {...props} />;
-    case 'add_boat': return <CreateBoatButton {...props} />;
+    case 'add_boat': return <EditButton boat={{}} label='Add Boat' {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
     case 'builder': return <BuilderPage {...props} {...kvp} />;
     case 'doc': return <PrivateDocument {...props} />;

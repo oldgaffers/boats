@@ -35,7 +35,7 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
       }
     } catch (error) {
       // console.log("post", error);
-      setSnackBarText(error.message);
+      setSnackBarText(`Something went wrong: ${error.message}`);
       setSnackBarSeverity('error');
       setSnackBarOpen(true);
     };

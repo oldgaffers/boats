@@ -6,7 +6,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Divider from '@mui/material/Divider';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Stack } from '@mui/material';
 import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
-import CreateBoatButton from './createboatbutton';
 import ShuffleBoatsButton from './shuffleboats';
 import RoleRestricted from './rolerestrictedcomponent';
 import FilterBoats from "./filterboats";
@@ -18,6 +17,7 @@ import { ExportFleet } from './exportfleet';
 import BoatRegisterFooter from './BoatRegisterFooter';
 import { useBoats } from '../util/boats';
 import Welcome from './Welcome';
+import EditButton from './editbutton';
 
 function makePickers(filtered) {
   // console.log('PB', filtered);
@@ -110,7 +110,7 @@ export default function BrowseBoats({
         <AccordionDetails>
           <IntroText view={state.view} />
           <Box maxHeight={200}>
-            <CreateBoatButton />
+            <EditButton boat={{}} label='Add Boat' />
           </Box>
         </AccordionDetails>
       </Accordion>
