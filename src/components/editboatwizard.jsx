@@ -18,29 +18,7 @@ import defaultSchema from './ddf/editboat_schema';
 
 function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
   const [pickers, setPickers] = useState();
-  const [data, setData] = useState(boat);
   const { user } = useAuth0();
-
-  useEffect(() => {
-    if (!data.oga_no) {
-      nextOgaNo().then(async (no) => {
-        const r = await createPhotoAlbum(boat.name, no);
-        if (r.ok) {
-          const j = await r.json();
-          setData({ ...data, oga_no: no, image_key: j.albumKey });
-        } else {
-          console.log('problem creating album for new boat', r.status, r.statusText);
-          const j = await r.json();
-          if (j.albumKey) {
-            setData({ ...data, oga_no: no, image_key: j.albumKey });
-          }
-          else {
-            setData({ ...data, oga_no: no });
-          }
-        }
-      }).catch((e) => console.log(e));
-    }
-  }, [data, boat]);
 
   useEffect(() => {
     if (!pickers) {
@@ -52,7 +30,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
 
   if (!pickers) return <CircularProgress />;
 
-  const activeSchema = schema || defaultSchema(!data.name);
+  const activeSchema = schema || defaultSchema(!boat.name);
 
   const handleSubmit = (_, formApi) => {
 
@@ -61,17 +39,13 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     // N.B. the values from the values parameter can be incomplete.
     // the values in the state seem correct
 
-    const { newItems, email, boat } = prepareModifiedValues(state.values, data, pickers);
+    const mv = prepareModifiedValues(state.values, boat, pickers);
 
     clearNewValues().then(() => {
       console.log('Cleared new picklist values');
     }).catch((e) => console.log(e));
   
-    onSubmit(
-      newItems,
-      boat,
-      email,
-    );
+    onSubmit(mv.newItems, mv.boat, mv.email );
 
   }
 
@@ -87,14 +61,37 @@ function EditWiz({ boat, onCancel, onSubmit, schema, pr }) {
     schema={activeSchema}
     onSubmit={handleSubmit}
     onCancel={onCancel}
-    initialValues={prepareInitialValues(data, user, pr)}
+    initialValues={prepareInitialValues(boat, user, pr)}
     subscription={{ values: true }}
   />;
 }
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
+  const [ogaNo, setOgaNo] = useState(boat.oga_no);
+  const [imageKey, setImageKey] = useState(boat.image_key);
 
-  const title = boat.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
+  useEffect(() => {
+    if (!ogaNo) {
+      nextOgaNo().then(async (no) => {
+        setOgaNo(no);
+        const r = await createPhotoAlbum(boat.name, no);
+        if (r.ok) {
+          const j = await r.json();
+          setImageKey(j.albumKey );
+        } else {
+          console.log('problem creating album for new boat', r.status, r.statusText);
+          const j = await r.json();
+          if (j.albumKey) {
+            setImageKey(j.albumKey);
+          }
+        }
+      }).catch((e) => console.log(e));
+    }
+  }, [ogaNo, imageKey, boat.name]);
+
+  if (!ogaNo) {return <CircularProgress />; }
+
+  const title = boat?.name ? `Update ${boat.name} (${ogaNo})` : `Add New Boat with OGA No ${ogaNo}`;
   return (
     <Dialog
       open={open}
@@ -107,12 +104,11 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
         <EditWiz
           onCancel={onCancel}
           onSubmit={onSubmit}
-          boat={boat}
+          boat={{...boat, oga_no: ogaNo, image_key: imageKey} }
           schema={schema}
           pr={pr}
         />
       </LocalizationProvider>
-
     </Dialog>
   );
 }
