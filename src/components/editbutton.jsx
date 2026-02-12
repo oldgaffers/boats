@@ -24,15 +24,13 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
         // console.log('submitted');
         setSnackBarText("Thanks, we'll get back to you.");
         setSnackBarSeverity('success');
-        setSnackBarOpen(true);
       } else {
-        console.log("post", response.status, response.statusText);
-        response.text.then(text => {
-          setSnackBarText(text);
-          setSnackBarSeverity('error');
-          setSnackBarOpen(true);
-        });
+        // console.log("post", response.status, response.statusText);
+        const text = await response.text();
+        setSnackBarText(text);
+        setSnackBarSeverity('error');
       }
+      setSnackBarOpen(true);
     } catch (error) {
       // console.log("post", error);
       setSnackBarText(`Something went wrong: ${error.message}`);
