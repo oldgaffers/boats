@@ -33,7 +33,7 @@ export default function BoatDetail({ view, boat }) {
   const hd = boat.handicap_data || {};
 
   useEffect(() => {
-    if (isAthenticated) {
+    if (isAuthenticated) {
       if (!voyages) {
         getAccessTokenSilently().then(async (token) => {
           // TODO filter by boat in the query
@@ -53,7 +53,7 @@ export default function BoatDetail({ view, boat }) {
     } else {
       setVoyages([]);
     }
-  }, [voyages, user, boat.oga_no, isAthenticated]);
+  }, [voyages, user, boat.oga_no, isAuthenticated]);
 
   const pane_data = [
     { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },
