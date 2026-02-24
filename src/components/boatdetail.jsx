@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -39,7 +38,7 @@ export default function BoatDetail({ view, boat }) {
           // TODO filter by boat in the query
           const d = await getScopedData('public', 'voyage');
           const p = d?.Items ?? [];
-          if ((user?.['https://oga.org.uk/roles'] || []).includes('member')) {
+          if (roles.includes('member')) {
             const q = await getScopedData('member', 'voyage', undefined, token);
             if (q?.Items) {
               p.push(...q.Items);
@@ -48,12 +47,13 @@ export default function BoatDetail({ view, boat }) {
           setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
         }).catch((e) => {
           alert('Error fetching voyages, please log in again');
+          setVoyages([]);
         });
       }
     } else {
       setVoyages([]);
     }
-  }, [voyages, user, boat.oga_no, isAuthenticated]);
+  }, [voyages, roles, boat.oga_no, isAuthenticated]);
 
   const pane_data = [
     { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },
@@ -146,7 +146,7 @@ export default function BoatDetail({ view, boat }) {
     );
   }
 
-  if (view === 'sail' && voyages?.length > 0) {
+  if (view === 'sail' && voyages.length > 0) {
 
     const sortedVoyages = [...voyages];
     sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
