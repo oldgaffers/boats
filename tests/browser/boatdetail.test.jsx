@@ -173,6 +173,7 @@ describe('BoatDetail component tests', () => {
   test('includes owners pane for members', async () => {
     useAuth0.mockReturnValue({
       user: { ...mockUser, 'https://oga.org.uk/roles': ['member'] },
+      isAuthenticated: vi.fn (() => false),
       getAccessTokenSilently: vi.fn(() => Promise.resolve('token')),
     });
 
@@ -186,6 +187,7 @@ describe('BoatDetail component tests', () => {
   test('includes skippers pane when boat has skippers', async () => {
     useAuth0.mockReturnValue({
       user: { ...mockUser, 'https://oga.org.uk/roles': ['member'] },
+      isAuthenticated: vi.fn (() => false),
       getAccessTokenSilently: vi.fn(() => Promise.resolve('token')),
     });
 
@@ -219,6 +221,7 @@ describe('BoatDetail component tests', () => {
   test('does not include owners/skippers panes for non-members', async () => {
     useAuth0.mockReturnValue({
       user: mockUser, // no 'member' role
+      isAuthenticated: vi.fn (() => false),
       getAccessTokenSilently: vi.fn(() => Promise.resolve('token')),
     });
 
