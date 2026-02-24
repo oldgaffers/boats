@@ -28,7 +28,7 @@ function is_oga(boat) {
 export default function BoatDetail({ view, boat }) {
   const { user, getAccessTokenSilently, logout } = useAuth0();
   const [value, setValue] = useState(0);
-  const [voyages, setVoyages] = useState();
+  const [voyages, setVoyages] = useState([]);
   const roles = user?.['https://oga.org.uk/roles'] || [];
   const hd = boat.handicap_data || {};
 
