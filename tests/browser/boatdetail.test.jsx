@@ -94,6 +94,7 @@ describe('BoatDetail component tests', () => {
 
   beforeEach(() => {
     useAuth0.mockReturnValue({
+      isAuthenticated: vi.fn (() => false),
       user: mockUser,
       getAccessTokenSilently: vi.fn(() => Promise.resolve('token')),
       logout: vi.fn(),
