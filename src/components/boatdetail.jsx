@@ -26,33 +26,34 @@ function is_oga(boat) {
 }
 
 export default function BoatDetail({ view, boat }) {
-  const { user, getAccessTokenSilently, logout } = useAuth0();
+  const { isAuthenticated, user, getAccessTokenSilently, logout } = useAuth0();
   const [value, setValue] = useState(0);
-  const [voyages, setVoyages] = useState([]);
+  const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];
   const hd = boat.handicap_data || {};
 
   useEffect(() => {
-    if (!voyages) {
-      getAccessTokenSilently().then(async (token) => {
-        // TODO filter by boat in the query
-        const d = await getScopedData('public', 'voyage');
-        const p = d?.Items ?? [];
-        if ((user?.['https://oga.org.uk/roles'] || []).includes('member')) {
-          const q = await getScopedData('member', 'voyage', undefined, token);
-          if (q?.Items) {
-            p.push(...q.Items);
+    if (isAthenticated) {
+      if (!voyages) {
+        getAccessTokenSilently().then(async (token) => {
+          // TODO filter by boat in the query
+          const d = await getScopedData('public', 'voyage');
+          const p = d?.Items ?? [];
+          if ((user?.['https://oga.org.uk/roles'] || []).includes('member')) {
+            const q = await getScopedData('member', 'voyage', undefined, token);
+            if (q?.Items) {
+              p.push(...q.Items);
+            }
           }
-        }
-        setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
-      }).catch((e) => {
-        console.error('Error fetching voyages', e);
-        const returnTo = window.location.origin + window.location.pathname;
-        logout({ returnTo });
-        alert('Error fetching voyages, please log in again');
-      });
+          setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
+        }).catch((e) => {
+          alert('Error fetching voyages, please log in again');
+        });
+      }
+    } else {
+      setVoyages([]);
     }
-  }, [voyages, user, boat.oga_no]);
+  }, [voyages, user, boat.oga_no, isAthenticated]);
 
   const pane_data = [
     { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },
