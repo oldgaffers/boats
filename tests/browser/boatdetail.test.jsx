@@ -3,6 +3,7 @@ import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import BoatDetail from '../../src/components/boatdetail';
 import { useAuth0 } from '@auth0/auth0-react';
+import { use } from 'react';
 
 // Mock Auth0
 vi.mock('@auth0/auth0-react', () => ({
@@ -54,6 +55,7 @@ vi.mock('../../src/components/skippers', () => ({
 
 vi.mock('../../src/components/voyage', () => ({
   default: ({ voyage }) => <div data-testid="voyage">{voyage.start}</div>,
+  useVoyageData: () => [],
 }));
 
 describe('BoatDetail component tests', () => {

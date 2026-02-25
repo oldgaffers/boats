@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useAuth0 } from '@auth0/auth0-react';
-import { getScopedData } from '../util/api';
 import { m2f, price, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import Owners from './owners';
 import Skippers from './skippers';
-import Voyage from './voyage';
+import Voyage, { useVoyageData } from './voyage';
 import SailTable from './sailtable';
 import { HandicapDisplay } from './Handicap';
 import { TextPane } from './boatpane';
@@ -25,35 +24,11 @@ function is_oga(boat) {
 }
 
 export default function BoatDetail({ view, boat }) {
-  const { isAuthenticated, user, getAccessTokenSilently, logout } = useAuth0();
+  const { user } = useAuth0();
   const [value, setValue] = useState(0);
-  const [voyages, setVoyages] = useState();
   const roles = user?.['https://oga.org.uk/roles'] || [];
   const hd = boat.handicap_data || {};
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      if (!voyages) {
-        getAccessTokenSilently().then(async (token) => {
-          // TODO filter by boat in the query
-          const d = await getScopedData('public', 'voyage');
-          const p = d?.Items ?? [];
-          if (roles.includes('member')) {
-            const q = await getScopedData('member', 'voyage', undefined, token);
-            if (q?.Items) {
-              p.push(...q.Items);
-            }
-          }
-          setVoyages(p.filter((v) => v.boat.oga_no === boat.oga_no));
-        }).catch((e) => {
-          alert('Error fetching voyages, please log in again');
-          setVoyages([]);
-        });
-      }
-    } else {
-      setVoyages([]);
-    }
-  }, [voyages, roles, boat.oga_no, isAuthenticated]);
+  const voyages = useVoyageData(boat.oga_no);
 
   const pane_data = [
     { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },

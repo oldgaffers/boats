@@ -20,7 +20,31 @@ import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
 import Disclaimer from './Disclaimer';
-import { postGeneralEnquiry } from '../util/api';
+import { getScopedData, postGeneralEnquiry } from '../util/api';
+
+export function useVoyageData(ogaNo) {
+    const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+    const roles = user?.['https://oga.org.uk/roles'] || [];
+    if (isAuthenticated) {
+        getAccessTokenSilently().then(async (token) => {
+            // TODO filter by boat in the query
+            const d = await getScopedData('public', 'voyage');
+            const p = d?.Items ?? [];
+            if (roles.includes('member')) {
+                const q = await getScopedData('member', 'voyage', undefined, token);
+                if (q?.Items) {
+                    p.push(...q.Items);
+                }
+            }
+            return p.filter((v) => v.boat.oga_no === ogaNo);
+        }).catch((e) => {
+            alert('Error fetching voyages, please log in again');
+            return [];
+        });
+    } else {
+        return [];
+    }
+}
 
 function interestEmail(from, fromEmail, user, voyage) {
 
@@ -75,7 +99,7 @@ function InterestDialog({ from, fromEmail, open, onSubmit, onCancel, voyage }) {
     const [email, setEmail] = useState(fromEmail);
     const [oldEnough, setOldEnough] = useState(false);
 
-    const bad =  (!oldEnough) || name ===  undefined || name.trim() === '' || email === undefined || !email.includes('@')
+    const bad = (!oldEnough) || name === undefined || name.trim() === '' || email === undefined || !email.includes('@')
 
     return <Dialog open={open}>
         <DialogTitle>{voyage.title} on {voyage.boat.name} ({voyage.boat.oga_no})</DialogTitle>
@@ -133,16 +157,16 @@ export default function Voyage({ voyage }) {
                 <Typography>Covering around {voyage.distance} nm</Typography>
                 <Typography
                     component='div'
-                    dangerouslySetInnerHTML={{ __html: voyage?.specifics?.trim()  }}
+                    dangerouslySetInnerHTML={{ __html: voyage?.specifics?.trim() }}
                 ></Typography>
             </CardContent>
             <CardActions>
                 <Button onClick={() => setOpen(true)}>I'm Interested</Button>
             </CardActions>
             <InterestDialog
-              voyage={voyage}
-              from={user?.name} fromEmail={user?.email}
-              open={open} onSubmit={handleSubmit} onCancel={() => setOpen(false)}
+                voyage={voyage}
+                from={user?.name} fromEmail={user?.email}
+                open={open} onSubmit={handleSubmit} onCancel={() => setOpen(false)}
             />
             <Snackbar
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
