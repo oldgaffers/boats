@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Unstable_Grid2/Grid2';
 import { useAuth0 } from '@auth0/auth0-react';
 import { m2f, price, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
@@ -10,10 +9,10 @@ import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
 import Owners from './owners';
 import Skippers from './skippers';
-import Voyage, { useVoyageData } from './voyage';
 import SailTable from './sailtable';
 import { HandicapDisplay } from './Handicap';
 import { TextPane } from './boatpane';
+import { VoyagePane } from './voyage';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
@@ -28,7 +27,6 @@ export default function BoatDetail({ view, boat }) {
   const [value, setValue] = useState(0);
   const roles = user?.['https://oga.org.uk/roles'] || [];
   const hd = boat.handicap_data || {};
-  const voyages = useVoyageData(boat.oga_no);
 
   const pane_data = [
     { title: 'Design & Build', fields: ['generic_type', 'design_class', 'designer', 'hull_form', 'builder', 'place_built', 'year_of_build', 'construction_material', 'construction_method', 'spar_material', 'construction_details'] },
@@ -121,37 +119,8 @@ export default function BoatDetail({ view, boat }) {
     );
   }
 
-  if (view === 'sail' && voyages.length > 0) {
-
-    const sortedVoyages = [...voyages];
-    sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
-
-    let introText = 'These are the voyages the owners have made public.';
-
-    if (user) {
-      if (roles.includes('member')) {
-        introText = 'The owners have told us about the following voyages.';
-      } else {
-        introText = `${introText} Members get to see any additional voyages restricted to members only.`;
-      }
-    } else {
-      introText = `${introText} Logged in members get to see any additional voyages restricted to members only.`;
-    }
-
-    panes.unshift({
-      title: 'Voyages', children: <Stack>
-        <Box verflow='auto' minWidth='50vw' maxWidth='85vw'>
-          <Typography>{introText}</Typography>
-          <Grid container spacing={2}>
-            {sortedVoyages.map((voyage, index) =>
-              <Grid key={index} xs={4} minWidth={300}>
-                <Voyage key={`v${index}`} voyage={voyage} />
-              </Grid>
-            )}
-          </Grid>
-        </Box>
-      </Stack>
-    });
+  if (view === 'sail') {
+    panes.unshift({ title: 'Voyages', children: <VoyagePane boat={boat} roles={roles} />  });
   }
 
   if (boat.selling_status === 'for_sale') {

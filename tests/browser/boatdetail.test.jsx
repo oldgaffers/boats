@@ -4,6 +4,7 @@ import { render } from 'vitest-browser-react';
 import BoatDetail from '../../src/components/boatdetail';
 import { useAuth0 } from '@auth0/auth0-react';
 import { use } from 'react';
+import { VoyagePane } from '../../src/components/voyage';
 
 // Mock Auth0
 vi.mock('@auth0/auth0-react', () => ({
@@ -56,6 +57,7 @@ vi.mock('../../src/components/skippers', () => ({
 vi.mock('../../src/components/voyage', () => ({
   default: ({ voyage }) => <div data-testid="voyage">{voyage.start}</div>,
   useVoyageData: () => [],
+  VoyagePane: ({ boat, roles }) => <div data-testid="voyage-pane">Voyage Pane</div>,
 }));
 
 describe('BoatDetail component tests', () => {

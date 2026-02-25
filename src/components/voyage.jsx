@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Alert from "@mui/material/Alert";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -21,29 +21,78 @@ import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
 import Disclaimer from './Disclaimer';
 import { getScopedData, postGeneralEnquiry } from '../util/api';
+import { Box, Grid } from '@mui/material';
 
 export function useVoyageData(ogaNo) {
-    const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
-    const roles = user?.['https://oga.org.uk/roles'] || [];
-    if (isAuthenticated) {
-        getAccessTokenSilently().then(async (token) => {
-            // TODO filter by boat in the query
-            const d = await getScopedData('public', 'voyage');
-            const p = d?.Items ?? [];
-            if (roles.includes('member')) {
-                const q = await getScopedData('member', 'voyage', undefined, token);
-                if (q?.Items) {
-                    p.push(...q.Items);
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+
+        async function fetchData() {
+            setLoading(true);
+            setError(null);
+            try {
+                const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+                // TODO filter by boat in the query
+                const d = await getScopedData('public', 'voyage');
+                const p = d?.Items ?? [];
+                if (isAuthenticated) {
+                    const roles = user?.['https://oga.org.uk/roles'] || [];
+                    if (roles.includes('member')) {
+                        const token = await getAccessTokenSilently();
+                        const q = await getScopedData('member', 'voyage', undefined, token);
+                        if (q?.Items) {
+                            p.push(...q.Items);
+                        }
+                    }
                 }
+                setData(p);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
             }
-            return p.filter((v) => v.boat.oga_no === ogaNo);
-        }).catch((e) => {
-            alert('Error fetching voyages, please log in again');
-            return [];
-        });
-    } else {
-        return [];
+        }
+
+        fetchData();
+    }, [ogaNo]);
+
+    return { data, loading, error };
+}
+
+export function VoyagePane({ boat, roles }) {
+    const voyages = useVoyageData(boat.oga_no);
+    if (voyages.loading) {
+        return <Typography>Loading voyages...</Typography>;
     }
+    if (voyages.error) {
+        return <Typography>Error loading voyages: {voyages.error}</Typography>;
+    }
+  const sortedVoyages = [...voyages.data];
+  sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
+
+  let introText = 'These are the voyages the owners have made public.';
+
+    if (roles.includes('member')) {
+      introText = 'The owners have told us about the following voyages.';
+    } else {
+      introText = `${introText} Members get to see any additional voyages restricted to members only.`;
+    }
+  
+  return <Stack>
+    <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
+      <Typography>{introText}</Typography>
+      <Grid container spacing={2}>
+        {sortedVoyages.map((voyage, index) =>
+          <Grid key={index} xs={4} minWidth={300}>
+            <Voyage key={`v${index}`} voyage={voyage} />
+          </Grid>
+        )}
+      </Grid>
+    </Box>
+  </Stack>;
 }
 
 function interestEmail(from, fromEmail, user, voyage) {
