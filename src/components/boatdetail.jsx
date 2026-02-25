@@ -119,7 +119,7 @@ export default function BoatDetail({ view, boat }) {
     );
   }
 
-  if (view === 'sail' || true) {
+  if (view === 'sail') {
     panes.unshift({ title: 'Voyages', children: <VoyagePane boat={boat} roles={roles} />  });
   }
 
