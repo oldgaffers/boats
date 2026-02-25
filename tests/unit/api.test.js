@@ -137,6 +137,7 @@ describe('api util', () => {
 
   it('getFilterable fetches and merges filterable boats with extra data', async () => {
     const fetchMock = vi.fn()
+      .mockResolvedValueOnce({ json: async () => ({ Items: [] }) })
       .mockResolvedValueOnce({ json: async () => [{ oga_no: 1, name: 'Boat' }] });
     globalThis.fetch = fetchMock;
     const res = await getFilterable();
@@ -251,11 +252,6 @@ describe('api util', () => {
     expect(fetchMock).toHaveBeenCalled();
     const callArgs = fetchMock.mock.calls[0];
     expect(callArgs[1].method).toBe('POST');
-  });
-
-  it('getExtra returns undefined (currently no-op)', async () => {
-    const res = await getExtra();
-    expect(res).toBeUndefined();
   });
 
   it('geolocate calls API on success and returns data', async () => {
