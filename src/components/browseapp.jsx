@@ -12,8 +12,6 @@ export default function BrowseApp({ view = 'app' }) {
   const [fleets, setFleets] = useState();
   const [fleetName, setFleetName] = useState();
 
-  // useEffect(() => { saveState(state, view); }, [state, view]);
-
   useEffect(() => {
     if (markList.length === 0) {
       setMarkedOnly(false);

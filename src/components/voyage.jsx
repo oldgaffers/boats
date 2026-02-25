@@ -15,18 +15,20 @@ import DialogTitle from "@mui/material/DialogTitle";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import VoyageMap from './voyagemap';
 import Disclaimer from './Disclaimer';
 import { getScopedData, postGeneralEnquiry } from '../util/api';
-import { Box, Grid } from '@mui/material';
 
 export function useVoyageData(ogaNo) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
 
@@ -34,7 +36,6 @@ export function useVoyageData(ogaNo) {
             setLoading(true);
             setError(null);
             try {
-                const { isAuthenticated, user, getAccessTokenSilently } = useAuth0();
                 // TODO filter by boat in the query
                 const d = await getScopedData('public', 'voyage');
                 const p = d?.Items ?? [];
@@ -48,7 +49,7 @@ export function useVoyageData(ogaNo) {
                         }
                     }
                 }
-                setData(p);
+                setData(p.filter((v) => v.boat?.oga_no === ogaNo));
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -70,29 +71,32 @@ export function VoyagePane({ boat, roles }) {
     if (voyages.error) {
         return <Typography>Error loading voyages: {voyages.error}</Typography>;
     }
-  const sortedVoyages = [...voyages.data];
-  sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
+    const sortedVoyages = [...voyages.data];
+    sortedVoyages.sort((a, b) => a.start.localeCompare(b.start));
 
-  let introText = 'These are the voyages the owners have made public.';
+    if (sortedVoyages.length === 0) {
+        return <Typography>The owners haven't shared any voyages yet.</Typography>;
+    }
+    
+    let introText = 'These are the voyages the owners have made public.';
 
     if (roles.includes('member')) {
-      introText = 'The owners have told us about the following voyages.';
+        introText = 'The owners have told us about the following voyages.';
     } else {
-      introText = `${introText} Members get to see any additional voyages restricted to members only.`;
+        introText = `${introText} Members get to see any additional voyages restricted to members only.`;
     }
-  
-  return <Stack>
-    <Box overflow='auto' minWidth='50vw' maxWidth='85vw'>
-      <Typography>{introText}</Typography>
-      <Grid container spacing={2}>
-        {sortedVoyages.map((voyage, index) =>
-          <Grid key={index} xs={4} minWidth={300}>
-            <Voyage key={`v${index}`} voyage={voyage} />
-          </Grid>
-        )}
-      </Grid>
-    </Box>
-  </Stack>;
+
+    return (
+        <Box overflow='auto' minWidth='50vw' maxWidth='85vw' minHeight='20vh'>
+            <Typography>{introText}</Typography>
+            <Grid container spacing={2}>
+                {sortedVoyages.map((voyage, index) =>
+                    <Grid item key={index} xs={4} minWidth={300}>
+                        <Voyage key={`v${index}`} voyage={voyage} />
+                    </Grid>
+                )}
+            </Grid>
+        </Box>);
 }
 
 function interestEmail(from, fromEmail, user, voyage) {
