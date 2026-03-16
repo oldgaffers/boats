@@ -16,6 +16,10 @@ function andfilter(boats, k, filters) {
             wanted = parseInt(wanted);
         }
         filteredBoats = filteredBoats.filter((boat) => {
+            if (filter === 'name') {
+                if (boat.previous_names.includes(wanted)) return true;
+                return wanted === boat.name;
+            }
             const val = boat[(filter==='oga_nos'?'oga_no':filter)];
             if (Array.isArray(val)) {
                 return val.includes(wanted);
