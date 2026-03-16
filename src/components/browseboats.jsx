@@ -19,11 +19,25 @@ import { useBoats } from '../util/boats';
 import Welcome from './Welcome';
 import EditButton from './editbutton';
 
+function makePicker(filtered, key) {
+  const l = new Set();
+  filtered.forEach((boat) => {
+    const v = boat[key];
+    if (Array.isArray(v)) {
+       v.forEach((i) => l.add(i));
+    } else {
+      l.add(v);
+    }
+  });
+  const picker = [...l].filter((v) => v);
+  pickers.sort();
+  return picker;
+}
+
 function makePickers(filtered) {
   // console.log('PB', filtered);
   const pickers = {};
   [
-    "name",
     "designer",
     "builder",
     "rig_type",
@@ -34,18 +48,11 @@ function makePickers(filtered) {
     "place_built",
     "home_port",
   ].forEach((key) => {
-    const l = new Set();
-    filtered.forEach((boat) => {
-      const v = boat[key];
-      if (Array.isArray(v)) {
-        v.forEach((i) => l.add(i));
-      } else {
-        l.add(v);
-      }
-    });
-    pickers[key] = [...l].filter((v) => v);
-    pickers[key].sort();
+    pickers[key] = makePicker(filtered, key);
   });
+  const names = makePicker(filtered, 'name');
+  const prev = makePicker(filtered, 'previous_names');
+  pickers.names = [...new Set(...names, ...prev)];
   const years = filtered.map((boat) => boat.year).filter((y) => y);
   years.sort();
   pickers.year = {
