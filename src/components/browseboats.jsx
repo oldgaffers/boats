@@ -12,57 +12,12 @@ import FilterBoats from "./filterboats";
 import SortingAndPagination from "./sortingandpagination";
 import BoatCards from './boatcards';
 import { IntroText } from "./Intro";
-import { applyFilters, sortAndPaginate } from '../util/oganoutils';
+import { applyFilters, makePickers, sortAndPaginate } from '../util/filtering';
 import { ExportFleet } from './exportfleet';
 import BoatRegisterFooter from './BoatRegisterFooter';
 import { useBoats } from '../util/boats';
 import Welcome from './Welcome';
 import EditButton from './editbutton';
-
-function makePicker(filtered, key) {
-  const l = new Set();
-  filtered.forEach((boat) => {
-    const v = boat[key];
-    if (Array.isArray(v)) {
-       v.forEach((i) => l.add(i));
-    } else {
-      l.add(v);
-    }
-  });
-  const picker = [...l].filter((v) => v);
-  picker.sort();
-  return picker;
-}
-
-function makePickers(filtered) {
-  // console.log('PB', filtered);
-  const pickers = {};
-  [
-    "designer",
-    "builder",
-    "rig_type",
-    "mainsail_type",
-    "generic_type",
-    "design_class",
-    "construction_material",
-    "place_built",
-    "home_port",
-  ].forEach((key) => {
-    pickers[key] = makePicker(filtered, key);
-  });
-  const names = makePicker(filtered, 'name');
-  const prev = makePicker(filtered, 'previous_names');
-  pickers.names = [...new Set(...names, ...prev)];
-  const years = filtered.map((boat) => boat.year).filter((y) => y);
-  years.sort();
-  pickers.year = {
-    step: 10,
-    min: years[0] || 1800,
-    max: years[years.length - 1] || new Date().getFullYear(),
-  };
-  // console.log('P', pickers);
-  return pickers;
-}
 
 function ExportOptions({ name, boats, filters }) {
   if (name) {

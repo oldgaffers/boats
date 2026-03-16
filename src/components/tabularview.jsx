@@ -1,7 +1,7 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useCardQuery, getBoats } from '../util/oganoutils';
+import { useCardQuery, getBoats } from '../util/filtering';
 
 const nested = {
     type: 'string',

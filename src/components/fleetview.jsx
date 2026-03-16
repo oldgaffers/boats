@@ -13,7 +13,7 @@ import BoatGallery from './boatgallery';
 import { getFleets, } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { getFilterable } from '../util/api';
-import { applyFilters, sortAndPaginate } from '../util/oganoutils';
+import { applyFilters, sortAndPaginate } from '../util/filtering';
 import { ExportFleet } from './exportfleet';
 
 export function FleetDisplay({ view, name, filters, tooltip = 'Click to expand', defaultExpanded = false }) {
