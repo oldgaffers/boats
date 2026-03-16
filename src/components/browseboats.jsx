@@ -30,7 +30,7 @@ function makePicker(filtered, key) {
     }
   });
   const picker = [...l].filter((v) => v);
-  pickers.sort();
+  picker.sort();
   return picker;
 }
 
