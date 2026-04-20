@@ -3,6 +3,8 @@
    errors still surface during development.
 */
 
+import '@testing-library/jest-dom';
+
 const IGNORED_PATTERNS = [
   /Module "util" has been externalized for browser compatibility/,
   /Either `children`, `image`, `src` or `component` prop must be specified/,

@@ -29,8 +29,9 @@ import {
   shuffleBoats,
   postBoatData,
   postCrewEnquiry,
-  getExtra,
   geolocate,
+  getGithubFile,
+  openPr,
 } from '../../src/util/api.js';
 
 describe('api util', () => {
@@ -268,6 +269,80 @@ describe('api util', () => {
     const fetchMock = vi.fn().mockResolvedValue({ ok: false });
     globalThis.fetch = fetchMock;
     const res = await geolocate('Unknown');
+    expect(res).toBeUndefined();
+  });
+
+  it('getGithubFile fetches file content from GitHub', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      text: async () => 'yaml content here'
+    });
+    globalThis.fetch = fetchMock;
+    const res = await getGithubFile('path/to/file.yml', 'main');
+    expect(fetchMock).toHaveBeenCalledWith(
+      'https://api.github.com/repos/oldgaffers/boatregister/contents/path/to/file.yml?ref=main',
+      {
+        headers: {
+          'Accept': 'application/vnd.github.raw+json',
+        }
+      }
+    );
+    expect(res).toBe('yaml content here');
+  });
+
+  it('getGithubFile returns undefined on fetch failure', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false });
+    globalThis.fetch = fetchMock;
+    const res = await getGithubFile('bad/path', 'branch');
+    expect(res).toBeUndefined();
+  });
+
+  it('openPr returns boat data when PR exists with boat changes', async () => {
+    const fetchMock = vi.fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [{ commits_url: 'commits-url' }]
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => [{ url: 'commit-url' }]
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          files: [{ filename: 'boat/123/boat.yml' }]
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        text: async () => 'boat yaml content'
+      });
+    
+    globalThis.fetch = fetchMock;
+    
+    // Mock getBoatFromYAML
+    vi.mock('../../src/util/yaml_utils', () => ({
+      getBoatFromYAML: vi.fn().mockReturnValue({ name: 'Test Boat' })
+    }));
+    
+    const res = await openPr(123);
+    expect(res).toEqual({ name: 'Test Boat' });
+  });
+
+  it('openPr returns undefined when no open PR', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => []
+    });
+    globalThis.fetch = fetchMock;
+    const res = await openPr(999);
+    expect(res).toBeUndefined();
+  });
+
+  it('openPr returns undefined when PR fetch fails', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ ok: false });
+    globalThis.fetch = fetchMock;
+    const res = await openPr(123);
     expect(res).toBeUndefined();
   });
 });

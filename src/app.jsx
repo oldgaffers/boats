@@ -14,6 +14,8 @@ import EditButton from './components/editbutton';
 import PickOrAddBoat from './components/pick_or_add_boat';
 import BuilderPage from './components/builderpage';
 import PrivateDocument from "./components/PrivateDocument";
+import { DBConfig } from "./util/DBConfig";
+import { initDB } from "react-indexed-db-hook";
 
 const lightTheme = createTheme({
   palette: {
@@ -89,3 +91,5 @@ export function BoatRegister(props) {
     </ThemeProvider>
   </CookiesProvider>;
 };
+
+initDB(DBConfig);

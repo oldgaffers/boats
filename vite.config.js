@@ -21,6 +21,7 @@ export default defineConfig({
       provider: 'v8',
       include: ['src/**/*.{js,jsx}'],
     },
+    environment: 'jsdom',
     projects: [
       {
         test: {
@@ -29,6 +30,7 @@ export default defineConfig({
             'tests/unit/**/*.{test,spec}.{js,jsx}',
             'tests/**/*.unit.{test,spec}.{js,jsx}',
           ],
+          environment: 'jsdom',
         },
       },
       {

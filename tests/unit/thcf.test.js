@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fMR, fBD, fThcf } from '../../src/util/THCF';
+import { fMainSA, fTopSA, fForeTriangle, sailArea, fL, fBD, fMR, fThcf, rigAllowance, sails, fMSA, fSqrtS, fPropellorBonus, fShoalBonus, fR } from '../../src/util/THCF';
 import { boatm2f, boatf2m } from "../../src/util/format";
 
 const Transcur = {
@@ -267,4 +267,85 @@ test('Transcur T(H)CF', () => {
 test('Robinetta T(H)CF', () => {
   const b = boatm2f(Robinetta);
   expect(fThcf(b).toFixed(3)).toMatchSnapshot();
+});
+
+test('rigAllowance returns correct values for different rig types', () => {
+  expect(rigAllowance('cutter')).toBe(0.96);
+  expect(rigAllowance('yawl')).toBe(0.94);
+  expect(rigAllowance('schooner')).toBe(0.92);
+  expect(rigAllowance('ketch')).toBe(0.90);
+  expect(rigAllowance('sloop')).toBe(1.0);
+  expect(rigAllowance('unknown')).toBe(1.0);
+});
+
+test('sails returns correct sail list for different rig types', () => {
+  expect(sails('cutter')).toEqual(['fore_triangle', 'main', 'topsail']);
+  expect(sails('sloop')).toEqual(['fore_triangle', 'main', 'topsail']);
+  expect(sails('yawl')).toEqual(['fore_triangle', 'main', 'topsail', 'mizzen', 'mizzen_topsail']);
+  expect(sails('ketch')).toEqual(['fore_triangle', 'main', 'topsail', 'mizzen', 'mizzen_topsail']);
+  expect(sails('schooner')).toEqual(['fore_triangle', 'main', 'topsail', 'fore_sail', 'fore_topsail', 'mizzen', 'mizzen_topsail']);
+  expect(sails('catboat')).toEqual(['main']);
+  expect(sails('single sail')).toEqual(['main']);
+  expect(sails('unknown')).toEqual([]);
+});
+
+test('fMSA calculates total sail area from sail area object', () => {
+  const sailAreaObj = { main: 10, jib: 5, spinnaker: 20 };
+  expect(fMSA(sailAreaObj)).toBe(35);
+  
+  const emptyObj = {};
+  expect(fMSA(emptyObj)).toBe(0);
+});
+
+test('fSqrtS calculates rig allowance times square root of sail area', () => {
+  expect(fSqrtS(0.96, 100)).toBe(0.96 * 10); // sqrt(100) = 10
+  expect(fSqrtS(1.0, 25)).toBe(1.0 * 5); // sqrt(25) = 5
+});
+
+test('fPropellorBonus returns correct bonus for different propellor types', () => {
+  expect(fPropellorBonus({ propellor: { type: 'fixed' } })).toBe(0.03);
+  expect(fPropellorBonus({ propellor: { type: 'folding' } })).toBe(0.015);
+  expect(fPropellorBonus({ propellor: { type: 'feathering' } })).toBe(0.015);
+  expect(fPropellorBonus({ propellor: { type: 'none' } })).toBe(0);
+  expect(fPropellorBonus({})).toBe(0);
+});
+
+test('fShoalBonus calculates shoal draft bonus correctly', () => {
+  const boat = {
+    handicap_data: { length_on_waterline: 8 },
+    draft: 0.6, // 0.6 < 0.8 * (0.12 * 8) = 0.6 < 0.768, so should get bonus
+    hull_form: 'long keel'
+  };
+  const R = 10;
+  
+  // For draft < 0.8 * nominalDraft, bonus = 0.02 * R
+  expect(fShoalBonus(R, boat)).toBe(0.02 * R);
+  
+  // For very shoal draft < 0.66 * nominalDraft, bonus = 0.02 * R (overwrites, not cumulative)
+  boat.draft = 0.4; // 0.4 < 0.66 * 0.96 = 0.6336
+  expect(fShoalBonus(R, boat)).toBe(0.02 * R); // Still 0.02 * R, not 0.04
+  
+  // For centre-boarder, bonus is halved
+  boat.hull_form = 'centre-boarder';
+  expect(fShoalBonus(R, boat)).toBe(0.01 * R); // 0.02 * R / 2
+});
+
+test('fR calculates rating with propellor bonus applied', () => {
+  // Create a boat with known values that will produce a calculable result
+  const boat = {
+    rig_type: 'sloop',
+    handicap_data: {
+      length_on_waterline: 8,
+      length_on_deck: 9,
+      beam: 3,
+      main: { foot: 4, luff: 5, head: 4 },
+      propellor: { type: 'fixed' }
+    }
+  };
+  
+  const r = fR(boat);
+  // Should be MR - MR * propellorBonus = MR - MR * 0.03 = MR * 0.97
+  // Since MR > 0, r should be less than MR but greater than 0
+  expect(r).toBeGreaterThan(0);
+  expect(r).toBeLessThan(fMR(boat));
 });

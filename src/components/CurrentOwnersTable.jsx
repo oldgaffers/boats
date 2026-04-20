@@ -14,7 +14,7 @@ import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
 import { yearFormatter } from './HistoricalOwnersTable';
 
 function goldIdValueGetter(params) {
-    console.log('goldIdValueGetter', params);
+    // console.log('goldIdValueGetter', params);
     if (params.row.name) {
         return params.row.name;
     }
