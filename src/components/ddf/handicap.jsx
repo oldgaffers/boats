@@ -185,17 +185,12 @@ const solentSteps = (thisStep, nextStep) => {
             const { values } = formOptions.getState();
             const mmr = solentMR(values);
             formOptions.change("handicap_data.solent.measured_rating", mmr);
+            let description = '0.2L√S/√(B×D×SF)+0.67*(L+√S)';
+            const value = mmr.toFixed(2);
             if (values?.handicap_data?.displacement) {
-              return {
-                value: mmr.toFixed(2),
-                description: '0.2L√S/√(Disp/L)+0.67*(L+√S)',
-              };
-            } else {
-              return {
-                value: mmr.toFixed(2),
-                description: '0.2L√S/√(B×D×SF)+0.67*(L+√S)',
-              };
+              description = '0.2L√S/√(Disp/L)+0.67*(L+√S)';
             }
+            return { value, description };
           },
         },
         {
