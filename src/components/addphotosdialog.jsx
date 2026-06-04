@@ -53,6 +53,18 @@ async function sortOutMissingAlbum(boat, email) {
   return albumKey;
 }
 
+export function makeKeywords(boat) {
+  const kw = new Set(...(boat.previous_names || []));
+  kw.add(boat.name);
+  if (boat.generic_type) {
+    kw.add(boat.generic_type);
+  }
+  if (boat.design_class) {
+    kw.add(boat.design_class);
+  }
+  return [...kw];
+}
+
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
   // console.log('AddPhotosDialog', boat, open, onClose, onCancel);
   const { user } = useAuth0();
@@ -80,7 +92,8 @@ export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
     }
     console.log('Uploading to album key', albumKey);
     if (albumKey) {
-      const r = await postPhotos(copyright, email, albumKey, pictures, setProgress);
+      const keywords = makeKeywords(boat);
+      const r = await postPhotos(copyright, email, keywords, albumKey, pictures, setProgress);
       r.forEach((res, idx) => {
         console.log(res.status, 'Uploaded', pictures[idx].name);
       });
