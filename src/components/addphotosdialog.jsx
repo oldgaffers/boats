@@ -54,7 +54,7 @@ async function sortOutMissingAlbum(boat, email) {
 }
 
 export function makeKeywords(boat) {
-  const kw = new Set(...(boat.previous_names || []));
+  const kw = new Set(boat.previous_names || []);
   kw.add(boat.name);
   if (boat.generic_type) {
     kw.add(boat.generic_type);
