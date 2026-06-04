@@ -3,7 +3,7 @@ import { fromCognitoIdentity } from "@aws-sdk/credential-providers";
 import { S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 
-export async function postPhotos(copyright, email, albumKey, fileList, onProgress = () => { }) {
+export async function postPhotos(copyright, email, keywords, albumKey, fileList, onProgress = () => { }) {
     const { bucketName, region, identityId } = await getUploadCredentials();
     const client = new S3Client({ region, credentials: fromCognitoIdentity({ identityId, clientConfig: { region } }) });
     const progress = fileList.reduce((acc, file) => ({ ...acc, [file.name]: { loaded: 0, total: file.size } }), {});
@@ -16,7 +16,7 @@ export async function postPhotos(copyright, email, albumKey, fileList, onProgres
                     Key: `${email}/${file.name}`,
                     ContentType: file.type,
                     Body: file,
-                    Metadata: { albumKey, copyright },
+                    Metadata: { albumKey, copyright, keywords },
                 }
             });
             upload.on("httpUploadProgress", (p) => {
