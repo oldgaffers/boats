@@ -62,7 +62,7 @@ export function makeKeywords(boat) {
   if (boat.design_class) {
     kw.add(boat.design_class);
   }
-  return [...kw];
+  return [...kw].join(';');
 }
 
 export default function AddPhotosDialog({ boat, onClose, onCancel, open }) {
