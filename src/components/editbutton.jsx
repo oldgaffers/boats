@@ -33,7 +33,11 @@ export default function EditButton({ boat, label = 'I have edits for this boat' 
 
   async function submitBoatEdits(email, changes, newItems, updated) {
     try {
-      const boat = await checkAlbum(updated);
+      const b = {...updated};
+      if (!b.oga_no || b.oga_no === 'TBD') {
+        b.oga_no = await nextOgaNo();
+      }
+      const boat = await checkAlbum(b);
       const response = await postBoatData({ email, changes, newItems, new: boat });
       if (response.ok) {
         // console.log('submitted');
