@@ -65,19 +65,8 @@ function EditWiz({ boat, onCancel, onSubmit, schema=defaultSchema(!boat.name), p
 }
 
 function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
-  const [ogaNo, setOgaNo] = useState(boat.oga_no);
 
-  useEffect(() => {
-    if (!ogaNo) {
-      nextOgaNo()
-      .then((n) => setOgaNo(n))
-      .catch((e) => console.log(e));
-    }
-  }, [ogaNo]);
-
-  if (!ogaNo) {return <CircularProgress />; }
-
-  const title = boat?.name ? `Update ${boat.name} (${ogaNo})` : `Add New Boat with OGA No ${ogaNo}`;
+  const title = boat?.name ? `Update ${boat.name} (${boat.oga_no})` : 'Add New Boat';
   return (
     <Dialog
       open={open}
@@ -90,7 +79,7 @@ function EditBoatWizardDialog({ boat, open, onCancel, onSubmit, schema, pr }) {
         <EditWiz
           onCancel={onCancel}
           onSubmit={onSubmit}
-          boat={{...boat, oga_no: ogaNo}}
+          boat={boat}
           schema={schema}
           pr={pr}
         />
