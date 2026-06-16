@@ -1,7 +1,7 @@
 {
   "name": "boats",
   "homepage": "/boat_register/",
-  "version": "3.10.27",
+  "version": "3.10.28",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,12 +15,10 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.8.0",
-
     "@aws-sdk/client-s3": "^3.988.0",
     "@aws-sdk/credential-provider-cognito-identity": "^3.972.46",
     "@aws-sdk/lib-storage": "^3.344.0",
     "@aws-sdk/s3-request-presigner": "^3.988.0",
-
     "@data-driven-forms/mui-component-mapper": "^4.1.1",
     "@data-driven-forms/react-form-renderer": "^4.1.1",
     "@dropzone-ui/react": "^7.0.4",
