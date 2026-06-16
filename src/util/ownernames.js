@@ -9,8 +9,8 @@ export function ownershipsWithNames(ownerships = [], members) {
         return ownerships;
     }
     const r = ownerships.map((ownership) => {
-        const r = { note: 'problem identifying owner' };
-        const m = members.filter((member) => member.id === ownership.id);
+        const r = { ...ownership };
+        const m = members.filter((member) => member.id === r.id);
         if (m.length > 0) {
             const { skipper, GDPR, firstname, lastname } = m[0];
             if (GDPR) {
@@ -21,8 +21,9 @@ export function ownershipsWithNames(ownerships = [], members) {
             if (skipper) {
                 r.skipper = skipper;
             }
+            return r;
         }
-        return { ...r, ...ownership }
+        return { ...r, note: 'problem identifying owner' };
     });
     r.sort((a, b) => a.start > b.start);
     return r;
