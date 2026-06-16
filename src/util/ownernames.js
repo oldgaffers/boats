@@ -22,8 +22,10 @@ export function ownershipsWithNames(ownerships = [], members) {
                 r.skipper = skipper;
             }
             return r;
+        } else {
+            r.note = 'problem identifying owner';
         }
-        return { ...r, note: 'problem identifying owner' };
+        return r;
     });
     r.sort((a, b) => a.start > b.start);
     return r;
