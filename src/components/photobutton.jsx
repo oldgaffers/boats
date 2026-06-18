@@ -100,7 +100,7 @@ export default function PhotoButton({ boat, onDone }) {
         Add pictures of this boat
       </Button>
       <AddPhotosDialog
-        title={`${boat.name} {${boat.oga_no}`}
+        title={`${boat.name} (${boat.oga_no})`}
         albumKey={albumKey}
         keywords={makeKeywords(boat)}
         onClose={handleClose} onCancel={() => setOpen(false)} open={open} 
