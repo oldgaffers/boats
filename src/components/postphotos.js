@@ -30,7 +30,7 @@ export async function postPhotos(copyright, email, keywords, albumKey, fileList,
                     Key: key,
                     ContentType: file.type,
                     Body: file,
-                    Metadata: { albumKey, copyright, keywords: kw },
+                    Metadata: { albumKey, copyright, keywords: kw64 },
                 },
             });
             upload.on("httpUploadProgress", (p) => {
