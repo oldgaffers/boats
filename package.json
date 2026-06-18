@@ -36,7 +36,7 @@
     "jsondiffpatch": "^0.5.0",
     "leaflet": "^1.9.3",
     "little-state-machine": "^4.8.0",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-app-polyfill": "^3.0.0",
     "react-cookie": "^8.0.1",
     "react-copy-to-clipboard": "^5.1.0",
