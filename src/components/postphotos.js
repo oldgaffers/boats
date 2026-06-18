@@ -3,6 +3,11 @@ import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-id
 import { S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 
+function bytesToBase64(bytes) {
+  const binString = String.fromCodePoint(...bytes);
+  return btoa(binString);
+}
+
 export async function postPhotos(copyright, email, keywords, albumKey, fileList, onProgress = () => { }) {
     const { bucketName, region, identityPoolId } = await getUploadCredentials();
     const client = new S3Client({
@@ -16,6 +21,7 @@ export async function postPhotos(copyright, email, keywords, albumKey, fileList,
     const totalSize = fileList.reduce((acc, file) => acc + file.size, 0);
     const uploaders = fileList.map((file) => {
         const key = `${email}/${file.name}`;
+        const kw64 = bytesToBase64(new TextEncoder().encode(keywords));
         try {
             const upload = new Upload({
                 client,
@@ -24,7 +30,7 @@ export async function postPhotos(copyright, email, keywords, albumKey, fileList,
                     Key: key,
                     ContentType: file.type,
                     Body: file,
-                    Metadata: { albumKey, copyright, keywords: window.btoa(new TextEncoder().encode(keywords)) },
+                    Metadata: { albumKey, copyright, keywords: kw },
                 },
             });
             upload.on("httpUploadProgress", (p) => {
