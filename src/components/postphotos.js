@@ -1,23 +1,31 @@
 import { getUploadCredentials } from '../util/api';
-import { fromCognitoIdentity } from "@aws-sdk/credential-provider-cognito-identity";
+import { fromCognitoIdentityPool } from "@aws-sdk/credential-provider-cognito-identity";
 import { S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 
 export async function postPhotos(copyright, email, keywords, albumKey, fileList, onProgress = () => { }) {
-    const { bucketName, region, identityId } = await getUploadCredentials();
-    const client = new S3Client({ region, credentials: fromCognitoIdentity({ identityId, clientConfig: { region } }) });
+    const { bucketName, region, identityPoolId } = await getUploadCredentials();
+    const client = new S3Client({
+        region,
+        credentials: fromCognitoIdentityPool({
+            clientConfig: { region },
+            identityPoolId,
+        }),
+    });
     const progress = fileList.reduce((acc, file) => ({ ...acc, [file.name]: { loaded: 0, total: file.size } }), {});
     const totalSize = fileList.reduce((acc, file) => acc + file.size, 0);
     const uploaders = fileList.map((file) => {
+        const key = `${email}/${file.name}`;
         try {
             const upload = new Upload({
-                client, params: {
+                client,
+                params: {
                     Bucket: bucketName,
-                    Key: `${email}/${file.name}`,
+                    Key: key,
                     ContentType: file.type,
                     Body: file,
-                    Metadata: { albumKey, copyright, keywords },
-                }
+                    Metadata: { albumKey, copyright, keywords: window.btoa(keywords) },
+                },
             });
             upload.on("httpUploadProgress", (p) => {
                 progress[file.name].loaded = p.loaded;

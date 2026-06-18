@@ -54,16 +54,20 @@ async function sortOutMissingAlbum(boat) {
 function makeKeywords(boat) {
   const kw = new Set(boat.previous_names || []);
   kw.add(boat.name);
-  if (boat.generic_type) {
+  if (Array.isArray(boat.generic_type)) {
+    boat.generic_type.forEach((t) => {
+      kw.add(t);
+    });
+  } else if (boat.generic_type) {
     kw.add(boat.generic_type);
   }
   if (boat.design_class) {
-    kw.add(boat.design_class);
+    kw.add(boat.design_class.name);
   }
-  return [...kw].join(';');
+  return ([...kw].join(';')).trim();
 }
 
-export default function PhotoButton({ boat, onDone }) {
+export default function PhotoButton({ boat }) {
   const [open, setOpen] = useState(false);
   const [albumKey, setAlbumKey] = useState(boat.image_key);
 

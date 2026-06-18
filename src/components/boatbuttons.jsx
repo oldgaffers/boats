@@ -13,14 +13,6 @@ export default function BoatButtons({ boat }) {
   const user = useAuth0();
   const roles = user?.['https://oga.org.uk/roles'] || [];
 
-  const photoCancelled = () => {
-    // console.log('cancel');
-  }
-
-  const photoDone = () => {
-    // console.log('done');
-  }
-
   return (
     <Paper>
         <Grid container direction='row' alignItems='flex-end' justifyContent='space-evenly'>
@@ -36,12 +28,7 @@ export default function BoatButtons({ boat }) {
             <Enquiry boat={boat} />
         </Grid>
         <Grid item xs={'auto'} >
-            <PhotoButton
-              boat={boat} user={user}
-              onCancel={photoCancelled}
-              onDone={photoDone}
-              color='secondary'
-            />
+            <PhotoButton boat={boat} color='secondary' />
         </Grid>
         <Grid item xs={'auto'} >
             <EditButton boat={boat} color='secondary'/>

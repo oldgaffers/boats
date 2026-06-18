@@ -26,7 +26,15 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
   const handleClose = () => {
     setPictures([]);
     setProgress(0);
+    setUploadButtonPressed(false);
     onClose();
+  }
+  
+  const handleCancel = () => {
+    setPictures([]);
+    setProgress(0);
+    setUploadButtonPressed(false);
+    onCancel();
   }
 
   const onUpload = () => {
@@ -38,7 +46,7 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
       });
     })
     .catch((r) => {
-      alert('error on upload');
+      console.error('error on upload', r);
     });
   };
 
@@ -96,7 +104,7 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>{percent}%</Typography>
             </Box>
             {(progress < 100) ?
-              <Button size="small" variant="outlined" onClick={onCancel}>
+              <Button size="small" variant="outlined" onClick={handleCancel}>
                 Cancel
               </Button> :
               <Button size="small" variant="contained" onClick={handleClose}>
