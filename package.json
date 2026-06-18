@@ -53,6 +53,7 @@
     "react-router-dom": "^7.17.0",
     "react-trix": "^0.10.2",
     "showdown": "^2.1.0",
+    "trix": "^2.1.19",
     "uuid": "^14.0.0",
     "yaml": "^2.8.1"
   },
