@@ -24,7 +24,7 @@ export async function postPhotos(copyright, email, keywords, albumKey, fileList,
                     Key: key,
                     ContentType: file.type,
                     Body: file,
-                    Metadata: { albumKey, copyright, keywords: window.btoa(keywords) },
+                    Metadata: { albumKey, copyright, keywords: window.btoa(new TextEncoder().encode(keywords)) },
                 },
             });
             upload.on("httpUploadProgress", (p) => {
