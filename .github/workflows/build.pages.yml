@@ -29,9 +29,9 @@ jobs:
       node_version: 22.x
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v6
     - name: Use Node.js ${{ env.node_version }}
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v6
       with:
         node-version: ${{ env.node_version }}
         cache: 'npm'
@@ -46,12 +46,12 @@ jobs:
         cp dist/assets/index-*.js dist/main.js
         cp dist/assets/index-*.css dist/main.css
     - name: Setup Pages
-      uses: actions/configure-pages@v2
+      uses: actions/configure-pages@v6
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v5
       with:
         # Upload dist folder made by vite
         path: dist
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@v5
