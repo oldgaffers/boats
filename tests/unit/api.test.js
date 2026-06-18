@@ -8,6 +8,10 @@ vi.mock('../../src/util/boatsbyhomeport', () => ({
   default: () => ['home-port-mock']
 }));
 
+vi.mock('../../src/util/yaml_utils', () => ({
+  getBoatFromYAML: vi.fn().mockReturnValue({ name: 'Test Boat' })
+}));
+
 import {
   postNewValues,
   clearNewValues,
@@ -319,11 +323,6 @@ describe('api util', () => {
       });
     
     globalThis.fetch = fetchMock;
-    
-    // Mock getBoatFromYAML
-    vi.mock('../../src/util/yaml_utils', () => ({
-      getBoatFromYAML: vi.fn().mockReturnValue({ name: 'Test Boat' })
-    }));
     
     const res = await openPr(123);
     expect(res).toEqual({ name: 'Test Boat' });

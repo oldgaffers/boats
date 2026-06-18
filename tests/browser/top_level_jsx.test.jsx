@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
+// expose render mock on global so the mock factory can access it when evaluated
+globalThis.__renderMock = vi.fn();
+vi.mock('react-dom/client', () => ({
+  createRoot: () => ({ render: globalThis.__renderMock })
+}));
+
 describe('top-level jsx modules (main/index/app) - browser mode', () => {
   beforeEach(() => {
     vi.resetModules();
@@ -10,12 +16,6 @@ describe('top-level jsx modules (main/index/app) - browser mode', () => {
     const p = document.createElement('p');
     p.innerText = '<<app:foo:bar>>';
     document.body.appendChild(p);
-
-    // expose render mock on global so the mock factory can access it when evaluated
-    globalThis.__renderMock = vi.fn();
-    vi.mock('react-dom/client', () => ({
-      createRoot: () => ({ render: globalThis.__renderMock })
-    }));
 
     // dynamic import after mocks so side-effects use the mocked createRoot
     await import('../../src/main.jsx');
