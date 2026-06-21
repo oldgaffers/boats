@@ -28,13 +28,14 @@ function optionsFromPicker(p) {
   return [];
 }
 
-export const extendableList = (name, isMulti) => {
+export const extendableList = (name, isMulti, helperText) => {
   const label = toTitleCase(name.replace('_', ' '));
   return [
     {
       component: 'select',
       name,
       label: isMulti ? `${label}(s)` : label,
+      helperText,
       isMulti,
       isSearchable: true,
       isClearable: true,

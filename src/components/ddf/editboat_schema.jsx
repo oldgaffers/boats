@@ -17,10 +17,65 @@ import {
   constructionItems,
   basicDimensionItems,
 } from "./SubForms";
-import { getPicklist, postNewValues } from "../../util/api";
+import { getBoatData, getFilterable } from "../../util/api";
 
 export default function schema(isNew = false) {
   const fields = [
+    {
+      name: "design-step",
+      nextStep: "rig-step",
+      fields: [
+        {
+          title: "Design",
+          name: "design",
+          component: 'sub-form',
+          fields: [
+            ...extendableList('design_class', false, 'Leave design class blank for one-off boats'),
+            {
+              "component": "switch",
+              "label": "Copy data from another boat",
+              "name": "ddf.copy_boat",
+              resolveProps: (props, { meta, input }, formOptions) => {
+                const { values } = formOptions.getState();
+                console.log("copy_boat", values.copy_boat);
+                if (values.ddf.copy_boat) {
+                  getFilterable().then((filterable) => {
+                    const prototypes = filterable.filter((boat) => (boat.design_class === values.design_class && boat.oga_no !== values.ddf.oga_no));
+                    if (prototypes.length > 0) {
+                      const prototype = prototypes[0];
+                      getBoatData(prototype.oga_no).then((data) => {
+                        if (data) {
+                          console.log("copying data from", data);
+                        }
+                      }).catch((error) => {
+                        console.error("Error fetching boat data:", error);
+                      });
+                    } else {
+                      console.log("No prototype found for design_class", values.design_class, "and oga_no", values.oga_no);
+                    }
+                  });
+                }
+                return {
+                };
+              }
+            },
+            ...extendableList('designer', true),
+            {
+              component: 'plain-text',
+              name: 'd-desc',
+              label: <Typography component='span'>Most boats will only have one,
+                but a boat could be based on another design, for example.
+                Pick one, and you can pick more if you need to.
+                Type to filter the options. If you type something that doesn't exist,
+                you can add them as a new designer.
+              </Typography>
+            },
+            newItemMonitor('designer'),
+            newItemMonitor('design_class'),
+          ],
+        },
+      ],
+    },
     {
       name: "rig-step",
       nextStep: "type-step",
@@ -83,7 +138,7 @@ export default function schema(isNew = false) {
     },
     {
       name: "build-step",
-      nextStep: "design-step",
+      nextStep: "basic-dimensions-step",
       fields: [
         {
           title: "Build",
@@ -113,33 +168,6 @@ export default function schema(isNew = false) {
               label: "Hull Identification Number (HIN)",
             },
             newItemMonitor('builder')
-          ],
-        },
-      ],
-    },
-    {
-      name: "design-step",
-      nextStep: "basic-dimensions-step",
-      fields: [
-        {
-          title: "Design",
-          name: "design",
-          component: 'sub-form',
-          fields: [
-            ...extendableList('designer', true),
-            {
-              component: 'plain-text',
-              name: 'd-desc',
-              label: <Typography component='span'>Most boats will only have one,
-                but a boat could be based on another design, for example.
-                Pick one, and you can pick more if you need to.
-                Type to filter the options. If you type something that doesn't exist,
-                you can add them as a new designer.
-              </Typography>
-            },
-            ...extendableList('design_class', false),
-            newItemMonitor('designer'),
-            newItemMonitor('design_class'),
           ],
         },
       ],
@@ -304,7 +332,7 @@ export default function schema(isNew = false) {
   if (isNew) {
     fields.unshift({
       name: "name-step",
-      nextStep: "rig-step",
+      nextStep: "design-step",
       fields: [
         {
           component: 'text-field',
