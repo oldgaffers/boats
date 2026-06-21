@@ -31,34 +31,51 @@ export default function schema(isNew = false) {
           component: 'sub-form',
           fields: [
             ...extendableList('design_class', false, 'Leave design class blank for one-off boats'),
-            {
-              "component": "switch",
-              "label": "Copy data from another boat",
-              "name": "ddf.copy_boat",
-              resolveProps: (props, { meta, input }, formOptions) => {
-                const { values } = formOptions.getState();
-                console.log("copy_boat", values.copy_boat);
-                if (values.ddf.copy_boat) {
-                  getFilterable().then((filterable) => {
-                    const prototypes = filterable.filter((boat) => (boat.design_class === values.design_class && boat.oga_no !== values.ddf.oga_no));
-                    if (prototypes.length > 0) {
-                      const prototype = prototypes[0];
-                      getBoatData(prototype.oga_no).then((data) => {
-                        if (data) {
-                          console.log("copying data from", data);
-                        }
-                      }).catch((error) => {
-                        console.error("Error fetching boat data:", error);
-                      });
-                    } else {
-                      console.log("No prototype found for design_class", values.design_class, "and oga_no", values.oga_no);
-                    }
-                  });
-                }
-                return {
-                };
-              }
-            },
+            // {
+            //   "component": "switch",
+            //   "label": "Copy data from another boat",
+            //   "name": "ddf.copy_boat",
+            //   initialValue: false,
+            //   resolveProps: (props, { meta, input }, formOptions) => {
+            //     const { values } = formOptions.getState();
+            //     // if (values.ddf.copy_boat) {
+            //     //   getFilterable().then((filterable) => {
+            //     //     const prototypes = filterable.filter((boat) => (boat.design_class === values.design_class && boat.oga_no !== values.ddf.oga_no));
+            //     //     if (prototypes.length > 0) {
+            //     //       const prototype = prototypes[0];
+            //     //       getBoatData(prototype.oga_no).then((data) => {
+            //     //         if (data) {
+            //     //           const bk = Object.keys(data);
+            //     //           const keysToCopy = ['designer'];
+            //     //           keysToCopy.forEach((key) => {
+            //     //             if (bk.includes(key)) {
+            //     //               console.log("copying", key, "=", JSON.stringify(data[key]));
+            //     //               switch (key) {
+            //     //                 case 'designer':
+            //     //                   data[key]?.forEach((designer) => {
+            //     //                     formOptions.change(key, designer.name);
+            //     //                   });
+            //     //                   break;
+            //     //                 default:
+            //     //                   formOptions.change(key, data[key]);
+            //     //               }
+            //     //             }
+            //     //           });
+            //     //         }
+            //     //       }).catch((error) => {
+            //     //         console.error("Error fetching boat data:", error);
+            //     //       });
+            //     //     } else {
+            //     //       console.log("No prototype found for design_class", values.design_class, "and oga_no", values.oga_no);
+            //     //     }
+            //     //   });
+            //     // }
+            //     return {
+            //       isReadOnly: true, // !values.design_class,
+            //       isHidden: true,
+            //     };
+            //   }
+            // },
             ...extendableList('designer', true),
             {
               component: 'plain-text',
