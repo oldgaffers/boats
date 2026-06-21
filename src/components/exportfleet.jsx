@@ -1,41 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useEffect, useState } from 'react';
 import CircularProgress from "@mui/material/CircularProgress";
-import { getLargestImage, getBoatData, getScopedData } from '../util/api';
+import { getLargestImage, getBoatData } from '../util/api';
 import RoleRestricted from './rolerestrictedcomponent';
 import { CSVLink } from "react-csv";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, getAccordionActionsUtilityClass, Stack } from '@mui/material';
-import { ownerMembershipNumbers, ownershipsWithNames } from '../util/ownernames';
- 
-async function getBoats(ogaNos, accessToken) {
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Stack } from '@mui/material';
+import { ownershipsWithNames } from '../util/ownernames';
+
+async function getBoats(ogaNos) {
   const r = await Promise.allSettled(ogaNos.map((ogaNo) => getBoatData(ogaNo)));
-  const pages = r.filter((p) => p.status === 'fulfilled').map((p) => p.value?.boat);
-  const boats = pages.map((p) => p);
+  const boats = r.filter((p) => p.status === 'fulfilled').map((p) => p.value);
   const images = await Promise.allSettled(boats.map((b) => {
-      if (b.image_key) {
-          return getLargestImage(b.image_key);
-      } else {
-            // console.log('no image', b);
-            return undefined;
-      }
+    if (b.image_key) {
+      return getLargestImage(b.image_key);
+    } else {
+      // console.log('no image', b);
+      return undefined;
+    }
   }));
-  const member = [...new Set(boats.map((b) => ownerMembershipNumbers(b)).flat())];
-  const f = {
-    fields: 'id,membership,firstname,lastname,GDPR',
-    member,
-  };
-  const d = await getScopedData('member', 'members', f, accessToken);
-  const names = d?.Items ?? [];
   return boats.map((b, i) => {
     const image = {};
     const img = images[i].value;
     if (img) {
-        const { url, caption } = img;
-        image.url = url;
-        image.copyright = caption;
+      const { url, caption } = img;
+      image.url = url;
+      image.copyright = caption;
     }
-    const ownerships = ownershipsWithNames(b, names);
-    const owners =  ownerships.filter((o) => o.current);
+    const ownerships = ownershipsWithNames(b.ownerships, []);
+    const owners = ownerships.filter((o) => o.current);
     const historicOwners = ownerships.filter((o) => !o.current);
     return { ...b, owners, historicOwners, image };
   });
@@ -119,7 +110,7 @@ function boatForLeaflet(boat) {
   <div class="container">
     <div class="header">${name} (${oga_no})</div>
     <div class="sidebar">
-      <div>${owners ? `Owned by: ${owners}`:''}</div>
+      <div>${owners ? `Owned by: ${owners}` : ''}</div>
       ${Object.keys(text).filter((k) => boat[k]).map((k) => `${km(k)}: ${vm(boat[k]?.name ? boat[k].name : boat[k])}`).join('<p>')}
     </div>
     <div class="photo">
@@ -132,28 +123,21 @@ function boatForLeaflet(boat) {
 
 function ExportFleetOptions({ name, ogaNos }) {
   const [data, setData] = useState();
-  const { getAccessTokenSilently, logout } = useAuth0();
 
   useEffect(() => {
     if (!data) {
-      getAccessTokenSilently()
-        .then((accessToken) => {
-          getBoats(ogaNos, accessToken).then((r) => setData(r));
-        }).catch((e) => {
-          console.error('Error getting access token:', e);
-          const returnTo = window.location.origin + window.location.pathname;
-          logout({ returnTo });
-          alert('Please log in again');
-        });
+      getBoats(ogaNos).then((boats) => {
+        setData(boats);
+      });
     }
-  }, [data, ogaNos]);
+  }, [ogaNos]);
 
   if (!data) {
     return <CircularProgress />
   }
 
   const leaflet = selectFieldsForExport(data, [
-    'name', 'oga_no', 'place_built', 
+    'name', 'oga_no', 'place_built',
     'owners', 'home_port',
     'construction_material', 'construction_method',
     'builder', 'designer', 'design_class', "year",
@@ -206,7 +190,7 @@ function ExportFleetOptions({ name, ogaNos }) {
       download={`${name}.html`}
       href={uRL}
     >Download HTML for boats attending leaflet</a>
-        <a
+    <a
       target="_blank" rel="noreferrer"
       href={uRL}
     >HTML for boats attending leaflet, opens in new tab for printing</a>
@@ -232,9 +216,7 @@ export function ExportFleet({ name, boats, filters }) {
     >
       <DialogTitle id="form-dialog-title">Export Fleet {name}</DialogTitle>
       <DialogContent>
-        <DialogContentText variant="subtitle2">
           <ExportFleetOptions name={name} ogaNos={ogaNos} />
-        </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setOpen(false)} color="primary">
