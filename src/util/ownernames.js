@@ -68,12 +68,3 @@ export function useGetOwnerNames(ownerships) {
     const members = useGetMemberData('members', f);
     return ownershipsWithNames(ownerships, members || defaultMembers);
 }
-
-export async function getOwnerNames(memberNumbers, accessToken) {
-    const f = {
-        fields: 'id,membership,firstname,lastname,GDPR',
-        member: memberNumbers,
-    };
-    const d = await getScopedData('member', 'members', f, accessToken);
-    return d?.Items ?? [];
-}
