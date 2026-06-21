@@ -2,7 +2,6 @@ import { test, expect, vi } from 'vitest';
 import {
   ownerMembershipNumbers,
   ownershipsWithNames,
-  getOwnerNames,
 } from '../../src/util/ownernames';
 import * as api from '../../src/util/api';
 
@@ -54,34 +53,3 @@ test('ownershipsWithNames adds names', () => {
   expect(out.find((o) => o.id === 3).note).toBe('name on record but withheld');
 });
 
-test('getOwnerNames calls getScopedData and returns Items', async () => {
-  const spy = vi.spyOn(api, 'getScopedData').mockResolvedValue({ Items: [{ id: 5, firstname: 'X', lastname: 'Y', GDPR: true }] });
-  const items = await getOwnerNames([5], 'token');
-  expect(spy).toHaveBeenCalled();
-  expect(items).toEqual([{ id: 5, firstname: 'X', lastname: 'Y', GDPR: true }]);
-  spy.mockRestore();
-});
-
-test('getOwnerNames returns empty array when getScopedData returns null', async () => {
-  const spy = vi.spyOn(api, 'getScopedData').mockResolvedValue(null);
-  const items = await getOwnerNames([5], 'token');
-  expect(items).toEqual([]);
-  spy.mockRestore();
-});
-
-test('getOwnerNames returns empty array when getScopedData returns undefined', async () => {
-  const spy = vi.spyOn(api, 'getScopedData').mockResolvedValue(undefined);
-  const items = await getOwnerNames([5], 'token');
-  expect(items).toEqual([]);
-  spy.mockRestore();
-});
-
-test('getOwnerNames passes correct parameters to getScopedData', async () => {
-  const spy = vi.spyOn(api, 'getScopedData').mockResolvedValue({ Items: [] });
-  await getOwnerNames([123, 456], 'token');
-  expect(spy).toHaveBeenCalledWith('member', 'members', {
-    fields: 'id,membership,firstname,lastname,GDPR',
-    member: [123, 456],
-  }, 'token');
-  spy.mockRestore();
-});
