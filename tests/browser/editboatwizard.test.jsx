@@ -42,6 +42,8 @@ function sleep(ms) {
 
 vi.mock('../../src/util/api', () => {
   return {
+    getBoatData: async (id) => Promise.resolve(boat),
+    getFilterable: async () => Promise.resolve({}),
     clearNewValues: () => Promise.resolve(vi.fn()),
     postNewValues: () => Promise.resolve(vi.fn()),
     getPicklist: async (name) => pickers[name] || [],
