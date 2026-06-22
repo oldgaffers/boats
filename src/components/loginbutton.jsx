@@ -8,14 +8,12 @@ export default function LoginButton({ label = 'Login/Sign-up', avatar = true }) 
     const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
 
     if (isAuthenticated) {
-        const returnTo = window.location.origin + window.location.pathname;
-        console.log('redirecting to', returnTo);
         return (
             <Button size="small"
                 startIcon={avatar ? <Avatar alt={user.name} src={user.picture} /> : undefined}
                 variant="contained"
                 color="primary"
-                onClick={() => logout({ returnTo })}
+                onClick={() => logout({ returnTo: window.location.origin })}
             >
                 Logout
             </Button>
