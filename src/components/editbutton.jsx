@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import Snackbar from '@mui/material/Snackbar';
-import { createPhotoAlbum, postBoatData } from '../util/api';
+import { createPhotoAlbum, postBoatData, nextOgaNo } from '../util/api';
 import EditBoatWizard from './editboatwizard';
 import { boatf2m, boatm2f } from '../util/format';
 import { boatdiff } from './editboatwizardfunctions';
