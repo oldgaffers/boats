@@ -19,6 +19,9 @@ function textvalue(data, key) {
         if (key.df) {
             return key.df(val);
         }
+        if (key.unit) {
+            return `${val} ${key.unit}`;
+        }
         return val;
     }
     if (data[key]?.name) {
