@@ -36,8 +36,8 @@ export default function BoatDetail({ view, boat }) {
         { field: 'length_on_waterline', df: m2f, abbr: 'LWL' },
         { field: 'beam', df: m2f },
         { field: 'draft', df: m2f },
-        { field: 'displacement', df: m2f },
-        { field: 'solent', df: m2f },
+        { field: 'displacement', unit: 'kg' },
+        { field: 'solent' },
       ]
     },
   ];
