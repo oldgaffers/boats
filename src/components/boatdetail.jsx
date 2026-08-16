@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useAuth0 } from '@auth0/auth0-react';
-import { m2f, price, m2f2, newestForSaleRecord } from '../util/format';
+import { kg, m2f, price, m2f2, newestForSaleRecord } from '../util/format';
 import DetailBar from './detailbar';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
@@ -36,7 +36,7 @@ export default function BoatDetail({ view, boat }) {
         { field: 'length_on_waterline', df: m2f, abbr: 'LWL' },
         { field: 'beam', df: m2f },
         { field: 'draft', df: m2f },
-        { field: 'displacement', unit: 'kg' },
+        { field: 'displacement', df: kg },
         { field: 'solent' },
       ]
     },
