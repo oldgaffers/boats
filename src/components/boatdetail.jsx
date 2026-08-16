@@ -37,7 +37,6 @@ export default function BoatDetail({ view, boat }) {
         { field: 'beam', df: m2f },
         { field: 'draft', df: m2f },
         { field: 'displacement', df: kg },
-        { field: 'solent' },
       ]
     },
   ];
