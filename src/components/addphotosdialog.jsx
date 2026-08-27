@@ -5,23 +5,20 @@ import Paper from "@mui/material/Paper";
 import Stack from '@mui/material/Stack';
 import Button from "@mui/material/Button";
 import Box from '@mui/material/Box';
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { useAuth0 } from "@auth0/auth0-react";
 import { postPhotos } from "./postphotos";
 import Photodrop from "./photodrop";
 
-/*
-1) the copyright owner retains ownership of the image
-> 2) you are the copyright owner, or you have obtained permission from the copyright owner for us to use the image as described below
-> 3) You grant the OGA a worldwide, non-exclusive, royalty-free, sublicensable, and transferable licence to host, store, reproduce, distribute, modify, and display the image on OGA and third party platforms such as social media outlets
-> 4) You grant permission for the OGA and OGA Areas and Sections to print the image in non-commercial publications, for example in Gaffers Log, brochures and event flyers, in support of the OGA's purposes.
-*/
 export default function AddPhotosDialog({ title, albumKey, keywords, onClose, onCancel, open }) {
   const { user } = useAuth0();
   const [pictures, setPictures] = useState([]);
   const [email, setEmail] = useState((user && user.email) || '');
   const [copyright, setCopyright] = useState(''); // user && user.name);
+  const [permission, setPermission] = useState(false);
   const [progress, setProgress] = useState(0);
   const [uploadButtonPressed, setUploadButtonPressed] = useState(false);
 
@@ -61,6 +58,7 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
     if (pictures.length === 0) return true;
     if (!email) return true;
     if (!copyright) return true;
+    if (!permission) return true;
     return false;
   }
 
@@ -70,6 +68,10 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
 
   const onCopyright = (e) => {
     setCopyright(e.target.value);
+  };
+
+  const onPermission = (e) => {
+    setPermission(e.target.checked);
   };
 
   const percent = Math.round(progress);
@@ -89,6 +91,7 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
             label="Copyright Owner"
             onChange={onCopyright}
           />
+          <Typography variant="subtitle1">the copyright owner retains ownership of the image</Typography>
           <TextField
             value={email}
             required={true}
@@ -96,6 +99,8 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
             type="email"
             onChange={onEmail}
           />
+          <FormControlLabel required control={<Switch onChange={onPermission}/>}
+            label="I am the copyright owner, or I have obtained permission from the copyright owner for the OGA to use the image as described below*"/>
           <Stack direction='row' justifyContent='space-evenly'>
             <Button
               disabled={disableUpload()}
@@ -118,6 +123,10 @@ export default function AddPhotosDialog({ title, albumKey, keywords, onClose, on
               </Button>
             }
           </Stack>
+          <Typography>* You grant the OGA a worldwide, non-exclusive, royalty-free, sublicensable, and transferable licence to host, store, reproduce, distribute, modify, and display the image on OGA and third party platforms such as social media outlets</Typography>
+          <Typography>
+           * You grant permission for the OGA and OGA Areas and Sections to print the image in non-commercial publications, for example in Gaffers Log, brochures and event flyers
+          </Typography>
         </Stack>
       </Paper>
     </Dialog>
