@@ -11,6 +11,12 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { postPhotos } from "./postphotos";
 import Photodrop from "./photodrop";
 
+/*
+1) the copyright owner retains ownership of the image
+> 2) you are the copyright owner, or you have obtained permission from the copyright owner for us to use the image as described below
+> 3) You grant the OGA a worldwide, non-exclusive, royalty-free, sublicensable, and transferable licence to host, store, reproduce, distribute, modify, and display the image on OGA and third party platforms such as social media outlets
+> 4) You grant permission for the OGA and OGA Areas and Sections to print the image in non-commercial publications, for example in Gaffers Log, brochures and event flyers, in support of the OGA's purposes.
+*/
 export default function AddPhotosDialog({ title, albumKey, keywords, onClose, onCancel, open }) {
   const { user } = useAuth0();
   const [pictures, setPictures] = useState([]);
