@@ -216,7 +216,7 @@ export const referencesItems = [
 
 export const descriptionsItems = [
   {
-    component: "html",
+    component: 'html',
     title: "Short description",
     name: "short_description",
     maxLength: 100,
@@ -226,7 +226,7 @@ export const descriptionsItems = [
         It shouldn't replicate data also included on the card, like rig type, designer, builder, etc.`,
   },
   {
-    component: "html",
+    component: 'html',
     title: "Full description (not the sales text)",
     name: "full_description",
     height: 6,
@@ -472,11 +472,9 @@ export const sellingDataFields = [
     validate: [{ type: 'required' }],
   },
   {
-    component: "html",
+    component: 'html',
     title: "Sales Text",
     name: "ddf.current_sales_record.sales_text",
-    controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
-    toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
     height: 4,
     maxLength: 500,
     isRequired: true,
@@ -607,8 +605,6 @@ export const salesSteps = (firstStep, nextStep) => [
           {
             component: 'html',
             name: "ddf.current_sales_record.sales_text",
-            controls: ["heading", "bold", "italic", "numberedList", "bulletedList", "link"],
-            toolbar: 'undo redo | blocks | bold italic numlist bullist link removeformat',
             maxLength: 500,
             title: "Updated Sales Text",
           },
@@ -679,15 +675,13 @@ export const salesSteps = (firstStep, nextStep) => [
             validate: [{ type: 'required' }],
           },
           {
-            component: "html",
+            component: 'html',
             helperText: <Typography component='span'>Please add some details,
               <br />including the new owner's name,
               <br />if they are happy to share, and whether
               <br />the Boat Register or
               Gaffer's Log helped with the sale.</Typography>,
             name: "ddf.current_sales_record.summary",
-            controls: ["bold", "italic"],
-            toolbar: 'undo redo | bold italic removeformat | help', // for tinymce
             maxLength: 500,
             isRequired: true,
             validate: [{ type: 'required' }],
