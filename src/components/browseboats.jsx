@@ -37,7 +37,7 @@ export default function BrowseBoats({
   onBoatMarked,
   onBoatUnMarked,
   onFleetChanges,
-  state,
+  state = {},
   fleets,
   fleetName,
   onFleetSelected,
