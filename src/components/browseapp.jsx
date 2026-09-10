@@ -19,6 +19,9 @@ export default function BrowseApp({ view = 'app' }) {
   }, [markList]);
 
   useEffect(() => {
+    if (!DEFAULT_BROWSE_STATE[view]) {
+      return;
+    }
     let filters = DEFAULT_BROWSE_STATE[view].filters;
     if (fleetName) {
       const fleet = fleets?.find((f) => f.name === fleetName);
