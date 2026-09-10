@@ -14,6 +14,10 @@ function handleParagraphs() {
     const q = text.match(/^<<(.*?):(.*)>>$/);
     if (q?.length === 3) {
       const [, component, arglist] = q;
+      if (['update_my_details', 'members', 'members_boats', 'crewfinder', 'cruisefinder', 'map', 'doc', 'folder'].includes(component)) {
+        console.log('ignoring members area components');
+        continue;
+      }
       const args = arglist.split(':');
       const al = args.map((a, index) => `data-oga-arg${index}="${a.trim()}"`).join(' ');
       p.outerHTML = `<div data-oga-component=${component} ${al}></div>`;
