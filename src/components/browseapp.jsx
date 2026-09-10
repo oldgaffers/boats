@@ -27,10 +27,11 @@ export default function BrowseApp({ view = 'app' }) {
       }
     }
     setState({ ...state, page: 1, filters });
-  }, [fleets, fleetName, markedOnly, state.filters.oga_nos]);
+  }, [fleets, fleetName, view]);
 
   const handlePageSizeChange = (bpp) => {
     setState({ ...state, page: 1, bpp });
+
   };
 
   const handleSortChange = (field, dir) => {
