@@ -63,6 +63,9 @@ const Pages = (props) => {
       if (window.location.pathname.includes('/boat/')) {
         return <Boat {...props} location={window.location} />;
       }
+      if (props.view) {
+        return <BrowseApp{...props} />;
+      }
       return <BrowseApp view='app' />;
     case 'login': return <LoginButton />;
     case 'boat': return <Boat {...props} location={window.location} />;
