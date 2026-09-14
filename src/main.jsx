@@ -4,6 +4,8 @@ import { createRoot } from 'react-dom/client';
 // import './index.css'
 import { BoatRegister } from './app.jsx'
 
+const membersAreaComponents = ['update_my_details', 'members', 'members_boats', 'crewfinder', 'cruisefinder', 'map', 'doc', 'folder'];
+
 // convert paragraph elements with <<xxxx>> to divs so that we can nest p and divs inside them
 // we need this because most editors don't have html access.
 function handleParagraphs() {
@@ -14,7 +16,7 @@ function handleParagraphs() {
     const q = text.match(/^<<(.*?):(.*)>>$/);
     if (q?.length === 3) {
       const [, component, arglist] = q;
-      if (['update_my_details', 'members', 'members_boats', 'crewfinder', 'cruisefinder', 'map', 'doc', 'folder'].includes(component)) {
+      if (membersAreaComponents.includes(component)) {
         console.log('ignoring members area components');
         continue;
       }
@@ -29,5 +31,9 @@ handleParagraphs();
 const placeholders = document.querySelectorAll("[data-oga-component]");
 placeholders.forEach((ph) => {
   const attr = ph.dataset;
-  createRoot(ph).render(<BoatRegister {...attr} />);
+  if (membersAreaComponents.includes(attr.ogaComponent)) {
+    console.log('ignoring members area components');
+  } else {
+    createRoot(ph).render(<BoatRegister {...attr} />);
+  }
 });
