@@ -378,7 +378,7 @@ const mainsail_fields = (sail) => {
     {
       component: 'text-field',
       name: `handicap_data.${sail}.luff`,
-      label: `Luff (decimal feet)`,
+      label: `Luff H (decimal feet)`,
       type: "number",
       dataType: 'float',
       resolveProps: (props, { meta, input }, formOptions) => {
@@ -389,7 +389,7 @@ const mainsail_fields = (sail) => {
     {
       component: 'text-field',
       name: `handicap_data.${sail}.foot`,
-      label: `Foot (decimal feet)`,
+      label: `Foot B (decimal feet)`,
       type: "number",
       dataType: 'float',
       resolveProps: (props, { meta, input }, formOptions) => {
@@ -400,7 +400,7 @@ const mainsail_fields = (sail) => {
     {
       component: 'text-field',
       name: `handicap_data.${sail}.head`,
-      label: `Head (decimal feet)`,
+      label: `Head G (decimal feet)`,
       type: "number",
       dataType: 'float',
       condition: {
@@ -451,14 +451,14 @@ const topsail_fields = (sail) => [
   {
     component: 'text-field',
     name: `handicap_data.${sail}.luff`,
-    label: `Luff (decimal feet)`,
+    label: `Luff TI (decimal feet)`,
     type: "number",
     dataType: 'float',
   },
   {
     component: 'text-field',
     name: `handicap_data.${sail}.perpendicular`,
-    label: `Perpendicular (decimal feet)`,
+    label: `Perpendicular TL (decimal feet)`,
     type: "number",
     dataType: 'float',
   },
@@ -551,7 +551,7 @@ export const steps = (firstStep, nextStep) => [
       {
         component: 'text-field',
         name: "handicap_data.fore_triangle_height",
-        label: "Height (decimal feet)",
+        label: "Height I (decimal feet)",
         description:
           "measured from deck to the top of the highest headsail halyard sheave (for jib topsail if one can be flown)",
         type: "number",
@@ -561,7 +561,7 @@ export const steps = (firstStep, nextStep) => [
       {
         component: 'text-field',
         name: "handicap_data.fore_triangle_base",
-        label: "Base (decimal feet)",
+        label: "Base J (decimal feet)",
         description:
           "measured from the foreside of the mast to the eye of the fitting which sets the tack of the furthest forward headsail, or to the sheave of the jib outhaul at the end of the bowsprit. If you have no foresails enter 0.",
         type: "number",
