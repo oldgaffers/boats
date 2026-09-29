@@ -5,15 +5,17 @@ import { toTitleCase } from '../util/text_utils';
 import { formatList } from '../util/format';
 
 function textvalue(data, key) {
-    if (Array.isArray(data[key])) {
-        return formatList(data, key);
-    }
     const o = data[key];
-    if (Object.keys(o).includes('approx')) {
-        if (o.value && o.approx) {
-            return `around ${data[key].value}`;
-        }
-        return o.value
+    if (o) {
+      if (Array.isArray(o)) {
+          return formatList(data, key);
+      }
+      if (Object.keys(o).includes('approx')) {
+          if (o.value && o.approx) {
+              return `around ${data[key].value}`;
+          }
+          return o.value
+      }
     }
     if (o?.value) {
         return o.value;
