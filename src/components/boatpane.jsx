@@ -8,11 +8,15 @@ function textvalue(data, key) {
     if (Array.isArray(data[key])) {
         return formatList(data, key);
     }
-    if (data[key]?.value) {
-        if (data[key].approx) {
+    const o = data[key];
+    if (Object.keys(o).includes('approx')) {
+        if (o.value && o.approx) {
             return `around ${data[key].value}`;
         }
-        return data[key].value;
+        return o.value
+    }
+    if (o?.value) {
+        return o.value;
     }
     if (key.field) {
         const val = data[key.field];
@@ -24,10 +28,10 @@ function textvalue(data, key) {
         }
         return val;
     }
-    if (data[key]?.name) {
-        return data[key].name;
+    if (o?.name) {
+        return o.name;
     }
-    return data[key];
+    return o;
 }
 
 function row({ field, data }) {
