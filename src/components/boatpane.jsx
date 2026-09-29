@@ -16,7 +16,7 @@ function textvalue(data, key) {
           }
           return o.value
       }
-      if (o?.value) {
+      if (o.value) {
           return o.value;
       }
     }
