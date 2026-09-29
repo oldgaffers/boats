@@ -16,9 +16,9 @@ function textvalue(data, key) {
           }
           return o.value
       }
-    }
-    if (o?.value) {
-        return o.value;
+      if (o?.value) {
+          return o.value;
+      }
     }
     if (key.field) {
         const val = data[key.field];
