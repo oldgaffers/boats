@@ -139,7 +139,7 @@ export function HandicapDiagram({ boat, metric = false }) {
                 />
                 <Label x={x + 372} y={y - 60} >
                     <Tag fill="white" />
-                    <Text text={param("TH", boat.handicap_data?.topsail.luff, metric)} fill="blue" fontSize={20} />
+                    <Text text={param("TH", boat.handicap_data?.topsail?.luff, metric)} fill="blue" fontSize={20} />
                 </Label>
                 <Line points={[x + 712, y + 358, x + 877, y + 358]} strokeWidth={2} stroke="black" />
                 <Line
