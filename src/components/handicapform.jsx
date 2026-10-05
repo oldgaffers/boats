@@ -182,7 +182,7 @@ export function HandicapDiagram({ boat, metric = false }) {
                 />
                 <Label x={x + 285} y={y - 20} >
                     <Tag fill="white" />
-                    <Text text={param("G", boat.handicap_data?.main?.head, metric)} width={100} align="right" fill="blue" fontSize={20} />
+                    <Text text={param("G", boat.handicap_data?.main?.head, metric)} fill="blue" fontSize={20} />
                 </Label>
                 <Arrow
                     name="I"
