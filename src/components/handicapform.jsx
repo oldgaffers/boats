@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stage, Layer, Label, Text, Line, Arrow, Path, Tag } from 'react-konva';
+import { Stage, Layer, Label, Text, Line, Arrow, Path, Tag, Group } from 'react-konva';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Switch } from '@mui/material';
@@ -15,18 +15,8 @@ function param(label, value, metric = false) {
     return `${label}=${m2f(value)}`;
 }
 
-export function BaseBoat({ x, y, scale = 1 }) {
-    return (<>
-        <Line points={[x + 712, y + 358, x + 877, y + 358]} strokeWidth={2} stroke="black" />
-        <Line
-            name="bowsprit"
-            points={[x + 550, y + 355, x + 680, y + 345]}
-            stroke="black"
-            strokeWidth={8}
-            lineCap="round"
-            lineJoin="round"
-            y={5}
-        />
+function GaffMast({x, y}) {
+    return (<Group>
         <Line
             name="boom"
             points={[x + 50, y + 300, x + 400, y + 320]}
@@ -64,6 +54,21 @@ export function BaseBoat({ x, y, scale = 1 }) {
             points={[x + 200, y - 110, x + 400, y + 20, x + 400, 0, x + 200, y - 110]}
             stroke="green"
             strokeWidth={1}
+            y={5}
+        />
+      </Group>);
+}
+
+export function BaseBoat({ x, y, scale = 1 }) {
+    return (<>
+        <Line points={[x + 712, y + 358, x + 877, y + 358]} strokeWidth={2} stroke="black" />
+        <Line
+            name="bowsprit"
+            points={[x + 550, y + 355, x + 680, y + 345]}
+            stroke="black"
+            strokeWidth={8}
+            lineCap="round"
+            lineJoin="round"
             y={5}
         />
         <Line
@@ -118,6 +123,7 @@ export function HandicapDiagram({ boat, metric = false }) {
         <Stage scale={0.5} width={910} height={700}>
             <Layer>
                 <BaseBoat x={x} y={y} scale={scale} />
+                <GaffMast x={x} y={y} />
                 <Line
                     points={[0, y + 415, x + 900, y + 415]}
                     stroke="blue"
