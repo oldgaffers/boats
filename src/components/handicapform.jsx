@@ -16,10 +16,10 @@ function param(label, value, metric = false) {
 }
 
 function GaffMast({ x, y }) {
-    return (<Group>
+    return (<Group x={x} y={y}>
         <Line
             name="boom"
-            points={[x + 50, y + 300, x + 400, y + 320]}
+            points={[50,  300,  400,  320]}
             stroke="black"
             strokeWidth={8}
             lineCap="round"
@@ -28,14 +28,14 @@ function GaffMast({ x, y }) {
         />
         <Line
             name="mast"
-            points={[x + 410, y + 360, x + 410, 0]}
+            points={[410, 360, 410, -210]}
             stroke="black"
             strokeWidth={10}
             y={5}
         />
         <Line
             name="gaff"
-            points={[x + 200, y - 100, x + 400, y + 30]}
+            points={[200, -100, 400, 30]}
             stroke="black"
             strokeWidth={8}
             lineCap="round"
@@ -44,14 +44,14 @@ function GaffMast({ x, y }) {
         />
         <Line
             name="mainsail"
-            points={[x + 50, y + 290, x + 400, y + 310, x + 400, y + 40, x + 200, y - 90, x + 50, y + 290]}
+            points={[50, 290, 400, 310, 400, 40, 200, -90, 50, 290]}
             stroke="green"
             strokeWidth={1}
             y={5}
         />
         <Line
             name="topsail"
-            points={[x + 200, y - 110, x + 400, y + 20, x + 400, 0, x + 200, y - 110]}
+            points={[200, -110, 400, 20, 400, -190, 200, -110]}
             stroke="green"
             strokeWidth={1}
             y={5}
@@ -252,6 +252,15 @@ function ForeTriangleMeasurements({ x, y, boat, metric = false }) {
     </Group>);
 }
 
+
+export function GaffWithTopSail({ x, y, boat, metric = false }) {
+    return (<Group x={x} y={y}>
+        <GaffMast x={0} y={0} />
+        <GaffMeasurements x={0} y={0} sail={boat.handicap_data.main} metric={metric} />
+        <TopsailMeasurements x={0} y={0} sail={boat.handicap_data.topsail} metric={metric} />
+    </Group>);
+}
+
 export function HandicapDiagram({ boat, metric = false }) {
     const scale = 1.2;
     const x = 0;
@@ -261,9 +270,7 @@ export function HandicapDiagram({ boat, metric = false }) {
         <Stage scale={0.5} width={910} height={700}>
             <Layer>
                 <BaseBoat x={x} y={y} scale={scale} />
-                <GaffMast x={x} y={y} />
-                <GaffMeasurements x={x} y={y} sail={boat.handicap_data.main} metric={metric} />
-                <TopsailMeasurements x={x} y={y} sail={boat.handicap_data.topsail} metric={metric} />
+                <GaffWithTopSail x={x} y={y} boat={boat} metric={metric} />
                 <HullMeasurements x={x} y={y} boat={boat} metric={metric} />
                 <ForeTriangleMeasurements x={x} y={y} boat={boat} metric={metric} />
             </Layer>
