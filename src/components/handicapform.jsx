@@ -114,6 +114,50 @@ export function BaseBoat({ x, y, scale = 1 }) {
     </>);
 }
 
+function GaffMeasurements({x, y, sail}) {
+    return (<Group>
+                  <Arrow
+                    name="B"
+                    points={[x + 50, y + 280, x + 400, y + 300]}
+                    stroke="blue"
+                    fill="blue"
+                    pointerAtBeginning={true}
+                    strokeWidth={1}
+                    y={5}
+                />
+                <Label x={x + 245} y={y + 285} >
+                    <Tag fill="white" />
+                    <Text text={param("B", sail?.foot, metric)} fill="blue" fontSize={20} />
+                </Label>
+                <Arrow
+                    name="H"
+                    points={[x + 380, y + 305, x + 380, y + 40]}
+                    stroke="blue"
+                    fill="blue"
+                    pointerAtBeginning={true}
+                    strokeWidth={1}
+                    y={5}
+                />
+                <Label x={x + 372} y={y + 170} >
+                    <Tag fill="white" />
+                    <Text text={param("H", sail?.luff, metric)} fill="blue" fontSize={20} />
+                </Label>
+<Arrow
+                    name="G"
+                    points={[x + 200, y - 80, x + 400, y + 50]}
+                    stroke="blue"
+                    fill="blue"
+                    pointerAtBeginning={true}
+                    strokeWidth={1}
+                    y={5}
+                />
+                <Label x={x + 285} y={y - 20} >
+                    <Tag fill="white" />
+                    <Text text={param("G", sail?.head, metric)} fill="blue" fontSize={20} />
+                </Label>
+            </Group>);
+}
+
 export function HandicapDiagram({ boat, metric = false }) {
     const scale = 1.2;
     const x = 0;
@@ -124,6 +168,7 @@ export function HandicapDiagram({ boat, metric = false }) {
             <Layer>
                 <BaseBoat x={x} y={y} scale={scale} />
                 <GaffMast x={x} y={y} />
+                <GaffMeasurements x={x} y={y} sail={boat.handicap_data.main)} />
                 <Line
                     points={[0, y + 415, x + 900, y + 415]}
                     stroke="blue"
@@ -150,45 +195,6 @@ export function HandicapDiagram({ boat, metric = false }) {
                 <Label x={x + 300} y={y + 430} >
                     <Tag fill="white" />
                     <Text text={param("LWL", boat.handicap_data?.length_on_waterline, metric)} fill="blue" fontSize={20} />
-                </Label>
-                <Arrow
-                    name="B"
-                    points={[x + 50, y + 280, x + 400, y + 300]}
-                    stroke="blue"
-                    fill="blue"
-                    pointerAtBeginning={true}
-                    strokeWidth={1}
-                    y={5}
-                />
-                <Label x={x + 245} y={y + 285} >
-                    <Tag fill="white" />
-                    <Text text={param("B", boat.handicap_data?.main?.foot, metric)} fill="blue" fontSize={20} />
-                </Label>
-                <Arrow
-                    name="H"
-                    points={[x + 380, y + 305, x + 380, y + 40]}
-                    stroke="blue"
-                    fill="blue"
-                    pointerAtBeginning={true}
-                    strokeWidth={1}
-                    y={5}
-                />
-                <Label x={x + 372} y={y + 170} >
-                    <Tag fill="white" />
-                    <Text text={param("H", boat.handicap_data?.main?.luff, metric)} fill="blue" fontSize={20} />
-                </Label>
-                <Arrow
-                    name="G"
-                    points={[x + 200, y - 80, x + 400, y + 50]}
-                    stroke="blue"
-                    fill="blue"
-                    pointerAtBeginning={true}
-                    strokeWidth={1}
-                    y={5}
-                />
-                <Label x={x + 285} y={y - 20} >
-                    <Tag fill="white" />
-                    <Text text={param("G", boat.handicap_data?.main?.head, metric)} fill="blue" fontSize={20} />
                 </Label>
                 <Arrow
                     name="I"
