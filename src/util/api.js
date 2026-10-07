@@ -92,7 +92,15 @@ export async function postCrewEnquiry(data) {
   );
 }
 
-function processBoatData(data) {
+export async function getBoatData(oga_no) {
+  const url = `https://raw.githubusercontent.com/oldgaffers/boatregister/refs/heads/main/boat/${oga_no}/boat.yml`;
+  const r = await fetch(url);
+  if (!r.ok) {
+    console.log('Failed to fetch boat data from GitHub');
+    return undefined;
+  }
+  const yaml = await r.text();
+  const data = getBoatFromYAML(yaml);
   data?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
   ['generic_type', 'builder', 'designer'].forEach((key) => {
     if (!Array.isArray(data[key])) {
@@ -101,15 +109,6 @@ function processBoatData(data) {
     data[key] = data[key].filter((v) => v);
   });
   return data;
-}
-
-export async function getBoatData(ogaNo) {
-  const r = await fetch(`${boatRegisterHome}/boatregister/page-data/boat/${ogaNo}/page-data.json`);
-  if (!r.ok) {
-    return undefined;
-  }
-  const data = await r.json();
-  return processBoatData(data?.result?.pageContext?.boat);
 }
 
 export async function getPicklists() {
