@@ -309,7 +309,7 @@ export function HandicapDiagram({ boat, metric = false }) {
                     </Group>
                 }
                 {
-                    (['Cat Boat', 'Single-Sail'].includes(boat.rig_type)) &&
+                    (['Cat Boat', 'Single Sail'].includes(boat.rig_type)) &&
                     <Group x={120} y={190}>
                         <GaffMast x={100} y={-7} />
                         <GaffMeasurements x={100} y={-7} sail={boat.handicap_data?.main} metric={metric} />
