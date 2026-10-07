@@ -14,7 +14,7 @@ export function HandicapDisplay({ boat }) {
   if (thcf > 0.1) {
     if (handicapData.last_modified) {
       const lmd = new Date(handicapData.last_modified);
-      handicapDisplay = `${handicapDisplay} (last modified ${lmd.toLocaleDateString()})`;
+      handicapDisplay = `${handicapDisplay} (last modified ${lmd.toLocaleDateString('en-GB')})`;
     }
     if (handicapData.thcf && Math.abs(thcf - handicapData.thcf) > 0.01) {
       handicapDisplay = `${handicapDisplay} (stored THCF ${handicapData.thcf.toFixed(3)})`;

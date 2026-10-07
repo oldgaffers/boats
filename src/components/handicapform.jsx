@@ -205,6 +205,35 @@ function ForeTriangleMeasurements({ x, y, scale = { x: 1, y: 1 }, boat, metric =
     </Group>);
 }
 
+export function BermudanMast({ x, y, sail, scale = { x: 1, y: 1 }, metric = false }) {
+    return (<Group x={x} y={y} scale={scale}>
+        <Line
+            name="boom"
+            points={[50, 300, 400, 320]}
+            stroke="black"
+            strokeWidth={8}
+            lineCap="round"
+            lineJoin="round"
+            y={5}
+        />
+        <Line
+            name="mast"
+            points={[410, 360, 410, -190]}
+            stroke="black"
+            strokeWidth={10}
+            y={5}
+        />
+        <Line
+            name="mainsail"
+            points={[50, 290, 400, 310, 400, -190, 50, 290]}
+            stroke="green"
+            strokeWidth={1}
+            y={5}
+        />
+        <HorizontalDimension x={50} y={290} length={350} label={param("B", sail?.foot, metric)} />
+        <VerticalDimension x={390} y={-185} length={500} label={param("H", sail?.luff, metric)} />
+    </Group>);
+}
 
 export function GaffWithTopSail({ x, y, main, topsail, scale = { x: 1, y: 1 }, metric = false }) {
     return (<Group x={x} y={y} scale={scale}>
@@ -287,6 +316,14 @@ export function Forestays({ x, y, scale = { x: 1, y: 1 } }) {
     </Group>);
 }
 
+function MastWithSails({ x, y, scale = { x: 1, y: 1 }, mainsail_type, main, topsail, metric = false }) {
+    console.log(mainsail_type);
+    if (['gaff'].includes(mainsail_type)) {
+        return (<GaffWithTopSail x={x} y={y} scale={scale} main={main} topsail={topsail} metric={metric} />);
+    }
+    return (<BermudanMast x={x} y={y} scale={scale} sail={main} metric={metric} />);
+}
+
 export function HandicapDiagram({ boat, metric = false }) {
     //console.log(boat.handicap_data);
     return (
@@ -295,7 +332,7 @@ export function HandicapDiagram({ boat, metric = false }) {
                 {
                     (['Cutter', 'Sloop'].includes(boat.rig_type)) &&
                     <Group x={120} y={190}>
-                        <GaffWithTopSail x={0} y={0} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
+                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
                         <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
@@ -311,8 +348,7 @@ export function HandicapDiagram({ boat, metric = false }) {
                 {
                     (['Cat Boat', 'Single Sail'].includes(boat.rig_type)) &&
                     <Group x={120} y={190}>
-                        <GaffMast x={100} y={-7} />
-                        <GaffMeasurements x={100} y={-7} sail={boat.handicap_data?.main} metric={metric} />
+                        <MastWithSails x={100} y={-7} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
@@ -327,9 +363,9 @@ export function HandicapDiagram({ boat, metric = false }) {
                     (['Schooner'].includes(boat.rig_type)) &&
                     <Group x={350} y={210} scale={{ x: 0.9, y: 0.9 }}>
                         <Group x={0} y={0} scale={{ x: 1.1, y: 1.1 }}>
-                            <GaffWithTopSail x={-400} y={-27} scale={{ x: 1, y: 1 }} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
+                            <MastWithSails x={-400} y={-27} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
                         </Group>
-                        <GaffWithTopSail x={0} y={0} scale={{ x: 1, y: 1 }} main={boat.handicap_data.fore} topsail={boat.handicap_data.fore_topsail} metric={metric} />
+                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.fore} metric={metric} />
                         <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-300} y={0} scale={{ x: 1.8, y: 1.2 }} />
