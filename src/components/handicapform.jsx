@@ -80,7 +80,7 @@ function GaffMeasurements({ x, y, sail, metric = false }) {
     return (<Group x={x} y={y}>
         <HorizontalDimension x={50} y={280} length={350} rotation={3.5} label={param("B", sail?.foot, metric)} />
         <HorizontalDimension x={190} y={-70} length={240} rotation={33} label={param("G", sail?.head, metric)} />
-        <VerticalDimension x={380} y={45} length={268} label={param("H", sail?.luff, metric)} />
+        <VerticalDimension x={370} y={45} length={268} label={param("H", sail?.luff, metric)} />
     </Group>);
 }
 
