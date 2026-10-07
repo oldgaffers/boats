@@ -217,6 +217,7 @@ export default function BoatCard({ state, onMarkChange, ogaNo }) {
 
   if (currentSR) {
     wanted.asking_price = { label: 'Price', access: (b, k) => price(currentSR[k]) };
+    wanted.created_at = { label: 'For Sale Since', access: (b, k) => currentSR[k]?.slice(0, 10) };
   }
 
   const id = user?.["https://oga.org.uk/id"];

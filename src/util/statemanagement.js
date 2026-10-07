@@ -10,7 +10,7 @@ export const DEFAULT_BROWSE_STATE = {
     sell: {
         bpp: 12, 
         page: 1, 
-        sort: 'price', 
+        sort: 'posted', 
         sortDirection: 'desc', 
         filters: { sale: true },
         view: 'sell',    

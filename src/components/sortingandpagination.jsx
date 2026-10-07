@@ -39,6 +39,7 @@ export default function SortingAndPagination({
   ];
   if (view === 'sell') {
     sortOptions.push({ field: "price", name: "Price", direction: "desc" });
+    sortOptions.push({ field: "posted", name: "Posted", direction: "desc" });
   }
   const sortLabelByField = sortOptions.reduce((r, { field, name }) => {
     r[field] = name;
