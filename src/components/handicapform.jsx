@@ -381,8 +381,8 @@ export function HandicapDiagram({ boat, metric = false }) {
                 {
                     (['Ketch', 'Yawl'].includes(boat.rig_type)) &&
                     <Group x={200} y={190}>
-                        <GaffWithTopSail x={-220} y={152} scale={{ x: 0.6, y: 0.6 }} main={boat.handicap_data.mizzen} topsail={boat.handicap_data.mizzen_topsail} metric={metric} />
-                        <GaffWithTopSail x={0} y={0} scale={{ x: 1, y: 1 }} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
+                        <MastWithSails x={-220} y={152} scale={{ x: 0.6, y: 0.6 }} main={boat.handicap_data.mizzen} metric={metric} />
+                        <MastWithSails x={0} y={0} main={boat.handicap_data.main} metric={metric} />
                         <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-140} y={0} scale={{ x: 1.5, y: 1.2 }} />
