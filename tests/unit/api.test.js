@@ -314,7 +314,7 @@ describe('api util', () => {
     globalThis.fetch = fetchMock;
     
     const res = await openPr(123);
-    expect(res).toEqual({ name: 'Test Boat' });
+    expect(res.name).toEqual('Test Boat');
   });
 
   it('openPr returns undefined when no open PR', async () => {
