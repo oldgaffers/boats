@@ -15,8 +15,8 @@ function param(label, value, metric = false) {
     return `${label}=${m2f(value)}`;
 }
 
-function HorizontalDimension({ x, y, length, label }) {
-    return (<Group x={x} y={y}>
+function HorizontalDimension({ x, y, rotation = 0, length, label }) {
+    return (<Group x={x} y={y} rotation={rotation}>
         <Line points={[0, -30, 0, 30]} stroke="blue" strokeWidth={1} dash={[4, 4]} />
         <Line points={[length, -30, length, 30]} stroke="blue" strokeWidth={1} dash={[4, 4]} />
         <Arrow points={[0, 0, length, 0]} stroke="blue" pointerAtBeginning={true} strokeWidth={1} fill="blue" />
@@ -78,76 +78,16 @@ function GaffMast({ x, y }) {
 
 function GaffMeasurements({ x, y, sail, metric = false }) {
     return (<Group x={x} y={y}>
-        <Arrow
-            name="B"
-            points={[50, 280, 400, 300]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={245} y={285} >
-            <Tag fill="white" />
-            <Text text={param("B", sail?.foot, metric)} fill="blue" fontSize={20} />
-        </Label>
-        <Arrow
-            name="H"
-            points={[380, 305, 380, 40]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={372} y={170} >
-            <Tag fill="white" />
-            <Text text={param("H", sail?.luff, metric)} fill="blue" fontSize={20} />
-        </Label>
-        <Arrow
-            name="G"
-            points={[200, -80, 400, 50]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={285} y={-20} >
-            <Tag fill="white" />
-            <Text text={param("G", sail?.head, metric)} fill="blue" fontSize={20} />
-        </Label>
+        <HorizontalDimension x={50} y={280} length={350} rotation={3.5} label={param("B", sail?.foot, metric)} />
+        <HorizontalDimension x={190} y={-70} length={240} rotation={33} label={param("G", sail?.head, metric)} />
+        <VerticalDimension x={380} y={45} length={268} label={param("H", sail?.luff, metric)} />
     </Group>);
 }
 
 function TopsailMeasurements({ x, y, sail, metric = false }) {
     return (<Group x={x} y={y}>
-        <Arrow
-            name="TI"
-            points={[200, -110, 400, -110]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={300} y={-115} >
-            <Tag fill="white" />
-            <Text text={param("TI", sail?.perpendicular, metric)} fill="blue" fontSize={20} />
-        </Label>
-        <Arrow
-            name="TH"
-            points={[390, 20, 390, -190]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={372} y={-60} >
-            <Tag fill="white" />
-            <Text text={param("TH", sail?.luff, metric)} fill="blue" fontSize={20} />
-        </Label>
+        <HorizontalDimension x={200} y={-110} length={200} label={param("TI", sail?.perpendicular, metric)} />
+        <VerticalDimension x={390} y={-186} length={210} label={param("TH", sail?.luff, metric)} />
     </Group>);
 }
 
@@ -176,32 +116,8 @@ function BeamMeasurement({ x, y, scale = { x: 1, y: 1 }, boat, metric = false })
 
 function ForeTriangleMeasurements({ x, y, scale = { x: 1, y: 1 }, boat, metric = false }) {
     return (<Group x={x} y={y} scale={scale}>
-        <Arrow
-            name="I"
-            points={[435, 360, 435, -150]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={432} y={120} >
-            <Tag fill="white" />
-            <Text text={param("I", boat.handicap_data?.fore_triangle_height, metric)} fill="blue" fontSize={20} />
-        </Label>
-        <Arrow
-            name="J"
-            points={[420, 300, 675, 300]}
-            stroke="blue"
-            fill="blue"
-            pointerAtBeginning={true}
-            strokeWidth={1}
-            y={5}
-        />
-        <Label x={545} y={295} >
-            <Tag fill="white" />
-            <Text text={param("J", boat.handicap_data?.fore_triangle_base, metric)} fill="blue" fontSize={20} />
-        </Label>
+        <HorizontalDimension x={417} y={300} length={260} label={param("J", boat.handicap_data?.fore_triangle_base, metric)} />
+        <VerticalDimension x={435} y={-145} length={510} label={param("I", boat.handicap_data?.fore_triangle_height, metric)} />
     </Group>);
 }
 
@@ -230,7 +146,7 @@ export function BermudanMast({ x, y, sail, scale = { x: 1, y: 1 }, metric = fals
             strokeWidth={1}
             y={5}
         />
-        <HorizontalDimension x={50} y={290} length={350} label={param("B", sail?.foot, metric)} />
+        <HorizontalDimension x={50} y={320} rotation={3.5} length={350} label={param("B", sail?.foot, metric)} />
         <VerticalDimension x={390} y={-185} length={500} label={param("H", sail?.luff, metric)} />
     </Group>);
 }
@@ -264,7 +180,6 @@ export function HullSideView({ x, y, scale = { x: 1, y: 1 } }) {
             data="M20.26667,444.81331c-0.21333,-0.12 -3.33333,-2.93333 -1.30667,-0.70667c2.04,2.21333 7.42667,9.33333 13.49333,14.01333c6.06667,4.68 13.85333,9.85333 22.89333,14.04933c9.05333,4.19067 23.88,8.07333 31.38666,11.092c7.50667,3.02 8.44,-2.95733 13.66667,7.02533c5.22667,9.98267 12.8,43.87466 17.72,52.87066c4.93333,8.99733 7.64,-1.47867 11.82667,1.10933c6.02667,0 14.57333,-0.36933 24.36,-1.10933l38.04,-0.36933l38.02666,-1.10933c15.76,-0.616 37.42666,0.24667 56.49333,-2.588c19.08,-2.83467 35.57333,-5.66933 57.97333,-14.42c22.4,-8.74933 41.42666,-18.60933 67.21333,-30.31733c25.78667,-11.708 33.66666,-20.812 44.66666,-31.06c11,-10.25333 26.36,-19.05333 27.24,-24.54667c4.54667,-4.74667 27.17333,-8.68 -12.82667,-7.25333l-233.10665,9.98667l-217.75999,3.33333l0.00001,0.00001z" />
         <Path x={0} y={0} stroke="black"
             data="M115.35999,545.59997c-6.18667,-3.06267 -12.37333,-6.12533 -17.98667,-10.5c-5.62667,-4.376 -12,-10.12533 -15.74667,-15.75067c-3.74667,-5.62533 -5.62667,-13.75067 -6.74667,-18.00133c-1.13333,-4.24933 -1,-5.62533 0,-7.5c1,-1.87467 3.86667,-2.75067 6,-3.75067c2.12,-1 3.86667,-2.37467 6.74667,-2.24933c2.86667,0.12533 6.68,1.56267 10.49333,3" />
-
     </Group>);
 }
 
@@ -350,10 +265,10 @@ export function HandicapDiagram({ boat, metric = false }) {
                             <MastWithSails x={-400} y={-27} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
                         </Group>
                         <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.fore} metric={metric} />
-                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-300} y={0} scale={{ x: 1.8, y: 1.2 }} />
                         <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
+                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={-222} y={330} length={715} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
@@ -367,10 +282,10 @@ export function HandicapDiagram({ boat, metric = false }) {
                     <Group x={200} y={190}>
                         <MastWithSails x={-220} y={152} scale={{ x: 0.6, y: 0.6 }} mainsail_type={boat.mainsail_type} main={boat.handicap_data.mizzen} metric={metric} />
                         <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
-                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-140} y={0} scale={{ x: 1.5, y: 1.2 }} />
                         <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
+                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={-95} y={330} length={590} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
@@ -383,10 +298,10 @@ export function HandicapDiagram({ boat, metric = false }) {
                     (!['Ketch', 'Yawl', 'Schooner', 'Cat Boat', 'Single Sail'].includes(boat.rig_type)) && // default to cutter or sloop
                     <Group x={120} y={190}>
                         <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
-                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
+                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={17} y={330} length={475} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
