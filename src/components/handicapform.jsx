@@ -317,11 +317,14 @@ export function Forestays({ x, y, scale = { x: 1, y: 1 } }) {
 }
 
 function MastWithSails({ x, y, scale = { x: 1, y: 1 }, mainsail_type, main, topsail, metric = false }) {
-    console.log(mainsail_type);
-    if (['gaff'].includes(mainsail_type)) {
+    console.log("MastWithSails", mainsail_type, main, topsail);
+    if (['gaff', 'junk', 'spritsail', 'lug', 'balanced lug', 'dipping lug', 'standing lug'].includes(mainsail_type)) {
         return (<GaffWithTopSail x={x} y={y} scale={scale} main={main} topsail={topsail} metric={metric} />);
     }
-    return (<BermudanMast x={x} y={y} scale={scale} sail={main} metric={metric} />);
+    if (['gunter', 'bermudan', 'lateen', 'leg-o-mutton'].includes(mainsail_type)) {
+        return (<BermudanMast x={x} y={y} scale={scale} sail={main} metric={metric} />);
+    }
+    return '';
 }
 
 export function HandicapDiagram({ boat, metric = false }) {
@@ -381,8 +384,8 @@ export function HandicapDiagram({ boat, metric = false }) {
                 {
                     (['Ketch', 'Yawl'].includes(boat.rig_type)) &&
                     <Group x={200} y={190}>
-                        <MastWithSails x={-220} y={152} scale={{ x: 0.6, y: 0.6 }} main={boat.handicap_data.mizzen} metric={metric} />
-                        <MastWithSails x={0} y={0} main={boat.handicap_data.main} metric={metric} />
+                        <MastWithSails x={-220} y={152} scale={{ x: 0.6, y: 0.6 }} mainsail_type={boat.mainsail_type} main={boat.handicap_data.mizzen} metric={metric} />
+                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
                         <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-140} y={0} scale={{ x: 1.5, y: 1.2 }} />
