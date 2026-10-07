@@ -114,12 +114,7 @@ describe('api util', () => {
   it('getBoatData fetches and processes boat data on success', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      text: async () => `
-name: 'Test Boat'
-generic_type: []
-builder: []
-designer: []
-`
+      text: async () => "name: 'Test Boat'"
     });
     globalThis.fetch = fetchMock;
     const res = await getBoatData(123);
