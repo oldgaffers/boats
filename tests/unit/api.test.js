@@ -116,9 +116,9 @@ describe('api util', () => {
       ok: true,
       text: async () => `
 name: 'Test Boat'
-generic_type: 'Cruiser'
-builder: 'Test Builder'
-designer: 'Test Designer'
+generic_type: []
+builder: []
+designer: []
 `
     });
     globalThis.fetch = fetchMock;
