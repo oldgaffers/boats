@@ -317,14 +317,11 @@ export function Forestays({ x, y, scale = { x: 1, y: 1 } }) {
 }
 
 function MastWithSails({ x, y, scale = { x: 1, y: 1 }, mainsail_type, main, topsail, metric = false }) {
-    console.log("MastWithSails", mainsail_type, main, topsail);
-    if (['gaff', 'junk', 'spritsail', 'lug', 'balanced lug', 'dipping lug', 'standing lug'].includes(mainsail_type)) {
-        return (<GaffWithTopSail x={x} y={y} scale={scale} main={main} topsail={topsail} metric={metric} />);
-    }
     if (['gunter', 'bermudan', 'lateen', 'leg-o-mutton'].includes(mainsail_type)) {
         return (<BermudanMast x={x} y={y} scale={scale} sail={main} metric={metric} />);
     }
-    return '';
+    // default to gaff rig
+    return (<GaffWithTopSail x={x} y={y} scale={scale} main={main} topsail={topsail} metric={metric} />);
 }
 
 export function HandicapDiagram({ boat, metric = false }) {
@@ -332,22 +329,6 @@ export function HandicapDiagram({ boat, metric = false }) {
     return (
         <Stage width={1200} height={700}>
             <Layer>
-                {
-                    (['Cutter', 'Sloop'].includes(boat.rig_type)) &&
-                    <Group x={120} y={190}>
-                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
-                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
-                        <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
-                        <HullSideView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
-                        <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
-                        <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
-                        <Group scale={{ x: 1.2, y: 1.2 }}>
-                            <HorizontalDimension x={17} y={330} length={475} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
-                            <HorizontalDimension x={100} y={370} length={330} label={param("LWL", boat.handicap_data?.length_on_waterline, metric)} />
-                        </Group>
-                        <WaterLine x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
-                    </Group>
-                }
                 {
                     (['Cat Boat', 'Single Sail'].includes(boat.rig_type)) &&
                     <Group x={120} y={190}>
@@ -394,6 +375,22 @@ export function HandicapDiagram({ boat, metric = false }) {
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={-95} y={330} length={590} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
                             <HorizontalDimension x={5} y={370} length={417} label={param("LWL", boat.handicap_data?.length_on_waterline, metric)} />
+                        </Group>
+                        <WaterLine x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
+                    </Group>
+                }
+                {
+                    (!['Ketch', 'Yawl', 'Schooner', 'Cat Boat', 'Single Sail'].includes(boat.rig_type)) && // default to cutter or sloop
+                    <Group x={120} y={190}>
+                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
+                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
+                        <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
+                        <HullSideView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
+                        <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
+                        <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
+                        <Group scale={{ x: 1.2, y: 1.2 }}>
+                            <HorizontalDimension x={17} y={330} length={475} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
+                            <HorizontalDimension x={100} y={370} length={330} label={param("LWL", boat.handicap_data?.length_on_waterline, metric)} />
                         </Group>
                         <WaterLine x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                     </Group>
