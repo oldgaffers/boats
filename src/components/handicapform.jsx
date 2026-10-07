@@ -303,11 +303,11 @@ export function HandicapDiagram({ boat, metric = false }) {
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-300} y={0} scale={{ x: 1.8, y: 1.2 }} />
                         <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
+                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <Group x={0} y={0} scale={{ x: 1.1, y: 1.1 }}>
                             <MastWithSails x={-400} y={-27} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
                         </Group>
                         <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.fore} metric={metric} />
-                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={-222} y={330} length={715} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
@@ -322,9 +322,9 @@ export function HandicapDiagram({ boat, metric = false }) {
                         <HullEndView x={0} y={0} scale={{ x: 1.2, y: 1.2 }} />
                         <HullSideView x={-140} y={0} scale={{ x: 1.5, y: 1.2 }} />
                         <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
+                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <MastWithSails x={-220} y={152} scale={{ x: 0.6, y: 0.6 }} mainsail_type={boat.mainsail_type} main={boat.handicap_data.mizzen} topsail={boat.handicap_data.mizzen_topsail} metric={metric} />
                         <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
-                        <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={-95} y={330} length={590} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />
