@@ -182,17 +182,17 @@ export const rigFields = [
       const picklist = await getPicklist('sail_type');
       return mapPicker(picklist);
     },
-                    resolveProps: (_props, _field, formOptions) => {
-                    const { rig_type } = formOptions.getState().values;
-                    if (['Schooner', 'Ketch', 'Yawl'].includes(rig_type)) {
-                        return {
-                            label: 'Main Mast Mainsail',
-                        };
-                    }
-                    return {
-                      label: 'Mainsail',
-                    };
-                },
+    resolveProps: (_props, _field, formOptions) => {
+      const { rig_type } = formOptions.getState().values;
+      if (['Schooner', 'Ketch', 'Yawl'].includes(rig_type)) {
+        return {
+          label: 'Main Mast Mainsail',
+        };
+      }
+      return {
+        label: 'Mainsail',
+      };
+    },
   },
   {
     component: 'select',
@@ -239,21 +239,11 @@ export const rigFields = [
           when: 'rig_type',
           is: 'Yawl',
         },
+        {
+          when: 'rig_type',
+          is: 'Schooner',
+        },
       ],
-    }
-  },
-  {
-    component: 'select',
-    name: "ddf.sail_type.schooner_mizzen",
-    label: "Mizzen Mast Mainsail",
-    isOptionEqualToValue: (option, value) => option.value === value,
-    loadOptions: async () => {
-      const picklist = await getPicklist('sail_type');
-      return mapPicker(picklist);
-    },
-    condition: {
-      when: 'rig_type',
-      is: 'Schooner',
     }
   },
 ];

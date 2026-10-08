@@ -61,13 +61,10 @@ export function prepareInitialValues(boat, user, pr) {
 
   if (boat.handicap_data?.main?.type || boat.handicap_data?.fore?.type || boat.handicap_data?.mizzen?.type ) {
     console.log(boat.handicap_data);
-    ddf.sail_type = { schooner_mizzen: 'none' };
+    ddf.sail_type = { };
     if (boat.handicap_data.main?.type) ddf.sail_type.main = boat.handicap_data.main.type;
     if (boat.handicap_data.fore?.type) ddf.sail_type.fore = boat.handicap_data.fore.type;
-    if (boat.handicap_data.mizzen?.type) {
-      ddf.sail_type.mizzen = boat.handicap_data.mizzen.type;
-      ddf.sail_type.schooner_mizzen = boat.handicap_data.mizzen.type;
-    }
+    if (boat.handicap_data.mizzen?.type) ddf.sail_type.mizzen = boat.handicap_data.mizzen.type;
   }
 
   const initialValues = { ddf, email, ...boatm2f(rest) };
@@ -194,13 +191,6 @@ export function prepareModifiedValues(values, boat, pickers) {
         submitted.handicap_data.mizzen = { type: ddf.sail_type.mizzen };
       }
     }
-    if (ddf.sail_type.schooner_mizzen) {
-      if (submitted.handicap_data.mizzen) {
-        submitted.handicap_data.mizzen.type = ddf.sail_type.schooner_mizzen;
-      } else {
-        submitted.handicap_data.mizzen = { type: ddf.sail_type.schooner_mizzen };
-      }
-    }
   }
 
   const modifiedBoat = {
@@ -215,6 +205,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     design_class: name2object(values.design_class, pickers.design_class, newItems.design_class),
   };
   const b = boatDefined(modifiedBoat);
+  console.log(ddf, b);
   return { boat: b, newItems, email };
 }
 
