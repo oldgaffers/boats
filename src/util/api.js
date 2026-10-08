@@ -121,7 +121,7 @@ export async function getBoatData(oga_no) {
       }
     }
   });
-  return { ...rest, sail_type, handicap_data };
+  return { ...rest, sail_type: [...sail_type.values()], handicap_data };
 }
 
 export async function getPicklists() {

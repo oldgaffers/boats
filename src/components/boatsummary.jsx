@@ -55,14 +55,13 @@ export default function BoatSummary({ boat }) {
   function handleSnackBarClose() {
     setSnackBarOpen(false);
   }
-
   return (
     <Box
       width={{xs: '100vw', sm: '25vw'}}
     >
     <Typography variant="h4" component="h4">Summary</Typography>
     <ConditionalText value={boat.year} label="Year Built"/>
-    <ConditionalText value={'?'} label="Mainsail"/>
+    <ConditionalText value={boat.sail_type} label="Mainsail"/>
     <ConditionalText value={boat.rig_type} label="Rig"/>
     <ConditionalText value={boat.home_port} label="Home port or other location"/>
     <ConditionalText label="Website">
