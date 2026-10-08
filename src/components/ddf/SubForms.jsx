@@ -154,22 +154,6 @@ export const constructionItems = [
 export const rigFields = [
   {
     component: 'select',
-    name: "sail_type",
-    label: "Mainsail",
-    isRequired: true,
-    validate: [
-      {
-        type: 'required',
-      },
-    ],
-    isOptionEqualToValue: (option, value) => option.value === value,
-    loadOptions: async () => {
-      const picklist = await getPicklist('sail_type');
-      return mapPicker(picklist);
-    },
-  },
-  {
-    component: 'select',
     name: "rig_type",
     label: "Rig",
     isRequired: true,
@@ -183,7 +167,95 @@ export const rigFields = [
       const picklist = await getPicklist('rig_type');
       return mapPicker(picklist);
     },
-  }
+  },
+  {
+    component: 'select',
+    name: "ddf.sail_type.main",
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('sail_type');
+      return mapPicker(picklist);
+    },
+                    resolveProps: (_props, _field, formOptions) => {
+                    const { rig_type } = formOptions.getState().values;
+                    if (['Schooner', 'Ketch', 'Yawl'].includes(rig_type)) {
+                        return {
+                            label: 'Main Mast Mainsail',
+                        };
+                    }
+                    return {
+                      label: 'Mainsail',
+                    };
+                },
+  },
+  {
+    component: 'select',
+    name: "ddf.sail_type.fore",
+    label: "Fore Mast Mainsail",
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('sail_type');
+      return mapPicker(picklist);
+    },
+    condition: {
+      when: 'rig_type',
+      is: 'Schooner',
+    }
+  },
+  {
+    component: 'select',
+    name: "ddf.sail_type.mizzen",
+    label: "Mizzen Mast Mainsail",
+    isRequired: true,
+    validate: [
+      {
+        type: 'required',
+      },
+    ],
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('sail_type');
+      return mapPicker(picklist);
+    },
+    condition: {
+      or: [
+        {
+          when: 'rig_type',
+          is: 'Ketch',
+        },
+        {
+          when: 'rig_type',
+          is: 'Yawl',
+        },
+      ],
+    }
+  },
+  {
+    component: 'select',
+    name: "ddf.sail_type.schooner_mizzen",
+    label: "Mizzen Mast Mainsail",
+    isOptionEqualToValue: (option, value) => option.value === value,
+    loadOptions: async () => {
+      const picklist = await getPicklist('sail_type');
+      return mapPicker(picklist);
+    },
+    condition: {
+      when: 'rig_type',
+      is: 'Schooner',
+    }
+  },
 ];
 
 export const referencesItems = [

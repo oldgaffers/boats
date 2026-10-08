@@ -50,7 +50,6 @@ export function salesChanges(ddf, boat) {
 }
 
 export function prepareInitialValues(boat, user, pr) {
-  console.log('prepareInitialValues', boat);
   const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
   const goldId = user?.['https://oga.org.uk/id'];
   const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
@@ -59,6 +58,17 @@ export function prepareInitialValues(boat, user, pr) {
   const email = user?.email || '';
   const current_sales_record = prepareSalesRecord(boat);
   const ddf = { name, oga_no, image_key, owner, editor, pr, current_sales_record };
+
+  if (boat.handicap_data?.main?.type || boat.handicap_data?.fore?.type || boat.handicap_data?.mizzen?.type ) {
+    console.log(boat.handicap_data);
+    ddf.sail_type = { schooner_mizzen: 'none' };
+    if (boat.handicap_data.main?.type) ddf.sail_type.main = boat.handicap_data.main.type;
+    if (boat.handicap_data.fore?.type) ddf.sail_type.fore = boat.handicap_data.fore.type;
+    if (boat.handicap_data.mizzen?.type) {
+      ddf.sail_type.mizzen = boat.handicap_data.mizzen.type;
+      ddf.sail_type.schooner_mizzen = boat.handicap_data.mizzen.type;
+    }
+  }
 
   const initialValues = { ddf, email, ...boatm2f(rest) };
 
@@ -94,9 +104,6 @@ export function prepareInitialValues(boat, user, pr) {
     });
 
   initialValues.ownerships = ownersWithId;
-
-  // ownersWithId.sort((a, b) => a.start > b.start);
-  console.log('IV', initialValues)
 
   return initialValues;
 
@@ -153,7 +160,7 @@ function listMapper(values, newItems, field, pickers) {
 
 export function prepareModifiedValues(values, boat, pickers) {
   console.log('prepareModifiedValues', values, boat);
-  const { name, oga_no, image_key, selling_status, for_sales } = boat
+  const { name, oga_no, image_key } = boat
   const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
 
   const newItems = getAllNewItems(submitted, pickers);
@@ -164,6 +171,38 @@ export function prepareModifiedValues(values, boat, pickers) {
 
   if (submitted.handicap_data.thcf === '-') {
     submitted.handicap_data.thcf = undefined
+  }
+
+  if (ddf.sail_type) {
+    console.log('W', ddf.sail_type);
+    if (ddf.sail_type.main) {
+      if (submitted.handicap_data.main) {
+        submitted.handicap_data.main.type = ddf.sail_type.main;
+      } else {
+        submitted.handicap_data.main = { type: ddf.sail_type.main };
+      }
+    }
+    if (ddf.sail_type.fore) {
+      if (submitted.handicap_data.fore) {
+        submitted.handicap_data.fore.type = ddf.sail_type.fore;
+      } else {
+        submitted.handicap_data.fore = { type: ddf.sail_type.fore };
+      }
+    }
+    if (ddf.sail_type.mizzen) {
+      if (submitted.handicap_data.mizzen) {
+        submitted.handicap_data.mizzen.type = ddf.sail_type.mizzen;
+      } else {
+        submitted.handicap_data.mizzen = { type: ddf.sail_type.mizzen };
+      }
+    }
+    if (ddf.sail_type.schooner_mizzen) {
+      if (submitted.handicap_data.mizzen) {
+        submitted.handicap_data.mizzen.type = ddf.sail_type.schooner_mizzen;
+      } else {
+        submitted.handicap_data.mizzen = { type: ddf.sail_type.schooner_mizzen };
+      }
+    }
   }
 
   const modifiedBoat = {
@@ -178,7 +217,6 @@ export function prepareModifiedValues(values, boat, pickers) {
     design_class: name2object(values.design_class, pickers.design_class, newItems.design_class),
   };
   const b = boatDefined(modifiedBoat);
-  console.log('MV', b);
   return { boat: b, newItems, email };
 }
 

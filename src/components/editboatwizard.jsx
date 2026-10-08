@@ -43,7 +43,7 @@ function EditWiz({ boat, onCancel, onSubmit, schema=defaultSchema(!boat.name), p
       console.log('Cleared new picklist values');
     }).catch((e) => console.log(e));
   
-    onSubmit(mv.newItems, mv.boat, mv.email );
+    //onSubmit(mv.newItems, mv.boat, mv.email );
 
   }
 
