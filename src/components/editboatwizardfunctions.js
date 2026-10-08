@@ -11,15 +11,7 @@ export function boatdiff(before, after) {
   return cj.diff(before, after);
 }
 
-export function prepareInitialValues(boat, user, pr) {
-  const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
-  const goldId = user?.['https://oga.org.uk/id'];
-  const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
-  const owner = (!!goldId) && ownerids.includes(goldId);
-  const { name, oga_no, image_key, for_sales, ...rest } = boat;
-  const email = user?.email || '';
-  const ddf = { name, oga_no, image_key, owner, editor, pr };
-
+export function prepareSalesRecord(boat) {
   const defaultSalesRecord = {
     created_at: new Date().toISOString(),
     asking_price: 0,
@@ -27,13 +19,46 @@ export function prepareInitialValues(boat, user, pr) {
     flexibility: 'normal',
   };
 
-  const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-
-  if (boat.selling_status === 'for_sale') {
-    ddf.current_sales_record = { ...defaultSalesRecord, ...sales_records.shift() };
-  } else {
-    ddf.current_sales_record = defaultSalesRecord;
+  if (boat.selling_status !== 'for_sale') {
+    return defaultSalesRecord;
   }
+
+  const sales_records = boat.for_sales;
+  sales_records.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+  return { ...defaultSalesRecord, ...sales_records[0] };
+}
+
+export function salesChanges(ddf, boat) {
+  const { selling_status, for_sales } = boat;
+  if (ddf.update_sale === undefined) { // there were no changes
+    return { selling_status, for_sales };
+  }
+
+  const sales_records = for_sales || [];
+  sales_records.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+
+  if (selling_status === 'for_sale') {
+    sales_records.shift(); // old current sales record is in ddf
+  }
+
+  sales_records.unshift(ddf.current_sales_record);
+
+  if (ddf.update_sale === 'unsell' || ddf.update_sale === 'sold') {
+      return { selling_status: 'not_for_sale', for_sales };
+  }
+  return { selling_status, for_sales };
+}
+
+export function prepareInitialValues(boat, user, pr) {
+  console.log('prepareInitialValues', boat);
+  const ownerids = boat.ownerships?.filter((o) => o.current)?.map((o) => o.id) || [];
+  const goldId = user?.['https://oga.org.uk/id'];
+  const editor = (user?.['https://oga.org.uk/roles'] || []).includes('editor');
+  const owner = (!!goldId) && ownerids.includes(goldId);
+  const { name, oga_no, image_key, ...rest } = boat;
+  const email = user?.email || '';
+  const current_sales_record = prepareSalesRecord(boat);
+  const ddf = { name, oga_no, image_key, owner, editor, pr, current_sales_record };
 
   const initialValues = { ddf, email, ...boatm2f(rest) };
 
@@ -71,38 +96,10 @@ export function prepareInitialValues(boat, user, pr) {
   initialValues.ownerships = ownersWithId;
 
   // ownersWithId.sort((a, b) => a.start > b.start);
-  // console.log('IV', initialValues)
+  console.log('IV', initialValues)
 
   return initialValues;
 
-}
-
-export function salesChanges(ddf, for_sales) {
-  if (ddf.update_sale === 'update') {
-    return {
-      selling_status: 'for_sale',
-      for_sales: [ddf.current_sales_record, ...for_sales],
-    }
-  }
-  if (ddf.update_sale === 'unsell') {
-    return {
-      selling_status: 'not_for_sale',
-      for_sales: [ddf.current_sales_record, ...for_sales],
-    }
-  }
-  if (ddf.update_sale === 'sold') {
-    return {
-      selling_status: 'not_for_sale',
-      for_sales: [ddf.current_sales_record, ...for_sales],
-    }
-  }
-  if (ddf.confirm_for_sale === true) {
-    return {
-      selling_status: 'for_sale',
-      for_sales: [ddf.current_sales_record, ...for_sales],
-    }
-  }
-  return { for_sales };
 }
 
 export function updateOwnerships(old = [], updated = []) {
@@ -118,7 +115,7 @@ export function updateOwnerships(old = [], updated = []) {
   return [...withoutRowIds, ...notes];
 }
 
-export function getNewItems(field=[], picker=[]) {
+export function getNewItems(field = [], picker = []) {
   const pn = picker.map(p => p.name || p);
   return field
     ?.filter(f => f && !(pn.includes(f) || pn.includes(f?.name)))
@@ -135,34 +132,29 @@ export function getAllNewItems(boat, pickers) {
   return Object.fromEntries([...single, ...multi]);
 }
 
-function name2object(value, picker=[], newItem=[]) {
-    if (value?.name) {
-      return value;
-    }
-    const choices = [...newItem, ...picker];
-    const r = choices.find((p) => p.name === value);
-    if (r) {
-      return r;
-    }
-    return undefined; // not possible to specify a value we don't have
+function name2object(value, picker = [], newItem = []) {
+  if (value?.name) {
+    return value;
   }
+  const choices = [...newItem, ...picker];
+  const r = choices.find((p) => p.name === value);
+  if (r) {
+    return r;
+  }
+  return undefined; // not possible to specify a value we don't have
+}
 
-  function listMapper(values, newItems, field, pickers) {
-    if (values[field]) {
-      return values[field].map((v) => name2object(v, pickers[field], newItems[field]));
-    }
-    return undefined;
+function listMapper(values, newItems, field, pickers) {
+  if (values[field]) {
+    return values[field].map((v) => name2object(v, pickers[field], newItems[field]));
   }
+  return undefined;
+}
 
 export function prepareModifiedValues(values, boat, pickers) {
+  console.log('prepareModifiedValues', values, boat);
   const { name, oga_no, image_key, selling_status, for_sales } = boat
   const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
-
-  const sales_records = [...(for_sales || [])].sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-
-  if (selling_status === 'for_sale') {
-    sales_records.shift();
-  }
 
   const newItems = getAllNewItems(submitted, pickers);
 
@@ -180,13 +172,14 @@ export function prepareModifiedValues(values, boat, pickers) {
     name: ddf.new_name || name || submitted.name,
     previous_names,
     oga_no, image_key,
-    ...salesChanges(ddf, sales_records),
+    ...salesChanges(ddf, boat),
     builder: listMapper(values, newItems, 'builder', pickers),
     designer: listMapper(values, newItems, 'designer', pickers),
     design_class: name2object(values.design_class, pickers.design_class, newItems.design_class),
   };
-
-  return { boat: boatDefined(modifiedBoat), newItems, email };
+  const b = boatDefined(modifiedBoat);
+  console.log('MV', b);
+  return { boat: b, newItems, email };
 }
 
 export function oldvalue(path, boat) {
