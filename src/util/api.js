@@ -100,7 +100,7 @@ export async function getBoatData(oga_no) {
     return undefined;
   }
   const yaml = await r.text();
-  const data = getBoatFromYAML(yaml);
+  const data = await getBoatFromYAML(yaml);
   data?.for_sales?.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
   ['generic_type', 'builder', 'designer'].forEach((key) => {
     if (!Array.isArray(data[key])) {
