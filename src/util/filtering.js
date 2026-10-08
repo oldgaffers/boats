@@ -21,7 +21,7 @@ export function makePickers(filtered) {
     "designer",
     "builder",
     "rig_type",
-    "mainsail_type",
+    "sail_type",
     "generic_type",
     "design_class",
     "construction_material",

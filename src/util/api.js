@@ -110,19 +110,18 @@ export async function getBoatData(oga_no) {
   });
 
   // upgrade old records with mainsail_type to new format
-  const sail_type = new Set(data.sail_type || [data.mainsail_type] || []);
-  const hd = data.handicap_data;
+  const { mainsail_type, handicap_data, ...rest } = data;
+  const sail_type = new Set(rest.sail_type || ((mainsail_type === 'none') ? [] : [mainsail_type]) || []);
   ['main', 'fore', 'mizzen'].forEach((mast) => {
-    if (hd?.[mast]) {
-      if (hd[mast]?.type) {
-        sail_type.add(hd[mast].type);
+    if (handicap_data?.[mast]) {
+      if (handicap_data[mast]?.type) {
+        sail_type.add(handicap_data[mast].type);
       } else {
-        data.handicap_data[mast].type = sail_type.values().next().value;
+        handicap_data[mast].type = sail_type.values().next().value;
       }
     }
   });
-  data.sail_type = [...sail_type];
-  return data;
+  return { ...rest, sail_type, handicap_data };
 }
 
 export async function getPicklists() {
@@ -153,11 +152,7 @@ export async function getFilterable() {
   // console.log('crewing', extra);
   const ex = Object.fromEntries((extra?.Items || []).map((item) => [item.oga_no, item]));
   const filterable = await (await fetch(`${boatRegisterHome}/boatregister/filterable.json`)).json();
-  return filterable.map((boat) => {
-    const b = boat;
-    if (b.sail_type == undefined) {
-      b.sail_type = [b.mainsail_type]; // until filterable.json catches up
-    }
+  return filterable.map((b) => {
     if (ex[b.oga_no]) {
       return { ...b, ...ex[b.oga_no] };
     }

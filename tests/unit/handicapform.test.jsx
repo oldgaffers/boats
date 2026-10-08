@@ -31,7 +31,7 @@ const boat = {
     fore_triangle_height: 9,
     length_on_deck: 10,
     length_on_waterline: 8,
-    main: { foot: 4, head: 2, luff: 5 },
+    main: { foot: 4, head: 2, luff: 5, type: 'gaff' },
     topsail: { luff: 3, perpendicular: 2 },
   },
 };

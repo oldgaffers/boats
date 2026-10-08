@@ -56,7 +56,9 @@
                     "main": {
                         "foot": 5.06,
                         "head": 4.42,
-                        "luff": 5.639
+                        "luff": 5.639,
+                        "type": "gaff"
+
                     },
                     "propellor": {
                         "type": "fixed"
@@ -70,7 +72,7 @@
                 "home_country": "GBR",
                 "hull_form": "long keel deep forefoot",
                 "image_key": "LnsDPq",
-                "mainsail_type": "gaff",
+                "sail_type": ["gaff"],
                 "name": "Ro-an-mor",
                 "oga_no": 843,
                 "ownerships": [

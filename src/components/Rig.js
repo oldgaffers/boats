@@ -9,7 +9,7 @@ export const rigForm = (pickers) => {
   fields: [
     {
       component: componentTypes.SELECT,
-      name: "mainsail_type",
+      name: "sail_type",
       label: "Mainsail",
       isRequired: true,
       options: mapPicker(pickers.sail_type),

@@ -14,7 +14,7 @@ const mockBoats = [
     designer: 'Designer A',
     builder: 'Builder A',
     rig_type: 'Sloop',
-    mainsail_type: 'Gaff',
+    sail_type: ['gaff'],
     generic_type: 'Dinghy',
     design_class: 'Class A',
     construction_material: 'Wood',
@@ -29,7 +29,7 @@ const mockBoats = [
     designer: 'Designer B',
     builder: 'Builder B',
     rig_type: 'Cutter',
-    mainsail_type: 'Bermudan',
+    sail_type: ['bermudan'],
     generic_type: 'Yacht',
     design_class: 'Class B',
     construction_material: 'GRP',
@@ -44,7 +44,7 @@ const mockBoats = [
     designer: 'Designer A',
     builder: 'Builder C',
     rig_type: 'Sloop',
-    mainsail_type: 'Gaff',
+    sail_type: ['gaff'],
     generic_type: 'Dinghy',
     design_class: 'Class A',
     construction_material: 'Wood',
@@ -59,7 +59,7 @@ const mockBoats = [
     designer: 'Designer C',
     builder: 'Builder A',
     rig_type: 'Ketch',
-    mainsail_type: 'Gaff',
+    sail_type: ['gaff'],
     generic_type: 'Yacht',
     design_class: 'Class C',
     construction_material: 'Steel',
@@ -100,7 +100,7 @@ test('makePickers creates pickers for all specified keys', () => {
   expect(result.designer).toEqual(['Designer A', 'Designer B', 'Designer C']);
   expect(result.builder).toEqual(['Builder A', 'Builder B', 'Builder C']);
   expect(result.rig_type).toEqual(['Cutter', 'Ketch', 'Sloop']);
-  expect(result.mainsail_type).toEqual(['Bermudan', 'Gaff']);
+  expect(result.sail_type).toEqual(['bermudan', 'gaff']);
   expect(result.generic_type).toEqual(['Dinghy', 'Yacht']);
   expect(result.design_class).toEqual(['Class A', 'Class B', 'Class C']);
   expect(result.construction_material).toEqual(['GRP', 'Steel', 'Wood']);
@@ -225,7 +225,7 @@ test('applyFilters filters by year range', () => {
 });
 
 test('applyFilters handles sail filter', () => {
-  const filters = { sail: ['rig_type', 'mainsail_type'] };
+  const filters = { sail: ['rig_type', 'sail_type'] };
   const result = applyFilters(mockBoats, filters);
   expect(result).toHaveLength(4); // All boats have at least one of these properties
 });

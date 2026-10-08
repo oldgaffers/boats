@@ -135,10 +135,10 @@
       ],
       "generic_type": ["Yacht"],
       "handicap_data": { "beam": 3.048, "draft": 1.524, "length_on_deck": 8.534 },
-      "hull_form": "long keel sloping forefoot", "id": "1dab7650-151e-44a6-b6d1-b7928ed732fe", "image_key": "2JTzFg", "mainsail_type": "gaff", "name": "Grosso", "oga_no": 2511, "ownerships": [], "place_built": "Mylor Bridge", "previous_names": [], "rig_type": "Cutter", "selling_status": "for_sale", "spar_material": "wood", "uk_part1": "28255", "year": 1988, "year_is_approximate": false,
+      "hull_form": "long keel sloping forefoot", "id": "1dab7650-151e-44a6-b6d1-b7928ed732fe", "image_key": "2JTzFg", "sail_type": ["gaff"], "name": "Grosso", "oga_no": 2511, "ownerships": [], "place_built": "Mylor Bridge", "previous_names": [], "rig_type": "Cutter", "selling_status": "for_sale", "spar_material": "wood", "uk_part1": "28255", "year": 1988, "year_is_approximate": false,
     };
     const submitted = {
-      "mainsail_type": "gaff", "rig_type": "Cutter", "generic_type": ["Yacht"], "year": 1988, "year_is_approximate": false, "place_built": "Mylor Bridge", "builder": { "name": "Martin Heard", "id": "ee814a69-d5ad-46d9-88a9-a0598ae6d33b" }, "designer": { "name": "Percy Dalton", "id": "7ac480da-7d09-4dd7-9c89-61199ff30913" }, "design_class": { "name": "Heard 28", "id": "47040682-ee05-42de-a493-400ebd5956db" },
+      "sail_type": ["gaff"], "rig_type": "Cutter", "generic_type": ["Yacht"], "year": 1988, "year_is_approximate": false, "place_built": "Mylor Bridge", "builder": { "name": "Martin Heard", "id": "ee814a69-d5ad-46d9-88a9-a0598ae6d33b" }, "designer": { "name": "Percy Dalton", "id": "7ac480da-7d09-4dd7-9c89-61199ff30913" }, "design_class": { "name": "Heard 28", "id": "47040682-ee05-42de-a493-400ebd5956db" },
       "handicap_data": { "length_on_deck": 8.534, "beam": 3.048, "draft": 1.524 },
       "previous_names": [], "uk_part1": "28255", "construction_material": "grp", "spar_material": "wood", "construction_details": "G R P", "hull_form": "long keel sloping forefoot", "ownerships": [], "name": "Grosso", "oga_no": 2511, "id": "1dab7650-151e-44a6-b6d1-b7928ed732fe", "image_key": "2JTzFg",
       "for_sales": [

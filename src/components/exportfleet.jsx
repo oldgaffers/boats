@@ -141,13 +141,13 @@ function ExportFleetOptions({ name, ogaNos }) {
     'owners', 'home_port',
     'construction_material', 'construction_method',
     'builder', 'designer', 'design_class', "year",
-    'mainsail_type', 'rig_type',
+    'sail_type', 'rig_type',
     'short_description', 'hull_form',
     'construction_details', 'spar_material',
     'image',
   ],
     [
-      'beam', 'draft', 'length_on_deck', 'length_over_all', 'length_on_waterline', 'thcf',
+      'beam', 'draft', 'length_on_deck', 'length_on_waterline', 'thcf',
     ]
   );
 

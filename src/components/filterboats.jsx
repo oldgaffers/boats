@@ -159,7 +159,7 @@ export default function FilterBoats({
                 <Picker
                     onChange={pl}
                     id="sail_type"
-                    options={makePicklist(view, pickers, "mainsail_type")}
+                    options={makePicklist(view, pickers, "sail_type")}
                     label="Sail Type"
                     value={filters["sail_type"]}
                 />

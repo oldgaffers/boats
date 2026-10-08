@@ -58,7 +58,7 @@ export default function BoatCards({
 
   const { 
     rig_type, construction_material, generic_type, 
-    design_class, firstYear, lastYear, mainsail_type,
+    design_class, firstYear, lastYear, sail_type,
     designer, builder, oga_no, oga_nos, name
   } = state.filters;
   const { sale } = state.view || {};
@@ -88,8 +88,8 @@ export default function BoatCards({
     } else {
       message = `${message} boats`;
     }
-    if (mainsail_type) {
-      message = `${message} with a ${mainsail_type} main`;
+    if (sail_type) {
+      message = `${message} with a ${sail_type} main`;
     }
     if (designer) {
       message = `${message} by this designer`;

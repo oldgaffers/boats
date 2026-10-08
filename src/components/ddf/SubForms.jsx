@@ -154,7 +154,7 @@ export const constructionItems = [
 export const rigFields = [
   {
     component: 'select',
-    name: "mainsail_type",
+    name: "sail_type",
     label: "Mainsail",
     isRequired: true,
     validate: [
