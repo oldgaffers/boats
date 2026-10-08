@@ -171,10 +171,10 @@ export default function MarksAndFleets({
                 <Grid>
                     <Picker
                         onChange={pl}
-                        id="mainsail_type"
+                        id="sail_types"
                         options={makePicklist(view, pickers, "mainsail_type")}
-                        label="Mainsail Type"
-                        value={currentFilters["mainsail_type"]}
+                        label="Sail Types"
+                        value={currentFilters["sail_types"]}
                     />
                 </Grid>
                 <Grid>
