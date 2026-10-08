@@ -38,8 +38,7 @@ export default function PrivateDocument({ name }) {
             setDoc(d);
         }).catch((e) => {
           console.error('Error getting access token:', e);
-          const returnTo = window.location.origin + window.location.pathname;
-          logout({ returnTo });
+          logout({ logoutParams: { returnTo: window.location.origin + window.location.pathname}});
           alert('Error getting access token, please log in again');
         }); 
       }

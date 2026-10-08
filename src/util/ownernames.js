@@ -48,8 +48,7 @@ export function useGetMemberData(subject, filter) {
                     setData(d?.Items ?? []);
                 }).catch((e) => {
                     console.error('Error getting access token:', e);
-                    const returnTo = window.location.origin + window.location.pathname;
-                    logout({ returnTo });
+                    logout({ logoutParams: { returnTo: window.location.origin + window.location.pathname}});
                     alert('Please log in again');
                 });
         }

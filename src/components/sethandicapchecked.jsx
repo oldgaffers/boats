@@ -30,8 +30,7 @@ function SetHandicapCheckedDialog({ boat, onClose, open }) {
         onClose();
       }).catch((e) => {
         console.error('Error getting access token for fleet update:', e);
-        const returnTo = window.location.origin + window.location.pathname;
-        logout({ returnTo });
+        logout({ logoutParams: { returnTo: window.location.origin + window.location.pathname}});
         alert('Error updating boat, please log in again');
       });
     }

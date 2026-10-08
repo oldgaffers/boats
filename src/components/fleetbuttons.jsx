@@ -45,7 +45,7 @@ export default function FleetButtons({
             }).catch((e) => {
                 console.error('Error fetching fleets:', e);
                 const returnTo = window.location.origin + window.location.pathname;
-                logout({ returnTo });
+                logout({ logoutParams: { returnTo }});
                 alert('Error fetching fleets, please log in again');
             });
         }
@@ -69,8 +69,7 @@ export default function FleetButtons({
                 setPopoverOpen(false);
             }).catch((e) => {
                 console.error('Error getting access token for fleet update:', e);
-                const returnTo = window.location.origin + window.location.pathname;
-                logout({ returnTo });
+                logout({ returnTo:  window.location.origin + window.location.pathname });
                 alert('Error updating fleet, please log in again');
             });
     }
