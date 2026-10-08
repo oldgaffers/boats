@@ -158,10 +158,10 @@ export default function FilterBoats({
             <Grid>
                 <Picker
                     onChange={pl}
-                    id="sail_types"
+                    id="sail_type"
                     options={makePicklist(view, pickers, "mainsail_type")}
                     label="Sail Type"
-                    value={filters["sail_types"]}
+                    value={filters["sail_type"]}
                 />
             </Grid>
             <Grid>
