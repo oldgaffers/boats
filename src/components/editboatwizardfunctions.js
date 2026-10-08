@@ -159,7 +159,6 @@ function listMapper(values, newItems, field, pickers) {
 }
 
 export function prepareModifiedValues(values, boat, pickers) {
-  console.log('prepareModifiedValues', values, boat);
   const { name, oga_no, image_key } = boat
   const { ddf, email, ownerships, previous_names = [], ...submitted } = values;
 
@@ -174,7 +173,6 @@ export function prepareModifiedValues(values, boat, pickers) {
   }
 
   if (ddf.sail_type) {
-    console.log('W', ddf.sail_type);
     if (ddf.sail_type.main) {
       if (submitted.handicap_data.main) {
         submitted.handicap_data.main.type = ddf.sail_type.main;
