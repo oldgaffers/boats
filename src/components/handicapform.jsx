@@ -161,6 +161,14 @@ function ForeTriangleMeasurements({ x, y, scale = { x: 1, y: 1 }, boat, metric =
 }
 
 export function BermudanMast({ x, y, sail, scale = { x: 1, y: 1 }, metric = false }) {
+    let area = '';
+    if (sail?.luff && sail?.foot) {
+        const l = sail.luff || 0;
+        const f = sail.foot || 0;
+        const area_m2 = 0.5 * f * l;
+        area = metric ? `${area_m2.toFixed(2)} m²` : `${m2dsqf(area_m2)} ft²`;
+        area = `Area = ${area}`;
+    }
     return (<Group x={x} y={y} scale={scale}>
         <Line
             name="boom"
@@ -187,6 +195,10 @@ export function BermudanMast({ x, y, sail, scale = { x: 1, y: 1 }, metric = fals
         />
         <HorizontalDimension x={50} y={320} rotation={3.5} length={350} label={param("B", sail?.foot, metric)} />
         <VerticalDimension x={390} y={-185} length={500} label={param("H", sail?.luff, metric)} />
+        <Label x={200} y={120} >
+            <Tag fill="white" />
+            <Text text={area} fill="blue" fontSize={15} />
+        </Label>
     </Group>);
 }
 
@@ -271,7 +283,7 @@ export function Forestays({ x, y, scale = { x: 1, y: 1 } }) {
 }
 
 function MastWithSails({ x, y, scale = { x: 1, y: 1 }, mainsail_type, main, topsail, metric = false }) {
-    if (['gunter', 'bermudan', 'lateen', 'leg-o-mutton'].includes(mainsail_type)) {
+    if (['gunter', 'bermudan', 'lateen', 'leg-o-mutton'].includes(main.type || mainsail_type)) {
         return (<BermudanMast x={x} y={y} scale={scale} sail={main} metric={metric} />);
     }
     // default to gaff rig
@@ -305,9 +317,9 @@ export function HandicapDiagram({ boat, metric = false }) {
                         <Forestays x={0} y={0} scale={{ x: 1, y: 1 }} />
                         <ForeTriangleMeasurements x={0} y={0} scale={{ x: 1, y: 1 }} boat={boat} metric={metric} />
                         <Group x={0} y={0} scale={{ x: 1.1, y: 1.1 }}>
-                            <MastWithSails x={-400} y={-27} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} metric={metric} />
+                            <MastWithSails x={-400} y={-27} mainsail_type={boat.mainsail_type} main={boat.handicap_data.main} topsail={boat.handicap_data.topsail} metric={metric} />
                         </Group>
-                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.fore} metric={metric} />
+                        <MastWithSails x={0} y={0} mainsail_type={boat.mainsail_type} main={boat.handicap_data.fore} topsail={boat.handicap_data.foretopsail} metric={metric} />
                         <BeamMeasurement x={712} y={340} boat={boat} metric={metric} scale={{ x: 1.2, y: 1.2 }} />
                         <Group scale={{ x: 1.2, y: 1.2 }}>
                             <HorizontalDimension x={-222} y={330} length={715} label={param("LOD", boat.handicap_data?.length_on_deck, metric)} />

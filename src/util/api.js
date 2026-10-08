@@ -93,7 +93,7 @@ export async function postCrewEnquiry(data) {
 }
 
 export async function getBoatData(oga_no) {
-  const url = `https://raw.githubusercontent.com/oldgaffers/boatregister/refs/heads/main/boat/${oga_no}/boat.yml`;
+  const url = `${boatRegisterHome}/boatregister/boat/${oga_no}/boat.yml`;
   const r = await fetch(url);
   if (!r.ok) {
     console.log('Failed to fetch boat data from GitHub');
@@ -108,6 +108,20 @@ export async function getBoatData(oga_no) {
     }
     data[key] = data[key].filter((v) => v);
   });
+
+  // upgrade old records with mainsail_type to new format
+  const sail_type = data.mainsail_type || 'none';
+  if (sail_type !== 'none') {
+    if (data.handicap_data?.main) {
+      data.handicap_data.main.type = data.handicap_data.main.type || sail_type;
+      if (data.handicap_data?.fore) {
+        data.handicap_data.fore.type = data.handicap_data.fore.type || sail_type;
+      }
+      if (data.handicap_data?.mizzen) {
+        data.handicap_data.mizzen.type = data.handicap_data.mizzen.type || sail_type;
+      }
+    }
+  }
   return data;
 }
 
@@ -128,7 +142,7 @@ export async function getPicklist(name) {
 export async function getExtra() {
   try {
     return getScopedData('public', 'crewing');
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
   return undefined;

@@ -405,9 +405,9 @@ const mainsail_fields = (sail) => {
       dataType: 'float',
       condition: {
         and: [
-          { not: { when: () => `${sail}sail_type`, is: "bermudan" } },
-          { not: { when: () => `${sail}sail_type`, is: "gunter" } },
-          { not: { when: () => `${sail}sail_type`, is: "legomutton" } },
+          { not: { when: () => `handicap_data.${sail}.type`, is: "bermudan" } },
+          { not: { when: () => `handicap_data.${sail}.type`, is: "gunter" } },
+          { not: { when: () => `handicap_data.${sail}.type`, is: "legomutton" } },
         ],
       },
       resolveProps: (props, { meta, input }, formOptions) => {
