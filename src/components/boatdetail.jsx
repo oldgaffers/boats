@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Paper from '@mui/material/Paper';
 import { useAuth0 } from '@auth0/auth0-react';
-import { kg, m2f, price, m2f2, newestForSaleRecord } from '../util/format';
+import { kg, m2f, price, m2f2 } from '../util/format';
 import DetailBar from './detailbar';
 import TabPanel from './tabpanel';
 import ConditionalText from './conditionaltext';
@@ -12,6 +12,7 @@ import { HandicapDisplay } from './Handicap';
 import { TextPane } from './boatpane';
 import { VoyagePane } from './voyage';
 import HandicapForm from './handicapform';
+import { currentSaleRecord } from '../util/sale_record';
 
 const registration_fields = ['sail_number', 'ssr', 'nhsr', 'fishing_number', 'mmsi', 'callsign', 'nsbr', 'uk_part1'];
 
@@ -122,7 +123,7 @@ export default function BoatDetail({ view, boat }) {
   }
 
   if (boat.selling_status === 'for_sale') {
-    const fs = newestForSaleRecord(boat);
+    const fs = currentSaleRecord(boat);
 
     if (fs) {
       panes.unshift(

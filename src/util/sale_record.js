@@ -43,12 +43,16 @@ export class SaleRecord {
     }
 }
 
+export function modified(fsr) {
+    return fsr.updated_at || fsr.created_at || '1970-01-01T00:00:00Z';
+}
+
 export function currentSaleRecord(boat) {
     if ((boat?.selling_status || '') !== 'for_sale') {
         return undefined;
     }
     const r = (boat.for_sales || []).reduce(
-        (prev, curr) => (prev.updated_at > curr.updated_at) ? prev : curr,
+        (prev, curr) => (modified(prev) > modified(curr)) ? prev : curr,
         { updated_at: new Date(0).toISOString() },
     );
     if (r.sold) {
@@ -58,4 +62,40 @@ export function currentSaleRecord(boat) {
         return undefined;
     }
     return SaleRecord.fromObject(r);
+}
+
+
+export function prepareSalesRecord(boat) {
+  const defaultSalesRecord = {
+    created_at: new Date().toISOString(),
+    asking_price: 0,
+    sales_text: '',
+    flexibility: 'normal',
+  };
+
+  if (boat.selling_status !== 'for_sale') {
+    return defaultSalesRecord;
+  }
+
+  return { ...defaultSalesRecord, ...currentSaleRecord(boat) };
+}
+
+export function salesChanges(update_sale, current_sales_record, boat) {
+  const { selling_status, for_sales } = boat;
+  if (update_sale === undefined) { // there were no changes
+    return { selling_status, for_sales };
+  }
+
+  const sales_records = for_sales || [];
+  sales_records.sort((a, b) => Date.parse(modified(b)) - Date.parse(modified(a)));
+
+  if (selling_status === 'for_sale') {
+    sales_records.shift();
+  }
+  sales_records.unshift(current_sales_record);
+
+  if (update_sale === 'unsell' || update_sale === 'sold') {
+      return { selling_status: 'not_for_sale', for_sales };
+  }
+  return { selling_status, for_sales };
 }

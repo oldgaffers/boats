@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { create } from 'jsondiffpatch';
 import { boatm2f, boatf2m, boatDefined } from "../util/format";
 import { fThcf } from '../util/THCF';
+import { currentSaleRecord, modified, prepareSalesRecord, salesChanges } from '../util/sale_record';
 
 export function boatdiff(before, after) {
   const cj = create({
@@ -9,44 +10,6 @@ export function boatdiff(before, after) {
     textDiff: { minLength: 60000 }, // prevent textdiff not supported by the RFC formatter
   });
   return cj.diff(before, after);
-}
-
-export function prepareSalesRecord(boat) {
-  const defaultSalesRecord = {
-    created_at: new Date().toISOString(),
-    asking_price: 0,
-    sales_text: '',
-    flexibility: 'normal',
-  };
-
-  if (boat.selling_status !== 'for_sale') {
-    return defaultSalesRecord;
-  }
-
-  const sales_records = boat.for_sales;
-  sales_records.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-  return { ...defaultSalesRecord, ...sales_records[0] };
-}
-
-export function salesChanges(ddf, boat) {
-  const { selling_status, for_sales } = boat;
-  if (ddf.update_sale === undefined) { // there were no changes
-    return { selling_status, for_sales };
-  }
-
-  const sales_records = for_sales || [];
-  sales_records.sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
-
-  if (selling_status === 'for_sale') {
-    sales_records.shift(); // old current sales record is in ddf
-  }
-
-  sales_records.unshift(ddf.current_sales_record);
-
-  if (ddf.update_sale === 'unsell' || ddf.update_sale === 'sold') {
-      return { selling_status: 'not_for_sale', for_sales };
-  }
-  return { selling_status, for_sales };
 }
 
 export function prepareInitialValues(boat, user, pr) {
@@ -199,7 +162,7 @@ export function prepareModifiedValues(values, boat, pickers) {
     name: ddf.new_name || name || submitted.name,
     previous_names,
     oga_no, image_key,
-    ...salesChanges(ddf, boat),
+    ...salesChanges(ddf.update_sale, ddf.current_sales_record, boat),
     builder: listMapper(values, newItems, 'builder', pickers),
     designer: listMapper(values, newItems, 'designer', pickers),
     design_class: name2object(values.design_class, pickers.design_class, newItems.design_class),
