@@ -19,14 +19,14 @@ export class SaleRecord {
         this.sales_text = sales_text;
         this.seller_gold_id = seller?.id;
         this.seller_member = seller?.member;
-        Object.defineProperty( this, 'asking_price', {
+        Object.defineProperty(this, 'asking_price', {
             enumerable: true,
-            get: ( ) => this.#price,
-            set: ( price ) => {
+            get: () => this.#price,
+            set: (price) => {
                 this.updated_at = new Date().toISOString();
-                this.#price = price;        
+                this.#price = price;
             },
-          } );
+        });
     }
 
     static fromObject(object) {
@@ -66,36 +66,35 @@ export function currentSaleRecord(boat) {
 
 
 export function prepareSalesRecord(boat) {
-  const defaultSalesRecord = {
-    created_at: new Date().toISOString(),
-    asking_price: 0,
-    sales_text: '',
-    flexibility: 'normal',
-  };
+    const defaultSalesRecord = {
+        created_at: new Date().toISOString(),
+        asking_price: 0,
+        sales_text: '',
+        flexibility: 'normal',
+    };
 
-  if (boat.selling_status !== 'for_sale') {
-    return defaultSalesRecord;
-  }
+    if (boat.selling_status !== 'for_sale') {
+        return defaultSalesRecord;
+    }
 
-  return { ...defaultSalesRecord, ...currentSaleRecord(boat) };
+    return { ...defaultSalesRecord, ...currentSaleRecord(boat) };
 }
 
-export function salesChanges(update_sale, current_sales_record, boat) {
-  const { selling_status, for_sales } = boat;
-  if (update_sale === undefined) { // there were no changes
-    return { selling_status, for_sales };
-  }
+export function salesChanges(confirm_for_sale, update_sale, current_sales_record, selling_status, for_sales) {
+    if (confirm_for_sale || update_sale) {
+        const sales_records = for_sales || [];
+        sales_records.sort((a, b) => Date.parse(modified(b)) - Date.parse(modified(a)));
 
-  const sales_records = for_sales || [];
-  sales_records.sort((a, b) => Date.parse(modified(b)) - Date.parse(modified(a)));
-
-  if (selling_status === 'for_sale') {
-    sales_records.shift();
-  }
-  sales_records.unshift(current_sales_record);
-
-  if (update_sale === 'unsell' || update_sale === 'sold') {
-      return { selling_status: 'not_for_sale', for_sales };
-  }
-  return { selling_status, for_sales };
+        if (selling_status === 'for_sale') {
+            sales_records.shift();
+        }
+        sales_records.unshift(current_sales_record);
+        let new_selling_status = 'for_sale';
+        if (update_sale) { // was for sale and changes might have happened.
+            new_selling_status: (update_sale === 'update') ? 'for_sale' : 'not_for_sale';
+        }
+        return { selling_status: new_selling_status, for_sales: sales_records };
+    } else { // not for sale and nothing changed
+        return { selling_status, for_sales };
+    }
 }

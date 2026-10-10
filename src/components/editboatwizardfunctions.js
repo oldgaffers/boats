@@ -23,7 +23,6 @@ export function prepareInitialValues(boat, user, pr) {
   const ddf = { name, oga_no, image_key, owner, editor, pr, current_sales_record };
 
   if (boat.handicap_data?.main?.type || boat.handicap_data?.fore?.type || boat.handicap_data?.mizzen?.type ) {
-    console.log(boat.handicap_data);
     ddf.sail_type = { };
     if (boat.handicap_data.main?.type) ddf.sail_type.main = boat.handicap_data.main.type;
     if (boat.handicap_data.fore?.type) ddf.sail_type.fore = boat.handicap_data.fore.type;
@@ -162,13 +161,12 @@ export function prepareModifiedValues(values, boat, pickers) {
     name: ddf.new_name || name || submitted.name,
     previous_names,
     oga_no, image_key,
-    ...salesChanges(ddf.update_sale, ddf.current_sales_record, boat),
+    ...salesChanges(ddf.confirm_for_sale, ddf.update_sale, ddf.current_sales_record, boat.selling_status, boat.for_sales),
     builder: listMapper(values, newItems, 'builder', pickers),
     designer: listMapper(values, newItems, 'designer', pickers),
     design_class: name2object(values.design_class, pickers.design_class, newItems.design_class),
   };
   const b = boatDefined(modifiedBoat);
-  console.log(ddf, b);
   return { boat: b, newItems, email };
 }
 
