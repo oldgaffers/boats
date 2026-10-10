@@ -9,23 +9,27 @@ export function ownershipsWithNames(ownerships = [], members) {
         return ownerships;
     }
     const r = ownerships.map((ownership) => {
-        const r = { ...ownership };
-        const m = members.filter((member) => member.id === r.id);
-        if (m.length > 0) {
-            const { skipper, GDPR, firstname, lastname } = m[0];
-            if (GDPR) {
-                r.name = `${firstname} ${lastname}`;
+        if (ownership.id) {
+            const r = { ...ownership };
+            const m = members.filter((member) => member.id === r.id);
+            if (m.length > 0) {
+                const { skipper, GDPR, firstname, lastname } = m[0];
+                if (GDPR) {
+                    r.name = `${firstname} ${lastname}`;
+                } else {
+                    r.note = 'name on record but withheld';
+                }
+                if (skipper) {
+                    r.skipper = skipper;
+                }
+                return r;
             } else {
-                r.note = 'name on record but withheld';
-            }
-            if (skipper) {
-                r.skipper = skipper;
+                r.note = 'problem identifying owner';
             }
             return r;
         } else {
-            r.note = 'problem identifying owner';
+            return ownership;
         }
-        return r;
     });
     r.sort((a, b) => a.start > b.start);
     return r;
@@ -48,7 +52,7 @@ export function useGetMemberData(subject, filter) {
                     setData(d?.Items ?? []);
                 }).catch((e) => {
                     console.error('Error getting access token:', e);
-                    logout({ logoutParams: { returnTo: window.location.origin + window.location.pathname}});
+                    logout({ logoutParams: { returnTo: window.location.origin + window.location.pathname } });
                     alert('Please log in again');
                 });
         }

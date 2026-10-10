@@ -5,8 +5,13 @@ import BoatSummary from './boatsummary';
 import BoatButtons from './boatbuttons';
 import SmugMugGallery from './smugmuggallery';
 import { Grid, Stack } from '@mui/material';
+import { useGetOwnerNames } from '../util/ownernames';
 
-export default function BoatWrapper({ view='app', boat, location=null }) {
+export default function BoatWrapper({ view = 'app', boat, location = null }) {
+  console.log('B', boat.ownerships);
+  const ownerships = useGetOwnerNames(boat.ownerships);
+  console.log('A', ownerships);
+  boat.ownerships = ownerships;
   return (
     <Stack>
       <Typography variant="h3" component="h3">{boat.name} ({boat.oga_no})</Typography>

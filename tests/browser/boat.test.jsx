@@ -34,6 +34,11 @@ vi.mock('../../src/util/api.js', () => ({
 })
 );
 
+vi.mock('../../src/util/ownernames.js', () => ({
+  useGetOwnerNames: () => [],
+})
+);
+
 describe('Boat component tests', () => {
   const mockUser = {
     email: 'test@example.com',

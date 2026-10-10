@@ -6,7 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { useGetOwnerNames } from '../util/ownernames.js';
 
 function formatName({ name, text, note }) {
   if (name) return name;
@@ -23,7 +22,6 @@ function formatEnd(owner) {
 }
 
 function Owner({ owner }) {
-  console.log(owner);
   const name = formatName(owner);
   const share = owner.share ? `${owner.share}/64` : '';
   return (
@@ -36,8 +34,7 @@ function Owner({ owner }) {
   );
 }
 
-export default function Owners({ boat }) {
-  const ownerships = useGetOwnerNames(boat.ownerships);
+export default function Owners({ ownerships }) {
   if (ownerships.length === 0) {
     return (<div />);
   }

@@ -86,7 +86,7 @@ export default function BoatDetail({ view, boat }) {
   if (roles.includes('member') && boat.ownerships?.length > 0) {
     panes.push({
       title: `Owners${is_oga(boat) ? '*' : ''}`, children: (
-        <Owners boat={boat} />
+        <Owners ownerships={boat.ownerships} />
       )
     });
     const skippers = (boat.ownerships).filter((o) => o.skipper);
