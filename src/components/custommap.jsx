@@ -1,183 +1,28 @@
-import MarkerClusterGroup from 'react-leaflet-cluster'
-import * as L from 'leaflet';
 import React, { useState, useEffect } from 'react';
 import { MapContainer } from 'react-leaflet/MapContainer';
 import { TileLayer } from 'react-leaflet/TileLayer';
 import { Marker } from 'react-leaflet/Marker';
-import { Popup } from 'react-leaflet/Popup';
-import humanizeDuration from 'humanize-duration';
 import Backdrop from '@mui/material/Backdrop';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { CompactBoatCard } from './boatcard';
+
 import { getScopedData } from '../util/api';
+import BoatMarkers from './boatmarkers';
+import PlaceMarkers from './placemarkers';
+import { customIcons } from '../util/mapicons';
 
-function SimpleBackdrop({open}) {
-  return (
-    <div>
-      <Backdrop
-        sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
-        open={open}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </div>
-  );
-}
-
-function gaffer(colour) {
-    return L.icon({
-        iconUrl: `https://oldgaffers.github.io/boatregister//images/gaffer-${colour}.png`,
-        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
-        iconSize: [32, 37], // size of the icon
-        shadowSize: [51, 37], // size of the shadow
-        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 34],  // the same for the shadow
-        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
-    });
-}
-
-const customIcons = {
-
-    gafferBlue: gaffer('blue'),
-
-    gafferOrange: gaffer('orange'),
-
-    blackDiamond: L.icon({
-        iconUrl: `https://oldgaffers.github.io/boatregister//images/diamond.png`,
-        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
-        iconSize: [32, 32], // size of the icon
-        shadowSize: [51, 37], // size of the shadow
-        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 34],  // the same for the shadow
-        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
-    }),
-
-    whiteDiamond: L.icon({
-        iconUrl: `https://oldgaffers.github.io/boatregister//images/diamond-white.png`,
-        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
-        iconSize: [32, 32], // size of the icon
-        shadowSize: [51, 37], // size of the shadow
-        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 34],  // the same for the shadow
-        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
-    }),
-
-    gaffling: L.icon({
-        iconUrl: `https://oldgaffers.github.io/boatregister//images/gaffling.png`,
-        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
-        iconSize: [32, 32], // size of the icon
-        shadowSize: [51, 37], // size of the shadow
-        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 34],  // the same for the shadow
-        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
-    }),
-
-    lug: L.icon({
-        iconUrl: `https://oldgaffers.github.io/boatregister//images/lug.png`,
-        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/shadow-gaffer.png',
-        iconSize: [32, 32], // size of the icon
-        shadowSize: [51, 37], // size of the shadow
-        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 34],  // the same for the shadow
-        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
-    }),
-
-    yard: L.icon({
-        iconUrl: 'https://oldgaffers.github.io/boatregister//images/anchor.png',
-        shadowUrl: 'https://oldgaffers.github.io/boatregister//images/anchor-shadow.png',
-        iconSize: [32, 32], // size of the icon
-        shadowSize: [48, 32], // size of the shadow
-        iconAnchor: [16, 34], // point of the icon which will correspond to marker's location
-        shadowAnchor: [16, 34],  // the same for the shadow
-        popupAnchor: [16, 18] // point from which the popup should open relative to the iconAnchor
-    }),
-};
-
-function BoatMarker({ boat }) {
-
-    const { latitude, longitude, timestamp, source } = boat.location;
-    const age = (new Date()).getTime() - (new Date(timestamp)).getTime()
-    const d = humanizeDuration(age, { round: true, largest: 2 });
-    const title = `${boat.name} ${d} ago from ${source || 'whatsapp'}`;
-    return <Marker
-        key={boat.oga_no}
-        position={[latitude, longitude]}
-        icon={customIcons.gafferBlue}
-        title={title}
-        eventHandlers={{
-            click: () => {
-                // console.log('marker clicked')
-            },
-        }}
-    >
-        <Popup maxWidth='200'>
-            <CompactBoatCard ogaNo={boat.oga_no} />
-        </Popup>
-    </Marker>;
-}
-
-function BoatMarkers({ entries }) {
-    // const map = useMap()
-    // const oms = new OverlappingMarkerSpiderfier(map);
-
-    const visible = (entries || []).filter((boat) => {
-        if (boat.location) {
-            const up = new Date(boat.location.timestamp).getTime();
-            const n = new Date().getTime();
-            const days_old = Math.floor((n - up) / 86400000);
-            // console.log(days_old);
-            if (days_old > 6) {
-                return false;
-            }
-            return boat.visible;
-        }
-        return false;
-    });
-
-    return <MarkerClusterGroup chunkedLoading>
-        {visible.map((boat) => <BoatMarker key={boat.ogaNo} boat={boat} />)}
-    </MarkerClusterGroup>;
-}
-
-function yards(place) {
-    const yards = (Array.isArray(place.yards) ? place.yards : Object.values(place.yards)) || [];
-    if (yards.length > 0) {
-        return yards;
-    }
-    if (place.no_yard?.length > 0) {
-        return [{ name: 'Yard Unknown', count: place.no_yard.length }];
-    }
-    return [];
-}
-
-function PlaceInfo({ place }) {
-    const y = yards(place);
-    y.sort((a, b) => a.count - b.count);
-    return <div>
-        <h3>{place.place}</h3>
-        <p>Boats built here: {place.count}</p>
-        <h4>Builders</h4>
-        {y.map(((y, i) => <div key={i}>
-            <a href={`/boat_register/builder/?name=${y.name}&place=${place.place}`}>{y.name}</a>
-           </div>)) }
-    </div>;
-}
-
-function PlaceMarkers({ entries }) {
-    return <MarkerClusterGroup chunkedLoading>
-        {entries.map((place, index) => <Marker
-                    key={index}
-                    position={[place.latitude, place.longitude]}
-                    icon={customIcons[place.icon || 'yard']}
-                    title={place.name}
-                >
-                    <Popup maxWidth='200'>
-                        <PlaceInfo place={place} />
-                    </Popup>
-                </Marker>)}
-    </MarkerClusterGroup>;
+function SimpleBackdrop({ open }) {
+    return (
+        <div>
+            <Backdrop
+                sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+                open={open}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </div>
+    );
 }
 
 export default function CustomMap(props) {
@@ -185,7 +30,11 @@ export default function CustomMap(props) {
     useEffect(() => {
         const getData = async () => {
             const p = await getScopedData(props.scope, props.table);
-            setData(p.Items);
+            if (p.Items) {
+                setData(p.Items);
+            } else {
+                setData([]);
+            }
         }
         if (!data) {
             getData();
@@ -197,25 +46,25 @@ export default function CustomMap(props) {
     return (
         <Stack>
             <Box height={800} zIndex={0} >
-              <MapContainer style={{ height: '800px' }} center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
-                <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
+                <MapContainer style={{ height: '800px' }} center={[55.0, -2.0]} zoom={6} scrollWheelZoom={false}>
+                    <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
 
-                {(window.markers || []).map((port, index) => <Marker
-                    key={index}
-                    position={[port.latitude, port.longitude]}
-                    icon={customIcons[port.icon]}
-                    title={port.name}
-                ></Marker>)}
+                    {(window.markers || []).map((port, index) => <Marker
+                        key={index}
+                        position={[port.latitude, port.longitude]}
+                        icon={customIcons[port.icon]}
+                        title={port.name}
+                    ></Marker>)}
 
-                <BoatMarkers entries={boats} />
-                <PlaceMarkers entries={places} />
+                    <BoatMarkers entries={boats} />
+                    <PlaceMarkers entries={places} />
 
-              </MapContainer>
+                </MapContainer>
             </Box>
-            <SimpleBackdrop open={!data}/>
+            <SimpleBackdrop open={!data} />
         </Stack>
     );
 }

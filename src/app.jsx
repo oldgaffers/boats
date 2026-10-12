@@ -72,7 +72,7 @@ const Pages = (props) => {
     case 'fleet': return <FleetView {...props} />;
     case 'my_fleets': return <Fleets filter={{ owned: true }} {...props} />;
     case 'shared_fleets': return <Fleets filter={{ public: true }} {...props} />;
-    case 'map': return <CustomMap {...props} />;
+    case 'map_of_boats': return <CustomMap {...props} />;
     case 'add_boat': return <EditButton boat={{}} label='Add Boat' {...props} />;
     case 'pick_or_add_boat': return <PickOrAddBoat {...props} />;
     case 'builder': return <BuilderPage {...props} {...kvp} />;
