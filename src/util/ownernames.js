@@ -42,21 +42,21 @@ export function ownerMembershipNumbers(ownerships = []) {
 
 export function useGetMemberData(subject, filter) {
     const [data, setData] = useState();
-    const { getAccessTokenSilently, logout } = useAuth0();
+    const { user, getAccessTokenSilently, logout } = useAuth0();
 
     useEffect(() => {
-        if (!data) {
+        if (user && !data) {
             getAccessTokenSilently()
                 .then(async (accessToken) => {
                     const d = await getScopedData('member', subject, filter, accessToken);
                     setData(d?.Items ?? []);
                 }).catch((e) => {
                     console.error('Error getting access token:', e);
-                    logout({ logoutParams: { returnTo: window.location.origin + window.location.pathname } });
-                    alert('Please log in again');
+                    logout({ logoutParams: { returnTo: `${window.location.origin}/boat_register/browse_the_register/`  } });
+                    alert('Login has expired. please log in again');
                 });
         }
-    }, [subject, filter, getAccessTokenSilently]);
+    }, [subject, filter, user, getAccessTokenSilently]);
 
     return data;
 }
