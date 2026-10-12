@@ -46,15 +46,13 @@ export function useGetMemberData(subject, filter) {
 
     useEffect(() => {
         if (user && !data) {
-            const returnTo = (document.referrer.includes('/boat/')) ? `${window.location.origin}/boat_register/browse_the_register/` : document.referrer;
-            console.log(returnTo);
             getAccessTokenSilently()
                 .then(async (accessToken) => {
                     const d = await getScopedData('member', subject, filter, accessToken);
                     setData(d?.Items ?? []);
                 }).catch((e) => {
                     console.error('Error getting access token:', e);
-                    logout({ logoutParams: { returnTo } });
+                    logout({ logoutParams: { returnTo: `${window.location.origin}/boat_register/browse_the_register/` } });
                     alert('Login has expired. please log in again');
                 });
         }
