@@ -1,42 +1,32 @@
-import { Marker, Popup } from "react-leaflet";
+import { Marker } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { customIcons } from "../util/mapicons";
 
-function yards(place) {
-    const yards = (Array.isArray(place.yards) ? place.yards : Object.values(place.yards)) || [];
-    if (yards.length > 0) {
-        return yards;
-    }
-    if (place.no_yard?.length > 0) {
-        return [{ name: 'Yard Unknown', count: place.no_yard.length }];
-    }
-    return [];
-}
-
-function PlaceInfo({ place }) {
-    const y = yards(place);
-    y.sort((a, b) => a.count - b.count);
-    return <div>
-        <h3>{place.place}</h3>
-        <p>Boats built here: {place.count}</p>
-        <h4>Builders</h4>
-        {y.map(((y, i) => <div key={i}>
-            <a href={`/boat_register/builder/?name=${y.name}&place=${place.place}`}>{y.name}</a>
-        </div>))}
-    </div>;
-}
+const places = [
+      { name: 'Jubilee', latitude: 51.9948773, longitude: 1.2681345, icon: 'whiteDiamond' },
+      { name: 'Jubilee', latitude: 51.9948773, longitude: 1.7, icon: 'gaffling' },
+      { name: 'Ramsgate', latitude: 51.32983885, longitude: 1.421, icon: 'blackDiamond' },
+      { name: 'Cowes', latitude: 50.7592, longitude: -1.293136436, icon: 'blackDiamond' },
+      { name: 'Plymouth', latitude: 50.369, longitude: -4.132253952, icon: 'blackDiamond' },
+      { name: 'Neyland', latitude: 51.708, longitude: -4.94154, icon: 'blackDiamond' },
+      { name: 'Dublin', latitude: 53.34362, longitude: -6.21721, icon: 'blackDiamond' },
+      { name: 'Oban', latitude: 56.41432278536105, longitude: -5.486, icon: 'blackDiamond' },
+      { name: 'Arbroath', latitude: 56.552858355054, longitude: -2.582, icon: 'blackDiamond' },
+      { name: 'Blyth', latitude: 55.126374852, longitude: -1.4978, icon: 'blackDiamond' },
+      { name: 'Langstone Harbour', latitude: 50.831, longitude: -1.0, icon: 'lug' },
+      { name: 'Cardiff Bay', latitude: 51.45573317, longitude: -3.17, icon: 'lug' },
+      { name: 'Ullswater', latitude: 54.6, longitude: -2.84122537, icon: 'lug' },
+      { name: 'Portsoy', latitude: 57.68567483697059, longitude: -2.69, icon: 'gafferOrange' }
+    ];
 
 export default function PlaceMarkers({ entries }) {
     return <MarkerClusterGroup chunkedLoading>
-        {entries.map((place, index) => <Marker
+        {places.map((place, index) => <Marker
             key={index}
             position={[place.latitude, place.longitude]}
             icon={customIcons[place.icon || 'yard']}
             title={place.name}
         >
-            <Popup maxWidth='200'>
-                <PlaceInfo place={place} />
-            </Popup>
         </Marker>)}
     </MarkerClusterGroup>;
 }

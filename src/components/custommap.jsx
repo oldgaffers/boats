@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import 'leaflet/dist/leaflet.css';
+import * as L from 'leaflet';
 import { MapContainer } from 'react-leaflet/MapContainer';
 import { TileLayer } from 'react-leaflet/TileLayer';
-import { Marker } from 'react-leaflet/Marker';
 import Backdrop from '@mui/material/Backdrop';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -9,8 +10,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 import { getScopedData } from '../util/api';
 import BoatMarkers from './boatmarkers';
-import PlaceMarkers from './placemarkers';
-import { customIcons } from '../util/mapicons';
+import YardMarkers from './yardmarkers';
 
 function SimpleBackdrop({ open }) {
     return (
@@ -51,17 +51,8 @@ export default function CustomMap(props) {
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     />
-
-                    {(window.markers || []).map((port, index) => <Marker
-                        key={index}
-                        position={[port.latitude, port.longitude]}
-                        icon={customIcons[port.icon]}
-                        title={port.name}
-                    ></Marker>)}
-
                     <BoatMarkers entries={boats} />
-                    <PlaceMarkers entries={places} />
-
+                    <YardMarkers entries={places} />
                 </MapContainer>
             </Box>
             <SimpleBackdrop open={!data} />
