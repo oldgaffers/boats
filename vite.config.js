@@ -4,6 +4,8 @@ import { playwright } from '@vitest/browser-playwright'
 
 // https://vite.dev/config/
 export default defineConfig({
+  resolve: { dedupe: ['leaflet', 'react', 'react-dom']},
+  build: { commonjsOptions: { include: ['/leaflet/', /node_modules/]}},
   plugins: [react()],
   test: {
     // common setup file for both unit and browser tests to filter/handle
