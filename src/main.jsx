@@ -2,9 +2,11 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 // import './index.css'
-import 'leaflet/dist/leaflet.css';
-import * as L from 'leaflet';
-import * as MC from 'leaflet.markercluster';
+import './util/leaflet-global.js';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+
 import { BoatRegister } from './app.jsx'
 
 const membersAreaComponents = ['update_my_details', 'members', 'members_boats', 'crewfinder', 'cruisefinder', 'map', 'doc', 'folder'];
