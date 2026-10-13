@@ -1,12 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { ViteHtml } from 'vite-plugin-html';
 import { playwright } from '@vitest/browser-playwright'
 
 // https://vite.dev/config/
 export default defineConfig({
-  resolve: { dedupe: ['leaflet', 'react', 'react-dom']},
-  build: { commonjsOptions: { include: ['/leaflet/', /node_modules/]}},
-  plugins: [react()],
+  plugins: [react(), ViteHtml()],
   test: {
     // common setup file for both unit and browser tests to filter/handle
     // non-fatal console warnings emitted by third-party libs (MUI, React)
@@ -19,7 +18,7 @@ export default defineConfig({
         lines: 41,
         branches: 38,
         statements: 40,
-      },            
+      },
       provider: 'v8',
       include: ['src/**/*.{js,jsx}'],
     },
@@ -57,8 +56,13 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  resolve: { dedupe: ['leaflet', 'react', 'react-dom'] },
   build: {
+    commonjsOptions: { include: ['/leaflet/', /node_modules/] },
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html')
+      },
       output: {
         manualChunks: () => 'main.js',
       },
