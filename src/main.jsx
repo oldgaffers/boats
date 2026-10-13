@@ -2,9 +2,13 @@ import 'react-app-polyfill/ie11';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 // import './index.css'
+import 'leaflet/dist/leaflet.css';
+import * as L from 'leaflet';
 import { BoatRegister } from './app.jsx'
 
 const membersAreaComponents = ['update_my_details', 'members', 'members_boats', 'crewfinder', 'cruisefinder', 'map', 'doc', 'folder'];
+
+window.L = L;
 
 // convert paragraph elements with <<xxxx>> to divs so that we can nest p and divs inside them
 // we need this because most editors don't have html access.

@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import 'leaflet/dist/leaflet.css';
-import * as L from 'leaflet';
 import { MapContainer } from 'react-leaflet/MapContainer';
 import { TileLayer } from 'react-leaflet/TileLayer';
 import Backdrop from '@mui/material/Backdrop';
