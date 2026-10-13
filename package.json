@@ -79,5 +79,11 @@
     "vite": "^7.1.7",
     "vitest": "^4.1.9",
     "vitest-browser-react": "^2.0.2"
+  },
+  "allowScripts": {
+    "@dynamicss/dynamicss": true,
+    "browser-tabs-lock": true,
+    "core-js": true,
+    "esbuild": true
   }
 }
