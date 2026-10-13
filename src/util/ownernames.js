@@ -61,7 +61,7 @@ export function useGetMemberData(subject, filter) {
     return data;
 }
 
-export function useGetOwnerNames(ownerships) {
+export function useGetOwnerNames(ownerships = []) {
     const m = ownerMembershipNumbers(ownerships);
     const defaultMembers = ownerships.map((r) => ({ member: r.member, id: r.id, GDPR: true, firstname: 'not', lastname: 'fetched' }));
     const f = {
