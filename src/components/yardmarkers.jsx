@@ -14,7 +14,6 @@ function yards(place) {
 }
 
 function YardInfo({ place }) {
-    const { scheme, hostname } = window.location;
     const url = 'https://oga.org.uk/boat_register/builder/';
     const y = yards(place);
     y.sort((a, b) => a.count - b.count);
