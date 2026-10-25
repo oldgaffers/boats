@@ -4,6 +4,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { Switch } from '@mui/material';
 import { m2dsqf, m2f } from '../util/format';
+import SailTable from './sailtable';
+import ConditionalText from './conditionaltext';
 
 function param(label, value, metric = false) {
     if (value === undefined || value === null) {
@@ -291,7 +293,6 @@ function MastWithSails({ x, y, scale = { x: 1, y: 1 }, sail_type, main, topsail,
 }
 
 export function HandicapDiagram({ boat, metric = false }) {
-    console.log(boat.handicap_data);
     return (
         <Stage width={1200} height={700}>
             <Layer>
@@ -425,6 +426,14 @@ export default function HandicapForm({ boat }) {
                 <Typography color="blue">Propellor Type = {boat.handicap_data?.propellor?.type || 'not specified'}</Typography>
                 <Typography color="blue">Displacement = {boat.handicap_data.displacement || 'not known'} kg</Typography>
                 <Typography color="blue">Hull Shape (Solent) = {boat.handicap_data?.solent?.hull_shape || 'not known'}</Typography>
+                <ConditionalText label='Hull Shape (Solent)' value={boat.handicap_data?.solent?.hull_shape || 'not known'}/>
+                <ConditionalText label="LOD" value={param('', boat.handicap_data.length_on_deck, metric)} />
+                <ConditionalText label="LWL" value={param('', boat.handicap_data.length_on_waterline, metric)} />
+                <ConditionalText label="beam" value={param('', boat.handicap_data.beam, metric)} />
+                <ConditionalText label="draft" value={param('', boat.handicap_data.draft, metric)} />
+                <ConditionalText label="Fore triangle base" value={param('', boat.handicap_data.fore_triangle_base, metric)} />
+                <ConditionalText label="Fore triangle height" value={param('', boat.handicap_data.fore_triangle_height, metric)} />
+                <SailTable handicapData={boat.handicap_data} />
             </Stack>
         </>
     );
