@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
-import { resolve } from 'path';
+// import { resolve } from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -60,9 +60,9 @@ export default defineConfig({
   build: {
     commonjsOptions: { include: ['/leaflet/', /node_modules/] },
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
-      },
+      // input: {
+      //   main: resolve(__dirname, 'index.html')
+      // },
       output: {
         manualChunks: () => 'main.js',
       },
