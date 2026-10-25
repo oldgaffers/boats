@@ -1,5 +1,5 @@
 # oga-boat-register-frontend
-React/MaterialUI/Apollo/GraphQL viewer for the OGA Boat Register
+React/MUI viewer for the OGA Boat Register
 
 ![Deploy to Pages](https://github.com/oldgaffers/boats/actions/workflows/build.pages.yml/badge.svg)
 

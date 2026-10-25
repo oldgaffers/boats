@@ -14,6 +14,7 @@ function yards(place) {
 }
 
 function YardInfo({ place }) {
+    const url = 'https://oga.org.uk/boat_register/builder/';
     const y = yards(place);
     y.sort((a, b) => a.count - b.count);
     return <div>
@@ -21,7 +22,7 @@ function YardInfo({ place }) {
         <p>Boats built here: {place.count}</p>
         <h4>Builders</h4>
         {y.map(((y, i) => <div key={i}>
-            <a href={`/boat_register/builder/?name=${y.name}&place=${place.place}`}>{y.name}</a>
+            <a href={`${url}?place=${place.place}&name=${y.name}`}>{y.name}</a>
         </div>))}
     </div>;
 }
