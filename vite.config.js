@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { ViteHtml } from 'vite-plugin-html';
 import { playwright } from '@vitest/browser-playwright'
+import { resolve } from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), ViteHtml()],
+  plugins: [react()],
   test: {
     // common setup file for both unit and browser tests to filter/handle
     // non-fatal console warnings emitted by third-party libs (MUI, React)
